@@ -39,6 +39,7 @@
     "react-virtualized": "^9.21.0",
     "recompose": "^0.30.0",
     "remove-markdown": "^0.3.0",
+    "to-css": "^1.2.1",
     "uuid": "^3.3.2",
     "validate.js": "^0.12.0"
   },

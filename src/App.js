@@ -1,4 +1,4 @@
-import './App.css';
+import './style.css';
 import _ from 'underscore'
 import update from 'immutability-helper'
 import { Component, Fragment } from 'react'
@@ -6,8 +6,6 @@ import { GoogleLogin, GoogleLogout } from 'react-google-login'
 import { a, div, h, h1, h2, nav } from 'react-hyperscript-helpers'
 import * as Dashboard from './components/Dashboard'
 import * as Nav from './nav'
-import * as Style from './style'
-
 
 const initNavPaths = () => {
   Nav.clearPaths()
@@ -45,7 +43,7 @@ class App extends Component {
     const { component, makeProps } = Nav.findPathHandler(windowHash) || {}
 
     const makeNavLink = function(props, label) {
-      return Style.addHoverStyle(a,
+      return a(
         _.extend(
           {
             style: {
@@ -54,7 +52,7 @@ class App extends Component {
               backgroundColor: '#eee', borderRadius: 4,
               textDecoration: 'none'
             },
-            hoverStyle: { color: '#039be5', backgroundColor: Style.colors.lightBluish }
+            hoverStyle: { color: '#039be5', backgroundColor: '#eee' }
           },
           props),
         label)
@@ -62,15 +60,13 @@ class App extends Component {
 
     let activeThing
     if (!isLoaded) {
-      activeThing = h2({}, 'Loading heroes...')
+      activeThing = h2({}, 'Loading studies...')
     } else if (component) {
       activeThing = component(makeProps())
     }
 
 
     return h(Fragment, [
-      h1({ style: { fontSize: '1.2em', color: '#999', marginBottom: 0 } },
-        this.props.title),
       h(GoogleLogout, {
         onLogoutSuccess: (returned) => {
           this.setState(prevState =>
@@ -82,32 +78,35 @@ class App extends Component {
       }),
       nav({ style: { paddingTop: 10 } }, [
         makeNavLink({ href: '#dashboard' }, 'Dashboard'),
-        makeNavLink({ href: '#list' }, 'Heroes')
+        makeNavLink({ href: '#list' }, 'Studies'),
+        makeNavLink({ href: '#list' }, 'Datasets'),
+        makeNavLink({ href: '#list' }, 'Users')
       ]),
       div({ style: { paddingTop: 10 } }, [
         activeThing
       ])
     ])
-
   }
+
+
 
   render() {
     const { isLoggedIn } = this.state
 
     if (!isLoggedIn) {
       return h(GoogleLogin, {
-        clientId: '500025638838-s2v23ar3spugtd5t2v1vgfa2sp7ppg0d.apps.googleusercontent.com',
-        onSuccess: (returned) => {
-          this.setState(prevState =>
-            update(prevState, {
-              isLoggedIn: { $set: true }
-            })
-          )
-        },
-        onFailure: function(message) {
-          console.log(message)
-        }
-      })
+            clientId: '500025638838-s2v23ar3spugtd5t2v1vgfa2sp7ppg0d.apps.googleusercontent.com',
+            onSuccess: (returned) => {
+              this.setState(prevState =>
+                update(prevState, {
+                  isLoggedIn: { $set: true }
+                })
+              )
+            },
+            onFailure: function(message) {
+              console.log(message)
+            }
+          })
     } else
       return this.renderSignedIn()
   }
