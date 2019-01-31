@@ -1,4 +1,4 @@
-@import "fonts/Montserrat.css";
+/*@import "fonts/Montserrat.css";*/
 
 body, input, textarea, select, button {
   font-family: "Montserrat", sans-serif;
@@ -40,6 +40,8 @@ a {
   height: 100%;
   position: relative;
   z-index: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 #root.overlayOpen {
