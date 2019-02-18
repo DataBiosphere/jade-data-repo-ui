@@ -1,0 +1,59 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Private should render properly 1`] = `
+<Screen
+  data-testid="PrivateWrapper"
+  key="Private"
+  minHeight="100vh"
+>
+  <Container
+    verticalPadding={true}
+  >
+    <ul>
+      <li>
+        <NavLink
+          to="/"
+        >
+          Home
+        </NavLink>
+      </li>
+      <li>
+        <NavLink
+          to="/studies"
+        >
+          Studies
+        </NavLink>
+      </li>
+      <li>
+        <NavLink
+          to="/datasets"
+        >
+          Datasets
+        </NavLink>
+      </li>
+    </ul>
+    <Switch>
+      <Route
+        component={[Function]}
+        exact={true}
+        path="/"
+      />
+      <Route
+        component={[Function]}
+        exact={true}
+        path="/studies"
+      />
+      <Route
+        component={[Function]}
+        exact={true}
+        path="/datasets"
+      />
+      <Route
+        component={[Function]}
+        exact={true}
+        path="/datasets/create"
+      />
+    </Switch>
+  </Container>
+</Screen>
+`;
