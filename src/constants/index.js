@@ -24,8 +24,8 @@ export const ActionTypes = keyMirror({
   SHOW_ALERT: undefined,
   HIDE_ALERT: undefined,
 
-  UPLOADED_IDS: undefined,
   CREATE_DATASET: undefined,
+  DATASET_CREATE_SUCCESS: undefined,
 });
 
 /**
