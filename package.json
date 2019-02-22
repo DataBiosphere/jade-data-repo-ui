@@ -38,6 +38,7 @@
     "react": "^16.7.0",
     "react-app-polyfill": "0.2.0",
     "react-dom": "^16.7.0",
+    "react-google-login": "^5.0.0",
     "react-helmet": "^5.2.0",
     "react-inlinesvg": "^0.8.3",
     "react-redux": "^6.0.0",
