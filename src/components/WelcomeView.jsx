@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+
 import { GoogleLogin } from 'react-google-login';
 
 import { logOut, logIn } from 'actions/index';
-import config from 'config';
+
 
 class WelcomeView extends React.PureComponent {
   static propTypes = {
@@ -23,7 +24,7 @@ class WelcomeView extends React.PureComponent {
     };
     return (
       <div>
-        <h1>Welcome to the {config.description}</h1>
+        <h1>Welcome to the Jade Data Repository</h1>
         <div>
           <GoogleLogin // stealing clientId from Terra
             clientId="500025638838-s2v23ar3spugtd5t2v1vgfa2sp7ppg0d.apps.googleusercontent.com"
