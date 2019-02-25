@@ -11,11 +11,11 @@ export const Logo = styled.img`
 `;
 
 const Title = styled.span`
-  color: #fff;
-  position: relative;
   bottom: 12px;
+  color: #fff;
   font-size: 21px;
   left: 4px;
+  position: relative;
 `;
 
 export default () => (

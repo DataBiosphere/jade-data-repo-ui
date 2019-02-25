@@ -97,7 +97,7 @@ export class DatasetCreateView extends React.PureComponent {
 
   render() {
     const FormRow = styled.section`
-      padding-bottom: 5px;
+      padding-bottom: 1em;
     `;
     const { ids } = this.props;
 

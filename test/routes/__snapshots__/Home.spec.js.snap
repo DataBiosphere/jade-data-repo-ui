@@ -104,11 +104,11 @@ exports[`Home should render properly 1`] = `
 }
 
 .c4 {
-  color: #fff;
-  position: relative;
   bottom: 12px;
+  color: #fff;
   font-size: 21px;
   left: 4px;
+  position: relative;
 }
 
 .c1 {
@@ -234,7 +234,7 @@ exports[`Home should render properly 1`] = `
           <h1
             className="c5"
           >
-            React-Redux-Saga Boilerplate
+            Data Repository UI
           </h1>
         </Heading>
         <Button

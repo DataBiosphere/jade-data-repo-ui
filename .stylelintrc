@@ -38,7 +38,7 @@
     "selector-pseudo-element-colon-notation": "single",
     "string-quotes": "single",
     "unit-blacklist": [
-      ["px", "em"], {
+      ["cm", "mm", "in", "pt", "pc"], {
         "ignoreProperties": {
           "px": ["max-width"]
         }

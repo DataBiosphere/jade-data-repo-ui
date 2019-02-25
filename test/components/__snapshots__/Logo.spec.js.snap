@@ -15,11 +15,11 @@ exports[`Logo should render properly 1`] = `
 }
 
 .c1 {
-  color: #fff;
-  position: relative;
   bottom: 12px;
+  color: #fff;
   font-size: 21px;
   left: 4px;
+  position: relative;
 }
 
 <div>

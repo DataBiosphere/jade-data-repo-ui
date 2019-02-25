@@ -26,11 +26,11 @@ exports[`Header should render properly 1`] = `
 }
 
 .c3 {
-  color: #fff;
-  position: relative;
   bottom: 12px;
+  color: #fff;
   font-size: 21px;
   left: 4px;
+  position: relative;
 }
 
 .c0 {
