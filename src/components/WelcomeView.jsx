@@ -8,20 +8,20 @@ import { logOut, logIn } from 'actions/index';
 
 class WelcomeView extends React.PureComponent {
   static propTypes = {
-    dispatch: PropTypes.func.isRequired
+    dispatch: PropTypes.func.isRequired,
   };
 
-
   render() {
-    const onSignInFailure = response => {
+    const onSignInFailure = () => {
       const { dispatch } = this.props;
       dispatch(logOut());
     };
 
-    const onSignInSuccess = response => {
+    const onSignInSuccess = () => {
       const { dispatch } = this.props;
       dispatch(logIn());
     };
+
     return (
       <div>
         <h1>Welcome to the Jade Data Repository</h1>
@@ -40,7 +40,7 @@ class WelcomeView extends React.PureComponent {
         <p>
           Terra uses your Google account. Once you have signed in and completed the user profile registration step, you can start using Terra.
         </p>
-        <a ref="https://app.terra.bio/">Need to create a Terra account?</a>
+        <a href="https://app.terra.bio/">Need to create a Terra account?</a>
         <hr />
 
         <div>
