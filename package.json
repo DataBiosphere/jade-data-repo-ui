@@ -211,14 +211,13 @@
     "serve": "serve --listen 3000 build",
     "deploy": "node tools deploy",
     "publish": "node tools publish",
-    "bundlesize": "bundlesize",
-    "precommit": "node tools upstream && lint-staged && flow"
+    "bundlesize": "bundlesize"
   },
   "proxy": "http://localhost:8080",
   "husky": {
     "hooks": {
       "post-merge": "node tools update",
-      "pre-push": "npm run precommit"
+      "pre-push": "npm run validate"
     }
   },
   "browserslist": [
