@@ -120,7 +120,13 @@ export class DatasetCreateView extends React.PureComponent {
               required
               validators={{ name: this.validateName }}
             />
-            <span> (must be unique)</span>
+            <Control.text
+              model="dataset.otherName"
+              id="dataset.otherName"
+              required
+              validators={{ name: this.validateName }}
+            />
+            <span> (this is the other name)</span>
           </FormRow>
 
           <FormRow>

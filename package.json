@@ -1,15 +1,15 @@
 {
-  "name": "react-redux-saga-boilerplate",
-  "title": "react-redux-saga-boilerplate",
-  "description": "React-Redux-Saga Boilerplate",
-  "version": "2019.1.0",
-  "author": "Gil Barbara <gilbarbara@gmail.com>",
+  "name": "jade-data-repo-ui",
+  "title": "jade-data-repo-ui",
+  "description": "Data Repository UI",
+  "version": "0.1",
+  "author": "Jade Team <jadeteam@broadinstitute.org>",
   "repository": {
     "type": "git",
-    "url": "https://github.com/gilbarbara/react-redux-saga-boilerplate"
+    "url": "https://github.com/DataBiosphere/jade-data-repo-ui"
   },
-  "bugs": "https://github.com/gilbarbara/react-redux-saga-boilerplate/issues",
-  "license": "MIT",
+  "bugs": "https://github.com/DataBiosphere/jade-data-repo-ui/issues",
+  "license": "BSD 3-Clause",
   "keywords": [
     "React",
     "React-Router",
@@ -218,7 +218,7 @@
   "husky": {
     "hooks": {
       "post-merge": "node tools update",
-      "pre-commit": "npm run precommit"
+      "pre-push": "npm run precommit"
     }
   },
   "browserslist": [
