@@ -40,7 +40,6 @@
     "unit-blacklist": [
       ["cm", "mm", "in", "pt", "pc"], {
         "ignoreProperties": {
-          "px": ["max-width"]
         }
       }
     ],
