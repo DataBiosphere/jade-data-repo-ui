@@ -4,13 +4,11 @@ import ReactDOM from 'react-dom';
 
 import { Provider } from 'react-redux';
 import { AppContainer } from 'react-hot-loader';
-import { PersistGate } from 'redux-persist/lib/integration/react';
 
-import { store, persistor } from 'store/index';
+import { store } from 'store/index';
 import { showAlert } from 'actions/index';
 
 import App from 'containers/App';
-import Loader from 'components/Loader';
 import Reload from 'components/Reload';
 
 export const app = {
@@ -46,9 +44,7 @@ export const app = {
       ReactDOM.render(
         <AppContainer>
           <Provider store={store}>
-            <PersistGate loading={<Loader size={100} block />} persistor={persistor}>
-              <Component />
-            </PersistGate>
+            <Component />
           </Provider>
         </AppContainer>,
         root,
