@@ -1,22 +1,39 @@
 import React from 'react';
 
-import { Home } from 'routes/Home';
+import WelcomeView from '../../src/components/WelcomeView';
 
 const mockDispatch = jest.fn();
-const props = {
+const ownProps = {
   dispatch: mockDispatch,
-  location: {},
-  user: {},
+  users: {},
 };
 
-function setup(ownProps = props) {
-  return mount(<Home {...ownProps} />);
+jest.mock('react-google-login/dist/google-login', () => ({
+  GoogleLogin: props => {
+    const { onSuccess } = props;
+    return <button type="button" onClick={onSuccess} />;
+  },
+}));
+
+function setup() {
+  return mount(<WelcomeView {...ownProps} />);
 }
 
-describe('Home', () => {
+describe('WelcomeView', () => {
   const wrapper = setup();
 
   it('should render properly', () => {
     expect(wrapper).toMatchSnapshot();
+  });
+
+  it('should handle login success', () => {
+    const mockGoogleLogin = wrapper
+      .find('GoogleLogin')
+      .find('button')
+      .simulate('click');
+
+    expect(mockGoogleLogin).not.toBeNull();
+    expect(mockGoogleLogin.length).toEqual(1);
+    expect(mockDispatch).toHaveBeenCalledWith({ payload: {}, type: 'USER_LOGIN' });
   });
 });
