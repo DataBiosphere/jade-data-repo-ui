@@ -1,6 +1,11 @@
-import React from 'react';
-import { NavLink, Switch, Route } from 'react-router-dom';
+import React, { Fragment }  from 'react';
+import { Link, NavLink, Switch, Route } from 'react-router-dom';
 import { Container, Screen } from 'styled-minimal';
+
+import { withStyles } from '@material-ui/core/styles';
+import AppBar from '@material-ui/core/AppBar';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 
 import HomeView from '../components/HomeView';
 import StudiesView from '../components/StudyView';
@@ -12,23 +17,26 @@ class Private extends React.Component {
     return (
       <Screen key="Private" data-testid="PrivateWrapper">
         <Container verticalPadding>
-          <ul>
-            <li>
-              <NavLink to="/">Home</NavLink>
-            </li>
-            <li>
-              <NavLink to="/studies">Studies</NavLink>
-            </li>
-            <li>
-              <NavLink to="/datasets">Datasets</NavLink>
-            </li>
-          </ul>
-          <Switch>
-            <Route exact path="/" component={HomeView} />
-            <Route exact path="/studies" component={StudiesView} />
-            <Route exact path="/datasets" component={DatasetView} />
-            <Route exact path="/datasets/create" component={DatasetCreateView} />
-          </Switch>
+          <Route
+            path="/"
+            render={({ location }) => (
+              <Fragment>
+                <AppBar position="static">
+                  <Tabs value={location.pathname}>
+                    <Tab label="Home" value="/" component={Link} to="/"/>
+                    <Tab label="Studies" value="/studies" component={Link} to="/studies"/>
+                    <Tab label="Datasets" value="/datasets" component={Link} to="/datasets"/>
+                  </Tabs>
+                </AppBar>
+                <Switch>
+                  <Route exact path="/" component={HomeView} />
+                  <Route exact path="/studies" component={StudiesView} />
+                  <Route exact path="/datasets" component={DatasetView} />
+                  <Route exact path="/datasets/create" component={DatasetCreateView} />
+                </Switch>
+              </Fragment>
+            )}
+          />
         </Container>
       </Screen>
     );
