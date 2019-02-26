@@ -2,22 +2,22 @@
 
 exports[`User should handle USER_LOGIN 1`] = `
 Object {
-  "isAuthenticated": false,
-  "status": "running",
+  "isAuthenticated": true,
+  "status": "ready",
 }
 `;
 
 exports[`User should handle USER_LOGIN_SUCCESS 1`] = `
 Object {
-  "isAuthenticated": true,
-  "status": "ready",
+  "isAuthenticated": false,
+  "status": "idle",
 }
 `;
 
 exports[`User should handle USER_LOGOUT 1`] = `
 Object {
   "isAuthenticated": false,
-  "status": "running",
+  "status": "idle",
 }
 `;
 
