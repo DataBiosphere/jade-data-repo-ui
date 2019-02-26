@@ -4,20 +4,27 @@ import Header from 'components/Header';
 
 const mockDispatch = jest.fn();
 
-function setup() {
+function setup(isAuthenticated) {
   const props = {
     app: {},
     dispatch: mockDispatch,
     location: {
       pathname: '/',
     },
+    user: { isAuthenticated: isAuthenticated },
   };
 
   return mount(<Header suppressClassNameWarning {...props} />);
 }
 
 describe('Header', () => {
-  const wrapper = setup();
+  let wrapper = setup(false);
+
+  it('should render properly', () => {
+    expect(wrapper).toMatchSnapshot();
+  });
+
+  wrapper = setup(true);
 
   it('should render properly', () => {
     expect(wrapper).toMatchSnapshot();
