@@ -10,7 +10,6 @@ Based off of [React Redux Saga Boilerplate](https://github.com/gilbarbara/react-
 - styled-components 4.x
 - redux 4.x
 - redux-saga 0.16.x
-- redux-persist 5.x
 
 ### Development
 
