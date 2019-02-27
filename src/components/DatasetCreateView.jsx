@@ -1,12 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+
 import styled from 'styled-components';
 import { Control, Form, actions, Errors } from 'react-redux-form';
 import { isEmail } from 'validator';
 import { createDataset } from 'actions/index';
 import xlsx from 'xlsx';
 import Combinatorics from 'js-combinatorics';
+import Button from '@material-ui/core/Button';
+import OutlinedInput from '@material-ui/core/OutlinedInput';
+import Select from '@material-ui/core/Select';
+import TextField from '@material-ui/core/TextField';
+
+
 
 function* colNameIter() {
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -113,73 +120,152 @@ export class DatasetCreateView extends React.PureComponent {
         </p>
         <Form model="dataset" onSubmit={data => this.handleSubmit(data)}>
           <FormRow>
-            <label htmlFor="dataset.name">Dataset name:</label>
             <Control.text
               model="dataset.name"
               id="dataset.name"
               required
               validators={{ name: this.validateName }}
+              component={(props) =>
+                <TextField
+                  {...props}
+                  label="Dataset Name"
+                  defaultValue={this.props.model}
+                  name={this.props.model}
+                  style={{width: '300px'}}
+                  variant="outlined"
+                />
+              }
             />
-            <Control.text
-              model="dataset.otherName"
-              id="dataset.otherName"
+          </FormRow>
+
+          <FormRow>
+            <Control.textarea
+              model="dataset.description"
+              id="dataset.description"
               required
-              validators={{ name: this.validateName }}
+              component={(props) =>
+                <TextField
+                  {...props}
+                  defaultValue={this.props.model}
+                  style={{width: '800px'}} //fullWidth
+                  label="Add Dataset Description:"
+                  multiline
+                  name={this.props.model}
+                  rows="8"
+                  rowsMax="100"
+                  variant="outlined"
+                />
+              }
             />
-            <span> (this is the other name)</span>
           </FormRow>
 
           <FormRow>
-            <label htmlFor="dataset.description">Dataset description:</label>
-            <Control.textarea model="dataset.description" id="dataset.description" required />
+            <Control.text
+              id="dataset.readers"
+              model="dataset.readers"
+              validators={{ isEmail }}
+              component={(props) =>
+                <TextField
+                  {...props}
+                  label="Access:"
+                  defaultValue={this.props.model}
+                  name={this.props.model}
+                  style={{width: '300px'}}
+                  variant="outlined"
+                />
+              }
+            />
+          </FormRow>
+          <FormRow>
+            <Control.select
+              model="dataset.study"
+              size="5"
+              component={(props) =>
+                <Select
+                  {...props}
+                  native
+                  style={{width: '300px'}}
+                  value={this.props.model}
+                  input={
+                    <OutlinedInput
+                      name="test"
+                      labelWidth={100}
+                      id="outlined-age-native-simple"
+                    />
+                  }
+                >
+                  <option>Select Studies</option> {/*TODO need to fix this guy*/}
+                  <option>Study_A</option>
+                  <option>Study_B</option>
+                  <option>Apt_23</option>
+                  <option>Study_D</option>
+                  <option>Study_E</option>
+                </Select>
+              }
+            />
           </FormRow>
 
           <FormRow>
-            <label htmlFor="dataset.readers">Access:</label>
-            <Control.text id="dataset.readers" model="dataset.readers" validators={{ isEmail }} />
+            <Control.select
+              model="dataset.asset"
+              size="5"
+              component={(props) =>
+                <Select
+                  {...props}
+                  native
+                  style={{width: '300px'}}
+                  value={this.props.model}
+                  input={
+                    <OutlinedInput
+                      name="test"
+                      labelWidth={100}
+                      id="outlined-age-native-simple"
+                    />
+                  }
+                >
+                  <option>Select Asset Type</option> {/*TODO need to fix this guy*/}
+                  <option>Participant</option>
+                  <option>Sample</option>
+                </Select>
+              }
+            />
           </FormRow>
 
           <FormRow>
-            <label htmlFor="dataset.study">Select study: </label>
-            <Control.text model="dataset.study" id="dataset.study" />
-          </FormRow>
-          <FormRow>
-            <Control.select model="dataset.study" size="5">
-              <option>Study_A</option>
-              <option>Another_B</option>
-              <option>Study_C</option>
-              <option>Study_D</option>
-              <option>Study_E</option>
-            </Control.select>
+            <input type="file" id="dataset.upload" onChange={this.parseFile}  style={{display: 'none'}}/>
+            <label htmlFor="dataset.upload">
+              <Button
+                variant="contained"
+                component="span"
+                color="primary">
+                Import Ids
+              </Button>
+            </label>
           </FormRow>
 
-          <FormRow>
-            <label htmlFor="dataset.asset">Select an asset: </label>
-            <Control.select model="dataset.asset">
-              <option>Select Asset Type</option>
-              <option>Participant</option>
-              <option>Sample</option>
-            </Control.select>
-          </FormRow>
-
-          <FormRow>
-            <label htmlFor="dataset.upload">Import IDs: </label>
-            <input type="file" id="dataset.upload" onChange={this.parseFile} />
-          </FormRow>
-
-          <FormRow>
-            <label htmlFor="dataset.ids">ID Preview: </label>
-            <Control.select multiple={true} disabled={true} id="dataset.ids" model="dataset.ids">
-              <option>Upload a spreadsheet</option>
+          {ids && <FormRow>
+            <Control.select multiple={true} disabled={true} id="dataset.ids" model="dataset.ids" >
+              <option>Preview</option>
               {ids && ids.map(id => <option key={id}>{id}</option>)}
             </Control.select>
-          </FormRow>
+          </FormRow>}
 
           <Errors model="dataset" />
 
           <FormRow>
-            <button type="submit">Preview Data</button>
-            <button type="button">Cancel</button>
+            <Button
+              variant="contained"
+              type="button"
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="contained"
+              type="submit"
+              color="primary"
+              >
+              Preview Data
+            </Button>
           </FormRow>
         </Form>
       </div>
