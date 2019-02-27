@@ -1,41 +1,21 @@
 import React from 'react';
 
-import Header from 'components/Header';
+import Header from 'containers/Header';
 
 const mockDispatch = jest.fn();
 
-function setup(isAuthenticated) {
+function setup() {
   const props = {
-    app: {},
     dispatch: mockDispatch,
-    location: {
-      pathname: '/',
-    },
-    user: { isAuthenticated },
   };
 
-  return mount(<Header suppressClassNameWarning {...props} />);
+  return mount(<Header {...props} />);
 }
 
 describe('Header', () => {
-  let wrapper = setup(false);
+  const wrapper = setup();
 
   it('should render properly', () => {
     expect(wrapper).toMatchSnapshot();
-  });
-
-  wrapper = setup(true);
-
-  it('should render properly', () => {
-    expect(wrapper).toMatchSnapshot();
-  });
-
-  it('should handle clicks', () => {
-    wrapper.find('Logout').simulate('click');
-
-    expect(mockDispatch).toHaveBeenCalledWith({
-      type: 'USER_LOGOUT',
-      payload: {},
-    });
   });
 });

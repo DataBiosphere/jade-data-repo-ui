@@ -1,15 +1,15 @@
 import { expectSaga } from 'redux-saga-test-plan';
 
-import github, { getRepos } from 'sagas/github';
+import repository, { createDataset } from 'sagas/repository';
 import { ActionTypes } from 'constants/index';
 
 jest.mock('modules/client', () => ({
   request: () => ({ items: [] }),
 }));
 
-describe('github', () => {
+describe('repository', () => {
   it('should have the expected watchers', done =>
-    expectSaga(github)
+    expectSaga(repository)
       .run({ silenceTimeout: true })
       .then(saga => {
         expect(saga).toMatchSnapshot();
@@ -17,11 +17,11 @@ describe('github', () => {
       }));
 
   it('should have the repos saga', () =>
-    expectSaga(getRepos, { payload: { query: 'react' } })
+    expectSaga(createDataset, { payload: { query: 'react' } })
       .put({
-        type: ActionTypes.GITHUB_GET_REPOS_SUCCESS,
+        type: ActionTypes.DATASET_CREATE_SUCCESS,
         payload: {
-          data: [],
+          data: [{ items: [] }],
         },
       })
       .run());
