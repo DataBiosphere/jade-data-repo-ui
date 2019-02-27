@@ -1,8 +1,7 @@
-import React, { Fragment }  from 'react';
-import { Link, NavLink, Switch, Route } from 'react-router-dom';
+import React, { Fragment } from 'react';
+import { Link, Switch, Route } from 'react-router-dom';
 import { Container, Screen } from 'styled-minimal';
 
-import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -22,10 +21,10 @@ class Private extends React.Component {
             render={({ location }) => (
               <Fragment>
                 <AppBar position="static">
-                  <Tabs value={'/' + location.pathname.split('/')[1]}>
-                    <Tab label="Home" value="/" component={Link} to="/"/>
-                    <Tab label="Studies" value="/studies" component={Link} to="/studies"/>
-                    <Tab label="Datasets" value="/datasets" component={Link} to="/datasets"/>
+                  <Tabs value={location.pathname && '/' + location.pathname.split('/')[1]}>
+                    <Tab label="Home" value="/" component={Link} to="/" />
+                    <Tab label="Studies" value="/studies" component={Link} to="/studies" />
+                    <Tab label="Datasets" value="/datasets" component={Link} to="/datasets" />
                   </Tabs>
                 </AppBar>
                 <Switch>
