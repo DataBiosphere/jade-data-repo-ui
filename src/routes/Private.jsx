@@ -22,7 +22,7 @@ class Private extends React.Component {
             render={({ location }) => (
               <Fragment>
                 <AppBar position="static">
-                  <Tabs value={location.pathname}>
+                  <Tabs value={'/' + location.pathname.split('/')[1]}>
                     <Tab label="Home" value="/" component={Link} to="/"/>
                     <Tab label="Studies" value="/studies" component={Link} to="/studies"/>
                     <Tab label="Datasets" value="/datasets" component={Link} to="/datasets"/>
