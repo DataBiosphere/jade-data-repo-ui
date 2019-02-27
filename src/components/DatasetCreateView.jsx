@@ -200,7 +200,6 @@ export class DatasetCreateView extends React.PureComponent {
               }
             />
           </FormRow>
-
           <FormRow>
             <Control.custom
               id="dataset.readers"
