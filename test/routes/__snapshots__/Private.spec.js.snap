@@ -9,51 +9,10 @@ exports[`Private should render properly 1`] = `
   <Container
     verticalPadding={true}
   >
-    <ul>
-      <li>
-        <NavLink
-          to="/"
-        >
-          Home
-        </NavLink>
-      </li>
-      <li>
-        <NavLink
-          to="/studies"
-        >
-          Studies
-        </NavLink>
-      </li>
-      <li>
-        <NavLink
-          to="/datasets"
-        >
-          Datasets
-        </NavLink>
-      </li>
-    </ul>
-    <Switch>
-      <Route
-        component={[Function]}
-        exact={true}
-        path="/"
-      />
-      <Route
-        component={[Function]}
-        exact={true}
-        path="/studies"
-      />
-      <Route
-        component={[Function]}
-        exact={true}
-        path="/datasets"
-      />
-      <Route
-        component={[Function]}
-        exact={true}
-        path="/datasets/create"
-      />
-    </Switch>
+    <Route
+      path="/"
+      render={[Function]}
+    />
   </Container>
 </Screen>
 `;
