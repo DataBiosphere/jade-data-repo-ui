@@ -109,7 +109,7 @@ export class DatasetCreateView extends React.PureComponent {
     dispatch(actions.change('dataset.readers', newReaders));
   };
 
-  removeReader(removeableEmail) { // TODO what if the email already exists? let them 'add' it anyway and don't do anything?
+  removeReader(removeableEmail) {
     const {dispatch, readers} = this.props;
     let newReaders = _.clone(readers);
     _.remove(newReaders, (r) => r == removeableEmail);
@@ -205,7 +205,7 @@ export class DatasetCreateView extends React.PureComponent {
             <Control.custom
               id="dataset.readers"
               model="dataset.readers"
-              component={(props) => // TODO don't want this triggering onchange--but on button click
+              component={(props) =>
                 <ManageUsers
                   {...props}
                   addReader={(newEmail) => this.addReader(newEmail)}
