@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import MultiSelect from 'react-select';
-
 import styled from 'styled-components';
 import { Control, Form, actions, Errors } from 'react-redux-form';
 import { isEmail } from 'validator';
@@ -11,6 +10,9 @@ import xlsx from 'xlsx';
 import Combinatorics from 'js-combinatorics';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
+
+import ManageUsers from './ManageUsersView';
+import _ from 'lodash';
 
 
 
@@ -65,6 +67,7 @@ export class DatasetCreateView extends React.PureComponent {
     asset: PropTypes.string,
     dispatch: PropTypes.func.isRequired,
     ids: PropTypes.arrayOf(PropTypes.string),
+    readers: PropTypes.arrayOf(PropTypes.string),
     study: PropTypes.string,
   };
 
@@ -88,6 +91,30 @@ export class DatasetCreateView extends React.PureComponent {
   validateName(name) {
     return name && name.length > 0 && name.length < 64;
   }
+
+  selectStudy(study) {
+    const { dispatch } = this.props;
+    dispatch(actions.change('dataset.study', study));
+  };
+
+  selectAsset(asset) {
+    const { dispatch } = this.props;
+    dispatch(actions.change('dataset.asset', asset));
+  };
+
+  addReader(newEmail) { // TODO what if the email already exists? let them 'add' it anyway and don't do anything?
+    const { dispatch, readers } = this.props;
+    _.includes(readers, newEmail); //TODO what if I add anyway and then use lodash _.uniq?
+    const newReaders = _.concat(readers, newEmail);
+    dispatch(actions.change('dataset.readers', newReaders));
+  };
+
+  removeReader(removeableEmail) { // TODO what if the email already exists? let them 'add' it anyway and don't do anything?
+    const {dispatch, readers} = this.props;
+    let newReaders = _.clone(readers);
+    _.remove(newReaders, (r) => r == removeableEmail);
+    dispatch(actions.change('dataset.readers', newReaders));
+  };
 
   parseFile = event => {
     const { dispatch } = this.props;
@@ -123,7 +150,7 @@ export class DatasetCreateView extends React.PureComponent {
     const FormRow = styled.section`
       padding-bottom: 1em;
     `;
-    const { asset, ids, study } = this.props;
+    const { asset, ids, readers, study } = this.props;
 
     return (
       <div>
@@ -145,8 +172,8 @@ export class DatasetCreateView extends React.PureComponent {
               component={(props) =>
                 <TextField
                   {...props}
-                  label="Dataset Name"
                   defaultValue={this.props.model}
+                  placeholder="Dataset Name"
                   style={{width: '300px'}}
                   variant="outlined"
                 />
@@ -164,8 +191,8 @@ export class DatasetCreateView extends React.PureComponent {
                   {...props}
                   defaultValue={this.props.model}
                   style={{width: '800px'}} //fullWidth
-                  label="Add Dataset Description"
                   multiline
+                  placeholder="Add Dataset Description"
                   rows="8"
                   rowsMax="100"
                   variant="outlined"
@@ -175,36 +202,35 @@ export class DatasetCreateView extends React.PureComponent {
           </FormRow>
 
           <FormRow>
-            <Control.text
+            <Control.custom
               id="dataset.readers"
               model="dataset.readers"
-              validators={{ isEmail }}
               component={(props) => // TODO don't want this triggering onchange--but on button click
-                <div>
-                <TextField
+                <ManageUsers
                   {...props}
-                  defaultValue={this.props.model}
-                  name={this.props.model}
-                  label="Access:"
-                  style={{width: '300px'}}
-                  variant="outlined"
+                  addReader={(newEmail) => this.addReader(newEmail)}
+                  defaultValue="Custodian Email Address"
+                  dispatch={this.props.dispatch}
+                  addValue={this.props.dispatch}
+                  removeReader={(removeableEmail) => this.removeReader(removeableEmail)}
+                  removeValue={this.props.dispatch}
+                  readers={readers}
                 />
-                </div>
               }
-            />
+           />
           </FormRow>
           <FormRow>
             <Control.select
               id="dataset.study"
               model="dataset.study"
               size="5"
-              study={study}
               component={(props) =>
                 <MultiSelect
                   {...props}
+                  onChange={(e) => this.selectStudy(e.value)}
                   options={studyOptions}
                   placeholder="Search Studies"
-                  value={props.study}
+                  value={studyOptions.filter(option => option.value == study)}
                 />
               }
             />
@@ -213,15 +239,15 @@ export class DatasetCreateView extends React.PureComponent {
           <FormRow>
             <Control.select
               id="dataset.asset"
-              asset={asset}
               model="dataset.asset"
               size="5"
               component={(props) =>
                 <MultiSelect
                   {...props}
+                  onChange={(e) => this.selectAsset(e.value)}
                   options={assetOptions}
                   placeholder="Select Asset Type..."
-                  value={props.asset}
+                  value={assetOptions.filter(option => option.value == asset)}
                 />
               }
             />
@@ -274,6 +300,7 @@ function mapStateToProps(state) {
   return {
     asset: state.dataset.asset,
     ids: state.dataset.ids,
+    readers: state.dataset.readers,
     study: state.dataset.study,
   };
 }
