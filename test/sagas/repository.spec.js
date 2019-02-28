@@ -21,7 +21,7 @@ describe('repository', () => {
       .put({
         type: ActionTypes.DATASET_CREATE_SUCCESS,
         payload: {
-          data: [{ items: [] }],
+          data: { items: [] },
         },
       })
       .run());
