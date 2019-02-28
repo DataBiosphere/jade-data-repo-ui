@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import MultiSelect from 'react-select';
 
 import styled from 'styled-components';
 import { Control, Form, actions, Errors } from 'react-redux-form';
@@ -9,8 +10,6 @@ import { createDataset } from 'actions/index';
 import xlsx from 'xlsx';
 import Combinatorics from 'js-combinatorics';
 import Button from '@material-ui/core/Button';
-import OutlinedInput from '@material-ui/core/OutlinedInput';
-import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
 
 
@@ -45,10 +44,28 @@ function getColumnForField(sheet, assetField) {
   return 'A';
 }
 
+const studyOptions = [
+  { value: 'Minimal', label: 'Minimal' },
+  { value: 'study_b', label: 'Study B' },
+  { value: 'study_c', label: 'Study C' },
+  { value: 'study_d', label: 'Study D' },
+  { value: 'study_e', label: 'Study E' },
+  { value: 'study_f', label: 'Study F' },
+  { value: 'study_g', label: 'Study G' },
+];
+
+
+const assetOptions = [
+  { value: 'participant', label: 'Participant' },
+  { value: 'sample', label: 'Sample' },
+];
+
 export class DatasetCreateView extends React.PureComponent {
   static propTypes = {
+    asset: PropTypes.string,
     dispatch: PropTypes.func.isRequired,
     ids: PropTypes.arrayOf(PropTypes.string),
+    study: PropTypes.string,
   };
 
   handleSubmit(dataset) {
@@ -106,7 +123,7 @@ export class DatasetCreateView extends React.PureComponent {
     const FormRow = styled.section`
       padding-bottom: 1em;
     `;
-    const { ids } = this.props;
+    const { asset, ids, study } = this.props;
 
     return (
       <div>
@@ -130,7 +147,6 @@ export class DatasetCreateView extends React.PureComponent {
                   {...props}
                   label="Dataset Name"
                   defaultValue={this.props.model}
-                  name={this.props.model}
                   style={{width: '300px'}}
                   variant="outlined"
                 />
@@ -148,9 +164,8 @@ export class DatasetCreateView extends React.PureComponent {
                   {...props}
                   defaultValue={this.props.model}
                   style={{width: '800px'}} //fullWidth
-                  label="Add Dataset Description:"
+                  label="Add Dataset Description"
                   multiline
-                  name={this.props.model}
                   rows="8"
                   rowsMax="100"
                   variant="outlined"
@@ -164,69 +179,50 @@ export class DatasetCreateView extends React.PureComponent {
               id="dataset.readers"
               model="dataset.readers"
               validators={{ isEmail }}
-              component={(props) =>
+              component={(props) => // TODO don't want this triggering onchange--but on button click
+                <div>
                 <TextField
                   {...props}
-                  label="Access:"
                   defaultValue={this.props.model}
                   name={this.props.model}
+                  label="Access:"
                   style={{width: '300px'}}
                   variant="outlined"
                 />
+                </div>
               }
             />
           </FormRow>
           <FormRow>
             <Control.select
+              id="dataset.study"
               model="dataset.study"
               size="5"
+              study={study}
               component={(props) =>
-                <Select
+                <MultiSelect
                   {...props}
-                  native
-                  style={{width: '300px'}}
-                  value={this.props.model}
-                  input={
-                    <OutlinedInput
-                      name="test"
-                      labelWidth={100}
-                      id="outlined-age-native-simple"
-                    />
-                  }
-                >
-                  <option>Select Studies</option> {/*TODO need to fix this guy*/}
-                  <option>Study_A</option>
-                  <option>Study_B</option>
-                  <option>Apt_23</option>
-                  <option>Study_D</option>
-                  <option>Study_E</option>
-                </Select>
+                  options={studyOptions}
+                  placeholder="Search Studies"
+                  value={props.study}
+                />
               }
             />
           </FormRow>
 
           <FormRow>
             <Control.select
+              id="dataset.asset"
+              asset={asset}
               model="dataset.asset"
               size="5"
               component={(props) =>
-                <Select
+                <MultiSelect
                   {...props}
-                  native
-                  style={{width: '300px'}}
-                  value={this.props.model}
-                  input={
-                    <OutlinedInput
-                      name="test"
-                      labelWidth={100}
-                      id="outlined-age-native-simple"
-                    />
-                  }
-                >
-                  <option>Select Asset Type</option> {/*TODO need to fix this guy*/}
-                  <option>Participant</option>
-                  <option>Sample</option>
-                </Select>
+                  options={assetOptions}
+                  placeholder="Select Asset Type..."
+                  value={props.asset}
+                />
               }
             />
           </FormRow>
@@ -276,7 +272,9 @@ export class DatasetCreateView extends React.PureComponent {
 /* istanbul ignore next */
 function mapStateToProps(state) {
   return {
+    asset: state.dataset.asset,
     ids: state.dataset.ids,
+    study: state.dataset.study,
   };
 }
 
