@@ -46,6 +46,7 @@
     "react-redux": "^6.0.0",
     "react-redux-form": "^1.16.12",
     "react-router-dom": "^4.3.1",
+    "react-select": "^2.4.1",
     "react-transition-group": "^2.5.2",
     "redux": "^4.0.1",
     "redux-actions": "^2.6.4",
