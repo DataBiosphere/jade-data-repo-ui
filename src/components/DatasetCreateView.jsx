@@ -223,7 +223,6 @@ export class DatasetCreateView extends React.PureComponent {
               id="dataset.study"
               model="dataset.study"
               size="5"
-              study={study}
               component={(props) =>
                 <MultiSelect
                   {...props}
