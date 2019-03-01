@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DatasetCreateView should render all zones 1`] = `
+<Connect(DatasetCreateView)
+  app={
+    Object {
+      "alerts": Array [],
+    }
+  }
+  dispatch={[MockFunction]}
+/>
+`;
+
+exports[`DatasetCreateView should render all zones 2`] = `
+<Connect(DatasetCreateView)
+  app={
+    Object {
+      "alerts": Array [],
+    }
+  }
+  dispatch={[MockFunction]}
+/>
+`;
