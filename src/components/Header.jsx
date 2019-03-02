@@ -65,25 +65,27 @@ const Logout = styled.button`
 export default class Header extends React.PureComponent {
   static propTypes = {
     dispatch: PropTypes.func.isRequired,
+    user: PropTypes.object.isRequired,
   };
 
   handleClickLogout = () => {
     const { dispatch } = this.props;
-
     dispatch(logOut());
   };
 
   render() {
+    const { user } = this.props;
     return (
       <div>
         <HeaderWrapper>
           <HeaderContainer>
             <Logo />
-            <Logout onClick={this.handleClickLogout}>
-              <span>logout</span>
-              <Icon name="sign-out" width={16} />
-            </Logout>
-          </HeaderContainer>
+            {user.isAuthenticated &&
+              <Logout onClick={this.handleClickLogout}>
+                <span>logout</span>
+                <Icon name="sign-out" width={16} />
+              </Logout>}
+            </HeaderContainer>
         </HeaderWrapper>
       </div>
     );

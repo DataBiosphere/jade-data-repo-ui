@@ -1,0 +1,38 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`WelcomeView should render properly 1`] = `
+<div>
+  <h1>
+    Welcome to the Jade Data Repository
+  </h1>
+  <div>
+    <button
+      onClick={[Function]}
+      type="button"
+    />
+  </div>
+  <h3>
+    New User?
+  </h3>
+  <h3>
+    Data Repository Requires a Terra Google account.
+  </h3>
+  <p>
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet. Proin gravida dolor sit amet lacus accumsan et viverra justo commodo. Proin sodales pulvinar sic tempor.
+  </p>
+  <a>
+    Need to create a Terra account?
+  </a>
+  <hr />
+  <div>
+    <div>
+      <div>
+        Warning Notice
+      </div>
+      <div>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet. Proin gravida dolor sit amet lacus accumsan et viverra justo commodo. Proin sodales pulvinar sic tempor. Sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nam fermentum, nulla luctus pharetra vulputate, felis tellus mollis orci, sed rhoncus pronin sapien nunc accuan eget.
+      </div>
+    </div>
+  </div>
+</div>
+`;

@@ -68,7 +68,7 @@ export class App extends React.Component {
               titleTemplate={`%s | ${config.name}`}
               titleAttributes={{ itemprop: 'name', lang: 'pt-br' }}
             />
-            {user.isAuthenticated && <Header dispatch={dispatch} user={user} />}
+            <Header dispatch={dispatch} user={user} />
             <Main isAuthenticated={user.isAuthenticated}>
               <Switch>
                 <RoutePublic

@@ -1,65 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Home should render properly 1`] = `
-.c6 {
-  box-sizing: border-box;
-  text-transform: uppercase;
-  background-color: #2E2E2E;
-  border: 1px solid #2E2E2E;
-  color: #fff;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  border-radius: 0px;
-  box-shadow: none;
-  cursor: pointer;
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  font-family: inherit;
-  font-size: 22px;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  line-height: 1;
-  padding: 14px 20px;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  width: auto;
-}
-
-.c6:disabled {
-  pointer-events: none;
-}
-
-.c6:hover {
-  -webkit-transition: -webkit-transform 0.2s;
-  -webkit-transition: transform 0.2s;
-  transition: transform 0.2s;
-  -webkit-transform: scale(1.05);
-  -ms-transform: scale(1.05);
-  transform: scale(1.05);
-}
-
-.c6:focus {
-  outline-color: #2E2E2E;
-}
-
-.c6 .c9 {
-  margin-left: 5px;
-}
-
-.c8 {
-  box-sizing: border-box;
-  margin-left: 8px;
-}
-
 .c0 {
-  background: #000 linear-gradient(to bottom,#00b4d5 0%,#002529 100%) fixed;
-  color: #fff;
+  background: #000 linear-gradient(to bottom,#fff 0%,#fff 80%) fixed;
+  color: #000;
   min-height: 100vh;
   overflow: hidden;
   position: relative;
@@ -79,38 +23,6 @@ exports[`Home should render properly 1`] = `
   transform: rotate(-20deg) scale(1.5) translate(0,43%);
 }
 
-.c7 {
-  display: inline-block;
-  line-height: 0;
-}
-
-.c7 svg {
-  height: auto;
-  max-height: 100%;
-  width: 20px;
-}
-
-.c3 {
-  -webkit-align-items: flex-start;
-  -webkit-box-align: flex-start;
-  -ms-flex-align: flex-start;
-  align-items: flex-start;
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  height: 41px;
-  width: 41px;
-}
-
-.c4 {
-  bottom: 12px;
-  color: #fff;
-  font-size: 21px;
-  left: 4px;
-  position: relative;
-}
-
 .c1 {
   box-sizing: border-box;
   margin-left: auto;
@@ -120,8 +32,6 @@ exports[`Home should render properly 1`] = `
   max-width: 1440px;
   position: relative;
   width: 100%;
-  padding-bottom: 16px;
-  padding-top: 16px;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -140,38 +50,6 @@ exports[`Home should render properly 1`] = `
   min-height: 100vh;
 }
 
-.c2 {
-  margin-bottom: 16px;
-  text-align: center;
-}
-
-.c2 svg {
-  width: 20rem;
-}
-
-.c5 {
-  color: #fff;
-  font-size: 3.5rem;
-  line-height: 1.4;
-  margin-bottom: 16px;
-  margin-top: 0;
-  text-align: center;
-}
-
-@media (min-width:768px) {
-  .c1 {
-    padding-bottom: 32px;
-    padding-top: 32px;
-  }
-}
-
-@media (min-width:1024px) {
-  .c1 {
-    padding-bottom: 64px;
-    padding-top: 64px;
-  }
-}
-
 @media (min-width:768px) {
   .c1 {
     padding-left: 32px;
@@ -179,105 +57,131 @@ exports[`Home should render properly 1`] = `
   }
 }
 
-@media (min-width:1024px) {
-  .c5 {
-    font-size: 4rem;
-  }
-}
-
 <Background
-  data-testid="HomeWrapper"
-  key="Home"
+  data-testid="home"
+  key="home"
 >
   <div
     className="c0"
-    data-testid="HomeWrapper"
+    data-testid="home"
   >
     <HomeContainer
-      verticalPadding={true}
+      verticalPadding={false}
     >
       <div
         className="c1"
       >
-        <Header>
-          <div
-            className="c2"
-          >
-            <div>
-              <Logo
-                src={
+        <div>
+          <h1>
+            Welcome to the Jade Data Repository
+          </h1>
+          <div>
+            <button
+              disabled={true}
+              onClick={[Function]}
+              onMouseDown={[Function]}
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+              style={
+                Object {
+                  "alignItems": "center",
+                  "backgroundColor": "rgb(66, 133, 244)",
+                  "border": "1px solid transparent",
+                  "borderRadius": 2,
+                  "boxShadow": "0 2px 2px 0 rgba(0, 0, 0, .24), 0 0 1px 0 rgba(0, 0, 0, .24)",
+                  "color": "#fff",
+                  "display": "inline-flex",
+                  "fontFamily": "Roboto, sans-serif",
+                  "fontSize": 14,
+                  "fontWeight": "500",
+                  "opacity": 0.6,
+                  "padding": 0,
+                }
+              }
+              type="button"
+            >
+              <div
+                style={
                   Object {
-                    "ReactComponent": "SvgMock",
+                    "background": "#fff",
+                    "borderRadius": 2,
+                    "marginRight": 10,
+                    "padding": 10,
                   }
                 }
               >
-                <img
-                  className="c3"
-                  src={
-                    Object {
-                      "ReactComponent": "SvgMock",
-                    }
-                  }
-                />
-              </Logo>
-              <Title>
-                <span
-                  className="c4"
+                <svg
+                  height="18"
+                  width="18"
+                  xmlns="http://www.w3.org/2000/svg"
                 >
-                  Jade Data Repository
-                </span>
-              </Title>
+                  <g
+                    fill="#000"
+                    fillRule="evenodd"
+                  >
+                    <path
+                      d="M9 3.48c1.69 0 2.83.73 3.48 1.34l2.54-2.48C13.46.89 11.43 0 9 0 5.48 0 2.44 2.02.96 4.96l2.91 2.26C4.6 5.05 6.62 3.48 9 3.48z"
+                      fill="#EA4335"
+                    />
+                    <path
+                      d="M17.64 9.2c0-.74-.06-1.28-.19-1.84H9v3.34h4.96c-.1.83-.64 2.08-1.84 2.92l2.84 2.2c1.7-1.57 2.68-3.88 2.68-6.62z"
+                      fill="#4285F4"
+                    />
+                    <path
+                      d="M3.88 10.78A5.54 5.54 0 0 1 3.58 9c0-.62.11-1.22.29-1.78L.96 4.96A9.008 9.008 0 0 0 0 9c0 1.45.35 2.82.96 4.04l2.92-2.26z"
+                      fill="#FBBC05"
+                    />
+                    <path
+                      d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.84-2.2c-.76.53-1.78.9-3.12.9-2.38 0-4.4-1.57-5.12-3.74L.97 13.04C2.45 15.98 5.48 18 9 18z"
+                      fill="#34A853"
+                    />
+                    <path
+                      d="M0 0h18v18H0z"
+                      fill="none"
+                    />
+                  </g>
+                </svg>
+              </div>
+              <span
+                style={
+                  Object {
+                    "fontWeight": 500,
+                    "paddingBottom": 10,
+                    "paddingLeft": 0,
+                    "paddingRight": 10,
+                    "paddingTop": 10,
+                  }
+                }
+              >
+                Sign in with Google
+              </span>
+            </button>
+          </div>
+          <h3>
+            New User?
+          </h3>
+          <h3>
+            Data Repository Requires a Terra Google account.
+          </h3>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet. Proin gravida dolor sit amet lacus accumsan et viverra justo commodo. Proin sodales pulvinar sic tempor.
+          </p>
+          <a>
+            Need to create a Terra account?
+          </a>
+          <hr />
+          <div>
+            <div>
+              <div>
+                Warning Notice
+              </div>
+              <div>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet. Proin gravida dolor sit amet lacus accumsan et viverra justo commodo. Proin sodales pulvinar sic tempor. Sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nam fermentum, nulla luctus pharetra vulputate, felis tellus mollis orci, sed rhoncus pronin sapien nunc accuan eget.
+              </div>
             </div>
           </div>
-        </Header>
-        <Heading>
-          <h1
-            className="c5"
-          >
-            Data Repository UI
-          </h1>
-        </Heading>
-        <Button
-          animate={false}
-          as="button"
-          block={false}
-          data-testid="Login"
-          disabled={false}
-          onClick={[Function]}
-          outline={false}
-          size="xl"
-          textTransform="uppercase"
-          type="button"
-          variant="primary"
-        >
-          <button
-            className="c6"
-            data-testid="Login"
-            disabled={false}
-            onClick={[Function]}
-            size="xl"
-            type="button"
-          >
-            <IconWrapper
-              src="/media/icons/sign-in.svg"
-              width={20}
-            >
-              <span
-                className="isvg loading c7"
-              />
-            </IconWrapper>
-            <Text
-              as="span"
-              ml={2}
-            >
-              <span
-                className="c8"
-              >
-                Start
-              </span>
-            </Text>
-          </button>
-        </Button>
+        </div>
       </div>
     </HomeContainer>
   </div>

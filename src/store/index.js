@@ -1,6 +1,4 @@
 import { applyMiddleware, createStore, compose, combineReducers } from 'redux';
-import { persistStore, persistReducer } from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
 import { createForms } from 'react-redux-form';
 
 import rootSaga from 'sagas/index';
@@ -15,14 +13,10 @@ const initialDatasetState = {
   study: '',
 };
 
-const reducer = persistReducer(
-  {
-    key: 'rrsb', // key is required
-    storage, // storage is now required
-    whitelist: ['app', 'user'],
-  },
-  combineReducers({ ...rootReducer, ...createForms({ dataset: initialDatasetState }) }),
-);
+const reducer = combineReducers({
+  ...rootReducer,
+  ...createForms({ dataset: initialDatasetState }),
+});
 
 const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
@@ -39,13 +33,12 @@ const configStore = (initialState = {}) => {
   }
 
   return {
-    persistor: persistStore(store),
     store,
   };
 };
 
-const { store, persistor } = configStore();
+const { store } = configStore();
 
 global.store = store;
 
-export { store, persistor };
+export { store };
