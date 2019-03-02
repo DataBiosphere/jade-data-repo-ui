@@ -1,6 +1,8 @@
 import React from 'react';
 
 import { App } from 'containers/App';
+import IconButton from '@material-ui/core/IconButton';
+import AppBar from '@material-ui/core/AppBar';
 
 const mockDispatch = jest.fn();
 
@@ -12,6 +14,7 @@ const props = {
   user: {
     isAuthenticated: false,
   },
+  classes: {},
 };
 
 function setup(ownProps = props) {
@@ -22,9 +25,8 @@ describe('App', () => {
   const wrapper = setup();
 
   it('should render properly for anonymous users', () => {
-    expect(wrapper.find('HelmetWrapper')).toExist();
-    expect(wrapper.find('Switch')).toExist();
-    expect(wrapper.find('Footer')).toExist();
+    expect(wrapper.find(AppBar)).toExist();
+    expect(wrapper.find(IconButton)).not.toExist();
   });
 
   it('should render properly for logged users', () => {
@@ -35,6 +37,7 @@ describe('App', () => {
       },
     });
 
-    expect(wrapper.find('Header')).toExist();
+    // only logged in users should see the logout button
+    expect(wrapper.find(IconButton)).toExist();
   });
 });

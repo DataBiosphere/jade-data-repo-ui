@@ -156,7 +156,7 @@ export class App extends React.Component {
                       onClick={this.handleMenu}
                       color="inherit"
                     >
-                      <AccountCircle/>
+                      <AccountCircle />
                     </IconButton>
                     <Menu
                       id="menu-appbar"
