@@ -1,12 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { GoogleLogin } from 'react-google-login';
+import { withStyles } from '@material-ui/core/styles';
 
 import { logOut, logIn } from 'actions/index';
+
+const styles = theme => ({
+  mainContent: {
+    padding: theme.spacing.unit * 3,
+  },
+});
+
 
 class WelcomeView extends React.PureComponent {
   static propTypes = {
     dispatch: PropTypes.func.isRequired,
+    classes: PropTypes.object.isRequired,
   };
 
   render() {
@@ -19,9 +28,10 @@ class WelcomeView extends React.PureComponent {
       const { dispatch } = this.props;
       dispatch(logIn());
     };
+    const { classes } = this.props;
 
     return (
-      <div>
+      <div className={classes.mainContent}>
         <h1>Welcome to the Jade Data Repository</h1>
         <div>
           <GoogleLogin // stealing clientId from Terra
@@ -62,4 +72,4 @@ class WelcomeView extends React.PureComponent {
   }
 }
 
-export default WelcomeView;
+export default withStyles(styles)(WelcomeView);
