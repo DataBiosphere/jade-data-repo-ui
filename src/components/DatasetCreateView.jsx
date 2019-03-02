@@ -144,7 +144,9 @@ export class DatasetCreateView extends React.PureComponent {
   };
 
   render() {
-    const FormRow = <div style={{ paddingBottom: '1em' }} />;
+    const FormRow = props => {
+      return <div style={{ paddingBottom: '1em' }}>{props.children} </div>;
+    };
     const { asset, ids, readers, study } = this.props;
 
     return (

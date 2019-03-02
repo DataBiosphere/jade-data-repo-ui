@@ -1,12 +1,13 @@
 // Polyfills
 import React from 'react';
 import ReactDOM from 'react-dom';
-
+import Helmet from 'react-helmet';
 import { Provider } from 'react-redux';
 import { AppContainer } from 'react-hot-loader';
 
 import { store } from 'store/index';
 
+import config from 'config';
 import App from 'containers/App';
 
 export const app = {
@@ -23,6 +24,14 @@ export const app = {
       ReactDOM.render(
         <AppContainer>
           <Provider store={store}>
+            <Helmet
+              defer={false}
+              htmlAttributes={{ lang: 'pt-br' }}
+              encodeSpecialCharacters={true}
+              defaultTitle={config.title}
+              titleTemplate={`%s | ${config.name}`}
+              titleAttributes={{ itemprop: 'name', lang: 'pt-br' }}
+            />
             <Component />
           </Provider>
         </AppContainer>,

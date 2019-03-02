@@ -26,19 +26,21 @@ class Private extends React.Component {
     const { value } = this.state;
     return (
       <BrowserRouter>
-        <AppBar position="static">
-          <Tabs value={value} onChange={this.handleChange}>
-            <Tab label="Home" component={Link} value="/" to="/" />
-            <Tab label="Studies" component={Link} value="/studies" to="/studies" />
-            <Tab label="Datasets" component={Link} value="/datasets" to="/datasets" />
-          </Tabs>
-        </AppBar>
-        <Switch>
-          <Route exact path="/" component={HomeView} />
-          <Route exact path="/studies" component={StudiesView} />
-          <Route exact path="/datasets" component={DatasetView} />
-          <Route exact path="/datasets/create" component={DatasetCreateView} />
-        </Switch>
+        <div>
+          <AppBar position="static">
+            <Tabs value={value} onChange={this.handleChange}>
+              <Tab label="Home" component={Link} value="/" to="/" />
+              <Tab label="Studies" component={Link} value="/studies" to="/studies" />
+              <Tab label="Datasets" component={Link} value="/datasets" to="/datasets" />
+            </Tabs>
+          </AppBar>
+          <Switch>
+            <Route exact path="/" component={HomeView} />
+            <Route exact path="/studies" component={StudiesView} />
+            <Route exact path="/datasets" component={DatasetView} />
+            <Route exact path="/datasets/create" component={DatasetCreateView} />
+          </Switch>
+        </div>
       </BrowserRouter>
     );
   }

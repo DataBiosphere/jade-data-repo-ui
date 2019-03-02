@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Router, Switch, Route } from 'react-router-dom';
-import Helmet from 'react-helmet';
 import classNames from 'classnames';
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -22,31 +21,14 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import history from 'modules/history';
 import theme from 'modules/theme';
 
-import config from 'config';
-
 import Home from 'routes/Home';
 import Private from 'routes/Private';
 import NotFound from 'routes/NotFound';
 
-import Header from 'components/Header';
 
 import { logOut } from 'actions/index';
-import Footer from 'components/Footer';
 import RoutePublic from 'components/RoutePublic';
 import RoutePrivate from 'components/RoutePrivate';
-
-const wrapperStyle = {
-  display: 'flex',
-  flexDirection: 'column',
-  minHeight: '100vh',
-  opacity: '1 !important',
-  position: 'relative',
-  transition: 'opacity 0.5s',
-};
-
-const mainStyle = {
-  minHeight: '100vh',
-};
 
 const drawerWidth = 240;
 
@@ -104,10 +86,7 @@ const styles = theme => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
-    width: theme.spacing.unit * 7,
-    [theme.breakpoints.up('sm')]: {
-      width: theme.spacing.unit * 9,
-    },
+    width: 0,
   },
   appBarSpacer: theme.mixins.toolbar,
   content: {
@@ -135,7 +114,7 @@ export class App extends React.Component {
   };
 
   state = {
-    open: true,
+    open: false,
   };
 
   handleDrawerOpen = () => {
@@ -147,7 +126,8 @@ export class App extends React.Component {
   };
 
   render() {
-    const { classes } = this.props;
+    const { classes, user } = this.props;
+    const { open } = this.state;
     return (
       <Router history={history}>
         <MuiThemeProvider theme={theme}>
@@ -162,10 +142,7 @@ export class App extends React.Component {
                   color="inherit"
                   aria-label="Open drawer"
                   onClick={this.handleDrawerOpen}
-                  className={classNames(
-                    classes.menuButton,
-                    this.state.open && classes.menuButtonHidden,
-                  )}
+                  className={classNames(classes.menuButton, open && classes.menuButtonHidden)}
                 >
                   <MenuIcon />
                 </IconButton>
@@ -176,7 +153,7 @@ export class App extends React.Component {
                   noWrap
                   className={classes.title}
                 >
-                  Dashboard
+                  Data Repository
                 </Typography>
                 <IconButton color="inherit">
                   <Badge badgeContent={4} color="secondary">
@@ -188,9 +165,9 @@ export class App extends React.Component {
             <Drawer
               variant="permanent"
               classes={{
-                paper: classNames(classes.drawerPaper, !this.state.open && classes.drawerPaperClose),
+                paper: classNames(classes.drawerPaper, !open && classes.drawerPaperClose),
               }}
-              open={this.state.open}
+              open={open}
             >
               <div className={classes.toolbarIcon}>
                 <IconButton onClick={this.handleDrawerClose}>
@@ -204,38 +181,6 @@ export class App extends React.Component {
             </Drawer>
             <main className={classes.content}>
               <div className={classes.appBarSpacer} />
-              <Typography variant="h4" gutterBottom component="h2">
-                Orders
-              </Typography>
-              <Typography component="div" className={classes.chartContainer}>
-                <div>Line chart</div>
-              </Typography>
-              <Typography variant="h4" gutterBottom component="h2">
-                Products
-              </Typography>
-              <div className={classes.tableContainer}>
-                <div>Table</div>
-              </div>
-            </main>
-          </div>
-        </MuiThemeProvider>
-      </Router>
-    );
-  }
-}
-
-/*
-          <div style={wrapperStyle}>
-            <Helmet
-              defer={false}
-              htmlAttributes={{ lang: 'pt-br' }}
-              encodeSpecialCharacters={true}
-              defaultTitle={config.title}
-              titleTemplate={`%s | ${config.name}`}
-              titleAttributes={{ itemprop: 'name', lang: 'pt-br' }}
-            />
-            <Header logOutClicked={() => dispatch(logOut())} user={user} />
-            <div style={mainStyle}>
               <Switch>
                 <RoutePublic
                   isAuthenticated={user.isAuthenticated}
@@ -246,9 +191,15 @@ export class App extends React.Component {
                 <RoutePrivate isAuthenticated={user.isAuthenticated} path="/" component={Private} />
                 <Route component={NotFound} />
               </Switch>
-            </div>
-            <Footer />
+            </main>
           </div>
+        </MuiThemeProvider>
+      </Router>
+    );
+  }
+}
+
+/*
  */
 
 function mapStateToProps(state) {
