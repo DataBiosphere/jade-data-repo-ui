@@ -9,7 +9,7 @@ import middleware, { sagaMiddleware } from './middleware';
 const initialDatasetState = {
   name: '',
   description: '',
-  readers: '',
+  readers: [],
   study: '',
 };
 

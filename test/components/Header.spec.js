@@ -11,7 +11,7 @@ function setup(isAuthenticated) {
     location: {
       pathname: '/',
     },
-    user: { isAuthenticated: isAuthenticated },
+    user: { isAuthenticated },
   };
 
   return mount(<Header suppressClassNameWarning {...props} />);

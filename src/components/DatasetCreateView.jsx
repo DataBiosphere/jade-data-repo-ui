@@ -1,12 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import MultiSelect from 'react-select';
 import styled from 'styled-components';
 import { Control, Form, actions, Errors } from 'react-redux-form';
 import { isEmail } from 'validator';
 import { createDataset } from 'actions/index';
 import xlsx from 'xlsx';
 import Combinatorics from 'js-combinatorics';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+
+import ManageUsers from './ManageUsersView';
+import _ from 'lodash';
+
+
 
 function* colNameIter() {
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -38,10 +46,29 @@ function getColumnForField(sheet, assetField) {
   return 'A';
 }
 
+const studyOptions = [
+  { value: 'Minimal', label: 'Minimal' },
+  { value: 'study_b', label: 'Study B' },
+  { value: 'study_c', label: 'Study C' },
+  { value: 'study_d', label: 'Study D' },
+  { value: 'study_e', label: 'Study E' },
+  { value: 'study_f', label: 'Study F' },
+  { value: 'study_g', label: 'Study G' },
+];
+
+
+const assetOptions = [
+  { value: 'participant', label: 'Participant' },
+  { value: 'sample', label: 'Sample' },
+];
+
 export class DatasetCreateView extends React.PureComponent {
   static propTypes = {
+    asset: PropTypes.string,
     dispatch: PropTypes.func.isRequired,
     ids: PropTypes.arrayOf(PropTypes.string),
+    readers: PropTypes.arrayOf(PropTypes.string),
+    study: PropTypes.string,
   };
 
   handleSubmit(dataset) {
@@ -64,6 +91,30 @@ export class DatasetCreateView extends React.PureComponent {
   validateName(name) {
     return name && name.length > 0 && name.length < 64;
   }
+
+  selectStudy(study) {
+    const { dispatch } = this.props;
+    dispatch(actions.change('dataset.study', study));
+  };
+
+  selectAsset(asset) {
+    const { dispatch } = this.props;
+    dispatch(actions.change('dataset.asset', asset));
+  };
+
+  addReader(newEmail) { // TODO what if the email already exists? let them 'add' it anyway and don't do anything?
+    const { dispatch, readers } = this.props;
+    _.includes(readers, newEmail); //TODO what if I add anyway and then use lodash _.uniq?
+    const newReaders = _.concat(readers, newEmail);
+    dispatch(actions.change('dataset.readers', newReaders));
+  };
+
+  removeReader(removeableEmail) {
+    const {dispatch, readers} = this.props;
+    let newReaders = _.clone(readers);
+    _.remove(newReaders, (r) => r == removeableEmail);
+    dispatch(actions.change('dataset.readers', newReaders));
+  };
 
   parseFile = event => {
     const { dispatch } = this.props;
@@ -99,7 +150,7 @@ export class DatasetCreateView extends React.PureComponent {
     const FormRow = styled.section`
       padding-bottom: 1em;
     `;
-    const { ids } = this.props;
+    const { asset, ids, readers, study } = this.props;
 
     return (
       <div>
@@ -113,73 +164,130 @@ export class DatasetCreateView extends React.PureComponent {
         </p>
         <Form model="dataset" onSubmit={data => this.handleSubmit(data)}>
           <FormRow>
-            <label htmlFor="dataset.name">Dataset name:</label>
             <Control.text
               model="dataset.name"
               id="dataset.name"
               required
               validators={{ name: this.validateName }}
+              component={(props) =>
+                <TextField
+                  {...props}
+                  defaultValue={this.props.model}
+                  placeholder="Dataset Name"
+                  style={{width: '300px'}}
+                  variant="outlined"
+                />
+              }
             />
-            <Control.text
-              model="dataset.otherName"
-              id="dataset.otherName"
+          </FormRow>
+
+          <FormRow>
+            <Control.textarea
+              model="dataset.description"
+              id="dataset.description"
               required
-              validators={{ name: this.validateName }}
+              component={(props) =>
+                <TextField
+                  {...props}
+                  defaultValue={this.props.model}
+                  style={{width: '800px'}} //fullWidth
+                  multiline
+                  placeholder="Add Dataset Description"
+                  rows="8"
+                  rowsMax="100"
+                  variant="outlined"
+                />
+              }
             />
-            <span> (this is the other name)</span>
           </FormRow>
 
           <FormRow>
-            <label htmlFor="dataset.description">Dataset description:</label>
-            <Control.textarea model="dataset.description" id="dataset.description" required />
+            <Control.custom
+              id="dataset.readers"
+              model="dataset.readers"
+              component={(props) =>
+                <ManageUsers
+                  {...props}
+                  addReader={(newEmail) => this.addReader(newEmail)}
+                  defaultValue="Custodian Email Address"
+                  dispatch={this.props.dispatch}
+                  addValue={this.props.dispatch}
+                  removeReader={(removeableEmail) => this.removeReader(removeableEmail)}
+                  removeValue={this.props.dispatch}
+                  readers={readers}
+                />
+              }
+           />
+          </FormRow>
+          <FormRow>
+            <Control.select
+              id="dataset.study"
+              model="dataset.study"
+              size="5"
+              component={(props) =>
+                <MultiSelect
+                  {...props}
+                  onChange={(e) => this.selectStudy(e.value)}
+                  options={studyOptions}
+                  placeholder="Search Studies"
+                  value={studyOptions.filter(option => option.value == study)}
+                />
+              }
+            />
           </FormRow>
 
           <FormRow>
-            <label htmlFor="dataset.readers">Access:</label>
-            <Control.text id="dataset.readers" model="dataset.readers" validators={{ isEmail }} />
+            <Control.select
+              id="dataset.asset"
+              model="dataset.asset"
+              size="5"
+              component={(props) =>
+                <MultiSelect
+                  {...props}
+                  onChange={(e) => this.selectAsset(e.value)}
+                  options={assetOptions}
+                  placeholder="Select Asset Type..."
+                  value={assetOptions.filter(option => option.value == asset)}
+                />
+              }
+            />
           </FormRow>
 
           <FormRow>
-            <label htmlFor="dataset.study">Select study: </label>
-            <Control.text model="dataset.study" id="dataset.study" />
-          </FormRow>
-          <FormRow>
-            <Control.select model="dataset.study" size="5">
-              <option>Study_A</option>
-              <option>Another_B</option>
-              <option>Study_C</option>
-              <option>Study_D</option>
-              <option>Study_E</option>
-            </Control.select>
+            <input type="file" id="dataset.upload" onChange={this.parseFile}  style={{display: 'none'}}/>
+            <label htmlFor="dataset.upload">
+              <Button
+                variant="contained"
+                component="span"
+                color="primary">
+                Import Ids
+              </Button>
+            </label>
           </FormRow>
 
-          <FormRow>
-            <label htmlFor="dataset.asset">Select an asset: </label>
-            <Control.select model="dataset.asset">
-              <option>Select Asset Type</option>
-              <option>Participant</option>
-              <option>Sample</option>
-            </Control.select>
-          </FormRow>
-
-          <FormRow>
-            <label htmlFor="dataset.upload">Import IDs: </label>
-            <input type="file" id="dataset.upload" onChange={this.parseFile} />
-          </FormRow>
-
-          <FormRow>
-            <label htmlFor="dataset.ids">ID Preview: </label>
-            <Control.select multiple={true} disabled={true} id="dataset.ids" model="dataset.ids">
-              <option>Upload a spreadsheet</option>
+          {ids && <FormRow>
+            <Control.select multiple={true} disabled={true} id="dataset.ids" model="dataset.ids" >
+              <option>Preview</option>
               {ids && ids.map(id => <option key={id}>{id}</option>)}
             </Control.select>
-          </FormRow>
+          </FormRow>}
 
           <Errors model="dataset" />
 
           <FormRow>
-            <button type="submit">Preview Data</button>
-            <button type="button">Cancel</button>
+            <Button
+              variant="contained"
+              type="button"
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="contained"
+              type="submit"
+              color="primary"
+              >
+              Preview Data
+            </Button>
           </FormRow>
         </Form>
       </div>
@@ -190,7 +298,10 @@ export class DatasetCreateView extends React.PureComponent {
 /* istanbul ignore next */
 function mapStateToProps(state) {
   return {
+    asset: state.dataset.asset,
     ids: state.dataset.ids,
+    readers: state.dataset.readers,
+    study: state.dataset.study,
   };
 }
 
