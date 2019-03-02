@@ -1,19 +1,16 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import styled from 'styled-components';
 
-import { Container } from 'styled-minimal';
-import Background from 'components/Background';
 import WelcomeView from '../components/WelcomeView';
 
-const HomeContainer = styled(Container)`
-  align-items: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  min-height: 100vh;
-`;
+const homeStyles = {
+  alignItems: 'center',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  minHeight: '100vh',
+};
 
 export class Home extends React.PureComponent {
   static propTypes = {
@@ -24,11 +21,9 @@ export class Home extends React.PureComponent {
     const { dispatch } = this.props;
 
     return (
-      <Background key="home" data-testid="home">
-        <HomeContainer>
-          <WelcomeView dispatch={dispatch} />
-        </HomeContainer>
-      </Background>
+      <div key="home" data-testid="home" style={homeStyles}>
+        <WelcomeView dispatch={dispatch} />
+      </div>
     );
   }
 }

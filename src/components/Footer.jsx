@@ -1,14 +1,9 @@
 import React from 'react';
-import styled from 'styled-components';
 
 import { Container, Flex } from 'styled-minimal';
 
-const FooterWrapper = styled.footer`
-  border-top: 0.1rem solid #ddd;
-`;
-
 const Footer = () => (
-  <FooterWrapper>
+  <div style={{ borderTop: '0.1rem solid #ddd' }}>
     <Container py={3}>
       <Flex justifyContent="space-between">
         <iframe
@@ -29,7 +24,7 @@ const Footer = () => (
         />
       </Flex>
     </Container>
-  </FooterWrapper>
+  </div>
 );
 
 export default Footer;

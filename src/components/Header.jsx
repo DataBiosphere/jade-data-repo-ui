@@ -4,10 +4,7 @@ import styled from 'styled-components';
 import rgba from 'polished/lib/color/rgba';
 import { appColor, headerHeight } from 'modules/theme';
 
-import { logOut } from 'actions';
-
 import { Container, utils } from 'styled-minimal';
-import Icon from 'components/Icon';
 import Logo from 'components/Logo';
 
 const { responsive, spacer } = utils;
@@ -78,7 +75,6 @@ export default class Header extends React.PureComponent {
             {user.isAuthenticated && (
               <Logout onClick={logOutClicked}>
                 <span>logout</span>
-                <Icon name="sign-out" width={16} />
               </Logout>
             )}
           </HeaderContainer>

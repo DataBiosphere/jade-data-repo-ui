@@ -32,7 +32,6 @@ const wrapperStyle = {
 
 const mainStyle = {
   minHeight: '100vh',
-  border: '1px solid blue',
 };
 
 export class App extends React.Component {

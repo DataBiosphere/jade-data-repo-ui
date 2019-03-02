@@ -6,12 +6,13 @@ import TextField from '@material-ui/core/TextField';
 
 class ManageUsersView extends React.PureComponent {
   constructor(props) {
-    super(props),
+    super(props);
     this.state = {
       newEmail: '',
       emailValid: false,
-    }
+    };
   }
+
   static propTypes = {
     defaultValue: PropTypes.string,
     addReader: PropTypes.func.isRequired,
@@ -20,23 +21,23 @@ class ManageUsersView extends React.PureComponent {
   };
 
   validateEmail(newEmail) {
-    this.setState({newEmail});
-    if(newEmail && newEmail.length > 0 && newEmail.length < 64 && newEmail.indexOf('@') > -1) {
+    this.setState({ newEmail });
+    if (newEmail && newEmail.length > 0 && newEmail.length < 64 && newEmail.indexOf('@') > -1) {
       this.setState({ emailValid: true });
     }
   }
 
   render() {
-    const { addReader, defaultValue, readers, removeReader} = this.props;
+    const { addReader, defaultValue, readers, removeReader } = this.props;
     const { emailValid, newEmail } = this.state;
 
     return (
       <div>
         <div>
           <TextField
-            placeholder={defaultValue || "New" }
+            placeholder={defaultValue || "New"}
             onChange={(e) => this.validateEmail(e.target.value)}
-            style={{width: '300px'}}
+            style={{ width: '300px' }}
             variant="outlined"
           />
           <Button
@@ -50,17 +51,14 @@ class ManageUsersView extends React.PureComponent {
           </Button>
         </div>
         <div>
-          {readers.map(reader =>
-            (<div key={reader} >
+          {readers.map(reader => (
+            <div key={reader} >
               {reader}
-              <Button
-                onClick={() => removeReader(reader)}
-                size="small"
-              >
+              <Button onClick={() => removeReader(reader)} size="small">
                 x
               </Button>
-            </div>)
-          )}
+            </div>
+          ))}
         </div>
       </div>
     );
