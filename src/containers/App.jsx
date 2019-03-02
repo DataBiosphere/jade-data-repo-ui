@@ -15,12 +15,11 @@ import Menu from '@material-ui/core/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 
 import history from 'modules/history';
-import theme from 'modules/theme';
+import globalTheme from 'modules/theme';
 
 import Home from 'routes/Home';
 import Private from 'routes/Private';
 import NotFound from 'routes/NotFound';
-
 
 import { logOut } from 'actions/index';
 import RoutePublic from 'components/RoutePublic';
@@ -106,18 +105,14 @@ const styles = theme => ({
 });
 
 export class App extends React.Component {
-  static propTypes = {
-    //dispatch: PropTypes.func.isRequired,
-    //user: PropTypes.object.isRequired,
-    classes: PropTypes.object.isRequired,
-  };
-
   state = {
     anchorEl: null,
   };
 
-  handleChange = event => {
-    this.setState({ auth: event.target.checked });
+  static propTypes = {
+    classes: PropTypes.object.isRequired,
+    dispatch: PropTypes.func.isRequired,
+    user: PropTypes.object.isRequired,
   };
 
   handleMenu = event => {
@@ -134,7 +129,7 @@ export class App extends React.Component {
     const open = Boolean(anchorEl);
     return (
       <Router history={history}>
-        <MuiThemeProvider theme={theme}>
+        <MuiThemeProvider theme={globalTheme}>
           <div className={classes.root}>
             <CssBaseline />
             <AppBar position="absolute" className={classNames(classes.appBar)}>

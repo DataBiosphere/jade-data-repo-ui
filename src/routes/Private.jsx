@@ -1,6 +1,5 @@
 import React from 'react';
 import { BrowserRouter, Link, Switch, Route } from 'react-router-dom';
-import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import { withStyles } from '@material-ui/core/styles';
@@ -30,16 +29,16 @@ const styles = theme => ({
 });
 
 class Private extends React.Component {
-  static propTypes = {
-    classes: PropTypes.object.isRequired,
-  }
-
   constructor(props) {
     super(props);
     this.state = {
       value: '/',
     };
   }
+
+  static propTypes = {
+    classes: PropTypes.object.isRequired,
+  };
 
   handleChange = (event, value) => {
     this.setState({ value });

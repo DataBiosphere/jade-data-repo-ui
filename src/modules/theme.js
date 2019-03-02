@@ -26,7 +26,6 @@ export default createMuiTheme({
       contrastText: '#ffffff',
     },
     secondary: {
-      //main: '#b7cf55', // this is the ligher color
       main: '#74ae43',
     },
   },

@@ -4,14 +4,14 @@ import { connect } from 'react-redux';
 import MultiSelect from 'react-select';
 import { Control, Form, actions, Errors } from 'react-redux-form';
 import { isEmail } from 'validator';
-import { createDataset } from 'actions/index';
+import _ from 'lodash';
 import xlsx from 'xlsx';
 import Combinatorics from 'js-combinatorics';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 
+import { createDataset } from 'actions/index';
 import ManageUsers from './ManageUsersView';
-import _ from 'lodash';
 
 function* colNameIter() {
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -92,24 +92,24 @@ export class DatasetCreateView extends React.PureComponent {
   selectStudy(study) {
     const { dispatch } = this.props;
     dispatch(actions.change('dataset.study', study));
-  };
+  }
 
   selectAsset(asset) {
     const { dispatch } = this.props;
     dispatch(actions.change('dataset.asset', asset));
-  };
+  }
 
-  addReader(newEmail) { // TODO what if the email already exists? let them 'add' it anyway and don't do anything?
+  addReader(newEmail) {
     const { dispatch, readers } = this.props;
-    _.includes(readers, newEmail); //TODO what if I add anyway and then use lodash _.uniq?
-    const newReaders = _.concat(readers, newEmail);
-    dispatch(actions.change('dataset.readers', newReaders));
+    if (!_.includes(readers, newEmail)) {
+      dispatch(actions.change('dataset.readers', _.concat(readers, newEmail)));
+    }
   };
 
   removeReader(removeableEmail) {
-    const {dispatch, readers} = this.props;
+    const { dispatch, readers } = this.props;
     let newReaders = _.clone(readers);
-    _.remove(newReaders, (r) => r == removeableEmail);
+    _.remove(newReaders, r => r === removeableEmail);
     dispatch(actions.change('dataset.readers', newReaders));
   };
 
