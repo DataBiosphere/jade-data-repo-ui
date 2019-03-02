@@ -3,8 +3,8 @@ import { expectSaga } from 'redux-saga-test-plan';
 import repository, { createDataset } from 'sagas/repository';
 import { ActionTypes } from 'constants/index';
 
-jest.mock('modules/client', () => ({
-  request: () => ({ items: [] }),
+jest.mock('axios', () => ({
+  post: () => ({ items: [] }),
 }));
 
 describe('repository', () => {

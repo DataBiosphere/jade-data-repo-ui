@@ -14,8 +14,6 @@ import TextField from '@material-ui/core/TextField';
 import ManageUsers from './ManageUsersView';
 import _ from 'lodash';
 
-
-
 function* colNameIter() {
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
   for (let i = 0; i < 3; i++) {
@@ -56,7 +54,6 @@ const studyOptions = [
   { value: 'study_g', label: 'Study G' },
 ];
 
-
 const assetOptions = [
   { value: 'participant', label: 'Participant' },
   { value: 'sample', label: 'Sample' },
@@ -76,12 +73,13 @@ export class DatasetCreateView extends React.PureComponent {
     const payload = {
       name: dataset.name,
       description: dataset.description,
-      source: [
+      contents: [
         {
-          studyName: dataset.study,
-          assetName: dataset.asset,
-          fieldName: 'foo',
-          values: dataset.ids,
+          source: {
+            studyName: dataset.study,
+            assetName: dataset.asset,
+          },
+          rootValues: dataset.ids,
         },
       ],
     };
