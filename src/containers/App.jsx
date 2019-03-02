@@ -17,6 +17,9 @@ import Badge from '@material-ui/core/Badge';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
+import MenuItem from '@material-ui/core/MenuItem';
+import Menu from '@material-ui/core/Menu';
+import AccountCircle from '@material-ui/icons/AccountCircle';
 
 import history from 'modules/history';
 import theme from 'modules/theme';
@@ -35,6 +38,16 @@ const drawerWidth = 240;
 const styles = theme => ({
   root: {
     display: 'flex',
+  },
+  layout: {
+    width: 'auto',
+    marginLeft: theme.spacing.unit * 3,
+    marginRight: theme.spacing.unit * 3,
+    [theme.breakpoints.up(1100 + theme.spacing.unit * 3 * 2)]: {
+      width: 1100,
+      marginLeft: 'auto',
+      marginRight: 'auto',
+    },
   },
   toolbar: {
     paddingRight: 24, // keep right padding when drawer closed
@@ -114,38 +127,32 @@ export class App extends React.Component {
   };
 
   state = {
-    open: false,
+    anchorEl: null,
   };
 
-  handleDrawerOpen = () => {
-    this.setState({ open: true });
+  handleChange = event => {
+    this.setState({ auth: event.target.checked });
   };
 
-  handleDrawerClose = () => {
-    this.setState({ open: false });
+  handleMenu = event => {
+    this.setState({ anchorEl: event.currentTarget });
+  };
+
+  handleClose = () => {
+    this.setState({ anchorEl: null });
   };
 
   render() {
-    const { classes, user } = this.props;
-    const { open } = this.state;
+    const { classes, user, dispatch } = this.props;
+    const { anchorEl } = this.state;
+    const open = Boolean(anchorEl);
     return (
       <Router history={history}>
         <MuiThemeProvider theme={theme}>
           <div className={classes.root}>
             <CssBaseline />
-            <AppBar
-              position="absolute"
-              className={classNames(classes.appBar, this.state.open && classes.appBarShift)}
-            >
-              <Toolbar disableGutters={!this.state.open} className={classes.toolbar}>
-                <IconButton
-                  color="inherit"
-                  aria-label="Open drawer"
-                  onClick={this.handleDrawerOpen}
-                  className={classNames(classes.menuButton, open && classes.menuButtonHidden)}
-                >
-                  <MenuIcon />
-                </IconButton>
+            <AppBar position="absolute" className={classNames(classes.appBar)}>
+              <Toolbar className={classes.toolbar}>
                 <Typography
                   component="h1"
                   variant="h6"
@@ -155,30 +162,43 @@ export class App extends React.Component {
                 >
                   Data Repository
                 </Typography>
-                <IconButton color="inherit">
-                  <Badge badgeContent={4} color="secondary">
-                    <NotificationsIcon />
-                  </Badge>
-                </IconButton>
+                {user.isAuthenticated && (
+                  <div>
+                    <IconButton
+                      aria-owns={open ? 'menu-appbar' : undefined}
+                      aria-haspopup="true"
+                      onClick={this.handleMenu}
+                      color="inherit"
+                    >
+                      <AccountCircle/>
+                    </IconButton>
+                    <Menu
+                      id="menu-appbar"
+                      anchorEl={anchorEl}
+                      anchorOrigin={{
+                        vertical: 'top',
+                        horizontal: 'right',
+                      }}
+                      transformOrigin={{
+                        vertical: 'top',
+                        horizontal: 'right',
+                      }}
+                      open={open}
+                      onClose={this.handleClose}
+                    >
+                      <MenuItem
+                        onClick={() => {
+                          dispatch(logOut());
+                          this.handleClose();
+                        }}
+                      >
+                        Logout
+                      </MenuItem>
+                    </Menu>
+                  </div>
+                )}
               </Toolbar>
             </AppBar>
-            <Drawer
-              variant="permanent"
-              classes={{
-                paper: classNames(classes.drawerPaper, !open && classes.drawerPaperClose),
-              }}
-              open={open}
-            >
-              <div className={classes.toolbarIcon}>
-                <IconButton onClick={this.handleDrawerClose}>
-                  <ChevronLeftIcon />
-                </IconButton>
-              </div>
-              <Divider />
-              <List>{[]}</List>
-              <Divider />
-              <List>{[]}</List>
-            </Drawer>
             <main className={classes.content}>
               <div className={classes.appBarSpacer} />
               <Switch>
