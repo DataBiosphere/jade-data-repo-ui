@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import MultiSelect from 'react-select';
 import { Control, Form, actions, Errors } from 'react-redux-form';
-import { isEmail } from 'validator';
 import _ from 'lodash';
 import xlsx from 'xlsx';
 import Combinatorics from 'js-combinatorics';
@@ -104,14 +103,14 @@ export class DatasetCreateView extends React.PureComponent {
     if (!_.includes(readers, newEmail)) {
       dispatch(actions.change('dataset.readers', _.concat(readers, newEmail)));
     }
-  };
+  }
 
   removeReader(removeableEmail) {
     const { dispatch, readers } = this.props;
-    let newReaders = _.clone(readers);
+    const newReaders = _.clone(readers);
     _.remove(newReaders, r => r === removeableEmail);
     dispatch(actions.change('dataset.readers', newReaders));
-  };
+  }
 
   parseFile = event => {
     const { dispatch } = this.props;
@@ -144,9 +143,7 @@ export class DatasetCreateView extends React.PureComponent {
   };
 
   render() {
-    const FormRow = props => {
-      return <div style={{ paddingBottom: '1em' }}>{props.children} </div>;
-    };
+    const FormRow = props => <div style={{ paddingBottom: '1em' }}>{props.children}</div>;
     const { asset, ids, readers, study } = this.props;
 
     return (
@@ -166,15 +163,14 @@ export class DatasetCreateView extends React.PureComponent {
               id="dataset.name"
               required
               validators={{ name: this.validateName }}
-              component={(props) =>
+              component={props => (
                 <TextField
                   {...props}
-                  defaultValue={this.props.model}
                   placeholder="Dataset Name"
-                  style={{width: '300px'}}
+                  style={{ width: '300px' }}
                   variant="outlined"
                 />
-              }
+              )}
             />
           </FormRow>
 
@@ -183,52 +179,48 @@ export class DatasetCreateView extends React.PureComponent {
               model="dataset.description"
               id="dataset.description"
               required
-              component={(props) =>
+              component={props => (
                 <TextField
                   {...props}
-                  defaultValue={this.props.model}
-                  style={{width: '800px'}} //fullWidth
+                  style={{ width: '800px' }} // fullWidth
                   multiline
                   placeholder="Add Dataset Description"
                   rows="8"
                   rowsMax="100"
                   variant="outlined"
                 />
-              }
+              )}
             />
           </FormRow>
           <FormRow>
             <Control.custom
               id="dataset.readers"
               model="dataset.readers"
-              component={(props) =>
+              component={props => (
                 <ManageUsers
                   {...props}
-                  addReader={(newEmail) => this.addReader(newEmail)}
+                  addReader={newEmail => this.addReader(newEmail)}
                   defaultValue="Custodian Email Address"
-                  dispatch={this.props.dispatch}
-                  addValue={this.props.dispatch}
-                  removeReader={(removeableEmail) => this.removeReader(removeableEmail)}
-                  removeValue={this.props.dispatch}
+                  removeReader={removeableEmail => this.removeReader(removeableEmail)}
                   readers={readers}
                 />
-              }
-           />
+              )}
+            />
           </FormRow>
           <FormRow>
             <Control.select
               id="dataset.study"
               model="dataset.study"
               size="5"
-              component={(props) =>
+              component={props => (
                 <MultiSelect
                   {...props}
-                  onChange={(e) => this.selectStudy(e.value)}
+                  onChange={e => this.selectStudy(e.value)}
                   options={studyOptions}
                   placeholder="Search Studies"
-                  value={studyOptions.filter(option => option.value == study)}
+                  value={studyOptions.filter(option => option.value === study)}
                 />
-              }
+              )}
             />
           </FormRow>
 
@@ -237,51 +229,48 @@ export class DatasetCreateView extends React.PureComponent {
               id="dataset.asset"
               model="dataset.asset"
               size="5"
-              component={(props) =>
+              component={props => (
                 <MultiSelect
                   {...props}
-                  onChange={(e) => this.selectAsset(e.value)}
+                  onChange={e => this.selectAsset(e.value)}
                   options={assetOptions}
                   placeholder="Select Asset Type..."
-                  value={assetOptions.filter(option => option.value == asset)}
+                  value={assetOptions.filter(option => option.value === asset)}
                 />
-              }
+              )}
             />
           </FormRow>
 
           <FormRow>
-            <input type="file" id="dataset.upload" onChange={this.parseFile}  style={{display: 'none'}}/>
+            <input
+              type="file"
+              id="dataset.upload"
+              onChange={this.parseFile}
+              style={{ display: 'none' }}
+            />
             <label htmlFor="dataset.upload">
-              <Button
-                variant="contained"
-                component="span"
-                color="primary">
+              <Button variant="contained" component="span" color="primary">
                 Import Ids
               </Button>
             </label>
           </FormRow>
 
-          {ids && <FormRow>
-            <Control.select multiple={true} disabled={true} id="dataset.ids" model="dataset.ids" >
-              <option>Preview</option>
-              {ids && ids.map(id => <option key={id}>{id}</option>)}
-            </Control.select>
-          </FormRow>}
+          {ids && (
+            <FormRow>
+              <Control.select multiple={true} disabled={true} id="dataset.ids" model="dataset.ids">
+                <option>Preview</option>
+                {ids && ids.map(id => <option key={id}>{id}</option>)}
+              </Control.select>
+            </FormRow>
+          )}
 
           <Errors model="dataset" />
 
           <FormRow>
-            <Button
-              variant="contained"
-              type="button"
-            >
+            <Button variant="contained" type="button">
               Cancel
             </Button>
-            <Button
-              variant="contained"
-              type="submit"
-              color="primary"
-              >
+            <Button variant="contained" type="submit" color="primary">
               Preview Data
             </Button>
           </FormRow>

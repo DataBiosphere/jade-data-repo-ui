@@ -15,6 +15,7 @@
         "ignoreAtRules": ["else"]
       }
     ],
+    "declaration-block-trailing-semicolon": null,
     "at-rule-no-unknown": null,
     "color-named": "never",
     "declaration-colon-newline-after": null,

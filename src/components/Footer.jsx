@@ -3,7 +3,7 @@ import React from 'react';
 const footerStyles = {
   display: 'flex',
   justifyContent: 'space-between',
-}
+};
 
 const Footer = () => (
   <div style={{ borderTop: '0.1rem solid #ddd' }}>

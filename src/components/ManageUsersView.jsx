@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { createDataset } from 'actions/index';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
+import { isEmail } from 'validator';
 
 class ManageUsersView extends React.PureComponent {
   constructor(props) {
@@ -14,16 +14,17 @@ class ManageUsersView extends React.PureComponent {
   }
 
   static propTypes = {
-    defaultValue: PropTypes.string,
     addReader: PropTypes.func.isRequired,
+    defaultValue: PropTypes.string,
     readers: PropTypes.arrayOf(PropTypes.string),
     removeReader: PropTypes.func.isRequired,
   };
 
   validateEmail(newEmail) {
-    this.setState({ newEmail });
-    if (newEmail && newEmail.length > 0 && newEmail.length < 64 && newEmail.indexOf('@') > -1) {
-      this.setState({ emailValid: true });
+    if (isEmail(newEmail)) {
+      this.setState({ newEmail, emailValid: true });
+    } else {
+      this.setState({ emailValid: false });
     }
   }
 
@@ -35,8 +36,8 @@ class ManageUsersView extends React.PureComponent {
       <div>
         <div>
           <TextField
-            placeholder={defaultValue || "New"}
-            onChange={(e) => this.validateEmail(e.target.value)}
+            placeholder={defaultValue || 'New'}
+            onChange={e => this.validateEmail(e.target.value)}
             style={{ width: '300px' }}
             variant="outlined"
           />
@@ -52,7 +53,7 @@ class ManageUsersView extends React.PureComponent {
         </div>
         <div>
           {readers.map(reader => (
-            <div key={reader} >
+            <div key={reader}>
               {reader}
               <Button onClick={() => removeReader(reader)} size="small">
                 x

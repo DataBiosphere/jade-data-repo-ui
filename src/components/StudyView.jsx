@@ -1,22 +1,17 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 class DatasetView extends React.PureComponent {
-  static propTypes = {
-    studies: PropTypes.array,
-    // dispatch: PropTypes.func.isRequired,
-  };
+  static propTypes = {};
 
   render() {
     return <div>Hello world studies</div>;
   }
 }
 
-function mapStateToProps(state) {
-  return {
-    studies: state.studies,
-  };
+function mapStateToProps() {
+  return {};
 }
 
 export default connect(mapStateToProps)(DatasetView);

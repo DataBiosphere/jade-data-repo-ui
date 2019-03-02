@@ -1,12 +1,10 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 
 class DatasetView extends React.PureComponent {
-  static propTypes = {
-    datasets: PropTypes.array,
-  };
+  static propTypes = {};
 
   render() {
     return (
@@ -28,10 +26,8 @@ class DatasetView extends React.PureComponent {
   }
 }
 
-function mapStateToProps(state) {
-  return {
-    datasets: state.datasets,
-  };
+function mapStateToProps() {
+  return {};
 }
 
 export default connect(mapStateToProps)(DatasetView);
