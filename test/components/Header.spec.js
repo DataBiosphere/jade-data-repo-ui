@@ -19,16 +19,7 @@ function setup(isAuthenticated) {
 
 describe('Header', () => {
   let wrapper = setup(false);
-
-  it('should render properly', () => {
-    expect(wrapper).toMatchSnapshot();
-  });
-
   wrapper = setup(true);
-
-  it('should render properly', () => {
-    expect(wrapper).toMatchSnapshot();
-  });
 
   it('should handle clicks', () => {
     wrapper.find('Logout').simulate('click');

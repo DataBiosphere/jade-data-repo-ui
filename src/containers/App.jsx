@@ -4,20 +4,17 @@ import { connect } from 'react-redux';
 import { Router, Switch, Route } from 'react-router-dom';
 import Helmet from 'react-helmet';
 import styled, { ThemeProvider } from 'styled-components';
-import treeChanges from 'tree-changes';
 
 import history from 'modules/history';
 import theme from 'modules/theme';
 
 import config from 'config';
-import { showAlert } from 'actions/index';
 
 import Home from 'routes/Home';
 import Private from 'routes/Private';
 import NotFound from 'routes/NotFound';
 
 import Header from 'components/Header';
-import SystemAlerts from 'containers/SystemAlerts';
 
 import Footer from 'components/Footer';
 import GlobalStyles from 'components/GlobalStyles';
@@ -42,16 +39,6 @@ export class App extends React.Component {
     dispatch: PropTypes.func.isRequired,
     user: PropTypes.object.isRequired,
   };
-
-  componentWillReceiveProps(nextProps) {
-    const { dispatch } = this.props;
-    const { changedTo } = treeChanges(this.props, nextProps);
-
-    /* istanbul ignore else */
-    if (changedTo('user.isAuthenticated', true)) {
-      dispatch(showAlert('Hello! And welcome!', { variant: 'success', icon: 'bell' }));
-    }
-  }
 
   render() {
     const { dispatch, user } = this.props;
@@ -82,7 +69,6 @@ export class App extends React.Component {
               </Switch>
             </Main>
             <Footer />
-            <SystemAlerts />
             <GlobalStyles />
           </AppWrapper>
         </ThemeProvider>

@@ -8,11 +8,6 @@ function setup() {
 
 describe('NotFound', () => {
   const wrapper = setup();
-
-  it('should render properly', () => {
-    expect(wrapper).toMatchSnapshot();
-  });
-
   it('should redirect to home', () => {
     navigate({ pathname: '/some-page' });
 
