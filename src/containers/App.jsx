@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Router, Switch, Route } from 'react-router-dom';
 import Helmet from 'react-helmet';
-import styled, { ThemeProvider } from 'styled-components';
+import { MuiThemeProvider } from '@material-ui/core/styles';
 
 import history from 'modules/history';
 import theme from 'modules/theme';
@@ -21,18 +21,20 @@ import GlobalStyles from 'components/GlobalStyles';
 import RoutePublic from 'components/RoutePublic';
 import RoutePrivate from 'components/RoutePrivate';
 
-const AppWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  opacity: 1 !important;
-  position: relative;
-  transition: opacity 0.5s;
-`;
+const AppWrapper = () => (
+  <div
+    style={{
+      display: 'flex',
+      flexDirection: 'column',
+      minHeight: '100vh',
+      opacity: '1 !important',
+      position: 'relative',
+      transition: 'opacity 0.5s',
+    }}
+  />
+)
 
-const Main = styled.main`
-  min-height: 100vh;
-`;
+const Main = () => <main style={{ minHeight: '100vh' }} />
 
 export class App extends React.Component {
   static propTypes = {
@@ -45,7 +47,7 @@ export class App extends React.Component {
 
     return (
       <Router history={history}>
-        <ThemeProvider theme={theme}>
+        <MuiThemeProvider theme={theme}>
           <AppWrapper logged={user.isAuthenticated}>
             <Helmet
               defer={false}
@@ -71,7 +73,7 @@ export class App extends React.Component {
             <Footer />
             <GlobalStyles />
           </AppWrapper>
-        </ThemeProvider>
+        </MuiThemeProvider>
       </Router>
     );
   }
