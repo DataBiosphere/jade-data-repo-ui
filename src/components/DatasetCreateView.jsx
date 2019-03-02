@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import MultiSelect from 'react-select';
-import styled from 'styled-components';
 import { Control, Form, actions, Errors } from 'react-redux-form';
 import { isEmail } from 'validator';
 import { createDataset } from 'actions/index';
@@ -145,9 +144,7 @@ export class DatasetCreateView extends React.PureComponent {
   };
 
   render() {
-    const FormRow = styled.section`
-      padding-bottom: 1em;
-    `;
+    const FormRow = <div style={{ paddingBottom: '1em' }} />;
     const { asset, ids, readers, study } = this.props;
 
     return (

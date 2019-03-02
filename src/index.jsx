@@ -19,7 +19,6 @@ export const app = {
   render(Component) {
     const root = document.getElementById('react');
 
-    /* istanbul ignore next */
     if (root) {
       ReactDOM.render(
         <AppContainer>
@@ -35,7 +34,6 @@ export const app = {
 
 app.run();
 
-/* istanbul ignore next  */
 if (module.hot) {
   module.hot.accept('containers/App', () => app.render(App));
 }
