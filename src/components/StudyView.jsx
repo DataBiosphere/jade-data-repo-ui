@@ -13,7 +13,6 @@ class DatasetView extends React.PureComponent {
   }
 }
 
-/* istanbul ignore next */
 function mapStateToProps(state) {
   return {
     studies: state.studies,

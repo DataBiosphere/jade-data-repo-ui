@@ -9,7 +9,6 @@ export const logoStyles = {
   width: '41px',
 };
 
-
 const titleStyles = {
   bottom: '12px',
   color: '#fff',
