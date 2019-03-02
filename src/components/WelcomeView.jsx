@@ -1,10 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
 import { GoogleLogin } from 'react-google-login';
 
 import { logOut, logIn } from 'actions/index';
-
 
 class WelcomeView extends React.PureComponent {
   static propTypes = {

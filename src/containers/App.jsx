@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Router, Switch, Route } from 'react-router-dom';
 import Helmet from 'react-helmet';
-import { MuiThemeProvider } from '@material-ui/core/styles';
+import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 
 import history from 'modules/history';
 import theme from 'modules/theme';
@@ -16,25 +16,24 @@ import NotFound from 'routes/NotFound';
 
 import Header from 'components/Header';
 
+import { logOut } from 'actions/index';
 import Footer from 'components/Footer';
-import GlobalStyles from 'components/GlobalStyles';
 import RoutePublic from 'components/RoutePublic';
 import RoutePrivate from 'components/RoutePrivate';
 
-const AppWrapper = () => (
-  <div
-    style={{
-      display: 'flex',
-      flexDirection: 'column',
-      minHeight: '100vh',
-      opacity: '1 !important',
-      position: 'relative',
-      transition: 'opacity 0.5s',
-    }}
-  />
-)
+const wrapperStyle = {
+  display: 'flex',
+  flexDirection: 'column',
+  minHeight: '100vh',
+  opacity: '1 !important',
+  position: 'relative',
+  transition: 'opacity 0.5s',
+};
 
-const Main = () => <main style={{ minHeight: '100vh' }} />
+const mainStyle = {
+  minHeight: '100vh',
+  border: '1px solid blue',
+};
 
 export class App extends React.Component {
   static propTypes = {
@@ -43,12 +42,11 @@ export class App extends React.Component {
   };
 
   render() {
-    const { dispatch, user } = this.props;
-
+    const { user, dispatch } = this.props;
     return (
       <Router history={history}>
         <MuiThemeProvider theme={theme}>
-          <AppWrapper logged={user.isAuthenticated}>
+          <div style={wrapperStyle}>
             <Helmet
               defer={false}
               htmlAttributes={{ lang: 'pt-br' }}
@@ -57,8 +55,8 @@ export class App extends React.Component {
               titleTemplate={`%s | ${config.name}`}
               titleAttributes={{ itemprop: 'name', lang: 'pt-br' }}
             />
-            <Header dispatch={dispatch} user={user} />
-            <Main isAuthenticated={user.isAuthenticated}>
+            <Header logOutClicked={() => dispatch(logOut())} user={user} />
+            <div style={mainStyle}>
               <Switch>
                 <RoutePublic
                   isAuthenticated={user.isAuthenticated}
@@ -69,17 +67,15 @@ export class App extends React.Component {
                 <RoutePrivate isAuthenticated={user.isAuthenticated} path="/" component={Private} />
                 <Route component={NotFound} />
               </Switch>
-            </Main>
+            </div>
             <Footer />
-            <GlobalStyles />
-          </AppWrapper>
+          </div>
         </MuiThemeProvider>
       </Router>
     );
   }
 }
 
-/* istanbul ignore next */
 function mapStateToProps(state) {
   return {
     user: state.user,
