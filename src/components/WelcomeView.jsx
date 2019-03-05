@@ -2,12 +2,35 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { GoogleLogin } from 'react-google-login';
 import { withStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 
 import { logOut, logIn } from 'actions/index';
 
 const styles = theme => ({
+  container: {
+    color: theme.typography.color,
+    flexGrow: 1,
+    padding: theme.spacing.unit * 10,
+  },
+  title: {
+    color: theme.palette.primary.main,
+    fontSize: '54px',
+    lineHeight: '66px',
+    paddingBottom: theme.spacing.unit * 8,
+  },
   mainContent: {
-    padding: theme.spacing.unit * 3,
+    justifyContent: 'center',
+  },
+  newUser: {
+    color: theme.palette.secondary.contrastText,
+    fontSize: '18px',
+    fontWeight: '200',
+    paddingBottom: theme.spacing.unit * 2,
+    paddingTop: theme.spacing.unit * 8
+  },
+  header: {
+    fontSize: '28px',
+    lineHeight: '36px',
   },
 });
 
@@ -30,9 +53,11 @@ class WelcomeView extends React.PureComponent {
     const { classes } = this.props;
 
     return (
-      <div className={classes.mainContent}>
-        <h1>Welcome to the Jade Data Repository</h1>
-        <div>
+      <div className={classes.container}>
+        <div className={classes.title}>
+          Welcome to the Jade Data Repository
+        </div>
+        <div className={classes.mainContent}>
           <GoogleLogin // stealing clientId from Terra
             clientId="500025638838-s2v23ar3spugtd5t2v1vgfa2sp7ppg0d.apps.googleusercontent.com"
             buttonText="Sign in with Google"
@@ -42,8 +67,8 @@ class WelcomeView extends React.PureComponent {
           />
         </div>
 
-        <h3>New User?</h3>
-        <h3>Jade Data Repository requires a Google account.</h3>
+        <div className={classes.newUser}>New User?</div>
+        <div className={classes.header}>Jade Data Repository requires a Google account.</div>
         <p>
           Terra uses your Google account. Once you have signed in and completed the user profile
           registration step, you can start using Terra.
