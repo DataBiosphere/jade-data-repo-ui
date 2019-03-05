@@ -20,6 +20,7 @@ import globalTheme from 'modules/theme';
 import Home from 'routes/Home';
 import Private from 'routes/Private';
 import NotFound from 'routes/NotFound';
+import Logo from 'components/Logo';
 
 import { logOut } from 'actions/index';
 import RoutePublic from 'components/RoutePublic';
@@ -30,6 +31,8 @@ const drawerWidth = 240;
 const styles = theme => ({
   root: {
     display: 'flex',
+    fontFamily: theme.typography.fontFamily,
+    fontWeight: theme.typography.fontWeight,
   },
   layout: {
     width: 'auto',
@@ -134,15 +137,7 @@ export class App extends React.Component {
             <CssBaseline />
             <AppBar position="absolute" className={classNames(classes.appBar)}>
               <Toolbar className={classes.toolbar}>
-                <Typography
-                  component="h1"
-                  variant="h6"
-                  color="inherit"
-                  noWrap
-                  className={classes.title}
-                >
-                  Data Repository
-                </Typography>
+                 <Logo />
                 {user.isAuthenticated && (
                   <div>
                     <IconButton
