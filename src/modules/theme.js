@@ -1,23 +1,32 @@
+import { createMuiTheme } from '@material-ui/core/styles';
+
 export const headerHeight = 70;
-
 export const appColor = '#7ebb7d';
-
 export const easing = 'cubic-bezier(0.35, 0.01, 0.77, 0.34);';
 
-export default {
-  breakpoints: [400, 768, 1024, 1280, 1920],
+export default createMuiTheme({
+  typography: {
+    useNextVariants: true,
+    fontFamily: [
+      'Montserrat',
+      'BlinkMacSystemFont',
+      '"Segoe UI"',
+      'Roboto',
+      '"Helvetica Neue"',
+      'Arial',
+      'sans-serif',
+      '"Apple Color Emoji"',
+      '"Segoe UI Emoji"',
+      '"Segoe UI Symbol"',
+    ].join(','),
+  },
   palette: {
-    primary: appColor,
-  },
-  button: {
-    borderRadius: {
-      xs: 4,
-      lg: 28,
-      xl: 32,
+    primary: {
+      main: '#81ab52',
+      contrastText: '#ffffff',
     },
-    padding: {
-      lg: [12, 28],
-      xl: [14, 32],
+    secondary: {
+      main: '#74ae43',
     },
   },
-};
+});

@@ -1,15 +1,14 @@
 // Polyfills
 import React from 'react';
 import ReactDOM from 'react-dom';
-
+import Helmet from 'react-helmet';
 import { Provider } from 'react-redux';
 import { AppContainer } from 'react-hot-loader';
 
 import { store } from 'store/index';
-import { showAlert } from 'actions/index';
 
+import config from 'config';
 import App from 'containers/App';
-import Reload from 'components/Reload';
 
 export const app = {
   cssRetries: 0,
@@ -17,33 +16,22 @@ export const app = {
 
   run() {
     this.render(App);
-
-    /* istanbul ignore else */
-    if (process.env.NODE_ENV === 'production') {
-      this.initOfflinePlugin();
-    }
-  },
-  initOfflinePlugin() {
-    const OfflinePlugin = require('offline-plugin/runtime');
-
-    /* istanbul ignore next */
-    OfflinePlugin.install({
-      onUpdateReady: () => {
-        OfflinePlugin.applyUpdate();
-      },
-      onUpdated: () => {
-        store.dispatch(showAlert(<Reload />, { id: 'sw-update', icon: 'bolt', timeout: 0 }));
-      },
-    });
   },
   render(Component) {
     const root = document.getElementById('react');
 
-    /* istanbul ignore next */
     if (root) {
       ReactDOM.render(
         <AppContainer>
           <Provider store={store}>
+            <Helmet
+              defer={false}
+              htmlAttributes={{ lang: 'pt-br' }}
+              encodeSpecialCharacters={true}
+              defaultTitle={config.title}
+              titleTemplate={`%s | ${config.name}`}
+              titleAttributes={{ itemprop: 'name', lang: 'pt-br' }}
+            />
             <Component />
           </Provider>
         </AppContainer>,
@@ -55,7 +43,6 @@ export const app = {
 
 app.run();
 
-/* istanbul ignore next  */
 if (module.hot) {
   module.hot.accept('containers/App', () => app.render(App));
 }

@@ -1,16 +1,14 @@
 import React from 'react';
-import styled from 'styled-components';
 
-import { Container, Flex } from 'styled-minimal';
-
-const FooterWrapper = styled.footer`
-  border-top: 0.1rem solid #ddd;
-`;
+const footerStyles = {
+  display: 'flex',
+  justifyContent: 'space-between',
+};
 
 const Footer = () => (
-  <FooterWrapper>
-    <Container py={3}>
-      <Flex justifyContent="space-between">
+  <div style={{ borderTop: '0.1rem solid #ddd' }}>
+    <div>
+      <div style={footerStyles}>
         <iframe
           title="GitHub Stars"
           src="https://ghbtns.com/github-btn.html?user=DataBiosphere&repo=jade-data-repo&type=star&count=true"
@@ -27,9 +25,9 @@ const Footer = () => (
           width="160px"
           height="20px"
         />
-      </Flex>
-    </Container>
-  </FooterWrapper>
+      </div>
+    </div>
+  </div>
 );
 
 export default Footer;

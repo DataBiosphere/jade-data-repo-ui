@@ -7,7 +7,6 @@ Based off of [React Redux Saga Boilerplate](https://github.com/gilbarbara/react-
 - react ^16.x
 - react-router 4.x
 - react-helmet 5.x
-- styled-components 4.x
 - redux 4.x
 - redux-saga 0.16.x
 

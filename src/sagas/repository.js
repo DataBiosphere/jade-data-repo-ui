@@ -3,8 +3,8 @@
  * @desc App
  */
 import { all, put, call, takeLatest } from 'redux-saga/effects';
+import axios from 'axios';
 
-import { request } from 'modules/client';
 import { ActionTypes } from 'constants/index';
 
 /**
@@ -15,16 +15,12 @@ import { ActionTypes } from 'constants/index';
  */
 export function* createDataset({ payload }) {
   try {
-    const response = yield call(request, '/api/repository/v1/datasets', {
-      payload,
-      method: 'POST',
-    });
+    const response = yield call(axios.post, '/api/repository/v1/datasets', payload);
     yield put({
       type: ActionTypes.DATASET_CREATE_SUCCESS,
       payload: { data: response },
     });
   } catch (err) {
-    /* istanbul ignore next */
     yield put({
       type: ActionTypes.EXCEPTION,
       payload: err,

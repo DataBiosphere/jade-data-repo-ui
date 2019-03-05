@@ -1,8 +1,7 @@
 {
-  "processors": ["stylelint-processor-styled-components"],
+  "processors": [],
   "extends": [
-    "stylelint-config-standard",
-    "stylelint-config-styled-components"
+    "stylelint-config-standard"
   ],
   "plugins": [
     "stylelint-order"
@@ -16,6 +15,7 @@
         "ignoreAtRules": ["else"]
       }
     ],
+    "declaration-block-trailing-semicolon": null,
     "at-rule-no-unknown": null,
     "color-named": "never",
     "declaration-colon-newline-after": null,

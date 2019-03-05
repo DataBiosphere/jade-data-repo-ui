@@ -22,10 +22,6 @@ function setup() {
 describe('WelcomeView', () => {
   const wrapper = setup();
 
-  it('should render properly', () => {
-    expect(wrapper).toMatchSnapshot();
-  });
-
   it('should handle login success', () => {
     const mockGoogleLogin = wrapper
       .find('GoogleLogin')
