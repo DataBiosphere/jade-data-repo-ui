@@ -6,8 +6,9 @@ export const easing = 'cubic-bezier(0.35, 0.01, 0.77, 0.34);';
 
 export default createMuiTheme({
   typography: {
+    color: '#333F52',
     useNextVariants: true,
-    fontWeight: '300',
+    fontWeight: '400',
     fontFamily: [
       'Montserrat',
       'BlinkMacSystemFont',
@@ -27,7 +28,7 @@ export default createMuiTheme({
       contrastText: '#ffffff',
     },
     secondary: {
-      main: '#74ae43',
+      main: '#81ab52',
       contrastText: '#8F96A1',
     },
   },
