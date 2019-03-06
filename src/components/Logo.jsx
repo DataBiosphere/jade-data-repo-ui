@@ -1,10 +1,11 @@
 import React from 'react';
 
 import Icon from 'assets/media/images/white-jade.png';
+import {withStyles} from '@material-ui/core';
+import PropTypes from 'prop-types';
 
 
-
-const styles = theme => ({
+const styles = ({
   logoStyles: {
     alignItems: 'flex-start',
     display: 'inline-flex',
@@ -21,26 +22,19 @@ const styles = theme => ({
   },
 });
 
+class Logo extends React.PureComponent {
+  static propTypes = {
+    classes: PropTypes.object.isRequired,
+  };
+  render() {
+    const { classes } = this.props;
+    return (
+      <div>
+        <img src={Icon} className={classes.logoStyles} alt="logo" />
+        <span className={classes.titleStyles}>Jade Data Repository</span>
+      </div>
+    )
+  }
+}
 
-export const logoStyles = {
-  alignItems: 'flex-start',
-  display: 'inline-flex',
-  height: '41px',
-  width: '41px',
-};
-
-const titleStyles = {
-  bottom: '12px',
-  color: '#fff',
-  fontSize: '21px',
-  fontWeight: '500',
-  left: '4px',
-  position: 'relative',
-};
-
-export default () => (
-  <div>
-    <img src={Icon} style={logoStyles} alt="logo" />
-    <span style={titleStyles}>Jade Data Repository</span>
-  </div>
-);
+export default withStyles(styles)(Logo);
