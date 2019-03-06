@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { GoogleLogin } from 'react-google-login';
 import { withStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
 
 import Hero from 'assets/media/images/hero.png';
 import { logOut, logIn } from 'actions/index';
@@ -39,6 +38,12 @@ const styles = theme => ({
     paddingTop: theme.spacing.unit * 2,
     textDecoration: 'none',
   },
+  terraLink: {
+    color: theme.palette.primary.main,
+    paddingBottom: theme.spacing.unit * 4,
+    paddingTop: theme.spacing.unit * 2,
+    textDecoration: 'none',
+  },
   header: {
     fontSize: '28px',
     lineHeight: '36px',
@@ -52,7 +57,11 @@ const styles = theme => ({
   warning: {
     fontWeight: '900',
     paddingBottom: theme.spacing.unit * 2,
+<<<<<<< HEAD
   },
+=======
+  }
+>>>>>>> styling pass on welcome page
 });
 
 class WelcomeView extends React.PureComponent {
@@ -76,7 +85,9 @@ class WelcomeView extends React.PureComponent {
     return (
       <div className={classes.container}>
         <div className={classes.mainContent}>
-          <div className={classes.title}>Welcome to the Jade Data Repository</div>
+          <div className={classes.title}>
+          Welcome to the Jade Data Repository
+          </div>
           <div>
             <GoogleLogin // stealing clientId from Terra
               clientId="500025638838-s2v23ar3spugtd5t2v1vgfa2sp7ppg0d.apps.googleusercontent.com"
@@ -92,9 +103,9 @@ class WelcomeView extends React.PureComponent {
             Terra uses your Google account. Once you have signed in and completed the user profile
             registration step, you can start using Terra.
           </p>
-          <a href="https://app.terra.bio/" className={classes.terraLink}>
+          <div href="https://app.terra.bio/" className={classes.terraLink}>
             Need to create a Terra account?
-          </a>
+          </div>
           <hr />
           <div>
             <div>
