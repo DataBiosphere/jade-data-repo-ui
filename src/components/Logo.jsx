@@ -1,10 +1,10 @@
 import React from 'react';
-
-import Icon from 'assets/media/images/white-jade.png';
 import { withStyles } from '@material-ui/core';
 import PropTypes from 'prop-types';
 
-const styles = theme => ({
+import Icon from 'assets/media/images/white-jade.png';
+
+  const styles = theme => ({
   logoStyles: {
     alignItems: 'flex-start',
     display: 'inline-flex',
