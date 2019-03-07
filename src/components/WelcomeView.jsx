@@ -38,12 +38,6 @@ const styles = theme => ({
     paddingTop: theme.spacing.unit * 2,
     textDecoration: 'none',
   },
-  terraLink: {
-    color: theme.palette.primary.main,
-    paddingBottom: theme.spacing.unit * 4,
-    paddingTop: theme.spacing.unit * 2,
-    textDecoration: 'none',
-  },
   header: {
     fontSize: '28px',
     lineHeight: '36px',
@@ -57,11 +51,7 @@ const styles = theme => ({
   warning: {
     fontWeight: '900',
     paddingBottom: theme.spacing.unit * 2,
-<<<<<<< HEAD
   },
-=======
-  }
->>>>>>> styling pass on welcome page
 });
 
 class WelcomeView extends React.PureComponent {
