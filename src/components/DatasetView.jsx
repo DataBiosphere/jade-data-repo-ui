@@ -1,15 +1,30 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+
+
+const styles = theme => ({
+  title: {
+    color: theme.palette.primary.main,
+    fontSize: '54px',
+    lineHeight: '66px',
+    paddingBottom: theme.spacing.unit * 8,
+  }
+});
+
 
 class DatasetView extends React.PureComponent {
-  static propTypes = {};
+  static propTypes = {
+    classes: PropTypes.object.isRequired,
+  };
 
   render() {
+    const { classes } = this.props;
     return (
       <div>
-        <h2>About Datasets</h2>
+        <div className={classes.title} >About Datasets</div>
         <p>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet.
           Proin gravida dolor sit amet lacus accumsan et viverra justo commodo. Proin sodales
@@ -30,4 +45,4 @@ function mapStateToProps() {
   return {};
 }
 
-export default connect(mapStateToProps)(DatasetView);
+export default connect(mapStateToProps)(withStyles(styles)(DatasetView));
