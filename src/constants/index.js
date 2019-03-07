@@ -34,3 +34,7 @@ export const STATUS = {
   SUCCESS: 'success',
   ERROR: 'error',
 };
+
+export const IMAGE = {
+  DEFAULT: 'default',
+};

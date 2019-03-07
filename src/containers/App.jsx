@@ -8,7 +8,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
+import Button from '@material-ui/core/Button';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
@@ -24,6 +24,7 @@ import Logo from 'components/Logo';
 import { logOut } from 'actions/index';
 import RoutePublic from 'components/RoutePublic';
 import RoutePrivate from 'components/RoutePrivate';
+import Avatar from '@material-ui/core/Avatar';
 
 const drawerWidth = 240;
 
@@ -32,6 +33,9 @@ const styles = theme => ({
     display: 'flex',
     fontFamily: theme.typography.fontFamily,
     fontWeight: theme.typography.fontWeight,
+  },
+  grow: {
+    flexGrow: 1,
   },
   layout: {
     width: 'auto',
@@ -137,16 +141,18 @@ export class App extends React.Component {
             <AppBar position="absolute" className={classNames(classes.appBar)}>
               <Toolbar className={classes.toolbar}>
                 <Logo />
+                <div className={classes.grow} />
                 {user.isAuthenticated && (
                   <div>
-                    <IconButton
+                    <Button
                       aria-owns={open ? 'menu-appbar' : undefined}
                       aria-haspopup="true"
                       onClick={this.handleMenu}
                       color="inherit"
                     >
-                      <AccountCircle />
-                    </IconButton>
+                      {user.image ? <Avatar src={user.image} alt={user.name} /> : <AccountCircle />}
+                      {user.name}
+                    </Button>
                     <Menu
                       id="menu-appbar"
                       anchorEl={anchorEl}

@@ -66,9 +66,12 @@ class WelcomeView extends React.PureComponent {
       dispatch(logOut());
     };
 
-    const onSignInSuccess = () => {
+    const onSignInSuccess = (user) => {
       const { dispatch } = this.props;
-      dispatch(logIn());
+      const name = user.profileObj && user.profileObj.name;
+      const image = user.profileObj && user.profileObj.imageUrl;
+
+      dispatch(logIn(name, image));
     };
     const { classes } = this.props;
 
