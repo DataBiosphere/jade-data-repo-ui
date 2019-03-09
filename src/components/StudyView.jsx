@@ -42,4 +42,3 @@ function mapStateToProps() {
 }
 
 export default connect(mapStateToProps)(withStyles(styles)(StudyView));
-
