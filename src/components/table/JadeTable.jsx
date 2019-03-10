@@ -43,7 +43,7 @@ const stableSort = (array, cmp) => {
 const getSorting = (order, orderBy) =>
   order === 'desc' ? (a, b) => desc(a, b, orderBy) : (a, b) => -desc(a, b, orderBy);
 
-class DataTable extends React.PureComponent {
+export class JadeTable extends React.PureComponent {
   state = {
     order: 'asc',
     orderBy: 'lastModified',
@@ -55,17 +55,15 @@ class DataTable extends React.PureComponent {
     rows: PropTypes.arrayOf(PropTypes.object),
   };
 
-  handleRequestSort = (event, columnId) => {
+  handleRequestSort = (event, property) => {
     const { order, orderBy } = this.state;
     let newOrder = 'desc';
-    if (orderBy === columnId && order === 'desc') {
+    if (orderBy === property && order === 'desc') {
       newOrder = 'asc';
     }
 
-    this.setState({ order: newOrder, orderBy: columnId });
+    this.setState({ order: newOrder, orderBy: property });
   };
-
-  // TODO: This should be operating off of keys, not indexes. It can't do the lookup correctly in desc above
 
   render() {
     const { classes, columns, rows } = this.props;
@@ -83,7 +81,9 @@ class DataTable extends React.PureComponent {
             {stableSort(rows, getSorting(order, orderBy)).map(row => (
               <TableRow key={row.id}>
                 {columns.map(col => (
-                  <TableCell key={col.id}>{row[col.property]}</TableCell>
+                  <TableCell key={col.property}>
+                    {col.render ? col.render(row) : row[col.property]}
+                  </TableCell>
                 ))}
               </TableRow>
             ))}
@@ -94,4 +94,4 @@ class DataTable extends React.PureComponent {
   }
 }
 
-export default withStyles(styles)(DataTable);
+export default withStyles(styles)(JadeTable);

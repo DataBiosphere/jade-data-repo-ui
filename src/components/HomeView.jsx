@@ -2,6 +2,8 @@ import React from 'react';
 import config from 'config';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import moment from 'moment';
+import { Link } from 'react-router-dom';
 
 import JadeTable from './table/JadeTable';
 
@@ -13,10 +15,25 @@ class HomeView extends React.PureComponent {
   render() {
     const { studies } = this.props;
     const columns = [
-      { id: 1, label: 'Study Name', property: 'name' },
-      { id: 2, label: 'Description', property: 'description' },
-      { id: 3, label: 'Last changed', property: 'createdDate' },
-      { id: 4, label: 'Date created', property: 'modifiedDate' },
+      {
+        label: 'Study Name',
+        property: 'name',
+        render: row => <Link to={`/studies/${row.id}`}>{row.name}</Link>,
+      },
+      {
+        label: 'Description',
+        property: 'description',
+      },
+      {
+        label: 'Last changed',
+        property: 'modifiedDate',
+        render: row => moment(row.modifiedDate).fromNow(),
+      },
+      {
+        label: 'Date created',
+        property: 'createdDate',
+        render: row => moment(row.createdDate).fromNow(),
+      },
     ];
     return (
       <div>

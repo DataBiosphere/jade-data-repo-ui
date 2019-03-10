@@ -9,7 +9,7 @@ import TableSortLabel from '@material-ui/core/TableSortLabel';
 
 const styles = () => {};
 
-class JadeTableHead extends React.PureComponent {
+export class JadeTableHead extends React.PureComponent {
   static propTypes = {
     columns: PropTypes.arrayOf(PropTypes.object),
     onRequestSort: PropTypes.func.isRequired,
@@ -31,7 +31,7 @@ class JadeTableHead extends React.PureComponent {
           {columns.map(
             col => (
               <TableCell
-                key={col.id}
+                key={col.property}
                 align={col.numeric ? 'right' : 'left'}
                 padding={col.disablePadding ? 'none' : 'default'}
                 sortDirection={orderBy === col.id ? order : false}

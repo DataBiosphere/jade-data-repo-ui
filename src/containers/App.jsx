@@ -174,7 +174,7 @@ export class App extends React.Component {
                 )}
               </Toolbar>
             </AppBar>
-            <main className={classes.content}>
+            <div className={classes.content}>
               <div className={classes.appBarSpacer} />
               <Switch>
                 <RoutePublic
@@ -186,7 +186,7 @@ export class App extends React.Component {
                 <RoutePrivate isAuthenticated={user.isAuthenticated} path="/" component={Private} />
                 <Route component={NotFound} />
               </Switch>
-            </main>
+            </div>
           </div>
         </MuiThemeProvider>
       </Router>
