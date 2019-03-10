@@ -55,7 +55,7 @@ class DataTable extends React.PureComponent {
 
   state = {
     order: 'asc',
-    orderBy: 1,
+    orderBy: 'lastModified',
   };
 
   handleRequestSort = (event, columnId) => {
@@ -87,7 +87,7 @@ class DataTable extends React.PureComponent {
             {stableSort(rows, getSorting(order, orderBy)).map(row => (
               <TableRow key={row.id}>
                 {columns.map(col => (
-                  <TableCell>{row[col.property]}</TableCell>
+                  <TableCell key={col.id}>{row[col.property]}</TableCell>
                 ))}
               </TableRow>
             ))}
