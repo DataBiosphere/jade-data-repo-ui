@@ -1,7 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-//import _ from 'lodash';
-import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -30,7 +28,7 @@ const desc = (a, b, orderBy) => {
     return 1;
   }
   return 0;
-}
+};
 
 const stableSort = (array, cmp) => {
   const stabilizedThis = array.map((el, index) => [el, index]);
@@ -40,22 +38,21 @@ const stableSort = (array, cmp) => {
     return a[1] - b[1];
   });
   return stabilizedThis.map(el => el[0]);
-}
+};
 
-const getSorting = (order, orderBy) => {
-  return order === 'desc' ? (a, b) => desc(a, b, orderBy) : (a, b) => -desc(a, b, orderBy);
-}
+const getSorting = (order, orderBy) =>
+  order === 'desc' ? (a, b) => desc(a, b, orderBy) : (a, b) => -desc(a, b, orderBy);
 
 class DataTable extends React.PureComponent {
+  state = {
+    order: 'asc',
+    orderBy: 'lastModified',
+  };
+
   static propTypes = {
     classes: PropTypes.object.isRequired,
     columns: PropTypes.arrayOf(PropTypes.object),
     rows: PropTypes.arrayOf(PropTypes.object),
-  };
-
-  state = {
-    order: 'asc',
-    orderBy: 'lastModified',
   };
 
   handleRequestSort = (event, columnId) => {
@@ -81,7 +78,6 @@ class DataTable extends React.PureComponent {
             onRequestSort={this.handleRequestSort}
             order={order}
             orderBy={orderBy}
-            rowCount={rows.length}
           />
           <TableBody>
             {stableSort(rows, getSorting(order, orderBy)).map(row => (

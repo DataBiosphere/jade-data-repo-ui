@@ -30,7 +30,7 @@ const styles = theme => ({
     fontSize: '18px',
     fontWeight: '300',
     paddingBottom: theme.spacing.unit * 2,
-    paddingTop: theme.spacing.unit * 8
+    paddingTop: theme.spacing.unit * 8,
   },
   terraLink: {
     color: theme.palette.primary.main,
@@ -51,7 +51,7 @@ const styles = theme => ({
   warning: {
     fontWeight: '900',
     paddingBottom: theme.spacing.unit * 2,
-  }
+  },
 });
 
 class WelcomeView extends React.PureComponent {
@@ -75,9 +75,7 @@ class WelcomeView extends React.PureComponent {
     return (
       <div className={classes.container}>
         <div className={classes.mainContent}>
-          <div className={classes.title}>
-          Welcome to the Jade Data Repository
-          </div>
+          <div className={classes.title}>Welcome to the Jade Data Repository</div>
           <div>
             <GoogleLogin // stealing clientId from Terra
               clientId="500025638838-s2v23ar3spugtd5t2v1vgfa2sp7ppg0d.apps.googleusercontent.com"
@@ -93,32 +91,32 @@ class WelcomeView extends React.PureComponent {
             Terra uses your Google account. Once you have signed in and completed the user profile
             registration step, you can start using Terra.
           </p>
-          <div href="https://app.terra.bio/" className={classes.terraLink} >Need to create a Terra account?</div>
+          <a href="https://app.terra.bio/" className={classes.terraLink}>
+            Need to create a Terra account?
+          </a>
           <hr />
           <div>
             <div>
               <div className={classes.warning}>WARNING NOTICE</div>
               <div>
                 <p>
-                  You are accessing a US Government web site which may contain information that must be
-                  protected under the US Privacy Act or other sensitive information and is intended for
-                  Government authorized use only.
+                  You are accessing a US Government web site which may contain information that must
+                  be protected under the US Privacy Act or other sensitive information and is
+                  intended Government authorized use only.
                 </p>
                 <p>
-                  Unauthorized attempts to upload information, change information,
-                  or use of this web site may result in disciplinary action, civil, and/or
-                  criminal penalties. Unauthorized users of this website should have no expectation
-                  of privacy regarding any communications or data processed by this website.
+                  Unauthorized attempts to upload information, change information, or use of this
+                  web site may result in disciplinary action, civil, and/or criminal penalties.
+                  Unauthorized users of this website should have no expectation of privacy regarding
+                  any communications or data processed by this website.
                 </p>
                 <p>
                   Anyone accessing this website expressly consents to monitoring of their actions
-                  and all communications or data transiting or stored on related to this website
-                  and is advised that if such monitoring reveals possible evidence of criminal
-                  activity, NIH may provide that evidence to law enforcement officials.
+                  and all communications or data transiting or stored on related to this website and
+                  is advised that if such monitoring reveals possible evidence of criminal activity,
+                  NIH may provide that evidence to law enforcement officials.
                 </p>
-                <p>
-                  WARNING NOTICE (when accessing TCGA controlled data)
-                </p>
+                <p>WARNING NOTICE (when accessing TCGA controlled data)</p>
                 <p>
                   You are reminded that when accessing TCGA controlled accessinformation you are
                   bound by the dbGaP TCGA DATA USE CERTIFICATION AGREEMENT (DUCA).
@@ -131,8 +129,6 @@ class WelcomeView extends React.PureComponent {
         <div className={classes.heroContainer}>
           <img src={Hero} alt="hero" className={classes.hero} />
         </div>
-
-
       </div>
     );
   }

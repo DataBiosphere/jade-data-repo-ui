@@ -7,15 +7,14 @@ import TableRow from '@material-ui/core/TableRow';
 import Tooltip from '@material-ui/core/Tooltip';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 
-const styles = theme => {};
+const styles = () => {};
 
 class JadeTableHead extends React.PureComponent {
   static propTypes = {
+    columns: PropTypes.arrayOf(PropTypes.object),
     onRequestSort: PropTypes.func.isRequired,
     order: PropTypes.string.isRequired,
     orderBy: PropTypes.string.isRequired,
-    rowCount: PropTypes.number.isRequired,
-    columns: PropTypes.arrayOf(PropTypes.object),
   };
 
   createSortHandler = property => event => {

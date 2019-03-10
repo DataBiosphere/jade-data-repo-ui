@@ -1,11 +1,10 @@
 import React from 'react';
 
 import Icon from 'assets/media/images/white-jade.png';
-import {withStyles} from '@material-ui/core';
+import { withStyles } from '@material-ui/core';
 import PropTypes from 'prop-types';
 
-
-const styles = ({
+const styles = {
   logoStyles: {
     alignItems: 'flex-start',
     display: 'inline-flex',
@@ -20,12 +19,13 @@ const styles = ({
     left: '4px',
     position: 'relative',
   },
-});
+};
 
 class Logo extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object.isRequired,
   };
+
   render() {
     const { classes } = this.props;
     return (
@@ -33,7 +33,7 @@ class Logo extends React.PureComponent {
         <img src={Icon} className={classes.logoStyles} alt="logo" />
         <span className={classes.titleStyles}>Jade Data Repository</span>
       </div>
-    )
+    );
   }
 }
 

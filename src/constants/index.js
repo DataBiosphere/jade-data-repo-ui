@@ -20,6 +20,7 @@ export const ActionTypes = keyMirror({
   USER_LOGOUT_FAILURE: undefined,
   CREATE_DATASET: undefined,
   DATASET_CREATE_SUCCESS: undefined,
+  GET_STUDIES_SUCCESS: undefined,
 });
 
 /**
