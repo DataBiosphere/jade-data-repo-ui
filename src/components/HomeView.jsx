@@ -3,7 +3,7 @@ import config from 'config';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import JadeTable from './JadeTable';
+import JadeTable from './table/JadeTable';
 
 class HomeView extends React.PureComponent {
   static propTypes = {
@@ -13,10 +13,10 @@ class HomeView extends React.PureComponent {
   render() {
     const { studies } = this.props;
     const columns = [
-      { name: 'Study Name', property: 'name' },
-      { name: 'Description', property: 'description' },
-      { name: 'Last changed', property: 'createdDate' },
-      { name: 'Date created', property: 'modifiedDate' },
+      { id: 1, label: 'Study Name', property: 'name' },
+      { id: 2, label: 'Description', property: 'description' },
+      { id: 3, label: 'Last changed', property: 'createdDate' },
+      { id: 4, label: 'Date created', property: 'modifiedDate' },
     ];
     return (
       <div>
