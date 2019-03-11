@@ -3,19 +3,19 @@ import immutable from 'immutability-helper';
 
 import { ActionTypes } from 'constants/index';
 
-export const studyState = {
-  studies: [],
+export const datasetState = {
+  datasets: [],
 };
 
 export default {
-  studies: handleActions(
+  datasets: handleActions(
     {
-      [ActionTypes.GET_STUDIES_SUCCESS]: (state, action) => {
+      [ActionTypes.GET_DATASETS_SUCCESS]: (state, action) => {
         return immutable(state, {
-          studies: { $set: action.studies.data.data },
+          datasets: { $set: action.datasets.data.data },
         });
       },
     },
-    studyState,
+    datasetState,
   ),
 };

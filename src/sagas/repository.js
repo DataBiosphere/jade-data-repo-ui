@@ -28,21 +28,33 @@ export function* createDataset({ payload }) {
   }
 }
 
-export function* enumerateDatasets({ payload }) {
+export function* getDatasets() {
+  // TODO: add limit and offset
   try {
-    const response = yield call(
-      axios.get,
-      '/api/repository/v1/datasets?offset=0&limit=10',
-      payload,
-    );
+    const response = yield call(axios.get, '/api/repository/v1/datasets');
     yield put({
-      type: ActionTypes.DATASETS_GET_SUCCESS,
-      payload: { data: response },
+      type: ActionTypes.GET_DATASETS_SUCCESS,
+      datasets: { data: response },
     });
   } catch (err) {
     yield put({
       type: ActionTypes.EXCEPTION,
-      payload: err,
+      datasets: err,
+    });
+  }
+}
+
+export function* getStudies() {
+  try {
+    const response = yield call(axios.get, '/api/repository/v1/studies');
+    yield put({
+      type: ActionTypes.GET_STUDIES_SUCCESS,
+      studies: { data: response },
+    });
+  } catch (err) {
+    yield put({
+      type: ActionTypes.EXCEPTION,
+      studies: err,
     });
   }
 }
@@ -51,8 +63,9 @@ export function* enumerateDatasets({ payload }) {
  * App Sagas
  */
 export default function* root() {
-  yield all(
-    [takeLatest(ActionTypes.CREATE_DATASET, createDataset)],
-    [takeLatest(ActionTypes.DATASETS_GET_SUCCESS, enumerateDatasets)],
-  );
+  yield all([
+    takeLatest(ActionTypes.CREATE_DATASET, createDataset),
+    takeLatest(ActionTypes.GET_DATASETS, getDatasets),
+    takeLatest(ActionTypes.GET_STUDIES, getStudies),
+  ]);
 }
