@@ -78,12 +78,12 @@ class Private extends React.Component {
             />
           </Tabs>
           <Switch>
-            <main className={classes.mainContent}>
+            <div className={classes.mainContent}>
               <Route exact path="/" component={HomeView} />
               <Route exact path="/studies" component={StudiesView} />
               <Route exact path="/datasets" component={DatasetView} />
               <Route exact path="/datasets/create" component={DatasetCreateView} />
-            </main>
+            </div>
           </Switch>
         </div>
       </BrowserRouter>

@@ -3,7 +3,6 @@ import { createForms } from 'react-redux-form';
 
 import rootSaga from 'sagas/index';
 import rootReducer from 'reducers/index';
-
 import middleware, { sagaMiddleware } from './middleware';
 
 const initialDatasetState = {

@@ -8,7 +8,6 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
@@ -20,6 +19,7 @@ import globalTheme from 'modules/theme';
 import Home from 'routes/Home';
 import Private from 'routes/Private';
 import NotFound from 'routes/NotFound';
+import Logo from 'components/Logo';
 
 import { logOut } from 'actions/index';
 import RoutePublic from 'components/RoutePublic';
@@ -30,6 +30,8 @@ const drawerWidth = 240;
 const styles = theme => ({
   root: {
     display: 'flex',
+    fontFamily: theme.typography.fontFamily,
+    fontWeight: theme.typography.fontWeight,
   },
   layout: {
     width: 'auto',
@@ -134,15 +136,7 @@ export class App extends React.Component {
             <CssBaseline />
             <AppBar position="absolute" className={classNames(classes.appBar)}>
               <Toolbar className={classes.toolbar}>
-                <Typography
-                  component="h1"
-                  variant="h6"
-                  color="inherit"
-                  noWrap
-                  className={classes.title}
-                >
-                  Data Repository
-                </Typography>
+                <Logo />
                 {user.isAuthenticated && (
                   <div>
                     <IconButton
@@ -180,7 +174,7 @@ export class App extends React.Component {
                 )}
               </Toolbar>
             </AppBar>
-            <main className={classes.content}>
+            <div className={classes.content}>
               <div className={classes.appBarSpacer} />
               <Switch>
                 <RoutePublic
@@ -192,7 +186,7 @@ export class App extends React.Component {
                 <RoutePrivate isAuthenticated={user.isAuthenticated} path="/" component={Private} />
                 <Route component={NotFound} />
               </Switch>
-            </main>
+            </div>
           </div>
         </MuiThemeProvider>
       </Router>
