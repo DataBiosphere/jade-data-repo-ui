@@ -33,11 +33,6 @@ class DatasetView extends React.PureComponent {
     const { classes, datasets } = this.props;
     const columns = [
       {
-        label: 'Dataset ID',
-        property: 'id',
-        render: row => <Link to={`/datasets/${row.id}`}>{row.id}</Link>,
-      },
-      {
         label: 'Dataset Name',
         property: 'name',
         render: row => <Link to={`/datasets/${row.id}`}>{row.name}</Link>,

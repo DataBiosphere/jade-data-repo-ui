@@ -46,11 +46,6 @@ class HomeView extends React.PureComponent {
     ];
     const datasetColumns = [
       {
-        label: 'Dataset ID',
-        property: 'id',
-        render: row => <Link to={`/datasets/${row.id}`}>{row.id}</Link>,
-      },
-      {
         label: 'Dataset Name',
         property: 'name',
         render: row => <Link to={`/datasets/${row.id}`}>{row.name}</Link>,
