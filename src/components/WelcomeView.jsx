@@ -66,16 +66,21 @@ class WelcomeView extends React.PureComponent {
       dispatch(logOut());
     };
 
-    const onSignInSuccess = () => {
+    const onSignInSuccess = (user) => {
       const { dispatch } = this.props;
-      dispatch(logIn());
+      const name = user.profileObj && user.profileObj.name;
+      const image = user.profileObj && user.profileObj.imageUrl;
+
+      dispatch(logIn(name, image));
     };
     const { classes } = this.props;
 
     return (
       <div className={classes.container}>
         <div className={classes.mainContent}>
-          <div className={classes.title}>Welcome to the Jade Data Repository</div>
+          <div className={classes.title}>
+          Welcome to the Jade Data Repository
+          </div>
           <div>
             <GoogleLogin // stealing clientId from Terra
               clientId="500025638838-s2v23ar3spugtd5t2v1vgfa2sp7ppg0d.apps.googleusercontent.com"
@@ -91,9 +96,9 @@ class WelcomeView extends React.PureComponent {
             Terra uses your Google account. Once you have signed in and completed the user profile
             registration step, you can start using Terra.
           </p>
-          <a href="https://app.terra.bio/" className={classes.terraLink}>
+          <div href="https://app.terra.bio/" className={classes.terraLink}>
             Need to create a Terra account?
-          </a>
+          </div>
           <hr />
           <div>
             <div>

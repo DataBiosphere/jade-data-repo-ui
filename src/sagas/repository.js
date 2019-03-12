@@ -28,9 +28,31 @@ export function* createDataset({ payload }) {
   }
 }
 
+export function* enumerateDatasets({ payload }) {
+  try {
+    const response = yield call(
+      axios.get,
+      '/api/repository/v1/datasets?offset=0&limit=10',
+      payload,
+    );
+    yield put({
+      type: ActionTypes.DATASETS_GET_SUCCESS,
+      payload: { data: response },
+    });
+  } catch (err) {
+    yield put({
+      type: ActionTypes.EXCEPTION,
+      payload: err,
+    });
+  }
+}
+
 /**
  * App Sagas
  */
 export default function* root() {
-  yield all([takeLatest(ActionTypes.CREATE_DATASET, createDataset)]);
+  yield all(
+    [takeLatest(ActionTypes.CREATE_DATASET, createDataset)],
+    [takeLatest(ActionTypes.DATASETS_GET_SUCCESS, enumerateDatasets)],
+  );
 }

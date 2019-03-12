@@ -1,10 +1,10 @@
 import React from 'react';
-
-import Icon from 'assets/media/images/white-jade.png';
 import { withStyles } from '@material-ui/core';
 import PropTypes from 'prop-types';
 
-const styles = {
+import Icon from 'assets/media/images/white-jade.png';
+
+  const styles = theme => ({
   logoStyles: {
     alignItems: 'flex-start',
     display: 'inline-flex',
@@ -19,7 +19,7 @@ const styles = {
     left: '4px',
     position: 'relative',
   },
-};
+});
 
 class Logo extends React.PureComponent {
   static propTypes = {
@@ -35,6 +35,6 @@ class Logo extends React.PureComponent {
       </div>
     );
   }
-}
+};
 
 export default withStyles(styles)(Logo);

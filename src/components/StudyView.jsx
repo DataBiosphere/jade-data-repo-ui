@@ -21,7 +21,7 @@ class StudyView extends React.PureComponent {
     const { classes } = this.props;
     return (
       <div>
-        <div className={classes.title}>About Studies</div>
+        <div className={classes.title} >About Studies</div>
         <p>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet.
           Proin gravida dolor sit amet lacus accumsan et viverra justo commodo. Proin sodales
@@ -29,7 +29,9 @@ class StudyView extends React.PureComponent {
           ridiculus mus. Nam fermentum, nulla luctus pharetra vulputate, felis tellus mollis orci,
           sed rhoncus pronin sapien nunc accuan eget.
         </p>
-        <div>STUDIES</div>
+        <div>
+          STUDIES
+        </div>
       </div>
     );
   }
@@ -40,3 +42,4 @@ function mapStateToProps() {
 }
 
 export default connect(mapStateToProps)(withStyles(styles)(StudyView));
+

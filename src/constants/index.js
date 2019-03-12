@@ -21,6 +21,7 @@ export const ActionTypes = keyMirror({
   CREATE_DATASET: undefined,
   DATASET_CREATE_SUCCESS: undefined,
   GET_STUDIES_SUCCESS: undefined,
+  DATASETS_GET_SUCCESS: undefined,
 });
 
 /**
@@ -33,4 +34,8 @@ export const STATUS = {
   READY: 'ready',
   SUCCESS: 'success',
   ERROR: 'error',
+};
+
+export const IMAGE = {
+  DEFAULT: 'default',
 };
