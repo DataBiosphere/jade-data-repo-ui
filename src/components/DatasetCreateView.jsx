@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { NavLink } from 'react-router-dom';
 import MultiSelect from 'react-select';
 import { Control, Form, actions, Errors } from 'react-redux-form';
 import _ from 'lodash';
@@ -9,7 +10,7 @@ import Combinatorics from 'js-combinatorics';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 
-import { createDataset } from 'actions/index';
+import { createDataset, getStudies } from 'actions/index';
 import ManageUsers from './ManageUsersView';
 
 function* colNameIter() {
@@ -42,16 +43,6 @@ function getColumnForField(sheet, assetField) {
   return 'A';
 }
 
-const studyOptions = [
-  { value: 'Minimal', label: 'Minimal' },
-  { value: 'study_b', label: 'Study B' },
-  { value: 'study_c', label: 'Study C' },
-  { value: 'study_d', label: 'Study D' },
-  { value: 'study_e', label: 'Study E' },
-  { value: 'study_f', label: 'Study F' },
-  { value: 'study_g', label: 'Study G' },
-];
-
 const assetOptions = [
   { value: 'participant', label: 'Participant' },
   { value: 'sample', label: 'Sample' },
@@ -64,7 +55,13 @@ export class DatasetCreateView extends React.PureComponent {
     ids: PropTypes.arrayOf(PropTypes.string),
     readers: PropTypes.arrayOf(PropTypes.string),
     study: PropTypes.string,
+    studies: PropTypes.arrayOf(PropTypes.string),
   };
+
+  componentDidMount() {
+    const { dispatch } = this.props;
+    dispatch(getStudies());
+  }
 
   handleSubmit(dataset) {
     const { dispatch } = this.props;
@@ -96,6 +93,14 @@ export class DatasetCreateView extends React.PureComponent {
   selectAsset(asset) {
     const { dispatch } = this.props;
     dispatch(actions.change('dataset.asset', asset));
+  }
+
+  getStudyOptions(studies) {
+    let studiesList = [];
+    studies.studies && studies.studies.map( study => {
+      studiesList.push({ value: study.id, label: study.name });
+    });
+    return studiesList;
   }
 
   addReader(newEmail) {
@@ -144,7 +149,8 @@ export class DatasetCreateView extends React.PureComponent {
 
   render() {
     const FormRow = props => <div style={{ paddingBottom: '1em' }}>{props.children}</div>;
-    const { asset, ids, readers, study } = this.props;
+    const { asset, ids, readers, studies, study } = this.props;
+    const studyOptions = this.getStudyOptions(studies);
 
     return (
       <div>
@@ -286,6 +292,7 @@ function mapStateToProps(state) {
     asset: state.dataset.asset,
     ids: state.dataset.ids,
     readers: state.dataset.readers,
+    studies: state.studies,
     study: state.dataset.study,
   };
 }
