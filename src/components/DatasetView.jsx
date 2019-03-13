@@ -21,7 +21,7 @@ class DatasetView extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired,
-    datasets: PropTypes.arrayOf(PropTypes.object),
+    datasets: PropTypes.object,
   };
 
   componentDidMount() {
