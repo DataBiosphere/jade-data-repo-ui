@@ -9,10 +9,11 @@ import HomeView from '../components/HomeView';
 import StudiesView from '../components/StudyView';
 import DatasetView from '../components/DatasetView';
 import DatasetCreateView from '../components/DatasetCreateView';
+import DatasetPreviewView from '../components/DatasetPreviewView';
 
 const styles = theme => ({
   mainContent: {
-    padding: theme.spacing.unit * 3,
+    padding: theme.spacing.unit * 3, // TODO this seems to be causing the computedMatch console error
   },
   tabsIndicator: {
     borderBottom: '4px solid #74ae43',
@@ -83,6 +84,7 @@ class Private extends React.Component {
               <Route exact path="/studies" component={StudiesView} />
               <Route exact path="/datasets" component={DatasetView} />
               <Route exact path="/datasets/create" component={DatasetCreateView} />
+              <Route exact path="/datasets/preview" component={DatasetPreviewView} />
             </div>
           </Switch>
         </div>

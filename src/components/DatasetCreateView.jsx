@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { NavLink } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import MultiSelect from 'react-select';
 import { Control, Form, actions, Errors } from 'react-redux-form';
 import _ from 'lodash';
@@ -10,7 +10,7 @@ import Combinatorics from 'js-combinatorics';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 
-import { createDataset, getStudies } from 'actions/index';
+import { getStudies } from 'actions/index';
 import ManageUsers from './ManageUsersView';
 
 function* colNameIter() {
@@ -61,24 +61,6 @@ export class DatasetCreateView extends React.PureComponent {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch(getStudies());
-  }
-
-  handleSubmit(dataset) {
-    const { dispatch } = this.props;
-    const payload = {
-      name: dataset.name,
-      description: dataset.description,
-      contents: [
-        {
-          source: {
-            studyName: dataset.study,
-            assetName: dataset.asset,
-          },
-          rootValues: dataset.ids,
-        },
-      ],
-    };
-    dispatch(createDataset(payload));
   }
 
   validateName(name) {
@@ -162,7 +144,7 @@ export class DatasetCreateView extends React.PureComponent {
           ridiculus mus. Nam fermentum, nulla luctus pharetra vulputate, felis tellus mollis orci,
           sed rhoncus pronin sapien nunc accuan eget.
         </p>
-        <Form model="dataset" onSubmit={data => this.handleSubmit(data)}>
+        <Form model="dataset" >
           <FormRow>
             <Control.text
               model="dataset.name"
@@ -221,10 +203,10 @@ export class DatasetCreateView extends React.PureComponent {
               component={props => (
                 <MultiSelect
                   {...props}
-                  onChange={e => this.selectStudy(e.value)}
+                  onChange={e => this.selectStudy(e.label)}
                   options={studyOptions}
                   placeholder="Search Studies"
-                  value={studyOptions.filter(option => option.value === study)}
+                  value={studyOptions.filter(option => option.label === study)}
                 />
               )}
             />
@@ -274,10 +256,17 @@ export class DatasetCreateView extends React.PureComponent {
 
           <FormRow>
             <Button variant="contained" type="button">
-              Cancel
+              <Link to="/datasets">
+                Cancel
+              </Link>
             </Button>
-            <Button variant="contained" type="submit" color="primary">
-              Preview Data
+            <Button
+              variant="contained"
+              color="primary"
+            >
+              <Link to="/datasets/preview">
+                Preview Data
+              </Link>
             </Button>
           </FormRow>
         </Form>

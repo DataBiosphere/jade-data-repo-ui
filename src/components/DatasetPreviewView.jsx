@@ -1,73 +1,48 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import MultiSelect from 'react-select';
-import { Control, Form, actions, Errors } from 'react-redux-form';
-import _ from 'lodash';
-import xlsx from 'xlsx';
-import Combinatorics from 'js-combinatorics';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
+import { withStyles } from '@material-ui/core/styles';
+import Card from '@material-ui/core/Card';
 
 import { createDataset } from 'actions/index';
-import ManageUsers from './ManageUsersView';
 
-function* colNameIter() {
-  const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  for (let i = 0; i < 3; i++) {
-    const args = [];
-    for (let j = 0; j <= i; j++) {
-      args.push(alphabet);
-    }
-    const product = Combinatorics.cartesianProduct.apply(null, args);
-    let item = product.next();
-    while (item) {
-      yield item.join('');
-      item = product.next();
-    }
-  }
-}
+const styles = theme => ({
+  container: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: theme.spacing.unit * 4,
+    margin: theme.spacing.unit * 4,
+  },
+  title: {
+    color: theme.palette.primary.main,
+    fontSize: '54px',
+    lineHeight: '66px',
+    paddingBottom: theme.spacing.unit * 8,
+  },
+  card: {
+    display: 'inline-block',
+    padding: theme.spacing.unit * 4,
+    width: '200px',
+  },
+  header: {
+    fontSize: '14px',
+    lineHeight: '22px',
+    fontWeight: '600',
+  },
+  values: {
+    paddingBottom: theme.spacing.unit * 3,
+  },
+});
 
-function getColumnForField(sheet, assetField) {
-  // go through column headers A1, B1, C1, ..., see if they match the asset root column
-  for (const column of colNameIter(sheet)) {
-    if (sheet[column + 1]) {
-      if (assetField === sheet[column + 1].v) {
-        return column;
-      }
-    } else {
-      break;
-    }
-  }
-  return 'A';
-}
-
-const studyOptions = [
-  { value: 'Minimal', label: 'Minimal' },
-  { value: 'study_b', label: 'Study B' },
-  { value: 'study_c', label: 'Study C' },
-  { value: 'study_d', label: 'Study D' },
-  { value: 'study_e', label: 'Study E' },
-  { value: 'study_f', label: 'Study F' },
-  { value: 'study_g', label: 'Study G' },
-];
-
-const assetOptions = [
-  { value: 'participant', label: 'Participant' },
-  { value: 'sample', label: 'Sample' },
-];
-
-export class DatasetCreateView extends React.PureComponent {
+export class DatasetPreviewView extends React.PureComponent {
   static propTypes = {
-    asset: PropTypes.string,
+    dataset: PropTypes.object,
     dispatch: PropTypes.func.isRequired,
-    ids: PropTypes.arrayOf(PropTypes.string),
-    readers: PropTypes.arrayOf(PropTypes.string),
-    study: PropTypes.string,
   };
 
-  handleSubmit(dataset) {
-    const { dispatch } = this.props;
+  componentDidMount() {
+    const { dataset, dispatch } = this.props;
     const payload = {
       name: dataset.name,
       description: dataset.description,
@@ -84,71 +59,15 @@ export class DatasetCreateView extends React.PureComponent {
     dispatch(createDataset(payload));
   }
 
-  validateName(name) {
-    return name && name.length > 0 && name.length < 64;
-  }
-
-  selectStudy(study) {
-    const { dispatch } = this.props;
-    dispatch(actions.change('dataset.study', study));
-  }
-
-  selectAsset(asset) {
-    const { dispatch } = this.props;
-    dispatch(actions.change('dataset.asset', asset));
-  }
-
-  addReader(newEmail) {
-    const { dispatch, readers } = this.props;
-    if (!_.includes(readers, newEmail)) {
-      dispatch(actions.change('dataset.readers', _.concat(readers, newEmail)));
-    }
-  }
-
-  removeReader(removeableEmail) {
-    const { dispatch, readers } = this.props;
-    const newReaders = _.clone(readers);
-    _.remove(newReaders, r => r === removeableEmail);
-    dispatch(actions.change('dataset.readers', newReaders));
-  }
-
-  parseFile = event => {
-    const { dispatch } = this.props;
-    const { files } = event.target;
-    const assetField = 'Epic';
-    if (files.length > 0) {
-      const reader = new FileReader();
-      reader.addEventListener('load', e => {
-        const data = e.target.result;
-        const workbook = xlsx.read(data, { type: 'binary' });
-        const values = [];
-        // assuming the upload has one spreadsheet
-        const sheetName = workbook.SheetNames[0];
-        const sheet = workbook.Sheets[sheetName];
-        const col = getColumnForField(sheet, assetField);
-        for (let i = 1; ; i++) {
-          const cell = sheet[col + i];
-          if (cell) {
-            values.push(cell.v);
-          } else {
-            break;
-          }
-        }
-        dispatch(actions.change('dataset.ids', values));
-      });
-      reader.readAsBinaryString(files[0]);
-    } else {
-      dispatch(actions.change('dataset.ids', []));
-    }
-  };
-
   render() {
-    const FormRow = props => <div style={{ paddingBottom: '1em' }}>{props.children}</div>;
-    const { asset, ids, readers, study } = this.props;
+    const { classes, dataset } = this.props;
+    // TODO when the job is completed -- what happens?
+    // what happens if you got to this page and we havent loaded data properly?
+    // what if it fails vs succeeds
 
     return (
       <div>
-        <h2>Create Dataset</h2>
+        <div className={classes.title} >Preview Dataset</div>
         <p>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet.
           Proin gravida dolor sit amet lacus accumsan et viverra justo commodo. Proin sodales
@@ -156,125 +75,20 @@ export class DatasetCreateView extends React.PureComponent {
           ridiculus mus. Nam fermentum, nulla luctus pharetra vulputate, felis tellus mollis orci,
           sed rhoncus pronin sapien nunc accuan eget.
         </p>
-        <Form model="dataset" onSubmit={data => this.handleSubmit(data)}>
-          <FormRow>
-            <Control.text
-              model="dataset.name"
-              id="dataset.name"
-              required
-              validators={{ name: this.validateName }}
-              component={props => (
-                <TextField
-                  {...props}
-                  placeholder="Dataset Name"
-                  style={{ width: '300px' }}
-                  variant="outlined"
-                />
-              )}
-            />
-          </FormRow>
-
-          <FormRow>
-            <Control.textarea
-              model="dataset.description"
-              id="dataset.description"
-              required
-              component={props => (
-                <TextField
-                  {...props}
-                  style={{ width: '800px' }} // fullWidth
-                  multiline
-                  placeholder="Add Dataset Description"
-                  rows="8"
-                  rowsMax="100"
-                  variant="outlined"
-                />
-              )}
-            />
-          </FormRow>
-          <FormRow>
-            <Control.custom
-              id="dataset.readers"
-              model="dataset.readers"
-              component={props => (
-                <ManageUsers
-                  {...props}
-                  addReader={newEmail => this.addReader(newEmail)}
-                  defaultValue="Custodian Email Address"
-                  removeReader={removeableEmail => this.removeReader(removeableEmail)}
-                  readers={readers}
-                />
-              )}
-            />
-          </FormRow>
-          <FormRow>
-            <Control.select
-              id="dataset.study"
-              model="dataset.study"
-              size="5"
-              component={props => (
-                <MultiSelect
-                  {...props}
-                  onChange={e => this.selectStudy(e.value)}
-                  options={studyOptions}
-                  placeholder="Search Studies"
-                  value={studyOptions.filter(option => option.value === study)}
-                />
-              )}
-            />
-          </FormRow>
-
-          <FormRow>
-            <Control.select
-              id="dataset.asset"
-              model="dataset.asset"
-              size="5"
-              component={props => (
-                <MultiSelect
-                  {...props}
-                  onChange={e => this.selectAsset(e.value)}
-                  options={assetOptions}
-                  placeholder="Select Asset Type..."
-                  value={assetOptions.filter(option => option.value === asset)}
-                />
-              )}
-            />
-          </FormRow>
-
-          <FormRow>
-            <input
-              type="file"
-              id="dataset.upload"
-              onChange={this.parseFile}
-              style={{ display: 'none' }}
-            />
-            <label htmlFor="dataset.upload">
-              <Button variant="contained" component="span" color="primary">
-                Import Ids
-              </Button>
-            </label>
-          </FormRow>
-
-          {ids && (
-            <FormRow>
-              <Control.select multiple={true} disabled={true} id="dataset.ids" model="dataset.ids">
-                <option>Preview</option>
-                {ids && ids.map(id => <option key={id}>{id}</option>)}
-              </Control.select>
-            </FormRow>
-          )}
-
-          <Errors model="dataset" />
-
-          <FormRow>
-            <Button variant="contained" type="button">
-              Cancel
-            </Button>
-            <Button variant="contained" type="submit" color="primary">
-              Preview Data
-            </Button>
-          </FormRow>
-        </Form>
+        <div className={classes.container} >
+          <div className={classes.card}>
+            <div className={classes.header} >Dataset Name: </div>
+            <div className={classes.values} > { dataset.name } </div>
+            <div className={classes.header} >Description: </div>
+            <div className={classes.values} > { dataset.description } </div>
+          </div>
+          <Card className={classes.card}>
+            <div className={classes.header} > Custodian(s): </div>
+            <div className={classes.values} > { dataset.readers } </div>
+            <div className={classes.header} > Access: </div>
+            <div className={classes.values} > { dataset.readers } </div>
+          </Card>
+        </div>
       </div>
     );
   }
@@ -283,11 +97,8 @@ export class DatasetCreateView extends React.PureComponent {
 /* istanbul ignore next */
 function mapStateToProps(state) {
   return {
-    asset: state.dataset.asset,
-    ids: state.dataset.ids,
-    readers: state.dataset.readers,
-    study: state.dataset.study,
+    dataset: state.dataset,
   };
 }
 
-export default connect(mapStateToProps)(DatasetCreateView);
+export default connect(mapStateToProps)(withStyles(styles)(DatasetPreviewView));
