@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { Link, NavLink } from 'react-router-dom';
 import MultiSelect from 'react-select';
 import { Control, Form, actions, Errors } from 'react-redux-form';
 import _ from 'lodash';
@@ -9,7 +10,7 @@ import Combinatorics from 'js-combinatorics';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 
-import { createDataset } from 'actions/index';
+import { getStudies } from 'actions/index';
 import ManageUsers from './ManageUsersView';
 
 function* colNameIter() {
@@ -42,16 +43,6 @@ function getColumnForField(sheet, assetField) {
   return 'A';
 }
 
-const studyOptions = [
-  { value: 'Minimal', label: 'Minimal' },
-  { value: 'study_b', label: 'Study B' },
-  { value: 'study_c', label: 'Study C' },
-  { value: 'study_d', label: 'Study D' },
-  { value: 'study_e', label: 'Study E' },
-  { value: 'study_f', label: 'Study F' },
-  { value: 'study_g', label: 'Study G' },
-];
-
 const assetOptions = [
   { value: 'participant', label: 'Participant' },
   { value: 'sample', label: 'Sample' },
@@ -64,24 +55,12 @@ export class DatasetCreateView extends React.PureComponent {
     ids: PropTypes.arrayOf(PropTypes.string),
     readers: PropTypes.arrayOf(PropTypes.string),
     study: PropTypes.string,
+    studies: PropTypes.arrayOf(PropTypes.string),
   };
 
-  handleSubmit(dataset) {
+  componentDidMount() {
     const { dispatch } = this.props;
-    const payload = {
-      name: dataset.name,
-      description: dataset.description,
-      contents: [
-        {
-          source: {
-            studyName: dataset.study,
-            assetName: dataset.asset,
-          },
-          rootValues: dataset.ids,
-        },
-      ],
-    };
-    dispatch(createDataset(payload));
+    dispatch(getStudies());
   }
 
   validateName(name) {
@@ -96,6 +75,14 @@ export class DatasetCreateView extends React.PureComponent {
   selectAsset(asset) {
     const { dispatch } = this.props;
     dispatch(actions.change('dataset.asset', asset));
+  }
+
+  getStudyOptions(studies) {
+    let studiesList = [];
+    studies.studies && studies.studies.map( study => {
+      studiesList.push({ value: study.id, label: study.name });
+    });
+    return studiesList;
   }
 
   addReader(newEmail) {
@@ -144,7 +131,8 @@ export class DatasetCreateView extends React.PureComponent {
 
   render() {
     const FormRow = props => <div style={{ paddingBottom: '1em' }}>{props.children}</div>;
-    const { asset, ids, readers, study } = this.props;
+    const { asset, ids, readers, studies, study } = this.props;
+    const studyOptions = this.getStudyOptions(studies);
 
     return (
       <div>
@@ -156,7 +144,7 @@ export class DatasetCreateView extends React.PureComponent {
           ridiculus mus. Nam fermentum, nulla luctus pharetra vulputate, felis tellus mollis orci,
           sed rhoncus pronin sapien nunc accuan eget.
         </p>
-        <Form model="dataset" onSubmit={data => this.handleSubmit(data)}>
+        <Form model="dataset" >
           <FormRow>
             <Control.text
               model="dataset.name"
@@ -215,10 +203,10 @@ export class DatasetCreateView extends React.PureComponent {
               component={props => (
                 <MultiSelect
                   {...props}
-                  onChange={e => this.selectStudy(e.value)}
+                  onChange={e => this.selectStudy(e.label)}
                   options={studyOptions}
                   placeholder="Search Studies"
-                  value={studyOptions.filter(option => option.value === study)}
+                  value={studyOptions.filter(option => option.label === study)}
                 />
               )}
             />
@@ -268,10 +256,17 @@ export class DatasetCreateView extends React.PureComponent {
 
           <FormRow>
             <Button variant="contained" type="button">
-              Cancel
+              <Link to="/datasets">
+                Cancel
+              </Link>
             </Button>
-            <Button variant="contained" type="submit" color="primary">
-              Preview Data
+            <Button
+              variant="contained"
+              color="primary"
+            >
+              <Link to="/datasets/preview">
+                Preview Data
+              </Link>
             </Button>
           </FormRow>
         </Form>
@@ -286,6 +281,7 @@ function mapStateToProps(state) {
     asset: state.dataset.asset,
     ids: state.dataset.ids,
     readers: state.dataset.readers,
+    studies: state.studies,
     study: state.dataset.study,
   };
 }

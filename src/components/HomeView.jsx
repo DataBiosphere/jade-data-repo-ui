@@ -11,8 +11,8 @@ import { getDatasets, getStudies } from 'actions/index';
 class HomeView extends React.PureComponent {
   static propTypes = {
     dispatch: PropTypes.func.isRequired,
-    datasets: PropTypes.arrayOf(PropTypes.object),
-    studies: PropTypes.arrayOf(PropTypes.object),
+    datasets: PropTypes.object,
+    studies: PropTypes.object,
   };
 
   componentDidMount() {
