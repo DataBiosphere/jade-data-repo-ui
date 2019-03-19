@@ -1,10 +1,10 @@
 import { expectSaga } from 'redux-saga-test-plan';
 
-import repository, { createDataset } from 'sagas/repository';
+import repository, { getDatasets, getStudies } from 'sagas/repository';
 import { ActionTypes } from 'constants/index';
 
 jest.mock('axios', () => ({
-  post: () => ({ items: [] }),
+  get: () => ({ items: [] }),
 }));
 
 describe('repository', () => {
@@ -15,11 +15,21 @@ describe('repository', () => {
         done();
       }));
 
-  it('should have the repos saga', () =>
-    expectSaga(createDataset, { payload: { query: 'react' } })
+  it('should have the get datasets saga', () =>
+    expectSaga(getDatasets)
       .put({
-        type: ActionTypes.DATASET_CREATE_SUCCESS,
-        payload: {
+        type: ActionTypes.GET_DATASETS_SUCCESS,
+        datasets: {
+          data: { items: [] },
+        },
+      })
+      .run());
+
+  it('should have the get studies saga', () =>
+    expectSaga(getStudies)
+      .put({
+        type: ActionTypes.GET_STUDIES_SUCCESS,
+        studies: {
           data: { items: [] },
         },
       })
