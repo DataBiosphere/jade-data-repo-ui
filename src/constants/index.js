@@ -20,14 +20,19 @@ export const ActionTypes = keyMirror({
   USER_LOGOUT_FAILURE: undefined,
   CREATE_DATASET: undefined,
   DATASET_CREATE_SUCCESS: undefined,
-  GET_STUDIES_SUCCESS: undefined,
   GET_STUDIES: undefined,
+  GET_STUDIES_SUCCESS: undefined,
   GET_STUDY_BY_ID: undefined,
   GET_STUDY_BY_ID_SUCCESS: undefined,
-  GET_DATASETS_SUCCESS: undefined,
   GET_DATASETS: undefined,
+  GET_DATASETS_SUCCESS: undefined,
   GET_DATASET_BY_ID: undefined,
   GET_DATASET_BY_ID_SUCCESS: undefined,
+  GET_JOB_RESULT: undefined,
+  GET_JOB_RESULT_SUCCESS: undefined,
+  GET_JOB_RESULT_FAILURE: undefined,
+  GET_JOB_BY_ID: undefined,
+  GET_JOB_BY_ID_SUCCESS: undefined,
 });
 
 /**
