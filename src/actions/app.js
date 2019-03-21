@@ -23,3 +23,8 @@ export const { getDatasets } = createActions({
   [ActionTypes.GET_DATASETS_SUCCESS]: datasets => datasets,
   [ActionTypes.GET_DATASETS]: datasets => datasets,
 });
+
+export const { getDatasetById } = createActions({
+  [ActionTypes.GET_DATASET_BY_ID]: dataset => dataset,
+  [ActionTypes.GET_DATASET_BY_ID_SUCCESS]: dataset => dataset,
+});
