@@ -24,6 +24,8 @@ export const ActionTypes = keyMirror({
   GET_STUDIES: undefined,
   GET_DATASETS_SUCCESS: undefined,
   GET_DATASETS: undefined,
+  GET_DATASET_BY_ID: undefined,
+  GET_DATASET_BY_ID_SUCCESS: undefined,
 });
 
 /**
