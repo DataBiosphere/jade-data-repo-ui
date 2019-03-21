@@ -4,12 +4,45 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
+import { withStyles } from '@material-ui/core/styles';
 
 import JadeTable from './table/JadeTable';
 import { getDatasets, getStudies } from 'actions/index';
 
+const styles = theme => ({
+  wrapper: {
+    padding: theme.spacing.unit * 4,
+    margin: theme.spacing.unit * 4,
+  },
+  container: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  title: {
+    color: theme.palette.primary.main,
+    fontSize: '54px',
+    lineHeight: '66px',
+    paddingBottom: theme.spacing.unit * 8,
+  },
+  card: {
+    display: 'inline-block',
+    padding: theme.spacing.unit * 4,
+    width: '200px',
+  },
+  header: {
+    fontSize: '14px',
+    lineHeight: '22px',
+    fontWeight: '600',
+  },
+  values: {
+    paddingBottom: theme.spacing.unit * 3,
+  },
+});
+
 class HomeView extends React.PureComponent {
   static propTypes = {
+    classes: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired,
     datasets: PropTypes.object,
     studies: PropTypes.object,
@@ -22,7 +55,7 @@ class HomeView extends React.PureComponent {
   }
 
   render() {
-    const { datasets, studies } = this.props;
+    const { classes, datasets, studies } = this.props;
     const studyColumns = [
       {
         label: 'Study Name',
@@ -66,10 +99,11 @@ class HomeView extends React.PureComponent {
       },
     ];
     return (
-      <div>
-        <h1>{config.description} at a glance</h1>
+      <div className={classes.wrapper}>
+        <div className={classes.title} >{config.description} at a glance</div>
+        <div className={classes.header} >STUDIES</div>
         {studies && studies.studies && <JadeTable columns={studyColumns} rows={studies.studies} />}
-
+        <div className={classes.header} >DATASETS</div>
         {datasets && datasets.datasets && <JadeTable columns={datasetColumns} rows={datasets.datasets} />}
 
       </div>
@@ -84,4 +118,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(HomeView);
+export default connect(mapStateToProps)(withStyles(styles)(HomeView));
