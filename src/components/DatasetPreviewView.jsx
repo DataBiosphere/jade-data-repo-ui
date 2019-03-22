@@ -5,6 +5,8 @@ import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 
 import { createDataset } from 'actions/index';
+import {Link, Route} from 'react-router-dom';
+import DatasetDetailView from './DatasetDetailView';
 
 const styles = theme => ({
   container: {
@@ -37,6 +39,7 @@ const styles = theme => ({
 
 export class DatasetPreviewView extends React.PureComponent {
   static propTypes = {
+    classes: PropTypes.object.isRequired,
     dataset: PropTypes.object,
     dispatch: PropTypes.func.isRequired,
   };
