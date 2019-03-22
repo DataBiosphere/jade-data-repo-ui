@@ -35,8 +35,8 @@ const styles = theme => ({
     lineHeight: '22px',
     fontWeight: '600',
   },
-  values: {
-    paddingBottom: theme.spacing.unit * 3,
+  jadeTableSpacer: {
+    paddingBottom: theme.spacing.unit * 8,
   },
 });
 
@@ -60,7 +60,7 @@ class HomeView extends React.PureComponent {
       {
         label: 'Study Name',
         property: 'name',
-        render: row => <Link to={`/studies/${row.id}`}>{row.name}</Link>,
+        render: row => <Link to={`/study/${row.id}`}>{row.name}</Link>,
       },
       {
         label: 'Description',
@@ -100,9 +100,10 @@ class HomeView extends React.PureComponent {
     ];
     return (
       <div className={classes.wrapper}>
-        <div className={classes.title} >{config.description} at a glance</div>
+        <div className={classes.title} >Jade Data Repository at a glance</div>
         <div className={classes.header} >STUDIES</div>
         {studies && studies.studies && <JadeTable columns={studyColumns} rows={studies.studies} />}
+        <div className={classes.jadeTableSpacer}/>
         <div className={classes.header} >DATASETS</div>
         {datasets && datasets.datasets && <JadeTable columns={datasetColumns} rows={datasets.datasets} />}
 
