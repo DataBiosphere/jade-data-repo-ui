@@ -81,6 +81,7 @@ export class DatasetPreviewView extends React.PureComponent {
         <div className={classes.container} >
           <div className={classes.card}>
             <div className={classes.header} >Dataset Name: </div>
+            {/* Does the dataset exist yet? if yes -- make this a link*/}
             <div className={classes.values} > { dataset.name } </div>
             <div className={classes.header} >Description: </div>
             <div className={classes.values} > { dataset.description } </div>
