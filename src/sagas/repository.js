@@ -2,7 +2,7 @@
  * @module Sagas/App
  * @desc App
  */
-import { all, put, call, race, take, takeLatest } from 'redux-saga/effects';
+import { all, put, call, takeLatest } from 'redux-saga/effects';
 import { delay } from 'redux-saga';
 import axios from 'axios';
 
@@ -19,29 +19,23 @@ import { ActionTypes } from 'constants/index';
  * Saga poller
  */
 function* pollJobWorker(jobId) {
-  let jobStatus = 'running';
-  while (jobStatus === 'running') {
-    try {
-      const response = yield call(axios.get, '/api/repository/v1/jobs/' + jobId);
-      jobStatus = response.data.job_status;
+  try {
+    const response = yield call(axios.get, '/api/repository/v1/jobs/' + jobId);
+    const jobStatus = response.data.job_status;
+    if (jobStatus !== 'running') {
+      const resultResponse = yield call(axios.get, '/api/repository/v1/jobs/' + jobId + '/result');
+      yield put({
+        type: ActionTypes.GET_JOB_RESULT_SUCCESS,
+        payload: { jobResult: resultResponse.data },
+      });
+    } else {
       yield put({
         type: ActionTypes.GET_JOB_BY_ID_SUCCESS,
         payload: { status: response.job_status },
       });
       yield call(delay, 4000);
-    } catch (err) {
-      yield put({
-        type: ActionTypes.EXCEPTION,
-        payload: err,
-      });
+      yield call(pollJobWorker, jobId);
     }
-  }
-  try {
-    const response = yield call(axios.get, '/api/repository/v1/jobs/' + jobId + '/result');
-    yield put({
-      type: ActionTypes.GET_JOB_RESULT_SUCCESS,
-      payload: { jobResult: response.data },
-    });
   } catch (err) {
     yield put({
       type: ActionTypes.EXCEPTION,
@@ -62,7 +56,7 @@ export function* createDataset({ payload }) {
       type: ActionTypes.DATASET_CREATE_SUCCESS,
       payload: { data: response, createdDataset: payload },
     });
-    yield race([call(pollJobWorker, jobId), take(ActionTypes.GET_JOB_RESULT_SUCCESS)]);
+    yield call(pollJobWorker, jobId);
   } catch (err) {
     yield put({
       type: ActionTypes.EXCEPTION,
