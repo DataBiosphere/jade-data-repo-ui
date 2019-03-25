@@ -120,6 +120,7 @@ export class DatasetDetailView extends React.PureComponent {
             <div className={classes.header}>Viewers: </div>
             <div className={classes.values}> {dataset.readers} </div>
             <div className={classes.header}> Date Created: </div>
+<<<<<<< HEAD
             <div className={classes.values}> {moment(dataset.createdDate).fromNow()} </div>
             <div>
               {dataset && dataset.id && (
@@ -130,6 +131,14 @@ export class DatasetDetailView extends React.PureComponent {
                   readers={hardCodedReaders}
                 />
               )}
+=======
+            <div className={classes.values}> {dataset.createdDate} </div>
+            <div className={classes.header}> Last Modified: </div>
+            <div className={classes.values}> {dataset.readers} </div>
+            {/*TODO hook this up to SAM?!?!?*/}
+            <div>
+              <ManageUsersModal />
+>>>>>>> add user modal button to dataset details page
             </div>
           </Card>
         </div>
