@@ -127,7 +127,6 @@ export function* getStudyById({ payload }) {
   const studyId = payload;
   try {
     const response = yield call(axios.get, '/api/repository/v1/studies/' + studyId);
-    console.log(response);
     yield put({
       type: ActionTypes.GET_STUDY_BY_ID_SUCCESS,
       study: { data: response },
