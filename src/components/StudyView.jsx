@@ -2,11 +2,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import JadeTable from './table/JadeTable';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
 
 import { getStudies } from 'actions/index';
+import JadeTable from './table/JadeTable';
 
 const styles = theme => ({
   wrapper: {
@@ -63,15 +63,8 @@ class StudyView extends React.PureComponent {
     ];
     return (
       <div className={classes.wrapper}>
-        <div className={classes.title} >About Studies</div>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet.
-          Proin gravida dolor sit amet lacus accumsan et viverra justo commodo. Proin sodales
-          pulvinar sic tempor. Sociis natoque penatibus et magnis dis parturient montes, nascetur
-          ridiculus mus. Nam fermentum, nulla luctus pharetra vulputate, felis tellus mollis orci,
-          sed rhoncus pronin sapien nunc accuan eget.
-        </p>
-        <div className={classes.header} >STUDIES</div>
+        <div className={classes.title}>About Studies</div>
+        <div className={classes.header}>STUDIES</div>
         {studies && studies.studies && <JadeTable columns={columns} rows={studies.studies} />}
       </div>
     );
@@ -85,4 +78,3 @@ function mapStateToProps(state) {
 }
 
 export default connect(mapStateToProps)(withStyles(styles)(StudyView));
-

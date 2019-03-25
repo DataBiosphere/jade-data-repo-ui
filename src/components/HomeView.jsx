@@ -1,13 +1,12 @@
 import React from 'react';
-import config from 'config';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 
-import JadeTable from './table/JadeTable';
 import { getDatasets, getStudies } from 'actions/index';
+import JadeTable from './table/JadeTable';
 
 const styles = theme => ({
   wrapper: {
@@ -43,8 +42,8 @@ const styles = theme => ({
 class HomeView extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    dispatch: PropTypes.func.isRequired,
     datasets: PropTypes.object,
+    dispatch: PropTypes.func.isRequired,
     studies: PropTypes.object,
   };
 
@@ -100,13 +99,14 @@ class HomeView extends React.PureComponent {
     ];
     return (
       <div className={classes.wrapper}>
-        <div className={classes.title} >Jade Data Repository at a glance</div>
-        <div className={classes.header} >STUDIES</div>
+        <div className={classes.title}>Jade Data Repository at a glance</div>
+        <div className={classes.header}>STUDIES</div>
         {studies && studies.studies && <JadeTable columns={studyColumns} rows={studies.studies} />}
-        <div className={classes.jadeTableSpacer}/>
-        <div className={classes.header} >DATASETS</div>
-        {datasets && datasets.datasets && <JadeTable columns={datasetColumns} rows={datasets.datasets} />}
-
+        <div className={classes.jadeTableSpacer} />
+        <div className={classes.header}>DATASETS</div>
+        {datasets && datasets.datasets && (
+          <JadeTable columns={datasetColumns} rows={datasets.datasets} />
+        )}
       </div>
     );
   }

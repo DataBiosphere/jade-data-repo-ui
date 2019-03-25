@@ -6,9 +6,9 @@ import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import { Link } from 'react-router-dom';
 
-import { getDatasetById, getStudies } from 'actions/index';
-import JadeTable from './table/JadeTable';
+import { getDatasetById } from 'actions/index';
 import moment from 'moment';
+import JadeTable from './table/JadeTable';
 
 const styles = theme => ({
   wrapper: {
@@ -81,27 +81,27 @@ export class DatasetDetailView extends React.PureComponent {
     ];
     return (
       <div className={classes.wrapper}>
-        <div className={classes.container} >
+        <div className={classes.container}>
           <div>
-            <div className={classes.title} >{dataset.name}</div> {/*TODO add ability to edit name?*/}
+            <div className={classes.title}>{dataset.name}</div> {/*TODO add ability to edit name?*/}
             <div>{dataset.description}</div>
           </div>
           <Card className={classes.card}>
-            <div className={classes.header} >Principal Investigator: </div>
+            <div className={classes.header}>Principal Investigator: </div>
             {/*TODO where are we even storing this info?*/}
-            <div className={classes.values} > { dataset.readers } </div>
-            <div className={classes.header} >Custodian(s): </div>
-            <div className={classes.values} > { dataset.readers } </div>
-            <div className={classes.header} > Date Created: </div>
-            <div className={classes.values} > { dataset.createdDate } </div>
-            <div className={classes.header} > Last Modified: </div>
-            <div className={classes.values} > { dataset.readers } </div>
+            <div className={classes.values}> {dataset.readers} </div>
+            <div className={classes.header}>Custodian(s): </div>
+            <div className={classes.values}> {dataset.readers} </div>
+            <div className={classes.header}> Date Created: </div>
+            <div className={classes.values}> {dataset.createdDate} </div>
+            <div className={classes.header}> Last Modified: </div>
+            <div className={classes.values}> {dataset.readers} </div>
             {/*TODO hook this up to SAM?!?!?*/}
             <div>Manage Viewers</div>
           </Card>
         </div>
         <div>
-          <div className={classes.header} >STUDIES IN THIS DATASET</div>  {/*TODO why is there a + here?*/}
+          <div className={classes.header}>STUDIES IN THIS DATASET</div>
           {/*TODO add front end search once there is more than one study in a dataset*/}
           {dataset && dataset.source && <JadeTable columns={columns} rows={studies} />}
         </div>
