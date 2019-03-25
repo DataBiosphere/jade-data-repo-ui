@@ -1,12 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import moment from 'moment';
 import { Link, NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 
 import { getDatasets } from 'actions/index';
 import JadeTable from './table/JadeTable';
-import moment from 'moment';
 
 const styles = theme => ({
   wrapper: {
@@ -29,8 +29,8 @@ const styles = theme => ({
 class DatasetView extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    dispatch: PropTypes.func.isRequired,
     datasets: PropTypes.object,
+    dispatch: PropTypes.func.isRequired,
   };
 
   componentDidMount() {
@@ -63,7 +63,7 @@ class DatasetView extends React.PureComponent {
     ];
     return (
       <div className={classes.wrapper}>
-        <div className={classes.title} >About Datasets</div>
+        <div className={classes.title}>About Datasets</div>
         <p>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet.
           Proin gravida dolor sit amet lacus accumsan et viverra justo commodo. Proin sodales
@@ -74,8 +74,9 @@ class DatasetView extends React.PureComponent {
         <div className={classes.header}>
           DATASETS
           <NavLink to="/datasets/create"> +</NavLink>
-
-          {datasets && datasets.datasets && <JadeTable columns={columns} rows={datasets.datasets} />}
+          {datasets && datasets.datasets && (
+            <JadeTable columns={columns} rows={datasets.datasets} />
+          )}
         </div>
       </div>
     );

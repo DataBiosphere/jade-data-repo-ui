@@ -66,7 +66,7 @@ class WelcomeView extends React.PureComponent {
       dispatch(logOut());
     };
 
-    const onSignInSuccess = (user) => {
+    const onSignInSuccess = user => {
       const { dispatch } = this.props;
       const name = user.profileObj && user.profileObj.name;
       const image = user.profileObj && user.profileObj.imageUrl;
@@ -78,9 +78,7 @@ class WelcomeView extends React.PureComponent {
     return (
       <div className={classes.container}>
         <div className={classes.mainContent}>
-          <div className={classes.title}>
-          Welcome to the Jade Data Repository
-          </div>
+          <div className={classes.title}>Welcome to the Jade Data Repository</div>
           <div>
             <GoogleLogin // TODO this component may be unuseable once we require a terra registration
               // stealing clientId from Terra
@@ -89,7 +87,7 @@ class WelcomeView extends React.PureComponent {
               onSuccess={onSignInSuccess}
               onFailure={onSignInFailure}
               isSignedIn
-              cookiePolicy={'single_host_origin'}
+              cookiePolicy="single_host_origin"
               prompt="select_account"
               scope="openid profile email"
               theme="dark"

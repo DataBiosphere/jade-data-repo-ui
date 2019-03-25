@@ -5,8 +5,6 @@ import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 
 import { createDataset } from 'actions/index';
-import {Link, Route} from 'react-router-dom';
-import DatasetDetailView from './DatasetDetailView';
 
 const styles = theme => ({
   container: {
@@ -70,27 +68,21 @@ export class DatasetPreviewView extends React.PureComponent {
 
     return (
       <div>
-        <div className={classes.title} >Preview Dataset</div>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet.
-          Proin gravida dolor sit amet lacus accumsan et viverra justo commodo. Proin sodales
-          pulvinar sic tempor. Sociis natoque penatibus et magnis dis parturient montes, nascetur
-          ridiculus mus. Nam fermentum, nulla luctus pharetra vulputate, felis tellus mollis orci,
-          sed rhoncus pronin sapien nunc accuan eget.
-        </p>
-        <div className={classes.container} >
+        <div className={classes.title}>Preview Dataset</div>
+        <p>Your new dataset is being created.</p>
+        <div className={classes.container}>
           <div className={classes.card}>
-            <div className={classes.header} >Dataset Name: </div>
+            <div className={classes.header}> Dataset Name: </div>
             {/* Does the dataset exist yet? if yes -- make this a link*/}
-            <div className={classes.values} > { dataset.name } </div>
-            <div className={classes.header} >Description: </div>
-            <div className={classes.values} > { dataset.description } </div>
+            <div className={classes.values}> {dataset.name} </div>
+            <div className={classes.header}> Description: </div>
+            <div className={classes.values}> {dataset.description} </div>
           </div>
           <Card className={classes.card}>
-            <div className={classes.header} > Custodian(s): </div>
-            <div className={classes.values} > { dataset.readers } </div>
-            <div className={classes.header} > Access: </div>
-            <div className={classes.values} > { dataset.readers } </div>
+            <div className={classes.header}> Custodian(s): </div>
+            <div className={classes.values}> {dataset.readers} </div>
+            <div className={classes.header}> Access: </div>
+            <div className={classes.values}> {dataset.readers} </div>
           </Card>
         </div>
       </div>

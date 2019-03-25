@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Link, NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import MultiSelect from 'react-select';
 import { Control, Form, actions, Errors } from 'react-redux-form';
 import _ from 'lodash';
@@ -54,8 +54,8 @@ export class DatasetCreateView extends React.PureComponent {
     dispatch: PropTypes.func.isRequired,
     ids: PropTypes.arrayOf(PropTypes.string),
     readers: PropTypes.arrayOf(PropTypes.string),
-    study: PropTypes.string,
     studies: PropTypes.arrayOf(PropTypes.string),
+    study: PropTypes.string,
   };
 
   componentDidMount() {
@@ -78,10 +78,8 @@ export class DatasetCreateView extends React.PureComponent {
   }
 
   getStudyOptions(studies) {
-    let studiesList = [];
-    studies.studies && studies.studies.map( study => {
-      studiesList.push({ value: study.id, label: study.name });
-    });
+    const studiesList = [];
+    studies.studies.map(study => studiesList.push({ value: study.id, label: study.name }));
     return studiesList;
   }
 
@@ -144,7 +142,7 @@ export class DatasetCreateView extends React.PureComponent {
           ridiculus mus. Nam fermentum, nulla luctus pharetra vulputate, felis tellus mollis orci,
           sed rhoncus pronin sapien nunc accuan eget.
         </p>
-        <Form model="dataset" >
+        <Form model="dataset">
           <FormRow>
             <Control.text
               model="dataset.name"
@@ -251,22 +249,13 @@ export class DatasetCreateView extends React.PureComponent {
               </Control.select>
             </FormRow>
           )}
-
           <Errors model="dataset" />
-
           <FormRow>
             <Button variant="contained" type="button">
-              <Link to="/datasets">
-                Cancel
-              </Link>
+              <Link to="/datasets">Cancel</Link>
             </Button>
-            <Button
-              variant="contained"
-              color="primary"
-            >
-              <Link to="/datasets/preview">
-                Preview Data
-              </Link>
+            <Button variant="contained" color="primary">
+              <Link to="/datasets/preview">Preview Data</Link>
             </Button>
           </FormRow>
         </Form>
