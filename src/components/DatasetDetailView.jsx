@@ -55,7 +55,7 @@ export class DatasetDetailView extends React.PureComponent {
   }
 
   render() {
-    const { classes, dataset } = this.props;
+    const { classes, dataset, dispatch } = this.props;
     const studies = dataset.source && dataset.source.map(s => s.study);
     const columns = [
       {
@@ -91,7 +91,10 @@ export class DatasetDetailView extends React.PureComponent {
             <div className={classes.header}> Date Created: </div>
             <div className={classes.values}> {moment(dataset.createdDate).fromNow()} </div>
             <div>
-              <ManageUsersModal />
+            { dataset && dataset.id && <ManageUsersModal
+                datasetUUID={dataset.id}
+                dispatch={dispatch}
+              />}
             </div>
           </Card>
         </div>
