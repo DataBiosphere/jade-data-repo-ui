@@ -14,7 +14,7 @@ const styles = theme => ({
     margin: theme.spacing.unit,
   },
   chipContainer: {
-    border: '1px red solid',
+    margin: theme.spacing.unit,
     maxHeight: theme.spacing.unit * 20,
     overflow: 'scroll',
     width: '100%',
