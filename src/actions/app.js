@@ -8,8 +8,6 @@ import { createActions } from 'redux-actions';
 
 import { ActionTypes } from 'constants/index';
 
-export { goBack, go, push, replace } from 'modules/history';
-
 export const { createDataset } = createActions({
   [ActionTypes.CREATE_DATASET]: dataset => dataset,
 });
@@ -32,4 +30,9 @@ export const { getDatasetById } = createActions({
 export const { getStudyById } = createActions({
   [ActionTypes.GET_STUDY_BY_ID]: study => study,
   [ActionTypes.GET_STUDY_BY_ID_SUCCESS]: study => study,
+});
+
+export const { getJobById } = createActions({
+  [ActionTypes.GET_JOB_BY_ID_SUCCESS]: datasets => datasets,
+  [ActionTypes.GET_JOB_BY_ID]: datasets => datasets,
 });

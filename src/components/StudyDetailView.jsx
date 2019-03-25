@@ -56,7 +56,6 @@ export class StudyDetailView extends React.PureComponent {
 
   render() {
     const { classes, study } = this.props;
-    console.log(study);
     //const studies = dataset.source && dataset.source.map(s=> s.study);
 
     return (

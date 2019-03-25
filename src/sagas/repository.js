@@ -3,6 +3,7 @@
  * @desc App
  */
 import { all, put, call, takeLatest } from 'redux-saga/effects';
+import { delay } from 'redux-saga';
 import axios from 'axios';
 
 import { ActionTypes } from 'constants/index';
@@ -13,13 +14,56 @@ import { ActionTypes } from 'constants/index';
  * @param {Object} action
  *
  */
+
+/**
+ * Saga poller
+ */
+function* pollJobWorker(jobId) {
+  try {
+    const response = yield call(axios.get, '/api/repository/v1/jobs/' + jobId);
+    const jobStatus = response.data.job_status;
+    if (jobStatus !== 'running') {
+      const resultResponse = yield call(axios.get, '/api/repository/v1/jobs/' + jobId + '/result');
+      if (jobStatus === 'succeeded' && resultResponse && resultResponse.id) {
+        yield put({
+          type: ActionTypes.GET_JOB_RESULT_SUCCESS,
+          payload: { jobResult: resultResponse.data },
+        });
+      } else {
+        yield put({
+          type: ActionTypes.GET_JOB_RESULT_FAILURE,
+          payload: { jobResult: resultResponse.data },
+        });
+      }
+    } else {
+      yield put({
+        type: ActionTypes.GET_JOB_BY_ID_SUCCESS,
+        payload: { status: response.job_status },
+      });
+      yield call(delay, 1000);
+      yield call(pollJobWorker, jobId);
+    }
+  } catch (err) {
+    yield put({
+      type: ActionTypes.EXCEPTION,
+      payload: err,
+    });
+  }
+}
+
+/**
+ * Datasets.
+ */
+
 export function* createDataset({ payload }) {
   try {
     const response = yield call(axios.post, '/api/repository/v1/datasets', payload);
+    const jobId = response.data.id;
     yield put({
       type: ActionTypes.DATASET_CREATE_SUCCESS,
-      payload: { data: response },
+      payload: { data: response, createdDataset: payload },
     });
+    yield call(pollJobWorker, jobId);
   } catch (err) {
     yield put({
       type: ActionTypes.EXCEPTION,
@@ -60,6 +104,10 @@ export function* getDatasetById({ payload }) {
   }
 }
 
+/**
+ * Studies.
+ */
+
 export function* getStudies() {
   try {
     const response = yield call(axios.get, '/api/repository/v1/studies');
@@ -79,7 +127,6 @@ export function* getStudyById({ payload }) {
   const studyId = payload;
   try {
     const response = yield call(axios.get, '/api/repository/v1/studies/' + studyId);
-    console.log(response);
     yield put({
       type: ActionTypes.GET_STUDY_BY_ID_SUCCESS,
       study: { data: response },
