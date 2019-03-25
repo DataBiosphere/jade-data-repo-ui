@@ -10,6 +10,8 @@ import StudiesView from '../components/StudyView';
 import DatasetView from '../components/DatasetView';
 import DatasetCreateView from '../components/DatasetCreateView';
 import DatasetPreviewView from '../components/DatasetPreviewView';
+import DatasetDetailView from '../components/DatasetDetailView';
+import StudyDetailView from '../components/StudyDetailView';
 
 const styles = theme => ({
   mainContent: {
@@ -82,9 +84,11 @@ class Private extends React.Component {
             <div className={classes.mainContent}>
               <Route exact path="/" component={HomeView} />
               <Route exact path="/studies" component={StudiesView} />
+              <Route exact path="/study/:uuid" component={StudyDetailView} />
               <Route exact path="/datasets" component={DatasetView} />
               <Route exact path="/datasets/create" component={DatasetCreateView} />
               <Route exact path="/datasets/preview" component={DatasetPreviewView} />
+              <Route exact path="/dataset/:uuid" component={DatasetDetailView} />
             </div>
           </Switch>
         </div>

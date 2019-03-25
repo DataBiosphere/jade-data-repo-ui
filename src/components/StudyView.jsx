@@ -9,11 +9,20 @@ import moment from 'moment';
 import { getStudies } from 'actions/index';
 
 const styles = theme => ({
+  wrapper: {
+    padding: theme.spacing.unit * 4,
+    margin: theme.spacing.unit * 4,
+  },
   title: {
     color: theme.palette.primary.main,
     fontSize: '54px',
     lineHeight: '66px',
     paddingBottom: theme.spacing.unit * 8,
+  },
+  header: {
+    fontSize: '14px',
+    lineHeight: '22px',
+    fontWeight: '600',
   },
 });
 
@@ -21,7 +30,7 @@ class StudyView extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired,
-    studies: PropTypes.arrayOf(PropTypes.object),
+    studies: PropTypes.object,
   };
 
   componentDidMount() {
@@ -53,7 +62,7 @@ class StudyView extends React.PureComponent {
       },
     ];
     return (
-      <div>
+      <div className={classes.wrapper}>
         <div className={classes.title} >About Studies</div>
         <p>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet.
@@ -62,7 +71,7 @@ class StudyView extends React.PureComponent {
           ridiculus mus. Nam fermentum, nulla luctus pharetra vulputate, felis tellus mollis orci,
           sed rhoncus pronin sapien nunc accuan eget.
         </p>
-        <div>STUDIES</div>
+        <div className={classes.header} >STUDIES</div>
         {studies && studies.studies && <JadeTable columns={columns} rows={studies.studies} />}
       </div>
     );

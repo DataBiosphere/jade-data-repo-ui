@@ -9,12 +9,21 @@ import JadeTable from './table/JadeTable';
 import moment from 'moment';
 
 const styles = theme => ({
+  wrapper: {
+    padding: theme.spacing.unit * 4,
+    margin: theme.spacing.unit * 4,
+  },
   title: {
     color: theme.palette.primary.main,
     fontSize: '54px',
     lineHeight: '66px',
     paddingBottom: theme.spacing.unit * 8,
-  }
+  },
+  header: {
+    fontSize: '14px',
+    lineHeight: '22px',
+    fontWeight: '600',
+  },
 });
 
 class DatasetView extends React.PureComponent {
@@ -35,7 +44,7 @@ class DatasetView extends React.PureComponent {
       {
         label: 'Dataset Name',
         property: 'name',
-        render: row => <Link to={`/datasets/${row.id}`}>{row.name}</Link>,
+        render: row => <Link to={`/dataset/${row.id}`}>{row.name}</Link>,
       },
       {
         label: 'Description',
@@ -53,7 +62,7 @@ class DatasetView extends React.PureComponent {
       },
     ];
     return (
-      <div>
+      <div className={classes.wrapper}>
         <div className={classes.title} >About Datasets</div>
         <p>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet.
@@ -62,7 +71,7 @@ class DatasetView extends React.PureComponent {
           ridiculus mus. Nam fermentum, nulla luctus pharetra vulputate, felis tellus mollis orci,
           sed rhoncus pronin sapien nunc accuan eget.
         </p>
-        <div>
+        <div className={classes.header}>
           DATASETS
           <NavLink to="/datasets/create"> +</NavLink>
 

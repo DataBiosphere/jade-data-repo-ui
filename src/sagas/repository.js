@@ -44,6 +44,22 @@ export function* getDatasets() {
   }
 }
 
+export function* getDatasetById({ payload }) {
+  const datasetId = payload;
+  try {
+    const response = yield call(axios.get, '/api/repository/v1/datasets/' + datasetId);
+    yield put({
+      type: ActionTypes.GET_DATASET_BY_ID_SUCCESS,
+      dataset: { data: response },
+    });
+  } catch (err) {
+    yield put({
+      type: ActionTypes.EXCEPTION,
+      dataset: err,
+    });
+  }
+}
+
 export function* getStudies() {
   try {
     const response = yield call(axios.get, '/api/repository/v1/studies');
@@ -59,6 +75,23 @@ export function* getStudies() {
   }
 }
 
+export function* getStudyById({ payload }) {
+  const studyId = payload;
+  try {
+    const response = yield call(axios.get, '/api/repository/v1/studies/' + studyId);
+    console.log(response);
+    yield put({
+      type: ActionTypes.GET_STUDY_BY_ID_SUCCESS,
+      study: { data: response },
+    });
+  } catch (err) {
+    yield put({
+      type: ActionTypes.EXCEPTION,
+      study: err,
+    });
+  }
+}
+
 /**
  * App Sagas
  */
@@ -66,6 +99,8 @@ export default function* root() {
   yield all([
     takeLatest(ActionTypes.CREATE_DATASET, createDataset),
     takeLatest(ActionTypes.GET_DATASETS, getDatasets),
+    takeLatest(ActionTypes.GET_DATASET_BY_ID, getDatasetById),
     takeLatest(ActionTypes.GET_STUDIES, getStudies),
+    takeLatest(ActionTypes.GET_STUDY_BY_ID, getStudyById),
   ]);
 }

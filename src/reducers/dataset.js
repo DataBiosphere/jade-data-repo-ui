@@ -4,6 +4,7 @@ import immutable from 'immutability-helper';
 import { ActionTypes } from 'constants/index';
 
 export const datasetState = {
+  dataset: {},
   datasets: [],
   previewDataset: [],
 };
@@ -17,9 +18,13 @@ export default {
         });
       },
       [ActionTypes.DATASET_CREATE_SUCCESS]: (state, action) => {
-        console.log(action);
         return immutable(state, {
           previewDataset: { $set: action.payload.data.data },
+        });
+      },
+      [ActionTypes.GET_DATASET_BY_ID_SUCCESS]: (state, action) => {
+        return immutable(state, {
+          dataset: { $set: action.dataset.data.data },
         });
       },
     },
