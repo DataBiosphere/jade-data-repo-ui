@@ -1,6 +1,6 @@
 import React from 'react';
-
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -14,6 +14,7 @@ import Chip from '@material-ui/core/Chip';
 
 import { getDatasetById, getStudies } from 'actions/index';
 import JadeTable from './table/JadeTable';
+import ManageUsersView from './ManageUsersView';
 import moment from 'moment';
 
 const styles = theme => ({
@@ -46,17 +47,12 @@ const styles = theme => ({
   },
 });
 
-function handleDelete() {
-  alert('You clicked the delete icon.'); // eslint-disable-line no-alert
-}
-
-function handleClick() {
-  alert('You clicked the Chip.'); // eslint-disable-line no-alert
-}
-
 export class ManageUsersModal extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object.isRequired,
+    datasetUUID: PropTypes.string.isRequired,
+    dispatch: PropTypes.func.isRequired,
+    readers: PropTypes.arrayOf(PropTypes.string),
   };
 
   state = {
@@ -73,60 +69,61 @@ export class ManageUsersModal extends React.PureComponent {
     this.setState({ open: false });
   };
 
+  addReader(newEmail) {
+    const { datasetUUID, dispatch, readers } = this.props;
+
+    //TODO where do I want to keep readers? maybe directly gotten out of SAM?
+    // so need to call something to put them directly in SAM
+    console.log(newEmail);
+    console.log(datasetUUID);
+    // dispatch();
+  }
+
+  removeReader(removeableEmail) {
+    const { datasetUUID, dispatch, readers } = this.props;
+    const newReaders = _.clone(readers);
+    console.log(removeableEmail);
+    console.log(datasetUUID);
+    // TODO send this reader to SAM
+    // _.remove(newReaders, r => r === removeableEmail);
+    // dispatch();
+}
+
+
   render() {
     const { classes } = this.props;
-    const readersList = [
+    const modalText = "Manage Viewers";
+    const readers = [
       'pamela.poovey@figgisagency.com',
       'algernop.krieger@figgisagency.com',
       'cheryl.tunt@figgisagency.com',
       'sterling.archer@figgisagency.com',
       'lana.kane@figgisagency.com',
     ];
-    const readers = readersList.map(reader => { return (
-      <div>
-        <Chip
-         label={reader}
-         onClick={handleClick}
-         onDelete={handleDelete}
-         className={classes.chip}
-         color="primary"
-         //variant="outlined"
-         />
-      </div>
-     )
-   });
     return (
       <div>
         <Button variant="outlined" color="secondary" onClick={this.handleClickOpen}>
-          Manage Viewers
+          {modalText}
         </Button>
         <Dialog
           onClose={this.handleClose}
           aria-labelledby="customized-dialog-title"
           open={this.state.open}>
           <DialogTitle className={classes.dialogTitle} id="customized-dialog-title" >
-            Manage Users
+            {modalText}
             <IconButton aria-label="Close" className={classes.closeButton} onClick={this.handleClose}>
               <CloseIcon />
             </IconButton>
           </DialogTitle>
-          <DialogContent>
-            <div>Principal Investigators</div>
-            <div>
-              <Chip
-               label="cyril.figgis@figgisagency.com"
-               onClick={handleClick}
-               onDelete={handleDelete}
-               className={classes.chip}
-               color="primary"
-               // variant="outlined"
-               />
-            </div>
-            <hr />
-            <div>Readers</div>
-            <div>{readers}</div>
+          <DialogContent className={classes.dialogContent}>
+            <ManageUsersView
+              addReader={newEmail => this.addReader(newEmail)}
+              defaultValue="Add viewer email addresses"
+              removeReader={removeableEmail => this.removeReader(removeableEmail)}
+              readers={readers}
+            />
           </DialogContent>
-          <DialogActions>
+          <DialogActions className={classes.dialogActions}>
             <Button onClick={this.handleClose} color="primary">
               Save
             </Button>
@@ -137,4 +134,11 @@ export class ManageUsersModal extends React.PureComponent {
   }
 }
 
-export default withStyles(styles)(ManageUsersModal);
+/* istanbul ignore next */
+function mapStateToProps(state) {
+  return {
+    readers: state.dataset.readers,
+  };
+}
+
+export default connect(mapStateToProps)(withStyles(styles)(ManageUsersModal));
