@@ -24,16 +24,23 @@ function* pollJobWorker(jobId) {
     const jobStatus = response.data.job_status;
     if (jobStatus !== 'running') {
       const resultResponse = yield call(axios.get, '/api/repository/v1/jobs/' + jobId + '/result');
-      yield put({
-        type: ActionTypes.GET_JOB_RESULT_SUCCESS,
-        payload: { jobResult: resultResponse.data },
-      });
+      if (jobStatus === 'succeeded' && resultResponse && resultResponse.id) {
+        yield put({
+          type: ActionTypes.GET_JOB_RESULT_SUCCESS,
+          payload: { jobResult: resultResponse.data },
+        });
+      } else {
+        yield put({
+          type: ActionTypes.GET_JOB_RESULT_FAILURE,
+          payload: { jobResult: resultResponse.data },
+        });
+      }
     } else {
       yield put({
         type: ActionTypes.GET_JOB_BY_ID_SUCCESS,
         payload: { status: response.job_status },
       });
-      yield call(delay, 4000);
+      yield call(delay, 1000);
       yield call(pollJobWorker, jobId);
     }
   } catch (err) {
