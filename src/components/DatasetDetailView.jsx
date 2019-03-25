@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom';
 
 import { getDatasetById } from 'actions/index';
 import JadeTable from './table/JadeTable';
+import ManageUsersModal from './ManageUsersModal';
 
 const styles = theme => ({
   wrapper: {
@@ -85,18 +86,13 @@ export class DatasetDetailView extends React.PureComponent {
             <div>{dataset.description}</div>
           </div>
           <Card className={classes.card}>
-            <div className={classes.header}>Principal Investigator: </div>
-            {/*TODO where are we even storing this info?*/}
-            <div className={classes.values}> {dataset.readers} </div>
-            <div className={classes.header}>Custodian(s): </div>
+            <div className={classes.header}>Custodian: </div>
             <div className={classes.values}> {dataset.readers} </div>
             <div className={classes.header}> Date Created: </div>
             <div className={classes.values}> {moment(dataset.createdDate).fromNow()} </div>
-            <div className={classes.header}> Last Modified: </div>
-            {/* where is this stored? */}
-            <div className={classes.values}> {moment(dataset.modifiedDate).fromNow()} </div>
-            {/* TODO hook this up to SAM?!?!?*/}
-            <div>Manage Viewers</div>
+            <div>
+              <ManageUsersModal />
+            </div>
           </Card>
         </div>
         <div>
