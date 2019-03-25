@@ -4,10 +4,10 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
+import { Link } from 'react-router-dom';
 
 import { getDatasetById, getStudies } from 'actions/index';
 import JadeTable from './table/JadeTable';
-import {Link} from 'react-router-dom';
 import moment from 'moment';
 
 const styles = theme => ({
