@@ -186,7 +186,7 @@ export class DatasetCreateView extends React.PureComponent {
                 <ManageUsers
                   {...props}
                   addReader={newEmail => this.addReader(newEmail)}
-                  defaultValue="Custodian Email Address"
+                  defaultValue="Add reader email addresses"
                   removeReader={removeableEmail => this.removeReader(removeableEmail)}
                   readers={readers}
                 />
