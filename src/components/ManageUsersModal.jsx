@@ -10,6 +10,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
+import Chip from '@material-ui/core/Chip';
 
 import { getDatasetById, getStudies } from 'actions/index';
 import JadeTable from './table/JadeTable';
@@ -40,7 +41,18 @@ const styles = theme => ({
     margin: 0,
     padding: theme.spacing.unit,
   },
+  chip: {
+    margin: theme.spacing.unit,
+  },
 });
+
+function handleDelete() {
+  alert('You clicked the delete icon.'); // eslint-disable-line no-alert
+}
+
+function handleClick() {
+  alert('You clicked the Chip.'); // eslint-disable-line no-alert
+}
 
 export class ManageUsersModal extends React.PureComponent {
   static propTypes = {
@@ -63,37 +75,64 @@ export class ManageUsersModal extends React.PureComponent {
 
   render() {
     const { classes } = this.props;
+    const readersList = [
+      'pamela.poovey@figgisagency.com',
+      'algernop.krieger@figgisagency.com',
+      'cheryl.tunt@figgisagency.com',
+      'sterling.archer@figgisagency.com',
+      'lana.kane@figgisagency.com',
+    ];
+    const readers = readersList.map(reader => { return (
+      <div>
+        <Chip
+         label={reader}
+         onClick={handleClick}
+         onDelete={handleDelete}
+         className={classes.chip}
+         color="primary"
+         //variant="outlined"
+         />
+      </div>
+     )
+   });
     return (
       <div>
-      <Button variant="outlined" color="secondary" onClick={this.handleClickOpen}>
-        Manage Viewers
-      </Button>
-      <Dialog
-        onClose={this.handleClose}
-        aria-labelledby="customized-dialog-title"
-        open={this.state.open}>
-        <DialogTitle className={classes.dialogTitle} id="customized-dialog-title" >
-          Manage Users
-          <IconButton aria-label="Close" className={classes.closeButton} onClick={this.handleClose}>
-            <CloseIcon />
-          </IconButton>
-        </DialogTitle>
-        <DialogContent>
-            Some drop downs or something
-            <br/>
-            Readers
-            <br/>
-            Custodian(s)
-            <br/>
-            Principal Investigators
+        <Button variant="outlined" color="secondary" onClick={this.handleClickOpen}>
+          Manage Viewers
+        </Button>
+        <Dialog
+          onClose={this.handleClose}
+          aria-labelledby="customized-dialog-title"
+          open={this.state.open}>
+          <DialogTitle className={classes.dialogTitle} id="customized-dialog-title" >
+            Manage Users
+            <IconButton aria-label="Close" className={classes.closeButton} onClick={this.handleClose}>
+              <CloseIcon />
+            </IconButton>
+          </DialogTitle>
+          <DialogContent>
+            <div>Principal Investigators</div>
+            <div>
+              <Chip
+               label="cyril.figgis@figgisagency.com"
+               onClick={handleClick}
+               onDelete={handleDelete}
+               className={classes.chip}
+               color="primary"
+               // variant="outlined"
+               />
+            </div>
+            <hr />
+            <div>Readers</div>
+            <div>{readers}</div>
           </DialogContent>
           <DialogActions>
             <Button onClick={this.handleClose} color="primary">
-              Save changes
+              Save
             </Button>
           </DialogActions>
         </Dialog>
-        </div>
+      </div>
     );
   }
 }
