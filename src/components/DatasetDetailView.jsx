@@ -91,10 +91,9 @@ export class DatasetDetailView extends React.PureComponent {
             <div className={classes.header}> Date Created: </div>
             <div className={classes.values}> {moment(dataset.createdDate).fromNow()} </div>
             <div>
-            { dataset && dataset.id && <ManageUsersModal
-                datasetUUID={dataset.id}
-                dispatch={dispatch}
-              />}
+              {dataset && dataset.id && (
+                <ManageUsersModal datasetUUID={dataset.id} dispatch={dispatch} />
+              )}
             </div>
           </Card>
         </div>

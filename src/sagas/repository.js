@@ -144,7 +144,6 @@ export function* getStudyById({ payload }) {
   }
 }
 
-
 /**
  * App Sagas
  */

@@ -49,18 +49,19 @@ class ManageUsersView extends React.PureComponent {
   render() {
     const { addReader, classes, defaultValue, readers, removeReader } = this.props;
     const { emailValid, newEmail } = this.state;
-    const readerChips = readers.map(reader => { return (
-      <div key={reader}>
-        <Chip
-         label={reader}
-         onDelete={() => removeReader(reader)}
-         className={classes.chip}
-         color="primary"
-         variant="outlined"
-         />
-      </div>
-     )
-   });
+    const readerChips = readers.map(reader => {
+      return (
+        <div key={reader}>
+          <Chip
+            label={reader}
+            onDelete={() => removeReader(reader)}
+            className={classes.chip}
+            color="primary"
+            variant="outlined"
+          />
+        </div>
+      );
+    });
 
     return (
       <div>
@@ -82,9 +83,7 @@ class ManageUsersView extends React.PureComponent {
             ADD
           </Button>
         </div>
-        <div className={classes.chipContainer}>
-          {readerChips}
-        </div>
+        <div className={classes.chipContainer}>{readerChips}</div>
       </div>
     );
   }
