@@ -69,18 +69,21 @@ export class DatasetPreviewView extends React.PureComponent {
     return (
       <div>
         <div className={classes.title}>Preview Dataset</div>
-        {createdDataset.id && createdDataset.name === dataset.name?
-          (<p>Your new dataset has been created.</p>)
-          : (<p>Your new dataset is being created.</p>)
-        }
-
+        {createdDataset.id && createdDataset.name === dataset.name ? (
+          <p>Your new dataset has been created.</p>
+        ) : (
+          <p>Your new dataset is being created.</p>
+        )}
         <div className={classes.container}>
           <div className={classes.card}>
             <div className={classes.header}> Dataset Name: </div>
-            {createdDataset.id && createdDataset.name === dataset.name?
-              (<div className={classes.values}><Link to={`/dataset/${createdDataset.id}`}>{dataset.name}</Link></div>)
-              :(<div className={classes.values}>{dataset.name}</div>)
-            }
+            {createdDataset.id && createdDataset.name === dataset.name ? (
+              <div className={classes.values}>
+                <Link to={`/dataset/${createdDataset.id}`}>{dataset.name}</Link>
+              </div>
+            ) : (
+              <div className={classes.values}>{dataset.name}</div>
+            )}
             <div className={classes.header}> Description: </div>
             <div className={classes.values}> {dataset.description} </div>
           </div>
