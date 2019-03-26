@@ -63,7 +63,12 @@ export function* createDataset({ payload }) {
       type: ActionTypes.CREATE_DATASET_JOB,
       payload: { data: response, createdDataset: payload },
     });
-    yield call(pollJobWorker, jobId, ActionTypes.CREATE_DATASET_SUCCESS, ActionTypes.CREATE_DATASET_FAILURE);
+    yield call(
+      pollJobWorker,
+      jobId,
+      ActionTypes.CREATE_DATASET_SUCCESS,
+      ActionTypes.CREATE_DATASET_FAILURE,
+    );
   } catch (err) {
     yield put({
       type: ActionTypes.EXCEPTION,
