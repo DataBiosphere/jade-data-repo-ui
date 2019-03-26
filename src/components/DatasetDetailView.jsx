@@ -1,13 +1,12 @@
 import React from 'react';
-
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import moment from 'moment';
 import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import { Link } from 'react-router-dom';
 
 import { getDatasetById } from 'actions/index';
-import moment from 'moment';
 import JadeTable from './table/JadeTable';
 
 const styles = theme => ({
@@ -93,10 +92,11 @@ export class DatasetDetailView extends React.PureComponent {
             <div className={classes.header}>Custodian(s): </div>
             <div className={classes.values}> {dataset.readers} </div>
             <div className={classes.header}> Date Created: </div>
-            <div className={classes.values}> {dataset.createdDate} </div>
+            <div className={classes.values}> {moment(dataset.createdDate).fromNow()} </div>
             <div className={classes.header}> Last Modified: </div>
-            <div className={classes.values}> {dataset.readers} </div>
-            {/*TODO hook this up to SAM?!?!?*/}
+            {/* where is this stored? */}
+            <div className={classes.values}> {moment(dataset.modifiedDate).fromNow()} </div>
+            {/* TODO hook this up to SAM?!?!?*/}
             <div>Manage Viewers</div>
           </Card>
         </div>
