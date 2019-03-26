@@ -6,7 +6,7 @@ import { all, put, call, takeLatest } from 'redux-saga/effects';
 import { delay } from 'redux-saga';
 import axios from 'axios';
 
-import { ActionTypes } from 'constants/index';
+import { ActionTypes, STATUS } from 'constants/index';
 
 /**
  * Switch Menu
@@ -18,20 +18,20 @@ import { ActionTypes } from 'constants/index';
 /**
  * Saga poller
  */
-function* pollJobWorker(jobId) {
+function* pollJobWorker(jobId, jobTypeSuccess, jobTypeFailure) {
   try {
     const response = yield call(axios.get, '/api/repository/v1/jobs/' + jobId);
     const jobStatus = response.data.job_status;
-    if (jobStatus !== 'running') {
+    if (jobStatus !== STATUS.RUNNING) {
       const resultResponse = yield call(axios.get, '/api/repository/v1/jobs/' + jobId + '/result');
-      if (jobStatus === 'succeeded' && resultResponse && resultResponse.id) {
+      if (jobStatus === 'succeeded' && resultResponse && resultResponse.data) {
         yield put({
-          type: ActionTypes.GET_JOB_RESULT_SUCCESS,
+          type: jobTypeSuccess,
           payload: { jobResult: resultResponse.data },
         });
       } else {
         yield put({
-          type: ActionTypes.GET_JOB_RESULT_FAILURE,
+          type: jobTypeFailure,
           payload: { jobResult: resultResponse.data },
         });
       }
@@ -41,7 +41,7 @@ function* pollJobWorker(jobId) {
         payload: { status: response.job_status },
       });
       yield call(delay, 1000);
-      yield call(pollJobWorker, jobId);
+      yield call(pollJobWorker, jobId, jobTypeSuccess, jobTypeFailure);
     }
   } catch (err) {
     yield put({
@@ -60,10 +60,10 @@ export function* createDataset({ payload }) {
     const response = yield call(axios.post, '/api/repository/v1/datasets', payload);
     const jobId = response.data.id;
     yield put({
-      type: ActionTypes.DATASET_CREATE_SUCCESS,
+      type: ActionTypes.CREATE_DATASET_JOB,
       payload: { data: response, createdDataset: payload },
     });
-    yield call(pollJobWorker, jobId);
+    yield call(pollJobWorker, jobId, ActionTypes.CREATE_DATASET_SUCCESS, ActionTypes.CREATE_DATASET_FAILURE);
   } catch (err) {
     yield put({
       type: ActionTypes.EXCEPTION,
