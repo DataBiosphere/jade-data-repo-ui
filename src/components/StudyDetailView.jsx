@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import moment from 'moment';
 import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 
@@ -66,9 +67,10 @@ export class StudyDetailView extends React.PureComponent {
             {/* TODO where are we even storing this info?*/}
             <div className={classes.values}> {study.readers} </div>
             <div className={classes.header}> Date Created: </div>
-            <div className={classes.values}> {study.createdDate} </div>
+            <div className={classes.values}> {moment(study.createdDate).fromNow()} </div>
             <div className={classes.header}> Last Modified: </div>
-            <div className={classes.values}> {study.readers} </div>
+            {/* where is this stored? */}
+            <div className={classes.values}> {moment(study.createdDate).fromNow()} </div>
             {/* TODO hook this up to SAM?!?!?*/}
           </Card>
         </div>
