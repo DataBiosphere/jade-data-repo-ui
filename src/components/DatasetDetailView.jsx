@@ -29,7 +29,6 @@ const styles = theme => ({
   card: {
     display: 'inline-block',
     padding: theme.spacing.unit * 4,
-    width: '200px',
   },
   header: {
     fontSize: '14px',
