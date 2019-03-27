@@ -16,16 +16,16 @@ import { ActionTypes, STATUS } from 'constants/index';
  *
  */
 
-const getToken = state => state.user.token;
-const getTokenExpiration = state => state.user.tokenExpiration;
+export const getToken = state => state.user.token;
+export const getTokenExpiration = state => state.user.tokenExpiration;
 
-function* checkToken() {
+export function* checkToken() {
   const tokenExpiration = yield select(getTokenExpiration);
   // if this fails, should isAuthenticated be flipped?
-  return moment(tokenExpiration.valueOf()).isSameOrAfter(moment().valueOf(), 'second');
+  return moment(moment()).isSameOrAfter(parseInt(tokenExpiration, 10));
 }
 
-function* authGet(url) {
+export function* authGet(url) {
   if (yield call(checkToken)) {
     // check expiration time against now
     const token = yield select(getToken);
@@ -36,7 +36,7 @@ function* authGet(url) {
   return false;
 }
 
-function* authPost(url, params) {
+export function* authPost(url, params) {
   if (yield call(checkToken)) {
     // check expiration time against now
     const token = yield select(getToken);
