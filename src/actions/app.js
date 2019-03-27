@@ -10,6 +10,8 @@ import { ActionTypes } from 'constants/index';
 
 export const { createDataset } = createActions({
   [ActionTypes.CREATE_DATASET]: dataset => dataset,
+  [ActionTypes.CREATE_DATASET_SUCCESS]: dataset => dataset,
+  [ActionTypes.CREATE_DATASET_FAILURE]: dataset => dataset,
 });
 
 export const { getStudies } = createActions({
@@ -30,9 +32,4 @@ export const { getDatasetById } = createActions({
 export const { getStudyById } = createActions({
   [ActionTypes.GET_STUDY_BY_ID]: study => study,
   [ActionTypes.GET_STUDY_BY_ID_SUCCESS]: study => study,
-});
-
-export const { getJobById } = createActions({
-  [ActionTypes.GET_JOB_BY_ID_SUCCESS]: datasets => datasets,
-  [ActionTypes.GET_JOB_BY_ID]: datasets => datasets,
 });

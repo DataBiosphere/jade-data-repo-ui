@@ -6,7 +6,7 @@ import { ActionTypes } from 'constants/index';
 export const datasetState = {
   dataset: {},
   datasets: [],
-  createDatasetJob: '',
+  createdDataset: {},
 };
 
 export default {
@@ -17,9 +17,9 @@ export default {
           datasets: { $set: action.datasets.data.data },
         });
       },
-      [ActionTypes.DATASET_CREATE_SUCCESS]: (state, action) => {
+      [ActionTypes.CREATE_DATASET_SUCCESS]: (state, action) => {
         return immutable(state, {
-          createDatasetJob: { $set: action.payload.data.data },
+          createdDataset: { $set: action.payload.jobResult },
         });
       },
       [ActionTypes.GET_DATASET_BY_ID_SUCCESS]: (state, action) => {

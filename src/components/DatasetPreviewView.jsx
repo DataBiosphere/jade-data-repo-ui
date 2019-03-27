@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
@@ -23,7 +24,6 @@ const styles = theme => ({
   card: {
     display: 'inline-block',
     padding: theme.spacing.unit * 4,
-    width: '200px',
   },
   header: {
     fontSize: '14px',
@@ -38,6 +38,7 @@ const styles = theme => ({
 export class DatasetPreviewView extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object.isRequired,
+    createdDataset: PropTypes.object,
     dataset: PropTypes.object,
     dispatch: PropTypes.func.isRequired,
   };
@@ -61,20 +62,28 @@ export class DatasetPreviewView extends React.PureComponent {
   }
 
   render() {
-    const { classes, dataset } = this.props;
+    const { classes, createdDataset, dataset } = this.props;
     // TODO when the job is completed -- what happens?
     // what happens if you got to this page and we havent loaded data properly?
     // what if it fails vs succeeds
-
     return (
       <div>
         <div className={classes.title}>Preview Dataset</div>
-        <p>Your new dataset is being created.</p>
+        {createdDataset.id && createdDataset.name === dataset.name ? (
+          <p>Your new dataset has been created.</p>
+        ) : (
+          <p>Your new dataset is being created.</p>
+        )}
         <div className={classes.container}>
           <div className={classes.card}>
             <div className={classes.header}> Dataset Name: </div>
-            {/* Does the dataset exist yet? if yes -- make this a link*/}
-            <div className={classes.values}> {dataset.name} </div>
+            {createdDataset.id && createdDataset.name === dataset.name ? (
+              <div className={classes.values}>
+                <Link to={`/dataset/${createdDataset.id}`}>{dataset.name}</Link>
+              </div>
+            ) : (
+              <div className={classes.values}>{dataset.name}</div>
+            )}
             <div className={classes.header}> Description: </div>
             <div className={classes.values}> {dataset.description} </div>
           </div>
@@ -93,6 +102,7 @@ export class DatasetPreviewView extends React.PureComponent {
 /* istanbul ignore next */
 function mapStateToProps(state) {
   return {
+    createdDataset: state.datasets.createdDataset,
     dataset: state.dataset,
   };
 }

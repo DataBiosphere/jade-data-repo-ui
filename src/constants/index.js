@@ -19,7 +19,9 @@ export const ActionTypes = keyMirror({
   USER_LOGOUT_SUCCESS: undefined,
   USER_LOGOUT_FAILURE: undefined,
   CREATE_DATASET: undefined,
-  DATASET_CREATE_SUCCESS: undefined,
+  CREATE_DATASET_JOB: undefined,
+  CREATE_DATASET_SUCCESS: undefined,
+  CREATE_DATASET_FAILURE: undefined,
   GET_STUDIES: undefined,
   GET_STUDIES_SUCCESS: undefined,
   GET_STUDY_BY_ID: undefined,
@@ -43,7 +45,7 @@ export const STATUS = {
   IDLE: 'idle',
   RUNNING: 'running',
   READY: 'ready',
-  SUCCESS: 'success',
+  SUCCESS: 'success', // should this be succeeded ?
   ERROR: 'error',
 };
 
