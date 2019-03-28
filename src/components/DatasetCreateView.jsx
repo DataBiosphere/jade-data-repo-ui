@@ -83,18 +83,18 @@ export class DatasetCreateView extends React.PureComponent {
     return studiesList;
   }
 
-  addReader(newEmail) {
+  addUser(newEmail) {
     const { dispatch, readers } = this.props;
     if (!_.includes(readers, newEmail)) {
       dispatch(actions.change('dataset.readers', _.concat(readers, newEmail)));
     }
   }
 
-  removeReader(removeableEmail) {
+  removeUser(removeableEmail) {
     const { dispatch, readers } = this.props;
-    const newReaders = _.clone(readers);
-    _.remove(newReaders, r => r === removeableEmail);
-    dispatch(actions.change('dataset.readers', newReaders));
+    const newUsers = _.clone(readers);
+    _.remove(newUsers, r => r === removeableEmail);
+    dispatch(actions.change('dataset.readers', newUsers));
   }
 
   parseFile = event => {
@@ -185,9 +185,9 @@ export class DatasetCreateView extends React.PureComponent {
               component={props => (
                 <ManageUsers
                   {...props}
-                  addReader={newEmail => this.addReader(newEmail)}
+                  addUser={newEmail => this.addUser(newEmail)}
                   defaultValue="Add viewer email address"
-                  removeReader={removeableEmail => this.removeReader(removeableEmail)}
+                  removeUser={removeableEmail => this.removeUser(removeableEmail)}
                   readers={readers}
                 />
               )}

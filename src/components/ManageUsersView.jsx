@@ -31,11 +31,11 @@ class ManageUsersView extends React.PureComponent {
   }
 
   static propTypes = {
-    addReader: PropTypes.func.isRequired,
+    addUser: PropTypes.func.isRequired,
     classes: PropTypes.object.isRequired,
     defaultValue: PropTypes.string,
     readers: PropTypes.arrayOf(PropTypes.string),
-    removeReader: PropTypes.func.isRequired,
+    removeUser: PropTypes.func.isRequired,
   };
 
   validateEmail(newEmail) {
@@ -47,14 +47,14 @@ class ManageUsersView extends React.PureComponent {
   }
 
   render() {
-    const { addReader, classes, defaultValue, readers, removeReader } = this.props;
+    const { addUser, classes, defaultValue, readers, removeUser } = this.props;
     const { emailValid, newEmail } = this.state;
     const readerChips = readers.map(reader => {
       return (
         <div key={reader}>
           <Chip
             label={reader}
-            onDelete={() => removeReader(reader)}
+            onDelete={() => removeUser(reader)}
             className={classes.chip}
             color="primary"
             variant="outlined"
@@ -67,7 +67,7 @@ class ManageUsersView extends React.PureComponent {
       <div>
         <div>
           <TextField
-            placeholder={defaultValue || 'New'}
+            placeholder={defaultValue || 'Add email address'}
             onChange={e => this.validateEmail(e.target.value)}
             style={{ width: '300px' }}
             variant="outlined"
@@ -76,7 +76,7 @@ class ManageUsersView extends React.PureComponent {
             className={classes.addButton}
             color="primary"
             disabled={!emailValid}
-            onClick={() => addReader(newEmail)}
+            onClick={() => addUser(newEmail)}
             type="button"
             variant="contained"
           >
