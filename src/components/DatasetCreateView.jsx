@@ -255,7 +255,7 @@ export class DatasetCreateView extends React.PureComponent {
               <Link to="/datasets">Cancel</Link>
             </Button>
             <Button variant="contained" color="primary">
-              <Link to="/datasets/preview">Preview Data</Link>
+              <Link to="/datasets/preview">Create Dataset</Link>
             </Button>
           </FormRow>
         </Form>
