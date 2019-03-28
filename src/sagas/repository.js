@@ -141,6 +141,43 @@ export function* getDatasetById({ payload }) {
   }
 }
 
+export function* getDatasetPolicy({ payload }) {
+  const datasetId = payload;
+  try {
+    const response = yield call(
+      axios.get,
+      '/api/repository/v1/datasets/' + datasetId + '/policies',
+    );
+    yield put({
+      type: ActionTypes.GET_DATASET_POLICY_SUCCESS,
+      dataset: { data: response },
+    });
+  } catch (err) {
+    yield put({
+      type: ActionTypes.EXCEPTION,
+      dataset: err,
+    });
+  }
+}
+
+export function* addReaderToDataset({ payload }) {
+  const datasetId = payload.datasetId;
+  const newReader = payload.newReader;
+  try {
+    const response = yield call(axios.get, '/api/repository/v1/datasets/' + datasetId + '/policies/readers/members');
+    yield put({
+      type: ActionTypes.SET_DATASET_POLICY_SUCCESS,
+      dataset: { data: response },
+    });
+  } catch (err) {
+    yield put({
+      type: ActionTypes.EXCEPTION,
+      dataset: err,
+    });
+  }
+}
+
+
 /**
  * Studies.
  */
@@ -184,6 +221,8 @@ export default function* root() {
     takeLatest(ActionTypes.CREATE_DATASET, createDataset),
     takeLatest(ActionTypes.GET_DATASETS, getDatasets),
     takeLatest(ActionTypes.GET_DATASET_BY_ID, getDatasetById),
+    takeLatest(ActionTypes.GET_DATASET_POLICY, getDatasetPolicy),
+    takeLatest(ActionTypes.SET_DATASET_POLICY, addReaderToDataset),
     takeLatest(ActionTypes.GET_STUDIES, getStudies),
     takeLatest(ActionTypes.GET_STUDY_BY_ID, getStudyById),
   ]);
