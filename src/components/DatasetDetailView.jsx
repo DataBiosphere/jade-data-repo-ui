@@ -5,6 +5,7 @@ import moment from 'moment';
 import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import { Link } from 'react-router-dom';
+import _ from 'lodash';
 
 import { getDatasetById } from 'actions/index';
 import JadeTable from './table/JadeTable';
@@ -40,6 +41,14 @@ const styles = theme => ({
   },
 });
 
+const hardCodedReaders = [
+  'pamela.poovey@figgisagency.com',
+  'algernop.krieger@figgisagency.com',
+  'cheryl.tunt@figgisagency.com',
+  'sterling.archer@figgisagency.com',
+  'lana.kane@figgisagency.com',
+];
+
 export class DatasetDetailView extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object.isRequired,
@@ -52,11 +61,30 @@ export class DatasetDetailView extends React.PureComponent {
     const { dispatch, match } = this.props;
     const datasetId = match.params.uuid;
     dispatch(getDatasetById(datasetId));
+    // dispatch(getDatasetPolicy(datasetId));
+  }
+
+  addUser(datasetId, newEmail) {
+    // so need to call something to put them directly in SAM
+    console.log('add user');
+    console.log(newEmail);
+    console.log(datasetId);
+    // dispatch(setDatasetPolicy(datasetId, newEmail));
+  }
+
+  removeUser(datasetId, removeableEmail) {
+    console.log('remove user');
+    console.log(removeableEmail);
+    console.log(datasetId);
+    // TODO send this reader to SAM
+    // _.remove(newReaders, r => r === removeableEmail);
+    // dispatch(setDatasetPolicy(datasetId, removeableEmail));
   }
 
   render() {
-    const { classes, dataset, dispatch } = this.props;
+    const { classes, dataset } = this.props;
     const studies = dataset.source && dataset.source.map(s => s.study);
+    const modalText = 'Manage Viewers';
     const columns = [
       {
         label: 'Study Name',
@@ -78,21 +106,29 @@ export class DatasetDetailView extends React.PureComponent {
         render: row => moment(row.createdDate).fromNow(),
       },
     ];
+
     return (
       <div className={classes.wrapper}>
         <div className={classes.container}>
           <div>
-            <div className={classes.title}>{dataset.name}</div> {/*TODO add ability to edit name?*/}
+            <div className={classes.title}>{dataset.name}</div>
             <div>{dataset.description}</div>
           </div>
           <Card className={classes.card}>
             <div className={classes.header}>Custodian: </div>
+            <div className={classes.values}> {dataset.owner} </div>
+            <div className={classes.header}>Viewers: </div>
             <div className={classes.values}> {dataset.readers} </div>
             <div className={classes.header}> Date Created: </div>
             <div className={classes.values}> {moment(dataset.createdDate).fromNow()} </div>
             <div>
               {dataset && dataset.id && (
-                <ManageUsersModal datasetUUID={dataset.id} dispatch={dispatch} />
+                <ManageUsersModal
+                  addUser={_.partial(this.addUser, dataset.id)}
+                  removeUser={_.partial(this.removeUser, dataset.id)}
+                  modalText={modalText}
+                  readers={hardCodedReaders}
+                />
               )}
             </div>
           </Card>
