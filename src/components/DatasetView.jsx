@@ -7,7 +7,7 @@ import { withStyles } from '@material-ui/core/styles';
 
 import { getDatasets } from 'actions/index';
 import JadeTable from './table/JadeTable';
-import Hex from 'assets/media/icons/hex-button.svg';
+import Hex from '../../assets/media/icons/hex-button.svg';
 
 const styles = theme => ({
   wrapper: {
@@ -25,6 +25,27 @@ const styles = theme => ({
     lineHeight: '22px',
     fontWeight: '600',
   },
+  hexBotton: {
+    position: 'fixed',
+    zIndex:1,
+    top:100,
+    left:100,
+    height:'40px',
+    width:'40px',
+  },
+  plusButtonContainer: {
+    margin:0,
+    padding:0,
+    overflow: 'hidden',
+  },
+  plusButton: {
+    position: 'fixed',
+    zIndex:2,
+    top:100,
+    left:100,
+    marginTop: '10px',
+    marginLeft: '10px',
+  }
 });
 
 class DatasetView extends React.PureComponent {
@@ -62,13 +83,19 @@ class DatasetView extends React.PureComponent {
         render: row => moment(row.createdDate).fromNow(),
       },
     ];
-    console.log({Hex});
     return (
       <div className={classes.wrapper}>
         <div className={classes.title}>About Datasets</div>
         <div className={classes.header}>
           DATASETS
-          <NavLink to="/datasets/create"> + </NavLink>
+          <NavLink to="/datasets/create">
+          <div className={classes.plusButtonContainer}>
+            <div className={classes.plusButton}>+</div>
+            <Hex
+              className={classes.hexBotton}
+            />
+          </div>
+          </NavLink>
           {datasets && datasets.datasets && (
             <JadeTable columns={columns} rows={datasets.datasets} />
           )}
