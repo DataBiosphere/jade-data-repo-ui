@@ -20,6 +20,7 @@ describe('DatasetView', () => {
   const wrapper = setup();
 
   it('hey look a datasets view', () => {
-    wrapper.find('#datasets').simulate('click');
+    expect(wrapper).not.toBeNull();
+    expect(wrapper.find('#datasets')).not.toBeNull();
   });
 });

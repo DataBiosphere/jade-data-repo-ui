@@ -20,6 +20,7 @@ describe('DatasetPreviewView', () => {
   const wrapper = setup();
 
   it('hey look a datasets preview', () => {
-    wrapper.find('#datasetPreview').simulate('click');
+    expect(wrapper).not.toBeNull();
+    expect(wrapper.find('#dataset-preview')).not.toBeNull();
   });
 });

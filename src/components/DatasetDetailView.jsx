@@ -85,7 +85,7 @@ export class DatasetDetailView extends React.PureComponent {
     const { classes, dataset } = this.props;
     if (!dataset) {
       return (
-        <div id="datasetDetailView" className={classes.wrapper}>
+        <div id="dataset-detail-view" className={classes.wrapper}>
           This dataset does not exist.
         </div>
       );
@@ -115,7 +115,7 @@ export class DatasetDetailView extends React.PureComponent {
     ];
 
     return (
-      <div className={classes.wrapper}>
+      <div id="dataset-detail-view" className={classes.wrapper}>
         <div className={classes.container}>
           <div>
             <div className={classes.title}>{dataset.name}</div>
