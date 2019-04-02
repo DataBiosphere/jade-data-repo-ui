@@ -1,8 +1,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
+import Chip from '@material-ui/core/Chip';
 import TextField from '@material-ui/core/TextField';
 import { isEmail } from 'validator';
+
+const styles = theme => ({
+  addButton: {
+    margin: theme.spacing.unit,
+  },
+  chip: {
+    margin: theme.spacing.unit,
+  },
+  chipContainer: {
+    margin: theme.spacing.unit,
+    maxHeight: theme.spacing.unit * 20,
+    overflow: 'scroll',
+    width: '100%',
+  },
+});
 
 class ManageUsersView extends React.PureComponent {
   constructor(props) {
@@ -14,10 +31,11 @@ class ManageUsersView extends React.PureComponent {
   }
 
   static propTypes = {
-    addReader: PropTypes.func.isRequired,
+    addUser: PropTypes.func.isRequired,
+    classes: PropTypes.object.isRequired,
     defaultValue: PropTypes.string,
     readers: PropTypes.arrayOf(PropTypes.string),
-    removeReader: PropTypes.func.isRequired,
+    removeUser: PropTypes.func.isRequired,
   };
 
   validateEmail(newEmail) {
@@ -29,41 +47,46 @@ class ManageUsersView extends React.PureComponent {
   }
 
   render() {
-    const { addReader, defaultValue, readers, removeReader } = this.props;
+    const { addUser, classes, defaultValue, readers, removeUser } = this.props;
     const { emailValid, newEmail } = this.state;
+    const readerChips = readers.map(reader => {
+      return (
+        <div key={reader}>
+          <Chip
+            label={reader}
+            onDelete={() => removeUser(reader)}
+            className={classes.chip}
+            color="primary"
+            variant="outlined"
+          />
+        </div>
+      );
+    });
 
     return (
       <div>
         <div>
           <TextField
-            placeholder={defaultValue || 'New'}
+            placeholder={defaultValue || 'Add email address'}
             onChange={e => this.validateEmail(e.target.value)}
             style={{ width: '300px' }}
             variant="outlined"
           />
           <Button
+            className={classes.addButton}
             color="primary"
             disabled={!emailValid}
-            onClick={() => addReader(newEmail)}
+            onClick={() => addUser(newEmail)}
             type="button"
             variant="contained"
           >
             ADD
           </Button>
         </div>
-        <div>
-          {readers.map(reader => (
-            <div key={reader}>
-              {reader}
-              <Button onClick={() => removeReader(reader)} size="small">
-                x
-              </Button>
-            </div>
-          ))}
-        </div>
+        <div className={classes.chipContainer}>{readerChips}</div>
       </div>
     );
   }
 }
 
-export default ManageUsersView;
+export default withStyles(styles)(ManageUsersView);

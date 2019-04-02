@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 import { createDataset } from 'actions/index';
 
@@ -32,6 +33,11 @@ const styles = theme => ({
   },
   values: {
     paddingBottom: theme.spacing.unit * 3,
+  },
+  query: {
+    flexGrow: 1,
+    paddingBottom: theme.spacing.unit * 3,
+    paddingTop: theme.spacing.unit * 8,
   },
 });
 
@@ -68,11 +74,22 @@ export class DatasetPreviewView extends React.PureComponent {
     // what if it fails vs succeeds
     return (
       <div>
-        <div className={classes.title}>Preview Dataset</div>
         {createdDataset.id && createdDataset.name === dataset.name ? (
-          <p>Your new dataset has been created.</p>
+          <div>
+            <div className={classes.title}>Created Dataset</div>
+            <p>Your new dataset has been created!</p>
+            <div className={classes.query}>
+              <LinearProgress variant="determinate" value={100} />
+            </div>
+          </div>
         ) : (
-          <p>Your new dataset is being created.</p>
+          <div>
+            <div className={classes.title}>Create Dataset</div>
+            <p>Your new dataset is being created.</p>
+            <div className={classes.query}>
+              <LinearProgress variant="query" />
+            </div>
+          </div>
         )}
         <div className={classes.container}>
           <div className={classes.card}>
