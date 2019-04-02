@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: data-repo-ui
+  namespace: data-repo
+  labels:
+    app: data-repo
+    component: data-repo-ui
+spec:
+  containers:
+  - name: data-repo-ui-container
+    image: data-repo-ui:latest
+    imagePullPolicy: Never
+    ports:
+    - containerPort: 80
