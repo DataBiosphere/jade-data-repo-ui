@@ -15,3 +15,4 @@ docker build -t data-repo-ui ${WD}/..
 
 # create a data-repo namespace to put everything in
 kubectl apply -f "${WD}/ui-pod.yaml"
+kubectl apply -f "${WD}/ui-service.yaml"
