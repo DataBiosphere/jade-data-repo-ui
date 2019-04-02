@@ -8,6 +8,9 @@ WD=$( dirname "${BASH_SOURCE[0]}" )
 # switch into minikube mode (we want the containers we build to be available locally to minikube)
 eval $( minikube docker-env )
 
+# build for production
+npm run build --production
+
 docker build -t data-repo-ui ${WD}/..
 
 # create a data-repo namespace to put everything in

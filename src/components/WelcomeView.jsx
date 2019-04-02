@@ -81,8 +81,7 @@ class WelcomeView extends React.PureComponent {
           <div className={classes.title}>Welcome to the Jade Data Repository</div>
           <div>
             <GoogleLogin // TODO this component may be unuseable once we require a terra registration
-              // stealing clientId from Terra
-              clientId="500025638838-s2v23ar3spugtd5t2v1vgfa2sp7ppg0d.apps.googleusercontent.com"
+              clientId="694017244717-j5a5b7sebsvhd2u9ls85cinima96c2p0.apps.googleusercontent.com"
               buttonText="Sign in with Google"
               onSuccess={onSignInSuccess}
               onFailure={onSignInFailure}
