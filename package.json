@@ -205,8 +205,8 @@
     "cy:open": "cypress open",
     "test:e2e": "is-ci \"test:e2e:run\" \"test:e2e:dev\"",
     "pretest:e2e:run": "npm run build",
-    "test:e2e:run": "start-server-and-test serve http://localhost:3000 cy:run",
-    "test:e2e:dev": "start-server-and-test start http://localhost:3000 cy:open",
+    "test:e2e:run": "start-server-and-test serve http://local.broadinstitute.org:3000 cy:run",
+    "test:e2e:dev": "start-server-and-test start http://local.broadinstitute.org:3000 cy:open",
     "format": "prettier \"**/*.{js,jsx}\" --write",
     "validate": "npm run lint && npm run lint:styles && npm run test:coverage && npm run test:e2e:run && npm run bundlesize",
     "setup": "npm install && npm run validate",
@@ -215,7 +215,7 @@
     "publish": "node tools publish",
     "bundlesize": "bundlesize"
   },
-  "proxy": "http://localhost:8080",
+  "proxy": "http://local.broadinstitute.org:8080",
   "husky": {
     "hooks": {
       "post-merge": "node tools update",
