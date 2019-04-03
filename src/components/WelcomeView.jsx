@@ -61,19 +61,19 @@ class WelcomeView extends React.PureComponent {
   };
 
   render() {
+    const { classes, dispatch } = this.props;
+
     const onSignInFailure = () => {
-      const { dispatch } = this.props;
       dispatch(logOut());
     };
 
     const onSignInSuccess = user => {
-      const { dispatch } = this.props;
       const name = user.profileObj && user.profileObj.name;
       const image = user.profileObj && user.profileObj.imageUrl;
-
-      dispatch(logIn(name, image));
+      const token = user.tokenObj && user.tokenObj.id_token;
+      const tokenExpiration = user.tokenObj && user.tokenObj.expires_at; // TODO how can we refresh this when it expires
+      dispatch(logIn(name, image, token, tokenExpiration));
     };
-    const { classes } = this.props;
 
     return (
       <div className={classes.container}>

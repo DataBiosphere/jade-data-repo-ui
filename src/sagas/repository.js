@@ -2,9 +2,10 @@
  * @module Sagas/App
  * @desc App
  */
-import { all, put, call, takeLatest } from 'redux-saga/effects';
+import { all, put, call, select, takeLatest } from 'redux-saga/effects';
 import { delay } from 'redux-saga';
 import axios from 'axios';
+import moment from 'moment';
 
 import { ActionTypes, STATUS } from 'constants/index';
 
@@ -15,15 +16,46 @@ import { ActionTypes, STATUS } from 'constants/index';
  *
  */
 
+export const getToken = state => state.user.token;
+export const getTokenExpiration = state => state.user.tokenExpiration;
+
+export function* checkToken() {
+  const tokenExpiration = yield select(getTokenExpiration);
+  // if this fails, should isAuthenticated be flipped?
+  return moment(moment()).isSameOrAfter(parseInt(tokenExpiration, 10));
+}
+
+export function* authGet(url) {
+  if (yield call(checkToken)) {
+    // check expiration time against now
+    const token = yield select(getToken);
+    return yield call(axios.get, url, {
+      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+    });
+  }
+  return false;
+}
+
+export function* authPost(url, params) {
+  if (yield call(checkToken)) {
+    // check expiration time against now
+    const token = yield select(getToken);
+    return yield call(axios.post, url, params, {
+      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+    });
+  }
+  return false;
+}
+
 /**
  * Saga poller
  */
 function* pollJobWorker(jobId, jobTypeSuccess, jobTypeFailure) {
   try {
-    const response = yield call(axios.get, '/api/repository/v1/jobs/' + jobId);
+    const response = yield call(authGet, '/api/repository/v1/jobs/' + jobId);
     const jobStatus = response.data.job_status;
     if (jobStatus !== STATUS.RUNNING) {
-      const resultResponse = yield call(axios.get, '/api/repository/v1/jobs/' + jobId + '/result');
+      const resultResponse = yield call(authGet, '/api/repository/v1/jobs/' + jobId + '/result');
       if (jobStatus === 'succeeded' && resultResponse && resultResponse.data) {
         yield put({
           type: jobTypeSuccess,
@@ -57,7 +89,7 @@ function* pollJobWorker(jobId, jobTypeSuccess, jobTypeFailure) {
 
 export function* createDataset({ payload }) {
   try {
-    const response = yield call(axios.post, '/api/repository/v1/datasets', payload);
+    const response = yield call(authPost, '/api/repository/v1/datasets', payload);
     const jobId = response.data.id;
     yield put({
       type: ActionTypes.CREATE_DATASET_JOB,
@@ -80,7 +112,7 @@ export function* createDataset({ payload }) {
 export function* getDatasets() {
   // TODO: add limit and offset
   try {
-    const response = yield call(axios.get, '/api/repository/v1/datasets');
+    const response = yield call(authGet, '/api/repository/v1/datasets');
     yield put({
       type: ActionTypes.GET_DATASETS_SUCCESS,
       datasets: { data: response },
@@ -96,7 +128,7 @@ export function* getDatasets() {
 export function* getDatasetById({ payload }) {
   const datasetId = payload;
   try {
-    const response = yield call(axios.get, '/api/repository/v1/datasets/' + datasetId);
+    const response = yield call(authGet, '/api/repository/v1/datasets/' + datasetId);
     yield put({
       type: ActionTypes.GET_DATASET_BY_ID_SUCCESS,
       dataset: { data: response },
@@ -115,7 +147,7 @@ export function* getDatasetById({ payload }) {
 
 export function* getStudies() {
   try {
-    const response = yield call(axios.get, '/api/repository/v1/studies');
+    const response = yield call(authGet, '/api/repository/v1/studies');
     yield put({
       type: ActionTypes.GET_STUDIES_SUCCESS,
       studies: { data: response },
@@ -131,7 +163,7 @@ export function* getStudies() {
 export function* getStudyById({ payload }) {
   const studyId = payload;
   try {
-    const response = yield call(axios.get, '/api/repository/v1/studies/' + studyId);
+    const response = yield call(authGet, '/api/repository/v1/studies/' + studyId);
     yield put({
       type: ActionTypes.GET_STUDY_BY_ID_SUCCESS,
       study: { data: response },
