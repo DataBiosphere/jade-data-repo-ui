@@ -1,6 +1,5 @@
 import React from 'react';
-import moment from 'moment';
-import { Link, NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 
@@ -9,9 +8,17 @@ import AddSVG from '../../../assets/media/icons/plus-circle-solid.svg';
 
 const styles = theme => ({
   wrapper: {
-    paddingTop: theme.spacing.unit * 4,
+    padding: theme.spacing.unit * 4,
+    margin: theme.spacing.unit * 4,
+  },
+  title: {
+    color: theme.palette.primary.main,
+    fontSize: '54px',
+    lineHeight: '66px',
+    paddingBottom: theme.spacing.unit * 8,
   },
   header: {
+    alignItems: 'center',
     display: 'flex',
     flexDirection: 'row',
     fontSize: '18px',
