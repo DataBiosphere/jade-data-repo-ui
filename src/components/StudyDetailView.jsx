@@ -75,7 +75,7 @@ export class StudyDetailView extends React.PureComponent {
           </Card>
         </div>
         <div>
-          <div className={classes.header}>DATASETS IN THIS STUDY</div>
+          {/* <div className={classes.header}>DATASETS IN THIS STUDY</div>*/}
           {/* TODO add front end search once there is more than one study in a dataset*/}
           {/* study && study.source && <JadeTable columns={columns} rows={studies} />*/}
         </div>
