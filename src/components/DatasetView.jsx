@@ -7,7 +7,7 @@ import { withStyles } from '@material-ui/core/styles';
 
 import { getDatasets } from 'actions/index';
 import JadeTable from './table/JadeTable';
-import Hex from '../../assets/media/icons/hex-button.svg';
+import AddSVG from '../../assets/media/icons/plus-circle-solid.svg';
 
 const styles = theme => ({
   wrapper: {
@@ -21,31 +21,19 @@ const styles = theme => ({
     paddingBottom: theme.spacing.unit * 8,
   },
   header: {
-    fontSize: '14px',
-    lineHeight: '22px',
+    alignItems: 'center',
+    display: 'flex',
+    flexDirection: 'row',
+    fontSize: '18px',
     fontWeight: '600',
-  },
-  hexBotton: {
-    position: 'fixed',
-    zIndex:1,
-    top:100,
-    left:100,
-    height:'40px',
-    width:'40px',
-  },
-  plusButtonContainer: {
-    margin:0,
-    padding:0,
-    overflow: 'hidden',
+    paddingTop: '30px',
   },
   plusButton: {
-    position: 'fixed',
-    zIndex:2,
-    top:100,
-    left:100,
-    marginTop: '10px',
+    height: '30px',
+    fill: theme.palette.primary.main,
     marginLeft: '10px',
-  }
+    width: '30px',
+  },
 });
 
 class DatasetView extends React.PureComponent {
@@ -85,16 +73,12 @@ class DatasetView extends React.PureComponent {
     ];
     return (
       <div className={classes.wrapper}>
-        <div className={classes.title}>About Datasets</div>
+        <div className={classes.title}>Datasets</div>
+        <p> Datasets make access control simple </p>
         <div className={classes.header}>
           DATASETS
           <NavLink to="/datasets/create">
-          <div className={classes.plusButtonContainer}>
-            <div className={classes.plusButton}>+</div>
-            <Hex
-              className={classes.hexBotton}
-            />
-          </div>
+            <AddSVG className={classes.plusButton} />
           </NavLink>
           {datasets && datasets.datasets && (
             <JadeTable columns={columns} rows={datasets.datasets} />
