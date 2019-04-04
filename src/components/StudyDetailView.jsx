@@ -70,12 +70,10 @@ export class StudyDetailView extends React.PureComponent {
             </div>
             <Card className={classes.card}>
               <div className={classes.header}> Created by: </div>
-              {/* TODO hook this up to SAM?!?!?*/}
               <div className={classes.values}> {study.readers} </div>
               <div className={classes.header}> Date Created: </div>
               <div className={classes.values}> {moment(study.createdDate).fromNow()} </div>
               <div className={classes.header}> Last Modified: </div>
-              {/* where is this stored? */}
               <div className={classes.values}> {moment(study.createdDate).fromNow()} </div>
             </Card>
           </div>
