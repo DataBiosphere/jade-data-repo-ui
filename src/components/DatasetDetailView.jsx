@@ -4,12 +4,11 @@ import { connect } from 'react-redux';
 import moment from 'moment';
 import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
-import { Link } from 'react-router-dom';
 import _ from 'lodash';
 
 import { getDatasetById } from 'actions/index';
-import JadeTable from './table/JadeTable';
 import ManageUsersModal from './ManageUsersModal';
+import StudyTable from './table/StudyTable';
 
 const styles = theme => ({
   wrapper: {
@@ -92,28 +91,6 @@ export class DatasetDetailView extends React.PureComponent {
     }
     const studies = dataset && dataset.source && dataset.source.map(s => s.study);
     const modalText = 'Manage Viewers';
-    const columns = [
-      {
-        label: 'Study Name',
-        property: 'name',
-        render: row => <Link to={`/study/${row.id}`}>{row.name}</Link>,
-      },
-      {
-        label: 'Description',
-        property: 'description',
-      },
-      {
-        label: 'Last changed',
-        property: 'modifiedDate',
-        render: row => moment(row.modifiedDate).fromNow(),
-      },
-      {
-        label: 'Date created',
-        property: 'createdDate',
-        render: row => moment(row.createdDate).fromNow(),
-      },
-    ];
-
     return (
       <div id="dataset-detail-view" className={classes.wrapper}>
         <div className={classes.container}>
@@ -143,7 +120,7 @@ export class DatasetDetailView extends React.PureComponent {
         <div>
           <div className={classes.header}>STUDIES IN THIS DATASET</div>
           {/*TODO add front end search once there is more than one study in a dataset*/}
-          {dataset && dataset.source && <JadeTable columns={columns} rows={studies} />}
+          {dataset && dataset.source && <StudyTable rows={studies} />}
         </div>
       </div>
     );
