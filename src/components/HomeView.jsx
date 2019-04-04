@@ -1,8 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import moment from 'moment';
-import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 
 import { getDatasets, getStudies } from 'actions/index';
@@ -11,6 +9,8 @@ import DatasetTable from './table/DatasetTable';
 
 const styles = theme => ({
   wrapper: {
+    display: 'flex',
+    justifyContent: 'center',
     padding: theme.spacing.unit * 4,
     margin: theme.spacing.unit * 4,
   },
@@ -58,12 +58,14 @@ class HomeView extends React.PureComponent {
     const { classes, datasets, studies } = this.props;
     return (
       <div className={classes.wrapper}>
-        <div className={classes.title}>Jade Data Repository at a glance</div>
-        <div className={classes.header}>STUDIES</div>
-        <div> {studies && studies.studies && <StudyTable rows={studies.studies} />} </div>
-        <div className={classes.jadeTableSpacer} />
-        <div className={classes.header}>DATASETS</div>
-        <div> {datasets && datasets.datasets && <DatasetTable rows={datasets.datasets} />} </div>
+        <div>
+          <div className={classes.title}>Jade Data Repository at a glance</div>
+          <div className={classes.header}>STUDIES</div>
+          <div> {studies && studies.studies && <StudyTable rows={studies.studies} />} </div>
+          <div className={classes.jadeTableSpacer} />
+          <div className={classes.header}>DATASETS</div>
+          <div> {datasets && datasets.datasets && <DatasetTable rows={datasets.datasets} />} </div>
+        </div>
       </div>
     );
   }

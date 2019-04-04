@@ -9,6 +9,8 @@ import DatasetTable from './table/DatasetTable';
 
 const styles = theme => ({
   wrapper: {
+    display: 'flex',
+    justifyContent: 'center',
     padding: theme.spacing.unit * 4,
     margin: theme.spacing.unit * 4,
   },
@@ -44,9 +46,11 @@ class StudyView extends React.PureComponent {
     const { classes, studies } = this.props;
     return (
       <div className={classes.wrapper}>
-        <div className={classes.title}>Studies</div>
-        <div className={classes.header}>STUDIES</div>
-        <div> {studies && studies.studies && <StudyTable rows={studies.studies} />} </div>
+        <div>
+          <div className={classes.title}>Studies</div>
+          <div className={classes.header}>STUDIES</div>
+          <div> {studies && studies.studies && <StudyTable rows={studies.studies} />} </div>
+        </div>
       </div>
     );
   }

@@ -9,6 +9,8 @@ import { getStudyById } from 'actions/index';
 
 const styles = theme => ({
   wrapper: {
+    display: 'flex',
+    justifyContent: 'center',
     padding: theme.spacing.unit * 4,
     margin: theme.spacing.unit * 4,
   },
@@ -16,6 +18,7 @@ const styles = theme => ({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
+    width: '60%',
   },
   title: {
     color: theme.palette.primary.main,
@@ -64,14 +67,13 @@ export class StudyDetailView extends React.PureComponent {
           </div>
           <Card className={classes.card}>
             <div className={classes.header}> Created by: </div>
-            {/* TODO where are we even storing this info?*/}
+            {/* TODO hook this up to SAM?!?!?*/}
             <div className={classes.values}> {study.readers} </div>
             <div className={classes.header}> Date Created: </div>
             <div className={classes.values}> {moment(study.createdDate).fromNow()} </div>
             <div className={classes.header}> Last Modified: </div>
             {/* where is this stored? */}
             <div className={classes.values}> {moment(study.createdDate).fromNow()} </div>
-            {/* TODO hook this up to SAM?!?!?*/}
           </Card>
         </div>
         <div>

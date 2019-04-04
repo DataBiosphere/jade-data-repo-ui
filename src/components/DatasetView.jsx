@@ -10,6 +10,8 @@ import AddSVG from '../../assets/media/icons/plus-circle-solid.svg';
 
 const styles = theme => ({
   wrapper: {
+    display: 'flex',
+    justifyContent: 'center',
     padding: theme.spacing.unit * 4,
     margin: theme.spacing.unit * 4,
   },
@@ -51,15 +53,17 @@ class DatasetView extends React.PureComponent {
     const { classes, datasets } = this.props;
     return (
       <div id="datasets" className={classes.wrapper}>
-        <div className={classes.title}>Datasets</div>
-        <p> Datasets make access control simple </p>
-        <div className={classes.header}>
-          DATASETS
-          <NavLink to="/datasets/create">
-            <AddSVG className={classes.plusButton} />
-          </NavLink>
+        <div>
+          <div className={classes.title}>Datasets</div>
+          <p> Datasets make access control simple </p>
+          <div className={classes.header}>
+            DATASETS
+            <NavLink to="/datasets/create">
+              <AddSVG className={classes.plusButton} />
+            </NavLink>
+          </div>
+          <div> {datasets && datasets.datasets && <DatasetTable rows={datasets.datasets} />} </div>
         </div>
-        <div> {datasets && datasets.datasets && <DatasetTable rows={datasets.datasets} />} </div>
       </div>
     );
   }

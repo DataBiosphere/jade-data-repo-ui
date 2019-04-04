@@ -12,6 +12,8 @@ import StudyTable from './table/StudyTable';
 
 const styles = theme => ({
   wrapper: {
+    display: 'flex',
+    justifyContent: 'center',
     padding: theme.spacing.unit * 4,
     margin: theme.spacing.unit * 4,
   },
@@ -93,34 +95,36 @@ export class DatasetDetailView extends React.PureComponent {
     const modalText = 'Manage Viewers';
     return (
       <div id="dataset-detail-view" className={classes.wrapper}>
-        <div className={classes.container}>
-          <div>
-            <div className={classes.title}>{dataset.name}</div>
-            <div>{dataset.description}</div>
-          </div>
-          <Card className={classes.card}>
-            <div className={classes.header}>Custodian: </div>
-            <div className={classes.values}> {dataset.owner} </div>
-            <div className={classes.header}>Viewers: </div>
-            <div className={classes.values}> {dataset.readers} </div>
-            <div className={classes.header}> Date Created: </div>
-            <div className={classes.values}> {moment(dataset.createdDate).fromNow()} </div>
-            <div>
-              {dataset && dataset.id && (
-                <ManageUsersModal
-                  addUser={_.partial(this.addUser, dataset.id)}
-                  removeUser={_.partial(this.removeUser, dataset.id)}
-                  modalText={modalText}
-                  readers={hardCodedReaders}
-                />
-              )}
-            </div>
-          </Card>
-        </div>
         <div>
-          <div className={classes.header}>STUDIES IN THIS DATASET</div>
-          {/*TODO add front end search once there is more than one study in a dataset*/}
-          {dataset && dataset.source && <StudyTable rows={studies} />}
+          <div className={classes.container}>
+            <div>
+              <div className={classes.title}>{dataset.name}</div>
+              <div>{dataset.description}</div>
+            </div>
+            <Card className={classes.card}>
+              <div className={classes.header}>Custodian: </div>
+              <div className={classes.values}> {dataset.owner} </div>
+              <div className={classes.header}>Viewers: </div>
+              <div className={classes.values}> {dataset.readers} </div>
+              <div className={classes.header}> Date Created: </div>
+              <div className={classes.values}> {moment(dataset.createdDate).fromNow()} </div>
+              <div>
+                {dataset && dataset.id && (
+                  <ManageUsersModal
+                    addUser={_.partial(this.addUser, dataset.id)}
+                    removeUser={_.partial(this.removeUser, dataset.id)}
+                    modalText={modalText}
+                    readers={hardCodedReaders}
+                  />
+                )}
+              </div>
+            </Card>
+          </div>
+          <div>
+            <div className={classes.header}>STUDIES IN THIS DATASET</div>
+            {/*TODO add front end search once there is more than one study in a dataset*/}
+            {dataset && dataset.source && <StudyTable rows={studies} />}
+          </div>
         </div>
       </div>
     );
