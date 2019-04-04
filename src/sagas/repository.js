@@ -179,7 +179,6 @@ export function* addReaderToDataset({ payload }) {
   }
 }
 
-
 /**
  * Studies.
  */
