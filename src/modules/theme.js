@@ -24,11 +24,11 @@ export default createMuiTheme({
   },
   palette: {
     primary: {
-      main: '#81ab52',
-      contrastText: '#ffffff',
+      main: '#81AB52',
+      contrastText: '#FFFFFF',
     },
     secondary: {
-      main: '#81ab52',
+      main: '#81AB52',
       contrastText: '#8F96A1',
     },
   },

@@ -7,10 +7,15 @@ import TableRow from '@material-ui/core/TableRow';
 import Tooltip from '@material-ui/core/Tooltip';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 
-const styles = () => {};
+const styles = () => ({
+  head: {
+    borderRadius: '5px 5px 0 0 ',
+  },
+});
 
 export class JadeTableHead extends React.PureComponent {
   static propTypes = {
+    classes: PropTypes.object.isRequired,
     columns: PropTypes.arrayOf(PropTypes.object),
     onRequestSort: PropTypes.func.isRequired,
     order: PropTypes.string.isRequired,
@@ -23,10 +28,10 @@ export class JadeTableHead extends React.PureComponent {
   };
 
   render() {
-    const { order, orderBy, columns } = this.props;
+    const { classes, columns, order, orderBy } = this.props;
 
     return (
-      <TableHead>
+      <TableHead className={classes.head}>
         <TableRow>
           {columns.map(
             col => (

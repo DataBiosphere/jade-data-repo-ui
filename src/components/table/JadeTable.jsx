@@ -11,12 +11,18 @@ import JadeTableHead from './JadeTableHead';
 
 const styles = theme => ({
   root: {
-    width: '100%',
+    borderRadius: '2px 2px 0 0 ',
     marginTop: theme.spacing.unit * 3,
+    maxWidth: 1400,
     overflowX: 'auto',
+    width: '100%',
   },
   table: {
+    borderRadius: '2px 2px 0 0 ',
     minWidth: 700,
+  },
+  row: {
+    borderRadius: '2px 2px 0 0 ',
   },
 });
 
@@ -79,7 +85,7 @@ export class JadeTable extends React.PureComponent {
           />
           <TableBody>
             {stableSort(rows, getSorting(order, orderBy)).map(row => (
-              <TableRow key={row.id}>
+              <TableRow key={row.id} className={classes.row}>
                 {columns.map(col => (
                   <TableCell key={col.property}>
                     {col.render ? col.render(row) : row[col.property]}
