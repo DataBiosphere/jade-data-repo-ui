@@ -162,9 +162,11 @@ export function* getDatasetPolicy({ payload }) {
 
 export function* addReaderToDataset({ payload }) {
   const datasetId = payload.datasetId;
-  const newReader = payload.newReader;
   try {
-    const response = yield call(axios.get, '/api/repository/v1/datasets/' + datasetId + '/policies/readers/members');
+    const response = yield call(
+      authGet,
+      '/api/repository/v1/datasets/' + datasetId + '/policies/readers/members',
+    );
     yield put({
       type: ActionTypes.SET_DATASET_POLICY_SUCCESS,
       dataset: { data: response },
