@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Link, Switch, Route } from 'react-router-dom';
+import { HashRouter, Link, Switch, Route } from 'react-router-dom';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import { withStyles } from '@material-ui/core/styles';
@@ -32,15 +32,23 @@ class Private extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: '/',
+      value: '',
     };
   }
 
   static propTypes = {
     classes: PropTypes.object.isRequired,
+    location: PropTypes.object.isRequired,
   };
 
-  handleChange = (event, value) => {
+  componentDidUpdate(prevProps) {
+    const { location } = this.props;
+    if (location !== prevProps.location) {
+      this.onRouteChanged(location.hash.split('/')[1]);
+    }
+  }
+
+  onRouteChanged = value => {
     this.setState({ value });
   };
 
@@ -48,31 +56,30 @@ class Private extends React.Component {
     const { value } = this.state;
     const { classes } = this.props;
     return (
-      <BrowserRouter>
+      <HashRouter>
         <div>
           <Tabs
             value={value}
-            onChange={this.handleChange}
             classes={{ root: classes.tabsRoot, indicator: classes.tabsIndicator }}
           >
             <Tab
               label="Home"
               component={Link}
-              value="/"
+              value=""
               to="/"
               classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
             />
             <Tab
               label="Studies"
               component={Link}
-              value="/studies"
+              value="studies"
               to="/studies"
               classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
             />
             <Tab
               label="Datasets"
               component={Link}
-              value="/datasets"
+              value="datasets"
               to="/datasets"
               classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
             />
@@ -89,7 +96,7 @@ class Private extends React.Component {
             </div>
           </Switch>
         </div>
-      </BrowserRouter>
+      </HashRouter>
     );
   }
 }
