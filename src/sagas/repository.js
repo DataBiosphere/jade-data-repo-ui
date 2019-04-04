@@ -22,7 +22,7 @@ export const getTokenExpiration = state => state.user.tokenExpiration;
 export function* checkToken() {
   const tokenExpiration = yield select(getTokenExpiration);
   // if this fails, should isAuthenticated be flipped?
-  return moment(moment()).isSameOrAfter(parseInt(tokenExpiration, 10));
+  return moment(moment()).isSameOrBefore(parseInt(tokenExpiration, 10));
 }
 
 export function* authGet(url) {

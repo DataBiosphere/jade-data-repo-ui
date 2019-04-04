@@ -19,16 +19,17 @@ import { ActionTypes } from 'constants/index';
 
 jest.mock('axios', () => ({
   get: () => ({ data: { job_status: 'succeeded' } }),
-  post: () => ({ data: { id: 'keep me posted', job_status: 'succeeded' } }),
+  post: () => ({ data: { id: 'keepMePosted', job_status: 'succeeded' } }),
 }));
+
+const anHourFromNow = moment() + 360000;
+const anHourBeforeNow = moment() - 360000;
 
 describe('repository', () => {
   it('test token expiration', () => {
-    const tokenExpiration = 1553537329627;
-    const dispatched = [];
+    const tokenExpiration = anHourFromNow;
     const test = runSaga(
       {
-        dispatch: action => dispatched.push(action),
         getState: () => ({ user: { tokenExpiration } }),
       },
       checkToken,
@@ -37,11 +38,9 @@ describe('repository', () => {
   });
 
   it('test token invalid', () => {
-    const tokenExpired = moment() - 360000;
-    const dispatched = [];
+    const tokenExpired = anHourBeforeNow;
     const test = runSaga(
       {
-        dispatch: action => dispatched.push(action),
         getState: () => ({ user: { tokenExpired } }),
       },
       checkToken,
@@ -51,42 +50,41 @@ describe('repository', () => {
 
   it('test get with auth header', () => {
     const token = 'Cherlene';
-    const tokenExpiration = 1553537329627;
-    const dispatched = [];
+    const tokenExpiration = anHourFromNow;
     const test = runSaga(
       {
-        dispatch: action => dispatched.push(action),
         getState: () => ({ user: { token, tokenExpiration } }),
       },
       authGet,
+      '/api/repository/v1/datasets',
     );
     expect(test.result()).toEqual({ data: { job_status: 'succeeded' } });
   });
 
   it('test post with auth header', () => {
     const token = 'Cherlene';
-    const tokenExpiration = 1553537329627;
-    const dispatched = [];
+    const tokenExpiration = anHourFromNow;
     const test = runSaga(
       {
-        dispatch: action => dispatched.push(action),
         getState: () => ({ user: { token, tokenExpiration } }),
       },
       authPost,
+      '/api/repository/v1/datasets',
+      'params',
     );
-    expect(test.result()).toEqual({ data: { id: 'keep me posted', job_status: 'succeeded' } });
+    expect(test.result()).toEqual({ data: { id: 'keepMePosted', job_status: 'succeeded' } });
   });
 
   it('should have the create dataset saga', () => {
     const token = 'Cherlene';
-    const tokenExpiration = 1553537329627;
+    const tokenExpiration = anHourFromNow;
     const payload = {};
     expectSaga(createDataset, { payload })
       .provide([[select(getTokenExpiration), tokenExpiration], [select(getToken), token]])
       .put({
         type: ActionTypes.CREATE_DATASET_JOB,
         payload: {
-          data: { data: { id: 'keep me posted', job_status: 'succeeded' } },
+          data: { data: { id: 'keepMePosted', job_status: 'succeeded' } },
           createdDataset: payload,
         },
       })
@@ -99,7 +97,7 @@ describe('repository', () => {
 
   it('should have the get datasets saga', () => {
     const token = 'Cherlene';
-    const tokenExpiration = 1553537329627;
+    const tokenExpiration = anHourFromNow;
     expectSaga(getDatasets)
       .provide([[select(getTokenExpiration), tokenExpiration], [select(getToken), token]])
       .put({
@@ -113,8 +111,8 @@ describe('repository', () => {
 
   it('should have the get dataset by id saga', () => {
     const token = 'Cherlene';
-    const tokenExpiration = 1553537329627;
-    const payload = {};
+    const tokenExpiration = anHourFromNow;
+    const payload = 'datasetId';
     expectSaga(getDatasetById, { payload })
       .provide([[select(getTokenExpiration), tokenExpiration], [select(getToken), token]])
       .put({
@@ -128,7 +126,7 @@ describe('repository', () => {
 
   it('should have the get studies saga', () => {
     const token = 'Cherlene';
-    const tokenExpiration = 1553537329627;
+    const tokenExpiration = anHourFromNow;
     expectSaga(getStudies)
       .provide([[select(getTokenExpiration), tokenExpiration], [select(getToken), token]])
       .put({
@@ -142,8 +140,8 @@ describe('repository', () => {
 
   it('should have the get study by id saga', () => {
     const token = 'Cherlene';
-    const tokenExpiration = 1553537329627;
-    const payload = {};
+    const tokenExpiration = anHourFromNow;
+    const payload = 'studyId';
     expectSaga(getStudyById, { payload })
       .provide([[select(getTokenExpiration), tokenExpiration], [select(getToken), token]])
       .put({
