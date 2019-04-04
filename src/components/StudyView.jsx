@@ -2,11 +2,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { Link } from 'react-router-dom';
-import moment from 'moment';
 
 import { getStudies } from 'actions/index';
-import JadeTable from './table/JadeTable';
+import StudyTable from './table/StudyTable';
+import DatasetTable from './table/DatasetTable';
 
 const styles = theme => ({
   wrapper: {
@@ -43,32 +42,11 @@ class StudyView extends React.PureComponent {
 
   render() {
     const { classes, studies } = this.props;
-    const columns = [
-      {
-        label: 'Study Name',
-        property: 'name',
-        render: row => <Link to={`/studies/${row.id}`}>{row.name}</Link>,
-      },
-      {
-        label: 'Description',
-        property: 'description',
-      },
-      {
-        label: 'Last changed',
-        property: 'modifiedDate',
-        render: row => moment(row.createdDate).fromNow(),
-      },
-      {
-        label: 'Date created',
-        property: 'createdDate',
-        render: row => moment(row.createdDate).fromNow(),
-      },
-    ];
     return (
       <div className={classes.wrapper}>
         <div className={classes.title}>Studies</div>
         <div className={classes.header}>STUDIES</div>
-        {studies && studies.studies && <JadeTable columns={columns} rows={studies.studies} />}
+        <div> {studies && studies.studies && <StudyTable rows={studies.studies} />} </div>
       </div>
     );
   }
