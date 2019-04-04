@@ -56,7 +56,7 @@ class StudyView extends React.PureComponent {
       {
         label: 'Last changed',
         property: 'modifiedDate',
-        render: row => moment(row.modifiedDate).fromNow(),
+        render: row => moment(row.createdDate).fromNow(),
       },
       {
         label: 'Date created',
