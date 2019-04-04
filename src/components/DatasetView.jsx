@@ -1,12 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import moment from 'moment';
-import { Link, NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 
 import { getDatasets } from 'actions/index';
-import JadeTable from './table/JadeTable';
+import DatasetTable from './table/DatasetTable';
 import AddSVG from '../../assets/media/icons/plus-circle-solid.svg';
 
 const styles = theme => ({
@@ -50,27 +49,6 @@ class DatasetView extends React.PureComponent {
 
   render() {
     const { classes, datasets } = this.props;
-    const columns = [
-      {
-        label: 'Dataset Name',
-        property: 'name',
-        render: row => <Link to={`/dataset/${row.id}`}>{row.name}</Link>,
-      },
-      {
-        label: 'Description',
-        property: 'description',
-      },
-      {
-        label: 'Last changed',
-        property: 'modifiedDate',
-        render: row => moment(row.modifiedDate).fromNow(),
-      },
-      {
-        label: 'Date created',
-        property: 'createdDate',
-        render: row => moment(row.createdDate).fromNow(),
-      },
-    ];
     return (
       <div id="datasets" className={classes.wrapper}>
         <div className={classes.title}>Datasets</div>
@@ -81,11 +59,7 @@ class DatasetView extends React.PureComponent {
             <AddSVG className={classes.plusButton} />
           </NavLink>
         </div>
-        <div>
-          {datasets && datasets.datasets && (
-            <JadeTable columns={columns} rows={datasets.datasets} />
-          )}
-        </div>
+        <div> {datasets && datasets.datasets && <DatasetTable rows={datasets.datasets} />} </div>
       </div>
     );
   }

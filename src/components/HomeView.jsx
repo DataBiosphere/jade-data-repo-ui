@@ -7,6 +7,7 @@ import { withStyles } from '@material-ui/core/styles';
 
 import { getDatasets, getStudies } from 'actions/index';
 import JadeTable from './table/JadeTable';
+import DatasetTable from './table/DatasetTable';
 
 const styles = theme => ({
   wrapper: {
@@ -76,27 +77,6 @@ class HomeView extends React.PureComponent {
         render: row => moment(row.createdDate).fromNow(),
       },
     ];
-    const datasetColumns = [
-      {
-        label: 'Dataset Name',
-        property: 'name',
-        render: row => <Link to={`/dataset/${row.id}`}>{row.name}</Link>,
-      },
-      {
-        label: 'Description',
-        property: 'description',
-      },
-      {
-        label: 'Last changed',
-        property: 'modifiedDate',
-        render: row => moment(row.modifiedDate).fromNow(),
-      },
-      {
-        label: 'Date created',
-        property: 'createdDate',
-        render: row => moment(row.createdDate).fromNow(),
-      },
-    ];
     return (
       <div className={classes.wrapper}>
         <div className={classes.title}>Jade Data Repository at a glance</div>
@@ -104,9 +84,7 @@ class HomeView extends React.PureComponent {
         {studies && studies.studies && <JadeTable columns={studyColumns} rows={studies.studies} />}
         <div className={classes.jadeTableSpacer} />
         <div className={classes.header}>DATASETS</div>
-        {datasets && datasets.datasets && (
-          <JadeTable columns={datasetColumns} rows={datasets.datasets} />
-        )}
+        <div> {datasets && datasets.datasets && <DatasetTable rows={datasets.datasets} />} </div>
       </div>
     );
   }
