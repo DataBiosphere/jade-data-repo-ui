@@ -59,27 +59,29 @@ export class StudyDetailView extends React.PureComponent {
     const { classes, study } = this.props;
     return (
       <div className={classes.wrapper}>
-        <div className={classes.container}>
-          <div>
-            <div className={classes.title}>{study.name}</div>
-            <div>{study.description}</div>
-            <div>Should this have schema info here?</div>
+        <div className={classes.width}>
+          <div className={classes.container}>
+            <div>
+              <div className={classes.title}>{study.name}</div>
+              <div>{study.description}</div>
+              <div>Should this have schema info here?</div>
+            </div>
+            <Card className={classes.card}>
+              <div className={classes.header}> Created by: </div>
+              {/* TODO hook this up to SAM?!?!?*/}
+              <div className={classes.values}> {study.readers} </div>
+              <div className={classes.header}> Date Created: </div>
+              <div className={classes.values}> {moment(study.createdDate).fromNow()} </div>
+              <div className={classes.header}> Last Modified: </div>
+              {/* where is this stored? */}
+              <div className={classes.values}> {moment(study.createdDate).fromNow()} </div>
+            </Card>
           </div>
-          <Card className={classes.card}>
-            <div className={classes.header}> Created by: </div>
-            {/* TODO hook this up to SAM?!?!?*/}
-            <div className={classes.values}> {study.readers} </div>
-            <div className={classes.header}> Date Created: </div>
-            <div className={classes.values}> {moment(study.createdDate).fromNow()} </div>
-            <div className={classes.header}> Last Modified: </div>
-            {/* where is this stored? */}
-            <div className={classes.values}> {moment(study.createdDate).fromNow()} </div>
-          </Card>
-        </div>
-        <div>
-          {/* <div className={classes.header}>DATASETS IN THIS STUDY</div>*/}
-          {/* TODO add front end search once there is more than one study in a dataset*/}
-          {/* study && study.source && <JadeTable columns={columns} rows={studies} />*/}
+          <div>
+            {/* <div className={classes.header}>DATASETS IN THIS STUDY</div>*/}
+            {/* TODO add front end search once there is more than one study in a dataset*/}
+            {/* study && study.source && <JadeTable columns={columns} rows={studies} />*/}
+          </div>
         </div>
       </div>
     );
