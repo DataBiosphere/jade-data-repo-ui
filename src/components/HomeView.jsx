@@ -14,6 +14,9 @@ const styles = theme => ({
     padding: theme.spacing.unit * 4,
     margin: theme.spacing.unit * 4,
   },
+  width: {
+    width: '70%',
+  },
   container: {
     display: 'flex',
     flexDirection: 'row',
@@ -29,11 +32,6 @@ const styles = theme => ({
     display: 'inline-block',
     padding: theme.spacing.unit * 4,
     width: '200px',
-  },
-  header: {
-    fontSize: '14px',
-    lineHeight: '22px',
-    fontWeight: '600',
   },
   jadeTableSpacer: {
     paddingBottom: theme.spacing.unit * 8,
@@ -58,12 +56,10 @@ class HomeView extends React.PureComponent {
     const { classes, datasets, studies } = this.props;
     return (
       <div className={classes.wrapper}>
-        <div>
+        <div className={classes.width}>
           <div className={classes.title}>Jade Data Repository at a glance</div>
-          <div className={classes.header}>STUDIES</div>
           <div> {studies && studies.studies && <StudyTable rows={studies.studies} />} </div>
           <div className={classes.jadeTableSpacer} />
-          <div className={classes.header}>DATASETS</div>
           <div> {datasets && datasets.datasets && <DatasetTable rows={datasets.datasets} />} </div>
         </div>
       </div>

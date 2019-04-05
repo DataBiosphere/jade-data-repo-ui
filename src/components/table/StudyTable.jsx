@@ -8,14 +8,7 @@ import JadeTable from './JadeTable';
 
 const styles = theme => ({
   wrapper: {
-    padding: theme.spacing.unit * 4,
-    margin: theme.spacing.unit * 4,
-  },
-  title: {
-    color: theme.palette.primary.main,
-    fontSize: '54px',
-    lineHeight: '66px',
-    paddingBottom: theme.spacing.unit * 8,
+    paddingTop: theme.spacing.unit * 4,
   },
   header: {
     alignItems: 'center',
@@ -31,15 +24,16 @@ class StudyTable extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object.isRequired,
     rows: PropTypes.array,
+    studyListName: PropTypes.string,
   };
 
   render() {
-    const { classes, rows } = this.props;
+    const { classes, rows, studyListName } = this.props;
     const columns = [
       {
         label: 'Study Name',
         property: 'name',
-        render: row => <Link to={`/studies/${row.id}`}>{row.name}</Link>,
+        render: row => <Link to={`/studies/details/${row.id}`}>{row.name}</Link>,
       },
       {
         label: 'Description',
@@ -58,6 +52,7 @@ class StudyTable extends React.PureComponent {
     ];
     return (
       <div className={classes.wrapper}>
+        <div className={classes.header}>{studyListName || 'STUDIES'}</div>
         <JadeTable columns={columns} rows={rows} />
       </div>
     );
