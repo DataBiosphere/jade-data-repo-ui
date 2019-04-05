@@ -9,6 +9,15 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import { createDataset } from 'actions/index';
 
 const styles = theme => ({
+  wrapper: {
+    display: 'flex',
+    justifyContent: 'center',
+    padding: theme.spacing.unit * 4,
+    margin: theme.spacing.unit * 4,
+  },
+  width: {
+    width: '70%',
+  },
   container: {
     display: 'flex',
     flexDirection: 'row',
@@ -73,44 +82,45 @@ export class DatasetPreviewView extends React.PureComponent {
     // what happens if you got to this page and we havent loaded data properly?
     // what if it fails vs succeeds
     return (
-      <div id="dataset-preview">
-        <div className={classes.title}>Preview Dataset</div>
-        {createdDataset.id && createdDataset.name === dataset.name ? (
-          <div>
-            <div className={classes.title}>Created Dataset</div>
-            <p>Your new dataset has been created!</p>
-            <div className={classes.query}>
-              <LinearProgress variant="determinate" value={100} />
-            </div>
-          </div>
-        ) : (
-          <div>
-            <div className={classes.title}>Create Dataset</div>
-            <p>Your new dataset is being created.</p>
-            <div className={classes.query}>
-              <LinearProgress variant="query" />
-            </div>
-          </div>
-        )}
-        <div className={classes.container}>
-          <div className={classes.card}>
-            <div className={classes.header}> Dataset Name: </div>
-            {createdDataset.id && createdDataset.name === dataset.name ? (
-              <div className={classes.values}>
-                <Link to={`/dataset/${createdDataset.id}`}>{dataset.name}</Link>
+      <div id="dataset-preview" className={classes.wrapper}>
+        <div className={classes.width}>
+          {createdDataset.id && createdDataset.name === dataset.name ? (
+            <div>
+              <div className={classes.title}>Created Dataset</div>
+              <p>Your new dataset has been created!</p>
+              <div className={classes.query}>
+                <LinearProgress variant="determinate" value={100} />
               </div>
-            ) : (
-              <div className={classes.values}>{dataset.name}</div>
-            )}
-            <div className={classes.header}> Description: </div>
-            <div className={classes.values}> {dataset.description} </div>
+            </div>
+          ) : (
+            <div>
+              <div className={classes.title}>Create Dataset</div>
+              <p>Your new dataset is being created.</p>
+              <div className={classes.query}>
+                <LinearProgress variant="query" />
+              </div>
+            </div>
+          )}
+          <div className={classes.container}>
+            <div className={classes.card}>
+              <div className={classes.header}> Dataset Name: </div>
+              {createdDataset.id && createdDataset.name === dataset.name ? (
+                <div className={classes.values}>
+                  <Link to={`/dataset/${createdDataset.id}`}>{dataset.name}</Link>
+                </div>
+              ) : (
+                <div className={classes.values}>{dataset.name}</div>
+              )}
+              <div className={classes.header}> Description: </div>
+              <div className={classes.values}> {dataset.description} </div>
+            </div>
+            <Card className={classes.card}>
+              <div className={classes.header}> Custodian(s): </div>
+              <div className={classes.values}> {dataset.readers} </div>
+              <div className={classes.header}> Access: </div>
+              <div className={classes.values}> {dataset.readers} </div>
+            </Card>
           </div>
-          <Card className={classes.card}>
-            <div className={classes.header}> Custodian(s): </div>
-            <div className={classes.values}> {dataset.readers} </div>
-            <div className={classes.header}> Access: </div>
-            <div className={classes.values}> {dataset.readers} </div>
-          </Card>
         </div>
       </div>
     );
