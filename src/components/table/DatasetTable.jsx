@@ -1,21 +1,15 @@
 import React from 'react';
 import moment from 'moment';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 
 import JadeTable from './JadeTable';
+import AddSVG from '../../../assets/media/icons/plus-circle-solid.svg';
 
 const styles = theme => ({
   wrapper: {
-    padding: theme.spacing.unit * 4,
-    margin: theme.spacing.unit * 4,
-  },
-  title: {
-    color: theme.palette.primary.main,
-    fontSize: '54px',
-    lineHeight: '66px',
-    paddingBottom: theme.spacing.unit * 8,
+    paddingTop: theme.spacing.unit * 4,
   },
   header: {
     alignItems: 'center',
@@ -24,6 +18,12 @@ const styles = theme => ({
     fontSize: '18px',
     fontWeight: '600',
     paddingTop: '30px',
+  },
+  plusButton: {
+    height: '30px',
+    fill: theme.palette.primary.main,
+    marginLeft: '10px',
+    width: '30px',
   },
 });
 
@@ -39,7 +39,7 @@ class DatasetTable extends React.PureComponent {
       {
         label: 'Dataset Name',
         property: 'name',
-        render: row => <Link to={`/datasets/${row.id}`}>{row.name}</Link>,
+        render: row => <Link to={`/datasets/details/${row.id}`}>{row.name}</Link>,
       },
       {
         label: 'Description',
@@ -58,6 +58,12 @@ class DatasetTable extends React.PureComponent {
     ];
     return (
       <div className={classes.wrapper}>
+        <div className={classes.header}>
+          DATASETS
+          <NavLink to="/datasets/create">
+            <AddSVG className={classes.plusButton} />
+          </NavLink>
+        </div>
         <JadeTable columns={columns} rows={rows} />
       </div>
     );
