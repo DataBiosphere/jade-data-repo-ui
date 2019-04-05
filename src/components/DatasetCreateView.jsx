@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { withStyles } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom';
 import MultiSelect from 'react-select';
 import { Control, Form, actions, Errors } from 'react-redux-form';
@@ -48,9 +49,49 @@ const assetOptions = [
   { value: 'sample', label: 'Sample' },
 ];
 
+const styles = theme => ({
+  wrapper: {
+    display: 'flex',
+    justifyContent: 'center',
+    padding: theme.spacing.unit * 4,
+    margin: theme.spacing.unit * 4,
+  },
+  title: {
+    color: theme.palette.primary.main,
+    fontSize: '54px',
+    lineHeight: '66px',
+    paddingBottom: theme.spacing.unit * 2,
+  },
+  header: {
+    alignItems: 'center',
+    display: 'flex',
+    flexDirection: 'row',
+    fontSize: '18px',
+    fontWeight: '600',
+    paddingTop: '30px',
+  },
+  manageUsers: {
+    width: '400px',
+  },
+  buttons: {
+    float: 'right',
+    marginLeft: '8px',
+    padding: theme.spacing.unit,
+  },
+  linkCreate: {
+    color: theme.palette.primary.contrastText,
+    textDecoration: 'none',
+  },
+  linkCancel: {
+    color: theme.palette.primary.main,
+    textDecoration: 'none',
+  },
+});
+
 export class DatasetCreateView extends React.PureComponent {
   static propTypes = {
     asset: PropTypes.string,
+    classes: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired,
     ids: PropTypes.arrayOf(PropTypes.string),
     readers: PropTypes.arrayOf(PropTypes.string),
@@ -129,136 +170,144 @@ export class DatasetCreateView extends React.PureComponent {
 
   render() {
     const FormRow = props => <div style={{ paddingBottom: '1em' }}>{props.children}</div>;
-    const { asset, ids, readers, studies, study } = this.props;
+    const { asset, classes, ids, readers, studies, study } = this.props;
     const studyOptions = this.getStudyOptions(studies);
 
     return (
-      <div>
-        <h2>Create Dataset</h2>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet.
-          Proin gravida dolor sit amet lacus accumsan et viverra justo commodo. Proin sodales
-          pulvinar sic tempor. Sociis natoque penatibus et magnis dis parturient montes, nascetur
-          ridiculus mus. Nam fermentum, nulla luctus pharetra vulputate, felis tellus mollis orci,
-          sed rhoncus pronin sapien nunc accuan eget.
-        </p>
-        <Form model="dataset">
-          <FormRow>
-            <Control.text
-              model="dataset.name"
-              id="dataset.name"
-              required
-              validators={{ name: this.validateName }}
-              component={props => (
-                <TextField
-                  {...props}
-                  placeholder="Dataset Name"
-                  style={{ width: '300px' }}
-                  variant="outlined"
-                />
-              )}
-            />
-          </FormRow>
-
-          <FormRow>
-            <Control.textarea
-              model="dataset.description"
-              id="dataset.description"
-              required
-              component={props => (
-                <TextField
-                  {...props}
-                  style={{ width: '800px' }} // fullWidth
-                  multiline
-                  placeholder="Add Dataset Description"
-                  rows="8"
-                  rowsMax="100"
-                  variant="outlined"
-                />
-              )}
-            />
-          </FormRow>
-          <FormRow>
-            <Control.custom
-              id="dataset.readers"
-              model="dataset.readers"
-              component={props => (
-                <ManageUsers
-                  {...props}
-                  addUser={newEmail => this.addUser(newEmail)}
-                  defaultValue="Add viewer email address"
-                  removeUser={removeableEmail => this.removeUser(removeableEmail)}
-                  readers={readers}
-                />
-              )}
-            />
-          </FormRow>
-          <FormRow>
-            <Control.select
-              id="dataset.study"
-              model="dataset.study"
-              size="5"
-              component={props => (
-                <MultiSelect
-                  {...props}
-                  onChange={e => this.selectStudy(e.label)}
-                  options={studyOptions}
-                  placeholder="Search Studies"
-                  value={studyOptions.filter(option => option.label === study)}
-                />
-              )}
-            />
-          </FormRow>
-
-          <FormRow>
-            <Control.select
-              id="dataset.asset"
-              model="dataset.asset"
-              size="5"
-              component={props => (
-                <MultiSelect
-                  {...props}
-                  onChange={e => this.selectAsset(e.value)}
-                  options={assetOptions}
-                  placeholder="Select Asset Type..."
-                  value={assetOptions.filter(option => option.value === asset)}
-                />
-              )}
-            />
-          </FormRow>
-
-          <FormRow>
-            <input
-              type="file"
-              id="dataset.upload"
-              onChange={this.parseFile}
-              style={{ display: 'none' }}
-            />
-            <label htmlFor="dataset.upload">
-              <Button variant="contained" component="span" color="primary">
-                Import Ids
-              </Button>
-            </label>
-          </FormRow>
-
-          {ids && (
+      <div className={classes.wrapper}>
+        <div>
+          <div className={classes.title}>Create Dataset</div>
+          <p>Fill out the following fields to create a new dataset</p>
+          <Form model="dataset">
             <FormRow>
-              <Control.select multiple={true} disabled={true} id="dataset.ids" model="dataset.ids">
-                <option>Preview</option>
-                {ids && ids.map(id => <option key={id}>{id}</option>)}
-              </Control.select>
+              <Control.text
+                model="dataset.name"
+                id="dataset.name"
+                required
+                validators={{ name: this.validateName }}
+                component={props => (
+                  <TextField
+                    {...props}
+                    className={classes.test}
+                    placeholder="Dataset Name"
+                    style={{ width: '300px' }}
+                    variant="outlined"
+                  />
+                )}
+              />
             </FormRow>
-          )}
-          <Errors model="dataset" />
-          <FormRow>
-            <Button variant="contained" type="button">
-              <Link to="/datasets">Cancel</Link>
-            </Button>
-            <Button variant="contained" color="primary">
-              <Link to="/datasets/preview">Create Dataset</Link>
-            </Button>
-          </FormRow>
-        </Form>
+
+            <FormRow>
+              <Control.textarea
+                model="dataset.description"
+                id="dataset.description"
+                required
+                component={props => (
+                  <TextField
+                    {...props}
+                    style={{ width: '800px' }} // fullWidth
+                    multiline
+                    placeholder="Add Dataset Description"
+                    rows="4"
+                    rowsMax="100"
+                    variant="outlined"
+                  />
+                )}
+              />
+            </FormRow>
+            <FormRow>
+              <div className={classes.manageUsers}>
+                <Control.custom
+                  id="dataset.readers"
+                  model="dataset.readers"
+                  component={props => (
+                    <ManageUsers
+                      {...props}
+                      addUser={newEmail => this.addUser(newEmail)}
+                      defaultValue="Add viewer email address"
+                      removeUser={removeableEmail => this.removeUser(removeableEmail)}
+                      readers={readers}
+                    />
+                  )}
+                />
+              </div>
+            </FormRow>
+            <FormRow>
+              <Control.select
+                id="dataset.study"
+                model="dataset.study"
+                size="5"
+                component={props => (
+                  <MultiSelect
+                    {...props}
+                    onChange={e => this.selectStudy(e.label)}
+                    options={studyOptions}
+                    placeholder="Search Studies"
+                    value={studyOptions.filter(option => option.label === study)}
+                  />
+                )}
+              />
+            </FormRow>
+
+            <FormRow>
+              <Control.select
+                id="dataset.asset"
+                model="dataset.asset"
+                size="5"
+                component={props => (
+                  <MultiSelect
+                    {...props}
+                    onChange={e => this.selectAsset(e.value)}
+                    options={assetOptions}
+                    placeholder="Select Asset Type..."
+                    value={assetOptions.filter(option => option.value === asset)}
+                  />
+                )}
+              />
+            </FormRow>
+
+            <FormRow>
+              <input
+                type="file"
+                id="dataset.upload"
+                onChange={this.parseFile}
+                style={{ display: 'none' }}
+              />
+              <label htmlFor="dataset.upload">
+                <Button variant="contained" component="span" color="primary">
+                  Import Ids
+                </Button>
+              </label>
+            </FormRow>
+
+            {ids && (
+              <FormRow>
+                <Control.select
+                  multiple={true}
+                  disabled={true}
+                  id="dataset.ids"
+                  model="dataset.ids"
+                >
+                  <option>Preview</option>
+                  {ids && ids.map(id => <option key={id}>{id}</option>)}
+                </Control.select>
+              </FormRow>
+            )}
+            <Errors model="dataset" />
+            <FormRow>
+              <Button variant="contained" color="primary" className={classes.buttons}>
+                <Link to="/datasets/preview" className={classes.linkCreate}>
+                  Create Dataset
+                </Link>
+              </Button>
+              <Button variant="contained" type="button" className={classes.buttons}>
+                <Link to="/datasets" className={classes.linkCancel}>
+                  Cancel
+                </Link>
+              </Button>
+            </FormRow>
+          </Form>
+        </div>
       </div>
     );
   }
@@ -275,4 +324,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(DatasetCreateView);
+export default connect(mapStateToProps)(withStyles(styles)(DatasetCreateView));
