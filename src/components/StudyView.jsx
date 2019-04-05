@@ -5,7 +5,6 @@ import { withStyles } from '@material-ui/core/styles';
 
 import { getStudies } from 'actions/index';
 import StudyTable from './table/StudyTable';
-import DatasetTable from './table/DatasetTable';
 
 const styles = theme => ({
   wrapper: {
