@@ -12,7 +12,6 @@ const styles = theme => ({
     paddingTop: theme.spacing.unit * 4,
   },
   header: {
-    alignItems: 'center',
     display: 'flex',
     flexDirection: 'row',
     fontSize: '18px',
@@ -20,10 +19,10 @@ const styles = theme => ({
     paddingTop: '30px',
   },
   plusButton: {
-    height: '30px',
+    height: '20px',
     fill: theme.palette.primary.main,
     marginLeft: '10px',
-    width: '30px',
+    width: '20px',
   },
 });
 
