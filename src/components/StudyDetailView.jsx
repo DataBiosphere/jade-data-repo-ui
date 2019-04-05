@@ -14,11 +14,14 @@ const styles = theme => ({
     padding: theme.spacing.unit * 4,
     margin: theme.spacing.unit * 4,
   },
+  width: {
+    width: '70%',
+  },
   container: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: '60%',
+    width: '100%',
   },
   title: {
     color: theme.palette.primary.main,
@@ -64,7 +67,6 @@ export class StudyDetailView extends React.PureComponent {
             <div>
               <div className={classes.title}>{study.name}</div>
               <div>{study.description}</div>
-              <div>Should this have schema info here?</div>
             </div>
             <Card className={classes.card}>
               <div className={classes.header}> Created by: </div>
@@ -76,11 +78,6 @@ export class StudyDetailView extends React.PureComponent {
               {/* where is this stored? */}
               <div className={classes.values}> {moment(study.createdDate).fromNow()} </div>
             </Card>
-          </div>
-          <div>
-            {/* <div className={classes.header}>DATASETS IN THIS STUDY</div>*/}
-            {/* TODO add front end search once there is more than one study in a dataset*/}
-            {/* study && study.source && <JadeTable columns={columns} rows={studies} />*/}
           </div>
         </div>
       </div>
