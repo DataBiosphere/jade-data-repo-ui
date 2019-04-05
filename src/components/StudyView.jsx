@@ -20,9 +20,12 @@ const styles = theme => ({
     paddingBottom: theme.spacing.unit * 8,
   },
   header: {
-    fontSize: '14px',
-    lineHeight: '22px',
+    alignItems: 'center',
+    display: 'flex',
+    flexDirection: 'row',
+    fontSize: '18px',
     fontWeight: '600',
+    paddingTop: '30px',
   },
 });
 
@@ -63,7 +66,7 @@ class StudyView extends React.PureComponent {
     ];
     return (
       <div className={classes.wrapper}>
-        <div className={classes.title}>About Studies</div>
+        <div className={classes.title}>Studies</div>
         <div className={classes.header}>STUDIES</div>
         {studies && studies.studies && <JadeTable columns={columns} rows={studies.studies} />}
       </div>

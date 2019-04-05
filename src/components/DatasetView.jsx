@@ -7,6 +7,7 @@ import { withStyles } from '@material-ui/core/styles';
 
 import { getDatasets } from 'actions/index';
 import JadeTable from './table/JadeTable';
+import AddSVG from '../../assets/media/icons/plus-circle-solid.svg';
 
 const styles = theme => ({
   wrapper: {
@@ -20,9 +21,18 @@ const styles = theme => ({
     paddingBottom: theme.spacing.unit * 8,
   },
   header: {
-    fontSize: '14px',
-    lineHeight: '22px',
+    alignItems: 'center',
+    display: 'flex',
+    flexDirection: 'row',
+    fontSize: '18px',
     fontWeight: '600',
+    paddingTop: '30px',
+  },
+  plusButton: {
+    height: '30px',
+    fill: theme.palette.primary.main,
+    marginLeft: '10px',
+    width: '30px',
   },
 });
 
@@ -63,17 +73,13 @@ class DatasetView extends React.PureComponent {
     ];
     return (
       <div className={classes.wrapper}>
-        <div className={classes.title}>About Datasets</div>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet.
-          Proin gravida dolor sit amet lacus accumsan et viverra justo commodo. Proin sodales
-          pulvinar sic tempor. Sociis natoque penatibus et magnis dis parturient montes, nascetur
-          ridiculus mus. Nam fermentum, nulla luctus pharetra vulputate, felis tellus mollis orci,
-          sed rhoncus pronin sapien nunc accuan eget.
-        </p>
+        <div className={classes.title}>Datasets</div>
+        <p> Datasets make access control simple </p>
         <div className={classes.header}>
           DATASETS
-          <NavLink to="/datasets/create"> +</NavLink>
+          <NavLink to="/datasets/create">
+            <AddSVG className={classes.plusButton} />
+          </NavLink>
           {datasets && datasets.datasets && (
             <JadeTable columns={columns} rows={datasets.datasets} />
           )}

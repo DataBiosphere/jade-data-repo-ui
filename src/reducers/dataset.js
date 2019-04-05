@@ -32,6 +32,11 @@ export default {
           dataset: { $set: action.dataset.data.data },
         });
       },
+      [ActionTypes.GET_DATASET_BY_ID_SUCCESS]: (state, action) => {
+        return immutable(state, {
+          dataset: { $set: action.dataset.data.data },
+        });
+      },
     },
     datasetState,
   ),
