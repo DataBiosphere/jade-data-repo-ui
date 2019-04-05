@@ -17,6 +17,9 @@ const styles = theme => ({
     padding: theme.spacing.unit * 4,
     margin: theme.spacing.unit * 4,
   },
+  width: {
+    width: '70%',
+  },
   container: {
     display: 'flex',
     flexDirection: 'row',
@@ -121,9 +124,10 @@ export class DatasetDetailView extends React.PureComponent {
             </Card>
           </div>
           <div>
-            <div className={classes.header}>STUDIES IN THIS DATASET</div>
             {/*TODO add front end search once there is more than one study in a dataset*/}
-            {dataset && dataset.source && <StudyTable rows={studies} />}
+            {dataset && dataset.source && (
+              <StudyTable rows={studies} studyListName="STUDIES IN THIS DATASET" />
+            )}
           </div>
         </div>
       </div>
