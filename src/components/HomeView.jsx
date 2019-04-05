@@ -1,8 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import moment from 'moment';
-import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 
 import { getDatasets, getStudies } from 'actions/index';
