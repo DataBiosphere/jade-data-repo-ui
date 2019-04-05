@@ -80,6 +80,8 @@ class DatasetView extends React.PureComponent {
           <NavLink to="/datasets/create">
             <AddSVG className={classes.plusButton} />
           </NavLink>
+        </div>
+        <div>
           {datasets && datasets.datasets && (
             <JadeTable columns={columns} rows={datasets.datasets} />
           )}
