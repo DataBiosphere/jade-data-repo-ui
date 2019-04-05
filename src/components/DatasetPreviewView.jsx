@@ -22,14 +22,17 @@ const styles = theme => ({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    padding: theme.spacing.unit * 4,
-    margin: theme.spacing.unit * 4,
+    paddingTop: theme.spacing.unit * 4,
   },
   title: {
     color: theme.palette.primary.main,
     fontSize: '54px',
     lineHeight: '66px',
     paddingBottom: theme.spacing.unit * 8,
+  },
+  info: {
+    display: 'inline-block',
+    paddingTop: theme.spacing.unit * 4,
   },
   card: {
     display: 'inline-block',
@@ -102,7 +105,7 @@ export class DatasetPreviewView extends React.PureComponent {
             </div>
           )}
           <div className={classes.container}>
-            <div className={classes.card}>
+            <div className={classes.info}>
               <div className={classes.header}> Dataset Name: </div>
               {createdDataset.id && createdDataset.name === dataset.name ? (
                 <div className={classes.values}>
