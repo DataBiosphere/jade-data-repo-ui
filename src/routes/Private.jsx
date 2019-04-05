@@ -81,11 +81,11 @@ class Private extends React.Component {
             <div>
               <Route exact path="/" component={HomeView} />
               <Route exact path="/studies" component={StudiesView} />
-              <Route exact path="/studies/:uuid" component={StudyDetailView} />
+              <Route exact path="/studies/details/:uuid" component={StudyDetailView} />
               <Route exact path="/datasets" component={DatasetView} />
               <Route exact path="/datasets/create" component={DatasetCreateView} />
               <Route exact path="/datasets/preview" component={DatasetPreviewView} />
-              <Route exact path="/datasets/:uuid" component={DatasetDetailView} />
+              <Route exact path="/datasets/details/:uuid" component={DatasetDetailView} />
             </div>
           </Switch>
         </div>
