@@ -98,7 +98,7 @@ export class DatasetDetailView extends React.PureComponent {
     const modalText = 'Manage Viewers';
     return (
       <div id="dataset-detail-view" className={classes.wrapper}>
-        <div>
+        <div className={classes.width}>
           <div className={classes.container}>
             <div>
               <div className={classes.title}>{dataset.name}</div>
