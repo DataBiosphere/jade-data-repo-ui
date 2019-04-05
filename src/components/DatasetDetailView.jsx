@@ -83,7 +83,14 @@ export class DatasetDetailView extends React.PureComponent {
 
   render() {
     const { classes, dataset } = this.props;
-    const studies = dataset.source && dataset.source.map(s => s.study);
+    if (!dataset) {
+      return (
+        <div id="dataset-detail-view" className={classes.wrapper}>
+          This dataset does not exist.
+        </div>
+      );
+    }
+    const studies = dataset && dataset.source && dataset.source.map(s => s.study);
     const modalText = 'Manage Viewers';
     const columns = [
       {
@@ -108,7 +115,7 @@ export class DatasetDetailView extends React.PureComponent {
     ];
 
     return (
-      <div className={classes.wrapper}>
+      <div id="dataset-detail-view" className={classes.wrapper}>
         <div className={classes.container}>
           <div>
             <div className={classes.title}>{dataset.name}</div>

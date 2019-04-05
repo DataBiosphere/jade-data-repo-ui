@@ -72,7 +72,7 @@ class DatasetView extends React.PureComponent {
       },
     ];
     return (
-      <div className={classes.wrapper}>
+      <div id="datasets" className={classes.wrapper}>
         <div className={classes.title}>Datasets</div>
         <p> Datasets make access control simple </p>
         <div className={classes.header}>
@@ -80,6 +80,8 @@ class DatasetView extends React.PureComponent {
           <NavLink to="/datasets/create">
             <AddSVG className={classes.plusButton} />
           </NavLink>
+        </div>
+        <div>
           {datasets && datasets.datasets && (
             <JadeTable columns={columns} rows={datasets.datasets} />
           )}

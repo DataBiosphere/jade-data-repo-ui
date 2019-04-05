@@ -73,7 +73,8 @@ export class DatasetPreviewView extends React.PureComponent {
     // what happens if you got to this page and we havent loaded data properly?
     // what if it fails vs succeeds
     return (
-      <div>
+      <div id="dataset-preview">
+        <div className={classes.title}>Preview Dataset</div>
         {createdDataset.id && createdDataset.name === dataset.name ? (
           <div>
             <div className={classes.title}>Created Dataset</div>
