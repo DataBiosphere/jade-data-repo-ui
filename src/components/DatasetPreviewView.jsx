@@ -5,14 +5,9 @@ import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import LinearProgress from '@material-ui/core/LinearProgress';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import DialogContent from '@material-ui/core/DialogContent';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
 
 import { createDataset } from 'actions/index';
+import DatasetDirectionalModal from './DatasetDirectionalModal';
 
 const styles = theme => ({
   wrapper: {
@@ -104,10 +99,6 @@ const styles = theme => ({
 });
 
 export class DatasetPreviewView extends React.PureComponent {
-  state = {
-    open: false,
-  };
-
   static propTypes = {
     classes: PropTypes.object.isRequired,
     createdDataset: PropTypes.object,
@@ -133,13 +124,8 @@ export class DatasetPreviewView extends React.PureComponent {
     dispatch(createDataset(payload));
   }
 
-  handleClose = () => {
-    this.setState({ open: false });
-  };
-
   render() {
     const { classes, createdDataset, dataset } = this.props;
-    const { open } = this.state;
     return (
       <div id="dataset-preview" className={classes.wrapper}>
         <div className={classes.width}>
@@ -147,50 +133,7 @@ export class DatasetPreviewView extends React.PureComponent {
             <div>
               <div className={classes.title}>Created Dataset</div>
               <p>Your new dataset has been created!</p>
-
-              <Dialog
-                onClose={this.handleClose}
-                aria-labelledby="customized-dialog-title"
-                open={open}
-                maxWidth={false}
-              >
-                <DialogTitle className={classes.dialogTitle} id="customized-dialog-title">
-                  <div className={classes.closetitle}>Where to Next?</div>
-                  <div>
-                    <IconButton
-                      aria-label="Close"
-                      onClick={this.handleClose}
-                      className={classes.closeButton}
-                    >
-                      <CloseIcon />
-                    </IconButton>
-                  </div>
-                </DialogTitle>
-                <DialogContent>
-                  <div className={classes.dialogContent}>
-                    The new dataset {createdDataset.name} has been created. What would you like to
-                    do next?
-                  </div>
-                  <div className={classes.dialogActions}>
-                    <Button color="primary" variant="contained">
-                      <Link to={`/datasets/${createdDataset.id}`} className={classes.actionButtons}>
-                        View new dataset
-                      </Link>
-                    </Button>
-                    <Button color="primary" variant="contained">
-                      <Link to="/datasets" className={classes.actionButtons}>
-                        View all datasets
-                      </Link>
-                    </Button>
-                    <Button color="primary" variant="contained">
-                      <Link to="/datasets/create" className={classes.actionButtons}>
-                        Create another dataset
-                      </Link>
-                    </Button>
-                  </div>
-                </DialogContent>
-              </Dialog>
-
+              <DatasetDirectionalModal createdDataset={createdDataset} success={true} />
               <div className={classes.query}>
                 <LinearProgress variant="determinate" value={100} />
               </div>
