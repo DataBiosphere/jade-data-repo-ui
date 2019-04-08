@@ -111,6 +111,7 @@ export class DatasetCreateView extends React.PureComponent {
   selectStudy(study) {
     const { dispatch } = this.props;
     dispatch(actions.change('dataset.study', study));
+    // TODO then get the asset info
   }
 
   selectAsset(asset) {
@@ -257,9 +258,12 @@ export class DatasetCreateView extends React.PureComponent {
                 component={props => (
                   <MultiSelect
                     {...props}
+                    isDisabled={!study}
                     onChange={e => this.selectAsset(e.value)}
                     options={assetOptions}
-                    placeholder="Select Asset Type..."
+                    placeholder={
+                      study ? 'Select Asset Type...' : 'Select Study to Select Asset Type...'
+                    }
                     value={assetOptions.filter(option => option.value === asset)}
                   />
                 )}
