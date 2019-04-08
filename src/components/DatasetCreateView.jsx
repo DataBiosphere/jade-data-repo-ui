@@ -95,7 +95,7 @@ export class DatasetCreateView extends React.PureComponent {
     dispatch: PropTypes.func.isRequired,
     ids: PropTypes.arrayOf(PropTypes.string),
     readers: PropTypes.arrayOf(PropTypes.string),
-    studies: PropTypes.arrayOf(PropTypes.string),
+    studies: PropTypes.object.isRequired,
     study: PropTypes.string,
   };
 

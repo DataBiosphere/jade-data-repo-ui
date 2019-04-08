@@ -104,6 +104,7 @@ export class DatasetPreviewView extends React.PureComponent {
     createdDataset: PropTypes.object,
     dataset: PropTypes.object,
     dispatch: PropTypes.func.isRequired,
+    userEmail: PropTypes.string,
   };
 
   componentDidMount() {
@@ -125,7 +126,7 @@ export class DatasetPreviewView extends React.PureComponent {
   }
 
   render() {
-    const { classes, createdDataset, dataset } = this.props;
+    const { classes, createdDataset, dataset, userEmail } = this.props;
     return (
       <div id="dataset-preview" className={classes.wrapper}>
         <div className={classes.width}>
@@ -162,7 +163,7 @@ export class DatasetPreviewView extends React.PureComponent {
             </div>
             <Card className={classes.card}>
               <div className={classes.header}> Custodian(s): </div>
-              <div className={classes.values}> {dataset.readers} </div>
+              <div className={classes.values}> {userEmail} </div>
               <div className={classes.header}> Access: </div>
               <div className={classes.values}> {dataset.readers} </div>
             </Card>
@@ -178,6 +179,7 @@ function mapStateToProps(state) {
   return {
     createdDataset: state.datasets.createdDataset,
     dataset: state.dataset,
+    userEmail: state.user.email,
   };
 }
 
