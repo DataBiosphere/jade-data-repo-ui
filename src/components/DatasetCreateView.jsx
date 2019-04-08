@@ -299,16 +299,21 @@ export class DatasetCreateView extends React.PureComponent {
             )}
             <Errors model="dataset" />
             <FormRow>
-              <Button variant="contained" color="primary" className={classes.buttons}>
-                <Link to="/datasets/preview" className={classes.linkCreate}>
+              <Link to="/datasets/preview" className={classes.linkCreate}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className={classes.buttons}
+                  disabled={!study}
+                >
                   Create Dataset
-                </Link>
-              </Button>
-              <Button variant="contained" type="button" className={classes.buttons}>
-                <Link to="/datasets" className={classes.linkCancel}>
+                </Button>
+              </Link>
+              <Link to="/datasets" className={classes.linkCancel}>
+                <Button variant="contained" type="button" className={classes.buttons}>
                   Cancel
-                </Link>
-              </Button>
+                </Button>
+              </Link>
             </FormRow>
           </Form>
         </div>
