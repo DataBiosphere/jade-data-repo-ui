@@ -1,17 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import moment from 'moment';
-import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 
 import { getDatasets, getStudies } from 'actions/index';
-import JadeTable from './table/JadeTable';
+import StudyTable from './table/StudyTable';
+import DatasetTable from './table/DatasetTable';
 
 const styles = theme => ({
   wrapper: {
+    display: 'flex',
+    justifyContent: 'center',
     padding: theme.spacing.unit * 4,
     margin: theme.spacing.unit * 4,
+  },
+  width: {
+    width: '70%',
   },
   container: {
     display: 'flex',
@@ -28,11 +32,6 @@ const styles = theme => ({
     display: 'inline-block',
     padding: theme.spacing.unit * 4,
     width: '200px',
-  },
-  header: {
-    fontSize: '14px',
-    lineHeight: '22px',
-    fontWeight: '600',
   },
   jadeTableSpacer: {
     paddingBottom: theme.spacing.unit * 8,
@@ -55,58 +54,14 @@ class HomeView extends React.PureComponent {
 
   render() {
     const { classes, datasets, studies } = this.props;
-    const studyColumns = [
-      {
-        label: 'Study Name',
-        property: 'name',
-        render: row => <Link to={`/study/${row.id}`}>{row.name}</Link>,
-      },
-      {
-        label: 'Description',
-        property: 'description',
-      },
-      {
-        label: 'Last changed',
-        property: 'modifiedDate',
-        render: row => moment(row.modifiedDate).fromNow(),
-      },
-      {
-        label: 'Date created',
-        property: 'createdDate',
-        render: row => moment(row.createdDate).fromNow(),
-      },
-    ];
-    const datasetColumns = [
-      {
-        label: 'Dataset Name',
-        property: 'name',
-        render: row => <Link to={`/dataset/${row.id}`}>{row.name}</Link>,
-      },
-      {
-        label: 'Description',
-        property: 'description',
-      },
-      {
-        label: 'Last changed',
-        property: 'modifiedDate',
-        render: row => moment(row.modifiedDate).fromNow(),
-      },
-      {
-        label: 'Date created',
-        property: 'createdDate',
-        render: row => moment(row.createdDate).fromNow(),
-      },
-    ];
     return (
       <div className={classes.wrapper}>
-        <div className={classes.title}>Jade Data Repository at a glance</div>
-        <div className={classes.header}>STUDIES</div>
-        {studies && studies.studies && <JadeTable columns={studyColumns} rows={studies.studies} />}
-        <div className={classes.jadeTableSpacer} />
-        <div className={classes.header}>DATASETS</div>
-        {datasets && datasets.datasets && (
-          <JadeTable columns={datasetColumns} rows={datasets.datasets} />
-        )}
+        <div className={classes.width}>
+          <div className={classes.title}>Jade Data Repository at a glance</div>
+          <div> {studies && studies.studies && <StudyTable rows={studies.studies} />} </div>
+          <div className={classes.jadeTableSpacer} />
+          <div> {datasets && datasets.datasets && <DatasetTable rows={datasets.datasets} />} </div>
+        </div>
       </div>
     );
   }

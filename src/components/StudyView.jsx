@@ -2,30 +2,25 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { Link } from 'react-router-dom';
-import moment from 'moment';
 
 import { getStudies } from 'actions/index';
-import JadeTable from './table/JadeTable';
+import StudyTable from './table/StudyTable';
 
 const styles = theme => ({
   wrapper: {
+    display: 'flex',
+    justifyContent: 'center',
     padding: theme.spacing.unit * 4,
     margin: theme.spacing.unit * 4,
+  },
+  width: {
+    width: '70%',
   },
   title: {
     color: theme.palette.primary.main,
     fontSize: '54px',
     lineHeight: '66px',
     paddingBottom: theme.spacing.unit * 8,
-  },
-  header: {
-    alignItems: 'center',
-    display: 'flex',
-    flexDirection: 'row',
-    fontSize: '18px',
-    fontWeight: '600',
-    paddingTop: '30px',
   },
 });
 
@@ -43,32 +38,12 @@ class StudyView extends React.PureComponent {
 
   render() {
     const { classes, studies } = this.props;
-    const columns = [
-      {
-        label: 'Study Name',
-        property: 'name',
-        render: row => <Link to={`/studies/${row.id}`}>{row.name}</Link>,
-      },
-      {
-        label: 'Description',
-        property: 'description',
-      },
-      {
-        label: 'Last changed',
-        property: 'modifiedDate',
-        render: row => moment(row.modifiedDate).fromNow(),
-      },
-      {
-        label: 'Date created',
-        property: 'createdDate',
-        render: row => moment(row.createdDate).fromNow(),
-      },
-    ];
     return (
       <div className={classes.wrapper}>
-        <div className={classes.title}>Studies</div>
-        <div className={classes.header}>STUDIES</div>
-        {studies && studies.studies && <JadeTable columns={columns} rows={studies.studies} />}
+        <div className={classes.width}>
+          <div className={classes.title}>Studies</div>
+          <div> {studies && studies.studies && <StudyTable rows={studies.studies} />} </div>
+        </div>
       </div>
     );
   }

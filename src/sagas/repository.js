@@ -144,10 +144,7 @@ export function* getDatasetById({ payload }) {
 export function* getDatasetPolicy({ payload }) {
   const datasetId = payload;
   try {
-    const response = yield call(
-      axios.get,
-      '/api/repository/v1/datasets/' + datasetId + '/policies',
-    );
+    const response = yield call(authGet, '/api/repository/v1/datasets/' + datasetId + '/policies');
     yield put({
       type: ActionTypes.GET_DATASET_POLICY_SUCCESS,
       dataset: { data: response },
@@ -164,7 +161,7 @@ export function* addReaderToDataset({ payload }) {
   const datasetId = payload.datasetId;
   try {
     const response = yield call(
-      authGet,
+      authPost,
       '/api/repository/v1/datasets/' + datasetId + '/policies/readers/members',
     );
     yield put({
