@@ -46,7 +46,7 @@ const styles = theme => ({
     justifyContent: 'space-between',
     paddingBottom: theme.spacing.unit * 2,
     paddingTop: theme.spacing.unit * 2,
-    width: '600px',
+    minWidth: '600px',
   },
   actionButtons: {
     color: theme.palette.primary.contrastText,
@@ -96,7 +96,7 @@ export class DatasetDirectionalModal extends React.PureComponent {
             maxWidth={false}
           >
             <DialogTitle className={classes.dialogTitle} id="customized-dialog-title">
-              <div className={classes.closetitle}>Where to Next?</div>
+              <div className={classes.closetitle}>Where to next?</div>
               <div>
                 <IconButton
                   aria-label="Close"
@@ -113,7 +113,10 @@ export class DatasetDirectionalModal extends React.PureComponent {
                 next?
               </div>
               <div className={classes.dialogActions}>
-                <Link to={`/datasets/${createdDataset.id}`} className={classes.actionButtons}>
+                <Link
+                  to={`/datasets/details/${createdDataset.id}`}
+                  className={classes.actionButtons}
+                >
                   <Button color="primary" variant="contained">
                     View new dataset
                   </Button>
@@ -123,8 +126,8 @@ export class DatasetDirectionalModal extends React.PureComponent {
                     View all datasets
                   </Button>
                 </Link>
-                <Link to="/datasets/create">
-                  <Button color="primary" variant="contained" className={classes.actionButtons}>
+                <Link to="/datasets/create" className={classes.actionButtons}>
+                  <Button color="primary" variant="contained">
                     Create another dataset
                   </Button>
                 </Link>

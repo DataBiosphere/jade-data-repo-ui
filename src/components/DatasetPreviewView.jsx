@@ -34,10 +34,12 @@ const styles = theme => ({
   info: {
     display: 'inline-block',
     paddingTop: theme.spacing.unit * 4,
+    paddingRight: theme.spacing.unit * 2,
   },
   card: {
     display: 'inline-block',
     padding: theme.spacing.unit * 4,
+    overflow: 'inherit',
   },
   header: {
     fontSize: theme.spacing.unit * 2,
@@ -127,6 +129,7 @@ export class DatasetPreviewView extends React.PureComponent {
 
   render() {
     const { classes, createdDataset, dataset, userEmail } = this.props;
+    console.log(dataset.readers);
     return (
       <div id="dataset-preview" className={classes.wrapper}>
         <div className={classes.width}>
@@ -153,7 +156,7 @@ export class DatasetPreviewView extends React.PureComponent {
               <div className={classes.header}> Dataset Name: </div>
               {createdDataset.id && createdDataset.name === dataset.name ? (
                 <div className={classes.values}>
-                  <Link to={`/datasets/${createdDataset.id}`}>{dataset.name}</Link>
+                  <Link to={`/datasets/details/${createdDataset.id}`}>{dataset.name}</Link>
                 </div>
               ) : (
                 <div className={classes.values}>{dataset.name}</div>
@@ -165,7 +168,11 @@ export class DatasetPreviewView extends React.PureComponent {
               <div className={classes.header}> Custodian(s): </div>
               <div className={classes.values}> {userEmail} </div>
               <div className={classes.header}> Access: </div>
-              <div className={classes.values}> {dataset.readers} </div>
+              <div className={classes.values}>
+                {dataset.readers.map(reader => (
+                  <div> {reader} </div>
+                ))}
+              </div>
             </Card>
           </div>
         </div>
