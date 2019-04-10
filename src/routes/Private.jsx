@@ -32,16 +32,8 @@ const styles = theme => ({
 });
 
 class Private extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      value: '',
-    };
-  }
-
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    location: PropTypes.object.isRequired,
   };
 
   static prefixMatcher = new RegExp('/[^/]*');
