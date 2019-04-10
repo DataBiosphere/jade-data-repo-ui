@@ -2,24 +2,25 @@ import React from 'react';
 import { withStyles } from '@material-ui/core';
 import PropTypes from 'prop-types';
 
-import Icon from 'assets/media/images/white-jade.png';
+import TerraIcon from '../../assets/media/brand/logo-wShadow.svg';
 
-const styles = {
-  logoStyles: {
+const styles = theme => ({
+  logoContainer: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  logo: {
     alignItems: 'flex-start',
     display: 'inline-flex',
-    height: '41px',
-    width: '41px',
+    height: theme.spacing.unit * 8,
   },
-  titleStyles: {
-    bottom: '12px',
+  logoTitle: {
     color: '#fff',
-    fontSize: '21px',
+    fontSize: '18px',
     fontWeight: '500',
-    left: '4px',
-    position: 'relative',
+    paddingLeft: theme.spacing.unit,
   },
-};
+});
 
 class Logo extends React.PureComponent {
   static propTypes = {
@@ -29,9 +30,9 @@ class Logo extends React.PureComponent {
   render() {
     const { classes } = this.props;
     return (
-      <div>
-        <img src={Icon} className={classes.logoStyles} alt="logo" />
-        <span className={classes.titleStyles}>Jade Data Repository</span>
+      <div className={classes.logoContainer}>
+        <TerraIcon className={classes.logo} alt="logo" />
+        <span className={classes.logoTitle}>Data Repository</span>
       </div>
     );
   }
