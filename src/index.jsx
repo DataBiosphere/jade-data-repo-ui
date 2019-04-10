@@ -28,7 +28,7 @@ export const app = {
               defer={false}
               htmlAttributes={{ lang: 'pt-br' }}
               encodeSpecialCharacters={true}
-              defaultTitle={config.title}
+              defaultTitle={'Terra Data Repository' || config.title}
               titleTemplate={`%s | ${config.name}`}
               titleAttributes={{ itemprop: 'name', lang: 'pt-br' }}
             />
