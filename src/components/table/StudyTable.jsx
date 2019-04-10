@@ -9,7 +9,6 @@ import JadeTable from './JadeTable';
 const styles = theme => ({
   wrapper: {
     paddingTop: theme.spacing.unit * 4,
-    margin: theme.spacing.unit * 4,
   },
   title: {
     color: theme.palette.primary.main,
