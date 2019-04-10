@@ -18,6 +18,7 @@ import { ActionTypes, STATUS } from 'constants/index';
 
 export const getToken = state => state.user.token;
 export const getTokenExpiration = state => state.user.tokenExpiration;
+export const getReaders = state => state.dataset.readers;
 
 export function* checkToken() {
   const tokenExpiration = yield select(getTokenExpiration);
@@ -157,12 +158,15 @@ export function* getDatasetPolicy({ payload }) {
   }
 }
 
-export function* addReaderToDataset({ payload }) {
-  const datasetId = payload.datasetId;
+export function* addReadersToDataset({ payload }) {
+  // TODO is this going to need a loop for the list?
+  const datasetId = payload.jobResult.id;
+  const readersList = yield select(getReaders);
   try {
     const response = yield call(
       authPost,
       '/api/repository/v1/datasets/' + datasetId + '/policies/readers/members',
+      readersList,
     );
     yield put({
       type: ActionTypes.SET_DATASET_POLICY_SUCCESS,
@@ -217,10 +221,10 @@ export function* getStudyById({ payload }) {
 export default function* root() {
   yield all([
     takeLatest(ActionTypes.CREATE_DATASET, createDataset),
+    takeLatest(ActionTypes.CREATE_DATASET_SUCCESS, addReadersToDataset),
     takeLatest(ActionTypes.GET_DATASETS, getDatasets),
     takeLatest(ActionTypes.GET_DATASET_BY_ID, getDatasetById),
     takeLatest(ActionTypes.GET_DATASET_POLICY, getDatasetPolicy),
-    takeLatest(ActionTypes.SET_DATASET_POLICY, addReaderToDataset),
     takeLatest(ActionTypes.GET_STUDIES, getStudies),
     takeLatest(ActionTypes.GET_STUDY_BY_ID, getStudyById),
   ]);
