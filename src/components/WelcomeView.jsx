@@ -78,7 +78,7 @@ class WelcomeView extends React.PureComponent {
     return (
       <div className={classes.container}>
         <div className={classes.mainContent}>
-          <div className={classes.title}>Welcome to the Jade Data Repository</div>
+          <div className={classes.title}>Welcome to the Terra Data Repository</div>
           <div>
             <GoogleLogin // TODO this component may be unuseable once we require a terra registration
               clientId="694017244717-j5a5b7sebsvhd2u9ls85cinima96c2p0.apps.googleusercontent.com"
@@ -93,7 +93,7 @@ class WelcomeView extends React.PureComponent {
             />
           </div>
           <div className={classes.newUser}>New User?</div>
-          <div className={classes.header}>Jade Data Repository requires a Google account.</div>
+          <div className={classes.header}>Terra Data Repository requires a Google account.</div>
           <p>
             Terra uses your Google account. Once you have signed in and completed the user profile
             registration step, you can start using Terra.

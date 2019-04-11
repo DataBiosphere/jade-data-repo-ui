@@ -57,7 +57,7 @@ class HomeView extends React.PureComponent {
     return (
       <div className={classes.wrapper}>
         <div className={classes.width}>
-          <div className={classes.title}>Jade Data Repository at a glance</div>
+          <div className={classes.title}>Terra Data Repository at a glance</div>
           <div> {studies && studies.studies && <StudyTable rows={studies.studies} />} </div>
           <div className={classes.jadeTableSpacer} />
           <div> {datasets && datasets.datasets && <DatasetTable rows={datasets.datasets} />} </div>
