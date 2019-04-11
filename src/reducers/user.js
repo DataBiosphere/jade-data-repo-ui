@@ -8,6 +8,7 @@ export const userState = {
   status: STATUS.IDLE,
   name: '', // TODO is there a placeholder that this should get? go google accounts ever not have names?
   image: IMAGE.DEFAULT, // with default the material ui AccountCircle image will show
+  email: '',
   token: '',
   tokenExpiration: '',
 };
@@ -21,6 +22,7 @@ export default {
           status: { $set: STATUS.READY },
           name: { $set: action.payload.name },
           image: { $set: action.payload.image },
+          email: { $set: action.payload.email },
           token: { $set: action.payload.token },
           tokenExpiration: { $set: action.payload.tokenExpiration },
         }),

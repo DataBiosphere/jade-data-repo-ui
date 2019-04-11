@@ -10,6 +10,12 @@ const styles = theme => ({
   wrapper: {
     paddingTop: theme.spacing.unit * 4,
   },
+  title: {
+    color: theme.palette.primary.main,
+    fontSize: '54px',
+    lineHeight: '66px',
+    paddingBottom: theme.spacing.unit * 8,
+  },
   header: {
     alignItems: 'center',
     display: 'flex',

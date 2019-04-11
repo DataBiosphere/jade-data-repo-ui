@@ -7,6 +7,7 @@ export const datasetState = {
   dataset: {},
   datasets: [],
   createdDataset: {},
+  study: {},
 };
 
 export default {
@@ -20,16 +21,6 @@ export default {
       [ActionTypes.CREATE_DATASET_SUCCESS]: (state, action) => {
         return immutable(state, {
           createdDataset: { $set: action.payload.jobResult },
-        });
-      },
-      [ActionTypes.GET_DATASET_BY_ID_SUCCESS]: (state, action) => {
-        return immutable(state, {
-          dataset: { $set: action.dataset.data.data },
-        });
-      },
-      [ActionTypes.GET_DATASET_BY_ID_SUCCESS]: (state, action) => {
-        return immutable(state, {
-          dataset: { $set: action.dataset.data.data },
         });
       },
       [ActionTypes.GET_DATASET_BY_ID_SUCCESS]: (state, action) => {

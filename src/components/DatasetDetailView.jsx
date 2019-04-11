@@ -59,6 +59,7 @@ export class DatasetDetailView extends React.PureComponent {
     dataset: PropTypes.object,
     dispatch: PropTypes.func.isRequired,
     match: PropTypes.object.isRequired,
+    userEmail: PropTypes.string.isRequired,
   };
 
   componentWillMount() {
@@ -86,7 +87,7 @@ export class DatasetDetailView extends React.PureComponent {
   }
 
   render() {
-    const { classes, dataset } = this.props;
+    const { classes, dataset, userEmail } = this.props;
     if (!dataset) {
       return (
         <div id="dataset-detail-view" className={classes.wrapper}>
@@ -106,7 +107,7 @@ export class DatasetDetailView extends React.PureComponent {
             </div>
             <Card className={classes.card}>
               <div className={classes.header}>Custodian: </div>
-              <div className={classes.values}> {dataset.owner} </div>
+              <div className={classes.values}> {userEmail} </div>
               <div className={classes.header}>Viewers: </div>
               <div className={classes.values}> {dataset.readers} </div>
               <div className={classes.header}> Date Created: </div>
@@ -139,6 +140,7 @@ export class DatasetDetailView extends React.PureComponent {
 function mapStateToProps(state) {
   return {
     dataset: state.datasets.dataset,
+    userEmail: state.user.email,
   };
 }
 

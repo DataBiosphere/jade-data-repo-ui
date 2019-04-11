@@ -70,9 +70,10 @@ class WelcomeView extends React.PureComponent {
     const onSignInSuccess = user => {
       const name = user.profileObj && user.profileObj.name;
       const image = user.profileObj && user.profileObj.imageUrl;
+      const email = user.profileObj && user.profileObj.email;
       const token = user.tokenObj && user.tokenObj.id_token;
       const tokenExpiration = user.tokenObj && user.tokenObj.expires_at; // TODO how can we refresh this when it expires
-      dispatch(logIn(name, image, token, tokenExpiration));
+      dispatch(logIn(name, image, email, token, tokenExpiration));
     };
 
     return (

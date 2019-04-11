@@ -11,7 +11,7 @@ import Combinatorics from 'js-combinatorics';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 
-import { getStudies } from 'actions/index';
+import { getStudies, getStudyById } from 'actions/index';
 import ManageUsers from './ManageUsersView';
 
 function* colNameIter() {
@@ -43,11 +43,6 @@ function getColumnForField(sheet, assetField) {
   }
   return 'A';
 }
-
-const assetOptions = [
-  { value: 'participant', label: 'Participant' },
-  { value: 'sample', label: 'Sample' },
-];
 
 const styles = theme => ({
   wrapper: {
@@ -95,7 +90,7 @@ export class DatasetCreateView extends React.PureComponent {
     dispatch: PropTypes.func.isRequired,
     ids: PropTypes.arrayOf(PropTypes.string),
     readers: PropTypes.arrayOf(PropTypes.string),
-    studies: PropTypes.arrayOf(PropTypes.string),
+    studies: PropTypes.object.isRequired,
     study: PropTypes.string,
   };
 
@@ -108,9 +103,10 @@ export class DatasetCreateView extends React.PureComponent {
     return name && name.length > 0 && name.length < 64;
   }
 
-  selectStudy(study) {
+  selectStudy(studyName, studyId) {
     const { dispatch } = this.props;
-    dispatch(actions.change('dataset.study', study));
+    dispatch(actions.change('dataset.study', studyName));
+    dispatch(getStudyById(studyId));
   }
 
   selectAsset(asset) {
@@ -119,9 +115,16 @@ export class DatasetCreateView extends React.PureComponent {
   }
 
   getStudyOptions(studies) {
-    const studiesList = [];
-    studies.studies.map(study => studiesList.push({ value: study.id, label: study.name }));
-    return studiesList;
+    const studyOptions = studies.studies.map(study => ({ value: study.id, label: study.name }));
+    return studyOptions;
+  }
+
+  getAssetOptions(study) {
+    let assetOptions = [];
+    if (study && study.schema && study.schema.assets) {
+      assetOptions = study.schema.assets.map(asset => ({ value: asset.name, label: asset.name }));
+    }
+    return assetOptions;
   }
 
   addUser(newEmail) {
@@ -172,6 +175,7 @@ export class DatasetCreateView extends React.PureComponent {
     const FormRow = props => <div style={{ paddingBottom: '1em' }}>{props.children}</div>;
     const { asset, classes, ids, readers, studies, study } = this.props;
     const studyOptions = this.getStudyOptions(studies);
+    const assetOptions = this.getAssetOptions(study);
 
     return (
       <div className={classes.wrapper}>
@@ -240,10 +244,10 @@ export class DatasetCreateView extends React.PureComponent {
                 component={props => (
                   <MultiSelect
                     {...props}
-                    onChange={e => this.selectStudy(e.label)}
+                    onChange={e => this.selectStudy(e.label, e.value)}
                     options={studyOptions}
                     placeholder="Search Studies"
-                    value={studyOptions.filter(option => option.label === study)}
+                    value={studyOptions.filter(option => option.value === study.id)}
                   />
                 )}
               />
@@ -257,9 +261,12 @@ export class DatasetCreateView extends React.PureComponent {
                 component={props => (
                   <MultiSelect
                     {...props}
+                    isDisabled={!study.name}
                     onChange={e => this.selectAsset(e.value)}
                     options={assetOptions}
-                    placeholder="Select Asset Type..."
+                    placeholder={
+                      study.name ? 'Select Asset Type...' : 'Select Study to Select Asset Type...'
+                    }
                     value={assetOptions.filter(option => option.value === asset)}
                   />
                 )}
@@ -295,16 +302,21 @@ export class DatasetCreateView extends React.PureComponent {
             )}
             <Errors model="dataset" />
             <FormRow>
-              <Button variant="contained" color="primary" className={classes.buttons}>
-                <Link to="/datasets/preview" className={classes.linkCreate}>
+              <Link to="/datasets/preview" className={classes.linkCreate}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className={classes.buttons}
+                  disabled={!study}
+                >
                   Create Dataset
-                </Link>
-              </Button>
-              <Button variant="contained" type="button" className={classes.buttons}>
-                <Link to="/datasets" className={classes.linkCancel}>
+                </Button>
+              </Link>
+              <Link to="/datasets" className={classes.linkCancel}>
+                <Button variant="contained" type="button" className={classes.buttons}>
                   Cancel
-                </Link>
-              </Button>
+                </Button>
+              </Link>
             </FormRow>
           </Form>
         </div>
@@ -320,7 +332,7 @@ function mapStateToProps(state) {
     ids: state.dataset.ids,
     readers: state.dataset.readers,
     studies: state.studies,
-    study: state.dataset.study,
+    study: state.studies.study,
   };
 }
 
