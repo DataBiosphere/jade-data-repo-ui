@@ -12,6 +12,7 @@ const styles = theme => ({
     paddingTop: theme.spacing.unit * 4,
   },
   header: {
+    alignItems: 'center',
     display: 'flex',
     flexDirection: 'row',
     fontSize: '18px',

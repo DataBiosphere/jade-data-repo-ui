@@ -17,21 +17,11 @@ const styles = theme => ({
   width: {
     width: '70%',
   },
-  container: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
   title: {
     color: theme.palette.primary.main,
     fontSize: '54px',
     lineHeight: '66px',
     paddingBottom: theme.spacing.unit * 8,
-  },
-  card: {
-    display: 'inline-block',
-    padding: theme.spacing.unit * 4,
-    width: '200px',
   },
   jadeTableSpacer: {
     paddingBottom: theme.spacing.unit * 8,
