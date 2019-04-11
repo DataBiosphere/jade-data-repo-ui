@@ -12,12 +12,12 @@ WD=$( dirname "${BASH_SOURCE[0]}" )
 npm run build --production
 
 # buld the docker image
-docker build -t jade-data-repo-ui:latest${GOOGLE_CLOUD_PROJECT} ${WD}/..
-docker push gcr.io/broad-jade-dev/jade-data-repo-ui:latest${GOOGLE_CLOUD_PROJECT}
+TAG="gcr.io/broad-jade-dev/jade-data-repo-ui:latest${GOOGLE_CLOUD_PROJECT}"
+docker build -t $TAG ${WD}/..
+docker push $TAG
 
 # delete the ui pod if it exists and recreate it
 kubectl apply -f "${WD}/k8s/ui-deployment.yaml"
 kubectl apply -f "${WD}/k8s/ui-service.yaml"
 
-kubectl --namespace data-repo set image deployments/ui-deployment \
-    "data-repo-ui-container=gcr.io/broad-jade-dev/jade-data-repo-ui:latest${GOOGLE_CLOUD_PROJECT}"
+kubectl --namespace data-repo set image deployments/ui-deployment "data-repo-ui-container=${TAG}"
