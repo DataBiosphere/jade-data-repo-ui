@@ -115,15 +115,14 @@ export class DatasetCreateView extends React.PureComponent {
   }
 
   getStudyOptions(studies) {
-    const studyOptions = [];
-    studies.studies.map(study => studyOptions.push({ value: study.id, label: study.name }));
+    const studyOptions = studies.studies.map(study => ({ value: study.id, label: study.name }));
     return studyOptions;
   }
 
   getAssetOptions(study) {
-    const assetOptions = [];
+    let assetOptions = [];
     if (study && study.schema && study.schema.assets) {
-      study.schema.assets.map(asset => assetOptions.push({ value: asset.name, label: asset.name }));
+      assetOptions = study.schema.assets.map(asset => ({ value: asset.name, label: asset.name }));
     }
     return assetOptions;
   }

@@ -96,7 +96,7 @@ export class DatasetDirectionalModal extends React.PureComponent {
             maxWidth={false}
           >
             <DialogTitle className={classes.dialogTitle} id="customized-dialog-title">
-              <div className={classes.closetitle}>Where to next?</div>
+              <div className={classes.closetitle}>Where to?</div>
               <div>
                 <IconButton
                   aria-label="Close"
