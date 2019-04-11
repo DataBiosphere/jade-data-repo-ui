@@ -9,7 +9,6 @@ metadata:
 spec:
   containers:
   - name: data-repo-ui-container
-    image: data-repo-ui:latest
-    imagePullPolicy: Never
+    image: gcr.io/broad-jade-dev/jade-data-repo-ui:latest
     ports:
     - containerPort: 80
