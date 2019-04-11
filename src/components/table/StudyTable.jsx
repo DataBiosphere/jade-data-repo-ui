@@ -24,6 +24,10 @@ const styles = theme => ({
     fontWeight: '600',
     paddingTop: '30px',
   },
+  jadeLink: {
+    color: theme.palette.primary.main,
+    textDecoration: 'none',
+  },
 });
 
 class StudyTable extends React.PureComponent {
@@ -39,7 +43,11 @@ class StudyTable extends React.PureComponent {
       {
         label: 'Study Name',
         property: 'name',
-        render: row => <Link to={`/studies/details/${row.id}`}>{row.name}</Link>,
+        render: row => (
+          <Link to={`/studies/details/${row.id}`} className={classes.jadeLink}>
+            {row.name}
+          </Link>
+        ),
       },
       {
         label: 'Description',
