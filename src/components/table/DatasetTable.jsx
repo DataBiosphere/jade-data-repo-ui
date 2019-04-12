@@ -25,6 +25,13 @@ const styles = theme => ({
     marginLeft: '10px',
     width: '20px',
   },
+  jadeLink: {
+    color: theme.palette.primary.main,
+    textDecoration: 'none',
+    '&:hover': {
+      textDecoration: 'underline',
+    },
+  },
 });
 
 class DatasetTable extends React.PureComponent {
@@ -39,7 +46,11 @@ class DatasetTable extends React.PureComponent {
       {
         label: 'Dataset Name',
         property: 'name',
-        render: row => <Link to={`/datasets/details/${row.id}`}>{row.name}</Link>,
+        render: row => (
+          <Link to={`/datasets/details/${row.id}`} className={classes.jadeLink}>
+            {row.name}
+          </Link>
+        ),
       },
       {
         label: 'Description',
