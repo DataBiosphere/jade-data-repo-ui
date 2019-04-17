@@ -4,9 +4,10 @@ import immutable from 'immutability-helper';
 import { ActionTypes } from 'constants/index';
 
 export const datasetState = {
+  createdDataset: {},
   dataset: {},
   datasets: [],
-  createdDataset: {},
+  exception: false,
   study: {},
 };
 
@@ -26,6 +27,11 @@ export default {
       [ActionTypes.GET_DATASET_BY_ID_SUCCESS]: (state, action) => {
         return immutable(state, {
           dataset: { $set: action.dataset.data.data },
+        });
+      },
+      [ActionTypes.EXCEPTION]: state => {
+        return immutable(state, {
+          exception: { $set: true },
         });
       },
     },
