@@ -36,6 +36,8 @@ export const ActionTypes = keyMirror({
   GET_DATASET_POLICY_SUCCESS: undefined,
   SET_DATASET_POLICY: undefined,
   SET_DATASET_POLICY_SUCCESS: undefined,
+  REMOVE_READER_FROM_DATASET: undefined,
+  REMOVE_READER_FROM_DATASET_SUCCESS: undefined,
   GET_JOB_RESULT: undefined,
   GET_JOB_RESULT_SUCCESS: undefined,
   GET_JOB_RESULT_FAILURE: undefined,

@@ -48,6 +48,17 @@ export function* authPost(url, params) {
   return false;
 }
 
+export function* authDelete(url, params) {
+  if (yield call(checkToken)) {
+    // check expiration time against now
+    const token = yield select(getToken);
+    return yield call(axios.delete, url, params, {
+      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+    });
+  }
+  return false;
+}
+
 /**
  * Saga poller
  */
@@ -158,18 +169,47 @@ export function* getDatasetPolicy({ payload }) {
   }
 }
 
-export function* addReadersToDataset({ payload }) {
-  // TODO is this going to need a loop for the list?
-  const datasetId = payload.jobResult.id;
-  const readersList = yield select(getReaders);
+export function* addReadersDataset(datasetId, reader) {
   try {
     const response = yield call(
       authPost,
-      '/api/repository/v1/datasets/' + datasetId + '/policies/readers/members',
-      readersList,
+      '/api/repository/v1/datasets/' + datasetId + '/policies/read/members',
+      reader,
     );
     yield put({
       type: ActionTypes.SET_DATASET_POLICY_SUCCESS,
+      dataset: { data: response }, // I don't don't actually get anything back here?
+    });
+  } catch (err) {
+    yield put({
+      type: ActionTypes.EXCEPTION,
+      dataset: err,
+    });
+  }
+}
+
+export function* setDatasetPolicy({ payload }) {
+  const datasetId = payload.datasetId;
+  const readersList = yield select(getReaders);
+  readersList.forEach(reader => addReadersDataset(datasetId, reader));
+}
+
+export function* createDatasetPolicy({ payload }) {
+  const datasetId = payload.jobResult.id;
+  const readersList = yield select(getReaders);
+  readersList.forEach(reader => addReadersDataset(datasetId, reader));
+}
+
+export function* removeReaderFromDataset({ payload }) {
+  const datasetId = payload.datasetId;
+  const reader = payload.user;
+  try {
+    const response = yield call(
+      authDelete,
+      '/api/repository/v1/datasets/' + datasetId + '/policies/read/members/' + reader,
+    );
+    yield put({
+      type: ActionTypes.REMOVE_READER_DATASET_POLICY_SUCCESS,
       dataset: { data: response },
     });
   } catch (err) {
@@ -221,7 +261,9 @@ export function* getStudyById({ payload }) {
 export default function* root() {
   yield all([
     takeLatest(ActionTypes.CREATE_DATASET, createDataset),
-    takeLatest(ActionTypes.CREATE_DATASET_SUCCESS, addReadersToDataset),
+    takeLatest(ActionTypes.CREATE_DATASET_SUCCESS, createDatasetPolicy),
+    takeLatest(ActionTypes.SET_DATASET_POLICY, setDatasetPolicy),
+    takeLatest(ActionTypes.REMOVE_READER_FROM_DATASET, removeReaderFromDataset),
     takeLatest(ActionTypes.GET_DATASETS, getDatasets),
     takeLatest(ActionTypes.GET_DATASET_BY_ID, getDatasetById),
     takeLatest(ActionTypes.GET_DATASET_POLICY, getDatasetPolicy),

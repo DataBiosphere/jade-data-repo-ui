@@ -8,6 +8,7 @@ export const datasetState = {
   dataset: {},
   datasets: [],
   exception: false,
+  datasetPolicies: [],
   study: {},
 };
 
@@ -29,9 +30,9 @@ export default {
           dataset: { $set: action.dataset.data.data },
         });
       },
-      [ActionTypes.EXCEPTION]: state => {
+      [ActionTypes.GET_DATASET_POLICY_SUCCESS]: (state, action) => {
         return immutable(state, {
-          exception: { $set: true },
+          datasetPolicies: { $set: action.dataset.data.data.policies },
         });
       },
     },

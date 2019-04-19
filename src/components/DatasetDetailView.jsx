@@ -6,7 +6,12 @@ import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import _ from 'lodash';
 
-import { getDatasetById } from 'actions/index';
+import {
+  getDatasetById,
+  getDatasetPolicy,
+  setDatasetPolicy,
+  removeReaderFromDataset,
+} from 'actions/index';
 import ManageUsersModal from './ManageUsersModal';
 import StudyTable from './table/StudyTable';
 
@@ -45,49 +50,39 @@ const styles = theme => ({
   },
 });
 
-const hardCodedReaders = [
-  'pamela.poovey@figgisagency.com',
-  'algernop.krieger@figgisagency.com',
-  'cheryl.tunt@figgisagency.com',
-  'sterling.archer@figgisagency.com',
-  'lana.kane@figgisagency.com',
-];
-
 export class DatasetDetailView extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object.isRequired,
     dataset: PropTypes.object,
+    datasetPolicies: PropTypes.arrayOf(PropTypes.object).isRequired,
     dispatch: PropTypes.func.isRequired,
     match: PropTypes.object.isRequired,
-    userEmail: PropTypes.string.isRequired,
   };
 
   componentWillMount() {
     const { dispatch, match } = this.props;
     const datasetId = match.params.uuid;
     dispatch(getDatasetById(datasetId));
-    // dispatch(getDatasetPolicy(datasetId));
+    dispatch(getDatasetPolicy(datasetId));
   }
 
-  addUser(datasetId, newEmail) {
-    // so need to call something to put them directly in SAM
-    console.log('add user');
-    console.log(newEmail);
-    console.log(datasetId);
-    // dispatch(setDatasetPolicy(datasetId, newEmail));
+  addUser(dispatch, datasetId, newEmail) {
+    // for now the setDatasetPolicy method will trigger a reset of datasetReaders
+    dispatch(setDatasetPolicy(datasetId, [newEmail]));
   }
 
-  removeUser(datasetId, removeableEmail) {
-    console.log('remove user');
-    console.log(removeableEmail);
-    console.log(datasetId);
-    // TODO send this reader to SAM
-    // _.remove(newReaders, r => r === removeableEmail);
-    // dispatch(setDatasetPolicy(datasetId, removeableEmail));
+  removeUser(dispatch, datasetId, removeableEmail) {
+    dispatch(removeReaderFromDataset(datasetId, removeableEmail));
   }
 
   render() {
-    const { classes, dataset, userEmail } = this.props;
+    const { classes, dataset, datasetPolicies, dispatch } = this.props;
+    const datasetReadersObj = datasetPolicies.find(policy => policy.name === 'reader'); // TODO make this an enum
+    const datasetReaders = (datasetReadersObj && datasetReadersObj.members) || [];
+    const datasetCustodiansObj = datasetPolicies.find(policy => policy.name === 'custodian');
+    const datasetCustodians = (datasetCustodiansObj && datasetCustodiansObj.members) || [];
+    const modalText = 'Viewers';
+    // TODO should there be placeholders in the UI if there are no readers? Or should that section of the container just not show?
     if (!dataset) {
       return (
         <div id="dataset-detail-view" className={classes.wrapper}>
@@ -96,7 +91,6 @@ export class DatasetDetailView extends React.PureComponent {
       );
     }
     const studies = dataset && dataset.source && dataset.source.map(s => s.study);
-    const modalText = 'Manage Viewers';
     return (
       <div id="dataset-detail-view" className={classes.wrapper}>
         <div className={classes.width}>
@@ -107,18 +101,33 @@ export class DatasetDetailView extends React.PureComponent {
             </div>
             <Card className={classes.card}>
               <div className={classes.header}>Custodian: </div>
-              <div className={classes.values}> {userEmail} </div>
-              <div className={classes.header}>Viewers: </div>
-              <div className={classes.values}> {dataset.readers} </div>
+              {datasetCustodians.map(custodian => (
+                <div className={classes.values} id={custodian}>
+                  {custodian}
+                </div>
+              ))}
+              {datasetReaders.length > 0 ? (
+                <div>
+                  <div className={classes.header}>{modalText}: </div>
+                  <div className={classes.values}>
+                    {datasetReaders.map(reader => (
+                      <div id={reader}>{reader}</div>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <div />
+              )}
               <div className={classes.header}> Date Created: </div>
               <div className={classes.values}> {moment(dataset.createdDate).fromNow()} </div>
               <div>
                 {dataset && dataset.id && (
                   <ManageUsersModal
-                    addUser={_.partial(this.addUser, dataset.id)}
-                    removeUser={_.partial(this.removeUser, dataset.id)}
-                    modalText={modalText}
-                    readers={hardCodedReaders}
+                    addUser={_.partial(this.addUser, dispatch, dataset.id)}
+                    dispatch={dispatch}
+                    removeUser={_.partial(this.removeUser, dispatch, dataset.id)}
+                    modalText={`Manage ${modalText}`}
+                    readers={datasetReaders}
                   />
                 )}
               </div>
@@ -140,7 +149,7 @@ export class DatasetDetailView extends React.PureComponent {
 function mapStateToProps(state) {
   return {
     dataset: state.datasets.dataset,
-    userEmail: state.user.email,
+    datasetPolicies: state.datasets.datasetPolicies,
   };
 }
 
