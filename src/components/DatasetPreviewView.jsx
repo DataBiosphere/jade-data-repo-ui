@@ -106,6 +106,7 @@ export class DatasetPreviewView extends React.PureComponent {
     createdDataset: PropTypes.object,
     dataset: PropTypes.object,
     dispatch: PropTypes.func.isRequired,
+    exception: PropTypes.bool.isRequired,
     userEmail: PropTypes.string,
   };
 
@@ -128,16 +129,19 @@ export class DatasetPreviewView extends React.PureComponent {
   }
 
   render() {
-    const { classes, createdDataset, dataset, userEmail } = this.props;
-    console.log(dataset.readers);
+    const { classes, createdDataset, dataset, exception, userEmail } = this.props;
     return (
       <div id="dataset-preview" className={classes.wrapper}>
         <div className={classes.width}>
-          {createdDataset.id && createdDataset.name === dataset.name ? (
+          {(createdDataset.id && createdDataset.name === dataset.name) || exception ? (
             <div>
               <div className={classes.title}>Created Dataset</div>
-              <p>Your new dataset has been created!</p>
-              <DatasetDirectionalModal createdDataset={createdDataset} success={true} />
+              <p>
+                {exception
+                  ? 'Your new dataset has not been created'
+                  : 'Your new dataset has been created!'}
+              </p>
+              <DatasetDirectionalModal createdDataset={createdDataset} success={!exception} />
               <div className={classes.query}>
                 <LinearProgress variant="determinate" value={100} />
               </div>
@@ -187,6 +191,7 @@ function mapStateToProps(state) {
     createdDataset: state.datasets.createdDataset,
     dataset: state.dataset,
     userEmail: state.user.email,
+    exception: state.datasets.exception,
   };
 }
 
