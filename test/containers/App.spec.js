@@ -7,14 +7,12 @@ import AppBar from '@material-ui/core/AppBar';
 const mockDispatch = jest.fn();
 
 const props = {
-  app: {
-    alerts: [],
-  },
   dispatch: mockDispatch,
   user: {
     isAuthenticated: false,
   },
   classes: {},
+  alerts: [],
 };
 
 function setup(ownProps = props) {
