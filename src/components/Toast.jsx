@@ -1,10 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
+import IconButton from '@material-ui/core/IconButton';
 
 import ErrorIcon from '../../assets/media/icons/warning-standard-solid.svg';
+import CloseIcon from '../../assets/media/icons/times-line.svg';
+import { hideAlert } from 'actions/index';
 
 const styles = theme => ({
   card: {
@@ -34,20 +38,30 @@ const styles = theme => ({
     fill: theme.palette.primary.contrastText,
     height: theme.spacing.unit * 4,
   },
-  close: {
-    color: theme.palette.primary.contrastText,
-    fontFamily: theme.typography.fontFamily,
+  closeButton: {
+    fill: theme.palette.primary.contrastText,
+    padding: theme.spacing.unit,
     position: 'absolute',
-    right: theme.spacing.unit,
+    right: 0,
     top: 0,
+  },
+  close: {
+    height: theme.spacing.unit * 2,
+    width: theme.spacing.unit * 2,
   },
 });
 
-class Toast extends React.PureComponent {
+export class Toast extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object.isRequired,
+    dispatch: PropTypes.func.isRequired,
     errorMsg: PropTypes.string,
   };
+
+  hideToast() {
+    const { dispatch } = this.props;
+    dispatch(hideAlert());
+  }
 
   render() {
     const { classes, errorMsg } = this.props;
@@ -56,7 +70,9 @@ class Toast extends React.PureComponent {
         <CardContent className={classes.content}>
           <ErrorIcon className={classes.icon} alt="logo" />
           <div className={classes.text}>{errorMsg || 'WTF did you do?'}</div>
-          <div className={classes.close}>x</div>
+          <IconButton className={classes.closeButton} onClick={() => this.hideToast()}>
+            <CloseIcon className={classes.close} />
+          </IconButton>
         </CardContent>
       </Card>
     );
