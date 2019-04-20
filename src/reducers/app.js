@@ -21,6 +21,10 @@ export default {
         immutable(state, {
           alerts: { $push: [payload] },
         }),
+      [ActionTypes.EXCEPTION]: (state, { payload }) =>
+        immutable(state, {
+          alerts: { $push: [payload] },
+        }),
     },
     appState,
   ),
