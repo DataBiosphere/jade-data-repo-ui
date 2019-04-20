@@ -36,6 +36,7 @@ export default createMuiTheme({
     error: {
       main: '#DB3214',
       contrastText: '#8F96A1',
+      dark: '#BA250A',
     },
   },
 });
