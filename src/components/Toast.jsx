@@ -5,9 +5,9 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import IconButton from '@material-ui/core/IconButton';
 
+import { hideAlert } from 'actions/index';
 import ErrorIcon from '../../assets/media/icons/warning-standard-solid.svg';
 import CloseIcon from '../../assets/media/icons/times-line.svg';
-import { hideAlert } from 'actions/index';
 
 const styles = theme => ({
   card: {

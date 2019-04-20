@@ -23,13 +23,9 @@ import NotFound from 'routes/NotFound';
 import Logo from 'components/Logo';
 import Toast from 'components/Toast';
 
-
 import { logOut } from 'actions/index';
 import RoutePublic from 'components/RoutePublic';
 import RoutePrivate from 'components/RoutePrivate';
-
-//dispatch(showAlert('Hello! And welcome!', { variant: 'success', icon: 'bell' }));
-
 
 const drawerWidth = 240;
 
@@ -200,8 +196,7 @@ export class App extends React.Component {
               </Switch>
             </div>
           </div>
-          {alerts.length > 0 &&
-            <Toast dispatch={dispatch} /> }
+          {alerts.length > 0 && <Toast dispatch={dispatch} />}
         </MuiThemeProvider>
       </Router>
     );
