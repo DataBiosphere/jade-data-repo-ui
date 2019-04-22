@@ -68,7 +68,9 @@ export class Toast extends React.PureComponent {
       <Card className={classes.card}>
         <CardContent className={classes.content}>
           <ErrorIcon className={classes.icon} alt="logo" />
-          <div className={classes.text}>{errorMsg || 'WTF did you do?'}</div>
+          <div className={classes.text}>
+            {errorMsg || 'An error occurred, please try again or submit a bug report'}
+          </div>
           <IconButton className={classes.closeButton} onClick={() => this.hideToast()}>
             <CloseIcon className={classes.close} />
           </IconButton>
