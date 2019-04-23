@@ -91,7 +91,7 @@ export class DatasetCreateView extends React.PureComponent {
     ids: PropTypes.arrayOf(PropTypes.string),
     readers: PropTypes.arrayOf(PropTypes.string),
     studies: PropTypes.object.isRequired,
-    study: PropTypes.string,
+    study: PropTypes.object,
   };
 
   componentDidMount() {

@@ -17,13 +17,12 @@ const styles = theme => ({
     color: theme.palette.primary.contrastText,
     height: 65,
     width: 268,
-    margin: theme.spacing.unit * 6,
-    position: 'absolute',
-    bottom: 0,
-    right: 0,
-    zIndex: 1,
+    margin: theme.spacing.unit * 2,
   },
   content: {
+    display: 'flex',
+  },
+  cardBody: {
     display: 'flex',
   },
   text: {
@@ -39,10 +38,8 @@ const styles = theme => ({
   },
   closeButton: {
     fill: theme.palette.primary.contrastText,
+    float: 'right',
     padding: theme.spacing.unit,
-    position: 'absolute',
-    right: 0,
-    top: 0,
   },
   close: {
     height: theme.spacing.unit * 2,
@@ -55,25 +52,28 @@ export class Toast extends React.PureComponent {
     classes: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired,
     errorMsg: PropTypes.string,
+    index: PropTypes.number.isRequired,
   };
 
   hideToast() {
-    const { dispatch } = this.props;
-    dispatch(hideAlert());
+    const { dispatch, index } = this.props;
+    dispatch(hideAlert(index));
   }
 
   render() {
     const { classes, errorMsg } = this.props;
     return (
       <Card className={classes.card}>
+        <IconButton className={classes.closeButton} onClick={() => this.hideToast()}>
+          <CloseIcon className={classes.close} />
+        </IconButton>
         <CardContent className={classes.content}>
-          <ErrorIcon className={classes.icon} alt="logo" />
-          <div className={classes.text}>
-            {errorMsg || 'An error occurred, please try again or submit a bug report'}
+          <div className={classes.cardBody}>
+            <ErrorIcon className={classes.icon} alt="logo" />
+            <div className={classes.text}>
+              {errorMsg || 'An error occurred, please try again or submit a bug report'}
+            </div>
           </div>
-          <IconButton className={classes.closeButton} onClick={() => this.hideToast()}>
-            <CloseIcon className={classes.close} />
-          </IconButton>
         </CardContent>
       </Card>
     );

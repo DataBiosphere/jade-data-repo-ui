@@ -106,8 +106,15 @@ const styles = theme => ({
     height: '100vh',
     overflow: 'auto',
   },
-  h5: {
-    marginBottom: theme.spacing.unit * 2,
+  errorPanel: {
+    display: 'flex',
+    justifyContent: 'flex-start',
+    flexDirection: 'column-reverse',
+    height: '80%',
+    position: 'absolute',
+    right: 0,
+    width: theme.spacing.unit * 40,
+    zIndex: '100',
   },
 });
 
@@ -184,6 +191,12 @@ export class App extends React.Component {
             </AppBar>
             <div className={classes.content}>
               <div className={classes.appBarSpacer} />
+              <div className={classes.errorPanel}>
+                {alerts &&
+                  alerts.map((alert, i) => (
+                    <Toast dispatch={dispatch} errorMsg={alert.toString()} index={i} key={i} />
+                  ))}
+              </div>
               <Switch>
                 <RoutePublic
                   isAuthenticated={user.isAuthenticated}
@@ -196,7 +209,6 @@ export class App extends React.Component {
               </Switch>
             </div>
           </div>
-          {alerts.length > 0 && <Toast dispatch={dispatch} />}
         </MuiThemeProvider>
       </Router>
     );
