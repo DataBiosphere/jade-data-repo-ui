@@ -40,5 +40,5 @@ export const { getJobById } = createActions({
 });
 
 export const { hideAlert } = createActions({
-  [ActionTypes.HIDE_ALERT]: (id: string) => ({ id }),
+  [ActionTypes.HIDE_ALERT]: index => index,
 });

@@ -10,21 +10,22 @@ export const appState = {
 export default {
   app: handleActions(
     {
-      [ActionTypes.HIDE_ALERT]: (state, { payload: { id } }) => {
-        const alerts = state.alerts.filter(d => d.id !== id);
-        // TODO this is just emptying out the alerts--need to pass an id
+      [ActionTypes.HIDE_ALERT]: (state, { payload }) => {
+        const alerts = state.alerts.filter((d, i) => i !== payload);
         return immutable(state, {
           alerts: { $set: alerts },
         });
       },
-      [ActionTypes.SHOW_ALERT]: (state, { payload }) =>
-        immutable(state, {
+      [ActionTypes.SHOW_ALERT]: (state, { payload }) => {
+        return immutable(state, {
           alerts: { $push: [payload] },
-        }),
-      [ActionTypes.EXCEPTION]: (state, { payload }) =>
-        immutable(state, {
+        });
+      },
+      [ActionTypes.EXCEPTION]: (state, { payload }) => {
+        return immutable(state, {
           alerts: { $push: [payload] },
-        }),
+        });
+      },
     },
     appState,
   ),
