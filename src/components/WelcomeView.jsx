@@ -99,9 +99,9 @@ class WelcomeView extends React.PureComponent {
             Terra uses your Google account. Once you have signed in and completed the user profile
             registration step, you can start using Terra.
           </p>
-          <div href="https://app.terra.bio/" className={classes.terraLink}>
+          <a href="https://app.terra.bio/" className={classes.terraLink}>
             Need to create a Terra account?
-          </div>
+          </a>
           <hr />
           <div>
             <div>
