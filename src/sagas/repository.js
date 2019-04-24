@@ -121,7 +121,7 @@ export function* getDatasets() {
   } catch (err) {
     yield put({
       type: ActionTypes.EXCEPTION,
-      datasets: err,
+      payload: err,
     });
   }
 }
@@ -137,7 +137,7 @@ export function* getDatasetById({ payload }) {
   } catch (err) {
     yield put({
       type: ActionTypes.EXCEPTION,
-      dataset: err,
+      payload: err,
     });
   }
 }
@@ -153,7 +153,7 @@ export function* getDatasetPolicy({ payload }) {
   } catch (err) {
     yield put({
       type: ActionTypes.EXCEPTION,
-      dataset: err,
+      payload: err,
     });
   }
 }
@@ -175,7 +175,7 @@ export function* addReadersToDataset({ payload }) {
   } catch (err) {
     yield put({
       type: ActionTypes.EXCEPTION,
-      dataset: err,
+      payload: err,
     });
   }
 }
@@ -194,7 +194,7 @@ export function* getStudies() {
   } catch (err) {
     yield put({
       type: ActionTypes.EXCEPTION,
-      studies: err,
+      payload: err,
     });
   }
 }
@@ -210,7 +210,7 @@ export function* getStudyById({ payload }) {
   } catch (err) {
     yield put({
       type: ActionTypes.EXCEPTION,
-      study: err,
+      payload: err,
     });
   }
 }

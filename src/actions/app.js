@@ -38,3 +38,7 @@ export const { getJobById } = createActions({
   [ActionTypes.GET_JOB_BY_ID_SUCCESS]: job => job,
   [ActionTypes.GET_JOB_BY_ID]: job => job,
 });
+
+export const { hideAlert } = createActions({
+  [ActionTypes.HIDE_ALERT]: index => index,
+});

@@ -12,6 +12,7 @@ import Button from '@material-ui/core/Button';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
+import Avatar from '@material-ui/core/Avatar';
 
 import history from 'modules/history';
 import globalTheme from 'modules/theme';
@@ -20,11 +21,11 @@ import Home from 'routes/Home';
 import Private from 'routes/Private';
 import NotFound from 'routes/NotFound';
 import Logo from 'components/Logo';
+import Toast from 'components/Toast';
 
 import { logOut } from 'actions/index';
 import RoutePublic from 'components/RoutePublic';
 import RoutePrivate from 'components/RoutePrivate';
-import Avatar from '@material-ui/core/Avatar';
 
 const drawerWidth = 240;
 
@@ -105,8 +106,15 @@ const styles = theme => ({
     height: '100vh',
     overflow: 'auto',
   },
-  h5: {
-    marginBottom: theme.spacing.unit * 2,
+  errorPanel: {
+    display: 'flex',
+    justifyContent: 'flex-start',
+    flexDirection: 'column-reverse',
+    height: '80%',
+    position: 'absolute',
+    right: 0,
+    width: theme.spacing.unit * 40,
+    zIndex: '100',
   },
 });
 
@@ -116,6 +124,7 @@ export class App extends React.Component {
   };
 
   static propTypes = {
+    alerts: PropTypes.arrayOf(PropTypes.object).isRequired,
     classes: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired,
     user: PropTypes.object.isRequired,
@@ -130,7 +139,7 @@ export class App extends React.Component {
   };
 
   render() {
-    const { classes, user, dispatch } = this.props;
+    const { alerts, classes, user, dispatch } = this.props;
     const { anchorEl } = this.state;
     const open = Boolean(anchorEl);
     return (
@@ -182,6 +191,12 @@ export class App extends React.Component {
             </AppBar>
             <div className={classes.content}>
               <div className={classes.appBarSpacer} />
+              <div className={classes.errorPanel}>
+                {alerts &&
+                  alerts.map((alert, i) => (
+                    <Toast dispatch={dispatch} errorMsg={alert.toString()} index={i} key={i} />
+                  ))}
+              </div>
               <Switch>
                 <RoutePublic
                   isAuthenticated={user.isAuthenticated}
@@ -206,6 +221,7 @@ export class App extends React.Component {
 function mapStateToProps(state) {
   return {
     user: state.user,
+    alerts: state.app.alerts,
   };
 }
 
