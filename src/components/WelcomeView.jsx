@@ -82,7 +82,7 @@ class WelcomeView extends React.PureComponent {
           <div className={classes.title}>Welcome to the Terra Data Repository</div>
           <div>
             <GoogleLogin // TODO this component may be unuseable once we require a terra registration
-              clientId="694017244717-j5a5b7sebsvhd2u9ls85cinima96c2p0.apps.googleusercontent.com"
+              clientId="970791974390-1581mjhtp2b3jmg4avhor1vabs13b7ur.apps.googleusercontent.com"
               buttonText="Sign in with Google"
               onSuccess={onSignInSuccess}
               onFailure={onSignInFailure}
