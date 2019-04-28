@@ -48,11 +48,11 @@ export function* authPost(url, params) {
   return false;
 }
 
-export function* authDelete(url, params) {
+export function* authDelete(url) {
   if (yield call(checkToken)) {
     // check expiration time against now
     const token = yield select(getToken);
-    return yield call(axios.delete, url, params, {
+    return yield call(axios.delete, url, {
       headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
     });
   }
@@ -170,48 +170,51 @@ export function* getDatasetPolicy({ payload }) {
 }
 
 export function* addReadersDataset(datasetId, reader) {
+  const readerObject = { email: reader };
   try {
     const response = yield call(
       authPost,
-      '/api/repository/v1/datasets/' + datasetId + '/policies/read/members',
-      reader,
+      '/api/repository/v1/datasets/' + datasetId + '/policies/reader/members',
+      readerObject,
     );
     yield put({
       type: ActionTypes.SET_DATASET_POLICY_SUCCESS,
-      dataset: { data: response }, // I don't don't actually get anything back here?
+      dataset: { data: response },
     });
+    yield call(getDatasetPolicy, { payload: datasetId });
   } catch (err) {
     yield put({
       type: ActionTypes.EXCEPTION,
-      dataset: err,
+      payload: err,
     });
   }
 }
 
 export function* setDatasetPolicy({ payload }) {
   const datasetId = payload.datasetId;
-  const readersList = yield select(getReaders);
-  readersList.forEach(reader => addReadersDataset(datasetId, reader));
+  const reader = payload.users[0];
+  yield call(addReadersDataset, datasetId, reader);
 }
 
 export function* createDatasetPolicy({ payload }) {
   const datasetId = payload.jobResult.id;
-  const readersList = yield select(getReaders);
-  readersList.forEach(reader => addReadersDataset(datasetId, reader));
+  const readerList = yield select(getReaders);
+  for (let i = 0; i < readerList.length; i++) {
+    yield put(addReadersDataset, datasetId, readerList[i]);
+  }
 }
 
 export function* removeReaderFromDataset({ payload }) {
   const datasetId = payload.datasetId;
   const reader = payload.user;
+  const url = '/api/repository/v1/datasets/' + datasetId + '/policies/reader/members/' + reader;
   try {
-    const response = yield call(
-      authDelete,
-      '/api/repository/v1/datasets/' + datasetId + '/policies/read/members/' + reader,
-    );
+    const response = yield call(authDelete, url);
     yield put({
-      type: ActionTypes.REMOVE_READER_DATASET_POLICY_SUCCESS,
+      type: ActionTypes.REMOVE_READER_FROM_DATASET_SUCCESS,
       dataset: { data: response },
     });
+    yield call(getDatasetPolicy, { payload: datasetId });
   } catch (err) {
     yield put({
       type: ActionTypes.EXCEPTION,
