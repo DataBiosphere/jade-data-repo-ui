@@ -194,7 +194,12 @@ export class App extends React.Component {
               <div className={classes.errorPanel}>
                 {alerts &&
                   alerts.map((alert, i) => (
-                    <Toast dispatch={dispatch} errorMsg={alert.toString()} index={i} key={i} />
+                    <Toast
+                      dispatch={dispatch}
+                      errorMsg={alert && alert.toString()}
+                      index={i}
+                      key={i}
+                    />
                   ))}
               </div>
               <Switch>
