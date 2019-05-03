@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import MultiSelect from 'react-select';
 import { Control, Form, actions, Errors } from 'react-redux-form';
 import _ from 'lodash';
@@ -11,7 +11,7 @@ import Combinatorics from 'js-combinatorics';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 
-import { getStudies, getStudyById } from 'actions/index';
+import { createDataset, getStudies, getStudyById } from 'actions/index';
 import ManageUsers from './ManageUsersView';
 
 function* colNameIter() {
@@ -87,16 +87,25 @@ export class DatasetCreateView extends React.PureComponent {
   static propTypes = {
     asset: PropTypes.string,
     classes: PropTypes.object.isRequired,
+    createdDataset: PropTypes.object,
     dispatch: PropTypes.func.isRequired,
+    jobId: PropTypes.string,
     ids: PropTypes.arrayOf(PropTypes.string),
     readers: PropTypes.arrayOf(PropTypes.string),
     studies: PropTypes.object.isRequired,
     study: PropTypes.object,
+    history: PropTypes.object.isRequired,
+    match: PropTypes.object.isRequired,
   };
 
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch(getStudies());
+  }
+
+  createDatasetJob() {
+    const { dispatch } = this.props;
+    dispatch(createDataset());
   }
 
   validateName(name) {
@@ -173,9 +182,10 @@ export class DatasetCreateView extends React.PureComponent {
 
   render() {
     const FormRow = props => <div style={{ paddingBottom: '1em' }}>{props.children}</div>;
-    const { asset, classes, ids, readers, studies, study } = this.props;
+    const { asset, classes, createdDataset, jobId, ids, readers, studies, study } = this.props;
     const studyOptions = this.getStudyOptions(studies);
     const assetOptions = this.getAssetOptions(study);
+    const createDisabled = !study || !ids;
 
     return (
       <div className={classes.wrapper}>
@@ -302,16 +312,19 @@ export class DatasetCreateView extends React.PureComponent {
             )}
             <Errors model="dataset" />
             <FormRow>
-              <Link to="/datasets/preview" className={classes.linkCreate}>
+              {createdDataset ? (
+                <Redirect push to={`/datasets/requests/${jobId}`} />
+              ) : (
                 <Button
                   variant="contained"
                   color="primary"
                   className={classes.buttons}
-                  disabled={!study}
+                  disabled={createDisabled}
+                  onClick={() => this.createDatasetJob()}
                 >
                   Create Dataset
                 </Button>
-              </Link>
+              )}
               <Link to="/datasets" className={classes.linkCancel}>
                 <Button variant="contained" type="button" className={classes.buttons}>
                   Cancel
@@ -329,6 +342,11 @@ export class DatasetCreateView extends React.PureComponent {
 function mapStateToProps(state) {
   return {
     asset: state.dataset.asset,
+    createdDataset: state.datasets.createdDatasets.find(
+      datasetJob => datasetJob.dataset.id === state.jobs.jobId,
+    ),
+    jobId: state.jobs.jobId,
+    createdDatasets: state.datasets.createdDatasets,
     ids: state.dataset.ids,
     readers: state.dataset.readers,
     studies: state.studies,

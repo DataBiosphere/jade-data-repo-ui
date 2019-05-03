@@ -19,6 +19,7 @@ import { ActionTypes, STATUS } from 'constants/index';
 export const getToken = state => state.user.token;
 export const getTokenExpiration = state => state.user.tokenExpiration;
 export const getReaders = state => state.dataset.readers;
+export const getCreateDataset = state => state.dataset;
 
 export function* checkToken() {
   const tokenExpiration = yield select(getTokenExpiration);
@@ -71,7 +72,7 @@ function* pollJobWorker(jobId, jobTypeSuccess, jobTypeFailure) {
       if (jobStatus === 'succeeded' && resultResponse && resultResponse.data) {
         yield put({
           type: jobTypeSuccess,
-          payload: { jobResult: resultResponse.data },
+          payload: { jobId: jobId, jobResult: resultResponse.data },
         });
       } else {
         yield put({
@@ -82,7 +83,7 @@ function* pollJobWorker(jobId, jobTypeSuccess, jobTypeFailure) {
     } else {
       yield put({
         type: ActionTypes.GET_JOB_BY_ID_SUCCESS,
-        payload: { status: response.job_status },
+        payload: { status: response.data.job_status },
       });
       yield call(delay, 1000);
       yield call(pollJobWorker, jobId, jobTypeSuccess, jobTypeFailure);
@@ -99,13 +100,27 @@ function* pollJobWorker(jobId, jobTypeSuccess, jobTypeFailure) {
  * Datasets.
  */
 
-export function* createDataset({ payload }) {
+export function* createDataset() {
+  const dataset = yield select(getCreateDataset);
+  const datasetRequest = {
+    name: dataset.name,
+    description: dataset.description,
+    contents: [
+      {
+        source: {
+          studyName: dataset.study,
+          assetName: dataset.asset,
+        },
+        rootValues: dataset.ids,
+      },
+    ],
+  };
   try {
-    const response = yield call(authPost, '/api/repository/v1/datasets', payload);
+    const response = yield call(authPost, '/api/repository/v1/datasets', datasetRequest);
     const jobId = response.data.id;
     yield put({
       type: ActionTypes.CREATE_DATASET_JOB,
-      payload: { data: response, createdDataset: payload },
+      payload: { data: response, jobId: jobId },
     });
     yield call(
       pollJobWorker,
@@ -264,9 +279,12 @@ export function* getStudyById({ payload }) {
 export default function* root() {
   yield all([
     takeLatest(ActionTypes.CREATE_DATASET, createDataset),
+<<<<<<< HEAD
     takeLatest(ActionTypes.CREATE_DATASET_SUCCESS, createDatasetPolicy),
     takeLatest(ActionTypes.SET_DATASET_POLICY, setDatasetPolicy),
     takeLatest(ActionTypes.REMOVE_READER_FROM_DATASET, removeReaderFromDataset),
+=======
+>>>>>>> break out new datasets by job id -- and use created datasets object to hold them
     takeLatest(ActionTypes.GET_DATASETS, getDatasets),
     takeLatest(ActionTypes.GET_DATASET_BY_ID, getDatasetById),
     takeLatest(ActionTypes.GET_DATASET_POLICY, getDatasetPolicy),
