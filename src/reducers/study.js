@@ -18,7 +18,13 @@ export default {
       [ActionTypes.GET_STUDY_BY_ID_SUCCESS]: (state, action) =>
         immutable(state, {
           study: { $set: action.study.data.data },
-        }),
+        });
+      },
+      [ActionTypes.CREATE_DATASET_JOB]: state => {
+        return immutable(state, {
+          study: { $set: {} },
+        });
+      },
     },
     studyState,
   ),
