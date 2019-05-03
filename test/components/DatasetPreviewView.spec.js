@@ -6,6 +6,16 @@ import DatasetPreviewView from 'components/DatasetPreviewView';
 
 const props = {
   classes: {},
+  createdDataset: {
+    dataset: {
+      id: 'datasetId',
+    },
+  },
+  match: {
+    params: {
+      jobId: 'jobId',
+    },
+  },
 };
 
 function setup(ownProps = props) {
