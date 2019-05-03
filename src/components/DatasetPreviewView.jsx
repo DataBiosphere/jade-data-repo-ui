@@ -119,7 +119,7 @@ export class DatasetPreviewView extends React.PureComponent {
     return (
       <div id="dataset-preview" className={classes.wrapper}>
         <div className={classes.width}>
-          {jobCompleted ? (
+          {jobCompleted || !createdDataset ? (
             <div>
               <div className={classes.title}>Created Dataset</div>
               <p>
@@ -128,7 +128,7 @@ export class DatasetPreviewView extends React.PureComponent {
                   : 'Your new dataset has been created!'}
               </p>
               <DatasetDirectionalModal
-                createdDataset={createdDataset.dataset}
+                createdDataset={createdDataset && createdDataset.dataset}
                 success={!exception}
               />
               <div className={classes.query}>
@@ -154,17 +154,22 @@ export class DatasetPreviewView extends React.PureComponent {
                   </Link>
                 </div>
               ) : (
-                <div className={classes.values}>{createdDataset.dataset.name}</div>
+                <div className={classes.values}>
+                  {createdDataset && createdDataset.dataset.name}
+                </div>
               )}
               <div className={classes.header}> Description: </div>
-              <div className={classes.values}> {createdDataset.dataset.description} </div>
+              <div className={classes.values}>
+                {createdDataset && createdDataset.dataset.description}
+              </div>
             </div>
             <Card className={classes.card}>
               <div className={classes.header}> Custodian(s): </div>
               <div className={classes.values}> {userEmail} </div>
               <div className={classes.header}> Access: </div>
               <div className={classes.values}>
-                {createdDataset.dataset &&
+                {createdDataset &&
+                  createdDataset.dataset &&
                   createdDataset.dataset.readers &&
                   createdDataset.dataset.readers.map(reader => <div> {reader} </div>)}
               </div>

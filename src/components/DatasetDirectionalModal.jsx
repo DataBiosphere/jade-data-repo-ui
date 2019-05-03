@@ -75,7 +75,7 @@ export class DatasetDirectionalModal extends React.PureComponent {
 
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    createdDataset: PropTypes.object.isRequired,
+    createdDataset: PropTypes.object,
     success: PropTypes.bool.isRequired,
   };
 
@@ -88,7 +88,7 @@ export class DatasetDirectionalModal extends React.PureComponent {
     const { open } = this.state;
     return (
       <div id="dataset-modal">
-        {success ? (
+        {success && createdDataset ? (
           <Dialog
             onClose={this.handleClose}
             aria-labelledby="customized-dialog-title"
@@ -155,7 +155,8 @@ export class DatasetDirectionalModal extends React.PureComponent {
             </DialogTitle>
             <DialogContent>
               <div className={classes.dialogContent}>
-                The dataset {createdDataset.name} was not created. What would you like to do next?
+                The dataset {createdDataset && createdDataset.name} was not created. What would you
+                like to do next?
               </div>
               <div className={classes.dialogActionsError}>
                 <Link to="/datasets" className={classes.actionButtons}>
