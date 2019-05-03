@@ -10,6 +10,7 @@ import { ActionTypes } from 'constants/index';
 
 export const { createDataset } = createActions({
   [ActionTypes.CREATE_DATASET]: dataset => dataset,
+  [ActionTypes.CREATE_DATASET_JOB]: dataset => dataset,
   [ActionTypes.CREATE_DATASET_SUCCESS]: dataset => dataset,
   [ActionTypes.CREATE_DATASET_FAILURE]: dataset => dataset,
 });
@@ -56,6 +57,10 @@ export const { removeReaderFromDataset } = createActions({
 export const { getJobById } = createActions({
   [ActionTypes.GET_JOB_BY_ID_SUCCESS]: job => job,
   [ActionTypes.GET_JOB_BY_ID]: job => job,
+});
+
+export const { clearJobId } = createActions({
+  [ActionTypes.CLEAR_JOB_ID]: job => job,
 });
 
 export const { hideAlert } = createActions({
