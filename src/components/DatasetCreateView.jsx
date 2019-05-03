@@ -344,7 +344,7 @@ function mapStateToProps(state) {
   return {
     asset: state.dataset.asset,
     createdDataset: state.datasets.createdDatasets.find(
-      datasetJob => datasetJob.dataset.id === state.jobs.jobId,
+      datasetJob => datasetJob.dataset && datasetJob.dataset.id === state.jobs.jobId,
     ),
     jobId: state.jobs.jobId,
     createdDatasets: state.datasets.createdDatasets,
