@@ -124,7 +124,8 @@ export class DatasetCreateView extends React.PureComponent {
   }
 
   getStudyOptions(studies) {
-    const studyOptions = studies.studies.map(study => ({ value: study.id, label: study.name }));
+    const studyOptions =
+      studies.studies && studies.studies.map(study => ({ value: study.id, label: study.name }));
     return studyOptions;
   }
 
