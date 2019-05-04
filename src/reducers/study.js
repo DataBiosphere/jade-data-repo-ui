@@ -11,16 +11,14 @@ export const studyState = {
 export default {
   studies: handleActions(
     {
-      [ActionTypes.GET_STUDIES_SUCCESS]: (state, action) => {
-        return immutable(state, {
+      [ActionTypes.GET_STUDIES_SUCCESS]: (state, action) =>
+        immutable(state, {
           studies: { $set: action.studies.data.data },
-        });
-      },
-      [ActionTypes.GET_STUDY_BY_ID_SUCCESS]: (state, action) => {
-        return immutable(state, {
+        }),
+      [ActionTypes.GET_STUDY_BY_ID_SUCCESS]: (state, action) =>
+        immutable(state, {
           study: { $set: action.study.data.data },
-        });
-      },
+        }),
     },
     studyState,
   ),

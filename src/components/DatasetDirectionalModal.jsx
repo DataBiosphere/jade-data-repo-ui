@@ -69,14 +69,14 @@ const styles = theme => ({
 });
 
 export class DatasetDirectionalModal extends React.PureComponent {
+  state = {
+    open: true,
+  };
+
   static propTypes = {
     classes: PropTypes.object.isRequired,
     createdDataset: PropTypes.object.isRequired,
     success: PropTypes.bool.isRequired,
-  };
-
-  state = {
-    open: true,
   };
 
   handleClose = () => {
