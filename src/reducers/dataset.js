@@ -28,7 +28,7 @@ export default {
           dataset: { $set: action.dataset.data.data },
         }),
       [ActionTypes.GET_DATASET_POLICY_SUCCESS]: (state, action) =>
-        return immutable(state, {
+        immutable(state, {
           datasetPolicies: { $set: action.dataset.data.data.policies },
         }),
       [ActionTypes.EXCEPTION]: state =>

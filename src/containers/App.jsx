@@ -14,7 +14,7 @@ import Menu from '@material-ui/core/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import Avatar from '@material-ui/core/Avatar';
 
-import history from 'modules/history';
+import history from 'modules/hist';
 import globalTheme from 'modules/theme';
 
 import Home from 'routes/Home';
