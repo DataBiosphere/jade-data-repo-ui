@@ -34,6 +34,25 @@ export const { getDatasetById } = createActions({
   [ActionTypes.GET_DATASET_BY_ID_SUCCESS]: dataset => dataset,
 });
 
+export const { getDatasetPolicy } = createActions({
+  [ActionTypes.GET_DATASET_POLICY_SUCCESS]: policy => policy,
+  [ActionTypes.GET_DATASET_POLICY]: policy => policy,
+});
+
+export const { setDatasetPolicy } = createActions({
+  [ActionTypes.SET_DATASET_POLICY]: (datasetId, users) => ({
+    datasetId,
+    users,
+  }),
+});
+
+export const { removeReaderFromDataset } = createActions({
+  [ActionTypes.REMOVE_READER_FROM_DATASET]: (datasetId, user) => ({
+    datasetId,
+    user,
+  }),
+});
+
 export const { getJobById } = createActions({
   [ActionTypes.GET_JOB_BY_ID_SUCCESS]: job => job,
   [ActionTypes.GET_JOB_BY_ID]: job => job,

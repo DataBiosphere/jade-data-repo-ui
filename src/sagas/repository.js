@@ -48,6 +48,17 @@ export function* authPost(url, params) {
   return false;
 }
 
+export function* authDelete(url) {
+  if (yield call(checkToken)) {
+    // check expiration time against now
+    const token = yield select(getToken);
+    return yield call(axios.delete, url, {
+      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+    });
+  }
+  return false;
+}
+
 /**
  * Saga poller
  */
@@ -158,20 +169,52 @@ export function* getDatasetPolicy({ payload }) {
   }
 }
 
-export function* addReadersToDataset({ payload }) {
-  // TODO is this going to need a loop for the list?
-  const datasetId = payload.jobResult.id;
-  const readersList = yield select(getReaders);
+export function* addReadersDataset(datasetId, reader) {
+  const readerObject = { email: reader };
   try {
     const response = yield call(
       authPost,
-      '/api/repository/v1/datasets/' + datasetId + '/policies/readers/members',
-      readersList,
+      '/api/repository/v1/datasets/' + datasetId + '/policies/reader/members',
+      readerObject,
     );
     yield put({
       type: ActionTypes.SET_DATASET_POLICY_SUCCESS,
       dataset: { data: response },
     });
+    yield call(getDatasetPolicy, { payload: datasetId });
+  } catch (err) {
+    yield put({
+      type: ActionTypes.EXCEPTION,
+      payload: err,
+    });
+  }
+}
+
+export function* setDatasetPolicy({ payload }) {
+  const datasetId = payload.datasetId;
+  const reader = payload.users[0];
+  yield call(addReadersDataset, datasetId, reader);
+}
+
+export function* createDatasetPolicy({ payload }) {
+  const datasetId = payload.jobResult.id;
+  const readerList = yield select(getReaders);
+  for (let i = 0; i < readerList.length; i++) {
+    yield put(addReadersDataset, datasetId, readerList[i]);
+  }
+}
+
+export function* removeReaderFromDataset({ payload }) {
+  const datasetId = payload.datasetId;
+  const reader = payload.user;
+  const url = '/api/repository/v1/datasets/' + datasetId + '/policies/reader/members/' + reader;
+  try {
+    const response = yield call(authDelete, url);
+    yield put({
+      type: ActionTypes.REMOVE_READER_FROM_DATASET_SUCCESS,
+      dataset: { data: response },
+    });
+    yield call(getDatasetPolicy, { payload: datasetId });
   } catch (err) {
     yield put({
       type: ActionTypes.EXCEPTION,
@@ -221,7 +264,9 @@ export function* getStudyById({ payload }) {
 export default function* root() {
   yield all([
     takeLatest(ActionTypes.CREATE_DATASET, createDataset),
-    takeLatest(ActionTypes.CREATE_DATASET_SUCCESS, addReadersToDataset),
+    takeLatest(ActionTypes.CREATE_DATASET_SUCCESS, createDatasetPolicy),
+    takeLatest(ActionTypes.SET_DATASET_POLICY, setDatasetPolicy),
+    takeLatest(ActionTypes.REMOVE_READER_FROM_DATASET, removeReaderFromDataset),
     takeLatest(ActionTypes.GET_DATASETS, getDatasets),
     takeLatest(ActionTypes.GET_DATASET_BY_ID, getDatasetById),
     takeLatest(ActionTypes.GET_DATASET_POLICY, getDatasetPolicy),

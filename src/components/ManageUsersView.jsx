@@ -42,12 +42,18 @@ class ManageUsersView extends React.PureComponent {
     if (isEmail(newEmail)) {
       this.setState({ newEmail, emailValid: true });
     } else {
-      this.setState({ emailValid: false });
+      this.setState({ newEmail, emailValid: false });
     }
   }
 
+  addUserClean(email) {
+    const { addUser } = this.props;
+    addUser(email);
+    this.setState({ newEmail: '' });
+  }
+
   render() {
-    const { addUser, classes, defaultValue, readers, removeUser } = this.props;
+    const { classes, defaultValue, readers, removeUser } = this.props;
     const { emailValid, newEmail } = this.state;
     const readerChips = readers.map(reader => {
       return (
@@ -70,13 +76,14 @@ class ManageUsersView extends React.PureComponent {
             placeholder={defaultValue || 'Add email address'}
             onChange={e => this.validateEmail(e.target.value)}
             style={{ width: '300px' }}
+            value={newEmail}
             variant="outlined"
           />
           <Button
             className={classes.addButton}
             color="primary"
             disabled={!emailValid}
-            onClick={() => addUser(newEmail)}
+            onClick={() => this.addUserClean(newEmail)}
             type="button"
             variant="contained"
           >
