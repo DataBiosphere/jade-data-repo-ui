@@ -279,12 +279,9 @@ export function* getStudyById({ payload }) {
 export default function* root() {
   yield all([
     takeLatest(ActionTypes.CREATE_DATASET, createDataset),
-<<<<<<< HEAD
     takeLatest(ActionTypes.CREATE_DATASET_SUCCESS, createDatasetPolicy),
     takeLatest(ActionTypes.SET_DATASET_POLICY, setDatasetPolicy),
     takeLatest(ActionTypes.REMOVE_READER_FROM_DATASET, removeReaderFromDataset),
-=======
->>>>>>> break out new datasets by job id -- and use created datasets object to hold them
     takeLatest(ActionTypes.GET_DATASETS, getDatasets),
     takeLatest(ActionTypes.GET_DATASET_BY_ID, getDatasetById),
     takeLatest(ActionTypes.GET_DATASET_POLICY, getDatasetPolicy),
