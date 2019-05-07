@@ -134,7 +134,7 @@ export class DatasetDetailView extends React.PureComponent {
             </Card>
           </div>
           <div>
-            {/*TODO add front end search once there is more than one study in a dataset*/}
+            {/* TODO add front end search once there is more than one study in a dataset*/}
             {dataset && dataset.source && (
               <StudyTable rows={studies} studyListName="STUDIES IN THIS DATASET" />
             )}

@@ -42,16 +42,16 @@ const styles = theme => ({
 });
 
 export class ManageUsersModal extends React.PureComponent {
+  state = {
+    open: false,
+  };
+
   static propTypes = {
     addUser: PropTypes.func.isRequired,
     classes: PropTypes.object.isRequired,
     modalText: PropTypes.string.isRequired,
     readers: PropTypes.arrayOf(PropTypes.string),
     removeUser: PropTypes.func.isRequired,
-  };
-
-  state = {
-    open: false,
   };
 
   handleClickOpen = () => {

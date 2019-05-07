@@ -16,16 +16,14 @@ export default {
           alerts: { $set: alerts },
         });
       },
-      [ActionTypes.SHOW_ALERT]: (state, { payload }) => {
-        return immutable(state, {
+      [ActionTypes.SHOW_ALERT]: (state, { payload }) =>
+        immutable(state, {
           alerts: { $push: [payload] },
-        });
-      },
-      [ActionTypes.EXCEPTION]: (state, { payload }) => {
-        return immutable(state, {
+        }),
+      [ActionTypes.EXCEPTION]: (state, { payload }) =>
+        immutable(state, {
           alerts: { $push: [payload] },
-        });
-      },
+        }),
     },
     appState,
   ),
