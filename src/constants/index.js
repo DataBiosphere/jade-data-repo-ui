@@ -43,6 +43,7 @@ export const ActionTypes = keyMirror({
   GET_JOB_RESULT_FAILURE: undefined,
   GET_JOB_BY_ID: undefined,
   GET_JOB_BY_ID_SUCCESS: undefined,
+  CLEAR_JOB_ID: undefined,
 });
 
 /**

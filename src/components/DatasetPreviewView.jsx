@@ -2,11 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { actions } from 'react-redux-form';
 import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
-import { createDataset } from 'actions/index';
+import { clearJobId, getJobById } from 'actions/index';
+import { STATUS } from 'constants/index';
 import DatasetDirectionalModal from './DatasetDirectionalModal';
 
 const styles = theme => ({
@@ -93,44 +95,42 @@ export class DatasetPreviewView extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object.isRequired,
     createdDataset: PropTypes.object,
-    dataset: PropTypes.object,
+    createdDatasets: PropTypes.arrayOf(PropTypes.object),
     dispatch: PropTypes.func.isRequired,
     exception: PropTypes.bool.isRequired,
+    jobStatus: PropTypes.string.isRequired,
+    match: PropTypes.object.isRequired,
     userEmail: PropTypes.string,
   };
 
   componentDidMount() {
-    const { dataset, dispatch } = this.props;
-    const payload = {
-      name: dataset.name,
-      description: dataset.description,
-      contents: [
-        {
-          source: {
-            studyName: dataset.study,
-            assetName: dataset.asset,
-          },
-          rootValues: dataset.ids,
-        },
-      ],
-    };
-    dispatch(createDataset(payload));
+    const { dispatch, match } = this.props;
+    const jobId = match.params.jobId;
+    dispatch(clearJobId());
+    dispatch(actions.change('dataset', {}));
+    dispatch(getJobById(jobId));
   }
 
   render() {
-    const { classes, createdDataset, dataset, exception, userEmail } = this.props;
+    const { classes, createdDatasets, exception, jobStatus, match, userEmail } = this.props;
+    const jobId = match.params.jobId;
+    const createdDataset = createdDatasets.find(datasetJob => datasetJob.jobId === jobId);
+    const jobCompleted = jobStatus === STATUS.SUCCESS || jobStatus === STATUS.ERROR;
     return (
       <div id="dataset-preview" className={classes.wrapper}>
         <div className={classes.width}>
-          {(createdDataset.id && createdDataset.name === dataset.name) || exception ? (
+          {jobCompleted || !createdDataset ? (
             <div>
               <div className={classes.title}>Created Dataset</div>
               <p>
-                {exception
+                {exception || !createdDataset || jobStatus === STATUS.ERROR
                   ? 'Your new dataset has not been created'
                   : 'Your new dataset has been created!'}
               </p>
-              <DatasetDirectionalModal createdDataset={createdDataset} success={!exception} />
+              <DatasetDirectionalModal
+                createdDataset={createdDataset && createdDataset.dataset}
+                success={!exception}
+              />
               <div className={classes.query}>
                 <LinearProgress variant="determinate" value={100} />
               </div>
@@ -147,24 +147,31 @@ export class DatasetPreviewView extends React.PureComponent {
           <div className={classes.container}>
             <div className={classes.info}>
               <div className={classes.header}> Dataset Name: </div>
-              {createdDataset.id && createdDataset.name === dataset.name ? (
-                <div className={classes.values}>
-                  <Link to={`/datasets/details/${createdDataset.id}`}>{dataset.name}</Link>
+              {createdDataset && jobCompleted ? (
+                <div>
+                  <Link to={`/datasets/details/${createdDataset.dataset.id}`}>
+                    {createdDataset.dataset.name}
+                  </Link>
                 </div>
               ) : (
-                <div className={classes.values}>{dataset.name}</div>
+                <div className={classes.values}>
+                  {createdDataset && createdDataset.dataset.name}
+                </div>
               )}
               <div className={classes.header}> Description: </div>
-              <div className={classes.values}> {dataset.description} </div>
+              <div className={classes.values}>
+                {createdDataset && createdDataset.dataset.description}
+              </div>
             </div>
             <Card className={classes.card}>
               <div className={classes.header}> Custodian(s): </div>
               <div className={classes.values}> {userEmail} </div>
               <div className={classes.header}> Access: </div>
               <div className={classes.values}>
-                {dataset.readers.map(reader => (
-                  <div> {reader} </div>
-                ))}
+                {createdDataset &&
+                  createdDataset.dataset &&
+                  createdDataset.dataset.readers &&
+                  createdDataset.dataset.readers.map(reader => <div> {reader} </div>)}
               </div>
             </Card>
           </div>
@@ -177,8 +184,8 @@ export class DatasetPreviewView extends React.PureComponent {
 /* istanbul ignore next */
 function mapStateToProps(state) {
   return {
-    createdDataset: state.datasets.createdDataset,
-    dataset: state.dataset,
+    createdDatasets: state.datasets.createdDatasets,
+    jobStatus: state.jobs.jobStatus,
     userEmail: state.user.email,
     exception: state.datasets.exception,
   };

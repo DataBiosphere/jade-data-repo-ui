@@ -19,6 +19,10 @@ export default {
         immutable(state, {
           study: { $set: action.study.data.data },
         }),
+      [ActionTypes.CREATE_DATASET_JOB]: state =>
+        immutable(state, {
+          study: { $set: {} },
+        }),
     },
     studyState,
   ),
