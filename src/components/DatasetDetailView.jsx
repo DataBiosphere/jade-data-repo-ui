@@ -57,6 +57,7 @@ export class DatasetDetailView extends React.PureComponent {
     datasetPolicies: PropTypes.arrayOf(PropTypes.object).isRequired,
     dispatch: PropTypes.func.isRequired,
     match: PropTypes.object.isRequired,
+    userEmail: PropTypes.string.isRequired,
   };
 
   componentWillMount() {
@@ -76,11 +77,15 @@ export class DatasetDetailView extends React.PureComponent {
   }
 
   render() {
-    const { classes, dataset, datasetPolicies, dispatch } = this.props;
+    const { classes, dataset, datasetPolicies, dispatch, userEmail } = this.props;
     const datasetReadersObj = datasetPolicies.find(policy => policy.name === 'reader'); // TODO make this an enum
     const datasetReaders = (datasetReadersObj && datasetReadersObj.members) || [];
     const datasetCustodiansObj = datasetPolicies.find(policy => policy.name === 'custodian');
     const datasetCustodians = (datasetCustodiansObj && datasetCustodiansObj.members) || [];
+    const datasetStewardsObj = datasetPolicies.find(policy => policy.name === 'steward');
+    const datasetStewards = (datasetStewardsObj && datasetStewardsObj.members) || [];
+    const allowedToAddReaders =
+      _.includes(datasetStewards, userEmail) || _.includes(datasetCustodians, userEmail);
     const modalText = 'Viewers';
     // TODO should there be placeholders in the UI if there are no readers? Or should that section of the container just not show?
     if (!dataset) {
@@ -121,7 +126,7 @@ export class DatasetDetailView extends React.PureComponent {
               <div className={classes.header}> Date Created: </div>
               <div className={classes.values}> {moment(dataset.createdDate).fromNow()} </div>
               <div>
-                {dataset && dataset.id && (
+                {allowedToAddReaders && dataset && dataset.id && (
                   <ManageUsersModal
                     addUser={_.partial(this.addUser, dispatch, dataset.id)}
                     dispatch={dispatch}
@@ -148,6 +153,7 @@ export class DatasetDetailView extends React.PureComponent {
 /* istanbul ignore next */
 function mapStateToProps(state) {
   return {
+    userEmail: state.user.email,
     dataset: state.datasets.dataset,
     datasetPolicies: state.datasets.datasetPolicies,
   };
