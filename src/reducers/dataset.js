@@ -47,6 +47,14 @@ export default {
         immutable(state, {
           datasetPolicies: { $set: action.dataset.data.data.policies },
         }),
+      [ActionTypes.ADD_READER_TO_DATASET_SUCCESS]: (state, action) =>
+        immutable(state, {
+          datasetPolicies: { $set: action.dataset.data.data.policies },
+        }),
+      [ActionTypes.REMOVE_READER_FROM_DATASET_SUCCESS]: (state, action) =>
+        immutable(state, {
+          datasetPolicies: { $set: action.dataset.data.data.policies },
+        }),
       [ActionTypes.EXCEPTION]: state =>
         immutable(state, {
           exception: { $set: true },
