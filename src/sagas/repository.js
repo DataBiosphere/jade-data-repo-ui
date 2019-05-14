@@ -189,7 +189,7 @@ export function* addReadersDataset(datasetId, reader) {
   try {
     const response = yield call(
       authPost,
-      `/api/repository/v1/datasets/${datasetId}/policies/readers/members`,
+      `/api/repository/v1/datasets/${datasetId}/policies/reader/members`,
       readerObject,
     );
     yield put({
