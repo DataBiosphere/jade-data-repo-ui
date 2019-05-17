@@ -90,12 +90,12 @@ export class DatasetCreateView extends React.PureComponent {
     createdDataset: PropTypes.object,
     dispatch: PropTypes.func.isRequired,
     jobId: PropTypes.string,
+    history: PropTypes.object.isRequired,
     ids: PropTypes.arrayOf(PropTypes.string),
+    match: PropTypes.object.isRequired,
     readers: PropTypes.arrayOf(PropTypes.string),
     studies: PropTypes.object.isRequired,
     study: PropTypes.object,
-    history: PropTypes.object.isRequired,
-    match: PropTypes.object.isRequired,
   };
 
   componentDidMount() {
@@ -139,8 +139,11 @@ export class DatasetCreateView extends React.PureComponent {
 
   addUser(newEmail) {
     const { dispatch, readers } = this.props;
-    if (!_.includes(readers, newEmail)) {
+    if (!readers) {
+      dispatch(actions.change('dataset.readers', [newEmail]));
+    } else if (!_.includes(readers, newEmail)) {
       dispatch(actions.change('dataset.readers', _.concat(readers, newEmail)));
+
     }
   }
 
@@ -156,8 +159,8 @@ export class DatasetCreateView extends React.PureComponent {
     const { files } = event.target;
     const assetField = 'Epic';
     if (files.length > 0) {
-      const reader = new FileReader();
-      reader.addEventListener('load', e => {
+      const fileReader = new FileReader();
+      fileReader.addEventListener('load', e => {
         const data = e.target.result;
         const workbook = xlsx.read(data, { type: 'binary' });
         const values = [];
@@ -175,7 +178,7 @@ export class DatasetCreateView extends React.PureComponent {
         }
         dispatch(actions.change('dataset.ids', values));
       });
-      reader.readAsBinaryString(files[0]);
+      fileReader.readAsBinaryString(files[0]);
     } else {
       dispatch(actions.change('dataset.ids', []));
     }
