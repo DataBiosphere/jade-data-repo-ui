@@ -56,20 +56,19 @@ class ManageUsersView extends React.PureComponent {
     const { classes, defaultValue, readers, removeUser } = this.props;
     const { emailValid, newEmail } = this.state;
     const readerChips =
-      readers &&
-      readers.map(reader => {
-        return (
-          <div key={reader}>
-            <Chip
-              label={reader}
-              onDelete={() => removeUser(reader)}
-              className={classes.chip}
-              color="primary"
-              variant="outlined"
-            />
-          </div>
-        );
-      });
+      !!readers &&
+      readers.map(reader => (
+        <div key={reader}>
+          <Chip
+            className={classes.chip}
+            color="primary"
+            label={reader}
+            key={reader}
+            onDelete={() => removeUser(reader)}
+            variant="outlined"
+          />
+        </div>
+      ));
     return (
       <div>
         <div>

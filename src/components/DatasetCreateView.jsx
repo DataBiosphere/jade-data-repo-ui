@@ -89,9 +89,9 @@ export class DatasetCreateView extends React.PureComponent {
     classes: PropTypes.object.isRequired,
     createdDataset: PropTypes.object,
     dispatch: PropTypes.func.isRequired,
-    jobId: PropTypes.string,
     history: PropTypes.object.isRequired,
     ids: PropTypes.arrayOf(PropTypes.string),
+    jobId: PropTypes.string,
     match: PropTypes.object.isRequired,
     readers: PropTypes.arrayOf(PropTypes.string),
     studies: PropTypes.object.isRequired,
@@ -143,7 +143,6 @@ export class DatasetCreateView extends React.PureComponent {
       dispatch(actions.change('dataset.readers', [newEmail]));
     } else if (!_.includes(readers, newEmail)) {
       dispatch(actions.change('dataset.readers', _.concat(readers, newEmail)));
-
     }
   }
 
