@@ -105,6 +105,7 @@ export function* createDataset() {
   const datasetRequest = {
     name: dataset.name,
     description: dataset.description,
+    readers: dataset.readers,
     contents: [
       {
         source: {
