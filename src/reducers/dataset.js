@@ -26,6 +26,7 @@ export default {
         };
         return immutable(state, {
           createdDatasets: { $push: [newDatasetCreation] },
+          dataset: { $set: {} },
         });
       },
       [ActionTypes.CREATE_DATASET_SUCCESS]: (state, action) =>
@@ -33,7 +34,7 @@ export default {
           dataset: { $set: action.payload.jobResult },
         }),
       [ActionTypes.CREATE_DATASET_FAILURE]: (state, action) => {
-        let successfullyCreatedDatasets = state.createdDatasets; // passes a ref or a value?
+        const successfullyCreatedDatasets = state.createdDatasets; // passes a ref or a value?
         successfullyCreatedDatasets.filter(dataset => dataset.jobId !== action.payload.jobId);
         return immutable(state, {
           createdDatasets: { $set: successfullyCreatedDatasets },
