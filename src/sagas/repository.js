@@ -137,10 +137,14 @@ export function* createDataset() {
   }
 }
 
-export function* getDatasets() {
-  // TODO: add limit and offset
+export function* getDatasets({ payload }) {
+  const limit = payload.limit;
+  const offset = payload.offset;
   try {
-    const response = yield call(authGet, '/api/repository/v1/datasets');
+    const response = yield call(
+      authGet,
+      `/api/repository/v1/datasets?offset=${offset}&limit=${limit}`,
+    );
     yield put({
       type: ActionTypes.GET_DATASETS_SUCCESS,
       datasets: { data: response },

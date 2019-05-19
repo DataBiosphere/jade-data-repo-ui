@@ -26,8 +26,11 @@ export const { getStudyById } = createActions({
 });
 
 export const { getDatasets } = createActions({
-  [ActionTypes.GET_DATASETS]: datasets => datasets,
   [ActionTypes.GET_DATASETS_SUCCESS]: datasets => datasets,
+  [ActionTypes.GET_DATASETS]: (limit, offset) => ({
+    limit,
+    offset,
+  }),
 });
 
 export const { getDatasetById } = createActions({
