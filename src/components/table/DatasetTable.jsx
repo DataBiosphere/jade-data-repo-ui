@@ -2,8 +2,10 @@ import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import moment from 'moment';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 
+import { getDatasets } from 'actions/index';
 import JadeTable from './JadeTable';
 import AddSVG from '../../../assets/media/icons/plus-circle-solid.svg';
 
@@ -37,11 +39,22 @@ const styles = theme => ({
 class DatasetTable extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    rows: PropTypes.array,
+    datasets: PropTypes.object.isRequired,
+    dispatch: PropTypes.func.isRequired,
+  };
+
+  componentDidMount() {
+    const { dispatch } = this.props;
+    dispatch(getDatasets());
+  }
+
+  handleChangePage = (limit, offset) => {
+    const { dispatch } = this.props;
+    dispatch(getDatasets(limit, offset));
   };
 
   render() {
-    const { classes, rows } = this.props;
+    const { classes, datasets } = this.props;
     const columns = [
       {
         label: 'Dataset Name',
@@ -75,10 +88,20 @@ class DatasetTable extends React.PureComponent {
             <AddSVG className={classes.plusButton} />
           </NavLink>
         </div>
-        <JadeTable columns={columns} rows={rows} />
+        <JadeTable
+          columns={columns}
+          handleChangePage={this.handleChangePage}
+          rows={datasets.datasets}
+        />
       </div>
     );
   }
 }
 
-export default withStyles(styles)(DatasetTable);
+function mapStateToProps(state) {
+  return {
+    datasets: state.datasets,
+  };
+}
+
+export default connect(mapStateToProps)(withStyles(styles)(DatasetTable));

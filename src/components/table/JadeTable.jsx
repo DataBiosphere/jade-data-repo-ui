@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
+import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 
@@ -53,11 +54,14 @@ export class JadeTable extends React.PureComponent {
   state = {
     order: 'asc',
     orderBy: 'lastModified',
+    page: 0,
+    rowsPerPage: 10,
   };
 
   static propTypes = {
     classes: PropTypes.object.isRequired,
     columns: PropTypes.arrayOf(PropTypes.object),
+    handleChangePage: PropTypes.func,
     rows: PropTypes.arrayOf(PropTypes.object),
   };
 
@@ -71,9 +75,24 @@ export class JadeTable extends React.PureComponent {
     this.setState({ order: newOrder, orderBy: property });
   };
 
+  handleChangeRowsPerPage = event => {
+    const { handleChangePage } = this.props;
+    const limit = event.target.value;
+    this.setState({ rowsPerPage: limit });
+    handleChangePage(limit);
+  };
+
+  handleChangePage = (event, page) => {
+    const { handleChangePage } = this.props;
+    const { rowsPerPage } = this.state; // limit
+    this.setState({ page }); // offset
+    handleChangePage(rowsPerPage, page);
+  };
+
   render() {
-    const { classes, columns, rows } = this.props;
-    const { order, orderBy } = this.state;
+    const { classes, columns, handleChangePage, rows } = this.props;
+    const { order, orderBy, page, rowsPerPage } = this.state;
+    // const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
     return (
       <Paper className={classes.root}>
         <Table className={classes.table}>
@@ -84,17 +103,41 @@ export class JadeTable extends React.PureComponent {
             orderBy={orderBy}
           />
           <TableBody>
-            {stableSort(rows, getSorting(order, orderBy)).map(row => (
-              <TableRow key={row.id} className={classes.row}>
-                {columns.map(col => (
-                  <TableCell key={col.property}>
-                    {col.render ? col.render(row) : row[col.property]}
-                  </TableCell>
-                ))}
+            {stableSort(rows, getSorting(order, orderBy))
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map(row => (
+                <TableRow key={row.id} className={classes.row}>
+                  {columns.map(col => (
+                    <TableCell key={col.property}>
+                      {col.render ? col.render(row) : row[col.property]}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))}
+            {/*handleChangePage && emptyRows > 0 && (
+              <TableRow style={{ height: 30 * emptyRows }}>
+                <TableCell colSpan={columns.length} />
               </TableRow>
-            ))}
+            )*/}
           </TableBody>
         </Table>
+        {handleChangePage && (
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={rows.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            backIconButtonProps={{
+              'aria-label': 'Previous Page',
+            }}
+            nextIconButtonProps={{
+              'aria-label': 'Next Page',
+            }}
+            onChangePage={this.handleChangePage}
+            onChangeRowsPerPage={this.handleChangeRowsPerPage}
+          />
+        )}
       </Paper>
     );
   }

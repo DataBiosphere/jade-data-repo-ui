@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 
-import { getDatasets, getStudies } from 'actions/index';
+import { getStudies } from 'actions/index';
 import StudyTable from './table/StudyTable';
 import DatasetTable from './table/DatasetTable';
 
@@ -32,7 +32,6 @@ const styles = theme => ({
 class HomeView extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    datasets: PropTypes.object,
     dispatch: PropTypes.func.isRequired,
     studies: PropTypes.object,
   };
@@ -40,18 +39,17 @@ class HomeView extends React.PureComponent {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch(getStudies());
-    dispatch(getDatasets());
   }
 
   render() {
-    const { classes, datasets, studies } = this.props;
+    const { classes, studies } = this.props;
     return (
       <div className={classes.wrapper}>
         <div className={classes.width}>
           <div className={classes.title}>Terra Data Repository at a glance</div>
           <div> {studies && studies.studies && <StudyTable rows={studies.studies} />} </div>
           <div className={classes.jadeTableSpacer} />
-          <div> {datasets && datasets.datasets && <DatasetTable rows={datasets.datasets} />} </div>
+          <DatasetTable />
         </div>
       </div>
     );
@@ -60,7 +58,6 @@ class HomeView extends React.PureComponent {
 
 function mapStateToProps(state) {
   return {
-    datasets: state.datasets,
     studies: state.studies,
   };
 }
