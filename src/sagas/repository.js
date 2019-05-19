@@ -138,8 +138,8 @@ export function* createDataset() {
 }
 
 export function* getDatasets({ payload }) {
-  const limit = payload.limit;
-  const offset = payload.offset;
+  const limit = payload.limit || 10;
+  const offset = payload.offset || 0;
   try {
     const response = yield call(
       authGet,
@@ -234,8 +234,8 @@ export function* removeReaderFromDataset({ payload }) {
  */
 
 export function* getStudies({ payload }) {
-  const limit = payload.limit;
-  const offset = payload.offset;
+  const limit = payload.limit || 10;
+  const offset = payload.offset || 0;
   try {
     const response = yield call(
       authGet,
