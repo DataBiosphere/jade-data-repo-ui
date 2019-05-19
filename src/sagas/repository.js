@@ -233,9 +233,14 @@ export function* removeReaderFromDataset({ payload }) {
  * Studies.
  */
 
-export function* getStudies() {
+export function* getStudies({ payload }) {
+  const limit = payload.limit;
+  const offset = payload.offset;
   try {
-    const response = yield call(authGet, '/api/repository/v1/studies');
+    const response = yield call(
+      authGet,
+      `/api/repository/v1/studies?offset=${offset}&limit=${limit}`,
+    );
     yield put({
       type: ActionTypes.GET_STUDIES_SUCCESS,
       studies: { data: response },

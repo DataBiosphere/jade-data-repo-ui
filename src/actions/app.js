@@ -16,8 +16,11 @@ export const { createDataset } = createActions({
 });
 
 export const { getStudies } = createActions({
-  [ActionTypes.GET_STUDIES]: studies => studies,
   [ActionTypes.GET_STUDIES_SUCCESS]: studies => studies,
+  [ActionTypes.GET_STUDIES]: (limit, offset) => ({
+    limit,
+    offset,
+  }),
 });
 
 export const { getStudyById } = createActions({
