@@ -1,19 +1,15 @@
 import React from 'react';
-import { Provider } from 'react-redux';
 
-import { store } from 'store/index';
 import DatasetView from 'components/DatasetView';
 
 const props = {
-  classes: {},
+  classes: {
+    wrapper: 'wrapper',
+  },
 };
 
 function setup(ownProps = props) {
-  return mount(
-    <Provider store={store}>
-      <DatasetView {...ownProps} />
-    </Provider>,
-  );
+  return shallow(<DatasetView {...ownProps} />, { attachTo: document.getElementById('react') });
 }
 
 describe('DatasetView', () => {

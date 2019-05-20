@@ -98,7 +98,8 @@ describe('repository', () => {
   it('should have the get datasets saga', () => {
     const token = 'Cherlene';
     const tokenExpiration = anHourFromNow;
-    expectSaga(getDatasets)
+    const payload = {};
+    expectSaga(getDatasets, { payload })
       .provide([[select(getTokenExpiration), tokenExpiration], [select(getToken), token]])
       .put({
         type: ActionTypes.GET_DATASETS_SUCCESS,
@@ -127,7 +128,8 @@ describe('repository', () => {
   it('should have the get studies saga', () => {
     const token = 'Cherlene';
     const tokenExpiration = anHourFromNow;
-    expectSaga(getStudies)
+    const payload = {};
+    expectSaga(getStudies, { payload })
       .provide([[select(getTokenExpiration), tokenExpiration], [select(getToken), token]])
       .put({
         type: ActionTypes.GET_STUDIES_SUCCESS,
