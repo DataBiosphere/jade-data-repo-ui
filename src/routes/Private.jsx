@@ -14,6 +14,9 @@ import DatasetDetailView from '../components/DatasetDetailView';
 import StudyDetailView from '../components/StudyDetailView';
 
 const styles = theme => ({
+  wrapper: {
+    fontFamily: theme.typography.fontFamily,
+  },
   tabsIndicator: {
     borderBottom: '4px solid #74ae43',
   },
@@ -22,7 +25,6 @@ const styles = theme => ({
     borderBottom: '2px solid #74ae43',
     color: '#5c912e',
   },
-  tabRoot: {},
   tabSelected: {
     backgroundColor: '#ddebd0',
   },
@@ -39,7 +41,7 @@ class Private extends React.Component {
     const { classes } = this.props;
     return (
       <Router>
-        <div>
+        <div className={classes.wrapper}>
           <Route
             path="/"
             render={({ location }) => (

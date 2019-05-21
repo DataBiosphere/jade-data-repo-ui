@@ -16,6 +16,7 @@ const styles = theme => ({
   },
   logoTitle: {
     color: '#fff',
+    fontFamily: theme.typography.fontFamily,
     fontSize: '18px',
     fontWeight: '500',
     paddingLeft: theme.spacing.unit,

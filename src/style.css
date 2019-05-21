@@ -1,0 +1,112 @@
+@import "../fonts/Montserrat.css";
+
+body, input, textarea, select, button {
+  font-family: "Montserrat", sans-serif;
+  font-variant-numeric: tabular-nums;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  background-color: #fafbfc;
+  color: #333f52;
+  margin: 0;
+  font-size: 14px;
+  overflow: hidden;
+  position: absolute;
+  width: 100%;
+  min-width: 1200px;
+  overflow-x: auto;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+a {
+  color: unset;
+  text-decoration: unset;
+}
+
+#root {
+  overflow: auto;
+  height: 100%;
+  position: relative;
+  z-index: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+#root.overlayOpen {
+  overflow: hidden;
+}
+
+#root.overlayOpen.overHeight {
+  overflow-y: scroll;
+}
+
+.table-row:not(:hover) .hover-only {
+  visibility: hidden;
+}
+
+.focus-style:focus {
+  /* Note: using CSS and !important here because react-interactive focus style wasn't applying on autofocus */
+  border: 1px solid #74ae43 !important;
+  outline: none !important;
+}
+
+/* Overrides for toast notifications library (react-notifications-component) */
+.notification-default {
+  background-color: #525c6C;
+  border-left: 8px solid #333f52;
+}
+
+.notification-success {
+  background-color: #74ae43;
+  border-left: 8px solid #5d9033;
+}
+
+.notification-danger {
+  background-color: #db3214;
+  border-left: 8px solid #ba250A;
+}
+
+.notification-info {
+  background-color: #5aa6da;
+  border-left: 8px solid #2691d0;
+}
+
+.notification-warning {
+  background-color: #f7981C;
+  border-left: 8px solid #dc8412;
+}
+
+.notification-awesome {
+  background-color: #a180a9;
+  border-left: 8px solid #8a6194;
+}
+
+.notification-item, .notification-item-root, .notification-message, .notification-title {
+  font-family: unset;
+}
+
+/* Styles for content rendered by marked (also used by react-simplemde-editor) */
+.markdown-body a, .simplemde-container .editor-preview a {
+  color: #74ae43;
+}
+
+.markdown-body a:hover, .simplemde-container .editor-preview a:hover {
+  color: #89bb60;
+}
+
+.markdown-body {
+  font-family: "Montserrat", sans-serif;
+}

@@ -10,6 +10,7 @@ import DatasetTable from './table/DatasetTable';
 const styles = theme => ({
   wrapper: {
     display: 'flex',
+    fontFamily: theme.typography.fontFamily,
     justifyContent: 'center',
     padding: theme.spacing.unit * 4,
     margin: theme.spacing.unit * 4,
