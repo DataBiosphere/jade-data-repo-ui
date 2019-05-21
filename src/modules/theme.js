@@ -30,6 +30,9 @@ export default createMuiTheme({
     ].join(','),
   },
   palette: {
+    common: {
+      white: '#FFFFFF',
+    },
     primary: {
       main: '#81AB52',
       contrastText: '#FFFFFF',
@@ -46,5 +49,8 @@ export default createMuiTheme({
       contrastText: '#8F96A1',
       dark: '#BA250A',
     },
+  },
+  shape: {
+    borderRadius: 5,
   },
 });
