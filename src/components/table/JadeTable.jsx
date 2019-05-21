@@ -93,8 +93,9 @@ export class JadeTable extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object.isRequired,
     columns: PropTypes.arrayOf(PropTypes.object),
-    handleChangePage: PropTypes.func,
+    handleFilterDatasets: PropTypes.func,
     rows: PropTypes.arrayOf(PropTypes.object),
+    summary: PropTypes.bool,
   };
 
   handleRequestSort = (event, property) => {
@@ -108,43 +109,49 @@ export class JadeTable extends React.PureComponent {
   };
 
   handleChangeRowsPerPage = event => {
-    const { handleChangePage } = this.props;
+    const { handleFilterDatasets } = this.props;
     const limit = event.target.value;
     this.setState({ rowsPerPage: limit });
-    handleChangePage(limit);
+    handleFilterDatasets(limit);
   };
 
   handleChangePage = (event, page) => {
-    const { handleChangePage } = this.props;
+    const { handleFilterDatasets } = this.props;
     const { rowsPerPage } = this.state; // limit
     this.setState({ page }); // offset
     const offset = page * rowsPerPage;
-    handleChangePage(rowsPerPage, offset);
+    handleFilterDatasets(rowsPerPage, offset);
   };
 
-  handleSearch = (event, search) => {
-    console.log(search);
+  handleSearchString = event => {
+    const { handleFilterDatasets } = this.props;
+    const { page, rowsPerPage } = this.state; // limit
+    const offset = page * rowsPerPage;
+    handleFilterDatasets(rowsPerPage, offset, event.target.value);
   };
 
   render() {
-    const { classes, columns, handleChangePage, rows } = this.props;
+    const { classes, columns, summary, rows } = this.props;
     const { order, orderBy, page, rowsPerPage } = this.state;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, 8 - page * rowsPerPage);
+    const fullView = true || !summary;
     return (
       <div>
-        <div className={classes.search}>
-          <div className={classes.searchIcon}>
-            <SearchIcon />
+        {fullView && (
+          <div className={classes.search}>
+            <div className={classes.searchIcon}>
+              <SearchIcon />
+            </div>
+            <InputBase
+              placeholder="Search"
+              classes={{
+                root: classes.inputRoot,
+                input: classes.searchInput,
+              }}
+              onChange={this.handleSearchString}
+            />
           </div>
-          <InputBase
-            placeholder="Search"
-            classes={{
-              root: classes.inputRoot,
-              input: classes.searchInput,
-            }}
-            onChange={this.handleSearch}
-          />
-        </div>
+        )}
         <Paper className={classes.root}>
           <Table className={classes.table}>
             <JadeTableHead
@@ -170,7 +177,7 @@ export class JadeTable extends React.PureComponent {
               )}
             </TableBody>
           </Table>
-          {handleChangePage && (
+          {fullView && (
             <TablePagination
               rowsPerPageOptions={[5, 10, 25]}
               component="div"
