@@ -16,6 +16,9 @@ const styles = theme => ({
     color: theme.palette.primary.dark,
     fontFamily: theme.typography.fontFamily,
   },
+  cell: {
+    minWidth: 200,
+  },
 });
 
 export class JadeTableHead extends React.PureComponent {
@@ -41,6 +44,7 @@ export class JadeTableHead extends React.PureComponent {
           {columns.map(
             col => (
               <TableCell
+                className={classes.cell}
                 key={col.property}
                 align={col.numeric ? 'right' : 'left'}
                 padding={col.disablePadding ? 'none' : 'default'}

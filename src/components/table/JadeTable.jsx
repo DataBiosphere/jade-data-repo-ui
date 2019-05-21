@@ -55,7 +55,7 @@ export class JadeTable extends React.PureComponent {
     order: 'asc',
     orderBy: 'lastModified',
     page: 0,
-    rowsPerPage: 10,
+    rowsPerPage: 5,
   };
 
   static propTypes = {
@@ -86,13 +86,14 @@ export class JadeTable extends React.PureComponent {
     const { handleChangePage } = this.props;
     const { rowsPerPage } = this.state; // limit
     this.setState({ page }); // offset
-    handleChangePage(rowsPerPage, page);
+    const offset = page * rowsPerPage;
+    handleChangePage(rowsPerPage, offset);
   };
 
   render() {
     const { classes, columns, handleChangePage, rows } = this.props;
     const { order, orderBy, page, rowsPerPage } = this.state;
-    // const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+    const emptyRows = rowsPerPage - Math.min(rowsPerPage, 8 - page * rowsPerPage);
     return (
       <Paper className={classes.root}>
         <Table className={classes.table}>
@@ -103,29 +104,27 @@ export class JadeTable extends React.PureComponent {
             orderBy={orderBy}
           />
           <TableBody>
-            {stableSort(rows, getSorting(order, orderBy))
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map(row => (
-                <TableRow key={row.id} className={classes.row}>
-                  {columns.map(col => (
-                    <TableCell key={col.property}>
-                      {col.render ? col.render(row) : row[col.property]}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))}
-            {/*handleChangePage && emptyRows > 0 && (
-              <TableRow style={{ height: 30 * emptyRows }}>
+            {stableSort(rows, getSorting(order, orderBy)).map(row => (
+              <TableRow key={row.id} className={classes.row}>
+                {columns.map(col => (
+                  <TableCell key={col.property}>
+                    {col.render ? col.render(row) : row[col.property]}
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))}
+            {rows.length < rowsPerPage && (
+              <TableRow style={{ height: 50 * emptyRows }}>
                 <TableCell colSpan={columns.length} />
               </TableRow>
-            )*/}
+            )}
           </TableBody>
         </Table>
         {handleChangePage && (
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={rows.length}
+            count={8} //rows.length
             rowsPerPage={rowsPerPage}
             page={page}
             backIconButtonProps={{
