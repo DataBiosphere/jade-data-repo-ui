@@ -6,6 +6,7 @@ import { ActionTypes } from 'constants/index';
 export const studyState = {
   studies: [],
   study: {},
+  studiesCount: 0,
 };
 
 export default {
@@ -14,6 +15,7 @@ export default {
       [ActionTypes.GET_STUDIES_SUCCESS]: (state, action) =>
         immutable(state, {
           studies: { $set: action.studies.data.data.items },
+          studiesCount: { $set: action.studies.data.data.total },
         }),
       [ActionTypes.GET_STUDY_BY_ID_SUCCESS]: (state, action) =>
         immutable(state, {

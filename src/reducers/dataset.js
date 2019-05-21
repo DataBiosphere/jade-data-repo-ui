@@ -10,6 +10,7 @@ export const datasetState = {
   exception: false,
   datasetPolicies: [],
   study: {},
+  datasetCount: 0,
 };
 
 export default {
@@ -18,6 +19,7 @@ export default {
       [ActionTypes.GET_DATASETS_SUCCESS]: (state, action) =>
         immutable(state, {
           datasets: { $set: action.datasets.data.data.items },
+          datasetCount: { $set: action.datasets.data.data.total },
         }),
       [ActionTypes.CREATE_DATASET_JOB]: (state, action) => {
         const newDatasetCreation = {

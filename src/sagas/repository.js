@@ -138,12 +138,14 @@ export function* createDataset() {
 }
 
 export function* getDatasets({ payload }) {
-  const limit = payload.limit || 5;
+  console.log(payload);
   const offset = payload.offset || 0;
+  const limit = payload.limit || 5;
+  const filter = payload.searchString || '';
   try {
     const response = yield call(
       authGet,
-      `/api/repository/v1/datasets?offset=${offset}&limit=${limit}`,
+      `/api/repository/v1/datasets?offset=${offset}&limit=${limit}&filter=${filter}`,
     );
     yield put({
       type: ActionTypes.GET_DATASETS_SUCCESS,
@@ -236,10 +238,11 @@ export function* removeReaderFromDataset({ payload }) {
 export function* getStudies({ payload }) {
   const limit = payload.limit || 5;
   const offset = payload.offset || 0;
+  const filter = payload.searchString || '';
   try {
     const response = yield call(
       authGet,
-      `/api/repository/v1/studies?offset=${offset}&limit=${limit}`,
+      `/api/repository/v1/studies?offset=${offset}&limit=${limit}&filter=${filter}`,
     );
     yield put({
       type: ActionTypes.GET_STUDIES_SUCCESS,
