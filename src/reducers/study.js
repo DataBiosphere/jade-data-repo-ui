@@ -13,7 +13,7 @@ export default {
     {
       [ActionTypes.GET_STUDIES_SUCCESS]: (state, action) =>
         immutable(state, {
-          studies: { $set: action.studies.data.data },
+          studies: { $set: action.studies.data.data.items },
         }),
       [ActionTypes.GET_STUDY_BY_ID_SUCCESS]: (state, action) =>
         immutable(state, {

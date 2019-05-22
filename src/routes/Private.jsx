@@ -14,17 +14,27 @@ import DatasetDetailView from '../components/DatasetDetailView';
 import StudyDetailView from '../components/StudyDetailView';
 
 const styles = theme => ({
+  wrapper: {
+    fontFamily: theme.typography.fontFamily,
+  },
   tabsIndicator: {
-    borderBottom: '4px solid #74ae43',
+    borderBottom: '8px solid #74ae43',
   },
   tabsRoot: {
-    paddingLeft: theme.spacing.unit * 3,
-    borderBottom: '2px solid #74ae43',
-    color: '#5c912e',
+    borderBottom: `2px solid ${theme.palette.secondary.main}`,
+    boxShadow: `0 2px 5px 0 rgba(0,0,0,0.26), 0 2px 10px 0 rgba(0,0,0,0.16)`,
+    color: '#333F52',
+    fontFamily: theme.typography.fontFamily,
+    paddingLeft: theme.spacing.unit * 11.5,
+    height: 18,
+    fontSize: 14,
+    fontWeight: 600,
+    lineHeight: 18,
+    textAlign: 'center',
   },
-  tabRoot: {},
   tabSelected: {
     backgroundColor: '#ddebd0',
+    color: theme.palette.secondary.dark,
   },
 });
 
@@ -39,7 +49,7 @@ class Private extends React.Component {
     const { classes } = this.props;
     return (
       <Router>
-        <div>
+        <div className={classes.wrapper}>
           <Route
             path="/"
             render={({ location }) => (

@@ -10,6 +10,7 @@ const styles = theme => ({
   container: {
     display: 'flex',
     flexDirection: 'row',
+    fontFamily: theme.typography.fontFamily,
     justifyContent: 'space-between',
   },
   title: {

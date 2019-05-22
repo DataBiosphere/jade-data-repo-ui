@@ -14,6 +14,7 @@ const styles = theme => ({
     borderRadius: '5px 5px 0 0 ',
     boxShadow: `0 2px 5px 0 ${theme.palette.primary.dark}`,
     color: theme.palette.primary.dark,
+    fontFamily: theme.typography.fontFamily,
   },
 });
 
