@@ -105,6 +105,7 @@ export function* createDataset() {
   const datasetRequest = {
     name: dataset.name,
     description: dataset.description,
+    readers: dataset.readers,
     contents: [
       {
         source: {
@@ -184,7 +185,9 @@ export function* getDatasetPolicy({ payload }) {
   }
 }
 
-export function* addReadersDataset(datasetId, reader) {
+export function* addReaderToDataset({ payload }) {
+  const datasetId = payload.datasetId;
+  const reader = payload.users[0];
   const readerObject = { email: reader };
   try {
     const response = yield call(
@@ -193,29 +196,14 @@ export function* addReadersDataset(datasetId, reader) {
       readerObject,
     );
     yield put({
-      type: ActionTypes.SET_DATASET_POLICY_SUCCESS,
+      type: ActionTypes.ADD_READER_TO_DATASET_SUCCESS,
       dataset: { data: response },
     });
-    yield call(getDatasetPolicy, { payload: datasetId });
   } catch (err) {
     yield put({
       type: ActionTypes.EXCEPTION,
       payload: err,
     });
-  }
-}
-
-export function* setDatasetPolicy({ payload }) {
-  const datasetId = payload.datasetId;
-  const reader = payload.users[0];
-  yield call(addReadersDataset, datasetId, reader);
-}
-
-export function* createDatasetPolicy({ payload }) {
-  const datasetId = payload.jobResult.id;
-  const readerList = yield select(getReaders);
-  for (let i = 0; i < readerList.length; i++) {
-    yield put(addReadersDataset, datasetId, readerList[i]);
   }
 }
 
@@ -229,7 +217,6 @@ export function* removeReaderFromDataset({ payload }) {
       type: ActionTypes.REMOVE_READER_FROM_DATASET_SUCCESS,
       dataset: { data: response },
     });
-    yield call(getDatasetPolicy, { payload: datasetId });
   } catch (err) {
     yield put({
       type: ActionTypes.EXCEPTION,
@@ -279,8 +266,7 @@ export function* getStudyById({ payload }) {
 export default function* root() {
   yield all([
     takeLatest(ActionTypes.CREATE_DATASET, createDataset),
-    takeLatest(ActionTypes.CREATE_DATASET_SUCCESS, createDatasetPolicy),
-    takeLatest(ActionTypes.SET_DATASET_POLICY, setDatasetPolicy),
+    takeLatest(ActionTypes.ADD_READER_TO_DATASET, addReaderToDataset),
     takeLatest(ActionTypes.REMOVE_READER_FROM_DATASET, removeReaderFromDataset),
     takeLatest(ActionTypes.GET_DATASETS, getDatasets),
     takeLatest(ActionTypes.GET_DATASET_BY_ID, getDatasetById),

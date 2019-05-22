@@ -9,7 +9,7 @@ import _ from 'lodash';
 import {
   getDatasetById,
   getDatasetPolicy,
-  setDatasetPolicy,
+  addReaderToDataset,
   removeReaderFromDataset,
 } from 'actions/index';
 import ManageUsersModal from './ManageUsersModal';
@@ -67,8 +67,8 @@ export class DatasetDetailView extends React.PureComponent {
   }
 
   addUser(dispatch, datasetId, newEmail) {
-    // for now the setDatasetPolicy method will trigger a reset of datasetReaders
-    dispatch(setDatasetPolicy(datasetId, [newEmail]));
+    // for now the addReaderToDataset method will trigger a reset of datasetReaders
+    dispatch(addReaderToDataset(datasetId, [newEmail]));
   }
 
   removeUser(dispatch, datasetId, removeableEmail) {

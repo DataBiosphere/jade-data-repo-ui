@@ -26,6 +26,7 @@ export default {
         };
         return immutable(state, {
           createdDatasets: { $push: [newDatasetCreation] },
+          dataset: { $set: {} },
         });
       },
       [ActionTypes.CREATE_DATASET_SUCCESS]: (state, action) =>
@@ -33,7 +34,7 @@ export default {
           dataset: { $set: action.payload.jobResult },
         }),
       [ActionTypes.CREATE_DATASET_FAILURE]: (state, action) => {
-        let successfullyCreatedDatasets = state.createdDatasets; // passes a ref or a value?
+        const successfullyCreatedDatasets = state.createdDatasets; // passes a ref or a value?
         successfullyCreatedDatasets.filter(dataset => dataset.jobId !== action.payload.jobId);
         return immutable(state, {
           createdDatasets: { $set: successfullyCreatedDatasets },
@@ -44,6 +45,14 @@ export default {
           dataset: { $set: action.dataset.data.data },
         }),
       [ActionTypes.GET_DATASET_POLICY_SUCCESS]: (state, action) =>
+        immutable(state, {
+          datasetPolicies: { $set: action.dataset.data.data.policies },
+        }),
+      [ActionTypes.ADD_READER_TO_DATASET_SUCCESS]: (state, action) =>
+        immutable(state, {
+          datasetPolicies: { $set: action.dataset.data.data.policies },
+        }),
+      [ActionTypes.REMOVE_READER_FROM_DATASET_SUCCESS]: (state, action) =>
         immutable(state, {
           datasetPolicies: { $set: action.dataset.data.data.policies },
         }),
