@@ -17,9 +17,11 @@ export const { createDataset } = createActions({
 
 export const { getStudies } = createActions({
   [ActionTypes.GET_STUDIES_SUCCESS]: studies => studies,
-  [ActionTypes.GET_STUDIES]: (limit, offset, searchString) => ({
+  [ActionTypes.GET_STUDIES]: (limit, offset, sort, direction, searchString) => ({
     limit,
     offset,
+    sort,
+    direction,
     searchString,
   }),
 });
@@ -31,9 +33,11 @@ export const { getStudyById } = createActions({
 
 export const { getDatasets } = createActions({
   [ActionTypes.GET_DATASETS_SUCCESS]: datasets => datasets,
-  [ActionTypes.GET_DATASETS]: (limit, offset, searchString) => ({
+  [ActionTypes.GET_DATASETS]: (limit, offset, sort, direction, searchString) => ({
     limit,
     offset,
+    sort,
+    direction,
     searchString,
   }),
 });

@@ -48,9 +48,9 @@ class DatasetTable extends React.PureComponent {
     dispatch(getDatasets());
   }
 
-  handleChangePage = (limit, offset) => {
+  handleFilterDatasets = (limit, offset, sort, sortDirection, searchString) => {
     const { dispatch } = this.props;
-    dispatch(getDatasets(limit, offset));
+    dispatch(getDatasets(limit, offset, sort, sortDirection, searchString));
   };
 
   render() {
@@ -71,12 +71,12 @@ class DatasetTable extends React.PureComponent {
       },
       {
         label: 'Last changed',
-        property: 'modifiedDate',
+        property: 'modified_date',
         render: row => moment(row.createdDate).fromNow(),
       },
       {
         label: 'Date created',
-        property: 'createdDate',
+        property: 'created_date',
         render: row => moment(row.createdDate).fromNow(),
       },
     ];
@@ -90,8 +90,9 @@ class DatasetTable extends React.PureComponent {
         </div>
         <JadeTable
           columns={columns}
-          handleChangePage={this.handleChangePage}
+          handleFilter={this.handleFilterDatasets}
           rows={datasets.datasets}
+          summary={false} // TODO change this on the welcome page
         />
       </div>
     );

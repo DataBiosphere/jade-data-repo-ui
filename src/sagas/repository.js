@@ -138,14 +138,15 @@ export function* createDataset() {
 }
 
 export function* getDatasets({ payload }) {
-  console.log(payload);
   const offset = payload.offset || 0;
   const limit = payload.limit || 5;
   const filter = payload.searchString || '';
+  const sort = payload.sort || '';
+  const direction = payload.direction || '';
   try {
     const response = yield call(
       authGet,
-      `/api/repository/v1/datasets?offset=${offset}&limit=${limit}&filter=${filter}`,
+      `/api/repository/v1/datasets?offset=${offset}&limit=${limit}&sort=${sort}&direction=${direction}&filter=${filter}`,
     );
     yield put({
       type: ActionTypes.GET_DATASETS_SUCCESS,
@@ -239,10 +240,12 @@ export function* getStudies({ payload }) {
   const limit = payload.limit || 5;
   const offset = payload.offset || 0;
   const filter = payload.searchString || '';
+  const sort = payload.sort || '';
+  const direction = payload.direction || '';
   try {
     const response = yield call(
       authGet,
-      `/api/repository/v1/studies?offset=${offset}&limit=${limit}&filter=${filter}`,
+      `/api/repository/v1/studies?offset=${offset}&limit=${limit}&sort=${sort}&direction=${direction}&filter=${filter}`,
     );
     yield put({
       type: ActionTypes.GET_STUDIES_SUCCESS,

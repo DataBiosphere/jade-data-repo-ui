@@ -59,75 +59,59 @@ const styles = theme => ({
   },
 });
 
-const desc = (a, b, orderBy) => {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-};
-
-const stableSort = (array, cmp) => {
-  const stabilizedThis = array.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
-    const order = cmp(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-  return stabilizedThis.map(el => el[0]);
-};
-
-const getSorting = (order, orderBy) =>
-  order === 'desc' ? (a, b) => desc(a, b, orderBy) : (a, b) => -desc(a, b, orderBy);
-
 export class JadeTable extends React.PureComponent {
   state = {
-    order: 'asc',
-    orderBy: 'lastModified',
+    orderDirection: 'asc',
+    orderBy: 'created_date',
     page: 0,
     rowsPerPage: 5,
+    searchString: '',
   };
 
   static propTypes = {
     classes: PropTypes.object.isRequired,
     columns: PropTypes.arrayOf(PropTypes.object),
-    handleFilterDatasets: PropTypes.func,
+    handleFilter: PropTypes.func,
     rows: PropTypes.arrayOf(PropTypes.object),
     summary: PropTypes.bool,
   };
 
-  handleRequestSort = (event, property) => {
-    const { order, orderBy } = this.state;
+  handleRequestSort = (event, sort) => {
+    const { handleFilter } = this.props;
+    const { orderDirection, orderBy, page, rowsPerPage, searchString } = this.state;
     let newOrder = 'desc';
-    if (orderBy === property && order === 'desc') {
+    if (orderBy === sort && orderDirection === 'desc') {
       newOrder = 'asc';
     }
-
-    this.setState({ order: newOrder, orderBy: property });
+    const offset = page * rowsPerPage;
+    this.setState({ order: newOrder, orderBy: sort });
+    handleFilter(rowsPerPage, offset, sort, newOrder, searchString);
   };
 
   handleChangeRowsPerPage = event => {
-    const { handleFilterDatasets } = this.props;
+    const { handleFilter } = this.props;
+    const { orderDirection, orderBy, page, searchString } = this.state;
     const limit = event.target.value;
+    const offset = page * limit;
     this.setState({ rowsPerPage: limit });
-    handleFilterDatasets(limit);
+    handleFilter(limit, offset, orderBy, orderDirection, searchString);
   };
 
   handleChangePage = (event, page) => {
-    const { handleFilterDatasets } = this.props;
-    const { rowsPerPage } = this.state; // limit
-    this.setState({ page }); // offset
+    const { handleFilter } = this.props;
+    const { orderDirection, orderBy, rowsPerPage, searchString } = this.state;
     const offset = page * rowsPerPage;
-    handleFilterDatasets(rowsPerPage, offset);
+    this.setState({ page }); // offset
+    handleFilter(rowsPerPage, offset, orderBy, orderDirection, searchString);
   };
 
   handleSearchString = event => {
-    const { handleFilterDatasets } = this.props;
-    const { page, rowsPerPage } = this.state; // limit
+    const { handleFilter } = this.props;
+    const { page, orderDirection, orderBy, rowsPerPage } = this.state; // limit
     const offset = page * rowsPerPage;
-    handleFilterDatasets(rowsPerPage, offset, event.target.value);
+    const searchString = event.target.value;
+    this.setState({ searchString }); // filter
+    handleFilter(rowsPerPage, offset, orderBy, orderDirection, searchString);
   };
 
   render() {
@@ -161,7 +145,7 @@ export class JadeTable extends React.PureComponent {
               orderBy={orderBy}
             />
             <TableBody>
-              {stableSort(rows, getSorting(order, orderBy)).map(row => (
+              {rows.map(row => (
                 <TableRow key={row.id} className={classes.row}>
                   {columns.map(col => (
                     <TableCell key={col.property}>
