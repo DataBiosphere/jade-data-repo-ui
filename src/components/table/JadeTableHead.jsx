@@ -10,9 +10,6 @@ import TableSortLabel from '@material-ui/core/TableSortLabel';
 const styles = theme => ({
   head: {
     backgroundColor: theme.palette.primary.light,
-    border: `1px solid ${theme.palette.primary.dark}`,
-    borderRadius: '5px 5px 0 0 ',
-    boxShadow: `0 2px 5px 0 ${theme.palette.primary.dark}`,
     color: theme.palette.primary.dark,
     fontFamily: theme.typography.fontFamily,
   },
@@ -26,7 +23,7 @@ export class JadeTableHead extends React.PureComponent {
     classes: PropTypes.object.isRequired,
     columns: PropTypes.arrayOf(PropTypes.object),
     onRequestSort: PropTypes.func.isRequired,
-    order: PropTypes.string.isRequired,
+    orderDirection: PropTypes.string.isRequired,
     orderBy: PropTypes.string.isRequired,
   };
 
@@ -36,7 +33,7 @@ export class JadeTableHead extends React.PureComponent {
   };
 
   render() {
-    const { classes, columns, order, orderBy } = this.props;
+    const { classes, columns, orderDirection, orderBy } = this.props;
 
     return (
       <TableHead className={classes.head}>
@@ -48,7 +45,7 @@ export class JadeTableHead extends React.PureComponent {
                 key={col.property}
                 align={col.numeric ? 'right' : 'left'}
                 padding={col.disablePadding ? 'none' : 'default'}
-                sortDirection={orderBy === col.id ? order : false}
+                sortDirection={orderBy === col.id ? orderDirection : false}
               >
                 <Tooltip
                   title="Sort"
@@ -57,7 +54,7 @@ export class JadeTableHead extends React.PureComponent {
                 >
                   <TableSortLabel
                     active={orderBy === col.property}
-                    direction={order}
+                    direction={orderDirection}
                     onClick={this.createSortHandler(col.property)}
                   >
                     {col.label}
