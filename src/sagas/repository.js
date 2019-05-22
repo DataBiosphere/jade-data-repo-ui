@@ -141,8 +141,8 @@ export function* getDatasets({ payload }) {
   const offset = payload.offset || 0;
   const limit = payload.limit || 5;
   const filter = payload.searchString || '';
-  const sort = payload.sort || '';
-  const direction = payload.direction || '';
+  const sort = payload.sort || 'created_date';
+  const direction = payload.direction || 'desc';
   try {
     const response = yield call(
       authGet,
@@ -240,8 +240,8 @@ export function* getStudies({ payload }) {
   const limit = payload.limit || 5;
   const offset = payload.offset || 0;
   const filter = payload.searchString || '';
-  const sort = payload.sort || '';
-  const direction = payload.direction || '';
+  const sort = payload.sort || 'created_date';
+  const direction = payload.direction || 'desc';
   try {
     const response = yield call(
       authGet,
