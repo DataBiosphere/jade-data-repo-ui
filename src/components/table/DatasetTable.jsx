@@ -39,8 +39,10 @@ const styles = theme => ({
 class DatasetTable extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object.isRequired,
+    datasetCount: PropTypes.number,
     datasets: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired,
+    summary: PropTypes.bool,
   };
 
   componentDidMount() {
@@ -54,7 +56,7 @@ class DatasetTable extends React.PureComponent {
   };
 
   render() {
-    const { classes, datasets } = this.props;
+    const { classes, datasetCount, datasets, summary } = this.props;
     const columns = [
       {
         label: 'Dataset Name',
@@ -91,8 +93,9 @@ class DatasetTable extends React.PureComponent {
         <JadeTable
           columns={columns}
           handleFilter={this.handleFilterDatasets}
-          rows={datasets.datasets}
-          summary={false} // TODO change this on the welcome page
+          rows={datasets}
+          summary={summary}
+          totalCount={datasetCount || datasets.length}
         />
       </div>
     );
@@ -101,7 +104,8 @@ class DatasetTable extends React.PureComponent {
 
 function mapStateToProps(state) {
   return {
-    datasets: state.datasets,
+    datasets: state.datasets.datasets,
+    datasetCount: state.datasets.datasetCount,
   };
 }
 

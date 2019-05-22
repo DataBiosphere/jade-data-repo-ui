@@ -40,7 +40,8 @@ class StudyTable extends React.PureComponent {
     classes: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired,
     studies: PropTypes.object.isRequired,
-    rows: PropTypes.array,
+    summary: PropTypes.bool,
+    studyCount: PropTypes.number,
     studyListName: PropTypes.string,
   };
 
@@ -55,7 +56,7 @@ class StudyTable extends React.PureComponent {
   };
 
   render() {
-    const { classes, rows, studyListName } = this.props;
+    const { classes, summary, studyCount, studies, studyListName } = this.props;
     const columns = [
       {
         label: 'Study Name',
@@ -86,9 +87,10 @@ class StudyTable extends React.PureComponent {
         <div className={classes.header}>{studyListName || 'STUDIES'}</div>
         <JadeTable
           columns={columns}
-          rows={rows}
+          rows={studies}
           handleFilter={this.handleFilterStudies}
-          summary={false}
+          summary={summary}
+          totalCount={studyCount || studies.length}
         />
       </div>
     );
@@ -97,7 +99,8 @@ class StudyTable extends React.PureComponent {
 
 function mapStateToProps(state) {
   return {
-    studies: state.studies,
+    studies: state.studies.studies,
+    studyCount: state.studies.studyCount,
   };
 }
 

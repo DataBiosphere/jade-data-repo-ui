@@ -15,18 +15,20 @@ import JadeTableHead from './JadeTableHead';
 
 const styles = theme => ({
   root: {
-    borderRadius: '2px 2px 0 0 ',
+    border: `1px solid ${theme.palette.primary.dark}`,
+    borderRadius: `${theme.shape.borderRadius}px ${theme.shape.borderRadius}px 0 0`,
+    boxShadow: 'none',
     marginTop: theme.spacing.unit * 3,
     maxWidth: 1400,
     overflowX: 'auto',
     width: '100%',
   },
   table: {
-    borderRadius: '2px 2px 0 0 ',
+    borderRadius: `${theme.shape.borderRadius}px ${theme.shape.borderRadius}px 0 0`,
     minWidth: 700,
   },
   row: {
-    borderRadius: '2px 2px 0 0 ',
+    borderRadius: `${theme.shape.borderRadius}px ${theme.shape.borderRadius}px 0 0`,
   },
   search: {
     height: 45,
@@ -34,7 +36,7 @@ const styles = theme => ({
     border: '1px solid #AEB3BA',
     backgroundColor: '#F1F4F8',
     '&:hover': {
-      backgroundColor: fade(theme.palette.common.white, 0.25),
+      backgroundColor: fade(theme.palette.common.selection, 0.2),
     },
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
@@ -61,8 +63,8 @@ const styles = theme => ({
 
 export class JadeTable extends React.PureComponent {
   state = {
-    orderDirection: 'asc',
-    orderBy: 'created_date',
+    orderDirection: '',
+    orderBy: '',
     page: 0,
     rowsPerPage: 5,
     searchString: '',
@@ -74,6 +76,7 @@ export class JadeTable extends React.PureComponent {
     handleFilter: PropTypes.func,
     rows: PropTypes.arrayOf(PropTypes.object),
     summary: PropTypes.bool,
+    totalCount: PropTypes.number.isRequired,
   };
 
   handleRequestSort = (event, sort) => {
@@ -84,7 +87,7 @@ export class JadeTable extends React.PureComponent {
       newOrder = 'asc';
     }
     const offset = page * rowsPerPage;
-    this.setState({ order: newOrder, orderBy: sort });
+    this.setState({ orderDirection: newOrder, orderBy: sort });
     handleFilter(rowsPerPage, offset, sort, newOrder, searchString);
   };
 
@@ -115,13 +118,12 @@ export class JadeTable extends React.PureComponent {
   };
 
   render() {
-    const { classes, columns, summary, rows } = this.props;
-    const { order, orderBy, page, rowsPerPage } = this.state;
+    const { classes, columns, rows, summary, totalCount } = this.props;
+    const { orderBy, orderDirection, page, rowsPerPage } = this.state;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, 8 - page * rowsPerPage);
-    const fullView = true || !summary;
     return (
       <div>
-        {fullView && (
+        {!summary && (
           <div className={classes.search}>
             <div className={classes.searchIcon}>
               <SearchIcon />
@@ -141,7 +143,7 @@ export class JadeTable extends React.PureComponent {
             <JadeTableHead
               columns={columns}
               onRequestSort={this.handleRequestSort}
-              order={order}
+              order={orderDirection}
               orderBy={orderBy}
             />
             <TableBody>
@@ -161,11 +163,11 @@ export class JadeTable extends React.PureComponent {
               )}
             </TableBody>
           </Table>
-          {fullView && (
+          {!summary && (
             <TablePagination
               rowsPerPageOptions={[5, 10, 25]}
               component="div"
-              count={8} //rows.length
+              count={totalCount}
               rowsPerPage={rowsPerPage}
               page={page}
               backIconButtonProps={{
