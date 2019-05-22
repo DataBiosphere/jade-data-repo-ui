@@ -17,7 +17,7 @@ export default {
     {
       [ActionTypes.GET_DATASETS_SUCCESS]: (state, action) =>
         immutable(state, {
-          datasets: { $set: action.datasets.data.data },
+          datasets: { $set: action.datasets.data.data.items },
         }),
       [ActionTypes.CREATE_DATASET_JOB]: (state, action) => {
         const newDatasetCreation = {
