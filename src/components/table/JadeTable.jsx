@@ -120,7 +120,7 @@ export class JadeTable extends React.PureComponent {
   render() {
     const { classes, columns, rows, summary, totalCount } = this.props;
     const { orderBy, orderDirection, page, rowsPerPage } = this.state;
-    const emptyRows = rowsPerPage - Math.min(rowsPerPage, 8 - page * rowsPerPage);
+    const emptyRows = rowsPerPage - Math.min(rowsPerPage, totalCount - page * rowsPerPage);
     return (
       <div>
         {!summary && (
@@ -143,7 +143,7 @@ export class JadeTable extends React.PureComponent {
             <JadeTableHead
               columns={columns}
               onRequestSort={this.handleRequestSort}
-              order={orderDirection}
+              orderDirection={orderDirection}
               orderBy={orderBy}
             />
             <TableBody>

@@ -39,7 +39,7 @@ class StudyTable extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired,
-    studies: PropTypes.object.isRequired,
+    studies: PropTypes.array.isRequired,
     summary: PropTypes.bool,
     studyCount: PropTypes.number,
     studyListName: PropTypes.string,
@@ -90,7 +90,7 @@ class StudyTable extends React.PureComponent {
           rows={studies}
           handleFilter={this.handleFilterStudies}
           summary={summary}
-          totalCount={studyCount || studies.length}
+          totalCount={studyCount}
         />
       </div>
     );

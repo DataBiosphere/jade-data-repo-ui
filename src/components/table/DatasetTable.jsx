@@ -40,7 +40,7 @@ class DatasetTable extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object.isRequired,
     datasetCount: PropTypes.number,
-    datasets: PropTypes.object.isRequired,
+    datasets: PropTypes.array.isRequired,
     dispatch: PropTypes.func.isRequired,
     summary: PropTypes.bool,
   };
@@ -95,7 +95,7 @@ class DatasetTable extends React.PureComponent {
           handleFilter={this.handleFilterDatasets}
           rows={datasets}
           summary={summary}
-          totalCount={datasetCount || datasets.length}
+          totalCount={datasetCount}
         />
       </div>
     );
