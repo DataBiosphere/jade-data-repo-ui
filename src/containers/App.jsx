@@ -26,6 +26,8 @@ import Toast from 'components/Toast';
 import { logOut } from 'actions/index';
 import RoutePublic from 'components/RoutePublic';
 import RoutePrivate from 'components/RoutePrivate';
+import CarrotSVG from '../../assets/media/icons/angle-line.svg';
+import SignOutSVG from '../../assets/media/icons/logout-line.svg';
 
 const drawerWidth = 240;
 
@@ -104,6 +106,22 @@ const styles = theme => ({
     width: 0,
   },
   appBarSpacer: theme.mixins.toolbar,
+  carrotClose: {
+    fill: theme.palette.primary.contrastText,
+    height: 19,
+    transform: 'scaleY(-1)',
+    width: 19,
+  },
+  carrotOpen: {
+    fill: theme.palette.primary.contrastText,
+    height: 19,
+    width: 19,
+  },
+  carrotButton: {
+    '&:hover': {
+      backgroundColor: 'transparent',
+    },
+  },
   content: {
     flexGrow: 1,
     height: '100vh',
@@ -118,6 +136,23 @@ const styles = theme => ({
     right: 0,
     width: theme.spacing.unit * 40,
     zIndex: '100',
+  },
+  userName: {
+    height: 15,
+    fontSize: 12,
+    fontWeight: 600,
+    paddingLeft: 10,
+  },
+  userSection: {
+    alignItems: 'center',
+    display: 'flex',
+  },
+  signOut: {
+    height: 15,
+  },
+  signOutText: {
+    fontSize: 12,
+    padding: `0 ${theme.spacing.unit * 2}px 0 0`,
   },
 });
 
@@ -155,39 +190,48 @@ export class App extends React.Component {
                 <Logo />
                 <div className={classes.grow} />
                 {user.isAuthenticated && (
-                  <div>
-                    <Button
-                      aria-owns={open ? 'menu-appbar' : undefined}
-                      aria-haspopup="true"
-                      onClick={this.handleMenu}
-                      color="inherit"
-                    >
+                  <div className={classes.userSection}>
+                    <div>
                       {user.image ? <Avatar src={user.image} alt={user.name} /> : <AccountCircle />}
-                      {user.name}
-                    </Button>
-                    <Menu
-                      id="menu-appbar"
-                      anchorEl={anchorEl}
-                      anchorOrigin={{
-                        vertical: 'top',
-                        horizontal: 'right',
-                      }}
-                      transformOrigin={{
-                        vertical: 'top',
-                        horizontal: 'right',
-                      }}
-                      open={open}
-                      onClose={this.handleClose}
-                    >
-                      <MenuItem
-                        onClick={() => {
-                          dispatch(logOut());
-                          this.handleClose();
-                        }}
+                    </div>
+                    <div className={classes.userName}>{user.name}</div>
+                    <div>
+                      <Button
+                        aria-owns={open ? 'menu-appbar' : undefined}
+                        aria-haspopup="true"
+                        onClick={this.handleMenu}
+                        className={classes.carrotButton}
+                        color="inherit"
                       >
-                        Logout
-                      </MenuItem>
-                    </Menu>
+                        <CarrotSVG className={open ? classes.carrotOpen : classes.carrotClose} />
+                      </Button>
+                      <Menu
+                        id="menu-appbar"
+                        anchorEl={anchorEl}
+                        getContentAnchorEl={null}
+                        anchorOrigin={{
+                          vertical: 'bottom',
+                          horizontal: 'left',
+                        }}
+                        transformOrigin={{
+                          vertical: 'top',
+                          horizontal: 'left',
+                        }}
+                        open={open}
+                        onClose={this.handleClose}
+                      >
+                        <MenuItem
+                          className={classes.signOutText}
+                          onClick={() => {
+                            dispatch(logOut());
+                            this.handleClose();
+                          }}
+                        >
+                          <SignOutSVG className={classes.signOut} />
+                          Sign Out
+                        </MenuItem>
+                      </Menu>
+                    </div>
                   </div>
                 )}
               </Toolbar>
