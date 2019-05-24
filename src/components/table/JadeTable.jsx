@@ -63,7 +63,7 @@ const styles = theme => ({
 
 export class JadeTable extends React.PureComponent {
   state = {
-    orderDirection: '',
+    orderDirection: 'desc',
     orderBy: '',
     page: 0,
     rowsPerPage: 5,
@@ -76,7 +76,7 @@ export class JadeTable extends React.PureComponent {
     handleEnumeration: PropTypes.func,
     rows: PropTypes.arrayOf(PropTypes.object),
     summary: PropTypes.bool,
-    totalCount: PropTypes.number.isRequired,
+    totalCount: PropTypes.number, // TODO why getting undefined sometimes?
   };
 
   handleRequestSort = (event, sort) => {
@@ -120,7 +120,7 @@ export class JadeTable extends React.PureComponent {
   render() {
     const { classes, columns, rows, summary, totalCount } = this.props;
     const { orderBy, orderDirection, page, rowsPerPage } = this.state;
-    const emptyRows = rowsPerPage - Math.min(rowsPerPage, totalCount - page * rowsPerPage);
+    const emptyRows = rowsPerPage - Math.min(rowsPerPage, totalCount - page * rowsPerPage) || 0;
     const ROW_HEIGHT = 50;
     const ROWS_PER_PAGE = [5, 10, 25];
     return (
