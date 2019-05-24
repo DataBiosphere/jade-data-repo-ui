@@ -219,7 +219,7 @@
     "publish": "node tools publish",
     "bundlesize": "bundlesize"
   },
-  "proxy": "https://http://localhost:8080",
+  "proxy": "http://localhost:8080",
   "husky": {
     "hooks": {
       "post-merge": "node tools update",
