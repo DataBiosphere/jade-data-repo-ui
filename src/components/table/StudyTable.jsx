@@ -9,23 +9,6 @@ import { getStudies } from 'actions/index';
 import JadeTable from './JadeTable';
 
 const styles = theme => ({
-  wrapper: {
-    paddingTop: theme.spacing.unit * 4,
-  },
-  title: {
-    color: theme.palette.primary.main,
-    fontSize: '54px',
-    lineHeight: '66px',
-    paddingBottom: theme.spacing.unit * 8,
-  },
-  header: {
-    alignItems: 'center',
-    display: 'flex',
-    flexDirection: 'row',
-    fontSize: '18px',
-    fontWeight: '600',
-    paddingTop: '30px',
-  },
   jadeLink: {
     color: theme.palette.primary.main,
     textDecoration: 'none',
@@ -42,7 +25,6 @@ class StudyTable extends React.PureComponent {
     studies: PropTypes.array.isRequired,
     summary: PropTypes.bool,
     studyCount: PropTypes.number,
-    studyListName: PropTypes.string,
   };
 
   componentDidMount() {
@@ -56,7 +38,7 @@ class StudyTable extends React.PureComponent {
   };
 
   render() {
-    const { classes, summary, studyCount, studies, studyListName } = this.props;
+    const { classes, summary, studyCount, studies } = this.props;
     const columns = [
       {
         label: 'Study Name',
@@ -83,8 +65,7 @@ class StudyTable extends React.PureComponent {
       },
     ];
     return (
-      <div className={classes.wrapper}>
-        <div className={classes.header}>{studyListName || 'STUDIES'}</div>
+      <div>
         <JadeTable
           columns={columns}
           rows={studies}
