@@ -94,7 +94,7 @@ const styles = theme => ({
 export class DatasetPreviewView extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    createdDataset: PropTypes.object,
+    createdDataset: PropTypes.object, // TODO is this even?
     createdDatasets: PropTypes.arrayOf(PropTypes.object),
     dispatch: PropTypes.func.isRequired,
     exception: PropTypes.bool.isRequired,
@@ -155,12 +155,12 @@ export class DatasetPreviewView extends React.PureComponent {
                 </div>
               ) : (
                 <div className={classes.values}>
-                  {createdDataset && createdDataset.dataset.name}
+                  {createdDataset && createdDataset.datasetRequest.name}
                 </div>
               )}
               <div className={classes.header}> Description: </div>
               <div className={classes.values}>
-                {createdDataset && createdDataset.dataset.description}
+                {createdDataset && createdDataset.datasetRequest.description}
               </div>
             </div>
             <Card className={classes.card}>
@@ -169,9 +169,9 @@ export class DatasetPreviewView extends React.PureComponent {
               <div className={classes.header}> Access: </div>
               <div className={classes.values}>
                 {createdDataset &&
-                  createdDataset.dataset &&
-                  createdDataset.dataset.readers &&
-                  createdDataset.dataset.readers.map(reader => <div> {reader} </div>)}
+                  createdDataset.datasetRequest &&
+                  createdDataset.datasetRequest.readers &&
+                  createdDataset.datasetRequest.readers.map(reader => <div> {reader} </div>)}
               </div>
             </Card>
           </div>
