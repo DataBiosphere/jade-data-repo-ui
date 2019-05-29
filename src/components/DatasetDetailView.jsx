@@ -25,11 +25,6 @@ const styles = theme => ({
   width: {
     width: '70%',
   },
-  container: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
   title: {
     color: theme.palette.primary.main,
     fontSize: '54px',
@@ -40,10 +35,18 @@ const styles = theme => ({
     display: 'inline-block',
     padding: theme.spacing.unit * 4,
   },
+  container: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
   header: {
     fontSize: '14px',
     lineHeight: '22px',
     fontWeight: '600',
+  },
+  info: {
+    width: '70%',
   },
   values: {
     paddingBottom: theme.spacing.unit * 3,
@@ -95,7 +98,7 @@ export class DatasetDetailView extends React.PureComponent {
       <div id="dataset-detail-view" className={classes.wrapper}>
         <div className={classes.width}>
           <div className={classes.container}>
-            <div>
+            <div className={classes.info}>
               <div className={classes.title}>{dataset.name}</div>
               <div>{dataset.description}</div>
             </div>

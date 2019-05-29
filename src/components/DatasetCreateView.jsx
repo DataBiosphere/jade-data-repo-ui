@@ -62,15 +62,26 @@ const styles = theme => ({
     display: 'flex',
     flexDirection: 'row',
     fontSize: '18px',
-    fontWeight: '600',
-    paddingTop: '30px',
+    fontWeight: 600,
+    paddingTop: 30,
+  },
+  nameDataset: {
+    width: 400,
+    ' && input': {
+      padding: `12px 14px`,
+      width: 272,
+    },
   },
   manageUsers: {
-    width: '400px',
+    width: 400,
+    ' && input': {
+      padding: `12px 14px`,
+      width: 300,
+    },
   },
   buttons: {
     float: 'right',
-    marginLeft: '8px',
+    marginLeft: theme.spacing.unit,
     padding: theme.spacing.unit,
   },
   linkCreate: {
@@ -197,21 +208,17 @@ export class DatasetCreateView extends React.PureComponent {
           <p>Fill out the following fields to create a new dataset</p>
           <Form model="dataset">
             <FormRow>
-              <Control.text
-                model="dataset.name"
-                id="dataset.name"
-                required
-                validators={{ name: this.validateName }}
-                component={props => (
-                  <TextField
-                    {...props}
-                    className={classes.test}
-                    placeholder="Dataset Name"
-                    style={{ width: '300px' }}
-                    variant="outlined"
-                  />
-                )}
-              />
+              <div className={classes.nameDataset}>
+                <Control.text
+                  model="dataset.name"
+                  id="dataset.name"
+                  required
+                  validators={{ name: this.validateName }}
+                  component={props => (
+                    <TextField {...props} placeholder="Dataset Name" variant="outlined" />
+                  )}
+                />
+              </div>
             </FormRow>
 
             <FormRow>

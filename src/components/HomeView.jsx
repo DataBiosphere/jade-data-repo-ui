@@ -10,14 +10,16 @@ import AddSVG from '../../assets/media/icons/plus-circle-solid.svg';
 
 const styles = theme => ({
   header: {
+    alignItems: 'center',
+    color: theme.typography.color,
+    display: 'flex',
     fontWeight: 500,
-    height: 21,
-    color: '#333F52',
     fontSize: 16,
+    height: 21,
     letterSpacing: 1,
   },
   jadeTableSpacer: {
-    paddingBottom: theme.spacing.unit * 8,
+    paddingBottom: theme.spacing.unit * 12,
   },
   jadeLink: {
     color: theme.palette.primary.main,

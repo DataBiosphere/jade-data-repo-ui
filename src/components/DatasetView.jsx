@@ -25,8 +25,8 @@ const styles = theme => ({
   },
   plusButton: {
     fill: theme.palette.primary.main,
-    marginLeft: 10,
-    width: 20,
+    marginLeft: theme.spacing.unit * 4,
+    width: theme.spacing.unit * 3,
   },
 });
 
