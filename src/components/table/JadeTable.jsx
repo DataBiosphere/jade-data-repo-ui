@@ -73,14 +73,14 @@ export class JadeTable extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object.isRequired,
     columns: PropTypes.arrayOf(PropTypes.object),
-    handleFilter: PropTypes.func,
+    handleEnumeration: PropTypes.func,
     rows: PropTypes.arrayOf(PropTypes.object),
     summary: PropTypes.bool,
     totalCount: PropTypes.number.isRequired,
   };
 
   handleRequestSort = (event, sort) => {
-    const { handleFilter } = this.props;
+    const { handleEnumeration } = this.props;
     const { orderDirection, orderBy, page, rowsPerPage, searchString } = this.state;
     let newOrder = 'desc';
     if (orderBy === sort && orderDirection === 'desc') {
@@ -88,39 +88,41 @@ export class JadeTable extends React.PureComponent {
     }
     const offset = page * rowsPerPage;
     this.setState({ orderDirection: newOrder, orderBy: sort });
-    handleFilter(rowsPerPage, offset, sort, newOrder, searchString);
+    handleEnumeration(rowsPerPage, offset, sort, newOrder, searchString);
   };
 
   handleChangeRowsPerPage = event => {
-    const { handleFilter } = this.props;
+    const { handleEnumeration } = this.props;
     const { orderDirection, orderBy, page, searchString } = this.state;
     const limit = event.target.value;
     const offset = page * limit;
     this.setState({ rowsPerPage: limit });
-    handleFilter(limit, offset, orderBy, orderDirection, searchString);
+    handleEnumeration(limit, offset, orderBy, orderDirection, searchString);
   };
 
   handleChangePage = (event, page) => {
-    const { handleFilter } = this.props;
+    const { handleEnumeration } = this.props;
     const { orderDirection, orderBy, rowsPerPage, searchString } = this.state;
     const offset = page * rowsPerPage;
     this.setState({ page }); // offset
-    handleFilter(rowsPerPage, offset, orderBy, orderDirection, searchString);
+    handleEnumeration(rowsPerPage, offset, orderBy, orderDirection, searchString);
   };
 
   handleSearchString = event => {
-    const { handleFilter } = this.props;
+    const { handleEnumeration } = this.props;
     const { page, orderDirection, orderBy, rowsPerPage } = this.state; // limit
     const offset = page * rowsPerPage;
     const searchString = event.target.value;
     this.setState({ searchString }); // filter
-    handleFilter(rowsPerPage, offset, orderBy, orderDirection, searchString);
+    handleEnumeration(rowsPerPage, offset, orderBy, orderDirection, searchString);
   };
 
   render() {
     const { classes, columns, rows, summary, totalCount } = this.props;
     const { orderBy, orderDirection, page, rowsPerPage } = this.state;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, totalCount - page * rowsPerPage);
+    const ROW_HEIGHT = 50;
+    const ROWS_PER_PAGE = [5, 10, 25];
     return (
       <div>
         {!summary && (
@@ -158,7 +160,7 @@ export class JadeTable extends React.PureComponent {
                   </TableRow>
                 ))}
               {rows && rows.length < rowsPerPage && (
-                <TableRow style={{ height: 50 * emptyRows }}>
+                <TableRow style={{ height: ROW_HEIGHT * emptyRows }}>
                   <TableCell colSpan={columns.length} />
                 </TableRow>
               )}
@@ -166,7 +168,7 @@ export class JadeTable extends React.PureComponent {
           </Table>
           {!summary && (
             <TablePagination
-              rowsPerPageOptions={[5, 10, 25]}
+              rowsPerPageOptions={ROWS_PER_PAGE}
               component="div"
               count={totalCount}
               rowsPerPage={rowsPerPage}
