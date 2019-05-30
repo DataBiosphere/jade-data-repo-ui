@@ -10,6 +10,9 @@ const props = {
     dataset: {
       id: 'datasetId',
     },
+    datasetRequest: {
+      readers: [],
+    },
   },
   match: {
     params: {
