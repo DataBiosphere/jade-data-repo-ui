@@ -147,16 +147,17 @@ export class JadeTable extends React.PureComponent {
               orderBy={orderBy}
             />
             <TableBody>
-              {rows.map(row => (
-                <TableRow key={row.id} className={classes.row}>
-                  {columns.map(col => (
-                    <TableCell key={col.property}>
-                      {col.render ? col.render(row) : row[col.property]}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))}
-              {rows.length < rowsPerPage && (
+              {rows &&
+                rows.map(row => (
+                  <TableRow key={row.id} className={classes.row}>
+                    {columns.map(col => (
+                      <TableCell key={col.property}>
+                        {col.render ? col.render(row) : row[col.property]}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))}
+              {rows && rows.length < rowsPerPage && (
                 <TableRow style={{ height: 50 * emptyRows }}>
                   <TableCell colSpan={columns.length} />
                 </TableRow>
