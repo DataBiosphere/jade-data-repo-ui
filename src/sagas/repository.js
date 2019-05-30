@@ -18,7 +18,6 @@ import { ActionTypes, STATUS } from 'constants/index';
 
 export const getToken = state => state.user.token;
 export const getTokenExpiration = state => state.user.tokenExpiration;
-export const getReaders = state => state.dataset.readers;
 export const getCreateDataset = state => state.dataset;
 
 export function* checkToken() {
@@ -148,7 +147,6 @@ export function* getDatasets({ payload }) {
       authGet,
       `/api/repository/v1/datasets?offset=${offset}&limit=${limit}&sort=${sort}&direction=${direction}&filter=${filter}`,
     );
-    console.log(response);
     yield put({
       type: ActionTypes.GET_DATASETS_SUCCESS,
       datasets: { data: response },
