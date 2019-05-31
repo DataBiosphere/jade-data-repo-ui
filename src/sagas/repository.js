@@ -148,7 +148,6 @@ export function* getDatasets({ payload }) {
       authGet,
       `/api/repository/v1/datasets?offset=${offset}&limit=${limit}&sort=${sort}&direction=${direction}&filter=${filter}`,
     );
-    console.log(response);
     yield put({
       type: ActionTypes.GET_DATASETS_SUCCESS,
       datasets: { data: response },
