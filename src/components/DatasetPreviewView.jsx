@@ -155,12 +155,16 @@ export class DatasetPreviewView extends React.PureComponent {
                 </div>
               ) : (
                 <div className={classes.values}>
-                  {createdDataset && createdDataset.datasetRequest.name}
+                  {createdDataset &&
+                    createdDataset.datasetRequest &&
+                    createdDataset.datasetRequest.name}
                 </div>
               )}
               <div className={classes.header}> Description: </div>
               <div className={classes.values}>
-                {createdDataset && createdDataset.datasetRequest.description}
+                {createdDataset &&
+                  createdDataset.datasetRequest &&
+                  createdDataset.datasetRequest.description}
               </div>
             </div>
             <Card className={classes.card}>
