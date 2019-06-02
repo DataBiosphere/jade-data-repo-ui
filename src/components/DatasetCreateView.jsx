@@ -300,20 +300,8 @@ export class DatasetCreateView extends React.PureComponent {
               </label>
             </FormRow>
 
-            {ids && (
-              <FormRow>
-                <Control.select
-                  multiple={true}
-                  disabled={true}
-                  id="dataset.ids"
-                  model="dataset.ids"
-                >
-                  <option>Preview</option>
-                  {ids && ids.map(id => <option key={id}>{id}</option>)}
-                </Control.select>
-              </FormRow>
-            )}
             <Errors model="dataset" />
+
             <FormRow>
               {createdDataset ? (
                 <Redirect push to={`/datasets/requests/${jobId}`} />
