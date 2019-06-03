@@ -24,7 +24,7 @@ class StudyTable extends React.PureComponent {
     dispatch: PropTypes.func.isRequired,
     studies: PropTypes.array.isRequired,
     summary: PropTypes.bool,
-    studyCount: PropTypes.number,
+    studiesCount: PropTypes.number,
   };
 
   componentDidMount() {
@@ -38,7 +38,7 @@ class StudyTable extends React.PureComponent {
   };
 
   render() {
-    const { classes, summary, studyCount, studies } = this.props;
+    const { classes, summary, studiesCount, studies } = this.props;
     const columns = [
       {
         label: 'Study Name',
@@ -70,7 +70,7 @@ class StudyTable extends React.PureComponent {
         rows={studies}
         handleFilter={this.handleFilterStudies}
         summary={summary}
-        totalCount={studyCount}
+        totalCount={studiesCount}
       />
     );
   }
@@ -78,8 +78,9 @@ class StudyTable extends React.PureComponent {
 
 function mapStateToProps(state) {
   return {
+    studiesTest: state.studies,
     studies: state.studies.studies,
-    studyCount: state.studies.studyCount,
+    studiesCount: state.studies.studiesCount,
   };
 }
 

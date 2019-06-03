@@ -120,9 +120,12 @@ export class JadeTable extends React.PureComponent {
   render() {
     const { classes, columns, rows, summary, totalCount } = this.props;
     const { orderBy, orderDirection, page, rowsPerPage } = this.state;
-    const emptyRows = rowsPerPage - Math.min(rowsPerPage, totalCount - page * rowsPerPage) || 0;
     const ROW_HEIGHT = 50;
     const ROWS_PER_PAGE = [5, 10, 25];
+    const emptyRows =
+      rowsPerPage < totalCount
+        ? rowsPerPage - Math.min(rowsPerPage, totalCount - page * rowsPerPage)
+        : 0;
     return (
       <div>
         {!summary && (
