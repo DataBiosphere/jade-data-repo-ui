@@ -25,6 +25,7 @@ export default {
         const newDatasetCreation = {
           jobId: action.payload.jobId,
           dataset: action.payload.data.data,
+          datasetRequest: action.payload.datasetRequest,
         };
         return immutable(state, {
           createdDatasets: { $push: [newDatasetCreation] },

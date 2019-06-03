@@ -121,7 +121,7 @@ export function* createDataset() {
     const jobId = response.data.id;
     yield put({
       type: ActionTypes.CREATE_DATASET_JOB,
-      payload: { data: response, jobId: jobId },
+      payload: { data: response, jobId: jobId, datasetRequest: datasetRequest },
     });
     yield call(
       pollJobWorker,
