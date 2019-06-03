@@ -32,6 +32,7 @@ export default createMuiTheme({
   palette: {
     common: {
       white: '#FFFFFF',
+      link: '#4D72AA',
       selection: '#99CCFF',
     },
     primary: {

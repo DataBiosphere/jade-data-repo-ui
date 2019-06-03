@@ -24,7 +24,7 @@ const styles = theme => ({
     paddingBottom: theme.spacing.unit * 8,
   },
   plusButton: {
-    fill: theme.palette.primary.main,
+    fill: theme.palette.common.link,
     marginLeft: theme.spacing.unit * 4,
     width: theme.spacing.unit * 3,
   },

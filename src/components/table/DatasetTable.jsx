@@ -10,7 +10,7 @@ import JadeTable from './JadeTable';
 
 const styles = theme => ({
   jadeLink: {
-    color: theme.palette.primary.main,
+    color: theme.palette.common.link,
     textDecoration: 'none',
     '&:hover': {
       textDecoration: 'underline',

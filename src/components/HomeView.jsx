@@ -22,7 +22,7 @@ const styles = theme => ({
     paddingBottom: theme.spacing.unit * 12,
   },
   jadeLink: {
-    color: theme.palette.primary.main,
+    color: theme.palette.common.link,
     float: 'right',
     fontSize: 16,
     fontWeight: 500,
@@ -37,7 +37,7 @@ const styles = theme => ({
   },
   plusButton: {
     height: 20,
-    fill: theme.palette.primary.main,
+    fill: theme.palette.common.link,
     marginLeft: 10,
     width: 20,
   },
