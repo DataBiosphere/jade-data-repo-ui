@@ -65,15 +65,13 @@ class StudyTable extends React.PureComponent {
       },
     ];
     return (
-      <div>
-        <JadeTable
-          columns={columns}
-          rows={studies}
-          handleEnumeration={this.handleFilterStudies}
-          summary={summary}
-          totalCount={studyCount}
-        />
-      </div>
+      <JadeTable
+        columns={columns}
+        rows={studies}
+        handleFilter={this.handleFilterStudies}
+        summary={summary}
+        totalCount={studyCount}
+      />
     );
   }
 }

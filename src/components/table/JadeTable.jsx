@@ -76,7 +76,7 @@ export class JadeTable extends React.PureComponent {
     handleEnumeration: PropTypes.func,
     rows: PropTypes.arrayOf(PropTypes.object),
     summary: PropTypes.bool,
-    totalCount: PropTypes.number, // TODO why getting undefined sometimes?
+    totalCount: PropTypes.number,
   };
 
   handleRequestSort = (event, sort) => {
