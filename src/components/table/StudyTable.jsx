@@ -39,6 +39,7 @@ class StudyTable extends React.PureComponent {
 
   render() {
     const { classes, summary, studiesCount, studies } = this.props;
+    // TODO add back modified_date column
     const columns = [
       {
         label: 'Study Name',
@@ -52,11 +53,6 @@ class StudyTable extends React.PureComponent {
       {
         label: 'Description',
         property: 'description',
-      },
-      {
-        label: 'Last changed',
-        property: 'modified_date',
-        render: row => moment(row.createdDate).fromNow(),
       },
       {
         label: 'Date created',

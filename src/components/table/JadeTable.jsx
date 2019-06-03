@@ -22,6 +22,7 @@ const styles = theme => ({
     maxWidth: 1400,
     overflowX: 'auto',
     width: '100%',
+    overflowWrap: 'break-word',
   },
   table: {
     borderRadius: `${theme.shape.borderRadius}px ${theme.shape.borderRadius}px 0 0`,
@@ -156,7 +157,7 @@ export class JadeTable extends React.PureComponent {
                 rows.map(row => (
                   <TableRow key={row.id} className={classes.row}>
                     {columns.map(col => (
-                      <TableCell key={col.property}>
+                      <TableCell key={col.property} style={{ wordBreak: 'break-word' }}>
                         {col.render ? col.render(row) : row[col.property]}
                       </TableCell>
                     ))}
