@@ -66,7 +66,7 @@ export class JadeTable extends React.PureComponent {
     orderDirection: '',
     orderBy: '',
     page: 0,
-    rowsPerPage: 5,
+    rowsPerPage: 10,
     searchString: '',
   };
 
