@@ -61,12 +61,14 @@ const styles = theme => ({
   },
 });
 
+const DEFAULT_PAGE_SIZE = 10;
+
 export class JadeTable extends React.PureComponent {
   state = {
     orderDirection: '',
     orderBy: '',
     page: 0,
-    rowsPerPage: 10,
+    rowsPerPage: DEFAULT_PAGE_SIZE,
     searchString: '',
   };
 
@@ -166,7 +168,7 @@ export class JadeTable extends React.PureComponent {
               )}
             </TableBody>
           </Table>
-          {!summary && (
+          {!summary && (rows && rows.length && rows.length < DEFAULT_PAGE_SIZE) && (
             <TablePagination
               rowsPerPageOptions={ROWS_PER_PAGE}
               component="div"
