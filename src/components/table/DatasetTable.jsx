@@ -92,7 +92,7 @@ class DatasetTable extends React.PureComponent {
         </div>
         <JadeTable
           columns={columns}
-          handleFilter={this.handleFilterDatasets}
+          handleEnumeration={this.handleFilterDatasets}
           rows={datasets}
           summary={summary}
           totalCount={datasetCount}

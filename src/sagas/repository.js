@@ -18,7 +18,6 @@ import { ActionTypes, STATUS } from 'constants/index';
 
 export const getToken = state => state.user.token;
 export const getTokenExpiration = state => state.user.tokenExpiration;
-export const getReaders = state => state.dataset.readers;
 export const getCreateDataset = state => state.dataset;
 
 export function* checkToken() {
