@@ -19,6 +19,14 @@ const styles = theme => ({
     overflow: 'scroll',
     width: '100%',
   },
+  manageUsers: {
+    alignItems: 'center',
+    display: 'flex',
+    ' && button': {
+      padding: '4px 8px',
+      margin: '0 16px',
+    },
+  },
 });
 
 class ManageUsersView extends React.PureComponent {
@@ -71,7 +79,7 @@ class ManageUsersView extends React.PureComponent {
       ));
     return (
       <div>
-        <div>
+        <div className={classes.manageUsers}>
           <TextField
             placeholder={defaultValue || 'Add email address'}
             onChange={e => this.validateEmail(e.target.value)}

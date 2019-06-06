@@ -128,10 +128,11 @@ const styles = theme => ({
     overflow: 'auto',
   },
   errorPanel: {
+    bottom: 100,
     display: 'flex',
-    justifyContent: 'flex-start',
     flexDirection: 'column-reverse',
-    height: '80%',
+    justifyContent: 'flex-start',
+    minHeight: 100,
     position: 'absolute',
     right: 0,
     width: theme.spacing.unit * 40,

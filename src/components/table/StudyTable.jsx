@@ -9,25 +9,8 @@ import { getStudies } from 'actions/index';
 import JadeTable from './JadeTable';
 
 const styles = theme => ({
-  wrapper: {
-    paddingTop: theme.spacing.unit * 4,
-  },
-  title: {
-    color: theme.palette.primary.main,
-    fontSize: '54px',
-    lineHeight: '66px',
-    paddingBottom: theme.spacing.unit * 8,
-  },
-  header: {
-    alignItems: 'center',
-    display: 'flex',
-    flexDirection: 'row',
-    fontSize: '18px',
-    fontWeight: '600',
-    paddingTop: '30px',
-  },
   jadeLink: {
-    color: theme.palette.primary.main,
+    color: theme.palette.common.link,
     textDecoration: 'none',
     '&:hover': {
       textDecoration: 'underline',
@@ -41,8 +24,7 @@ class StudyTable extends React.PureComponent {
     dispatch: PropTypes.func.isRequired,
     studies: PropTypes.array.isRequired,
     summary: PropTypes.bool,
-    studyCount: PropTypes.number,
-    studyListName: PropTypes.string,
+    studiesCount: PropTypes.number,
   };
 
   componentDidMount() {
@@ -56,7 +38,8 @@ class StudyTable extends React.PureComponent {
   };
 
   render() {
-    const { classes, summary, studyCount, studies, studyListName } = this.props;
+    const { classes, summary, studiesCount, studies } = this.props;
+    // TODO add back modified_date column
     const columns = [
       {
         label: 'Study Name',
@@ -72,35 +55,28 @@ class StudyTable extends React.PureComponent {
         property: 'description',
       },
       {
-        label: 'Last changed',
-        property: 'modified_date',
-        render: row => moment(row.createdDate).fromNow(),
-      },
-      {
         label: 'Date created',
         property: 'created_date',
         render: row => moment(row.createdDate).fromNow(),
       },
     ];
     return (
-      <div className={classes.wrapper}>
-        <div className={classes.header}>{studyListName || 'STUDIES'}</div>
-        <JadeTable
-          columns={columns}
-          rows={studies}
-          handleEnumeration={this.handleFilterStudies}
-          summary={summary}
-          totalCount={studyCount}
-        />
-      </div>
+      <JadeTable
+        columns={columns}
+        rows={studies}
+        handleFilter={this.handleFilterStudies}
+        summary={summary}
+        totalCount={studiesCount}
+      />
     );
   }
 }
 
 function mapStateToProps(state) {
   return {
+    studiesTest: state.studies,
     studies: state.studies.studies,
-    studyCount: state.studies.studyCount,
+    studiesCount: state.studies.studiesCount,
   };
 }
 

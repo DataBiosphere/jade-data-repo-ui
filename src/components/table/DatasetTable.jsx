@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -7,28 +7,10 @@ import { withStyles } from '@material-ui/core/styles';
 
 import { getDatasets } from 'actions/index';
 import JadeTable from './JadeTable';
-import AddSVG from '../../../assets/media/icons/plus-circle-solid.svg';
 
 const styles = theme => ({
-  wrapper: {
-    paddingTop: theme.spacing.unit * 4,
-  },
-  header: {
-    alignItems: 'center',
-    display: 'flex',
-    flexDirection: 'row',
-    fontSize: '18px',
-    fontWeight: '600',
-    paddingTop: '30px',
-  },
-  plusButton: {
-    height: '20px',
-    fill: theme.palette.primary.main,
-    marginLeft: '10px',
-    width: '20px',
-  },
   jadeLink: {
-    color: theme.palette.primary.main,
+    color: theme.palette.common.link,
     textDecoration: 'none',
     '&:hover': {
       textDecoration: 'underline',
@@ -57,6 +39,7 @@ class DatasetTable extends React.PureComponent {
 
   render() {
     const { classes, datasetCount, datasets, summary } = this.props;
+    // TODO add back modified_date column
     const columns = [
       {
         label: 'Dataset Name',
@@ -72,24 +55,13 @@ class DatasetTable extends React.PureComponent {
         property: 'description',
       },
       {
-        label: 'Last changed',
-        property: 'modified_date',
-        render: row => moment(row.createdDate).fromNow(),
-      },
-      {
         label: 'Date created',
         property: 'created_date',
         render: row => moment(row.createdDate).fromNow(),
       },
     ];
     return (
-      <div className={classes.wrapper}>
-        <div className={classes.header}>
-          DATASETS
-          <NavLink to="/datasets/create">
-            <AddSVG className={classes.plusButton} />
-          </NavLink>
-        </div>
+      <div>
         <JadeTable
           columns={columns}
           handleEnumeration={this.handleFilterDatasets}

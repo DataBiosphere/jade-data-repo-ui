@@ -22,6 +22,7 @@ const styles = theme => ({
     maxWidth: 1400,
     overflowX: 'auto',
     width: '100%',
+    overflowWrap: 'break-word',
   },
   table: {
     borderRadius: `${theme.shape.borderRadius}px ${theme.shape.borderRadius}px 0 0`,
@@ -65,7 +66,7 @@ const DEFAULT_PAGE_SIZE = 10;
 
 export class JadeTable extends React.PureComponent {
   state = {
-    orderDirection: '',
+    orderDirection: 'desc',
     orderBy: '',
     page: 0,
     rowsPerPage: DEFAULT_PAGE_SIZE,
@@ -78,7 +79,7 @@ export class JadeTable extends React.PureComponent {
     handleEnumeration: PropTypes.func,
     rows: PropTypes.arrayOf(PropTypes.object),
     summary: PropTypes.bool,
-    totalCount: PropTypes.number.isRequired,
+    totalCount: PropTypes.number,
   };
 
   handleRequestSort = (event, sort) => {
@@ -122,9 +123,12 @@ export class JadeTable extends React.PureComponent {
   render() {
     const { classes, columns, rows, summary, totalCount } = this.props;
     const { orderBy, orderDirection, page, rowsPerPage } = this.state;
-    const emptyRows = rowsPerPage - Math.min(rowsPerPage, totalCount - page * rowsPerPage);
     const ROW_HEIGHT = 50;
     const ROWS_PER_PAGE = [5, 10, 25];
+    const emptyRows =
+      rowsPerPage < totalCount
+        ? rowsPerPage - Math.min(rowsPerPage, totalCount - page * rowsPerPage)
+        : 0;
     return (
       <div>
         {!summary && (
@@ -155,7 +159,7 @@ export class JadeTable extends React.PureComponent {
                 rows.map(row => (
                   <TableRow key={row.id} className={classes.row}>
                     {columns.map(col => (
-                      <TableCell key={col.property}>
+                      <TableCell key={col.property} style={{ wordBreak: 'break-word' }}>
                         {col.render ? col.render(row) : row[col.property]}
                       </TableCell>
                     ))}
