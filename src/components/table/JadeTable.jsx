@@ -67,7 +67,7 @@ const DEFAULT_PAGE_SIZE = 10;
 export class JadeTable extends React.PureComponent {
   state = {
     orderDirection: 'desc',
-    orderBy: '',
+    orderBy: 'created_date',
     page: 0,
     rowsPerPage: DEFAULT_PAGE_SIZE,
     searchString: '',
