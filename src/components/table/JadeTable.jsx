@@ -168,7 +168,7 @@ export class JadeTable extends React.PureComponent {
                 ))
               ) : (
                 <TableRow className={classes.row}>
-                  <TableCell colSpan={columns.length}>No {items} have been loaded yet</TableCell>
+                  <TableCell colSpan={columns.length}>No {items} have been created yet</TableCell>
                 </TableRow>
               )}
               {rows && emptyRows > 0 && rows.length < rowsPerPage && (
