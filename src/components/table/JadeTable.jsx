@@ -77,6 +77,7 @@ export class JadeTable extends React.PureComponent {
     classes: PropTypes.object.isRequired,
     columns: PropTypes.arrayOf(PropTypes.object),
     handleEnumeration: PropTypes.func,
+    items: PropTypes.string.isRequired,
     rows: PropTypes.arrayOf(PropTypes.object),
     summary: PropTypes.bool,
     totalCount: PropTypes.number,
@@ -121,7 +122,7 @@ export class JadeTable extends React.PureComponent {
   };
 
   render() {
-    const { classes, columns, rows, summary, totalCount } = this.props;
+    const { classes, columns, items, rows, summary, totalCount } = this.props;
     const { orderBy, orderDirection, page, rowsPerPage } = this.state;
     const ROW_HEIGHT = 50;
     const ROWS_PER_PAGE = [5, 10, 25];
@@ -155,7 +156,7 @@ export class JadeTable extends React.PureComponent {
               orderBy={orderBy}
             />
             <TableBody>
-              {rows &&
+              {rows && rows.length > 0 ? (
                 rows.map(row => (
                   <TableRow key={row.id} className={classes.row}>
                     {columns.map(col => (
@@ -164,15 +165,20 @@ export class JadeTable extends React.PureComponent {
                       </TableCell>
                     ))}
                   </TableRow>
-                ))}
-              {rows && rows.length < rowsPerPage && (
+                ))
+              ) : (
+                <TableRow className={classes.row}>
+                  <TableCell colSpan={columns.length}>No {items} have been loaded yet</TableCell>
+                </TableRow>
+              )}
+              {rows && emptyRows > 0 && rows.length < rowsPerPage && (
                 <TableRow style={{ height: ROW_HEIGHT * emptyRows }}>
                   <TableCell colSpan={columns.length} />
                 </TableRow>
               )}
             </TableBody>
           </Table>
-          {!summary && (rows && rows.length && rows.length < DEFAULT_PAGE_SIZE) && (
+          {!summary && (rows && rows.length < DEFAULT_PAGE_SIZE) && (
             <TablePagination
               rowsPerPageOptions={ROWS_PER_PAGE}
               component="div"
