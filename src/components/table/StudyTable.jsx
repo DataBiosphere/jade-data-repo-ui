@@ -28,8 +28,12 @@ class StudyTable extends React.PureComponent {
   };
 
   componentDidMount() {
-    const { dispatch } = this.props;
-    dispatch(getStudies());
+    const { dispatch, summary } = this.props;
+    let limit = 5;
+    if (!summary) {
+      limit = 10;
+    }
+    dispatch(getStudies(limit));
   }
 
   handleFilterStudies = (limit, offset, sort, sortDirection, searchString) => {
@@ -63,8 +67,8 @@ class StudyTable extends React.PureComponent {
     return (
       <JadeTable
         columns={columns}
-        items="studies"
         handleEnumeration={this.handleFilterStudies}
+        items="studies"
         rows={studies}
         summary={summary}
         totalCount={studiesCount}

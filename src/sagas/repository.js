@@ -138,7 +138,7 @@ export function* createDataset() {
 
 export function* getDatasets({ payload }) {
   const offset = payload.offset || 0;
-  const limit = payload.limit || 5;
+  const limit = payload.limit || 10;
   const filter = payload.searchString || '';
   const sort = payload.sort || 'created_date';
   const direction = payload.direction || 'desc';
@@ -236,7 +236,7 @@ export function* removeReaderFromDataset({ payload }) {
  */
 
 export function* getStudies({ payload }) {
-  const limit = payload.limit || 5;
+  const limit = payload.limit || 10;
   const offset = payload.offset || 0;
   const filter = payload.searchString || '';
   const sort = payload.sort || 'created_date';

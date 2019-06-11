@@ -28,8 +28,12 @@ class DatasetTable extends React.PureComponent {
   };
 
   componentDidMount() {
-    const { dispatch } = this.props;
-    dispatch(getDatasets());
+    const { dispatch, summary } = this.props;
+    let limit = 5;
+    if (!summary) {
+      limit = 10;
+    }
+    dispatch(getDatasets(limit));
   }
 
   handleFilterDatasets = (limit, offset, sort, sortDirection, searchString) => {
