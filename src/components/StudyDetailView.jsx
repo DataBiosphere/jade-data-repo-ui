@@ -56,6 +56,7 @@ export class StudyDetailView extends React.PureComponent {
     const { dispatch, match } = this.props;
     const studyId = match.params.uuid;
     dispatch(getStudyById(studyId));
+    // TODO set the study policy here too?
   }
 
   render() {
@@ -69,12 +70,24 @@ export class StudyDetailView extends React.PureComponent {
               <div>{study.description}</div>
             </div>
             <Card className={classes.card}>
-              <div className={classes.header}> Created by: </div>
-              <div className={classes.values}> {study.readers} </div>
-              <div className={classes.header}> Date Created: </div>
-              <div className={classes.values}> {moment(study.createdDate).fromNow()} </div>
-              <div className={classes.header}> Last Modified: </div>
-              <div className={classes.values}> {moment(study.createdDate).fromNow()} </div>
+              {study && study.owner && (
+                <div>
+                  <div className={classes.header}> Created by: </div>
+                  <div className={classes.values}> {study.owner} </div>
+                </div>
+              )}
+              {study && study.readers && (
+                <div>
+                  <div className={classes.header}> Viewers: </div>
+                  <div className={classes.values}> {study.readers} </div>
+                </div>
+              )}
+              {study && study.createdDate && (
+                <div>
+                  <div className={classes.header}> Date Created: </div>
+                  <div className={classes.values}> {moment(study.createdDate).fromNow()} </div>
+                </div>
+              )}
             </Card>
           </div>
         </div>
