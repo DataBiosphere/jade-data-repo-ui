@@ -77,7 +77,7 @@ export class JadeTable extends React.PureComponent {
     classes: PropTypes.object.isRequired,
     columns: PropTypes.arrayOf(PropTypes.object),
     handleEnumeration: PropTypes.func,
-    items: PropTypes.string.isRequired,
+    itemType: PropTypes.string.isRequired,
     rows: PropTypes.arrayOf(PropTypes.object),
     summary: PropTypes.bool,
     totalCount: PropTypes.number,
@@ -122,7 +122,7 @@ export class JadeTable extends React.PureComponent {
   };
 
   render() {
-    const { classes, columns, items, rows, summary, totalCount } = this.props;
+    const { classes, columns, itemType, rows, summary, totalCount } = this.props;
     const { orderBy, orderDirection, page, rowsPerPage } = this.state;
     const ROW_HEIGHT = 50;
     const ROWS_PER_PAGE = [5, 10, 25];
@@ -168,7 +168,9 @@ export class JadeTable extends React.PureComponent {
                 ))
               ) : (
                 <TableRow className={classes.row}>
-                  <TableCell colSpan={columns.length}>No {items} have been created yet</TableCell>
+                  <TableCell colSpan={columns.length}>
+                    No {itemType} have been created yet
+                  </TableCell>
                 </TableRow>
               )}
               {rows && emptyRows > 0 && rows.length < rowsPerPage && (

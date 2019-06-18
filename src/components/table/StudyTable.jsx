@@ -68,7 +68,7 @@ class StudyTable extends React.PureComponent {
       <JadeTable
         columns={columns}
         handleEnumeration={this.handleFilterStudies}
-        items="studies"
+        itemType="studies"
         rows={studies}
         summary={summary}
         totalCount={studiesCount}
