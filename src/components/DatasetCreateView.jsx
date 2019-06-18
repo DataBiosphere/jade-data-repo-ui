@@ -111,7 +111,7 @@ export class DatasetCreateView extends React.PureComponent {
 
   componentDidMount() {
     const { dispatch } = this.props;
-    dispatch(getStudies());
+    dispatch(getStudies(0));
   }
 
   createDatasetJob() {
