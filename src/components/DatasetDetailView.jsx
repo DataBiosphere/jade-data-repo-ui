@@ -114,7 +114,7 @@ export class DatasetDetailView extends React.PureComponent {
                   <div className={classes.header}>{modalText}: </div>
                   <div className={classes.values}>
                     {datasetReaders.map(reader => (
-                      <div id={reader}>{reader}</div>
+                      <div key={reader}>{reader}</div>
                     ))}
                   </div>
                 </div>

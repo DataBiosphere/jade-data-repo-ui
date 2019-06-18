@@ -86,7 +86,7 @@ export class ManageUsersModal extends React.PureComponent {
           <DialogContent className={classes.dialogContent}>
             <ManageUsersView
               addUser={newEmail => addUser(newEmail)}
-              defaultValue="Add viewer email addresses"
+              defaultValue="Add email addresses"
               removeUser={removeableEmail => removeUser(removeableEmail)}
               readers={readers}
             />

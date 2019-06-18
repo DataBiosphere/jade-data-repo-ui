@@ -274,18 +274,77 @@ export function* getStudyById({ payload }) {
   }
 }
 
+export function* getStudyPolicy({ payload }) {
+  const studyId = payload;
+  try {
+    const response = yield call(authGet, `/api/repository/v1/studies/${studyId}/policies`);
+    yield put({
+      type: ActionTypes.GET_STUDY_POLICY_SUCCESS,
+      policy: response,
+    });
+  } catch (err) {
+    yield put({
+      type: ActionTypes.EXCEPTION,
+      payload: err,
+    });
+  }
+}
+
+export function* addCustodianToStudy({ payload }) {
+  const studyId = payload.studyId;
+  const custodian = payload.users[0];
+  const custodianObject = { email: custodian };
+  try {
+    const response = yield call(
+      authPost,
+      `/api/repository/v1/studies/${studyId}/policies/custodian/members`, // TODO what is this?
+      custodianObject,
+    );
+    yield put({
+      type: ActionTypes.ADD_CUSTODIAN_TO_STUDY_SUCCESS,
+      policy: response,
+    });
+  } catch (err) {
+    yield put({
+      type: ActionTypes.EXCEPTION,
+      payload: err,
+    });
+  }
+}
+
+export function* removeCustodianFromStudy({ payload }) {
+  const studyId = payload.studyId;
+  const custodian = payload.user;
+  const url = '/api/repository/v1/studies/' + studyId + '/policies/custodian/members/' + custodian;
+  try {
+    const response = yield call(authDelete, url);
+    yield put({
+      type: ActionTypes.REMOVE_CUSTODIAN_FROM_STUDY_SUCCESS,
+      policy: response,
+    });
+  } catch (err) {
+    yield put({
+      type: ActionTypes.EXCEPTION,
+      payload: err,
+    });
+  }
+}
+
 /**
  * App Sagas
  */
 export default function* root() {
   yield all([
     takeLatest(ActionTypes.CREATE_DATASET, createDataset),
-    takeLatest(ActionTypes.ADD_READER_TO_DATASET, addReaderToDataset),
-    takeLatest(ActionTypes.REMOVE_READER_FROM_DATASET, removeReaderFromDataset),
     takeLatest(ActionTypes.GET_DATASETS, getDatasets),
     takeLatest(ActionTypes.GET_DATASET_BY_ID, getDatasetById),
     takeLatest(ActionTypes.GET_DATASET_POLICY, getDatasetPolicy),
+    takeLatest(ActionTypes.ADD_READER_TO_DATASET, addReaderToDataset),
+    takeLatest(ActionTypes.REMOVE_READER_FROM_DATASET, removeReaderFromDataset),
     takeLatest(ActionTypes.GET_STUDIES, getStudies),
     takeLatest(ActionTypes.GET_STUDY_BY_ID, getStudyById),
+    takeLatest(ActionTypes.GET_STUDY_POLICY, getStudyPolicy),
+    takeLatest(ActionTypes.ADD_CUSTODIAN_TO_STUDY, addCustodianToStudy),
+    takeLatest(ActionTypes.REMOVE_CUSTODIAN_FROM_STUDY, removeCustodianFromStudy),
   ]);
 }
