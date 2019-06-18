@@ -83,6 +83,9 @@ class ManageUsersView extends React.PureComponent {
           <TextField
             placeholder={defaultValue || 'Add email address'}
             onChange={e => this.validateEmail(e.target.value)}
+            onKeyPress={e =>
+              e.key === 'Enter' && emailValid && e.target && this.addUserClean(e.target.value)
+            }
             style={{ width: '300px' }}
             value={newEmail}
             variant="outlined"
