@@ -94,8 +94,8 @@ const styles = theme => ({
 export class DatasetPreviewView extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    createdDataset: PropTypes.object, // TODO is this even?
     createdDatasets: PropTypes.arrayOf(PropTypes.object),
+    dataset: PropTypes.object,
     dispatch: PropTypes.func.isRequired,
     exception: PropTypes.bool.isRequired,
     jobStatus: PropTypes.string.isRequired,
@@ -112,7 +112,15 @@ export class DatasetPreviewView extends React.PureComponent {
   }
 
   render() {
-    const { classes, createdDatasets, exception, jobStatus, match, userEmail } = this.props;
+    const {
+      classes,
+      createdDatasets,
+      dataset,
+      exception,
+      jobStatus,
+      match,
+      userEmail,
+    } = this.props;
     const jobId = match.params.jobId;
     const createdDataset = createdDatasets.find(datasetJob => datasetJob.jobId === jobId);
     const jobCompleted = jobStatus === STATUS.SUCCESS || jobStatus === STATUS.ERROR;
@@ -128,7 +136,7 @@ export class DatasetPreviewView extends React.PureComponent {
                   : 'Your new dataset has been created!'}
               </p>
               <DatasetDirectionalModal
-                createdDataset={createdDataset && createdDataset.dataset}
+                createdDataset={createdDataset && dataset}
                 success={!exception}
               />
               <div className={classes.query}>
@@ -147,10 +155,10 @@ export class DatasetPreviewView extends React.PureComponent {
           <div className={classes.container}>
             <div className={classes.info}>
               <div className={classes.header}> Dataset Name: </div>
-              {createdDataset && jobCompleted ? (
+              {createdDataset && jobCompleted && dataset ? (
                 <div>
-                  <Link to={`/datasets/details/${createdDataset.dataset.id}`}>
-                    {createdDataset.dataset.name}
+                  <Link to={`/datasets/details/${dataset.id}`}>
+                    {createdDataset.datasetRequest.name}
                   </Link>
                 </div>
               ) : (
@@ -189,6 +197,7 @@ export class DatasetPreviewView extends React.PureComponent {
 function mapStateToProps(state) {
   return {
     createdDatasets: state.datasets.createdDatasets,
+    dataset: state.datasets.dataset,
     jobStatus: state.jobs.jobStatus,
     userEmail: state.user.email,
     exception: state.datasets.exception,

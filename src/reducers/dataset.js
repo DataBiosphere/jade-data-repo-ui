@@ -24,7 +24,6 @@ export default {
       [ActionTypes.CREATE_DATASET_JOB]: (state, action) => {
         const newDatasetCreation = {
           jobId: action.payload.jobId,
-          dataset: action.payload.data.data,
           datasetRequest: action.payload.datasetRequest,
         };
         return immutable(state, {
