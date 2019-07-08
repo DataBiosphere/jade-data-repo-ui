@@ -110,7 +110,7 @@
     "babel-plugin-transform-flow-strip-types": "^6.22.0",
     "babel-plugin-transform-imports": "^1.5.1",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
-    "bfj": "^6.1.1",
+    "bfj": "^7.0.0",
     "bundlesize": "^0.17.2",
     "case-sensitive-paths-webpack-plugin": "^2.2.0",
     "chalk": "^2.4.2",
