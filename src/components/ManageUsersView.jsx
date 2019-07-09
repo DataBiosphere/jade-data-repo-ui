@@ -16,7 +16,7 @@ const styles = theme => ({
   chipContainer: {
     margin: theme.spacing.unit,
     maxHeight: theme.spacing.unit * 20,
-    overflow: 'scroll',
+    overflowY: 'scroll',
     width: '100%',
   },
   manageUsers: {
@@ -101,7 +101,7 @@ class ManageUsersView extends React.PureComponent {
             ADD
           </Button>
         </div>
-        <div className={classes.chipContainer}>{readerChips}</div>
+        {readers.length > 0 && <div className={classes.chipContainer}>{readerChips}</div>}
       </div>
     );
   }

@@ -78,7 +78,6 @@ const styles = theme => ({
       padding: `12px 14px`,
       width: 300,
     },
-    height: 44,
   },
   buttons: {
     float: 'right',
