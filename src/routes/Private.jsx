@@ -4,6 +4,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
+import history from 'modules/hist';
 
 import HomeView from '../components/HomeView';
 import StudiesView from '../components/StudyView';
@@ -48,7 +49,7 @@ class Private extends React.Component {
   render() {
     const { classes } = this.props;
     return (
-      <Router>
+      <Router history={history}>
         <div className={classes.wrapper}>
           <Route
             path="/"
