@@ -9,12 +9,14 @@ import TableSortLabel from '@material-ui/core/TableSortLabel';
 
 const styles = theme => ({
   head: {
-    backgroundColor: theme.palette.primary.light,
     color: theme.palette.primary.dark,
+    backgroundColor: theme.palette.primary.light,
     fontFamily: theme.typography.fontFamily,
   },
   cell: {
+    color: theme.palette.secondary.dark,
     minWidth: 200,
+    fontWeight: 500,
   },
 });
 
