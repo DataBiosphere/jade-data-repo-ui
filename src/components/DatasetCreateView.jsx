@@ -92,6 +92,9 @@ const styles = theme => ({
     color: theme.palette.primary.main,
     textDecoration: 'none',
   },
+  selector: {
+    width: '300px',
+  },
 });
 
 export class DatasetCreateView extends React.PureComponent {
@@ -260,7 +263,7 @@ export class DatasetCreateView extends React.PureComponent {
               <Control.select
                 id="dataset.study"
                 model="dataset.study"
-                size="5"
+                className={classes.selector}
                 component={props => (
                   <MultiSelect
                     {...props}
@@ -277,7 +280,7 @@ export class DatasetCreateView extends React.PureComponent {
               <Control.select
                 id="dataset.asset"
                 model="dataset.asset"
-                size="5"
+                className={classes.selector}
                 component={props => (
                   <MultiSelect
                     {...props}

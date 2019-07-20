@@ -26,12 +26,17 @@ const styles = theme => ({
 class Logo extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object.isRequired,
+    history: PropTypes.object,
+  };
+
+  handleGoHome = history => {
+    history.push('/');
   };
 
   render() {
-    const { classes } = this.props;
+    const { classes, history } = this.props;
     return (
-      <div className={classes.logoContainer}>
+      <div className={classes.logoContainer} onClick={() => this.handleGoHome(history)}>
         <TerraIcon className={classes.logo} alt="logo" />
         <span className={classes.logoTitle}>Data Repository</span>
       </div>
