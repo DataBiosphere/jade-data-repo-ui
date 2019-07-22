@@ -6,7 +6,7 @@ import Tooltip from '@material-ui/core/Tooltip/Tooltip';
 
 import DatasetTable from './table/DatasetTable';
 import StudyTable from './table/StudyTable';
-import AddSVG from '../../assets/media/icons/plus-circle-solid.svg';
+import Add from './icons/Add';
 
 const styles = theme => ({
   header: {
@@ -19,7 +19,7 @@ const styles = theme => ({
     letterSpacing: 1,
   },
   jadeTableSpacer: {
-    paddingBottom: theme.spacing.unit * 12,
+    paddingBottom: theme.spacing(12),
   },
   jadeLink: {
     color: theme.palette.common.link,
@@ -28,8 +28,8 @@ const styles = theme => ({
     fontWeight: 500,
     height: 20,
     letterSpacing: 0.3,
-    paddingLeft: theme.spacing.unit * 4,
-    paddingTop: theme.spacing.unit * 4,
+    paddingLeft: theme.spacing(4),
+    paddingTop: theme.spacing(4),
     textDecoration: 'none',
     '&:hover': {
       textDecoration: 'underline',
@@ -45,14 +45,14 @@ const styles = theme => ({
     color: theme.palette.primary.main,
     fontSize: '54px',
     lineHeight: '66px',
-    paddingBottom: theme.spacing.unit * 8,
+    paddingBottom: theme.spacing(8),
   },
   wrapper: {
     display: 'flex',
     fontFamily: theme.typography.fontFamily,
     justifyContent: 'center',
-    padding: theme.spacing.unit * 4,
-    margin: theme.spacing.unit * 4,
+    padding: theme.spacing(4),
+    margin: theme.spacing(4),
   },
   width: {
     width: '70%',
@@ -83,7 +83,7 @@ class HomeView extends React.PureComponent {
             RECENT DATASETS
             <NavLink to="/datasets/create">
               <Tooltip title="Create a new dataset" enterDelay={100}>
-                <AddSVG className={classes.plusButton} />
+                <Add className={classes.plusButton} />
               </Tooltip>
             </NavLink>
           </div>

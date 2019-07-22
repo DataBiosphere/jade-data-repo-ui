@@ -18,7 +18,7 @@ const styles = theme => ({
     border: `1px solid ${theme.palette.primary.dark}`,
     borderRadius: `${theme.shape.borderRadius}px ${theme.shape.borderRadius}px 0 0`,
     boxShadow: 'none',
-    marginTop: theme.spacing.unit * 3,
+    marginTop: theme.spacing(3),
     maxWidth: 1400,
     overflowX: 'auto',
     width: '100%',
@@ -41,8 +41,8 @@ const styles = theme => ({
     },
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
-    marginTop: theme.spacing.unit * 3,
-    marginRight: theme.spacing.unit * 2,
+    marginTop: theme.spacing(3),
+    marginRight: theme.spacing(2),
     marginLeft: 0,
   },
   searchIcon: {
@@ -54,11 +54,11 @@ const styles = theme => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingLeft: theme.spacing.unit * 3,
+    paddingLeft: theme.spacing(3),
   },
   searchInput: {
-    paddingTop: theme.spacing.unit * 1.5,
-    paddingLeft: theme.spacing.unit * 6,
+    paddingTop: theme.spacing(1.5),
+    paddingLeft: theme.spacing(6),
   },
 });
 

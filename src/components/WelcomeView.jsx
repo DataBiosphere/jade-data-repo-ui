@@ -17,26 +17,26 @@ const styles = theme => ({
     color: theme.palette.primary.main,
     fontSize: '54px',
     lineHeight: '66px',
-    paddingBottom: theme.spacing.unit * 8,
+    paddingBottom: theme.spacing(8),
   },
   mainContent: {
     display: 'inline-block',
     color: theme.typography.color,
     overflow: 'hidden',
-    padding: theme.spacing.unit * 10,
+    padding: theme.spacing(10),
     width: '60%',
   },
   newUser: {
     color: theme.palette.secondary.contrastText,
     fontSize: '18px',
     fontWeight: '300',
-    paddingBottom: theme.spacing.unit * 2,
-    paddingTop: theme.spacing.unit * 8,
+    paddingBottom: theme.spacing(2),
+    paddingTop: theme.spacing(8),
   },
   terraLink: {
     color: theme.palette.primary.main,
-    paddingBottom: theme.spacing.unit * 4,
-    paddingTop: theme.spacing.unit * 2,
+    paddingBottom: theme.spacing(4),
+    paddingTop: theme.spacing(2),
     textDecoration: 'none',
   },
   header: {
@@ -51,7 +51,7 @@ const styles = theme => ({
   },
   warning: {
     fontWeight: '900',
-    paddingBottom: theme.spacing.unit * 2,
+    paddingBottom: theme.spacing(2),
   },
 });
 

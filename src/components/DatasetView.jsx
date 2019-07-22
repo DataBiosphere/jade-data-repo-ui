@@ -5,14 +5,14 @@ import { withStyles } from '@material-ui/core/styles';
 import Tooltip from '@material-ui/core/Tooltip/Tooltip';
 
 import DatasetTable from './table/DatasetTable';
-import AddSVG from '../../assets/media/icons/plus-circle-solid.svg';
+import Add from './icons/Add';
 
 const styles = theme => ({
   wrapper: {
     display: 'flex',
     justifyContent: 'center',
-    padding: theme.spacing.unit * 4,
-    margin: theme.spacing.unit * 4,
+    padding: theme.spacing(4),
+    margin: theme.spacing(4),
   },
   width: {
     width: '70%',
@@ -21,12 +21,12 @@ const styles = theme => ({
     color: theme.palette.primary.main,
     fontSize: 54,
     lineHeight: '66px',
-    paddingBottom: theme.spacing.unit * 8,
+    paddingBottom: theme.spacing(8),
   },
   plusButton: {
     fill: theme.palette.common.link,
-    marginLeft: theme.spacing.unit * 4,
-    width: theme.spacing.unit * 3,
+    marginLeft: theme.spacing(4),
+    width: theme.spacing(3),
   },
 });
 
@@ -44,7 +44,7 @@ class DatasetView extends React.PureComponent {
             Datasets
             <NavLink to="/datasets/create">
               <Tooltip title="Create a new dataset" enterDelay={100}>
-                <AddSVG className={classes.plusButton} />
+                <Add className={classes.plusButton} />
               </Tooltip>
             </NavLink>
           </div>

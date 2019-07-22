@@ -10,8 +10,8 @@ const styles = theme => ({
   wrapper: {
     display: 'flex',
     justifyContent: 'center',
-    padding: theme.spacing.unit * 4,
-    margin: theme.spacing.unit * 4,
+    padding: theme.spacing(4),
+    margin: theme.spacing(4),
   },
   width: {
     width: '70%',
@@ -20,7 +20,7 @@ const styles = theme => ({
     color: theme.palette.primary.main,
     fontSize: '54px',
     lineHeight: '66px',
-    paddingBottom: theme.spacing.unit * 8,
+    paddingBottom: theme.spacing(8),
   },
 });
 
