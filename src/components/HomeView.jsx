@@ -62,7 +62,6 @@ const styles = theme => ({
 class HomeView extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    studies: PropTypes.object,
   };
 
   render() {

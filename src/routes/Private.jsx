@@ -23,7 +23,7 @@ const styles = theme => ({
   },
   tabsRoot: {
     borderBottom: `2px solid ${theme.palette.secondary.main}`,
-    boxShadow: `0 2px 5px 0 rgba(0,0,0,0.26), 0 2px 10px 0 rgba(0,0,0,0.16)`,
+    boxShadow: '0 2px 5px 0 rgba(0,0,0,0.26), 0 2px 10px 0 rgba(0,0,0,0.16)',
     color: '#333F52',
     fontFamily: theme.typography.fontFamily,
     paddingLeft: theme.spacing(11.5),

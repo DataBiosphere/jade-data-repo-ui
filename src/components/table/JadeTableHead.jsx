@@ -25,8 +25,8 @@ export class JadeTableHead extends React.PureComponent {
     classes: PropTypes.object.isRequired,
     columns: PropTypes.arrayOf(PropTypes.object),
     onRequestSort: PropTypes.func.isRequired,
-    orderDirection: PropTypes.string.isRequired,
     orderBy: PropTypes.string.isRequired,
+    orderDirection: PropTypes.string.isRequired,
   };
 
   createSortHandler = property => event => {

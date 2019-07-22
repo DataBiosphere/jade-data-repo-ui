@@ -3,7 +3,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Helmet from 'react-helmet';
 import { Provider } from 'react-redux';
-import { AppContainer } from 'react-hot-loader';
 import { Router } from 'react-router-dom';
 import history from 'modules/hist';
 import globalTheme from 'modules/theme';

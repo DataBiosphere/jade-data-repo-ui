@@ -68,14 +68,14 @@ const styles = theme => ({
   nameDataset: {
     width: 400,
     ' && input': {
-      padding: `12px 14px`,
+      padding: '12px 14px',
       width: 272,
     },
   },
   manageUsers: {
     width: 400,
     ' && input': {
-      padding: `12px 14px`,
+      padding: '12px 14px',
       width: 300,
     },
   },

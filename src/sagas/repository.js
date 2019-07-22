@@ -53,7 +53,7 @@ export function* authDelete(url) {
     // check expiration time against now
     const token = yield select(getToken);
     return yield call(axios.delete, url, {
-      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
     });
   }
   return false;
@@ -71,7 +71,7 @@ function* pollJobWorker(jobId, jobTypeSuccess, jobTypeFailure) {
       if (jobStatus === 'succeeded' && resultResponse && resultResponse.data) {
         yield put({
           type: jobTypeSuccess,
-          payload: { jobId: jobId, jobResult: resultResponse.data },
+          payload: { jobId, jobResult: resultResponse.data },
         });
       } else {
         yield put({
@@ -120,7 +120,7 @@ export function* createDataset() {
     const jobId = response.data.id;
     yield put({
       type: ActionTypes.CREATE_DATASET_JOB,
-      payload: { data: response, jobId: jobId, datasetRequest: datasetRequest },
+      payload: { data: response, jobId, datasetRequest },
     });
     yield call(
       pollJobWorker,
@@ -192,7 +192,7 @@ export function* getDatasetPolicy({ payload }) {
 }
 
 export function* addReaderToDataset({ payload }) {
-  const datasetId = payload.datasetId;
+  const { datasetId } = payload;
   const reader = payload.users[0];
   const readerObject = { email: reader };
   try {
@@ -214,9 +214,9 @@ export function* addReaderToDataset({ payload }) {
 }
 
 export function* removeReaderFromDataset({ payload }) {
-  const datasetId = payload.datasetId;
+  const { datasetId } = payload;
   const reader = payload.user;
-  const url = '/api/repository/v1/datasets/' + datasetId + '/policies/reader/members/' + reader;
+  const url = `/api/repository/v1/datasets/${datasetId}/policies/reader/members/${reader}`;
   try {
     const response = yield call(authDelete, url);
     yield put({
@@ -291,7 +291,7 @@ export function* getStudyPolicy({ payload }) {
 }
 
 export function* addCustodianToStudy({ payload }) {
-  const studyId = payload.studyId;
+  const { studyId } = payload;
   const custodian = payload.users[0];
   const custodianObject = { email: custodian };
   try {
@@ -313,9 +313,9 @@ export function* addCustodianToStudy({ payload }) {
 }
 
 export function* removeCustodianFromStudy({ payload }) {
-  const studyId = payload.studyId;
+  const { studyId } = payload;
   const custodian = payload.user;
-  const url = '/api/repository/v1/studies/' + studyId + '/policies/custodian/members/' + custodian;
+  const url = `/api/repository/v1/studies/${studyId}/policies/custodian/members/${custodian}`;
   try {
     const response = yield call(authDelete, url);
     yield put({

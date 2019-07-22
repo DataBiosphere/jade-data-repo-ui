@@ -105,7 +105,7 @@ export class DatasetDetailView extends React.PureComponent {
             <Card className={classes.card}>
               <div className={classes.header}>Custodian: </div>
               {datasetCustodians.map(custodian => (
-                <div className={classes.values} id={custodian}>
+                <div className={classes.values} id={custodian} key={custodian}>
                   {custodian}
                 </div>
               ))}

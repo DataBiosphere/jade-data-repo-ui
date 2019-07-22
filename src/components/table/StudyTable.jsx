@@ -23,8 +23,8 @@ class StudyTable extends React.PureComponent {
     classes: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired,
     studies: PropTypes.array.isRequired,
-    summary: PropTypes.bool,
     studiesCount: PropTypes.number,
+    summary: PropTypes.bool,
   };
 
   componentDidMount() {

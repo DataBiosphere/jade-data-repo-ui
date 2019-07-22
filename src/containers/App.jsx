@@ -2,8 +2,8 @@ import { hot } from 'react-hot-loader/root';
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Provider } from 'react-redux';
-import { Router, Switch, Route } from 'react-router-dom';
+
+import { Switch, Route } from 'react-router-dom';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -155,13 +155,6 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export function App(props) {
-    /*alerts: PropTypes.arrayOf(PropTypes.object).isRequired,
-  propTypes = {
-    classes: PropTypes.object.isRequired,
-    dispatch: PropTypes.func.isRequired,
-  };
-    user: PropTypes.object.isRequired,*/
-
   const { user, alerts, dispatch } = props;
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
@@ -234,12 +227,7 @@ export function App(props) {
         <div className={classes.errorPanel}>
           {alerts &&
             alerts.map((alert, i) => (
-              <Toast
-                dispatch={dispatch}
-                errorMsg={alert && alert.toString()}
-                index={i}
-                key={i}
-              />
+              <Toast dispatch={dispatch} errorMsg={alert && alert.toString()} index={i} key={i} />
             ))}
         </div>
         <Switch>
@@ -257,11 +245,17 @@ export function App(props) {
   );
 }
 
+App.propTypes = {
+  alerts: PropTypes.arrayOf(PropTypes.object).isRequired,
+  dispatch: PropTypes.func.isRequired,
+  user: PropTypes.object.isRequired,
+};
+
 function mapStateToProps(state) {
   return {
     user: state.user,
-    alerts: state.app.alerts
-  }
+    alerts: state.app.alerts,
+  };
 }
 
 export default hot(connect(mapStateToProps)(App));

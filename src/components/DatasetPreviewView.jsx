@@ -105,7 +105,7 @@ export class DatasetPreviewView extends React.PureComponent {
 
   componentDidMount() {
     const { dispatch, match } = this.props;
-    const jobId = match.params.jobId;
+    const { jobId } = match.params;
     dispatch(clearJobId());
     dispatch(actions.change('dataset', {}));
     dispatch(getJobById(jobId));
@@ -121,7 +121,7 @@ export class DatasetPreviewView extends React.PureComponent {
       match,
       userEmail,
     } = this.props;
-    const jobId = match.params.jobId;
+    const { jobId } = match.params;
     const createdDataset = createdDatasets.find(datasetJob => datasetJob.jobId === jobId);
     const jobCompleted = jobStatus === STATUS.SUCCESS || jobStatus === STATUS.ERROR;
     return (
@@ -183,7 +183,9 @@ export class DatasetPreviewView extends React.PureComponent {
                 {createdDataset &&
                   createdDataset.datasetRequest &&
                   createdDataset.datasetRequest.readers &&
-                  createdDataset.datasetRequest.readers.map(reader => <div> {reader} </div>)}
+                  createdDataset.datasetRequest.readers.map(reader => (
+                    <div key={reader}> {reader} </div>
+                  ))}
               </div>
             </Card>
           </div>
