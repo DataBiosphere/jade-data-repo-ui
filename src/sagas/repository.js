@@ -330,6 +330,26 @@ export function* removeCustodianFromStudy({ payload }) {
   }
 }
 
+export function* getStudyTablePreview({ payload }) {
+  const { study, tableName } = payload;
+  const studyProject = study.dataProject;
+  const studyBqDatasetName = `datarepo_${study.name}`;
+  const bqApi = 'https://www.googleapis.com/bigquery/v2';
+  const url = `${bqApi}/projects/${studyProject}/datasets/${studyBqDatasetName}/tables/${tableName}/data`;
+  try {
+    const response = yield call(authGet, url);
+    yield put({
+      type: ActionTypes.GET_STUDY_TABLE_PREVIEW_SUCCESS,
+      preview: response,
+    });
+  } catch (err) {
+    yield put({
+      type: ActionTypes.EXCEPTION,
+      payload: err,
+    });
+  }
+}
+
 /**
  * App Sagas
  */
@@ -346,5 +366,6 @@ export default function* root() {
     takeLatest(ActionTypes.GET_STUDY_POLICY, getStudyPolicy),
     takeLatest(ActionTypes.ADD_CUSTODIAN_TO_STUDY, addCustodianToStudy),
     takeLatest(ActionTypes.REMOVE_CUSTODIAN_FROM_STUDY, removeCustodianFromStudy),
+    takeLatest(ActionTypes.GET_STUDY_TABLE_PREVIEW, getStudyTablePreview),
   ]);
 }

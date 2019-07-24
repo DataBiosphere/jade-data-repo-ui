@@ -13,6 +13,7 @@ import {
   removeCustodianFromStudy,
 } from 'actions/index';
 import ManageUsersModal from './ManageUsersModal';
+import StudyTablePreview from './StudyTablePreview';
 
 const styles = theme => ({
   wrapper: {
@@ -119,6 +120,7 @@ export class StudyDetailView extends React.PureComponent {
               </div>
             </Card>
           </div>
+          {study && study.schema && <StudyTablePreview study={study} />}
         </div>
       </div>
     );
