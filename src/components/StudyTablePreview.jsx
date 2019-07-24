@@ -15,6 +15,9 @@ const styles = theme => ({
   tableIcon: {
     verticalAlign: 'text-bottom',
     marginRight: '.25em',
+    fontSize: '54px',
+    lineHeight: '66px',
+    paddingBottom: theme.spacing(8),
   },
 });
 
@@ -81,6 +84,12 @@ export class StudyTablePreview extends React.PureComponent {
         )}
       </div>
     );
+  }
+
+  loadPreview() {
+    const { dispatch, study } = this.props;
+    const { currentTable } = this.state;
+    dispatch(getStudyTablePreview(study, currentTable));
   }
 }
 
