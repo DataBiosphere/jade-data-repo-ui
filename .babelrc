@@ -12,12 +12,6 @@
     "@babel/preset-flow"
   ],
   "plugins": [
-    [
-      "babel-plugin-styled-components",
-      {
-        "fileName": false
-      }
-    ],
     "inline-react-svg",
     "@babel/plugin-proposal-function-bind",
     "@babel/plugin-proposal-export-default-from",

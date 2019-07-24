@@ -14,18 +14,18 @@ const styles = theme => ({
     color: theme.palette.primary.main,
     fontSize: '54px',
     lineHeight: '66px',
-    paddingBottom: theme.spacing.unit * 8,
+    paddingBottom: theme.spacing(8),
   },
   dialogTitle: {
     borderBottom: `1px solid ${theme.palette.divider}`,
     display: 'flex',
     justifyContent: 'space-between',
     margin: 0,
-    padding: theme.spacing.unit * 3,
+    padding: theme.spacing(3),
   },
   dialogContent: {
-    paddingBottom: theme.spacing.unit * 4,
-    paddingTop: theme.spacing.unit * 4,
+    paddingBottom: theme.spacing(4),
+    paddingTop: theme.spacing(4),
     fontFamily: [
       'Montserrat',
       'BlinkMacSystemFont',
@@ -44,8 +44,8 @@ const styles = theme => ({
   dialogActions: {
     display: 'flex',
     justifyContent: 'space-between',
-    paddingBottom: theme.spacing.unit * 2,
-    paddingTop: theme.spacing.unit * 2,
+    paddingBottom: theme.spacing(2),
+    paddingTop: theme.spacing(2),
     minWidth: '600px',
   },
   actionButtons: {
@@ -63,8 +63,8 @@ const styles = theme => ({
   },
   closeButton: {
     position: 'absolute',
-    right: theme.spacing.unit * 1.5,
-    top: theme.spacing.unit * 2,
+    right: theme.spacing(1.5),
+    top: theme.spacing(2),
   },
 });
 

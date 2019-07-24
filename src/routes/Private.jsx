@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { BrowserRouter as Router, Link, Switch, Route } from 'react-router-dom';
+import { Router, Link, Switch, Route } from 'react-router-dom';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import { withStyles } from '@material-ui/core/styles';
@@ -23,10 +23,10 @@ const styles = theme => ({
   },
   tabsRoot: {
     borderBottom: `2px solid ${theme.palette.secondary.main}`,
-    boxShadow: `0 2px 5px 0 rgba(0,0,0,0.26), 0 2px 10px 0 rgba(0,0,0,0.16)`,
+    boxShadow: '0 2px 5px 0 rgba(0,0,0,0.26), 0 2px 10px 0 rgba(0,0,0,0.16)',
     color: '#333F52',
     fontFamily: theme.typography.fontFamily,
-    paddingLeft: theme.spacing.unit * 11.5,
+    paddingLeft: theme.spacing(11.5),
     height: 18,
     fontSize: 14,
     fontWeight: 600,

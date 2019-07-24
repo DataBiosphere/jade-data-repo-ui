@@ -19,8 +19,8 @@ const styles = theme => ({
   wrapper: {
     display: 'flex',
     justifyContent: 'center',
-    padding: theme.spacing.unit * 4,
-    margin: theme.spacing.unit * 4,
+    padding: theme.spacing(4),
+    margin: theme.spacing(4),
   },
   width: {
     width: '70%',
@@ -29,11 +29,11 @@ const styles = theme => ({
     color: theme.palette.primary.main,
     fontSize: '54px',
     lineHeight: '66px',
-    paddingBottom: theme.spacing.unit * 8,
+    paddingBottom: theme.spacing(8),
   },
   card: {
     display: 'inline-block',
-    padding: theme.spacing.unit * 4,
+    padding: theme.spacing(4),
   },
   container: {
     display: 'flex',
@@ -49,7 +49,7 @@ const styles = theme => ({
     width: '70%',
   },
   values: {
-    paddingBottom: theme.spacing.unit * 3,
+    paddingBottom: theme.spacing(3),
   },
 });
 
@@ -105,7 +105,7 @@ export class DatasetDetailView extends React.PureComponent {
             <Card className={classes.card}>
               <div className={classes.header}>Custodian: </div>
               {datasetCustodians.map(custodian => (
-                <div className={classes.values} id={custodian}>
+                <div className={classes.values} id={custodian} key={custodian}>
                   {custodian}
                 </div>
               ))}

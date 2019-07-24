@@ -12,14 +12,14 @@ const styles = theme => ({
   logo: {
     alignItems: 'flex-start',
     display: 'inline-flex',
-    height: theme.spacing.unit * 8,
+    height: theme.spacing(8),
   },
   logoTitle: {
     color: '#fff',
     fontFamily: theme.typography.fontFamily,
     fontSize: '18px',
     fontWeight: '500',
-    paddingLeft: theme.spacing.unit,
+    paddingLeft: theme.spacing(1),
   },
 });
 

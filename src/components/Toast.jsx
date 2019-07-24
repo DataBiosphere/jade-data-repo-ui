@@ -13,11 +13,11 @@ const styles = theme => ({
   card: {
     borderRadius: 5,
     backgroundColor: theme.palette.error.main,
-    boxShadow: `${theme.spacing.unit * -1}px 0 0 0 ${theme.palette.error.dark}`,
+    boxShadow: `${theme.spacing(1) * -1}px 0 0 0 ${theme.palette.error.dark}`,
     color: theme.palette.primary.contrastText,
     height: 65,
     width: 268,
-    margin: theme.spacing.unit * 2,
+    margin: theme.spacing(2),
   },
   content: {
     display: 'flex',
@@ -30,20 +30,20 @@ const styles = theme => ({
     fontFamily: theme.typography.fontFamily,
     fontSize: 12,
     fontWeight: 600,
-    padding: `0 0 0 ${theme.spacing.unit * 2}px`,
+    padding: `0 0 0 ${theme.spacing(2)}px`,
   },
   icon: {
     fill: theme.palette.primary.contrastText,
-    height: theme.spacing.unit * 4,
+    height: theme.spacing(4),
   },
   closeButton: {
     fill: theme.palette.primary.contrastText,
     float: 'right',
-    padding: theme.spacing.unit,
+    padding: theme.spacing(1),
   },
   close: {
-    height: theme.spacing.unit * 2,
-    width: theme.spacing.unit * 2,
+    height: theme.spacing(2),
+    width: theme.spacing(2),
   },
 });
 

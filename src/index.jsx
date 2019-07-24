@@ -3,7 +3,10 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Helmet from 'react-helmet';
 import { Provider } from 'react-redux';
-import { AppContainer } from 'react-hot-loader';
+import { Router } from 'react-router-dom';
+import history from 'modules/hist';
+import globalTheme from 'modules/theme';
+import { ThemeProvider } from '@material-ui/styles';
 
 import { store } from 'store/index';
 
@@ -17,24 +20,27 @@ export const app = {
   run() {
     this.render(App);
   },
+
   render(Component) {
     const root = document.getElementById('react');
 
     if (root) {
       ReactDOM.render(
-        <AppContainer>
-          <Provider store={store}>
-            <Helmet
-              defer={false}
-              htmlAttributes={{ lang: 'pt-br' }}
-              encodeSpecialCharacters={true}
-              defaultTitle={'Terra Data Repository' || config.title}
-              titleTemplate={`%s | ${config.name}`}
-              titleAttributes={{ itemprop: 'name', lang: 'pt-br' }}
-            />
-            <Component />
-          </Provider>
-        </AppContainer>,
+        <Provider store={store}>
+          <Helmet
+            defer={false}
+            htmlAttributes={{ lang: 'pt-br' }}
+            encodeSpecialCharacters={true}
+            defaultTitle={'Terra Data Repository' || config.title}
+            titleTemplate={`%s | ${config.name}`}
+            titleAttributes={{ itemprop: 'name', lang: 'pt-br' }}
+          />
+          <Router history={history}>
+            <ThemeProvider theme={globalTheme}>
+              <Component />
+            </ThemeProvider>
+          </Router>
+        </Provider>,
         root,
       );
     }
@@ -42,7 +48,3 @@ export const app = {
 };
 
 app.run();
-
-if (module.hot) {
-  module.hot.accept('containers/App', () => app.render(App));
-}

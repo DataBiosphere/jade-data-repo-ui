@@ -8,14 +8,14 @@ import { isEmail } from 'validator';
 
 const styles = theme => ({
   addButton: {
-    margin: theme.spacing.unit,
+    margin: theme.spacing(1),
   },
   chip: {
-    margin: theme.spacing.unit,
+    margin: theme.spacing(1),
   },
   chipContainer: {
-    margin: theme.spacing.unit,
-    maxHeight: theme.spacing.unit * 20,
+    margin: theme.spacing(1),
+    maxHeight: theme.spacing(20),
     overflowY: 'scroll',
     width: '100%',
   },
