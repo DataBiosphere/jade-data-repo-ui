@@ -173,7 +173,7 @@
     "raw-loader": "^1.0.0",
     "react-dev-utils": "^7.0.5",
     "react-error-overlay": "^5.1.6",
-    "react-hot-loader": "^4.12.8",
+    "react-hot-loader": "^4.12.9",
     "redux-mock-store": "^1.5.3",
     "redux-saga-test-plan": "^3.7.0",
     "rsync": "^0.6.1",
