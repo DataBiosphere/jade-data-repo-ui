@@ -15,9 +15,6 @@ const styles = theme => ({
   tableIcon: {
     verticalAlign: 'text-bottom',
     marginRight: '.25em',
-    fontSize: '54px',
-    lineHeight: '66px',
-    paddingBottom: theme.spacing(8),
   },
 });
 
