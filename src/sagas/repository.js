@@ -341,6 +341,7 @@ export function* getStudyTablePreview({ payload }) {
     yield put({
       type: ActionTypes.GET_STUDY_TABLE_PREVIEW_SUCCESS,
       preview: response,
+      tableName,
     });
   } catch (err) {
     yield put({

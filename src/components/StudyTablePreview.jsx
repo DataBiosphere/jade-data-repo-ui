@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 // import Paper from '@material-ui/core/Paper';
-
 import { getStudyTablePreview } from 'actions/index';
+import PreviewTable from './table/PreviewTable';
 
 const styles = theme => ({
   title: {
@@ -39,9 +39,22 @@ export class StudyTablePreview extends React.PureComponent {
     dispatch(getStudyTablePreview(study, currentTable));
   }
 
+  getTable() {
+    const { study } = this.props;
+    const { currentTable } = this.state;
+    if (study && study.schema) {
+      return study.schema.tables.find(t => t.name === currentTable);
+    }
+    return null;
+  }
+
   render() {
-    const { classes, study } = this.props;
-    return <div className={classes.title}>Hello {study.name}</div>;
+    const { classes } = this.props;
+    return (
+      <div>
+        <PreviewTable table={this.getTable()} />
+      </div>
+    );
   }
 }
 

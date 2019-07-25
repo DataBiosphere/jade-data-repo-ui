@@ -38,6 +38,12 @@ export default {
         immutable(state, {
           study: { $set: {} },
         }),
+      [ActionTypes.GET_STUDY_TABLE_PREVIEW_SUCCESS]: (state, action) => {
+        const i = state.study.schema.tables.findIndex(table => table.name === action.tableName);
+        return immutable(state, {
+          study: { schema: { tables: { [i]: { preview: { $set: action.preview.data.rows } } } } },
+        });
+      },
     },
     studyState,
   ),
