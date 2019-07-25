@@ -2,16 +2,19 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
-// import Paper from '@material-ui/core/Paper';
 import { getStudyTablePreview } from 'actions/index';
+import TableChart from '@material-ui/icons/TableChartOutlined';
 import PreviewTable from './table/PreviewTable';
+import TablePicker from './TablePicker';
 
 const styles = theme => ({
   title: {
     color: theme.palette.primary.main,
-    fontSize: '54px',
-    lineHeight: '66px',
-    paddingBottom: theme.spacing(8),
+    fontSize: '24px',
+  },
+  tableIcon: {
+    verticalAlign: 'text-bottom',
+    marginRight: '.25em',
   },
 });
 
@@ -20,6 +23,7 @@ export class StudyTablePreview extends React.PureComponent {
     super(props);
     this.state = {
       currentTable: props.study.schema.tables[0].name,
+      pickerOpen: false,
     };
   }
 
@@ -30,13 +34,13 @@ export class StudyTablePreview extends React.PureComponent {
   };
 
   componentDidMount() {
-    this.loadPreview();
+    const { currentTable } = this.state;
+    this.loadPreview(currentTable);
   }
 
-  loadPreview() {
+  loadPreview(tableName) {
     const { dispatch, study } = this.props;
-    const { currentTable } = this.state;
-    dispatch(getStudyTablePreview(study, currentTable));
+    dispatch(getStudyTablePreview(study, tableName));
   }
 
   getTable() {
@@ -48,11 +52,33 @@ export class StudyTablePreview extends React.PureComponent {
     return null;
   }
 
+  openTablePicker = () => {
+    this.setState({ pickerOpen: true });
+  };
+
+  pickTable = tableName => {
+    this.setState({ pickerOpen: false, currentTable: tableName });
+    this.loadPreview(tableName);
+  };
+
   render() {
-    const { classes } = this.props;
+    const { classes, study } = this.props;
+    const { currentTable, pickerOpen } = this.state;
     return (
       <div>
-        <PreviewTable table={this.getTable()} />
+        <div>
+          <TableChart className={classes.tableIcon} onClick={this.openTablePicker} />
+          <span className={classes.title}>{currentTable}</span>
+        </div>
+        {pickerOpen ? (
+          <TablePicker
+            tables={study.schema.tables}
+            currentTable={currentTable}
+            pickTable={this.pickTable}
+          />
+        ) : (
+          <PreviewTable table={this.getTable()} />
+        )}
       </div>
     );
   }
