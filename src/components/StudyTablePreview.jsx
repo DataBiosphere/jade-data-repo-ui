@@ -85,12 +85,6 @@ export class StudyTablePreview extends React.PureComponent {
       </div>
     );
   }
-
-  loadPreview() {
-    const { dispatch, study } = this.props;
-    const { currentTable } = this.state;
-    dispatch(getStudyTablePreview(study, currentTable));
-  }
 }
 
 function mapStateToProps(state) {
