@@ -1,19 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import moment from 'moment';
-import _ from 'lodash';
 import { withStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import Card from '@material-ui/core/Card';
-import Typography from '@material-ui/core/Typography';
 import {
   getStudyById,
   getStudyPolicy,
   addCustodianToStudy,
   removeCustodianFromStudy,
 } from 'actions/index';
-import ManageUsersModal from './ManageUsersModal';
+import DetailViewHeader from './DetailViewHeader';
 import StudyTablePreview from './StudyTablePreview';
 
 const styles = theme => ({
@@ -62,62 +57,29 @@ export class StudyDetailView extends React.PureComponent {
     dispatch(getStudyPolicy(studyId));
   }
 
-  addUser(dispatch, studyId, newEmail) {
-    dispatch(addCustodianToStudy(studyId, [newEmail]));
-  }
+  addUser = newEmail => {
+    const { dispatch, study } = this.props;
+    dispatch(addCustodianToStudy(study.id, [newEmail]));
+  };
 
-  removeUser(dispatch, studyId, removeableEmail) {
-    dispatch(removeCustodianFromStudy(studyId, removeableEmail));
-  }
+  removeUser = removeableEmail => {
+    const { dispatch, study } = this.props;
+    dispatch(removeCustodianFromStudy(study.id, removeableEmail));
+  };
 
   render() {
-    const { classes, dispatch, study, studyPolicies } = this.props;
+    const { classes, study, studyPolicies } = this.props;
     const studyCustodiansObj = studyPolicies.find(policy => policy.name === 'custodian');
     const studyCustodians = (studyCustodiansObj && studyCustodiansObj.members) || [];
     return (
       <div className={classes.wrapper}>
         <div className={classes.width}>
-          <Grid container wrap="nowrap" spacing={2}>
-            <Grid item zeroMinWidth xs={9}>
-              <Typography noWrap className={classes.title}>
-                {study.name}
-              </Typography>
-              <Typography>{study.description}</Typography>
-            </Grid>
-            <Grid item xs={3}>
-              <Card className={classes.card}>
-                {study && study.createdDate && (
-                  <div>
-                    <div className={classes.header}> Date Created: </div>
-                    <div className={classes.values}> {moment(study.createdDate).fromNow()} </div>
-                  </div>
-                )}
-                {studyCustodians.length > 0 ? (
-                  <div>
-                    <div className={classes.header}>Custodians: </div>
-                    <div className={classes.values}>
-                      {studyCustodians.map(custodian => (
-                        <div key={custodian}>{custodian}</div>
-                      ))}
-                    </div>
-                  </div>
-                ) : (
-                  <div />
-                )}
-                <div>
-                  {study && study.id && (
-                    <ManageUsersModal
-                      addUser={_.partial(this.addUser, dispatch, study.id)}
-                      dispatch={dispatch}
-                      removeUser={_.partial(this.removeUser, dispatch, study.id)}
-                      modalText="Manage Custodians"
-                      readers={studyCustodians}
-                    />
-                  )}
-                </div>
-              </Card>
-            </Grid>
-          </Grid>
+          <DetailViewHeader
+            of={study}
+            custodians={studyCustodians}
+            addUser={this.addUser}
+            removeUser={this.removeUser}
+          />
           {study && study.schema && <StudyTablePreview study={study} />}
         </div>
       </div>

@@ -50,8 +50,8 @@ export class ManageUsersModal extends React.PureComponent {
     addUser: PropTypes.func.isRequired,
     classes: PropTypes.object.isRequired,
     modalText: PropTypes.string.isRequired,
-    readers: PropTypes.arrayOf(PropTypes.string),
     removeUser: PropTypes.func.isRequired,
+    users: PropTypes.arrayOf(PropTypes.string),
   };
 
   handleClickOpen = () => {
@@ -65,7 +65,7 @@ export class ManageUsersModal extends React.PureComponent {
   };
 
   render() {
-    const { addUser, classes, modalText, readers, removeUser } = this.props;
+    const { addUser, classes, modalText, users, removeUser } = this.props;
     const { open } = this.state;
     return (
       <div>
@@ -88,7 +88,7 @@ export class ManageUsersModal extends React.PureComponent {
               addUser={newEmail => addUser(newEmail)}
               defaultValue="Add email addresses"
               removeUser={removeableEmail => removeUser(removeableEmail)}
-              readers={readers}
+              users={users}
             />
           </DialogContent>
           <DialogActions className={classes.dialogActions}>
