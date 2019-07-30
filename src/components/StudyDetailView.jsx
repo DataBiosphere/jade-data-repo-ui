@@ -4,8 +4,9 @@ import { connect } from 'react-redux';
 import moment from 'moment';
 import _ from 'lodash';
 import { withStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
-
+import Typography from '@material-ui/core/Typography';
 import {
   getStudyById,
   getStudyPolicy,
@@ -25,12 +26,6 @@ const styles = theme => ({
   width: {
     width: '70%',
   },
-  container: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
-  },
   title: {
     color: theme.palette.primary.main,
     fontSize: '54px',
@@ -40,7 +35,6 @@ const styles = theme => ({
   card: {
     display: 'inline-block',
     padding: theme.spacing(4),
-    width: '300px',
   },
   header: {
     fontSize: '14px',
@@ -83,43 +77,47 @@ export class StudyDetailView extends React.PureComponent {
     return (
       <div className={classes.wrapper}>
         <div className={classes.width}>
-          <div className={classes.container}>
-            <div>
-              <div className={classes.title}>{study.name}</div>
-              <div>{study.description}</div>
-            </div>
-            <Card className={classes.card}>
-              {study && study.createdDate && (
-                <div>
-                  <div className={classes.header}> Date Created: </div>
-                  <div className={classes.values}> {moment(study.createdDate).fromNow()} </div>
-                </div>
-              )}
-              {studyCustodians.length > 0 ? (
-                <div>
-                  <div className={classes.header}>Custodians: </div>
-                  <div className={classes.values}>
-                    {studyCustodians.map(custodian => (
-                      <div key={custodian}>{custodian}</div>
-                    ))}
+          <Grid container wrap="nowrap" spacing={2}>
+            <Grid item zeroMinWidth xs={9}>
+              <Typography noWrap className={classes.title}>
+                {study.name}
+              </Typography>
+              <Typography>{study.description}</Typography>
+            </Grid>
+            <Grid item xs={3}>
+              <Card className={classes.card}>
+                {study && study.createdDate && (
+                  <div>
+                    <div className={classes.header}> Date Created: </div>
+                    <div className={classes.values}> {moment(study.createdDate).fromNow()} </div>
                   </div>
-                </div>
-              ) : (
-                <div />
-              )}
-              <div>
-                {study && study.id && (
-                  <ManageUsersModal
-                    addUser={_.partial(this.addUser, dispatch, study.id)}
-                    dispatch={dispatch}
-                    removeUser={_.partial(this.removeUser, dispatch, study.id)}
-                    modalText="Manage Custodians"
-                    readers={studyCustodians}
-                  />
                 )}
-              </div>
-            </Card>
-          </div>
+                {studyCustodians.length > 0 ? (
+                  <div>
+                    <div className={classes.header}>Custodians: </div>
+                    <div className={classes.values}>
+                      {studyCustodians.map(custodian => (
+                        <div key={custodian}>{custodian}</div>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <div />
+                )}
+                <div>
+                  {study && study.id && (
+                    <ManageUsersModal
+                      addUser={_.partial(this.addUser, dispatch, study.id)}
+                      dispatch={dispatch}
+                      removeUser={_.partial(this.removeUser, dispatch, study.id)}
+                      modalText="Manage Custodians"
+                      readers={studyCustodians}
+                    />
+                  )}
+                </div>
+              </Card>
+            </Grid>
+          </Grid>
           {study && study.schema && <StudyTablePreview study={study} />}
         </div>
       </div>
