@@ -71,6 +71,11 @@ export const { getStudyPolicy } = createActions({
   [ActionTypes.GET_STUDY_POLICY_SUCCESS]: policy => policy,
 });
 
+export const { getStudyTablePreview } = createActions({
+  [ActionTypes.GET_STUDY_TABLE_PREVIEW]: (study, tableName) => ({ study, tableName }),
+  [ActionTypes.GET_STUDY_TABLE_PREVIEW_SUCCESS]: _ => _,
+});
+
 export const { addCustodianToStudy } = createActions({
   [ActionTypes.ADD_CUSTODIAN_TO_STUDY]: (studyId, users) => ({
     studyId,

@@ -78,6 +78,7 @@ export class JadeTable extends React.PureComponent {
     columns: PropTypes.arrayOf(PropTypes.object),
     handleEnumeration: PropTypes.func,
     itemType: PropTypes.string.isRequired,
+    rowKey: PropTypes.func,
     rows: PropTypes.arrayOf(PropTypes.object),
     summary: PropTypes.bool,
     totalCount: PropTypes.number,
@@ -122,7 +123,7 @@ export class JadeTable extends React.PureComponent {
   };
 
   render() {
-    const { classes, columns, itemType, rows, summary, totalCount } = this.props;
+    const { classes, columns, itemType, rows, summary, totalCount, rowKey } = this.props;
     const { orderBy, orderDirection, page, rowsPerPage } = this.state;
     const ROW_HEIGHT = 50;
     const ROWS_PER_PAGE = [5, 10, 25];
@@ -158,7 +159,7 @@ export class JadeTable extends React.PureComponent {
             <TableBody>
               {rows && rows.length > 0 ? (
                 rows.map(row => (
-                  <TableRow key={row.id} className={classes.row}>
+                  <TableRow key={rowKey ? rowKey(row) : row.id} className={classes.row}>
                     {columns.map(col => (
                       <TableCell key={col.property} style={{ wordBreak: 'break-word' }}>
                         {col.render ? col.render(row) : row[col.property]}

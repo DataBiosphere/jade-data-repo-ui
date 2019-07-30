@@ -90,7 +90,7 @@ class WelcomeView extends React.PureComponent {
               isSignedIn
               cookiePolicy="single_host_origin"
               prompt="select_account"
-              scope="openid profile email"
+              scope="openid profile email https://www.googleapis.com/auth/bigquery"
               theme="dark"
             />
           </div>
