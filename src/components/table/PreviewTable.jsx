@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React from 'react';
 import PropTypes from 'prop-types';
 import JadeTable from './JadeTable';
@@ -15,7 +16,16 @@ export default class PreviewTable extends React.PureComponent {
     const columns = table.columns.map((col, j) => ({
       label: col.name,
       property: col.name,
-      render: row => row.f[j + 1].v,
+      render: row => {
+        const value = row.f[j + 1].v;
+        if (_.isArray(value)) {
+          return _(value)
+            .map('v')
+            .value()
+            .join(', ');
+        }
+        return value;
+      },
     }));
     const keyFn = row => row.f[0].v;
     return (
