@@ -77,8 +77,8 @@ export class StudyDetailView extends React.PureComponent {
           <DetailViewHeader
             of={study}
             custodians={studyCustodians}
-            addUser={this.addUser}
-            removeUser={this.removeUser}
+            addCustodian={this.addUser}
+            removeCustodian={this.removeUser}
           />
           {study && study.schema && <StudyTablePreview study={study} />}
         </div>

@@ -36,6 +36,20 @@ export const { getDatasetPolicy } = createActions({
   [ActionTypes.GET_DATASET_POLICY_SUCCESS]: policy => policy,
 });
 
+export const { addCustodianToDataset } = createActions({
+  [ActionTypes.ADD_CUSTODIAN_TO_DATASET]: (datasetId, users) => ({
+    datasetId,
+    users,
+  }),
+});
+
+export const { removeCustodianFromDataset } = createActions({
+  [ActionTypes.REMOVE_CUSTODIAN_FROM_DATASET]: (datasetId, user) => ({
+    datasetId,
+    user,
+  }),
+});
+
 export const { addReaderToDataset } = createActions({
   [ActionTypes.ADD_READER_TO_DATASET]: (datasetId, users) => ({
     datasetId,
