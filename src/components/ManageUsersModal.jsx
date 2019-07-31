@@ -39,6 +39,9 @@ const styles = theme => ({
   chip: {
     margin: theme.spacing(1),
   },
+  openButton: {
+    width: '100%',
+  },
 });
 
 export class ManageUsersModal extends React.PureComponent {
@@ -69,7 +72,12 @@ export class ManageUsersModal extends React.PureComponent {
     const { open } = this.state;
     return (
       <div>
-        <Button variant="outlined" color="secondary" onClick={this.handleClickOpen}>
+        <Button
+          className={classes.openButton}
+          variant="outlined"
+          color="secondary"
+          onClick={this.handleClickOpen}
+        >
           {modalText}
         </Button>
         <Dialog onClose={this.handleClose} aria-labelledby="customized-dialog-title" open={open}>

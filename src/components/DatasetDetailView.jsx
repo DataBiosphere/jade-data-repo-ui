@@ -90,7 +90,7 @@ export class DatasetDetailView extends React.PureComponent {
 
   render() {
     const { classes, dataset, datasetPolicies } = this.props;
-    const datasetReadersObj = datasetPolicies.find(policy => policy.name === 'reader'); // TODO make this an enum
+    const datasetReadersObj = datasetPolicies.find(policy => policy.name === 'reader');
     const datasetReaders = (datasetReadersObj && datasetReadersObj.members) || [];
     const datasetCustodiansObj = datasetPolicies.find(policy => policy.name === 'custodian');
     const datasetCustodians = (datasetCustodiansObj && datasetCustodiansObj.members) || [];
@@ -107,7 +107,6 @@ export class DatasetDetailView extends React.PureComponent {
             addReader={this.addReader}
             removeReader={this.removeReader}
           />
-          {/* TODO add front end search once there is more than one study in a dataset*/}
           {dataset && dataset.source && (
             <StudyTable rows={studies} studyListName="STUDIES IN THIS DATASET" />
           )}
@@ -117,7 +116,6 @@ export class DatasetDetailView extends React.PureComponent {
   }
 }
 
-/* istanbul ignore next */
 function mapStateToProps(state) {
   return {
     dataset: state.datasets.dataset,

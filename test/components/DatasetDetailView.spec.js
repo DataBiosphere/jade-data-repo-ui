@@ -11,6 +11,10 @@ const props = {
       uuid: 'someuuid',
     },
   },
+  dataset: {
+    name: 'TODO: test this',
+    description: 'describes a dataset',
+  },
 };
 
 function setup(ownProps = props) {

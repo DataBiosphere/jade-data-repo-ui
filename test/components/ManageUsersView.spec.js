@@ -9,7 +9,7 @@ const ownProps = {
   addReader: mockAddReader,
   defaultValue: '',
   removeReader: mockRemoveReader,
-  readers: [],
+  users: [],
 };
 
 function setup() {
