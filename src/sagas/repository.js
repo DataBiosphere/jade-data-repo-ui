@@ -352,6 +352,26 @@ export function* getStudyTablePreview({ payload }) {
 }
 
 /**
+ * unauthenticated
+ */
+
+export function* getConfiguration() {
+  try {
+    const response = yield call(authGet, '/configuration');
+
+    yield put({
+      type: ActionTypes.GET_CONFIGURATION_SUCCESS,
+      configuration: { data: response },
+    });
+  } catch (err) {
+    yield put({
+      type: ActionTypes.EXCEPTION,
+      payload: err,
+    });
+  }
+}
+
+/**
  * App Sagas
  */
 export default function* root() {

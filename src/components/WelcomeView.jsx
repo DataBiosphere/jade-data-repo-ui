@@ -58,11 +58,12 @@ const styles = theme => ({
 class WelcomeView extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object.isRequired,
+    configuration: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired,
   };
 
   render() {
-    const { classes, dispatch } = this.props;
+    const { classes, configuration, dispatch } = this.props;
 
     const onSignInFailure = () => {
       dispatch(logOut());
@@ -83,7 +84,7 @@ class WelcomeView extends React.PureComponent {
           <div className={classes.title}>Welcome to the Terra Data Repository</div>
           <div>
             <GoogleLogin // TODO this component may be unuseable once we require a terra registration
-              clientId="970791974390-1581mjhtp2b3jmg4avhor1vabs13b7ur.apps.googleusercontent.com"
+              clientId={configuration.clientId}
               buttonText="Sign in with Google"
               onSuccess={onSignInSuccess}
               onFailure={onSignInFailure}
