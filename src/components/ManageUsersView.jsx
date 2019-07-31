@@ -42,8 +42,8 @@ class ManageUsersView extends React.PureComponent {
     addUser: PropTypes.func.isRequired,
     classes: PropTypes.object.isRequired,
     defaultValue: PropTypes.string,
-    readers: PropTypes.arrayOf(PropTypes.string),
     removeUser: PropTypes.func.isRequired,
+    users: PropTypes.arrayOf(PropTypes.string),
   };
 
   validateEmail(newEmail) {
@@ -61,18 +61,18 @@ class ManageUsersView extends React.PureComponent {
   }
 
   render() {
-    const { classes, defaultValue, readers, removeUser } = this.props;
+    const { classes, defaultValue, users, removeUser } = this.props;
     const { emailValid, newEmail } = this.state;
-    const readerChips =
-      !!readers &&
-      readers.map(reader => (
-        <div key={reader}>
+    const userChips =
+      !!users &&
+      users.map(user => (
+        <div key={user}>
           <Chip
             className={classes.chip}
             color="primary"
-            label={reader}
-            key={reader}
-            onDelete={() => removeUser(reader)}
+            label={user}
+            key={user}
+            onDelete={() => removeUser(user)}
             variant="outlined"
           />
         </div>
@@ -101,7 +101,7 @@ class ManageUsersView extends React.PureComponent {
             ADD
           </Button>
         </div>
-        {readers.length > 0 && <div className={classes.chipContainer}>{readerChips}</div>}
+        {users.length > 0 && <div className={classes.chipContainer}>{userChips}</div>}
       </div>
     );
   }

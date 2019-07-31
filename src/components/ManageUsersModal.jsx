@@ -39,6 +39,9 @@ const styles = theme => ({
   chip: {
     margin: theme.spacing(1),
   },
+  openButton: {
+    width: '100%',
+  },
 });
 
 export class ManageUsersModal extends React.PureComponent {
@@ -50,8 +53,8 @@ export class ManageUsersModal extends React.PureComponent {
     addUser: PropTypes.func.isRequired,
     classes: PropTypes.object.isRequired,
     modalText: PropTypes.string.isRequired,
-    readers: PropTypes.arrayOf(PropTypes.string),
     removeUser: PropTypes.func.isRequired,
+    users: PropTypes.arrayOf(PropTypes.string),
   };
 
   handleClickOpen = () => {
@@ -65,11 +68,16 @@ export class ManageUsersModal extends React.PureComponent {
   };
 
   render() {
-    const { addUser, classes, modalText, readers, removeUser } = this.props;
+    const { addUser, classes, modalText, users, removeUser } = this.props;
     const { open } = this.state;
     return (
       <div>
-        <Button variant="outlined" color="secondary" onClick={this.handleClickOpen}>
+        <Button
+          className={classes.openButton}
+          variant="outlined"
+          color="secondary"
+          onClick={this.handleClickOpen}
+        >
           {modalText}
         </Button>
         <Dialog onClose={this.handleClose} aria-labelledby="customized-dialog-title" open={open}>
@@ -88,7 +96,7 @@ export class ManageUsersModal extends React.PureComponent {
               addUser={newEmail => addUser(newEmail)}
               defaultValue="Add email addresses"
               removeUser={removeableEmail => removeUser(removeableEmail)}
-              readers={readers}
+              users={users}
             />
           </DialogContent>
           <DialogActions className={classes.dialogActions}>

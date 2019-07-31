@@ -1,18 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import moment from 'moment';
 import { withStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import _ from 'lodash';
-
 import {
   getDatasetById,
   getDatasetPolicy,
   addReaderToDataset,
   removeReaderFromDataset,
+  addCustodianToDataset,
+  removeCustodianFromDataset,
 } from 'actions/index';
-import ManageUsersModal from './ManageUsersModal';
+import DetailViewHeader from './DetailViewHeader';
+
 import StudyTable from './table/StudyTable';
 
 const styles = theme => ({
@@ -69,86 +68,54 @@ export class DatasetDetailView extends React.PureComponent {
     dispatch(getDatasetPolicy(datasetId));
   }
 
-  addUser(dispatch, datasetId, newEmail) {
-    // for now the addReaderToDataset method will trigger a reset of datasetReaders
-    dispatch(addReaderToDataset(datasetId, [newEmail]));
-  }
+  addReader = newEmail => {
+    const { dataset, dispatch } = this.props;
+    dispatch(addReaderToDataset(dataset.id, [newEmail]));
+  };
 
-  removeUser(dispatch, datasetId, removeableEmail) {
-    dispatch(removeReaderFromDataset(datasetId, removeableEmail));
-  }
+  removeReader = removeableEmail => {
+    const { dataset, dispatch } = this.props;
+    dispatch(removeReaderFromDataset(dataset.id, removeableEmail));
+  };
+
+  addCustodian = newEmail => {
+    const { dataset, dispatch } = this.props;
+    dispatch(addCustodianToDataset(dataset.id, [newEmail]));
+  };
+
+  removeCustodian = removeableEmail => {
+    const { dataset, dispatch } = this.props;
+    dispatch(removeCustodianFromDataset(dataset.id, removeableEmail));
+  };
 
   render() {
-    const { classes, dataset, datasetPolicies, dispatch } = this.props;
-    const datasetReadersObj = datasetPolicies.find(policy => policy.name === 'reader'); // TODO make this an enum
+    const { classes, dataset, datasetPolicies } = this.props;
+    const datasetReadersObj = datasetPolicies.find(policy => policy.name === 'reader');
     const datasetReaders = (datasetReadersObj && datasetReadersObj.members) || [];
     const datasetCustodiansObj = datasetPolicies.find(policy => policy.name === 'custodian');
     const datasetCustodians = (datasetCustodiansObj && datasetCustodiansObj.members) || [];
-    const modalText = 'Viewers';
-    // TODO should there be placeholders in the UI if there are no readers? Or should that section of the container just not show?
-    if (!dataset) {
-      return (
-        <div id="dataset-detail-view" className={classes.wrapper}>
-          This dataset does not exist.
-        </div>
-      );
-    }
     const studies = dataset && dataset.source && dataset.source.map(s => s.study);
     return (
       <div id="dataset-detail-view" className={classes.wrapper}>
         <div className={classes.width}>
-          <div className={classes.container}>
-            <div className={classes.info}>
-              <div className={classes.title}>{dataset.name}</div>
-              <div>{dataset.description}</div>
-            </div>
-            <Card className={classes.card}>
-              <div className={classes.header}>Custodian: </div>
-              {datasetCustodians.map(custodian => (
-                <div className={classes.values} id={custodian} key={custodian}>
-                  {custodian}
-                </div>
-              ))}
-              {datasetReaders.length > 0 ? (
-                <div>
-                  <div className={classes.header}>{modalText}: </div>
-                  <div className={classes.values}>
-                    {datasetReaders.map(reader => (
-                      <div key={reader}>{reader}</div>
-                    ))}
-                  </div>
-                </div>
-              ) : (
-                <div />
-              )}
-              <div className={classes.header}> Date Created: </div>
-              <div className={classes.values}> {moment(dataset.createdDate).fromNow()} </div>
-              <div>
-                {dataset && dataset.id && (
-                  <ManageUsersModal
-                    addUser={_.partial(this.addUser, dispatch, dataset.id)}
-                    dispatch={dispatch}
-                    removeUser={_.partial(this.removeUser, dispatch, dataset.id)}
-                    modalText={`Manage ${modalText}`}
-                    readers={datasetReaders}
-                  />
-                )}
-              </div>
-            </Card>
-          </div>
-          <div>
-            {/* TODO add front end search once there is more than one study in a dataset*/}
-            {dataset && dataset.source && (
-              <StudyTable rows={studies} studyListName="STUDIES IN THIS DATASET" />
-            )}
-          </div>
+          <DetailViewHeader
+            of={dataset}
+            custodians={datasetCustodians}
+            addCustodian={this.addCustodian}
+            removeCustodian={this.removeCustodian}
+            readers={datasetReaders}
+            addReader={this.addReader}
+            removeReader={this.removeReader}
+          />
+          {dataset && dataset.source && (
+            <StudyTable rows={studies} studyListName="STUDIES IN THIS DATASET" />
+          )}
         </div>
       </div>
     );
   }
 }
 
-/* istanbul ignore next */
 function mapStateToProps(state) {
   return {
     dataset: state.datasets.dataset,
