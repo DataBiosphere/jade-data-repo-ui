@@ -56,6 +56,7 @@ export const ActionTypes = keyMirror({
   CLEAR_JOB_ID: undefined,
   GET_STUDY_TABLE_PREVIEW: undefined,
   GET_STUDY_TABLE_PREVIEW_SUCCESS: undefined,
+  GET_CONFIGURATION: undefined,
   GET_CONFIGURATION_SUCCESS: undefined,
 });
 

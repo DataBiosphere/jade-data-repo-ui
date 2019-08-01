@@ -116,3 +116,8 @@ export const { clearJobId } = createActions({
 export const { hideAlert } = createActions({
   [ActionTypes.HIDE_ALERT]: index => index,
 });
+
+export const { getConfiguration } = createActions({
+  [ActionTypes.GET_CONFIGURATION_SUCCESS]: configuration => configuration,
+  [ActionTypes.GET_CONFIGURATION]: configuration => configuration,
+});
