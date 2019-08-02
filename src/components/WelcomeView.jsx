@@ -56,7 +56,7 @@ const styles = theme => ({
   },
 });
 
-class WelcomeView extends React.PureComponent {
+export class WelcomeView extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object.isRequired,
     configuration: PropTypes.object.isRequired,
