@@ -84,8 +84,6 @@ export class WelcomeView extends React.PureComponent {
       dispatch(logIn(name, image, email, token, tokenExpiration));
     };
 
-    console.log(configuration);
-    console.log(configuration.clientId);
     return (
       <div className={classes.container}>
         <div className={classes.mainContent}>
