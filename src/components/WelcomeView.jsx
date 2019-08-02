@@ -65,7 +65,6 @@ class WelcomeView extends React.PureComponent {
 
   componentDidMount() {
     const { dispatch } = this.props;
-    console.log('going to dispatch');
     dispatch(getConfiguration());
   }
 
@@ -85,6 +84,8 @@ class WelcomeView extends React.PureComponent {
       dispatch(logIn(name, image, email, token, tokenExpiration));
     };
 
+    console.log(configuration);
+    console.log(configuration.clientId);
     return (
       <div className={classes.container}>
         <div className={classes.mainContent}>
