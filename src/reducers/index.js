@@ -3,6 +3,7 @@ import user from './user';
 import dataset from './dataset';
 import study from './study';
 import job from './job';
+import configuration from './configuration';
 
 export default {
   ...app,
@@ -10,4 +11,5 @@ export default {
   ...dataset,
   ...study,
   ...job,
+  ...configuration,
 };

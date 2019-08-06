@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { GoogleLogin } from 'react-google-login';
 import { withStyles } from '@material-ui/core/styles';
 
 import Hero from 'assets/media/images/hero.png';
-import { logOut, logIn } from 'actions/index';
+import { logOut, logIn, getConfiguration } from 'actions/index';
 
 const styles = theme => ({
   container: {
@@ -55,14 +56,20 @@ const styles = theme => ({
   },
 });
 
-class WelcomeView extends React.PureComponent {
+export class WelcomeView extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object.isRequired,
+    configuration: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired,
   };
 
+  componentDidMount() {
+    const { dispatch } = this.props;
+    dispatch(getConfiguration());
+  }
+
   render() {
-    const { classes, dispatch } = this.props;
+    const { classes, configuration, dispatch } = this.props;
 
     const onSignInFailure = () => {
       dispatch(logOut());
@@ -82,17 +89,19 @@ class WelcomeView extends React.PureComponent {
         <div className={classes.mainContent}>
           <div className={classes.title}>Welcome to the Terra Data Repository</div>
           <div>
-            <GoogleLogin // TODO this component may be unuseable once we require a terra registration
-              clientId="970791974390-1581mjhtp2b3jmg4avhor1vabs13b7ur.apps.googleusercontent.com"
-              buttonText="Sign in with Google"
-              onSuccess={onSignInSuccess}
-              onFailure={onSignInFailure}
-              isSignedIn
-              cookiePolicy="single_host_origin"
-              prompt="select_account"
-              scope="openid profile email https://www.googleapis.com/auth/bigquery"
-              theme="dark"
-            />
+            {configuration.clientId && (
+              <GoogleLogin // TODO this component may be unuseable once we require a terra registration
+                clientId={configuration.clientId}
+                buttonText="Sign in with Google"
+                onSuccess={onSignInSuccess}
+                onFailure={onSignInFailure}
+                isSignedIn
+                cookiePolicy="single_host_origin"
+                prompt="select_account"
+                scope="openid profile email https://www.googleapis.com/auth/bigquery"
+                theme="dark"
+              />
+            )}
           </div>
           <div className={classes.newUser}>New User?</div>
           <div className={classes.header}>Terra Data Repository requires a Google account.</div>
@@ -143,4 +152,10 @@ class WelcomeView extends React.PureComponent {
   }
 }
 
-export default withStyles(styles)(WelcomeView);
+function mapStateToProps(state) {
+  return {
+    configuration: state.configuration.configuration,
+  };
+}
+
+export default connect(mapStateToProps)(withStyles(styles)(WelcomeView));
