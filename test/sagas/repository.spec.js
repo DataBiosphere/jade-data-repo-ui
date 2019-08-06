@@ -7,11 +7,11 @@ import {
   authGet,
   authPost,
   checkToken,
-  createDataset,
+  createSnapshot,
+  getSnapshots,
+  getSnapshotById,
   getDatasets,
   getDatasetById,
-  getStudies,
-  getStudyById,
   getTokenExpiration,
   getToken,
 } from 'sagas/repository';
@@ -56,7 +56,7 @@ describe('repository', () => {
         getState: () => ({ user: { token, tokenExpiration } }),
       },
       authGet,
-      '/api/repository/v1/datasets',
+      '/api/repository/v1/snapshots',
     );
     expect(test.result()).toEqual({ data: { job_status: 'succeeded' } });
   });
@@ -69,28 +69,58 @@ describe('repository', () => {
         getState: () => ({ user: { token, tokenExpiration } }),
       },
       authPost,
-      '/api/repository/v1/datasets',
+      '/api/repository/v1/snapshots',
       'params',
     );
     expect(test.result()).toEqual({ data: { id: 'keepMePosted', job_status: 'succeeded' } });
   });
 
-  it('should have the create dataset saga', () => {
+  it('should have the create snapshot saga', () => {
     const token = 'Cherlene';
     const tokenExpiration = anHourFromNow;
     const payload = {};
-    expectSaga(createDataset, { payload })
+    expectSaga(createSnapshot, { payload })
       .provide([[select(getTokenExpiration), tokenExpiration], [select(getToken), token]])
       .put({
-        type: ActionTypes.CREATE_DATASET_JOB,
+        type: ActionTypes.CREATE_SNAPSHOT_JOB,
         payload: {
           data: { data: { id: 'keepMePosted', job_status: 'succeeded' } },
-          createdDataset: payload,
+          createdSnapshot: payload,
         },
       })
       .put({
-        type: ActionTypes.CREATE_DATASET_SUCCESS,
+        type: ActionTypes.CREATE_SNAPSHOT_SUCCESS,
         payload: { jobResult: { job_status: 'succeeded' } },
+      })
+      .run();
+  });
+
+  it('should have the get snapshots saga', () => {
+    const token = 'Cherlene';
+    const tokenExpiration = anHourFromNow;
+    const payload = {};
+    expectSaga(getSnapshots, { payload })
+      .provide([[select(getTokenExpiration), tokenExpiration], [select(getToken), token]])
+      .put({
+        type: ActionTypes.GET_SNAPSHOTS_SUCCESS,
+        snapshots: {
+          data: { data: { job_status: 'succeeded' } },
+        },
+      })
+      .run();
+  });
+
+  it('should have the get snapshot by id saga', () => {
+    const token = 'Cherlene';
+    const tokenExpiration = anHourFromNow;
+    const payload = 'snapshotId';
+    expectSaga(getSnapshotById, { payload })
+      .provide([[select(getTokenExpiration), tokenExpiration], [select(getToken), token]])
+      .put({
+        type: ActionTypes.GET_SNAPSHOT_BY_ID_SUCCESS,
+        snapshot: {
+          data: { data: { job_status: 'succeeded' } },
+        },
       })
       .run();
   });
@@ -119,36 +149,6 @@ describe('repository', () => {
       .put({
         type: ActionTypes.GET_DATASET_BY_ID_SUCCESS,
         dataset: {
-          data: { data: { job_status: 'succeeded' } },
-        },
-      })
-      .run();
-  });
-
-  it('should have the get studies saga', () => {
-    const token = 'Cherlene';
-    const tokenExpiration = anHourFromNow;
-    const payload = {};
-    expectSaga(getStudies, { payload })
-      .provide([[select(getTokenExpiration), tokenExpiration], [select(getToken), token]])
-      .put({
-        type: ActionTypes.GET_STUDIES_SUCCESS,
-        studies: {
-          data: { data: { job_status: 'succeeded' } },
-        },
-      })
-      .run();
-  });
-
-  it('should have the get study by id saga', () => {
-    const token = 'Cherlene';
-    const tokenExpiration = anHourFromNow;
-    const payload = 'studyId';
-    expectSaga(getStudyById, { payload })
-      .provide([[select(getTokenExpiration), tokenExpiration], [select(getToken), token]])
-      .put({
-        type: ActionTypes.GET_STUDY_BY_ID_SUCCESS,
-        study: {
           data: { data: { job_status: 'succeeded' } },
         },
       })

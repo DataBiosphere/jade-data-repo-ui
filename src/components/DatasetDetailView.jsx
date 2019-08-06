@@ -5,14 +5,11 @@ import { withStyles } from '@material-ui/core/styles';
 import {
   getDatasetById,
   getDatasetPolicy,
-  addReaderToDataset,
-  removeReaderFromDataset,
   addCustodianToDataset,
   removeCustodianFromDataset,
 } from 'actions/index';
 import DetailViewHeader from './DetailViewHeader';
-
-import StudyTable from './table/StudyTable';
+import DatasetTablePreview from './DatasetTablePreview';
 
 const styles = theme => ({
   wrapper: {
@@ -34,18 +31,10 @@ const styles = theme => ({
     display: 'inline-block',
     padding: theme.spacing(4),
   },
-  container: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
   header: {
     fontSize: '14px',
     lineHeight: '22px',
     fontWeight: '600',
-  },
-  info: {
-    width: '70%',
   },
   values: {
     paddingBottom: theme.spacing(3),
@@ -58,64 +47,47 @@ export class DatasetDetailView extends React.PureComponent {
     dataset: PropTypes.object,
     datasetPolicies: PropTypes.arrayOf(PropTypes.object).isRequired,
     dispatch: PropTypes.func.isRequired,
-    match: PropTypes.object.isRequired,
+    match: PropTypes.object,
   };
 
-  componentWillMount() {
+  componentDidMount() {
     const { dispatch, match } = this.props;
     const datasetId = match.params.uuid;
     dispatch(getDatasetById(datasetId));
     dispatch(getDatasetPolicy(datasetId));
   }
 
-  addReader = newEmail => {
-    const { dataset, dispatch } = this.props;
-    dispatch(addReaderToDataset(dataset.id, [newEmail]));
-  };
-
-  removeReader = removeableEmail => {
-    const { dataset, dispatch } = this.props;
-    dispatch(removeReaderFromDataset(dataset.id, removeableEmail));
-  };
-
-  addCustodian = newEmail => {
-    const { dataset, dispatch } = this.props;
+  addUser = newEmail => {
+    const { dispatch, dataset } = this.props;
     dispatch(addCustodianToDataset(dataset.id, [newEmail]));
   };
 
-  removeCustodian = removeableEmail => {
-    const { dataset, dispatch } = this.props;
+  removeUser = removeableEmail => {
+    const { dispatch, dataset } = this.props;
     dispatch(removeCustodianFromDataset(dataset.id, removeableEmail));
   };
 
   render() {
     const { classes, dataset, datasetPolicies } = this.props;
-    const datasetReadersObj = datasetPolicies.find(policy => policy.name === 'reader');
-    const datasetReaders = (datasetReadersObj && datasetReadersObj.members) || [];
     const datasetCustodiansObj = datasetPolicies.find(policy => policy.name === 'custodian');
     const datasetCustodians = (datasetCustodiansObj && datasetCustodiansObj.members) || [];
-    const studies = dataset && dataset.source && dataset.source.map(s => s.study);
     return (
-      <div id="dataset-detail-view" className={classes.wrapper}>
+      <div className={classes.wrapper}>
         <div className={classes.width}>
           <DetailViewHeader
             of={dataset}
             custodians={datasetCustodians}
-            addCustodian={this.addCustodian}
-            removeCustodian={this.removeCustodian}
-            readers={datasetReaders}
-            addReader={this.addReader}
-            removeReader={this.removeReader}
+            addCustodian={this.addUser}
+            removeCustodian={this.removeUser}
           />
-          {dataset && dataset.source && (
-            <StudyTable rows={studies} studyListName="STUDIES IN THIS DATASET" />
-          )}
+          {dataset && dataset.schema && <DatasetTablePreview dataset={dataset} />}
         </div>
       </div>
     );
   }
 }
 
+/* istanbul ignore next */
 function mapStateToProps(state) {
   return {
     dataset: state.datasets.dataset,

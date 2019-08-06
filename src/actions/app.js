@@ -8,11 +8,60 @@ import { createActions } from 'redux-actions';
 
 import { ActionTypes } from 'constants/index';
 
-export const { createDataset } = createActions({
-  [ActionTypes.CREATE_DATASET]: dataset => dataset,
-  [ActionTypes.CREATE_DATASET_JOB]: dataset => dataset,
-  [ActionTypes.CREATE_DATASET_SUCCESS]: dataset => dataset,
-  [ActionTypes.CREATE_DATASET_FAILURE]: dataset => dataset,
+export const { createSnapshot } = createActions({
+  [ActionTypes.CREATE_SNAPSHOT]: snapshot => snapshot,
+  [ActionTypes.CREATE_SNAPSHOT_JOB]: snapshot => snapshot,
+  [ActionTypes.CREATE_SNAPSHOT_SUCCESS]: snapshot => snapshot,
+  [ActionTypes.CREATE_SNAPSHOT_FAILURE]: snapshot => snapshot,
+});
+
+export const { getSnapshots } = createActions({
+  [ActionTypes.GET_SNAPSHOTS_SUCCESS]: snapshots => snapshots,
+  [ActionTypes.GET_SNAPSHOTS]: (limit, offset, sort, direction, searchString) => ({
+    limit,
+    offset,
+    sort,
+    direction,
+    searchString,
+  }),
+});
+
+export const { getSnapshotById } = createActions({
+  [ActionTypes.GET_SNAPSHOT_BY_ID]: snapshot => snapshot,
+  [ActionTypes.GET_SNAPSHOT_BY_ID_SUCCESS]: snapshot => snapshot,
+});
+
+export const { getSnapshotPolicy } = createActions({
+  [ActionTypes.GET_SNAPSHOT_POLICY]: policy => policy,
+  [ActionTypes.GET_SNAPSHOT_POLICY_SUCCESS]: policy => policy,
+});
+
+export const { addCustodianToSnapshot } = createActions({
+  [ActionTypes.ADD_CUSTODIAN_TO_SNAPSHOT]: (snapshotId, users) => ({
+    snapshotId,
+    users,
+  }),
+});
+
+export const { removeCustodianFromSnapshot } = createActions({
+  [ActionTypes.REMOVE_CUSTODIAN_FROM_SNAPSHOT]: (snapshotId, user) => ({
+    snapshotId,
+    user,
+  }),
+});
+
+export const { addReaderToSnapshot } = createActions({
+  [ActionTypes.ADD_READER_TO_SNAPSHOT]: (snapshotId, users) => ({
+    snapshotId,
+    users,
+  }),
+});
+
+export const { removeReaderFromSnapshot } = createActions({
+  [ActionTypes.REMOVE_READER_FROM_SNAPSHOT]: (snapshotId, user) => ({
+    snapshotId,
+    user,
+  }),
 });
 
 export const { getDatasets } = createActions({
@@ -36,6 +85,11 @@ export const { getDatasetPolicy } = createActions({
   [ActionTypes.GET_DATASET_POLICY_SUCCESS]: policy => policy,
 });
 
+export const { getDatasetTablePreview } = createActions({
+  [ActionTypes.GET_DATASET_TABLE_PREVIEW]: (dataset, tableName) => ({ dataset, tableName }),
+  [ActionTypes.GET_DATASET_TABLE_PREVIEW_SUCCESS]: _ => _,
+});
+
 export const { addCustodianToDataset } = createActions({
   [ActionTypes.ADD_CUSTODIAN_TO_DATASET]: (datasetId, users) => ({
     datasetId,
@@ -46,60 +100,6 @@ export const { addCustodianToDataset } = createActions({
 export const { removeCustodianFromDataset } = createActions({
   [ActionTypes.REMOVE_CUSTODIAN_FROM_DATASET]: (datasetId, user) => ({
     datasetId,
-    user,
-  }),
-});
-
-export const { addReaderToDataset } = createActions({
-  [ActionTypes.ADD_READER_TO_DATASET]: (datasetId, users) => ({
-    datasetId,
-    users,
-  }),
-});
-
-export const { removeReaderFromDataset } = createActions({
-  [ActionTypes.REMOVE_READER_FROM_DATASET]: (datasetId, user) => ({
-    datasetId,
-    user,
-  }),
-});
-
-export const { getStudies } = createActions({
-  [ActionTypes.GET_STUDIES_SUCCESS]: studies => studies,
-  [ActionTypes.GET_STUDIES]: (limit, offset, sort, direction, searchString) => ({
-    limit,
-    offset,
-    sort,
-    direction,
-    searchString,
-  }),
-});
-
-export const { getStudyById } = createActions({
-  [ActionTypes.GET_STUDY_BY_ID]: study => study,
-  [ActionTypes.GET_STUDY_BY_ID_SUCCESS]: study => study,
-});
-
-export const { getStudyPolicy } = createActions({
-  [ActionTypes.GET_STUDY_POLICY]: policy => policy,
-  [ActionTypes.GET_STUDY_POLICY_SUCCESS]: policy => policy,
-});
-
-export const { getStudyTablePreview } = createActions({
-  [ActionTypes.GET_STUDY_TABLE_PREVIEW]: (study, tableName) => ({ study, tableName }),
-  [ActionTypes.GET_STUDY_TABLE_PREVIEW_SUCCESS]: _ => _,
-});
-
-export const { addCustodianToStudy } = createActions({
-  [ActionTypes.ADD_CUSTODIAN_TO_STUDY]: (studyId, users) => ({
-    studyId,
-    users,
-  }),
-});
-
-export const { removeCustodianFromStudy } = createActions({
-  [ActionTypes.REMOVE_CUSTODIAN_FROM_STUDY]: (studyId, user) => ({
-    studyId,
     user,
   }),
 });

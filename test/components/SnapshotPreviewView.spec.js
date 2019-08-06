@@ -2,15 +2,15 @@ import React from 'react';
 import { Provider } from 'react-redux';
 
 import { store } from 'store/index';
-import DatasetPreviewView from 'components/DatasetPreviewView';
+import SnapshotPreviewView from 'components/SnapshotPreviewView';
 
 const props = {
   classes: {},
-  createdDataset: {
-    dataset: {
-      id: 'datasetId',
+  createdSnapshot: {
+    snapshot: {
+      id: 'snapshotId',
     },
-    datasetRequest: {
+    snapshotRequest: {
       readers: [],
     },
   },
@@ -24,16 +24,16 @@ const props = {
 function setup(ownProps = props) {
   return mount(
     <Provider store={store}>
-      <DatasetPreviewView {...ownProps} />
+      <SnapshotPreviewView {...ownProps} />
     </Provider>,
   );
 }
 
-describe('DatasetPreviewView', () => {
+describe('SnapshotPreviewView', () => {
   const wrapper = setup();
 
-  it('hey look a datasets preview', () => {
+  it('hey look a snapshots preview', () => {
     expect(wrapper).not.toBeNull();
-    expect(wrapper.find('#dataset-preview')).not.toBeNull();
+    expect(wrapper.find('#snapshot-preview')).not.toBeNull();
   });
 });

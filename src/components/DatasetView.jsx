@@ -1,11 +1,10 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { NavLink } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
-import Tooltip from '@material-ui/core/Tooltip/Tooltip';
 
+import { getDatasets } from 'actions/index';
 import DatasetTable from './table/DatasetTable';
-import Add from './icons/Add';
 
 const styles = theme => ({
   wrapper: {
@@ -19,42 +18,41 @@ const styles = theme => ({
   },
   title: {
     color: theme.palette.primary.main,
-    fontSize: 54,
+    fontSize: '54px',
     lineHeight: '66px',
     paddingBottom: theme.spacing(8),
-  },
-  plusButton: {
-    fill: theme.palette.common.link,
-    marginLeft: theme.spacing(4),
-    width: theme.spacing(3),
   },
 });
 
 class DatasetView extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object.isRequired,
+    datasets: PropTypes.object,
+    dispatch: PropTypes.func.isRequired,
   };
 
+  componentDidMount() {
+    const { dispatch } = this.props;
+    dispatch(getDatasets());
+  }
+
   render() {
-    const { classes } = this.props;
+    const { classes, datasets } = this.props;
     return (
-      <div id="datasets" className={classes.wrapper}>
+      <div className={classes.wrapper}>
         <div className={classes.width}>
-          <div className={classes.title}>
-            Datasets
-            <NavLink to="/datasets/create">
-              <Tooltip title="Create a new dataset" enterDelay={100}>
-                <Add className={classes.plusButton} />
-              </Tooltip>
-            </NavLink>
-          </div>
-          <div>
-            <DatasetTable />
-          </div>
+          <div className={classes.title}>Datasets</div>
+          <div> {datasets && datasets.datasets && <DatasetTable rows={datasets.datasets} />} </div>
         </div>
       </div>
     );
   }
 }
 
-export default withStyles(styles)(DatasetView);
+function mapStateToProps(state) {
+  return {
+    datasets: state.datasets,
+  };
+}
+
+export default connect(mapStateToProps)(withStyles(styles)(DatasetView));

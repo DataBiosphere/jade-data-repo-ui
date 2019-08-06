@@ -18,7 +18,7 @@ import { ActionTypes, STATUS } from 'constants/index';
 
 export const getToken = state => state.user.token;
 export const getTokenExpiration = state => state.user.tokenExpiration;
-export const getCreateDataset = state => state.dataset;
+export const getCreateSnapshot = state => state.snapshot;
 
 export function* checkToken() {
   const tokenExpiration = yield select(getTokenExpiration);
@@ -96,37 +96,37 @@ function* pollJobWorker(jobId, jobTypeSuccess, jobTypeFailure) {
 }
 
 /**
- * Datasets.
+ * Snapshots.
  */
 
-export function* createDataset() {
-  const dataset = yield select(getCreateDataset);
-  const datasetRequest = {
-    name: dataset.name,
-    description: dataset.description,
-    readers: dataset.readers,
+export function* createSnapshot() {
+  const snapshot = yield select(getCreateSnapshot);
+  const snapshotRequest = {
+    name: snapshot.name,
+    description: snapshot.description,
+    readers: snapshot.readers,
     contents: [
       {
         source: {
-          studyName: dataset.study,
-          assetName: dataset.asset,
+          datasetName: snapshot.dataset,
+          assetName: snapshot.asset,
         },
-        rootValues: dataset.ids,
+        rootValues: snapshot.ids,
       },
     ],
   };
   try {
-    const response = yield call(authPost, '/api/repository/v1/datasets', datasetRequest);
+    const response = yield call(authPost, '/api/repository/v1/snapshots', snapshotRequest);
     const jobId = response.data.id;
     yield put({
-      type: ActionTypes.CREATE_DATASET_JOB,
-      payload: { data: response, jobId, datasetRequest },
+      type: ActionTypes.CREATE_SNAPSHOT_JOB,
+      payload: { data: response, jobId, snapshotRequest },
     });
     yield call(
       pollJobWorker,
       jobId,
-      ActionTypes.CREATE_DATASET_SUCCESS,
-      ActionTypes.CREATE_DATASET_FAILURE,
+      ActionTypes.CREATE_SNAPSHOT_SUCCESS,
+      ActionTypes.CREATE_SNAPSHOT_FAILURE,
     );
   } catch (err) {
     yield put({
@@ -136,9 +136,108 @@ export function* createDataset() {
   }
 }
 
-export function* getDatasets({ payload }) {
+export function* getSnapshots({ payload }) {
   const offset = payload.offset || 0;
   const limit = payload.limit || 10;
+  const filter = payload.searchString || '';
+  const sort = payload.sort || 'created_date';
+  const direction = payload.direction || 'desc';
+  try {
+    const response = yield call(
+      authGet,
+      `/api/repository/v1/snapshots?offset=${offset}&limit=${limit}&sort=${sort}&direction=${direction}&filter=${filter}`,
+    );
+    yield put({
+      type: ActionTypes.GET_SNAPSHOTS_SUCCESS,
+      snapshots: { data: response },
+    });
+  } catch (err) {
+    yield put({
+      type: ActionTypes.EXCEPTION,
+      payload: err,
+    });
+  }
+}
+
+export function* getSnapshotById({ payload }) {
+  const snapshotId = payload;
+  try {
+    const response = yield call(authGet, `/api/repository/v1/snapshots/${snapshotId}`);
+    yield put({
+      type: ActionTypes.GET_SNAPSHOT_BY_ID_SUCCESS,
+      snapshot: { data: response },
+    });
+  } catch (err) {
+    yield put({
+      type: ActionTypes.EXCEPTION,
+      payload: err,
+    });
+  }
+}
+
+export function* getSnapshotPolicy({ payload }) {
+  const snapshotId = payload;
+  try {
+    const response = yield call(authGet, `/api/repository/v1/snapshots/${snapshotId}/policies`);
+    yield put({
+      type: ActionTypes.GET_SNAPSHOT_POLICY_SUCCESS,
+      snapshot: { data: response },
+    });
+  } catch (err) {
+    yield put({
+      type: ActionTypes.EXCEPTION,
+      payload: err,
+    });
+  }
+}
+
+export function* addReaderToSnapshot({ payload }) {
+  const { snapshotId } = payload;
+  const reader = payload.users[0];
+  const readerObject = { email: reader };
+  try {
+    const response = yield call(
+      authPost,
+      `/api/repository/v1/snapshots/${snapshotId}/policies/reader/members`,
+      readerObject,
+    );
+    yield put({
+      type: ActionTypes.ADD_READER_TO_SNAPSHOT_SUCCESS,
+      snapshot: { data: response },
+    });
+  } catch (err) {
+    yield put({
+      type: ActionTypes.EXCEPTION,
+      payload: err,
+    });
+  }
+}
+
+export function* removeReaderFromSnapshot({ payload }) {
+  const { snapshotId } = payload;
+  const reader = payload.user;
+  const url = `/api/repository/v1/snapshots/${snapshotId}/policies/reader/members/${reader}`;
+  try {
+    const response = yield call(authDelete, url);
+    yield put({
+      type: ActionTypes.REMOVE_READER_FROM_SNAPSHOT_SUCCESS,
+      snapshot: { data: response },
+    });
+  } catch (err) {
+    yield put({
+      type: ActionTypes.EXCEPTION,
+      payload: err,
+    });
+  }
+}
+
+/**
+ * Datasets.
+ */
+
+export function* getDatasets({ payload }) {
+  const limit = payload.limit || 10;
+  const offset = payload.offset || 0;
   const filter = payload.searchString || '';
   const sort = payload.sort || 'created_date';
   const direction = payload.direction || 'desc';
@@ -181,105 +280,6 @@ export function* getDatasetPolicy({ payload }) {
     const response = yield call(authGet, `/api/repository/v1/datasets/${datasetId}/policies`);
     yield put({
       type: ActionTypes.GET_DATASET_POLICY_SUCCESS,
-      dataset: { data: response },
-    });
-  } catch (err) {
-    yield put({
-      type: ActionTypes.EXCEPTION,
-      payload: err,
-    });
-  }
-}
-
-export function* addReaderToDataset({ payload }) {
-  const { datasetId } = payload;
-  const reader = payload.users[0];
-  const readerObject = { email: reader };
-  try {
-    const response = yield call(
-      authPost,
-      `/api/repository/v1/datasets/${datasetId}/policies/reader/members`,
-      readerObject,
-    );
-    yield put({
-      type: ActionTypes.ADD_READER_TO_DATASET_SUCCESS,
-      dataset: { data: response },
-    });
-  } catch (err) {
-    yield put({
-      type: ActionTypes.EXCEPTION,
-      payload: err,
-    });
-  }
-}
-
-export function* removeReaderFromDataset({ payload }) {
-  const { datasetId } = payload;
-  const reader = payload.user;
-  const url = `/api/repository/v1/datasets/${datasetId}/policies/reader/members/${reader}`;
-  try {
-    const response = yield call(authDelete, url);
-    yield put({
-      type: ActionTypes.REMOVE_READER_FROM_DATASET_SUCCESS,
-      dataset: { data: response },
-    });
-  } catch (err) {
-    yield put({
-      type: ActionTypes.EXCEPTION,
-      payload: err,
-    });
-  }
-}
-
-/**
- * Studies.
- */
-
-export function* getStudies({ payload }) {
-  const limit = payload.limit || 10;
-  const offset = payload.offset || 0;
-  const filter = payload.searchString || '';
-  const sort = payload.sort || 'created_date';
-  const direction = payload.direction || 'desc';
-  try {
-    const response = yield call(
-      authGet,
-      `/api/repository/v1/studies?offset=${offset}&limit=${limit}&sort=${sort}&direction=${direction}&filter=${filter}`,
-    );
-    yield put({
-      type: ActionTypes.GET_STUDIES_SUCCESS,
-      studies: { data: response },
-    });
-  } catch (err) {
-    yield put({
-      type: ActionTypes.EXCEPTION,
-      payload: err,
-    });
-  }
-}
-
-export function* getStudyById({ payload }) {
-  const studyId = payload;
-  try {
-    const response = yield call(authGet, `/api/repository/v1/studies/${studyId}`);
-    yield put({
-      type: ActionTypes.GET_STUDY_BY_ID_SUCCESS,
-      study: { data: response },
-    });
-  } catch (err) {
-    yield put({
-      type: ActionTypes.EXCEPTION,
-      payload: err,
-    });
-  }
-}
-
-export function* getStudyPolicy({ payload }) {
-  const studyId = payload;
-  try {
-    const response = yield call(authGet, `/api/repository/v1/studies/${studyId}/policies`);
-    yield put({
-      type: ActionTypes.GET_STUDY_POLICY_SUCCESS,
       policy: response,
     });
   } catch (err) {
@@ -290,18 +290,18 @@ export function* getStudyPolicy({ payload }) {
   }
 }
 
-export function* addCustodianToStudy({ payload }) {
-  const { studyId } = payload;
+export function* addCustodianToDataset({ payload }) {
+  const { datasetId } = payload;
   const custodian = payload.users[0];
   const custodianObject = { email: custodian };
   try {
     const response = yield call(
       authPost,
-      `/api/repository/v1/studies/${studyId}/policies/custodian/members`, // TODO what is this?
+      `/api/repository/v1/datasets/${datasetId}/policies/custodian/members`, // TODO what is this?
       custodianObject,
     );
     yield put({
-      type: ActionTypes.ADD_CUSTODIAN_TO_STUDY_SUCCESS,
+      type: ActionTypes.ADD_CUSTODIAN_TO_DATASET_SUCCESS,
       policy: response,
     });
   } catch (err) {
@@ -312,14 +312,14 @@ export function* addCustodianToStudy({ payload }) {
   }
 }
 
-export function* removeCustodianFromStudy({ payload }) {
-  const { studyId } = payload;
+export function* removeCustodianFromDataset({ payload }) {
+  const { datasetId } = payload;
   const custodian = payload.user;
-  const url = `/api/repository/v1/studies/${studyId}/policies/custodian/members/${custodian}`;
+  const url = `/api/repository/v1/datasets/${datasetId}/policies/custodian/members/${custodian}`;
   try {
     const response = yield call(authDelete, url);
     yield put({
-      type: ActionTypes.REMOVE_CUSTODIAN_FROM_STUDY_SUCCESS,
+      type: ActionTypes.REMOVE_CUSTODIAN_FROM_DATASET_SUCCESS,
       policy: response,
     });
   } catch (err) {
@@ -330,16 +330,16 @@ export function* removeCustodianFromStudy({ payload }) {
   }
 }
 
-export function* getStudyTablePreview({ payload }) {
-  const { study, tableName } = payload;
-  const studyProject = study.dataProject;
-  const studyBqDatasetName = `datarepo_${study.name}`;
+export function* getDatasetTablePreview({ payload }) {
+  const { dataset, tableName } = payload;
+  const datasetProject = dataset.dataProject;
+  const datasetBqSnapshotName = `datarepo_${dataset.name}`;
   const bqApi = 'https://www.googleapis.com/bigquery/v2';
-  const url = `${bqApi}/projects/${studyProject}/datasets/${studyBqDatasetName}/tables/${tableName}/data`;
+  const url = `${bqApi}/projects/${datasetProject}/datasets/${datasetBqSnapshotName}/tables/${tableName}/data`;
   try {
     const response = yield call(authGet, url);
     yield put({
-      type: ActionTypes.GET_STUDY_TABLE_PREVIEW_SUCCESS,
+      type: ActionTypes.GET_DATASET_TABLE_PREVIEW_SUCCESS,
       preview: response,
       tableName,
     });
@@ -375,18 +375,18 @@ export function* getConfiguration() {
  */
 export default function* root() {
   yield all([
-    takeLatest(ActionTypes.CREATE_DATASET, createDataset),
+    takeLatest(ActionTypes.CREATE_SNAPSHOT, createSnapshot),
+    takeLatest(ActionTypes.GET_SNAPSHOTS, getSnapshots),
+    takeLatest(ActionTypes.GET_SNAPSHOT_BY_ID, getSnapshotById),
+    takeLatest(ActionTypes.GET_SNAPSHOT_POLICY, getSnapshotPolicy),
+    takeLatest(ActionTypes.ADD_READER_TO_SNAPSHOT, addReaderToSnapshot),
+    takeLatest(ActionTypes.REMOVE_READER_FROM_SNAPSHOT, removeReaderFromSnapshot),
     takeLatest(ActionTypes.GET_DATASETS, getDatasets),
     takeLatest(ActionTypes.GET_DATASET_BY_ID, getDatasetById),
     takeLatest(ActionTypes.GET_DATASET_POLICY, getDatasetPolicy),
-    takeLatest(ActionTypes.ADD_READER_TO_DATASET, addReaderToDataset),
-    takeLatest(ActionTypes.REMOVE_READER_FROM_DATASET, removeReaderFromDataset),
-    takeLatest(ActionTypes.GET_STUDIES, getStudies),
-    takeLatest(ActionTypes.GET_STUDY_BY_ID, getStudyById),
-    takeLatest(ActionTypes.GET_STUDY_POLICY, getStudyPolicy),
-    takeLatest(ActionTypes.ADD_CUSTODIAN_TO_STUDY, addCustodianToStudy),
-    takeLatest(ActionTypes.REMOVE_CUSTODIAN_FROM_STUDY, removeCustodianFromStudy),
-    takeLatest(ActionTypes.GET_STUDY_TABLE_PREVIEW, getStudyTablePreview),
+    takeLatest(ActionTypes.ADD_CUSTODIAN_TO_DATASET, addCustodianToDataset),
+    takeLatest(ActionTypes.REMOVE_CUSTODIAN_FROM_DATASET, removeCustodianFromDataset),
+    takeLatest(ActionTypes.GET_DATASET_TABLE_PREVIEW, getDatasetTablePreview),
     takeLatest(ActionTypes.GET_CONFIGURATION, getConfiguration),
   ]);
 }

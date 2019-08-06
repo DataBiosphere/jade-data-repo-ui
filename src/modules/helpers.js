@@ -9,7 +9,7 @@
  * @param {Element} elem
  * @returns {{}}
  */
-export function datasetToObject(elem: Element): Object {
+export function snapshotToObject(elem: Element): Object {
   const data = {};
   [].forEach.call(elem.attributes, attr => {
     if (/^data-/.test(attr.name)) {

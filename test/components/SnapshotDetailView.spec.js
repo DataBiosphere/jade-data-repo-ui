@@ -2,7 +2,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 
 import { store } from 'store/index';
-import DatasetDetailView from 'components/DatasetDetailView';
+import SnapshotDetailView from 'components/SnapshotDetailView';
 
 const props = {
   classes: {},
@@ -11,25 +11,25 @@ const props = {
       uuid: 'someuuid',
     },
   },
-  dataset: {
+  snapshot: {
     name: 'TODO: test this',
-    description: 'describes a dataset',
+    description: 'describes a snapshot',
   },
 };
 
 function setup(ownProps = props) {
   return mount(
     <Provider store={store}>
-      <DatasetDetailView {...ownProps} />
+      <SnapshotDetailView {...ownProps} />
     </Provider>,
   );
 }
 
-describe('DatasetDetailView', () => {
+describe('SnapshotDetailView', () => {
   const wrapper = setup();
 
-  it('hey look a datasets detail view', () => {
+  it('hey look a snapshots detail view', () => {
     expect(wrapper).not.toBeNull();
-    expect(wrapper.find('#dataset-detail-view')).not.toBeNull();
+    expect(wrapper.find('#snapshot-detail-view')).not.toBeNull();
   });
 });

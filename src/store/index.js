@@ -5,16 +5,16 @@ import rootSaga from 'sagas/index';
 import rootReducer from 'reducers/index';
 import middleware, { sagaMiddleware } from './middleware';
 
-const initialDatasetState = {
+const initialSnapshotState = {
   name: '',
   description: '',
   readers: [],
-  study: '',
+  dataset: '',
 };
 
 const reducer = combineReducers({
   ...rootReducer,
-  ...createForms({ dataset: initialDatasetState }),
+  ...createForms({ snapshot: initialSnapshotState }),
 });
 
 const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

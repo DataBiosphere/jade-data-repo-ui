@@ -7,12 +7,12 @@ import PropTypes from 'prop-types';
 import history from 'modules/hist';
 
 import HomeView from '../components/HomeView';
-import StudiesView from '../components/StudyView';
-import DatasetView from '../components/DatasetView';
-import DatasetCreateView from '../components/DatasetCreateView';
-import DatasetPreviewView from '../components/DatasetPreviewView';
+import DatasetsView from '../components/DatasetView';
+import SnapshotView from '../components/SnapshotView';
+import SnapshotCreateView from '../components/SnapshotCreateView';
+import SnapshotPreviewView from '../components/SnapshotPreviewView';
+import SnapshotDetailView from '../components/SnapshotDetailView';
 import DatasetDetailView from '../components/DatasetDetailView';
-import StudyDetailView from '../components/StudyDetailView';
 
 const styles = theme => ({
   wrapper: {
@@ -67,28 +67,28 @@ class Private extends React.Component {
                     classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
                   />
                   <Tab
-                    label="Studies"
-                    component={Link}
-                    value="/studies"
-                    to="/studies"
-                    classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
-                  />
-                  <Tab
                     label="Datasets"
                     component={Link}
                     value="/datasets"
                     to="/datasets"
                     classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
                   />
+                  <Tab
+                    label="Snapshots"
+                    component={Link}
+                    value="/snapshots"
+                    to="/snapshots"
+                    classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
+                  />
                 </Tabs>
                 <Switch>
                   <Route exact path="/" component={HomeView} />
-                  <Route exact path="/studies" component={StudiesView} />
-                  <Route exact path="/studies/details/:uuid" component={StudyDetailView} />
-                  <Route exact path="/datasets" component={DatasetView} />
-                  <Route exact path="/datasets/create" component={DatasetCreateView} />
-                  <Route exact path="/datasets/requests/:jobId" component={DatasetPreviewView} />
+                  <Route exact path="/datasets" component={DatasetsView} />
                   <Route exact path="/datasets/details/:uuid" component={DatasetDetailView} />
+                  <Route exact path="/snapshots" component={SnapshotView} />
+                  <Route exact path="/snapshots/create" component={SnapshotCreateView} />
+                  <Route exact path="/snapshots/requests/:jobId" component={SnapshotPreviewView} />
+                  <Route exact path="/snapshots/details/:uuid" component={SnapshotDetailView} />
                 </Switch>
               </Fragment>
             )}
