@@ -352,6 +352,25 @@ export function* getStudyTablePreview({ payload }) {
 }
 
 /**
+ * unauthenticated
+ */
+
+export function* getConfiguration() {
+  try {
+    const response = yield call(axios.get, '/configuration');
+    yield put({
+      type: ActionTypes.GET_CONFIGURATION_SUCCESS,
+      configuration: { data: response },
+    });
+  } catch (err) {
+    yield put({
+      type: ActionTypes.EXCEPTION,
+      payload: err,
+    });
+  }
+}
+
+/**
  * App Sagas
  */
 export default function* root() {
@@ -368,5 +387,6 @@ export default function* root() {
     takeLatest(ActionTypes.ADD_CUSTODIAN_TO_STUDY, addCustodianToStudy),
     takeLatest(ActionTypes.REMOVE_CUSTODIAN_FROM_STUDY, removeCustodianFromStudy),
     takeLatest(ActionTypes.GET_STUDY_TABLE_PREVIEW, getStudyTablePreview),
+    takeLatest(ActionTypes.GET_CONFIGURATION, getConfiguration),
   ]);
 }
