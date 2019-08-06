@@ -29,8 +29,8 @@ export class DatasetTablePreview extends React.PureComponent {
 
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    dispatch: PropTypes.func.isRequired,
     dataset: PropTypes.object,
+    dispatch: PropTypes.func.isRequired,
   };
 
   componentDidMount() {

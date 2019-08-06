@@ -27,8 +27,8 @@ const styles = theme => ({
 class DatasetView extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    dispatch: PropTypes.func.isRequired,
     datasets: PropTypes.object,
+    dispatch: PropTypes.func.isRequired,
   };
 
   componentDidMount() {

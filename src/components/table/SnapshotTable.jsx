@@ -21,9 +21,9 @@ const styles = theme => ({
 class SnapshotTable extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object.isRequired,
+    dispatch: PropTypes.func.isRequired,
     snapshotCount: PropTypes.number,
     snapshots: PropTypes.array.isRequired,
-    dispatch: PropTypes.func.isRequired,
     summary: PropTypes.bool,
   };
 

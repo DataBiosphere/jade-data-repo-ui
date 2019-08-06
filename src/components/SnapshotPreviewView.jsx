@@ -95,11 +95,11 @@ export class SnapshotPreviewView extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object.isRequired,
     createdSnapshots: PropTypes.arrayOf(PropTypes.object),
-    snapshot: PropTypes.object,
     dispatch: PropTypes.func.isRequired,
     exception: PropTypes.bool.isRequired,
     jobStatus: PropTypes.string.isRequired,
     match: PropTypes.object.isRequired,
+    snapshot: PropTypes.object,
     userEmail: PropTypes.string,
   };
 

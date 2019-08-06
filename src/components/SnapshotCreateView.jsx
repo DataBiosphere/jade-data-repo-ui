@@ -102,14 +102,14 @@ export class SnapshotCreateView extends React.PureComponent {
     asset: PropTypes.string,
     classes: PropTypes.object.isRequired,
     createdSnapshot: PropTypes.object,
+    dataset: PropTypes.object,
+    datasets: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired,
     history: PropTypes.object.isRequired,
     ids: PropTypes.arrayOf(PropTypes.string),
     jobId: PropTypes.string,
     match: PropTypes.object.isRequired,
     readers: PropTypes.arrayOf(PropTypes.string),
-    datasets: PropTypes.object.isRequired,
-    dataset: PropTypes.object,
   };
 
   componentDidMount() {
@@ -139,7 +139,8 @@ export class SnapshotCreateView extends React.PureComponent {
 
   getDatasetOptions(datasets) {
     const datasetOptions =
-      datasets.datasets && datasets.datasets.map(dataset => ({ value: dataset.id, label: dataset.name }));
+      datasets.datasets &&
+      datasets.datasets.map(dataset => ({ value: dataset.id, label: dataset.name }));
     return datasetOptions;
   }
 
@@ -288,7 +289,9 @@ export class SnapshotCreateView extends React.PureComponent {
                     onChange={e => this.selectAsset(e.value)}
                     options={assetOptions}
                     placeholder={
-                      dataset.name ? 'Select Asset Type...' : 'Select Dataset to Select Asset Type...'
+                      dataset.name
+                        ? 'Select Asset Type...'
+                        : 'Select Dataset to Select Asset Type...'
                     }
                     value={assetOptions.filter(option => option.value === asset)}
                   />

@@ -155,8 +155,8 @@ export class SnapshotDirectionalModal extends React.PureComponent {
             </DialogTitle>
             <DialogContent>
               <div className={classes.dialogContent}>
-                The snapshot {createdSnapshot && createdSnapshot.name} was not created. What would you
-                like to do next?
+                The snapshot {createdSnapshot && createdSnapshot.name} was not created. What would
+                you like to do next?
               </div>
               <div className={classes.dialogActionsError}>
                 <Link to="/snapshots" className={classes.actionButtons}>

@@ -44,10 +44,10 @@ const styles = theme => ({
 export class DatasetDetailView extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    dispatch: PropTypes.func.isRequired,
-    match: PropTypes.object,
     dataset: PropTypes.object,
     datasetPolicies: PropTypes.arrayOf(PropTypes.object).isRequired,
+    dispatch: PropTypes.func.isRequired,
+    match: PropTypes.object,
   };
 
   componentDidMount() {

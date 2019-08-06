@@ -21,9 +21,9 @@ const styles = theme => ({
 class DatasetTable extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    dispatch: PropTypes.func.isRequired,
     datasets: PropTypes.array.isRequired,
     datasetsCount: PropTypes.number,
+    dispatch: PropTypes.func.isRequired,
     summary: PropTypes.bool,
   };
 

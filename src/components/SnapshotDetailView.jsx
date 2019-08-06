@@ -55,10 +55,10 @@ const styles = theme => ({
 export class SnapshotDetailView extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    snapshot: PropTypes.object,
-    snapshotPolicies: PropTypes.arrayOf(PropTypes.object).isRequired,
     dispatch: PropTypes.func.isRequired,
     match: PropTypes.object.isRequired,
+    snapshot: PropTypes.object,
+    snapshotPolicies: PropTypes.arrayOf(PropTypes.object).isRequired,
   };
 
   componentWillMount() {
