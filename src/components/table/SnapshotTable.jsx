@@ -1,11 +1,11 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import moment from 'moment';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
-import { Link } from 'react-router-dom';
-import moment from 'moment';
 
-import { getStudies } from 'actions/index';
+import { getSnapshots } from 'actions/index';
 import JadeTable from './JadeTable';
 
 const styles = theme => ({
@@ -18,12 +18,12 @@ const styles = theme => ({
   },
 });
 
-class StudyTable extends React.PureComponent {
+class SnapshotTable extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object.isRequired,
+    snapshotCount: PropTypes.number,
+    snapshots: PropTypes.array.isRequired,
     dispatch: PropTypes.func.isRequired,
-    studies: PropTypes.array.isRequired,
-    studiesCount: PropTypes.number,
     summary: PropTypes.bool,
   };
 
@@ -33,23 +33,23 @@ class StudyTable extends React.PureComponent {
     if (!summary) {
       limit = 10;
     }
-    dispatch(getStudies(limit));
+    dispatch(getSnapshots(limit));
   }
 
-  handleFilterStudies = (limit, offset, sort, sortDirection, searchString) => {
+  handleFilterSnapshots = (limit, offset, sort, sortDirection, searchString) => {
     const { dispatch } = this.props;
-    dispatch(getStudies(limit, offset, sort, sortDirection, searchString));
+    dispatch(getSnapshots(limit, offset, sort, sortDirection, searchString));
   };
 
   render() {
-    const { classes, summary, studiesCount, studies } = this.props;
+    const { classes, snapshotCount, snapshots, summary } = this.props;
     // TODO add back modified_date column
     const columns = [
       {
-        label: 'Study Name',
+        label: 'Snapshot Name',
         property: 'name',
         render: row => (
-          <Link to={`/studies/details/${row.id}`} className={classes.jadeLink}>
+          <Link to={`/snapshots/details/${row.id}`} className={classes.jadeLink}>
             {row.name}
           </Link>
         ),
@@ -65,24 +65,25 @@ class StudyTable extends React.PureComponent {
       },
     ];
     return (
-      <JadeTable
-        columns={columns}
-        handleEnumeration={this.handleFilterStudies}
-        itemType="studies"
-        rows={studies}
-        summary={summary}
-        totalCount={studiesCount}
-      />
+      <div>
+        <JadeTable
+          columns={columns}
+          handleEnumeration={this.handleFilterSnapshots}
+          itemType="snapshots"
+          rows={snapshots}
+          summary={summary}
+          totalCount={snapshotCount}
+        />
+      </div>
     );
   }
 }
 
 function mapStateToProps(state) {
   return {
-    studiesTest: state.studies,
-    studies: state.studies.studies,
-    studiesCount: state.studies.studiesCount,
+    snapshots: state.snapshots.snapshots,
+    snapshotCount: state.snapshots.snapshotCount,
   };
 }
 
-export default connect(mapStateToProps)(withStyles(styles)(StudyTable));
+export default connect(mapStateToProps)(withStyles(styles)(SnapshotTable));

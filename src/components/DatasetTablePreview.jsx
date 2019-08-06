@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
-import { getStudyTablePreview } from 'actions/index';
+import { getDatasetTablePreview } from 'actions/index';
 import TableChart from '@material-ui/icons/TableChartOutlined';
 import PreviewTable from './table/PreviewTable';
 import TablePicker from './TablePicker';
@@ -18,11 +18,11 @@ const styles = theme => ({
   },
 });
 
-export class StudyTablePreview extends React.PureComponent {
+export class DatasetTablePreview extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      currentTable: props.study.schema.tables[0].name,
+      currentTable: props.dataset.schema.tables[0].name,
       pickerOpen: false,
     };
   }
@@ -30,7 +30,7 @@ export class StudyTablePreview extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired,
-    study: PropTypes.object,
+    dataset: PropTypes.object,
   };
 
   componentDidMount() {
@@ -39,15 +39,15 @@ export class StudyTablePreview extends React.PureComponent {
   }
 
   loadPreview(tableName) {
-    const { dispatch, study } = this.props;
-    dispatch(getStudyTablePreview(study, tableName));
+    const { dispatch, dataset } = this.props;
+    dispatch(getDatasetTablePreview(dataset, tableName));
   }
 
   getTable() {
-    const { study } = this.props;
+    const { dataset } = this.props;
     const { currentTable } = this.state;
-    if (study && study.schema) {
-      return study.schema.tables.find(t => t.name === currentTable);
+    if (dataset && dataset.schema) {
+      return dataset.schema.tables.find(t => t.name === currentTable);
     }
     return null;
   }
@@ -62,7 +62,7 @@ export class StudyTablePreview extends React.PureComponent {
   };
 
   render() {
-    const { classes, study } = this.props;
+    const { classes, dataset } = this.props;
     const { currentTable, pickerOpen } = this.state;
     return (
       <div>
@@ -72,7 +72,7 @@ export class StudyTablePreview extends React.PureComponent {
         </div>
         {pickerOpen ? (
           <TablePicker
-            tables={study.schema.tables}
+            tables={dataset.schema.tables}
             currentTable={currentTable}
             pickTable={this.pickTable}
           />
@@ -86,8 +86,8 @@ export class StudyTablePreview extends React.PureComponent {
 
 function mapStateToProps(state) {
   return {
-    study: state.studies.study,
+    dataset: state.datasets.dataset,
   };
 }
 
-export default connect(mapStateToProps)(withStyles(styles)(StudyTablePreview));
+export default connect(mapStateToProps)(withStyles(styles)(DatasetTablePreview));

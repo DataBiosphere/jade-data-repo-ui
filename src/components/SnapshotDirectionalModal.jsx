@@ -68,14 +68,14 @@ const styles = theme => ({
   },
 });
 
-export class DatasetDirectionalModal extends React.PureComponent {
+export class SnapshotDirectionalModal extends React.PureComponent {
   state = {
     open: true,
   };
 
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    createdDataset: PropTypes.object,
+    createdSnapshot: PropTypes.object,
     success: PropTypes.bool.isRequired,
   };
 
@@ -84,11 +84,11 @@ export class DatasetDirectionalModal extends React.PureComponent {
   };
 
   render() {
-    const { classes, createdDataset, success } = this.props;
+    const { classes, createdSnapshot, success } = this.props;
     const { open } = this.state;
     return (
-      <div id="dataset-modal">
-        {success && createdDataset ? (
+      <div id="snapshot-modal">
+        {success && createdSnapshot ? (
           <Dialog
             onClose={this.handleClose}
             aria-labelledby="customized-dialog-title"
@@ -109,26 +109,26 @@ export class DatasetDirectionalModal extends React.PureComponent {
             </DialogTitle>
             <DialogContent>
               <div className={classes.dialogContent}>
-                The new dataset {createdDataset.name} has been created. What would you like to do
+                The new snapshot {createdSnapshot.name} has been created. What would you like to do
                 next?
               </div>
               <div className={classes.dialogActions}>
                 <Link
-                  to={`/datasets/details/${createdDataset.id}`}
+                  to={`/snapshots/details/${createdSnapshot.id}`}
                   className={classes.actionButtons}
                 >
                   <Button color="primary" variant="contained">
-                    View new dataset
+                    View new snapshot
                   </Button>
                 </Link>
-                <Link to="/datasets" className={classes.actionButtons}>
+                <Link to="/snapshots" className={classes.actionButtons}>
                   <Button color="primary" variant="contained">
-                    View all datasets
+                    View all snapshots
                   </Button>
                 </Link>
-                <Link to="/datasets/create" className={classes.actionButtons}>
+                <Link to="/snapshots/create" className={classes.actionButtons}>
                   <Button color="primary" variant="contained">
-                    Create another dataset
+                    Create another snapshot
                   </Button>
                 </Link>
               </div>
@@ -142,7 +142,7 @@ export class DatasetDirectionalModal extends React.PureComponent {
             maxWidth={false}
           >
             <DialogTitle className={classes.dialogTitle} id="customized-dialog-title">
-              <div className={classes.closetitle}>There was a problem creating your dataset</div>
+              <div className={classes.closetitle}>There was a problem creating your snapshot</div>
               <div>
                 <IconButton
                   aria-label="Close"
@@ -155,16 +155,16 @@ export class DatasetDirectionalModal extends React.PureComponent {
             </DialogTitle>
             <DialogContent>
               <div className={classes.dialogContent}>
-                The dataset {createdDataset && createdDataset.name} was not created. What would you
+                The snapshot {createdSnapshot && createdSnapshot.name} was not created. What would you
                 like to do next?
               </div>
               <div className={classes.dialogActionsError}>
-                <Link to="/datasets" className={classes.actionButtons}>
+                <Link to="/snapshots" className={classes.actionButtons}>
                   <Button color="primary" variant="contained" className={classes.actionButtons}>
-                    View all datasets
+                    View all snapshots
                   </Button>
                 </Link>
-                <Link to="/datasets/create">
+                <Link to="/snapshots/create">
                   <Button variant="contained" className={classes.actionButtonsError}>
                     Try again
                   </Button>
@@ -178,4 +178,4 @@ export class DatasetDirectionalModal extends React.PureComponent {
   }
 }
 
-export default withStyles(styles)(DatasetDirectionalModal);
+export default withStyles(styles)(SnapshotDirectionalModal);

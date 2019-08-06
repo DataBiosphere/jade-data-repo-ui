@@ -21,11 +21,11 @@ export default {
         immutable(state, {
           jobResultObjectId: { $set: action.payload.data.id },
         }),
-      [ActionTypes.CREATE_DATASET_JOB]: (state, action) =>
+      [ActionTypes.CREATE_SNAPSHOT_JOB]: (state, action) =>
         immutable(state, {
           jobId: { $set: action.payload.jobId },
         }),
-      [ActionTypes.CREATE_DATASET_SUCCESS]: state =>
+      [ActionTypes.CREATE_SNAPSHOT_SUCCESS]: state =>
         immutable(state, {
           jobStatus: { $set: STATUS.SUCCESS },
         }),

@@ -4,8 +4,8 @@ import { withStyles } from '@material-ui/core/styles';
 import { Link, NavLink } from 'react-router-dom';
 import Tooltip from '@material-ui/core/Tooltip/Tooltip';
 
+import SnapshotTable from './table/SnapshotTable';
 import DatasetTable from './table/DatasetTable';
-import StudyTable from './table/StudyTable';
 import Add from './icons/Add';
 
 const styles = theme => ({
@@ -70,26 +70,26 @@ class HomeView extends React.PureComponent {
       <div className={classes.wrapper}>
         <div className={classes.width}>
           <div className={classes.title}>Terra Data Repository at a glance</div>
-          <div className={classes.header}> RECENT STUDIES </div>
-          <StudyTable summary />
-          <div>
-            <Link to="/studies" className={classes.jadeLink}>
-              See all Studies
-            </Link>
-          </div>
-          <div className={classes.jadeTableSpacer} />
-          <div className={classes.header}>
-            RECENT DATASETS
-            <NavLink to="/datasets/create">
-              <Tooltip title="Create a new dataset" enterDelay={100}>
-                <Add className={classes.plusButton} />
-              </Tooltip>
-            </NavLink>
-          </div>
+          <div className={classes.header}> RECENT DATASETS </div>
           <DatasetTable summary />
           <div>
             <Link to="/datasets" className={classes.jadeLink}>
               See all Datasets
+            </Link>
+          </div>
+          <div className={classes.jadeTableSpacer} />
+          <div className={classes.header}>
+            RECENT SNAPSHOTS
+            <NavLink to="/snapshots/create">
+              <Tooltip title="Create a new snapshot" enterDelay={100}>
+                <Add className={classes.plusButton} />
+              </Tooltip>
+            </NavLink>
+          </div>
+          <SnapshotTable summary />
+          <div>
+            <Link to="/snapshots" className={classes.jadeLink}>
+              See all Snapshots
             </Link>
           </div>
         </div>

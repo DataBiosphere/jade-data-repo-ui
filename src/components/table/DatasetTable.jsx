@@ -1,9 +1,9 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import moment from 'moment';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
+import { Link } from 'react-router-dom';
+import moment from 'moment';
 
 import { getDatasets } from 'actions/index';
 import JadeTable from './JadeTable';
@@ -21,9 +21,9 @@ const styles = theme => ({
 class DatasetTable extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    datasetCount: PropTypes.number,
-    datasets: PropTypes.array.isRequired,
     dispatch: PropTypes.func.isRequired,
+    datasets: PropTypes.array.isRequired,
+    datasetsCount: PropTypes.number,
     summary: PropTypes.bool,
   };
 
@@ -42,7 +42,7 @@ class DatasetTable extends React.PureComponent {
   };
 
   render() {
-    const { classes, datasetCount, datasets, summary } = this.props;
+    const { classes, summary, datasetsCount, datasets } = this.props;
     // TODO add back modified_date column
     const columns = [
       {
@@ -65,24 +65,23 @@ class DatasetTable extends React.PureComponent {
       },
     ];
     return (
-      <div>
-        <JadeTable
-          columns={columns}
-          handleEnumeration={this.handleFilterDatasets}
-          itemType="datasets"
-          rows={datasets}
-          summary={summary}
-          totalCount={datasetCount}
-        />
-      </div>
+      <JadeTable
+        columns={columns}
+        handleEnumeration={this.handleFilterDatasets}
+        itemType="datasets"
+        rows={datasets}
+        summary={summary}
+        totalCount={datasetsCount}
+      />
     );
   }
 }
 
 function mapStateToProps(state) {
   return {
+    datasetsTest: state.datasets,
     datasets: state.datasets.datasets,
-    datasetCount: state.datasets.datasetCount,
+    datasetsCount: state.datasets.datasetsCount,
   };
 }
 

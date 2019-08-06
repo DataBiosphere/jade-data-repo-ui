@@ -4,13 +4,10 @@ import immutable from 'immutability-helper';
 import { ActionTypes } from 'constants/index';
 
 export const datasetState = {
-  createdDatasets: [],
-  dataset: {},
   datasets: [],
-  exception: false,
+  dataset: {},
+  datasetsCount: 0,
   datasetPolicies: [],
-  study: {},
-  datasetCount: 0,
 };
 
 export default {
@@ -19,49 +16,34 @@ export default {
       [ActionTypes.GET_DATASETS_SUCCESS]: (state, action) =>
         immutable(state, {
           datasets: { $set: action.datasets.data.data.items },
-          datasetCount: { $set: action.datasets.data.data.total },
+          datasetsCount: { $set: action.datasets.data.data.total },
         }),
-      [ActionTypes.CREATE_DATASET_JOB]: (state, action) => {
-        const newDatasetCreation = {
-          jobId: action.payload.jobId,
-          datasetRequest: action.payload.datasetRequest,
-        };
-        return immutable(state, {
-          createdDatasets: { $push: [newDatasetCreation] },
-          dataset: { $set: {} },
-        });
-      },
-      [ActionTypes.CREATE_DATASET_SUCCESS]: (state, action) =>
-        immutable(state, {
-          dataset: { $set: action.payload.jobResult },
-        }),
-      [ActionTypes.CREATE_DATASET_FAILURE]: (state, action) => {
-        const successfullyCreatedDatasets = state.createdDatasets; // passes a ref or a value?
-        successfullyCreatedDatasets.filter(dataset => dataset.jobId !== action.payload.jobId);
-        return immutable(state, {
-          createdDatasets: { $set: successfullyCreatedDatasets },
-        });
-      },
       [ActionTypes.GET_DATASET_BY_ID_SUCCESS]: (state, action) =>
         immutable(state, {
           dataset: { $set: action.dataset.data.data },
         }),
       [ActionTypes.GET_DATASET_POLICY_SUCCESS]: (state, action) =>
         immutable(state, {
-          datasetPolicies: { $set: action.dataset.data.data.policies },
+          datasetPolicies: { $set: action.policy.data.policies },
         }),
-      [ActionTypes.ADD_READER_TO_DATASET_SUCCESS]: (state, action) =>
+      [ActionTypes.ADD_CUSTODIAN_TO_DATASET_SUCCESS]: (state, action) =>
         immutable(state, {
-          datasetPolicies: { $set: action.dataset.data.data.policies },
+          datasetPolicies: { $set: action.policy.data.policies },
         }),
-      [ActionTypes.REMOVE_READER_FROM_DATASET_SUCCESS]: (state, action) =>
+      [ActionTypes.REMOVE_CUSTODIAN_FROM_DATASET_SUCCESS]: (state, action) =>
         immutable(state, {
-          datasetPolicies: { $set: action.dataset.data.data.policies },
+          datasetPolicies: { $set: action.policy.data.policies },
         }),
-      [ActionTypes.EXCEPTION]: state =>
+      [ActionTypes.CREATE_SNAPSHOT_JOB]: state =>
         immutable(state, {
-          exception: { $set: true },
+          dataset: { $set: {} },
         }),
+      [ActionTypes.GET_DATASET_TABLE_PREVIEW_SUCCESS]: (state, action) => {
+        const i = state.dataset.schema.tables.findIndex(table => table.name === action.tableName);
+        return immutable(state, {
+          dataset: { schema: { tables: { [i]: { preview: { $set: action.preview.data.rows } } } } },
+        });
+      },
     },
     datasetState,
   ),

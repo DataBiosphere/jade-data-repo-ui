@@ -11,7 +11,7 @@ import Combinatorics from 'js-combinatorics';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 
-import { createDataset, getStudies, getStudyById } from 'actions/index';
+import { createSnapshot, getDatasets, getDatasetById } from 'actions/index';
 import ManageUsers from './ManageUsersView';
 
 function* colNameIter() {
@@ -65,7 +65,7 @@ const styles = theme => ({
     fontWeight: 600,
     paddingTop: 30,
   },
-  nameDataset: {
+  nameSnapshot: {
     width: 400,
     ' && input': {
       padding: '12px 14px',
@@ -97,56 +97,56 @@ const styles = theme => ({
   },
 });
 
-export class DatasetCreateView extends React.PureComponent {
+export class SnapshotCreateView extends React.PureComponent {
   static propTypes = {
     asset: PropTypes.string,
     classes: PropTypes.object.isRequired,
-    createdDataset: PropTypes.object,
+    createdSnapshot: PropTypes.object,
     dispatch: PropTypes.func.isRequired,
     history: PropTypes.object.isRequired,
     ids: PropTypes.arrayOf(PropTypes.string),
     jobId: PropTypes.string,
     match: PropTypes.object.isRequired,
     readers: PropTypes.arrayOf(PropTypes.string),
-    studies: PropTypes.object.isRequired,
-    study: PropTypes.object,
+    datasets: PropTypes.object.isRequired,
+    dataset: PropTypes.object,
   };
 
   componentDidMount() {
     const { dispatch } = this.props;
-    dispatch(getStudies(0));
+    dispatch(getDatasets(0));
   }
 
-  createDatasetJob() {
+  createSnapshotJob() {
     const { dispatch } = this.props;
-    dispatch(createDataset());
+    dispatch(createSnapshot());
   }
 
   validateName(name) {
     return name && name.length > 0 && name.length < 64;
   }
 
-  selectStudy(studyName, studyId) {
+  selectDataset(datasetName, datasetId) {
     const { dispatch } = this.props;
-    dispatch(actions.change('dataset.study', studyName));
-    dispatch(getStudyById(studyId));
+    dispatch(actions.change('snapshot.dataset', datasetName));
+    dispatch(getDatasetById(datasetId));
   }
 
   selectAsset(asset) {
     const { dispatch } = this.props;
-    dispatch(actions.change('dataset.asset', asset));
+    dispatch(actions.change('snapshot.asset', asset));
   }
 
-  getStudyOptions(studies) {
-    const studyOptions =
-      studies.studies && studies.studies.map(study => ({ value: study.id, label: study.name }));
-    return studyOptions;
+  getDatasetOptions(datasets) {
+    const datasetOptions =
+      datasets.datasets && datasets.datasets.map(dataset => ({ value: dataset.id, label: dataset.name }));
+    return datasetOptions;
   }
 
-  getAssetOptions(study) {
+  getAssetOptions(dataset) {
     let assetOptions = [];
-    if (study && study.schema && study.schema.assets) {
-      assetOptions = study.schema.assets.map(asset => ({ value: asset.name, label: asset.name }));
+    if (dataset && dataset.schema && dataset.schema.assets) {
+      assetOptions = dataset.schema.assets.map(asset => ({ value: asset.name, label: asset.name }));
     }
     return assetOptions;
   }
@@ -154,9 +154,9 @@ export class DatasetCreateView extends React.PureComponent {
   addUser(newEmail) {
     const { dispatch, readers } = this.props;
     if (!readers) {
-      dispatch(actions.change('dataset.readers', [newEmail]));
+      dispatch(actions.change('snapshot.readers', [newEmail]));
     } else if (!_.includes(readers, newEmail)) {
-      dispatch(actions.change('dataset.readers', _.concat(readers, newEmail)));
+      dispatch(actions.change('snapshot.readers', _.concat(readers, newEmail)));
     }
   }
 
@@ -164,7 +164,7 @@ export class DatasetCreateView extends React.PureComponent {
     const { dispatch, readers } = this.props;
     const newUsers = _.clone(readers);
     _.remove(newUsers, r => r === removeableEmail);
-    dispatch(actions.change('dataset.readers', newUsers));
+    dispatch(actions.change('snapshot.readers', newUsers));
   }
 
   parseFile = event => {
@@ -189,36 +189,36 @@ export class DatasetCreateView extends React.PureComponent {
             break;
           }
         }
-        dispatch(actions.change('dataset.ids', values));
+        dispatch(actions.change('snapshot.ids', values));
       });
       fileReader.readAsBinaryString(files[0]);
     } else {
-      dispatch(actions.change('dataset.ids', []));
+      dispatch(actions.change('snapshot.ids', []));
     }
   };
 
   render() {
     const FormRow = props => <div style={{ paddingBottom: '1em' }}>{props.children}</div>;
-    const { asset, classes, createdDataset, jobId, ids, readers, studies, study } = this.props;
-    const studyOptions = this.getStudyOptions(studies);
-    const assetOptions = this.getAssetOptions(study);
-    const createDisabled = !study || !ids;
+    const { asset, classes, createdSnapshot, jobId, ids, readers, datasets, dataset } = this.props;
+    const datasetOptions = this.getDatasetOptions(datasets);
+    const assetOptions = this.getAssetOptions(dataset);
+    const createDisabled = !dataset || !ids;
 
     return (
       <div className={classes.wrapper}>
         <div>
-          <div className={classes.title}>Create Dataset</div>
-          <p>Fill out the following fields to create a new dataset</p>
-          <Form model="dataset">
+          <div className={classes.title}>Create Snapshot</div>
+          <p>Fill out the following fields to create a new snapshot</p>
+          <Form model="snapshot">
             <FormRow>
-              <div className={classes.nameDataset}>
+              <div className={classes.nameSnapshot}>
                 <Control.text
-                  model="dataset.name"
-                  id="dataset.name"
+                  model="snapshot.name"
+                  id="snapshot.name"
                   required
                   validators={{ name: this.validateName }}
                   component={props => (
-                    <TextField {...props} placeholder="Dataset Name" variant="outlined" />
+                    <TextField {...props} placeholder="Snapshot Name" variant="outlined" />
                   )}
                 />
               </div>
@@ -226,15 +226,15 @@ export class DatasetCreateView extends React.PureComponent {
 
             <FormRow>
               <Control.textarea
-                model="dataset.description"
-                id="dataset.description"
+                model="snapshot.description"
+                id="snapshot.description"
                 required
                 component={props => (
                   <TextField
                     {...props}
                     style={{ width: '800px' }} // fullWidth
                     multiline
-                    placeholder="Add Dataset Description"
+                    placeholder="Add Snapshot Description"
                     rows="4"
                     rowsMax="100"
                     variant="outlined"
@@ -245,8 +245,8 @@ export class DatasetCreateView extends React.PureComponent {
             <FormRow>
               <div className={classes.manageUsers}>
                 <Control.custom
-                  id="dataset.readers"
-                  model="dataset.readers"
+                  id="snapshot.readers"
+                  model="snapshot.readers"
                   component={props => (
                     <ManageUsers
                       {...props}
@@ -261,16 +261,16 @@ export class DatasetCreateView extends React.PureComponent {
             </FormRow>
             <FormRow>
               <Control.select
-                id="dataset.study"
-                model="dataset.study"
+                id="snapshot.dataset"
+                model="snapshot.dataset"
                 className={classes.selector}
                 component={props => (
                   <MultiSelect
                     {...props}
-                    onChange={e => this.selectStudy(e.label, e.value)}
-                    options={studyOptions}
-                    placeholder="Search Studies"
-                    value={studyOptions.filter(option => option.value === study.id)}
+                    onChange={e => this.selectDataset(e.label, e.value)}
+                    options={datasetOptions}
+                    placeholder="Search Datasets"
+                    value={datasetOptions.filter(option => option.value === dataset.id)}
                   />
                 )}
               />
@@ -278,17 +278,17 @@ export class DatasetCreateView extends React.PureComponent {
 
             <FormRow>
               <Control.select
-                id="dataset.asset"
-                model="dataset.asset"
+                id="snapshot.asset"
+                model="snapshot.asset"
                 className={classes.selector}
                 component={props => (
                   <MultiSelect
                     {...props}
-                    isDisabled={!study.name}
+                    isDisabled={!dataset.name}
                     onChange={e => this.selectAsset(e.value)}
                     options={assetOptions}
                     placeholder={
-                      study.name ? 'Select Asset Type...' : 'Select Study to Select Asset Type...'
+                      dataset.name ? 'Select Asset Type...' : 'Select Dataset to Select Asset Type...'
                     }
                     value={assetOptions.filter(option => option.value === asset)}
                   />
@@ -299,34 +299,34 @@ export class DatasetCreateView extends React.PureComponent {
             <FormRow>
               <input
                 type="file"
-                id="dataset.upload"
+                id="snapshot.upload"
                 onChange={this.parseFile}
                 style={{ display: 'none' }}
               />
-              <label htmlFor="dataset.upload">
+              <label htmlFor="snapshot.upload">
                 <Button variant="contained" component="span" color="primary">
                   Import Ids
                 </Button>
               </label>
             </FormRow>
 
-            <Errors model="dataset" />
+            <Errors model="snapshot" />
 
             <FormRow>
-              {createdDataset ? (
-                <Redirect push to={`/datasets/requests/${jobId}`} />
+              {createdSnapshot ? (
+                <Redirect push to={`/snapshots/requests/${jobId}`} />
               ) : (
                 <Button
                   variant="contained"
                   color="primary"
                   className={classes.buttons}
                   disabled={createDisabled}
-                  onClick={() => this.createDatasetJob()}
+                  onClick={() => this.createSnapshotJob()}
                 >
-                  Create Dataset
+                  Create Snapshot
                 </Button>
               )}
-              <Link to="/datasets" className={classes.linkCancel}>
+              <Link to="/snapshots" className={classes.linkCancel}>
                 <Button variant="contained" type="button" className={classes.buttons}>
                   Cancel
                 </Button>
@@ -342,17 +342,17 @@ export class DatasetCreateView extends React.PureComponent {
 /* istanbul ignore next */
 function mapStateToProps(state) {
   return {
-    asset: state.dataset.asset,
-    createdDataset: state.datasets.createdDatasets.find(
-      datasetJob => datasetJob.jobId === state.jobs.jobId,
+    asset: state.snapshot.asset,
+    createdSnapshot: state.snapshots.createdSnapshots.find(
+      snapshotJob => snapshotJob.jobId === state.jobs.jobId,
     ),
     jobId: state.jobs.jobId,
-    createdDatasets: state.datasets.createdDatasets,
-    ids: state.dataset.ids,
-    readers: state.dataset.readers,
-    studies: state.studies,
-    study: state.studies.study,
+    createdSnapshots: state.snapshots.createdSnapshots,
+    ids: state.snapshot.ids,
+    readers: state.snapshot.readers,
+    datasets: state.datasets,
+    dataset: state.datasets.dataset,
   };
 }
 
-export default connect(mapStateToProps)(withStyles(styles)(DatasetCreateView));
+export default connect(mapStateToProps)(withStyles(styles)(SnapshotCreateView));
