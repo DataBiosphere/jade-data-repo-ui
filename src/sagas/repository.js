@@ -370,6 +370,25 @@ export function* getConfiguration() {
   }
 }
 
+export function* runQuery(projectId, sql) {
+  try {
+    const url = `https://bigquery.googleapis.com/bigquery/v2/projects/${projectId}/queries`;
+    const body = {
+      query: sql,
+    };
+    const response = yield call(authPost, url, body);
+    yield put({
+      type: ActionTypes.RUN_QUERY_SUCCESS,
+      results: response,
+    });
+  } catch (err) {
+    yield put({
+      type: ActionTypes.EXCEPTION,
+      payload: err,
+    });
+  }
+}
+
 /**
  * App Sagas
  */
