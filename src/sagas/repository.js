@@ -407,5 +407,6 @@ export default function* root() {
     takeLatest(ActionTypes.REMOVE_CUSTODIAN_FROM_DATASET, removeCustodianFromDataset),
     takeLatest(ActionTypes.GET_DATASET_TABLE_PREVIEW, getDatasetTablePreview),
     takeLatest(ActionTypes.GET_CONFIGURATION, getConfiguration),
+    takeLatest(ActionTypes.RUN_QUERY, runQuery),
   ]);
 }

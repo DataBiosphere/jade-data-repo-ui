@@ -58,6 +58,8 @@ export const ActionTypes = keyMirror({
   GET_DATASET_TABLE_PREVIEW_SUCCESS: undefined,
   GET_CONFIGURATION: undefined,
   GET_CONFIGURATION_SUCCESS: undefined,
+  RUN_QUERY: undefined,
+  RUN_QUERY_SUCCESS: undefined,
 });
 
 /**
