@@ -1,6 +1,7 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core';
 import PropTypes from 'prop-types';
+import push from 'modules/hist';
 
 import TerraIcon from '../../assets/media/brand/logo-wShadow.svg';
 
@@ -26,17 +27,16 @@ const styles = theme => ({
 class Logo extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    history: PropTypes.object,
   };
 
-  handleGoHome = history => {
-    history.push('/');
+  handleGoHome = () => {
+    push('/');
   };
 
   render() {
-    const { classes, history } = this.props;
+    const { classes } = this.props;
     return (
-      <div className={classes.logoContainer} onClick={() => this.handleGoHome(history)}>
+      <div className={classes.logoContainer} onClick={this.handleGoHome}>
         <TerraIcon className={classes.logo} alt="logo" />
         <span className={classes.logoTitle}>Data Repository</span>
       </div>
