@@ -9,6 +9,7 @@ import {
   getDatasetPolicy,
   addCustodianToDataset,
   removeCustodianFromDataset,
+  runQuery,
 } from 'actions/index';
 import DetailViewHeader from './DetailViewHeader';
 import DatasetTablePreview from './DatasetTablePreview';
@@ -57,6 +58,12 @@ export class DatasetDetailView extends React.PureComponent {
     const datasetId = match.params.uuid;
     dispatch(getDatasetById(datasetId));
     dispatch(getDatasetPolicy(datasetId));
+    dispatch(
+      runQuery(
+        'broad-jade-my',
+        'SELECT * FROM [broad-jade-my-data.datarepo_ingest_test_08_15_15_47.sample]',
+      ),
+    );
   }
 
   addUser = newEmail => {
