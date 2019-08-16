@@ -370,11 +370,11 @@ export function* getConfiguration() {
   }
 }
 
-export function* runQuery(projectId, sql) {
+export function* runQuery({ payload }) {
   try {
-    const url = `https://bigquery.googleapis.com/bigquery/v2/projects/${projectId}/queries`;
+    const url = `https://bigquery.googleapis.com/bigquery/v2/projects/${payload.projectId}/queries`;
     const body = {
-      query: sql,
+      query: payload.query,
     };
     const response = yield call(authPost, url, body);
     yield put({
