@@ -124,8 +124,9 @@ export const { getConfiguration } = createActions({
 
 export const { runQuery } = createActions({
   [ActionTypes.RUN_QUERY_SUCCESS]: result => result,
-  [ActionTypes.RUN_QUERY]: (projectId, query) => ({
+  [ActionTypes.RUN_QUERY]: (projectId, query, maxResults) => ({
     projectId,
     query,
+    maxResults,
   }),
 });
