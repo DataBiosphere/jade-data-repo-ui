@@ -13,6 +13,7 @@ import SnapshotCreateView from '../components/SnapshotCreateView';
 import SnapshotPreviewView from '../components/SnapshotPreviewView';
 import SnapshotDetailView from '../components/SnapshotDetailView';
 import DatasetDetailView from '../components/DatasetDetailView';
+import DatasetQueryView from '../components/DatasetQueryView';
 
 const styles = theme => ({
   wrapper: {
@@ -80,11 +81,19 @@ class Private extends React.Component {
                     to="/snapshots"
                     classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
                   />
+                  <Tab
+                    label="Queries"
+                    component={Link}
+                    value="/queries"
+                    to="/queries"
+                    classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
+                  />
                 </Tabs>
                 <Switch>
                   <Route exact path="/" component={HomeView} />
                   <Route exact path="/datasets" component={DatasetsView} />
                   <Route exact path="/datasets/details/:uuid" component={DatasetDetailView} />
+                  <Route exact path="/queries/" component={DatasetQueryView} />
                   <Route exact path="/snapshots" component={SnapshotView} />
                   <Route exact path="/snapshots/create" component={SnapshotCreateView} />
                   <Route exact path="/snapshots/requests/:jobId" component={SnapshotPreviewView} />
