@@ -94,7 +94,7 @@ export class DatasetQueryView extends React.PureComponent {
         {queryResults && queryResults.jobReference && (
           <MaterialTable
             columns={columns}
-            // options={options}
+            options={options}
             data={query =>
               new Promise((resolve, reject) => {
                 let rawData = {};
@@ -145,13 +145,13 @@ export class DatasetQueryView extends React.PureComponent {
                     });
                     console.log('DATA');
                     console.log(data);
-                  });
 
-                resolve({
-                  data,
-                  page: query.page,
-                  totalCount: queryResults.totalRows,
-                });
+                    resolve({
+                      data,
+                      page: query.page,
+                      totalCount: parseInt(queryResults.totalRows, 10),
+                    });
+                  });
               })
             }
             icons={tableIcons}
