@@ -23,8 +23,6 @@ import ViewColumn from '@material-ui/icons/ViewColumn';
 
 import { runQuery } from 'actions/index';
 
-const styles = theme => ({});
-
 const tableIcons = {
   Add: React.forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
   Check: React.forwardRef((props, ref) => <Check {...props} ref={ref} />),
@@ -46,14 +44,6 @@ const tableIcons = {
 };
 
 export class DatasetQueryView extends React.PureComponent {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      pageToken: '',
-    };
-  }
-
   static propTypes = {
     dispatch: PropTypes.func.isRequired,
     queryResults: PropTypes.object,
@@ -73,8 +63,8 @@ export class DatasetQueryView extends React.PureComponent {
   render() {
     const { queryResults, token } = this.props;
 
-    let columns = [];
-    let options = {
+    const columns = [];
+    const options = {
       pageSize: 1,
       pageSizeOptions: [1, 2, 3],
     };
@@ -96,17 +86,12 @@ export class DatasetQueryView extends React.PureComponent {
             columns={columns}
             options={options}
             data={query =>
-              new Promise((resolve, reject) => {
+              new Promise(resolve => {
                 let rawData = {};
                 let data = [];
 
                 const { jobId } = queryResults.jobReference;
                 const { projectId } = queryResults.jobReference;
-
-                console.log('TOKEN');
-                console.log(query.tokenToUse);
-                console.log('PAGE');
-                console.log(query.page);
 
                 if (query.tokenToUse === undefined) {
                   query.tokenToUse = queryResults.pageToken;
@@ -143,8 +128,6 @@ export class DatasetQueryView extends React.PureComponent {
 
                       data.push(row);
                     });
-                    console.log('DATA');
-                    console.log(data);
 
                     resolve({
                       data,
