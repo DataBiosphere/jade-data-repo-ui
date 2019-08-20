@@ -235,7 +235,7 @@ call('gcloud auth list', loginsStdin => {
                   const config = {
                     configuration: {
                       query: {
-                        query: `SELECT * FROM [${prodProject}.${bqDatasetId}.${table.name}] LIMIT 1000`,
+                        query: `SELECT * FROM [${prodProject}.${bqDatasetId}.${table.name}] LIMIT ${argv.cutoff}`,
                         destinationTable: {
                           projectId: targetProject,
                           datasetId: bqDatasetId,
