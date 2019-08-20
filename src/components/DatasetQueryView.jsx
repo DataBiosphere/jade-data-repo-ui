@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import MaterialTable from 'material-table';
 import axios from 'axios';
 import { connect } from 'react-redux';
+import { withStyles } from '@material-ui/core/styles';
 
 import AddBox from '@material-ui/icons/AddBox';
 import ArrowUpward from '@material-ui/icons/ArrowUpward';
@@ -41,6 +42,41 @@ const tableIcons = {
   ThirdStateCheck: React.forwardRef((props, ref) => <Remove {...props} ref={ref} />),
   ViewColumn: React.forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />),
 };
+
+const styles = theme => ({
+  root: {
+    border: `1px solid ${theme.palette.primary.dark}`,
+    borderRadius: `${theme.shape.borderRadius}px ${theme.shape.borderRadius}px 0 0`,
+    boxShadow: 'none',
+    marginTop: theme.spacing(3),
+    maxWidth: 1400,
+    overflowX: 'auto',
+    width: '100%',
+    overflowWrap: 'break-word',
+  },
+  table: {
+    borderRadius: `${theme.shape.borderRadius}px ${theme.shape.borderRadius}px 0 0`,
+    minWidth: 700,
+  },
+  row: {
+    borderRadius: `${theme.shape.borderRadius}px ${theme.shape.borderRadius}px 0 0`,
+  },
+  searchIcon: {
+    color: theme.palette.primary.main,
+    width: 22,
+    height: '100%',
+    position: 'absolute',
+    pointerEvents: 'none',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingLeft: theme.spacing(3),
+  },
+  searchInput: {
+    paddingTop: theme.spacing(1.5),
+    paddingLeft: theme.spacing(6),
+  },
+});
 
 export class DatasetQueryView extends React.PureComponent {
   static propTypes = {
@@ -151,4 +187,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(DatasetQueryView);
+export default connect(mapStateToProps)(withStyles(styles)(DatasetQueryView));
