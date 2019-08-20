@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import MaterialTable from 'material-table';
 import axios from 'axios';
 import { connect } from 'react-redux';
-import { withStyles } from '@material-ui/core/styles';
 
 import AddBox from '@material-ui/icons/AddBox';
 import ArrowUpward from '@material-ui/icons/ArrowUpward';
