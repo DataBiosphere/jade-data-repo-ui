@@ -100,8 +100,8 @@ export class DatasetQueryView extends React.PureComponent {
 
     const columns = [];
     const options = {
-      pageSize: 1,
-      pageSizeOptions: [1, 2, 3],
+      pageSize: 100,
+      pageSizeOptions: [100],
     };
     if (queryResults.rows !== undefined && queryResults.schema !== undefined) {
       queryResults.schema.fields.forEach(colData => {
@@ -134,7 +134,7 @@ export class DatasetQueryView extends React.PureComponent {
 
                 const url = `https://bigquery.googleapis.com/bigquery/v2/projects/${projectId}/queries/${jobId}`;
                 const params = {
-                  maxResults: 1,
+                  maxResults: query.pageSize,
                   pageToken: query.tokenToUse,
                 };
 
