@@ -152,4 +152,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(withStyles(styles)(DatasetQueryView));
+export default connect(mapStateToProps)(DatasetQueryView);
