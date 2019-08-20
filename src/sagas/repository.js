@@ -337,7 +337,7 @@ export function* getDatasetTablePreview({ payload }) {
   const bqApi = 'https://www.googleapis.com/bigquery/v2';
   const url = `${bqApi}/projects/${datasetProject}/datasets/${datasetBqSnapshotName}/tables/${tableName}/data`;
   try {
-    const response = yield call(authGet, url);
+    const response = yield call(authGet, `${url}?maxResults=100`);
     yield put({
       type: ActionTypes.GET_DATASET_TABLE_PREVIEW_SUCCESS,
       preview: response,
