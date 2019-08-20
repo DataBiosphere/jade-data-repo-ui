@@ -328,7 +328,7 @@ module.exports = webpackEnv => {
       new webpack.DefinePlugin({
         ...env.stringified,
         APP__BRANCH: JSON.stringify(gitInfoPlugin.branch()),
-        APP__BUILD_DATE: JSON.stringify(dateFns.format(new Date(), 'DD/MM/YYYY')),
+        APP__BUILD_DATE: JSON.stringify(dateFns.format(new Date(), 'dd/MM/yyyy')),
         APP__GITHASH: JSON.stringify(gitInfoPlugin.hash()),
         APP__VERSION: JSON.stringify(NPMPackage.version),
       }),
