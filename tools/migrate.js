@@ -203,7 +203,7 @@ console.log(`running ${command} for ${datasetName}`);
 call('gcloud auth list', loginsStdin => {
   const logins = loginsStdin
     .split('\n')
-    .filter((line, index) => index > 2)
+    .filter((line, index) => index > 1)
     .map(line => line.replace(/^[* ]+/, ''));
   inquirer
     .prompt([
