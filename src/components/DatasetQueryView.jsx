@@ -43,6 +43,8 @@ const tableIcons = {
   ViewColumn: React.forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />),
 };
 
+const PAGE_SIZE = 100;
+
 const styles = theme => ({
   root: {
     border: `1px solid ${theme.palette.primary.dark}`,
@@ -79,6 +81,11 @@ const styles = theme => ({
 });
 
 export class DatasetQueryView extends React.PureComponent {
+  constructor(props) {
+    super(props);
+    this.pageTokenMap = {};
+  }
+
   static propTypes = {
     dispatch: PropTypes.func.isRequired,
     queryResults: PropTypes.object,
@@ -90,7 +97,8 @@ export class DatasetQueryView extends React.PureComponent {
     dispatch(
       runQuery(
         'broad-jade-my',
-        'SELECT * FROM [broad-jade-my-data.datarepo_ingest_test_08_15_15_47.sample]',
+        'SELECT * FROM [broad-jade-my-data.datarepo_V2F_GWAS_Summary_Stats.variant]',
+        PAGE_SIZE,
       ),
     );
   }
@@ -100,8 +108,9 @@ export class DatasetQueryView extends React.PureComponent {
 
     const columns = [];
     const options = {
-      pageSize: 100,
-      pageSizeOptions: [100],
+      pageSize: PAGE_SIZE,
+      pageSizeOptions: [PAGE_SIZE],
+      showFirstLastPageButtons: false,
     };
     if (queryResults.rows !== undefined && queryResults.schema !== undefined) {
       queryResults.schema.fields.forEach(colData => {
@@ -128,14 +137,18 @@ export class DatasetQueryView extends React.PureComponent {
                 const { jobId } = queryResults.jobReference;
                 const { projectId } = queryResults.jobReference;
 
-                if (query.tokenToUse === undefined) {
-                  query.tokenToUse = queryResults.pageToken;
+                if (query.tokenToUse === undefined && query.page === 0) {
+                  this.pageTokenMap[1] = queryResults.pageToken;
+                }
+
+                if (this.pageTokenMap[query.page] === undefined && query.page !== 0) {
+                  this.pageTokenMap[query.page] = query.tokenToUse;
                 }
 
                 const url = `https://bigquery.googleapis.com/bigquery/v2/projects/${projectId}/queries/${jobId}`;
                 const params = {
                   maxResults: query.pageSize,
-                  pageToken: query.tokenToUse,
+                  pageToken: this.pageTokenMap[query.page],
                 };
 
                 axios

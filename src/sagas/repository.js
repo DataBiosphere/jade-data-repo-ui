@@ -379,6 +379,7 @@ export function* runQuery({ payload }) {
     const url = `https://bigquery.googleapis.com/bigquery/v2/projects/${payload.projectId}/queries`;
     const body = {
       query: payload.query,
+      maxResults: payload.maxResults,
     };
     const response = yield call(authPost, url, body);
     yield put({
