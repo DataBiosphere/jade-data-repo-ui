@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
+import { Link } from 'react-router-dom';
+import Button from '@material-ui/core/Button';
 import {
   getDatasetById,
   getDatasetPolicy,
@@ -80,6 +82,9 @@ export class DatasetDetailView extends React.PureComponent {
             addCustodian={this.addUser}
             removeCustodian={this.removeUser}
           />
+          <Link to={`/datasets/details/${dataset.id}/query`}>
+            <Button> query dataset</Button>
+          </Link>
           {dataset && dataset.schema && <DatasetTablePreview dataset={dataset} />}
         </div>
       </div>

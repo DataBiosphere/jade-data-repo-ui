@@ -394,27 +394,6 @@ export function* runQuery({ payload }) {
   }
 }
 
-export function* getQueryResults({ payload }) {
-  try {
-    const url = `https://bigquery.googleapis.com/bigquery/v2/projects/${payload.projectId}/queries/${payload.jobId}`;
-    const body = {
-      query: payload.query,
-      maxResults: payload.maxResults,
-      pageToken: payload.pageToken,
-    };
-    const response = yield call(authGet, url, body);
-    yield put({
-      type: ActionTypes.GET_QUERY_RESULTS_SUCCESS,
-      results: response,
-    });
-  } catch (err) {
-    yield put({
-      type: ActionTypes.EXCEPTION,
-      payload: err,
-    });
-  }
-}
-
 /**
  * App Sagas
  */
@@ -434,6 +413,5 @@ export default function* root() {
     takeLatest(ActionTypes.GET_DATASET_TABLE_PREVIEW, getDatasetTablePreview),
     takeLatest(ActionTypes.GET_CONFIGURATION, getConfiguration),
     takeLatest(ActionTypes.RUN_QUERY, runQuery),
-    takeLatest(ActionTypes.GET_QUERY_RESULTS, getQueryResults),
   ]);
 }
