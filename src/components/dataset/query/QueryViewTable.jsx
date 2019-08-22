@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import MaterialTable from 'material-table';
 import axios from 'axios';
-import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 
 import AddBox from '@material-ui/icons/AddBox';
@@ -20,8 +19,6 @@ import Remove from '@material-ui/icons/Remove';
 import SaveAlt from '@material-ui/icons/SaveAlt';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
-
-import { runQuery } from 'actions/index';
 
 const tableIcons = {
   Add: React.forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
