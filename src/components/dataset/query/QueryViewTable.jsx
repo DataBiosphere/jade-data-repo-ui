@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import MaterialTable from 'material-table';
 import axios from 'axios';
+import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 
 import AddBox from '@material-ui/icons/AddBox';
@@ -19,6 +20,8 @@ import Remove from '@material-ui/icons/Remove';
 import SaveAlt from '@material-ui/icons/SaveAlt';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
+
+import { runQuery } from 'actions/index';
 
 const tableIcons = {
   Add: React.forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
@@ -85,20 +88,19 @@ export class QueryViewTable extends React.PureComponent {
 
   static propTypes = {
     queryResults: PropTypes.object,
-    title: PropTypes.string,
     token: PropTypes.string,
   };
 
   render() {
-    const { queryResults, title, token } = this.props;
-    let options = {};
+    const { queryResults, token } = this.props;
 
     const columns = [];
-    if (
-      queryResults.rows !== undefined &&
-      queryResults.schema !== undefined &&
-      queryResults.schema.fields !== undefined
-    ) {
+    const options = {
+      pageSize: PAGE_SIZE,
+      pageSizeOptions: [PAGE_SIZE],
+      showFirstLastPageButtons: false,
+    };
+    if (queryResults.rows !== undefined && queryResults.schema !== undefined) {
       queryResults.schema.fields.forEach(colData => {
         const col = {
           title: colData.name,
@@ -109,27 +111,10 @@ export class QueryViewTable extends React.PureComponent {
       });
     }
 
-    if (queryResults.totalRows !== undefined) {
-      const numRows = parseInt(queryResults.totalRows, 10);
-      let pageSize = 0;
-      if (numRows > PAGE_SIZE) {
-        pageSize = PAGE_SIZE;
-      } else {
-        pageSize = numRows;
-      }
-
-      options = {
-        pageSize,
-        pageSizeOptions: [pageSize],
-        showFirstLastPageButtons: false,
-      };
-    }
-
     return (
       <div>
         {queryResults && queryResults.jobReference && (
           <MaterialTable
-            title={title}
             columns={columns}
             options={options}
             data={query =>
@@ -167,21 +152,18 @@ export class QueryViewTable extends React.PureComponent {
                     query.tokenToUse = rawData.pageToken;
 
                     const columnNames = columns.map(x => x.title);
+                    rawData.rows.forEach(rowData => {
+                      const row = {};
 
-                    if (rawData.rows && rawData.rows.length > 0) {
-                      rawData.rows.forEach(rowData => {
-                        const row = {};
+                      for (let i = 0; i < rowData.f.length; i++) {
+                        const item = rowData.f[i].v;
+                        const currColumn = columnNames[i];
 
-                        for (let i = 0; i < rowData.f.length; i++) {
-                          const item = rowData.f[i].v;
-                          const currColumn = columnNames[i];
+                        row[currColumn] = item;
+                      }
 
-                          row[currColumn] = item;
-                        }
-
-                        data.push(row);
-                      });
-                    }
+                      data.push(row);
+                    });
 
                     resolve({
                       data,
