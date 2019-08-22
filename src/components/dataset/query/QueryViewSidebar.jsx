@@ -42,7 +42,7 @@ const styles = theme => ({
     }),
   },
   menuButton: {
-    marginRight: 36,
+    'border-radius': '0%',
   },
   hide: {
     display: 'none',
@@ -96,16 +96,16 @@ export class QueryViewSidebar extends React.PureComponent {
     classes: PropTypes.object,
   };
 
+  handleDrawerOpen = () => {
+    this.setState({ open: true });
+  };
+
+  handleDrawerClose = () => {
+    this.setState({ open: false });
+  };
+
   render() {
     const { classes } = this.props;
-
-    function handleDrawerOpen() {
-      this.setState({ open: true });
-    }
-
-    function handleDrawerClose() {
-      this.setState({ open: false });
-    }
 
     const { open } = this.state;
 
@@ -114,6 +114,7 @@ export class QueryViewSidebar extends React.PureComponent {
         <CssBaseline />
         <Drawer
           variant="permanent"
+          anchor="right"
           className={clsx(classes.drawer, {
             [classes.drawerOpen]: open,
             [classes.drawerClose]: !open,
@@ -129,7 +130,7 @@ export class QueryViewSidebar extends React.PureComponent {
           <IconButton
             color="inherit"
             aria-label="open drawer"
-            onClick={handleDrawerOpen}
+            onClick={this.handleDrawerOpen}
             edge="start"
             className={clsx(classes.menuButton, {
               [classes.hide]: open,
@@ -138,8 +139,8 @@ export class QueryViewSidebar extends React.PureComponent {
             <MenuIcon />
           </IconButton>
           <IconButton
-            onClick={handleDrawerClose}
-            className={clsx({
+            onClick={this.handleDrawerClose}
+            className={clsx(classes.menuButton, {
               [classes.hide]: !open,
             })}
           >

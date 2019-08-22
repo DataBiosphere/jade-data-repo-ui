@@ -5,7 +5,6 @@ import { withStyles } from '@material-ui/core/styles';
 
 import { runQuery } from 'actions/index';
 
-import Grid from '@material-ui/core/Grid';
 import QueryViewTable from './QueryViewTable';
 import QueryViewSidebar from './QueryViewSidebar';
 import QueryViewDropdown from './QueryViewDropdown';
