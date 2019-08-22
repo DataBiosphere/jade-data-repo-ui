@@ -1,6 +1,7 @@
 import React from 'react';
 import clsx from 'clsx';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
+import PropTypes from 'prop-types';
 import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -17,11 +18,11 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
-import { authPost } from '../sagas/repository';
+import { authPost } from '../../../sagas/repository';
 
 const drawerWidth = 240;
 
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
   root: {
     display: 'flex',
   },
@@ -81,76 +82,90 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 1,
     padding: theme.spacing(3),
   },
-}));
+});
 
-export default function QueryViewSidebar() {
-  const classes = useStyles();
-  const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
-
-  function handleDrawerOpen() {
-    setOpen(true);
+export class QueryViewSidebar extends React.PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      open: false,
+    };
   }
 
-  function handleDrawerClose() {
-    setOpen(false);
-  }
+  static propTypes = {
+    classes: PropTypes.object,
+  };
 
-  return (
-    <div className={classes.root}>
-      <CssBaseline />
-      <Drawer
-        variant="permanent"
-        className={clsx(classes.drawer, {
-          [classes.drawerOpen]: open,
-          [classes.drawerClose]: !open,
-        })}
-        classes={{
-          paper: clsx(classes.drawer, {
+  render() {
+    const { classes } = this.props;
+
+    function handleDrawerOpen() {
+      this.setState({ open: true });
+    }
+
+    function handleDrawerClose() {
+      this.setState({ open: false });
+    }
+
+    const { open } = this.state;
+
+    return (
+      <div className={classes.root}>
+        <CssBaseline />
+        <Drawer
+          variant="permanent"
+          className={clsx(classes.drawer, {
             [classes.drawerOpen]: open,
             [classes.drawerClose]: !open,
-          }),
-        }}
-        open={open}
-      >
-        <IconButton
-          color="inherit"
-          aria-label="open drawer"
-          onClick={handleDrawerOpen}
-          edge="start"
-          className={clsx(classes.menuButton, {
-            [classes.hide]: open,
           })}
+          classes={{
+            paper: clsx(classes.drawer, {
+              [classes.drawerOpen]: open,
+              [classes.drawerClose]: !open,
+            }),
+          }}
+          open={open}
         >
-          <MenuIcon />
-        </IconButton>
-        <IconButton
-          onClick={handleDrawerClose}
-          className={clsx({
-            [classes.hide]: !open,
-          })}
-        >
-          {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
-        </IconButton>
-        <Divider />
-        <List>
-          {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
-        </List>
-        <Divider />
-        <List>
-          {['All mail', 'Trash', 'Spam'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
-        </List>
-      </Drawer>
-    </div>
-  );
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            onClick={handleDrawerOpen}
+            edge="start"
+            className={clsx(classes.menuButton, {
+              [classes.hide]: open,
+            })}
+          >
+            <MenuIcon />
+          </IconButton>
+          <IconButton
+            onClick={handleDrawerClose}
+            className={clsx({
+              [classes.hide]: !open,
+            })}
+          >
+            <ChevronRightIcon />
+          </IconButton>
+          <Divider />
+          <List>
+            {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
+              <ListItem button key={text}>
+                <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
+                <ListItemText primary={text} />
+              </ListItem>
+            ))}
+          </List>
+          <Divider />
+          <List>
+            {['All mail', 'Trash', 'Spam'].map((text, index) => (
+              <ListItem button key={text}>
+                <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
+                <ListItemText primary={text} />
+              </ListItem>
+            ))}
+          </List>
+        </Drawer>
+      </div>
+    );
+  }
 }
+export default withStyles(styles)(QueryViewSidebar);

@@ -80,28 +80,16 @@ const styles = theme => ({
   },
 });
 
-export class DatasetQueryView extends React.PureComponent {
+export class QueryViewTable extends React.PureComponent {
   constructor(props) {
     super(props);
     this.pageTokenMap = {};
   }
 
   static propTypes = {
-    dispatch: PropTypes.func.isRequired,
     queryResults: PropTypes.object,
     token: PropTypes.string,
   };
-
-  componentDidMount() {
-    const { dispatch } = this.props;
-    dispatch(
-      runQuery(
-        'broad-jade-my',
-        'SELECT * FROM [broad-jade-my-data.datarepo_V2F_GWAS_Summary_Stats.variant]',
-        PAGE_SIZE,
-      ),
-    );
-  }
 
   render() {
     const { queryResults, token } = this.props;
@@ -132,7 +120,7 @@ export class DatasetQueryView extends React.PureComponent {
             data={query =>
               new Promise(resolve => {
                 let rawData = {};
-                let data = [];
+                const data = [];
 
                 const { jobId } = queryResults.jobReference;
                 const { projectId } = queryResults.jobReference;
@@ -193,11 +181,4 @@ export class DatasetQueryView extends React.PureComponent {
   }
 }
 
-function mapStateToProps(state) {
-  return {
-    queryResults: state.query.queryResults,
-    token: state.user.token,
-  };
-}
-
-export default connect(mapStateToProps)(withStyles(styles)(DatasetQueryView));
+export default withStyles(styles)(QueryViewTable);
