@@ -7,6 +7,7 @@ import { runQuery } from 'actions/index';
 import Grid from '@material-ui/core/Grid';
 import QueryViewTable from './QueryViewTable';
 import QueryViewSidebar from './QueryViewSidebar';
+import { QueryViewDropdown } from './QueryViewDropdown';
 
 export class QueryView extends React.PureComponent {
   static propTypes = {
@@ -33,6 +34,9 @@ export class QueryView extends React.PureComponent {
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Grid container justify="center" spacing={2}>
+            <Grid item>
+              <QueryViewDropdown />
+            </Grid>
             <Grid item>
               <QueryViewTable queryResults={queryResults} token={token} />
             </Grid>
