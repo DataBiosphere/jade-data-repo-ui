@@ -2,6 +2,9 @@
 
 Based off of [React Redux Saga Boilerplate](https://github.com/gilbarbara/react-redux-saga-boilerplate)
 
+### Prerequisites
+- install nvm from [nvm.sh](nvm.sh)
+
 ### Provides
 
 - react ^16.x
