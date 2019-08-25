@@ -2,6 +2,16 @@
 
 Based off of [React Redux Saga Boilerplate](https://github.com/gilbarbara/react-redux-saga-boilerplate)
 
+### Prerequisites
+- install npm: `brew install npm`
+- install nvm from [nvm.sh](nvm.sh) -- do NOT install through homebrew as that is no longer maintaine
+
+Run the following to get automatic node version switching set up:
+```
+npm install -g avn avn-nvm avn-n
+avn setup
+ ```
+
 ### Provides
 
 - react ^16.x
