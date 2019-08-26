@@ -26,13 +26,16 @@ export class QueryViewDropdown extends React.PureComponent {
 
   static propTypes = {
     classes: PropTypes.object,
+    onSelectedItem: PropTypes.func,
     options: PropTypes.array,
   };
 
   handleChange = event => {
+    const { onSelectedItem } = this.props;
     this.setState({
       values: { ...this.values, [event.target.name]: event.target.value },
     });
+    onSelectedItem(event.target.value);
   };
 
   render() {

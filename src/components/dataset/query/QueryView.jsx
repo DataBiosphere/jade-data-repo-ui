@@ -19,7 +19,17 @@ const styles = theme => ({
   },
 });
 
+const PAGE_SIZE = 100;
+
 export class QueryView extends React.PureComponent {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      selected: '',
+    };
+  }
+
   static propTypes = {
     classes: PropTypes.object,
     dataset: PropTypes.object,
@@ -28,16 +38,18 @@ export class QueryView extends React.PureComponent {
     token: PropTypes.string,
   };
 
-  componentDidMount() {
+  handleChange = value => {
+    this.setState({ selected: value });
+
     const { dataset, dispatch } = this.props;
     dispatch(
       runQuery(
-        'broad-jade-my',
-        `SELECT * FROM [${dataset.dataProject}.datarepo_${dataset.name}.${dataset.schema.tables[0].name}]`,
-        100,
+        dataset.dataProject,
+        `SELECT * FROM [${dataset.dataProject}.datarepo_${dataset.name}.${value}]`,
+        PAGE_SIZE,
       ),
     );
-  }
+  };
 
   render() {
     const { classes, dataset, queryResults, token } = this.props;
@@ -48,7 +60,7 @@ export class QueryView extends React.PureComponent {
         <div className={classes.wrapper}>
           <Grid container spacing={2}>
             <Grid item xs={3}>
-              <QueryViewDropdown options={names} />
+              <QueryViewDropdown options={names} onSelectedItem={this.handleChange} />
             </Grid>
             <Grid item xs={12}>
               <QueryViewTable queryResults={queryResults} token={token} />

@@ -90,14 +90,14 @@ export class QueryViewTable extends React.PureComponent {
 
   render() {
     const { queryResults, token } = this.props;
+    let options = {};
 
     const columns = [];
-    const options = {
-      pageSize: PAGE_SIZE,
-      pageSizeOptions: [PAGE_SIZE],
-      showFirstLastPageButtons: false,
-    };
-    if (queryResults.rows !== undefined && queryResults.schema !== undefined) {
+    if (
+      queryResults.rows !== undefined &&
+      queryResults.schema !== undefined &&
+      queryResults.schema.fields !== undefined
+    ) {
       queryResults.schema.fields.forEach(colData => {
         const col = {
           title: colData.name,
@@ -106,6 +106,22 @@ export class QueryViewTable extends React.PureComponent {
 
         columns.push(col);
       });
+    }
+
+    if (queryResults.totalRows !== undefined) {
+      const numRows = parseInt(queryResults.totalRows, 10);
+      let pageSize = 0;
+      if (numRows > PAGE_SIZE) {
+        pageSize = PAGE_SIZE;
+      } else {
+        pageSize = numRows;
+      }
+
+      options = {
+        pageSize,
+        pageSizeOptions: [pageSize],
+        showFirstLastPageButtons: false,
+      };
     }
 
     return (
@@ -149,18 +165,21 @@ export class QueryViewTable extends React.PureComponent {
                     query.tokenToUse = rawData.pageToken;
 
                     const columnNames = columns.map(x => x.title);
-                    rawData.rows.forEach(rowData => {
-                      const row = {};
 
-                      for (let i = 0; i < rowData.f.length; i++) {
-                        const item = rowData.f[i].v;
-                        const currColumn = columnNames[i];
+                    if (rawData.rows && rawData.rows.length > 0) {
+                      rawData.rows.forEach(rowData => {
+                        const row = {};
 
-                        row[currColumn] = item;
-                      }
+                        for (let i = 0; i < rowData.f.length; i++) {
+                          const item = rowData.f[i].v;
+                          const currColumn = columnNames[i];
 
-                      data.push(row);
-                    });
+                          row[currColumn] = item;
+                        }
+
+                        data.push(row);
+                      });
+                    }
 
                     resolve({
                       data,
