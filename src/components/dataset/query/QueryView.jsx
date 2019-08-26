@@ -57,6 +57,7 @@ export class QueryView extends React.PureComponent {
 
     return (
       <Fragment>
+        <QueryViewSidebar />
         <div className={classes.wrapper}>
           <Grid container spacing={2}>
             <Grid item xs={3}>
@@ -67,7 +68,6 @@ export class QueryView extends React.PureComponent {
             </Grid>
           </Grid>
         </div>
-        <QueryViewSidebar />
       </Fragment>
     );
   }
