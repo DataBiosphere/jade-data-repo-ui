@@ -40,12 +40,12 @@ export class QueryView extends React.PureComponent {
 
   handleChange = value => {
     this.setState({ selected: value });
-
     const { dataset, dispatch } = this.props;
     dispatch(
       runQuery(
         dataset.dataProject,
-        `SELECT * FROM [${dataset.dataProject}.datarepo_${dataset.name}.${value}]`,
+        `#standardSQL
+        SELECT * FROM \`${dataset.dataProject}.datarepo_${dataset.name}.${value}\``,
         PAGE_SIZE,
       ),
     );
