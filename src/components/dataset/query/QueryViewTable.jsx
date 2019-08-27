@@ -85,11 +85,12 @@ export class QueryViewTable extends React.PureComponent {
 
   static propTypes = {
     queryResults: PropTypes.object,
+    title: PropTypes.string,
     token: PropTypes.string,
   };
 
   render() {
-    const { queryResults, token } = this.props;
+    const { queryResults, title, token } = this.props;
     let options = {};
 
     const columns = [];
@@ -128,6 +129,7 @@ export class QueryViewTable extends React.PureComponent {
       <div>
         {queryResults && queryResults.jobReference && (
           <MaterialTable
+            title={title}
             columns={columns}
             options={options}
             data={query =>

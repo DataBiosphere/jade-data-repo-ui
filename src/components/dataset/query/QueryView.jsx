@@ -17,6 +17,10 @@ const styles = theme => ({
     padding: theme.spacing(4),
     margin: theme.spacing(4),
   },
+  scrollTable: {
+    overflowY: 'scroll',
+    height: '-webkit-fill-available',
+  },
 });
 
 const PAGE_SIZE = 100;
@@ -53,19 +57,26 @@ export class QueryView extends React.PureComponent {
 
   render() {
     const { classes, dataset, queryResults, token } = this.props;
+    const { selected } = this.state;
     const names = dataset.schema.tables.map(table => table.name);
 
     return (
       <Fragment>
         <QueryViewSidebar />
         <div className={classes.wrapper}>
-          <Grid container spacing={2}>
-            <Grid item xs={3}>
-              <QueryViewDropdown options={names} onSelectedItem={this.handleChange} />
-            </Grid>
-            <Grid item xs={12}>
-              <QueryViewTable queryResults={queryResults} token={token} />
-            </Grid>
+          <Grid container spacing={2} direction="column">
+            <div>
+              <Grid item xs={3}>
+                <QueryViewDropdown options={names} onSelectedItem={this.handleChange} />
+              </Grid>
+            </div>
+            <div>
+              <Grid item xs={12}>
+                <div className={classes.scrollTable}>
+                  <QueryViewTable queryResults={queryResults} title={selected} token={token} />
+                </div>
+              </Grid>
+            </div>
           </Grid>
         </div>
       </Fragment>
