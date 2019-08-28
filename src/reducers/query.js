@@ -14,11 +14,10 @@ export default {
         immutable(state, {
           queryResults: { $set: action.results.data },
         }),
-      [ActionTypes.RUN_QUERY]: state => {
-        return immutable(state, {
+      [ActionTypes.RUN_QUERY]: state =>
+        immutable(state, {
           queryResults: { $set: {} },
-        });
-      },
+        }),
     },
     queryState,
   ),
