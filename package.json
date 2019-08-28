@@ -46,7 +46,7 @@
     "mobile-detect": "^1.4.3",
     "modernizr": "^3.7.1",
     "moment": "^2.24.0",
-    "polished": "^2.3.3",
+    "polished": "^3.4.1",
     "prop-types": "^15.7.2",
     "qs": "^6.7.0",
     "react": "^16.9.0",
