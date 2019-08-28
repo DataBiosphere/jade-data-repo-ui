@@ -13,6 +13,7 @@ import SnapshotCreateView from '../components/SnapshotCreateView';
 import SnapshotPreviewView from '../components/SnapshotPreviewView';
 import SnapshotDetailView from '../components/SnapshotDetailView';
 import DatasetDetailView from '../components/DatasetDetailView';
+import QueryView from '../components/dataset/query/QueryView';
 
 const styles = theme => ({
   wrapper: {
@@ -85,6 +86,7 @@ class Private extends React.Component {
                   <Route exact path="/" component={HomeView} />
                   <Route exact path="/datasets" component={DatasetsView} />
                   <Route exact path="/datasets/details/:uuid" component={DatasetDetailView} />
+                  <Route exact path="/datasets/details/:uuid/query" component={QueryView} />
                   <Route exact path="/snapshots" component={SnapshotView} />
                   <Route exact path="/snapshots/create" component={SnapshotCreateView} />
                   <Route exact path="/snapshots/requests/:jobId" component={SnapshotPreviewView} />
