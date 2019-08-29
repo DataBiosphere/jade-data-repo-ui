@@ -3,19 +3,18 @@ import clsx from 'clsx';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import Drawer from '@material-ui/core/Drawer';
-import List from '@material-ui/core/List';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import Typography from '@material-ui/core/Typography';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
-const drawerWidth = 240;
+const drawerWidth = 400;
 
 const styles = theme => ({
   root: {
@@ -89,6 +88,7 @@ export class QueryViewSidebar extends React.PureComponent {
 
   static propTypes = {
     classes: PropTypes.object,
+    table: PropTypes.object,
   };
 
   handleDrawerOpen = () => {
@@ -100,7 +100,7 @@ export class QueryViewSidebar extends React.PureComponent {
   };
 
   render() {
-    const { classes } = this.props;
+    const { classes, table } = this.props;
 
     const { open } = this.state;
 
@@ -142,23 +142,24 @@ export class QueryViewSidebar extends React.PureComponent {
             <ChevronRightIcon />
           </IconButton>
           <Divider />
-          <List>
-            {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-              <ListItem button key={text}>
-                <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItem>
+          {table &&
+            table.columns.map(c => (
+              <ExpansionPanel key={c.name}>
+                <ExpansionPanelSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls={`panel-content-${c.name}`}
+                  id={`panel-header-${c.name}`}
+                >
+                  <Typography className={classes.heading}>{c.name}</Typography>
+                </ExpansionPanelSummary>
+                <ExpansionPanelDetails>
+                  <Typography>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada
+                    lacus ex, sit amet blandit leo lobortis eget.
+                  </Typography>
+                </ExpansionPanelDetails>
+              </ExpansionPanel>
             ))}
-          </List>
-          <Divider />
-          <List>
-            {['All mail', 'Trash', 'Spam'].map((text, index) => (
-              <ListItem button key={text}>
-                <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItem>
-            ))}
-          </List>
         </Drawer>
       </div>
     );

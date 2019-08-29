@@ -2,10 +2,10 @@ import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
 
 import { runQuery } from 'actions/index';
 
-import Grid from '@material-ui/core/Grid';
 import QueryViewTable from './QueryViewTable';
 import QueryViewSidebar from './QueryViewSidebar';
 import QueryViewDropdown from './QueryViewDropdown';
@@ -31,6 +31,7 @@ export class QueryView extends React.PureComponent {
 
     this.state = {
       selected: '',
+      table: null,
     };
   }
 
@@ -43,7 +44,6 @@ export class QueryView extends React.PureComponent {
   };
 
   handleChange = value => {
-    this.setState({ selected: value });
     const { dataset, dispatch } = this.props;
     dispatch(
       runQuery(
@@ -53,16 +53,21 @@ export class QueryView extends React.PureComponent {
         PAGE_SIZE,
       ),
     );
+    const table = dataset.schema.tables.find(t => t.name === value);
+    this.setState({
+      selected: value,
+      table,
+    });
   };
 
   render() {
     const { classes, dataset, queryResults, token } = this.props;
-    const { selected } = this.state;
-    const names = dataset.schema.tables.map(table => table.name);
+    const { table, selected } = this.state;
+    const names = dataset.schema.tables.map(t => t.name);
 
     return (
       <Fragment>
-        <QueryViewSidebar />
+        <QueryViewSidebar table={table} />
         <div className={classes.wrapper}>
           <Grid container spacing={2} direction="column">
             <div>
