@@ -130,3 +130,7 @@ export const { runQuery } = createActions({
     maxResults,
   }),
 });
+
+export const { applyFilters } = createActions({
+  [ActionTypes.APPLY_FILTERS]: filter => filter,
+});

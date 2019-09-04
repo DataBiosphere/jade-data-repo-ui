@@ -61,6 +61,8 @@ export const ActionTypes = keyMirror({
   RUN_QUERY: undefined,
   RUN_QUERY_SUCCESS: undefined,
   QUERY_MENU_SELECT: undefined,
+  APPLY_FILTERS: undefined,
+  APPLY_FILTERS_SUCCESS: undefined,
 });
 
 /**

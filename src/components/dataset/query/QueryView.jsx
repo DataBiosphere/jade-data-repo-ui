@@ -5,6 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 
 import { runQuery } from 'actions/index';
+import BigQuery from 'modules/bigquery';
 
 import QueryViewTable from './QueryViewTable';
 import QueryViewSidebar from './QueryViewSidebar';
@@ -30,6 +31,7 @@ export class QueryView extends React.PureComponent {
     super(props);
 
     this.state = {
+      filterMap: {},
       selected: '',
       table: null,
     };
@@ -45,19 +47,31 @@ export class QueryView extends React.PureComponent {
 
   handleChange = value => {
     const { dataset, dispatch } = this.props;
+    const { filterMap } = this.state;
+    const bigquery = new BigQuery({});
+
+    const filterStatement = bigquery.buildFilterStatement(filterMap);
     dispatch(
       runQuery(
         dataset.dataProject,
         `#standardSQL
-        SELECT * FROM \`${dataset.dataProject}.datarepo_${dataset.name}.${value}\``,
+        SELECT * FROM \`${dataset.dataProject}.datarepo_${dataset.name}.${value}\`
+        ${filterStatement}`,
         PAGE_SIZE,
       ),
     );
     const table = dataset.schema.tables.find(t => t.name === value);
+    console.log('table:::');
+    console.log(table);
     this.setState({
       selected: value,
       table,
     });
+  };
+
+  handleFilters = map => {
+    this.setState({ filterMap: map });
+    console.log(map);
   };
 
   render() {
@@ -67,7 +81,7 @@ export class QueryView extends React.PureComponent {
 
     return (
       <Fragment>
-        <QueryViewSidebar table={table} />
+        <QueryViewSidebar table={table} handleFilters={this.handleFilters} />
         <div className={classes.wrapper}>
           <Grid container spacing={2} direction="column">
             <div>

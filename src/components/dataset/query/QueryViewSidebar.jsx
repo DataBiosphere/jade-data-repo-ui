@@ -13,6 +13,9 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import Button from '@material-ui/core/Button';
+
+import QueryViewSidebarItem from './QueryViewSidebarItem';
 
 const drawerWidth = 400;
 
@@ -83,11 +86,13 @@ export class QueryViewSidebar extends React.PureComponent {
     super(props);
     this.state = {
       open: false,
+      filterMap: {},
     };
   }
 
   static propTypes = {
     classes: PropTypes.object,
+    handleFilters: PropTypes.func,
     table: PropTypes.object,
   };
 
@@ -99,10 +104,22 @@ export class QueryViewSidebar extends React.PureComponent {
     this.setState({ open: false });
   };
 
+  handleChange = value => {
+    const { filterMap } = this.state;
+
+    filterMap[value.name] = value.value;
+    this.setState({ filterMap });
+  };
+
+  handleFilters = () => {
+    const { handleFilters } = this.props;
+    const { filterMap } = this.state;
+    handleFilters(filterMap);
+  };
+
   render() {
     const { classes, table } = this.props;
-
-    const { open } = this.state;
+    const { filterMap, open } = this.state;
 
     return (
       <div className={classes.root}>
@@ -141,6 +158,7 @@ export class QueryViewSidebar extends React.PureComponent {
           >
             <ChevronRightIcon />
           </IconButton>
+          <Button onClick={this.handleFilters}>Apply Filters</Button>
           <Divider />
           {table &&
             table.columns.map(c => (
@@ -153,10 +171,7 @@ export class QueryViewSidebar extends React.PureComponent {
                   <Typography className={classes.heading}>{c.name}</Typography>
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails>
-                  <Typography>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada
-                    lacus ex, sit amet blandit leo lobortis eget.
-                  </Typography>
+                  <QueryViewSidebarItem column={c} handleChange={this.handleChange} />
                 </ExpansionPanelDetails>
               </ExpansionPanel>
             ))}
@@ -165,4 +180,5 @@ export class QueryViewSidebar extends React.PureComponent {
     );
   }
 }
+
 export default withStyles(styles)(QueryViewSidebar);

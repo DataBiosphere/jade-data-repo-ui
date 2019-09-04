@@ -5,6 +5,7 @@ import { ActionTypes } from 'constants/index';
 
 export const queryState = {
   queryResults: {},
+  filterData: {},
 };
 
 export default {
@@ -17,6 +18,10 @@ export default {
       [ActionTypes.RUN_QUERY]: state =>
         immutable(state, {
           queryResults: { $set: {} },
+        }),
+      [ActionTypes.APPLY_FILTERS]: (state, action) =>
+        immutable(state, {
+          filterData: { $set: action },
         }),
     },
     queryState,

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import _ from 'lodash';
 
 export default class BigQuery {
   constructor(pageTokenMap) {
@@ -100,5 +101,17 @@ export default class BigQuery {
       };
     }
     return {};
+  };
+
+  buildFilterStatement = filterMap => {
+    if (!_.isEmpty(filterMap)) {
+      let statement = 'WHERE ';
+      _.keys(filterMap).forEach(key => {
+        statement = `${statement + key}='${filterMap[key]}'`;
+      });
+
+      return statement;
+    }
+    return '';
   };
 }
