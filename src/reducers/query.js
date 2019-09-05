@@ -2,10 +2,15 @@ import { handleActions } from 'redux-actions';
 import immutable from 'immutability-helper';
 
 import { ActionTypes } from 'constants/index';
+import BigQuery from 'modules/bigquery';
 
 export const queryState = {
-  queryResults: {},
+  baseQuery: '',
   filterData: {},
+  filterStatement: '',
+  pageSize: 0,
+  projectId: '',
+  queryResults: {},
 };
 
 export default {
@@ -19,10 +24,18 @@ export default {
         immutable(state, {
           queryResults: { $set: {} },
         }),
-      [ActionTypes.APPLY_FILTERS]: (state, action) =>
-        immutable(state, {
-          filterData: { $set: action },
-        }),
+      [ActionTypes.APPLY_FILTERS]: (state, action) => {
+        const bigquery = new BigQuery();
+        const filterStatement = bigquery.buildFilterStatement(action.payload);
+
+        console.log(state);
+        console.log(action);
+
+        return immutable(state, {
+          filterData: { $set: action.payload },
+          filterStatement: { $set: filterStatement },
+        });
+      },
     },
     queryState,
   ),

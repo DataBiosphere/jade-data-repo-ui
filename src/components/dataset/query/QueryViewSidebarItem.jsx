@@ -4,14 +4,6 @@ import PropTypes from 'prop-types';
 import Input from '@material-ui/core/Input';
 
 export class QueryViewSidebarItem extends React.PureComponent {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      column: {},
-    };
-  }
-
   static propTypes = {
     column: PropTypes.object,
     handleChange: PropTypes.func,

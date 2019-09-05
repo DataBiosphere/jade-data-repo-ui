@@ -1,5 +1,7 @@
 import React from 'react';
+import _ from 'lodash';
 import clsx from 'clsx';
+import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import Drawer from '@material-ui/core/Drawer';
@@ -16,6 +18,8 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Button from '@material-ui/core/Button';
 
 import QueryViewSidebarItem from './QueryViewSidebarItem';
+import { applyFilters } from '../../../actions';
+import { runQuery } from '../../../actions/index';
 
 const drawerWidth = 400;
 
@@ -92,7 +96,7 @@ export class QueryViewSidebar extends React.PureComponent {
 
   static propTypes = {
     classes: PropTypes.object,
-    handleFilters: PropTypes.func,
+    dispatch: PropTypes.func.isRequired,
     table: PropTypes.object,
   };
 
@@ -106,20 +110,29 @@ export class QueryViewSidebar extends React.PureComponent {
 
   handleChange = value => {
     const { filterMap } = this.state;
+    const clonedMap = _.clone(filterMap);
 
-    filterMap[value.name] = value.value;
-    this.setState({ filterMap });
+    if (value.value.length <= 0) {
+      delete clonedMap[value.name];
+    } else {
+      clonedMap[value.name] = value.value;
+    }
+
+    console.log(clonedMap);
+    this.setState({ filterMap: clonedMap });
   };
 
   handleFilters = () => {
-    const { handleFilters } = this.props;
+    const { dispatch } = this.props;
     const { filterMap } = this.state;
-    handleFilters(filterMap);
+    console.log('uh oh');
+    console.log(filterMap);
+    dispatch(applyFilters(filterMap));
   };
 
   render() {
     const { classes, table } = this.props;
-    const { filterMap, open } = this.state;
+    const { open } = this.state;
 
     return (
       <div className={classes.root}>
@@ -181,4 +194,4 @@ export class QueryViewSidebar extends React.PureComponent {
   }
 }
 
-export default withStyles(styles)(QueryViewSidebar);
+export default connect()(withStyles(styles)(QueryViewSidebar));

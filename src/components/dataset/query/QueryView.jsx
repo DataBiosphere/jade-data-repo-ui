@@ -31,7 +31,6 @@ export class QueryView extends React.PureComponent {
     super(props);
 
     this.state = {
-      filterMap: {},
       selected: '',
       table: null,
     };
@@ -41,25 +40,31 @@ export class QueryView extends React.PureComponent {
     classes: PropTypes.object,
     dataset: PropTypes.object,
     dispatch: PropTypes.func.isRequired,
+    filterStatement: PropTypes.string,
     queryResults: PropTypes.object,
     token: PropTypes.string,
   };
 
-  handleChange = value => {
-    const { dataset, dispatch } = this.props;
-    const { filterMap } = this.state;
-    const bigquery = new BigQuery({});
+  componentDidUpdate(prevProps, prevState) {
+    const { dataset, dispatch, filterStatement } = this.props;
+    const { selected } = this.state;
+    if (prevProps.filterStatement !== filterStatement || prevState.selected !== selected) {
+      dispatch(
+        runQuery(
+          dataset.dataProject,
+          `#standardSQL
+          SELECT * FROM \`${dataset.dataProject}.datarepo_${dataset.name}.${selected}\`
+          ${filterStatement}`,
+          PAGE_SIZE,
+        ),
+      );
+    }
+  }
 
-    const filterStatement = bigquery.buildFilterStatement(filterMap);
-    dispatch(
-      runQuery(
-        dataset.dataProject,
-        `#standardSQL
-        SELECT * FROM \`${dataset.dataProject}.datarepo_${dataset.name}.${value}\`
-        ${filterStatement}`,
-        PAGE_SIZE,
-      ),
-    );
+  handleChange = value => {
+    const { dataset } = this.props;
+    console.log('maigl');
+
     const table = dataset.schema.tables.find(t => t.name === value);
     console.log('table:::');
     console.log(table);
@@ -69,11 +74,6 @@ export class QueryView extends React.PureComponent {
     });
   };
 
-  handleFilters = map => {
-    this.setState({ filterMap: map });
-    console.log(map);
-  };
-
   render() {
     const { classes, dataset, queryResults, token } = this.props;
     const { table, selected } = this.state;
@@ -81,7 +81,7 @@ export class QueryView extends React.PureComponent {
 
     return (
       <Fragment>
-        <QueryViewSidebar table={table} handleFilters={this.handleFilters} />
+        <QueryViewSidebar table={table} />
         <div className={classes.wrapper}>
           <Grid container spacing={2} direction="column">
             <div>
@@ -106,6 +106,7 @@ export class QueryView extends React.PureComponent {
 function mapStateToProps(state) {
   return {
     dataset: state.datasets.dataset,
+    filterStatement: state.query.filterStatement,
     queryResults: state.query.queryResults,
     token: state.user.token,
   };

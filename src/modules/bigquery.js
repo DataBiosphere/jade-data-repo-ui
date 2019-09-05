@@ -104,13 +104,14 @@ export default class BigQuery {
   };
 
   buildFilterStatement = filterMap => {
+    console.log('rori wants to go home');
     if (!_.isEmpty(filterMap)) {
-      let statement = 'WHERE ';
+      let statementClauses = [];
       _.keys(filterMap).forEach(key => {
-        statement = `${statement + key}='${filterMap[key]}'`;
+        statementClauses.push(`${key}='${filterMap[key]}'`);
       });
 
-      return statement;
+      return `WHERE ${statementClauses.join(' AND ')}`;
     }
     return '';
   };
