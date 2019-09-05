@@ -5,7 +5,6 @@ import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 
 import { runQuery } from 'actions/index';
-import BigQuery from 'modules/bigquery';
 
 import QueryViewTable from './QueryViewTable';
 import QueryViewSidebar from './QueryViewSidebar';
@@ -63,11 +62,8 @@ export class QueryView extends React.PureComponent {
 
   handleChange = value => {
     const { dataset } = this.props;
-    console.log('maigl');
 
     const table = dataset.schema.tables.find(t => t.name === value);
-    console.log('table:::');
-    console.log(table);
     this.setState({
       selected: value,
       table,

@@ -21,7 +21,6 @@ export class QueryViewSidebarItem extends React.PureComponent {
 
   render() {
     const { column } = this.props;
-    console.log(column);
 
     switch (column.datatype) {
       case 'string':

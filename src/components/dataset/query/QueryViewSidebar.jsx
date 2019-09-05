@@ -19,7 +19,6 @@ import Button from '@material-ui/core/Button';
 
 import QueryViewSidebarItem from './QueryViewSidebarItem';
 import { applyFilters } from '../../../actions';
-import { runQuery } from '../../../actions/index';
 
 const drawerWidth = 400;
 
@@ -118,15 +117,12 @@ export class QueryViewSidebar extends React.PureComponent {
       clonedMap[value.name] = value.value;
     }
 
-    console.log(clonedMap);
     this.setState({ filterMap: clonedMap });
   };
 
   handleFilters = () => {
     const { dispatch } = this.props;
     const { filterMap } = this.state;
-    console.log('uh oh');
-    console.log(filterMap);
     dispatch(applyFilters(filterMap));
   };
 

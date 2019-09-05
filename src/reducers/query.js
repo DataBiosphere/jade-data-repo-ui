@@ -28,9 +28,6 @@ export default {
         const bigquery = new BigQuery();
         const filterStatement = bigquery.buildFilterStatement(action.payload);
 
-        console.log(state);
-        console.log(action);
-
         return immutable(state, {
           filterData: { $set: action.payload },
           filterStatement: { $set: filterStatement },

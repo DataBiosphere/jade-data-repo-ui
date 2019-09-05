@@ -104,7 +104,6 @@ export default class BigQuery {
   };
 
   buildFilterStatement = filterMap => {
-    console.log('rori wants to go home');
     if (!_.isEmpty(filterMap)) {
       let statementClauses = [];
       _.keys(filterMap).forEach(key => {
