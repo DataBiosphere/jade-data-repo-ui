@@ -21,11 +21,11 @@ export class QueryViewSidebarItem extends React.PureComponent {
   handleChange = event => {
     const { column, handleChange } = this.props;
 
-    const idAndValue = {
+    const nameAndValue = {
       name: column.name,
       value: event.target.value,
     };
-    handleChange(idAndValue);
+    handleChange(nameAndValue);
   };
 
   handleSliderValue = (event, newValue) => {

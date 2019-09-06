@@ -93,7 +93,7 @@ export class QueryViewTable extends React.PureComponent {
   render() {
     const { queryResults, title, token } = this.props;
 
-    const bigquery = new BigQuery({});
+    const bigquery = new BigQuery();
     const columns = bigquery.calculateColumns(queryResults);
     const options = bigquery.calculatePageOptions(queryResults, PAGE_SIZE);
 

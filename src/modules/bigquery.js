@@ -11,8 +11,7 @@ export default class BigQuery {
       let rawData = {};
       const data = [];
 
-      const { jobId } = queryResults.jobReference;
-      const { projectId } = queryResults.jobReference;
+      const { jobId, projectId } = queryResults.jobReference;
 
       if (query.tokenToUse === undefined && query.page === 0) {
         this.pageTokenMap[1] = queryResults.pageToken;
