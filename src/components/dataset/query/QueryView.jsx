@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 
-import { runQuery } from 'actions/index';
+import { applyFilters, runQuery } from 'actions/index';
 
 import QueryViewTable from './QueryViewTable';
 import QueryViewSidebar from './QueryViewSidebar';
@@ -61,13 +61,14 @@ export class QueryView extends React.PureComponent {
   }
 
   handleChange = value => {
-    const { dataset } = this.props;
+    const { dataset, dispatch } = this.props;
 
     const table = dataset.schema.tables.find(t => t.name === value);
     this.setState({
       selected: value,
       table,
     });
+    dispatch(applyFilters({}));
   };
 
   render() {
