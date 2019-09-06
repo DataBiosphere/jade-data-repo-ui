@@ -107,7 +107,11 @@ export default class BigQuery {
     if (!_.isEmpty(filterMap)) {
       let statementClauses = [];
       _.keys(filterMap).forEach(key => {
-        statementClauses.push(`${key}='${filterMap[key]}'`);
+        if (_.isArray(filterMap[key])) {
+          statementClauses.push(`${key} BETWEEN ${filterMap[key][0]} AND ${filterMap[key][1]}`);
+        } else {
+          statementClauses.push(`${key}='${filterMap[key]}'`);
+        }
       });
 
       return `WHERE ${statementClauses.join(' AND ')}`;

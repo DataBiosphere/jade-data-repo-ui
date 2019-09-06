@@ -116,7 +116,6 @@ export class QueryViewSidebar extends React.PureComponent {
     } else {
       clonedMap[value.name] = value.value;
     }
-
     this.setState({ filterMap: clonedMap });
   };
 
