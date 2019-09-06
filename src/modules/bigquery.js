@@ -2,8 +2,8 @@ import axios from 'axios';
 import _ from 'lodash';
 
 export default class BigQuery {
-  constructor(pageTokenMap) {
-    this.pageTokenMap = pageTokenMap;
+  constructor() {
+    this.pageTokenMap = {};
   }
 
   pageData = (query, queryResults, columns, token) =>
