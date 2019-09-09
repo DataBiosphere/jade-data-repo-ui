@@ -1,5 +1,7 @@
 import React from 'react';
+import _ from 'lodash';
 import clsx from 'clsx';
+import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import Drawer from '@material-ui/core/Drawer';
@@ -13,6 +15,10 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import Button from '@material-ui/core/Button';
+
+import QueryViewSidebarItem from './QueryViewSidebarItem';
+import { applyFilters } from '../../../actions';
 
 const drawerWidth = 400;
 
@@ -83,11 +89,13 @@ export class QueryViewSidebar extends React.PureComponent {
     super(props);
     this.state = {
       open: false,
+      filterMap: {},
     };
   }
 
   static propTypes = {
     classes: PropTypes.object,
+    dispatch: PropTypes.func.isRequired,
     table: PropTypes.object,
   };
 
@@ -99,9 +107,26 @@ export class QueryViewSidebar extends React.PureComponent {
     this.setState({ open: false });
   };
 
+  handleChange = value => {
+    const { filterMap } = this.state;
+    const clonedMap = _.clone(filterMap);
+
+    if (value.value.length <= 0) {
+      delete clonedMap[value.name];
+    } else {
+      clonedMap[value.name] = value.value;
+    }
+    this.setState({ filterMap: clonedMap });
+  };
+
+  handleFilters = () => {
+    const { dispatch } = this.props;
+    const { filterMap } = this.state;
+    dispatch(applyFilters(filterMap));
+  };
+
   render() {
     const { classes, table } = this.props;
-
     const { open } = this.state;
 
     return (
@@ -141,6 +166,7 @@ export class QueryViewSidebar extends React.PureComponent {
           >
             <ChevronRightIcon />
           </IconButton>
+          <Button onClick={this.handleFilters}>Apply Filters</Button>
           <Divider />
           {table &&
             table.columns.map(c => (
@@ -153,10 +179,7 @@ export class QueryViewSidebar extends React.PureComponent {
                   <Typography className={classes.heading}>{c.name}</Typography>
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails>
-                  <Typography>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada
-                    lacus ex, sit amet blandit leo lobortis eget.
-                  </Typography>
+                  <QueryViewSidebarItem column={c} handleChange={this.handleChange} />
                 </ExpansionPanelDetails>
               </ExpansionPanel>
             ))}
@@ -165,4 +188,5 @@ export class QueryViewSidebar extends React.PureComponent {
     );
   }
 }
-export default withStyles(styles)(QueryViewSidebar);
+
+export default connect()(withStyles(styles)(QueryViewSidebar));

@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 
-import { runQuery } from 'actions/index';
+import { applyFilters, runQuery } from 'actions/index';
 
 import QueryViewTable from './QueryViewTable';
 import QueryViewSidebar from './QueryViewSidebar';
@@ -39,25 +39,36 @@ export class QueryView extends React.PureComponent {
     classes: PropTypes.object,
     dataset: PropTypes.object,
     dispatch: PropTypes.func.isRequired,
+    filterStatement: PropTypes.string,
     queryResults: PropTypes.object,
     token: PropTypes.string,
   };
 
+  componentDidUpdate(prevProps, prevState) {
+    const { dataset, dispatch, filterStatement } = this.props;
+    const { selected } = this.state;
+    if (prevProps.filterStatement !== filterStatement || prevState.selected !== selected) {
+      dispatch(
+        runQuery(
+          dataset.dataProject,
+          `#standardSQL
+          SELECT * FROM \`${dataset.dataProject}.datarepo_${dataset.name}.${selected}\`
+          ${filterStatement}`,
+          PAGE_SIZE,
+        ),
+      );
+    }
+  }
+
   handleChange = value => {
     const { dataset, dispatch } = this.props;
-    dispatch(
-      runQuery(
-        dataset.dataProject,
-        `#standardSQL
-        SELECT * FROM \`${dataset.dataProject}.datarepo_${dataset.name}.${value}\``,
-        PAGE_SIZE,
-      ),
-    );
+
     const table = dataset.schema.tables.find(t => t.name === value);
     this.setState({
       selected: value,
       table,
     });
+    dispatch(applyFilters({}));
   };
 
   render() {
@@ -92,6 +103,7 @@ export class QueryView extends React.PureComponent {
 function mapStateToProps(state) {
   return {
     dataset: state.datasets.dataset,
+    filterStatement: state.query.filterStatement,
     queryResults: state.query.queryResults,
     token: state.user.token,
   };

@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import MaterialTable from 'material-table';
-import axios from 'axios';
 import { withStyles } from '@material-ui/core/styles';
+
+import BigQuery from 'modules/bigquery';
 
 import AddBox from '@material-ui/icons/AddBox';
 import ArrowUpward from '@material-ui/icons/ArrowUpward';
@@ -91,39 +92,10 @@ export class QueryViewTable extends React.PureComponent {
 
   render() {
     const { queryResults, title, token } = this.props;
-    let options = {};
 
-    const columns = [];
-    if (
-      queryResults.rows !== undefined &&
-      queryResults.schema !== undefined &&
-      queryResults.schema.fields !== undefined
-    ) {
-      queryResults.schema.fields.forEach(colData => {
-        const col = {
-          title: colData.name,
-          field: colData.name,
-        };
-
-        columns.push(col);
-      });
-    }
-
-    if (queryResults.totalRows !== undefined) {
-      const numRows = parseInt(queryResults.totalRows, 10);
-      let pageSize = 0;
-      if (numRows > PAGE_SIZE) {
-        pageSize = PAGE_SIZE;
-      } else {
-        pageSize = numRows;
-      }
-
-      options = {
-        pageSize,
-        pageSizeOptions: [pageSize],
-        showFirstLastPageButtons: false,
-      };
-    }
+    const bigquery = new BigQuery();
+    const columns = bigquery.calculateColumns(queryResults);
+    const options = bigquery.calculatePageOptions(queryResults, PAGE_SIZE);
 
     return (
       <div>
@@ -132,65 +104,7 @@ export class QueryViewTable extends React.PureComponent {
             title={title}
             columns={columns}
             options={options}
-            data={query =>
-              new Promise(resolve => {
-                let rawData = {};
-                const data = [];
-
-                const { jobId } = queryResults.jobReference;
-                const { projectId } = queryResults.jobReference;
-
-                if (query.tokenToUse === undefined && query.page === 0) {
-                  this.pageTokenMap[1] = queryResults.pageToken;
-                }
-
-                if (this.pageTokenMap[query.page] === undefined && query.page !== 0) {
-                  this.pageTokenMap[query.page] = query.tokenToUse;
-                }
-
-                const url = `https://bigquery.googleapis.com/bigquery/v2/projects/${projectId}/queries/${jobId}`;
-                const params = {
-                  maxResults: query.pageSize,
-                  pageToken: this.pageTokenMap[query.page],
-                };
-
-                axios
-                  .get(url, {
-                    headers: {
-                      'Content-Type': 'application/json',
-                      Authorization: `Bearer ${token}`,
-                    },
-                    params,
-                  })
-                  .then(response => {
-                    rawData = response.data;
-                    query.tokenToUse = rawData.pageToken;
-
-                    const columnNames = columns.map(x => x.title);
-
-                    if (rawData.rows && rawData.rows.length > 0) {
-                      rawData.rows.forEach(rowData => {
-                        const row = {};
-
-                        for (let i = 0; i < rowData.f.length; i++) {
-                          const item = rowData.f[i].v;
-                          const currColumn = columnNames[i];
-
-                          row[currColumn] = item;
-                        }
-
-                        data.push(row);
-                      });
-                    }
-
-                    resolve({
-                      data,
-                      page: query.page,
-                      totalCount: parseInt(queryResults.totalRows, 10),
-                    });
-                  });
-              })
-            }
+            data={query => bigquery.pageData(query, queryResults, columns, token)}
             icons={tableIcons}
           />
         )}
