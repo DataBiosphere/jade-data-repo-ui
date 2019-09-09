@@ -1,5 +1,6 @@
 // Polyfills
 import React from 'react';
+import ReactGA from 'react-ga';
 import ReactDOM from 'react-dom';
 import Helmet from 'react-helmet';
 import { Provider } from 'react-redux';
@@ -12,6 +13,12 @@ import { store } from 'store/index';
 
 import config from 'config';
 import App from 'containers/App';
+
+ReactGA.initialize('UA-147471357-1', {
+  debug: true,
+  gaOptions: { cookieDomain: 'none' },
+});
+ReactGA.pageview('michael');
 
 export const app = {
   cssRetries: 0,
