@@ -1,5 +1,6 @@
 // @flow
 import { createBrowserHistory } from 'history';
+import ReactGA from 'react-ga';
 
 import qs from 'qs';
 
@@ -11,12 +12,15 @@ history.location = {
   state: {},
 };
 
+ReactGA.initialize('UA-147471357-1');
+
 history.listen(() => {
   history.location = {
     ...history.location,
     query: qs.parse(history.location.search.substr(1)),
     state: history.location.state || {},
   };
+  ReactGA.pageview(history.location.pathname);
 });
 
 const { go, goBack, push, replace } = history;
