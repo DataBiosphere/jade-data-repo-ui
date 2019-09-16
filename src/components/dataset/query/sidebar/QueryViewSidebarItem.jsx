@@ -2,18 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Input from '@material-ui/core/Input';
-import { Slider } from '@material-ui/core';
 import RangeFilter from './RangeFilter';
 
 export class QueryViewSidebarItem extends React.PureComponent {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      value: [0, 1000],
-    };
-  }
-
   static propTypes = {
     column: PropTypes.object,
     dataset: PropTypes.object,
@@ -29,7 +20,6 @@ export class QueryViewSidebarItem extends React.PureComponent {
       name: column.name,
       value: event.target.value,
     };
-    console.log(nameAndValue);
     handleChange(nameAndValue);
   };
 
@@ -44,7 +34,6 @@ export class QueryViewSidebarItem extends React.PureComponent {
 
   render() {
     const { column, dataset, tableName, token } = this.props;
-    const { value } = this.state;
 
     switch (column.datatype) {
       case 'string':
@@ -59,14 +48,6 @@ export class QueryViewSidebarItem extends React.PureComponent {
         );
       case 'integer':
         return (
-          // <Slider
-          //   value={value}
-          //   onChange={this.handleSliderValue}
-          //   valueLabelDisplay="auto"
-          //   aria-labelledby="range-slider"
-          //   min={0}
-          //   max={1000}
-          // />
           <RangeFilter
             column={column}
             dataset={dataset}

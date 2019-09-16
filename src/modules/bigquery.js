@@ -134,7 +134,7 @@ export default class BigQuery {
         },
       )
       .then(response => {
-        return response.data.rows[0]['f'][0]['v'];
+        return response.data.rows[0].f[0].v;
       });
   };
 
@@ -154,7 +154,7 @@ export default class BigQuery {
         },
       )
       .then(response => {
-        return response.data.rows[0]['f'][0]['v'];
+        return response.data.rows[0].f[0].v;
       });
   };
 }

@@ -9,9 +9,9 @@ export class RangeFilter extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      minVal: null,
-      maxVal: null,
-      value: [null, null],
+      minVal: 0,
+      maxVal: 1000,
+      value: [0, 1000],
     };
     const { column, dataset, tableName, token } = this.props;
     const bq = new BigQuery();
@@ -52,7 +52,6 @@ export class RangeFilter extends React.PureComponent {
   render() {
     const { maxVal, minVal, value } = this.state;
     const stepVal = (maxVal - minVal) / 20;
-    console.log(stepVal);
     return (
       <Slider
         value={value}
