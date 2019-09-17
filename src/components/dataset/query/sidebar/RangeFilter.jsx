@@ -17,8 +17,8 @@ export class RangeFilter extends React.PureComponent {
     const { column, dataset, tableName, token } = this.props;
     const bq = new BigQuery();
     bq.getColumnMinMax(column.name, dataset, tableName, token).then(response => {
-      const min = parseInt(response[0].v, 10);
-      const max = parseInt(response[1].v, 10);
+      const min = parseFloat(response[0].v, 10);
+      const max = parseFloat(response[1].v, 10);
 
       this.setState({
         minVal: min,

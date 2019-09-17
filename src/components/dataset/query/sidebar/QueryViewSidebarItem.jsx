@@ -46,6 +46,7 @@ export class QueryViewSidebarItem extends React.PureComponent {
             }}
           />
         );
+      case 'float':
       case 'integer':
         return (
           <RangeFilter
