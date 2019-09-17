@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import BigQuery from 'modules/bigquery';
 
 import { Slider } from '@material-ui/core';
+import ValueLabel from './ValueLabel';
 
 export class RangeFilter extends React.PureComponent {
   constructor(props) {
@@ -51,6 +52,7 @@ export class RangeFilter extends React.PureComponent {
     return (
       <Slider
         value={value}
+        ValueLabelComponent={ValueLabel}
         onChange={this.handleSliderValue}
         valueLabelDisplay="auto"
         aria-labelledby="range-slider"
