@@ -131,8 +131,6 @@ export class QueryViewSidebar extends React.PureComponent {
     const { classes, dataset, table, token } = this.props;
     const { open } = this.state;
 
-    console.log(open);
-
     return (
       <div className={classes.root}>
         <CssBaseline />
