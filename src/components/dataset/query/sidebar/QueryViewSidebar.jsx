@@ -131,6 +131,8 @@ export class QueryViewSidebar extends React.PureComponent {
     const { classes, dataset, table, token } = this.props;
     const { open } = this.state;
 
+    console.log(open);
+
     return (
       <div className={classes.root}>
         <CssBaseline />
@@ -168,12 +170,14 @@ export class QueryViewSidebar extends React.PureComponent {
           >
             <ChevronRightIcon />
           </IconButton>
-          <Button onClick={this.handleFilters}>Apply Filters</Button>
+          <Button className={!open ? classes.hide : ''} onClick={this.handleFilters}>
+            Apply Filters
+          </Button>
           <Divider />
           {table &&
             table.name &&
             table.columns.map(c => (
-              <ExpansionPanel key={c.name}>
+              <ExpansionPanel key={c.name} className={!open ? classes.hide : ''}>
                 <ExpansionPanelSummary
                   expandIcon={<ExpandMoreIcon />}
                   aria-controls={`panel-content-${c.name}`}
