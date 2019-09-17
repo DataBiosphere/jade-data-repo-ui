@@ -23,15 +23,6 @@ export class QueryViewSidebarItem extends React.PureComponent {
     handleChange(nameAndValue);
   };
 
-  handleSliderValue = (event, newValue) => {
-    this.setState({ value: newValue });
-    this.handleChange({
-      target: {
-        value: newValue,
-      },
-    });
-  };
-
   render() {
     const { column, dataset, tableName, token } = this.props;
 
