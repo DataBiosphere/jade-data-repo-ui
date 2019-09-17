@@ -118,9 +118,9 @@ export default class BigQuery {
     return '';
   };
 
-  getColumnMin = (columnName, dataset, tableName, token) => {
+  getColumnMinMax = (columnName, dataset, tableName, token) => {
     const url = `https://bigquery.googleapis.com/bigquery/v2/projects/${dataset.dataProject}/queries`;
-    const query = `SELECT MIN(${columnName}) FROM [${dataset.dataProject}.datarepo_${dataset.name}.${tableName}]`;
+    const query = `SELECT MIN(${columnName}) AS min, MAX(${columnName}) AS max FROM [${dataset.dataProject}.datarepo_${dataset.name}.${tableName}]`;
 
     return axios
       .post(
@@ -134,27 +134,7 @@ export default class BigQuery {
         },
       )
       .then(response => {
-        return response.data.rows[0].f[0].v;
-      });
-  };
-
-  getColumnMax = (columnName, dataset, tableName, token) => {
-    const url = `https://bigquery.googleapis.com/bigquery/v2/projects/${dataset.dataProject}/queries`;
-    const query = `SELECT MAX(${columnName}) FROM [${dataset.dataProject}.datarepo_${dataset.name}.${tableName}]`;
-
-    return axios
-      .post(
-        url,
-        { query },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      )
-      .then(response => {
-        return response.data.rows[0].f[0].v;
+        return response.data.rows[0].f;
       });
   };
 }
