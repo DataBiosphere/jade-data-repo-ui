@@ -7,7 +7,7 @@ import Grid from '@material-ui/core/Grid';
 import { applyFilters, runQuery } from 'actions/index';
 
 import QueryViewTable from './QueryViewTable';
-import QueryViewSidebar from './QueryViewSidebar';
+import QueryViewSidebar from './sidebar/QueryViewSidebar';
 import QueryViewDropdown from './QueryViewDropdown';
 
 const styles = theme => ({

@@ -18,7 +18,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Button from '@material-ui/core/Button';
 
 import QueryViewSidebarItem from './QueryViewSidebarItem';
-import { applyFilters } from '../../../actions';
+import { applyFilters } from '../../../../actions';
 
 const drawerWidth = 400;
 
@@ -95,8 +95,10 @@ export class QueryViewSidebar extends React.PureComponent {
 
   static propTypes = {
     classes: PropTypes.object,
+    dataset: PropTypes.object,
     dispatch: PropTypes.func.isRequired,
     table: PropTypes.object,
+    token: PropTypes.string,
   };
 
   handleDrawerOpen = () => {
@@ -126,7 +128,7 @@ export class QueryViewSidebar extends React.PureComponent {
   };
 
   render() {
-    const { classes, table } = this.props;
+    const { classes, dataset, table, token } = this.props;
     const { open } = this.state;
 
     return (
@@ -166,11 +168,14 @@ export class QueryViewSidebar extends React.PureComponent {
           >
             <ChevronRightIcon />
           </IconButton>
-          <Button onClick={this.handleFilters}>Apply Filters</Button>
+          <Button className={!open ? classes.hide : ''} onClick={this.handleFilters}>
+            Apply Filters
+          </Button>
           <Divider />
           {table &&
+            table.name &&
             table.columns.map(c => (
-              <ExpansionPanel key={c.name}>
+              <ExpansionPanel key={c.name} className={!open ? classes.hide : ''}>
                 <ExpansionPanelSummary
                   expandIcon={<ExpandMoreIcon />}
                   aria-controls={`panel-content-${c.name}`}
@@ -179,7 +184,13 @@ export class QueryViewSidebar extends React.PureComponent {
                   <Typography className={classes.heading}>{c.name}</Typography>
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails>
-                  <QueryViewSidebarItem column={c} handleChange={this.handleChange} />
+                  <QueryViewSidebarItem
+                    column={c}
+                    dataset={dataset}
+                    handleChange={this.handleChange}
+                    tableName={table.name}
+                    token={token}
+                  />
                 </ExpansionPanelDetails>
               </ExpansionPanel>
             ))}
@@ -189,4 +200,11 @@ export class QueryViewSidebar extends React.PureComponent {
   }
 }
 
-export default connect()(withStyles(styles)(QueryViewSidebar));
+function mapStateToProps(state) {
+  return {
+    dataset: state.datasets.dataset,
+    token: state.user.token,
+  };
+}
+
+export default connect(mapStateToProps)(withStyles(styles)(QueryViewSidebar));

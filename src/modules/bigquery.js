@@ -117,4 +117,24 @@ export default class BigQuery {
     }
     return '';
   };
+
+  getColumnMinMax = (columnName, dataset, tableName, token) => {
+    const url = `https://bigquery.googleapis.com/bigquery/v2/projects/${dataset.dataProject}/queries`;
+    const query = `SELECT MIN(${columnName}) AS min, MAX(${columnName}) AS max FROM [${dataset.dataProject}.datarepo_${dataset.name}.${tableName}]`;
+
+    return axios
+      .post(
+        url,
+        { query },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      )
+      .then(response => {
+        return response.data.rows[0].f;
+      });
+  };
 }
