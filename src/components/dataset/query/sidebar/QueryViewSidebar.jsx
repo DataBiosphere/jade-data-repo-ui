@@ -18,6 +18,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Button from '@material-ui/core/Button';
 
 import QueryViewSidebarItem from './QueryViewSidebarItem';
+import QuerySidebarPanel from './QuerySidebarPanel';
 import { applyFilters } from '../../../../actions';
 
 const drawerWidth = 400;
@@ -97,6 +98,7 @@ export class QueryViewSidebar extends React.PureComponent {
     classes: PropTypes.object,
     dataset: PropTypes.object,
     dispatch: PropTypes.func.isRequired,
+    filterData: PropTypes.object,
     table: PropTypes.object,
     token: PropTypes.string,
   };
@@ -128,7 +130,7 @@ export class QueryViewSidebar extends React.PureComponent {
   };
 
   render() {
-    const { classes, dataset, table, token } = this.props;
+    const { classes, dataset, filterData, table, token } = this.props;
     const { open } = this.state;
 
     return (
@@ -168,6 +170,7 @@ export class QueryViewSidebar extends React.PureComponent {
           >
             <ChevronRightIcon />
           </IconButton>
+          <QuerySidebarPanel />
           <Button className={!open ? classes.hide : ''} onClick={this.handleFilters}>
             Apply Filters
           </Button>
@@ -187,6 +190,7 @@ export class QueryViewSidebar extends React.PureComponent {
                   <QueryViewSidebarItem
                     column={c}
                     dataset={dataset}
+                    filterData={filterData}
                     handleChange={this.handleChange}
                     tableName={table.name}
                     token={token}
@@ -203,6 +207,7 @@ export class QueryViewSidebar extends React.PureComponent {
 function mapStateToProps(state) {
   return {
     dataset: state.datasets.dataset,
+    filterData: state.query.filterData,
     token: state.user.token,
   };
 }

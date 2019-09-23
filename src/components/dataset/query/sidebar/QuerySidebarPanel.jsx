@@ -1,0 +1,65 @@
+import React from 'react';
+import _ from 'lodash';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
+import HighlightOff from '@material-ui/icons/HighlightOff';
+import Icon from '@material-ui/core';
+import { applyFilters } from '../../../../actions';
+
+export class QuerySidebarPanel extends React.PureComponent {
+  static propTypes = {
+    dispatch: PropTypes.func.isRequired,
+    filterData: PropTypes.object,
+  };
+
+  clearFilter = (filter, e) => {
+    console.log(filter);
+    const { dispatch, filterData } = this.props;
+    let clonedData = _.clone(filterData);
+    delete clonedData[filter];
+    dispatch(applyFilters(clonedData));
+  };
+
+  render() {
+    const { filterData } = this.props;
+    console.log(filterData);
+    const listFilters = _.keys(filterData).map(filter => {
+      console.log(filter);
+      let boundFilter = this.clearFilter.bind(this, filter);
+      const data = _.get(filterData, filter);
+      let dataString = data;
+      if (Array.isArray(data)) {
+        dataString = _.join(data, ', ');
+      }
+
+      return (
+        <li key={filter}>
+          {filter} : {dataString}
+          <Button onClick={boundFilter}>
+            <HighlightOff />
+          </Button>
+        </li>
+      );
+    });
+
+    return (
+      <Card>
+        <ul>{listFilters}</ul>
+      </Card>
+    );
+  }
+}
+
+function mapStateToProps(state) {
+  return {
+    filterData: state.query.filterData,
+  };
+}
+
+export default connect(mapStateToProps)(QuerySidebarPanel);
