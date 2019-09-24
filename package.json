@@ -233,8 +233,7 @@
   "proxy": "http://localhost:8080",
   "husky": {
     "hooks": {
-      "post-merge": "node tools update",
-      "pre-push": "npm run lint && npm run lint:styles && npm run test:coverage"
+      "post-merge": "node tools update"
     }
   },
   "browserslist": [
