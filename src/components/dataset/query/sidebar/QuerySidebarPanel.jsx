@@ -4,12 +4,9 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import HighlightOff from '@material-ui/icons/HighlightOff';
-import Icon from '@material-ui/core';
 import { applyFilters } from '../../../../actions';
 
 export class QuerySidebarPanel extends React.PureComponent {
@@ -19,18 +16,15 @@ export class QuerySidebarPanel extends React.PureComponent {
   };
 
   clearFilter = (filter, e) => {
-    console.log(filter);
     const { dispatch, filterData } = this.props;
-    let clonedData = _.clone(filterData);
+    const clonedData = _.clone(filterData);
     delete clonedData[filter];
     dispatch(applyFilters(clonedData));
   };
 
   render() {
     const { filterData } = this.props;
-    console.log(filterData);
     const listFilters = _.keys(filterData).map(filter => {
-      console.log(filter);
       let boundFilter = this.clearFilter.bind(this, filter);
       const data = _.get(filterData, filter);
       let dataString = data;
@@ -50,6 +44,7 @@ export class QuerySidebarPanel extends React.PureComponent {
 
     return (
       <Card>
+        <Typography>Properties</Typography>
         <ul>{listFilters}</ul>
       </Card>
     );

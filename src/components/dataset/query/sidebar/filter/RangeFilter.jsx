@@ -15,32 +15,18 @@ export class RangeFilter extends React.PureComponent {
       maxVal: 1000,
       value: [0, 1000],
     };
-    const { column, dataset, filterData, tableName, token } = this.props;
-    console.log(filterData);
 
-    let currLeftValue = undefined;
-    let currRightValue = undefined;
-
-    const currFilter = _.get(filterData, column.name);
-    if (currFilter !== undefined) {
-      currLeftValue = currFilter[0];
-      currRightValue = currFilter[1];
-    }
-
+    const { column, dataset, tableName, token } = this.props;
     const bq = new BigQuery();
+
     bq.getColumnMinMax(column.name, dataset, tableName, token).then(response => {
       const min = parseFloat(response[0].v, 10);
       const max = parseFloat(response[1].v, 10);
 
-      if (currLeftValue === undefined || currRightValue === undefined) {
-        currLeftValue = min;
-        currRightValue = max;
-      }
-
       this.setState({
         minVal: min,
         maxVal: max,
-        value: [currLeftValue, currRightValue],
+        value: [min, max],
       });
     });
   }
@@ -54,22 +40,13 @@ export class RangeFilter extends React.PureComponent {
     token: PropTypes.string,
   };
 
-  handleSliderValue = (event, newValue) => {
-    const { handleChange } = this.props;
-    this.setState({ value: newValue });
-    handleChange({
-      target: {
-        value: newValue,
-      },
-    });
-  };
-
   componentWillReceiveProps(nextProps) {
-    const { column, filterData } = nextProps;
+    const { column } = nextProps;
+    const { filterData } = this.props;
     const { minVal, maxVal } = this.state;
-    const currFilter = _.get(filterData, column.name);
+    const currFilter = _.get(nextProps.filterData, column.name);
 
-    if (nextProps.filterData !== this.props.filterData && currFilter !== undefined) {
+    if (nextProps.filterData !== filterData && currFilter !== undefined) {
       const currLeftValue = currFilter[0];
       const currRightValue = currFilter[1];
       this.setState({
@@ -81,6 +58,16 @@ export class RangeFilter extends React.PureComponent {
       });
     }
   }
+
+  handleSliderValue = (event, newValue) => {
+    const { handleChange } = this.props;
+    this.setState({ value: newValue });
+    handleChange({
+      target: {
+        value: newValue,
+      },
+    });
+  };
 
   render() {
     const { maxVal, minVal, value } = this.state;

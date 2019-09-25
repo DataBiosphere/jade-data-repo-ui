@@ -103,6 +103,16 @@ export class QueryViewSidebar extends React.PureComponent {
     token: PropTypes.string,
   };
 
+  componentWillReceiveProps(nextProps) {
+    const { filterMap } = this.state;
+
+    if (nextProps.filterData !== filterMap) {
+      this.setState({
+        filterMap: nextProps.filterData,
+      });
+    }
+  }
+
   handleDrawerOpen = () => {
     this.setState({ open: true });
   };
@@ -170,7 +180,9 @@ export class QueryViewSidebar extends React.PureComponent {
           >
             <ChevronRightIcon />
           </IconButton>
-          <QuerySidebarPanel />
+          <div className={!open ? classes.hide : ''}>
+            <QuerySidebarPanel />
+          </div>
           <Button className={!open ? classes.hide : ''} onClick={this.handleFilters}>
             Apply Filters
           </Button>
