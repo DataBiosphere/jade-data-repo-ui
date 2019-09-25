@@ -15,7 +15,7 @@ export class QuerySidebarPanel extends React.PureComponent {
     filterData: PropTypes.object,
   };
 
-  clearFilter = (filter, e) => {
+  clearFilter = filter => {
     const { dispatch, filterData } = this.props;
     const clonedData = _.clone(filterData);
     delete clonedData[filter];
