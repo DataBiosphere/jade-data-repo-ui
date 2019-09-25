@@ -2,12 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Input from '@material-ui/core/Input';
-import RangeFilter from './RangeFilter';
+import RangeFilter from './filter/RangeFilter';
 
 export class QueryViewSidebarItem extends React.PureComponent {
   static propTypes = {
     column: PropTypes.object,
     dataset: PropTypes.object,
+    filterData: PropTypes.object,
     handleChange: PropTypes.func,
     tableName: PropTypes.string,
     token: PropTypes.string,
@@ -24,7 +25,7 @@ export class QueryViewSidebarItem extends React.PureComponent {
   };
 
   render() {
-    const { column, dataset, tableName, token } = this.props;
+    const { column, dataset, filterData, tableName, token } = this.props;
 
     switch (column.datatype) {
       case 'string':
@@ -43,6 +44,7 @@ export class QueryViewSidebarItem extends React.PureComponent {
           <RangeFilter
             column={column}
             dataset={dataset}
+            filterData={filterData}
             handleChange={this.handleChange}
             tableName={tableName}
             token={token}
