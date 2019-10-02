@@ -3,13 +3,14 @@ const path = require('path');
 const errorOverlayMiddleware = require('react-dev-utils/errorOverlayMiddleware');
 const evalSourceMapMiddleware = require('react-dev-utils/evalSourceMapMiddleware');
 const noopServiceWorkerMiddleware = require('react-dev-utils/noopServiceWorkerMiddleware');
+const proxy = require('http-proxy-middleware');
 
 const paths = require('./paths');
 
 const protocol = process.env.HTTPS === 'true' ? 'https' : 'http';
 const host = process.env.HOST || '0.0.0.0';
 
-module.exports = function(proxy, allowedHost) {
+module.exports = function(allowedHost) {
   // noinspection WebpackConfigHighlighting
   return {
     clientLogLevel: 'none',
@@ -24,7 +25,6 @@ module.exports = function(proxy, allowedHost) {
     https: protocol === 'https',
     noInfo: true,
     overlay: false,
-    proxy,
     public: allowedHost,
     publicPath: '/',
     quiet: false,
@@ -49,6 +49,22 @@ module.exports = function(proxy, allowedHost) {
       // it used the same host and port.
       // https://github.com/facebook/create-react-app/issues/2272#issuecomment-302832432
       app.use(noopServiceWorkerMiddleware());
+
+      console.log('jeremy');
+      app.use(
+        '/api',
+        proxy({
+          target: 'http://localhost:8080',
+          changeOrigin: true,
+        }),
+      );
+      app.use(
+        '/configuration',
+        proxy({
+          target: 'http://localhost:8080',
+          changeOrigin: true,
+        }),
+      );
     },
   };
 };
