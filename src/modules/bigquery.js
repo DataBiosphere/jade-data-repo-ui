@@ -137,4 +137,24 @@ export default class BigQuery {
         return response.data.rows[0].f;
       });
   };
+
+  getColumnDistinct = (columnName, dataset, tableName, token) => {
+    const url = `https://bigquery.googleapis.com/bigquery/v2/projects/${dataset.dataProject}/queries`;
+    const query = `SELECT ${columnName}, COUNT(*) FROM [${dataset.dataProject}.datarepo_${dataset.name}.${tableName}] GROUP BY ${columnName}`;
+
+    return axios
+      .post(
+        url,
+        { query },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      )
+      .then(response => {
+        return response.data.rows;
+      });
+  };
 }

@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Input from '@material-ui/core/Input';
 import RangeFilter from './filter/RangeFilter';
+import CategoryFilter, { CategoryWrapper } from './filter/CategoryWrapper';
 
 export class QueryViewSidebarItem extends React.PureComponent {
   static propTypes = {
@@ -30,12 +30,13 @@ export class QueryViewSidebarItem extends React.PureComponent {
     switch (column.datatype) {
       case 'string':
         return (
-          <Input
-            placeholder={column.name}
-            onChange={this.handleChange}
-            inputProps={{
-              'aria-label': 'description',
-            }}
+          <CategoryWrapper
+            column={column}
+            dataset={dataset}
+            filterData={filterData}
+            handleChange={this.handleChange}
+            tableName={tableName}
+            token={token}
           />
         );
       case 'float':
