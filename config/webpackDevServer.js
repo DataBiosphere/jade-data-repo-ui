@@ -50,7 +50,6 @@ module.exports = function(allowedHost) {
       // https://github.com/facebook/create-react-app/issues/2272#issuecomment-302832432
       app.use(noopServiceWorkerMiddleware());
 
-      console.log('jeremy');
       app.use(
         '/api',
         proxy({
