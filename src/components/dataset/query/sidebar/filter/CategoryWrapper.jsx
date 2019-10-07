@@ -2,7 +2,7 @@ import React from 'react';
 import BigQuery from 'modules/bigquery';
 import PropTypes from 'prop-types';
 import FreetextFilter from './FreetextFilter';
-import { CategoryFilter } from './CategoryFilter';
+import CategoryFilterGroup from './CategoryFilterGroup';
 
 export class CategoryWrapper extends React.PureComponent {
   constructor(props) {
@@ -36,7 +36,7 @@ export class CategoryWrapper extends React.PureComponent {
     const { column, handleChange } = this.props;
 
     if (values.length <= 10) {
-      return <CategoryFilter column={column} handleChange={handleChange} values={values} />;
+      return <CategoryFilterGroup column={column} handleChange={handleChange} values={values} />;
     }
     return <FreetextFilter column={column} handleChange={handleChange} />;
   }
