@@ -31,6 +31,11 @@ export class QuerySidebarPanel extends React.PureComponent {
       if (Array.isArray(data)) {
         dataString = _.join(data, ', ');
       }
+      if (_.isObject(data)) {
+        console.log('HERE');
+        console.log(data);
+        dataString = _.keys(data).join(', ');
+      }
 
       return (
         <li key={filter}>

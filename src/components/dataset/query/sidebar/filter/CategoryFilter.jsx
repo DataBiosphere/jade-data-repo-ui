@@ -17,25 +17,29 @@ export class CategoryFilter extends React.PureComponent {
   static propTypes = {
     handleChange: PropTypes.func,
     name: PropTypes.string,
+    count: PropTypes.string,
   };
 
   handleChange = event => {
-    const { handleChange } = this.props;
+    const { handleChange, name } = this.props;
     this.setState({
       checked: event.target.checked,
     });
-    handleChange();
+    handleChange({
+      name,
+      value: event.target.checked,
+    });
   };
 
   render() {
     const { checked } = this.state;
-    const { name } = this.props;
+    const { name, count } = this.props;
     return (
       <FormControlLabel
         control={
           <Checkbox checked={checked} onChange={this.handleChange} value={name} color="primary" />
         }
-        label="Primary"
+        label={`${name} (${count})`}
       />
     );
   }
