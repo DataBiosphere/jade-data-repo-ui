@@ -31,6 +31,9 @@ export class QuerySidebarPanel extends React.PureComponent {
       if (Array.isArray(data)) {
         dataString = _.join(data, ', ');
       }
+      if (_.isPlainObject(data)) {
+        dataString = _.keys(data).join(', ');
+      }
 
       return (
         <li key={filter}>

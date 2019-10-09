@@ -83,6 +83,9 @@ const styles = theme => ({
     flexGrow: 1,
     padding: theme.spacing(3),
   },
+  noMargin: {
+    margin: '0px',
+  },
 });
 
 export class QueryViewSidebar extends React.PureComponent {
@@ -136,6 +139,7 @@ export class QueryViewSidebar extends React.PureComponent {
   handleFilters = () => {
     const { dispatch } = this.props;
     const { filterMap } = this.state;
+
     dispatch(applyFilters(filterMap));
   };
 

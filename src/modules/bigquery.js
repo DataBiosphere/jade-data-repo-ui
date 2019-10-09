@@ -104,16 +104,24 @@ export default class BigQuery {
 
   buildFilterStatement = filterMap => {
     if (!_.isEmpty(filterMap)) {
-      let statementClauses = [];
+      const statementClauses = [];
       _.keys(filterMap).forEach(key => {
         if (_.isArray(filterMap[key])) {
           statementClauses.push(`${key} BETWEEN ${filterMap[key][0]} AND ${filterMap[key][1]}`);
+        } else if (_.isObject(filterMap[key])) {
+          const checkboxes = _.keys(filterMap[key]);
+          if (checkboxes.length > 0) {
+            const checkboxValues = checkboxes.map(checkboxValue => `"${checkboxValue}"`).join(',');
+            statementClauses.push(`${key} IN (${checkboxValues})`);
+          }
         } else {
           statementClauses.push(`${key}='${filterMap[key]}'`);
         }
       });
 
-      return `WHERE ${statementClauses.join(' AND ')}`;
+      if (!_.isEmpty(statementClauses)) {
+        return `WHERE ${statementClauses.join(' AND ')}`;
+      }
     }
     return '';
   };
@@ -135,6 +143,26 @@ export default class BigQuery {
       )
       .then(response => {
         return response.data.rows[0].f;
+      });
+  };
+
+  getColumnDistinct = (columnName, dataset, tableName, token) => {
+    const url = `https://bigquery.googleapis.com/bigquery/v2/projects/${dataset.dataProject}/queries`;
+    const query = `SELECT ${columnName}, COUNT(*) FROM [${dataset.dataProject}.datarepo_${dataset.name}.${tableName}] GROUP BY ${columnName}`;
+
+    return axios
+      .post(
+        url,
+        { query },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      )
+      .then(response => {
+        return response.data.rows;
       });
   };
 }
