@@ -28,10 +28,11 @@ export class QuerySidebarPanel extends React.PureComponent {
       let boundFilter = this.clearFilter.bind(this, filter);
       const data = _.get(filterData, filter);
       let dataString = data;
+      console.log(data);
       if (Array.isArray(data)) {
         dataString = _.join(data, ', ');
       }
-      if (_.isObject(data)) {
+      if (_.isPlainObject(data)) {
         dataString = _.keys(data).join(', ');
       }
 
