@@ -139,7 +139,7 @@ export class QueryViewSidebar extends React.PureComponent {
   handleFilters = () => {
     const { dispatch } = this.props;
     const { filterMap } = this.state;
-    
+
     dispatch(applyFilters(filterMap));
   };
 

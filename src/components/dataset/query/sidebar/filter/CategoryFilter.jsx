@@ -1,5 +1,5 @@
 import React from 'react';
-import BigQuery from 'modules/bigquery';
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 
 import FormControlLabel from '@material-ui/core/FormControlLabel';
