@@ -32,8 +32,6 @@ export class QuerySidebarPanel extends React.PureComponent {
         dataString = _.join(data, ', ');
       }
       if (_.isObject(data)) {
-        console.log('HERE');
-        console.log(data);
         dataString = _.keys(data).join(', ');
       }
 

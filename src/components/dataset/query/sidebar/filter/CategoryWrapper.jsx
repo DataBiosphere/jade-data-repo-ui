@@ -15,7 +15,6 @@ export class CategoryWrapper extends React.PureComponent {
     const bq = new BigQuery();
 
     bq.getColumnDistinct(column.name, dataset, tableName, token).then(response => {
-      console.log(response);
       this.setState({
         values: response,
       });
@@ -33,10 +32,17 @@ export class CategoryWrapper extends React.PureComponent {
 
   render() {
     const { values } = this.state;
-    const { column, handleChange } = this.props;
+    const { column, filterData, handleChange } = this.props;
 
     if (values.length <= 10) {
-      return <CategoryFilterGroup column={column} handleChange={handleChange} values={values} />;
+      return (
+        <CategoryFilterGroup
+          column={column}
+          filterData={filterData}
+          handleChange={handleChange}
+          values={values}
+        />
+      );
     }
     return <FreetextFilter column={column} handleChange={handleChange} />;
   }

@@ -83,6 +83,9 @@ const styles = theme => ({
     flexGrow: 1,
     padding: theme.spacing(3),
   },
+  noMargin: {
+    margin: '0px',
+  },
 });
 
 export class QueryViewSidebar extends React.PureComponent {
@@ -130,14 +133,13 @@ export class QueryViewSidebar extends React.PureComponent {
     } else {
       clonedMap[value.name] = value.value;
     }
-    console.log(clonedMap);
     this.setState({ filterMap: clonedMap });
   };
 
   handleFilters = () => {
     const { dispatch } = this.props;
     const { filterMap } = this.state;
-    console.log(filterMap);
+    
     dispatch(applyFilters(filterMap));
   };
 

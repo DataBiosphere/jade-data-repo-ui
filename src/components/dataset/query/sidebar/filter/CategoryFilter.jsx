@@ -15,10 +15,23 @@ export class CategoryFilter extends React.PureComponent {
   }
 
   static propTypes = {
+    column: PropTypes.object,
+    count: PropTypes.string,
+    filterData: PropTypes.object,
     handleChange: PropTypes.func,
     name: PropTypes.string,
-    count: PropTypes.string,
   };
+
+  componentWillReceiveProps(nextProps) {
+    const { column, filterData } = this.props;
+    const currFilter = _.get(nextProps.filterData, column.name);
+
+    if (nextProps.filterData !== filterData && currFilter === undefined) {
+      this.setState({
+        checked: false,
+      });
+    }
+  }
 
   handleChange = event => {
     const { handleChange, name } = this.props;
