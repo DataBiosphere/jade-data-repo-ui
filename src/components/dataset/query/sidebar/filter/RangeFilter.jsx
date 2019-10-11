@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 
 import BigQuery from 'modules/bigquery';
 
-import { Slider } from '@material-ui/core';
+import { Slider, Input, Grid } from '@material-ui/core';
 import ValueLabel from './ValueLabel';
+import RangeInput from './RangeInput';
 
 export class RangeFilter extends React.PureComponent {
   constructor(props) {
@@ -69,21 +70,46 @@ export class RangeFilter extends React.PureComponent {
     });
   };
 
+  handleMinLabelValue = event => {
+    const { value } = this.state;
+    const newValue = [event.target.value, value[1]];
+
+    this.handleSliderValue(null, newValue);
+  };
+
+  handleMaxLabelValue = event => {
+    const { value } = this.state;
+    const newValue = [value[0], event.target.value];
+
+    this.handleSliderValue(null, newValue);
+  };
+
   render() {
     const { maxVal, minVal, value } = this.state;
-    const stepVal = (maxVal - minVal) / 20;
     return (
-      <Slider
-        value={value}
-        ValueLabelComponent={ValueLabel}
-        onChange={this.handleSliderValue}
-        valueLabelDisplay="auto"
-        aria-labelledby="range-slider"
-        step={stepVal}
-        marks
-        min={minVal}
-        max={maxVal}
-      />
+      <div>
+        <Grid container={true} spacing={4}>
+          <Grid item xs={6}>
+            <RangeInput labelName="min" value={value[0]} handleChange={this.handleMinLabelValue} />
+          </Grid>
+          <Grid item xs={6}>
+            <RangeInput labelName="max" value={value[1]} handleChange={this.handleMaxLabelValue} />
+          </Grid>
+        </Grid>
+        <Grid container={true}>
+          <Fragment>
+            <Slider
+              value={value}
+              ValueLabelComponent={ValueLabel}
+              onChange={this.handleSliderValue}
+              valueLabelDisplay="auto"
+              aria-labelledby="range-slider"
+              min={minVal}
+              max={maxVal}
+            />
+          </Fragment>
+        </Grid>
+      </div>
     );
   }
 }
