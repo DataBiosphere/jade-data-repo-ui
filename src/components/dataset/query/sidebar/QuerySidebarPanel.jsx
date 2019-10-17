@@ -2,6 +2,7 @@ import React from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { withStyles } from '@material-ui/core/styles';
 
 import Card from '@material-ui/core/Card';
 import Button from '@material-ui/core/Button';
@@ -9,8 +10,15 @@ import Typography from '@material-ui/core/Typography';
 import HighlightOff from '@material-ui/icons/HighlightOff';
 import { applyFilters } from '../../../../actions';
 
+const styles = theme => ({
+  cardPadding: {
+    padding: '10px',
+  },
+});
+
 export class QuerySidebarPanel extends React.PureComponent {
   static propTypes = {
+    classes: PropTypes.object,
     dispatch: PropTypes.func.isRequired,
     filterData: PropTypes.object,
   };
@@ -23,7 +31,7 @@ export class QuerySidebarPanel extends React.PureComponent {
   };
 
   render() {
-    const { filterData } = this.props;
+    const { classes, filterData } = this.props;
     const listFilters = _.keys(filterData).map(filter => {
       let boundFilter = this.clearFilter.bind(this, filter);
       const data = _.get(filterData, filter);
@@ -46,7 +54,7 @@ export class QuerySidebarPanel extends React.PureComponent {
     });
 
     return (
-      <Card>
+      <Card className={classes.cardPadding}>
         <Typography>Properties</Typography>
         <ul>{listFilters}</ul>
       </Card>
@@ -60,4 +68,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(QuerySidebarPanel);
+export default connect(mapStateToProps)(withStyles(styles)(QuerySidebarPanel));

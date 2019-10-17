@@ -97,6 +97,9 @@ export default class BigQuery {
         pageSize,
         pageSizeOptions: [pageSize],
         showFirstLastPageButtons: false,
+        search: false,
+        showTitle: false,
+        toolbar: false,
       };
     }
     return {};

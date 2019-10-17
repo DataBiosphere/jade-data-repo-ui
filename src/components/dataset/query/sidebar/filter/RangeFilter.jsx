@@ -88,11 +88,14 @@ export class RangeFilter extends React.PureComponent {
     const { maxVal, minVal, value } = this.state;
     return (
       <div>
-        <Grid container={true} spacing={4}>
-          <Grid item xs={6}>
+        <Grid container={true} spacing={2}>
+          <Grid item xs={5}>
             <RangeInput labelName="min" value={value[0]} handleChange={this.handleMinLabelValue} />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={2}>
+            —
+          </Grid>
+          <Grid item xs={5}>
             <RangeInput labelName="max" value={value[1]} handleChange={this.handleMaxLabelValue} />
           </Grid>
         </Grid>

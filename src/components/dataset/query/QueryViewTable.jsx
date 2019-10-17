@@ -101,7 +101,6 @@ export class QueryViewTable extends React.PureComponent {
       <div>
         {queryResults && queryResults.jobReference && (
           <MaterialTable
-            title={title}
             columns={columns}
             options={options}
             data={query => bigquery.pageData(query, queryResults, columns, token)}
