@@ -223,7 +223,10 @@ export class QueryViewSidebar extends React.PureComponent {
           {table &&
             table.name &&
             table.columns.map(c => (
-              <ExpansionPanel key={c.name}>
+              <ExpansionPanel
+                key={c.name}
+                className={clsx(classes.panelBottomBorder, { [classes.hide]: !open })}
+              >
                 <ExpansionPanelSummary
                   expandIcon={<ExpandMoreIcon />}
                   aria-controls={`panel-content-${c.name}`}
@@ -231,7 +234,7 @@ export class QueryViewSidebar extends React.PureComponent {
                 >
                   <Typography className={classes.heading}>{c.name}</Typography>
                 </ExpansionPanelSummary>
-                <ExpansionPanelDetails className={classes.panelBottomBorder}>
+                <ExpansionPanelDetails>
                   <QueryViewSidebarItem
                     column={c}
                     dataset={dataset}
