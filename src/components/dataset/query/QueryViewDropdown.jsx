@@ -15,13 +15,15 @@ const styles = () => ({
 export class QueryViewDropdown extends React.PureComponent {
   constructor(props) {
     super(props);
+    const { onSelectedItem, options } = this.props;
 
     this.state = {
       values: {
-        table: '',
+        table: options[0],
         name: '',
       },
     };
+    onSelectedItem(options[0]);
   }
 
   static propTypes = {
@@ -36,6 +38,8 @@ export class QueryViewDropdown extends React.PureComponent {
       values: { ...this.values, [event.target.name]: event.target.value },
     });
     onSelectedItem(event.target.value);
+    console.log(event.target.name);
+    console.log(event.target.value);
   };
 
   render() {

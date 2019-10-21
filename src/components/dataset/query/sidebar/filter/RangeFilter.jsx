@@ -4,8 +4,7 @@ import PropTypes from 'prop-types';
 
 import BigQuery from 'modules/bigquery';
 
-import { Slider, Input, Grid } from '@material-ui/core';
-import ValueLabel from './ValueLabel';
+import { Slider, Grid } from '@material-ui/core';
 import RangeInput from './RangeInput';
 
 export class RangeFilter extends React.PureComponent {
@@ -103,9 +102,8 @@ export class RangeFilter extends React.PureComponent {
           <Fragment>
             <Slider
               value={value}
-              ValueLabelComponent={ValueLabel}
               onChange={this.handleSliderValue}
-              valueLabelDisplay="auto"
+              valueLabelDisplay="off"
               aria-labelledby="range-slider"
               min={minVal}
               max={maxVal}
