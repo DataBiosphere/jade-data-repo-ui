@@ -14,6 +14,9 @@ const styles = theme => ({
   cardPadding: {
     padding: '10px',
   },
+  noBullets: {
+    listStyleType: 'none',
+  },
 });
 
 export class QuerySidebarPanel extends React.PureComponent {
@@ -45,7 +48,7 @@ export class QuerySidebarPanel extends React.PureComponent {
 
       return (
         <li key={filter}>
-          {filter} : {dataString}
+          <strong>{filter}</strong> : {dataString}
           <Button onClick={boundFilter}>
             <HighlightOff />
           </Button>
@@ -56,7 +59,7 @@ export class QuerySidebarPanel extends React.PureComponent {
     return (
       <Card className={classes.cardPadding}>
         <Typography>Properties</Typography>
-        <ul>{listFilters}</ul>
+        <ul className={classes.noBullets}>{listFilters}</ul>
       </Card>
     );
   }

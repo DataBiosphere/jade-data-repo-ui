@@ -38,8 +38,6 @@ export class QueryViewDropdown extends React.PureComponent {
       values: { ...this.values, [event.target.name]: event.target.value },
     });
     onSelectedItem(event.target.value);
-    console.log(event.target.name);
-    console.log(event.target.value);
   };
 
   render() {
