@@ -51,7 +51,7 @@ const styles = theme => ({
     display: 'none',
   },
   drawer: {
-    backgroundColor: '#f2f0f0',
+    backgroundColor: theme.palette.primary.light,
     top: 'auto',
     width: drawerWidth,
     flexShrink: 0,

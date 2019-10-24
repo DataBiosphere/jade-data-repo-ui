@@ -12,7 +12,7 @@ import { applyFilters } from '../../../../actions';
 
 const styles = theme => ({
   cardPadding: {
-    padding: '10px',
+    padding: theme.spacing(3),
   },
   noBullets: {
     listStyleType: 'none',
