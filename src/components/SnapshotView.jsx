@@ -23,11 +23,6 @@ const styles = theme => ({
     lineHeight: '66px',
     paddingBottom: theme.spacing(8),
   },
-  plusButton: {
-    fill: theme.palette.common.link,
-    marginLeft: theme.spacing(4),
-    width: theme.spacing(3),
-  },
 });
 
 class SnapshotView extends React.PureComponent {
@@ -42,11 +37,6 @@ class SnapshotView extends React.PureComponent {
         <div className={classes.width}>
           <div className={classes.title}>
             Snapshots
-            <NavLink to="/snapshots/create">
-              <Tooltip title="Create a new snapshot" enterDelay={100}>
-                <Add className={classes.plusButton} />
-              </Tooltip>
-            </NavLink>
           </div>
           <div>
             <SnapshotTable />
