@@ -254,7 +254,7 @@ export class SnapshotCreateView extends React.PureComponent {
                       addUser={newEmail => this.addUser(newEmail)}
                       defaultValue="Add viewer email address"
                       removeUser={removeableEmail => this.removeUser(removeableEmail)}
-                      readers={readers}
+                      users={readers}
                     />
                   )}
                 />
