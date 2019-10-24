@@ -101,7 +101,7 @@ class ManageUsersView extends React.PureComponent {
             ADD
           </Button>
         </div>
-        {users.length > 0 && <div className={classes.chipContainer}>{userChips}</div>}
+        {users && users.length > 0 && <div className={classes.chipContainer}>{userChips}</div>}
       </div>
     );
   }
