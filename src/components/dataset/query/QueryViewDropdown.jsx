@@ -15,13 +15,15 @@ const styles = () => ({
 export class QueryViewDropdown extends React.PureComponent {
   constructor(props) {
     super(props);
+    const { onSelectedItem, options } = this.props;
 
     this.state = {
       values: {
-        table: '',
+        table: options[0],
         name: '',
       },
     };
+    onSelectedItem(options[0]);
   }
 
   static propTypes = {
@@ -45,7 +47,6 @@ export class QueryViewDropdown extends React.PureComponent {
     return (
       <form autoComplete="off">
         <FormControl className={classes.root}>
-          <InputLabel htmlFor="table-select">Table</InputLabel>
           <Select
             value={values.table}
             onChange={this.handleChange}

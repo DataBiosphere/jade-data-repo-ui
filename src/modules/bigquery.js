@@ -1,5 +1,6 @@
 import axios from 'axios';
 import _ from 'lodash';
+import { statement } from '@babel/template';
 
 export default class BigQuery {
   constructor() {
@@ -97,6 +98,9 @@ export default class BigQuery {
         pageSize,
         pageSizeOptions: [pageSize],
         showFirstLastPageButtons: false,
+        search: false,
+        showTitle: false,
+        toolbar: false,
       };
     }
     return {};
@@ -115,7 +119,8 @@ export default class BigQuery {
             statementClauses.push(`${key} IN (${checkboxValues})`);
           }
         } else {
-          statementClauses.push(`${key}='${filterMap[key]}'`);
+          const values = filterMap[key].split(',').map(val => `${key}='${val}'`);
+          statementClauses.push(values.join(' OR '));
         }
       });
 

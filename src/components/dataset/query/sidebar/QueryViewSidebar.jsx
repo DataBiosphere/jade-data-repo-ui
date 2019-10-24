@@ -8,7 +8,7 @@ import Drawer from '@material-ui/core/Drawer';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
+import FilterList from '@material-ui/icons/FilterList';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
@@ -16,7 +16,9 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
 
+import { Box } from '@material-ui/core';
 import QueryViewSidebarItem from './QueryViewSidebarItem';
 import QuerySidebarPanel from './QuerySidebarPanel';
 import { applyFilters } from '../../../../actions';
@@ -49,6 +51,7 @@ const styles = theme => ({
     display: 'none',
   },
   drawer: {
+    backgroundColor: theme.palette.primary.light,
     top: 'auto',
     width: drawerWidth,
     flexShrink: 0,
@@ -85,6 +88,21 @@ const styles = theme => ({
   },
   noMargin: {
     margin: '0px',
+  },
+  filterPanel: {
+    paddingLeft: '10px',
+    paddingRight: '10px',
+  },
+  sidebarTitle: {
+    flexDirection: 'column',
+    display: 'flex',
+    justifyContent: 'center',
+  },
+  panelBottomBorder: {
+    borderBottom: `1px solid ${theme.palette.divider}`,
+  },
+  panelTopBorder: {
+    borderTop: `1px solid ${theme.palette.divider}`,
   },
 });
 
@@ -174,17 +192,28 @@ export class QueryViewSidebar extends React.PureComponent {
               [classes.hide]: open,
             })}
           >
-            <MenuIcon />
+            <FilterList />
           </IconButton>
-          <IconButton
-            onClick={this.handleDrawerClose}
-            className={clsx(classes.menuButton, {
-              [classes.hide]: !open,
-            })}
-          >
-            <ChevronRightIcon />
-          </IconButton>
-          <div className={!open ? classes.hide : ''}>
+          <Box className={!open ? classes.hide : ''}>
+            <Grid container={true} spacing={1}>
+              <Grid item xs={2}>
+                <IconButton
+                  onClick={this.handleDrawerClose}
+                  className={clsx(classes.menuButton, {
+                    [classes.hide]: !open,
+                  })}
+                >
+                  <ChevronRightIcon />
+                </IconButton>
+              </Grid>
+              <Grid item xs={10} className={classes.sidebarTitle}>
+                <Typography variant="h6" display="block">
+                  Data Snapshot
+                </Typography>
+              </Grid>
+            </Grid>
+          </Box>
+          <div className={clsx(classes.filterPanel, { [classes.hide]: !open })}>
             <QuerySidebarPanel />
           </div>
           <Button className={!open ? classes.hide : ''} onClick={this.handleFilters}>
@@ -194,7 +223,10 @@ export class QueryViewSidebar extends React.PureComponent {
           {table &&
             table.name &&
             table.columns.map(c => (
-              <ExpansionPanel key={c.name} className={!open ? classes.hide : ''}>
+              <ExpansionPanel
+                key={c.name}
+                className={clsx(classes.panelBottomBorder, { [classes.hide]: !open })}
+              >
                 <ExpansionPanelSummary
                   expandIcon={<ExpandMoreIcon />}
                   aria-controls={`panel-content-${c.name}`}

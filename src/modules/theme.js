@@ -55,4 +55,13 @@ export default createMuiTheme({
   shape: {
     borderRadius: 5,
   },
+  overrides: {
+    MuiExpansionPanel: {
+      root: {
+        '&$expanded': {
+          margin: '0px',
+        },
+      },
+    },
+  },
 });
