@@ -93,7 +93,7 @@ const styles = theme => ({
     textDecoration: 'none',
   },
   selector: {
-    width: '300px',
+    width: '380px',
   },
 });
 
