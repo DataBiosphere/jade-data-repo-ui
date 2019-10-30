@@ -48,10 +48,11 @@ const { argv } = require('yargs').command(
 
 const CORE_BILLING_ACCOUNT_ID = '00708C-45D19D-27AAFA';
 const prodHost = 'https://jade-terra.datarepo-prod.broadinstitute.org';
+const subdomainSuffix = argv.suffix ? `-${argv.suffix}` : '';
 const targetHost =
   argv.env === 'local'
     ? 'http://localhost:8080'
-    : `https://jade-${argv.suffix}.datarepo-${argv.env}.broadinstitute.org`;
+    : `https://jade${subdomainSuffix}.datarepo-${argv.env}.broadinstitute.org`;
 
 if (argv.verbose) {
   axios.interceptors.request.use(request => {
@@ -62,7 +63,7 @@ if (argv.verbose) {
 
 // there is an issue with the intermediate certificate on production, we'll need a special agent to handle this
 const agent = new https.Agent({
-  rejectUnauthorized: false,
+  // rejectUnauthorized: false,
 });
 
 function findDatasetByName(token, name) {
@@ -221,8 +222,8 @@ call('gcloud auth list', loginsStdin => {
       },
     ])
     .then(answers => {
-      switchAccount(answers.prodAccount).then(prodToken => {
-        switchAccount(answers.devAccount).then(devToken => {
+      switchAccount(answers.devAccount).then(devToken => {
+        switchAccount(answers.prodAccount).then(prodToken => {
           findDatasetByName(prodToken, datasetName)
             .then(prodDataset => {
               copyDataset(devToken, prodDataset).then(targetDataset => {
@@ -235,7 +236,8 @@ call('gcloud auth list', loginsStdin => {
                   const config = {
                     configuration: {
                       query: {
-                        query: `SELECT * FROM [${prodProject}.${bqDatasetId}.${table.name}] LIMIT ${argv.cutoff}`,
+                        useLegacySql: false,
+                        query: `SELECT * FROM \`${prodProject}.${bqDatasetId}.${table.name}\` LIMIT ${argv.cutoff}`,
                         destinationTable: {
                           projectId: targetProject,
                           datasetId: bqDatasetId,
