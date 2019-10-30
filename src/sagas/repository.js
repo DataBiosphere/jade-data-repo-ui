@@ -406,7 +406,6 @@ export function* runQuery({ payload }) {
     const body = {
       query: payload.query,
       maxResults: payload.maxResults,
-      allowLargeResults: true,
     };
     const response = yield call(authPost, url, body);
     const { jobComplete } = response.data;
