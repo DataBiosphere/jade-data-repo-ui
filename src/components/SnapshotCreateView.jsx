@@ -93,7 +93,7 @@ const styles = theme => ({
     textDecoration: 'none',
   },
   selector: {
-    width: '300px',
+    width: '380px',
   },
 });
 
@@ -254,7 +254,7 @@ export class SnapshotCreateView extends React.PureComponent {
                       addUser={newEmail => this.addUser(newEmail)}
                       defaultValue="Add viewer email address"
                       removeUser={removeableEmail => this.removeUser(removeableEmail)}
-                      readers={readers}
+                      users={readers}
                     />
                   )}
                 />

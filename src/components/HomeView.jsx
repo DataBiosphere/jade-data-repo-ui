@@ -35,12 +35,6 @@ const styles = theme => ({
       textDecoration: 'underline',
     },
   },
-  plusButton: {
-    height: 20,
-    fill: theme.palette.common.link,
-    marginLeft: 10,
-    width: 20,
-  },
   title: {
     color: theme.palette.primary.main,
     fontSize: '54px',
@@ -80,11 +74,6 @@ class HomeView extends React.PureComponent {
           <div className={classes.jadeTableSpacer} />
           <div className={classes.header}>
             RECENT SNAPSHOTS
-            <NavLink to="/snapshots/create">
-              <Tooltip title="Create a new snapshot" enterDelay={100}>
-                <Add className={classes.plusButton} />
-              </Tooltip>
-            </NavLink>
           </div>
           <SnapshotTable summary />
           <div>
