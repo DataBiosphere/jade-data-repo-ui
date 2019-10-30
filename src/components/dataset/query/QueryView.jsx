@@ -24,6 +24,7 @@ const styles = theme => ({
 });
 
 const PAGE_SIZE = 100;
+const QUERY_LIMIT = 1000;
 
 export class QueryView extends React.PureComponent {
   constructor(props) {
@@ -53,7 +54,8 @@ export class QueryView extends React.PureComponent {
           dataset.dataProject,
           `#standardSQL
           SELECT * FROM \`${dataset.dataProject}.datarepo_${dataset.name}.${selected}\`
-          ${filterStatement}`,
+          ${filterStatement}
+          LIMIT ${QUERY_LIMIT}`,
           PAGE_SIZE,
         ),
       );
