@@ -5,6 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 
 import { applyFilters, runQuery } from 'actions/index';
+import { DB_COLUMNS } from '../../../constants/index';
 
 import QueryViewTable from './QueryViewTable';
 import QueryViewSidebar from './sidebar/QueryViewSidebar';
@@ -53,7 +54,7 @@ export class QueryView extends React.PureComponent {
         runQuery(
           dataset.dataProject,
           `#standardSQL
-          SELECT * FROM \`${dataset.dataProject}.datarepo_${dataset.name}.${selected}\`
+          SELECT * EXCEPT (${DB_COLUMNS.ROW_ID}) FROM \`${dataset.dataProject}.datarepo_${dataset.name}.${selected}\`
           ${filterStatement}
           LIMIT ${QUERY_LIMIT}`,
           PAGE_SIZE,

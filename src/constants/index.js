@@ -81,3 +81,7 @@ export const STATUS = {
 export const IMAGE = {
   DEFAULT: 'default',
 };
+
+export const DB_COLUMNS = {
+  ROW_ID: 'datarepo_row_id',
+};
