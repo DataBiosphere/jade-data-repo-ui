@@ -374,18 +374,59 @@ export function* getConfiguration() {
  * bigquery
  */
 
+function* pollQuery(projectId, jobId) {
+  try {
+    const url = `https://bigquery.googleapis.com/bigquery/v2/projects/${projectId}/queries/${jobId}`;
+    const response = yield call(authGet, url);
+    const { jobComplete } = response.data;
+    if (jobComplete) {
+      yield put({
+        type: ActionTypes.RUN_QUERY_SUCCESS,
+        results: response,
+      });
+    } else {
+      yield put({
+        type: ActionTypes.POLL_QUERY,
+        payload: { projectId, jobId },
+      });
+      yield call(delay, 1000);
+      yield call(pollQuery, projectId, jobId);
+    }
+  } catch (err) {
+    yield put({
+      type: ActionTypes.EXCEPTION,
+      payload: err,
+    });
+  }
+}
+
 export function* runQuery({ payload }) {
   try {
     const url = `https://bigquery.googleapis.com/bigquery/v2/projects/${payload.projectId}/queries`;
     const body = {
       query: payload.query,
       maxResults: payload.maxResults,
+      allowLargeResults: true,
     };
     const response = yield call(authPost, url, body);
-    yield put({
-      type: ActionTypes.RUN_QUERY_SUCCESS,
-      results: response,
-    });
+    const { jobComplete } = response.data;
+    const { jobId } = response.data.jobReference;
+    if (jobComplete) {
+      yield put({
+        type: ActionTypes.RUN_QUERY_SUCCESS,
+        results: response,
+      });
+    } else {
+      yield put({
+        type: ActionTypes.POLL_QUERY,
+        payload: {
+          ...payload,
+          jobId,
+        },
+      });
+      yield call(delay, 1000);
+      yield call(pollQuery, payload.projectId, jobId);
+    }
   } catch (err) {
     yield put({
       type: ActionTypes.EXCEPTION,
