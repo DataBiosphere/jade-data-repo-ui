@@ -120,6 +120,7 @@ export class QueryViewSidebar extends React.PureComponent {
     dataset: PropTypes.object,
     dispatch: PropTypes.func.isRequired,
     filterData: PropTypes.object,
+    filterStatement: PropTypes.string,
     table: PropTypes.object,
     token: PropTypes.string,
   };
@@ -162,7 +163,7 @@ export class QueryViewSidebar extends React.PureComponent {
   };
 
   render() {
-    const { classes, dataset, filterData, table, token } = this.props;
+    const { classes, dataset, filterData, filterStatement, table, token } = this.props;
     const { open } = this.state;
 
     return (
@@ -239,6 +240,7 @@ export class QueryViewSidebar extends React.PureComponent {
                     column={c}
                     dataset={dataset}
                     filterData={filterData}
+                    filterStatement={filterStatement}
                     handleChange={this.handleChange}
                     tableName={table.name}
                     token={token}
@@ -256,6 +258,7 @@ function mapStateToProps(state) {
   return {
     dataset: state.datasets.dataset,
     filterData: state.query.filterData,
+    filterStatement: state.query.filterStatement,
     token: state.user.token,
   };
 }

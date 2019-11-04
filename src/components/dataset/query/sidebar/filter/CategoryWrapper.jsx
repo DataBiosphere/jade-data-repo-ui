@@ -11,10 +11,10 @@ export class CategoryWrapper extends React.PureComponent {
       values: [],
     };
 
-    const { column, dataset, tableName, token } = this.props;
+    const { column, dataset, tableName, token, filterStatement } = this.props;
     const bq = new BigQuery();
 
-    bq.getColumnDistinct(column.name, dataset, tableName, token).then(response => {
+    bq.getColumnDistinct(column.name, dataset, tableName, token, filterStatement).then(response => {
       this.setState({
         values: response,
       });
@@ -25,16 +25,31 @@ export class CategoryWrapper extends React.PureComponent {
     column: PropTypes.object,
     dataset: PropTypes.object,
     filterData: PropTypes.object,
+    filterStatement: PropTypes.string,
     handleChange: PropTypes.func,
     tableName: PropTypes.string,
     token: PropTypes.string,
   };
 
+  componentDidUpdate(prevProps) {
+    const { column, dataset, tableName, token, filterStatement } = this.props;
+    if (filterStatement !== prevProps.filterStatement) {
+      const bq = new BigQuery();
+      bq.getColumnDistinct(column.name, dataset, tableName, token, filterStatement).then(
+        response => {
+          this.setState({
+            values: response,
+          });
+        },
+      );
+    }
+  }
+
   render() {
     const { values } = this.state;
     const { column, filterData, handleChange } = this.props;
 
-    if (values.length <= 10) {
+    if (values && values.length <= 10) {
       return (
         <CategoryFilterGroup
           column={column}

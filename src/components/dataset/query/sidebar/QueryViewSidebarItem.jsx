@@ -2,13 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import RangeFilter from './filter/RangeFilter';
-import CategoryFilter, { CategoryWrapper } from './filter/CategoryWrapper';
+import CategoryWrapper from './filter/CategoryWrapper';
 
 export class QueryViewSidebarItem extends React.PureComponent {
   static propTypes = {
     column: PropTypes.object,
     dataset: PropTypes.object,
     filterData: PropTypes.object,
+    filterStatement: PropTypes.string,
     handleChange: PropTypes.func,
     tableName: PropTypes.string,
     token: PropTypes.string,
@@ -25,7 +26,7 @@ export class QueryViewSidebarItem extends React.PureComponent {
   };
 
   render() {
-    const { column, dataset, filterData, tableName, token } = this.props;
+    const { column, dataset, filterData, filterStatement, tableName, token } = this.props;
 
     switch (column.datatype) {
       case 'string':
@@ -34,6 +35,7 @@ export class QueryViewSidebarItem extends React.PureComponent {
             column={column}
             dataset={dataset}
             filterData={filterData}
+            filterStatement={filterStatement}
             handleChange={this.handleChange}
             tableName={tableName}
             token={token}
