@@ -128,7 +128,7 @@ export class QueryViewSidebar extends React.PureComponent {
   componentWillReceiveProps(nextProps) {
     const { filterMap } = this.state;
 
-    if (nextProps.filterData !== filterMap) {
+    if (!_.isEqual(nextProps.filterData, filterMap)) {
       this.setState({
         filterMap: nextProps.filterData,
       });
