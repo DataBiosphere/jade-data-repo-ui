@@ -6,8 +6,10 @@ import { CategoryFilter } from './CategoryFilter';
 export class CategoryFilterGroup extends React.PureComponent {
   constructor(props) {
     super(props);
+    const { filterData } = this.props;
     this.state = {
       selected: {},
+      prevPropsFilterData: filterData,
     };
   }
 
@@ -18,10 +20,20 @@ export class CategoryFilterGroup extends React.PureComponent {
     values: PropTypes.array,
   };
 
+  static getDerivedStateFromProps(props, state) {
+    if (!_.isEqual(props.filterData, state.prevPropsFilterData)) {
+      return {
+        selected: _.get(props.filterData, `${props.column.name}`, {}),
+        prevPropsFilterData: props.filterData,
+      };
+    }
+    return null;
+  }
+
   handleChange = box => {
     const { handleChange } = this.props;
     const { selected } = this.state;
-    let selectedClone = _.clone(selected);
+    const selectedClone = _.clone(selected);
     if (box.value) {
       selectedClone[box.name] = box.value;
       this.setState({
