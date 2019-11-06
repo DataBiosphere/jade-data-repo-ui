@@ -1,6 +1,5 @@
 import axios from 'axios';
 import _ from 'lodash';
-import { statement } from '@babel/template';
 
 export default class BigQuery {
   constructor() {
@@ -151,9 +150,9 @@ export default class BigQuery {
       });
   };
 
-  getColumnDistinct = (columnName, dataset, tableName, token) => {
+  getColumnDistinct = (columnName, dataset, tableName, token, filterStatement) => {
     const url = `https://bigquery.googleapis.com/bigquery/v2/projects/${dataset.dataProject}/queries`;
-    const query = `SELECT ${columnName}, COUNT(*) FROM [${dataset.dataProject}.datarepo_${dataset.name}.${tableName}] GROUP BY ${columnName}`;
+    const query = `SELECT ${columnName}, COUNT(*) FROM [${dataset.dataProject}.datarepo_${dataset.name}.${tableName}] ${filterStatement} GROUP BY ${columnName}`;
 
     return axios
       .post(

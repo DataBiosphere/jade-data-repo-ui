@@ -8,10 +8,18 @@ import Checkbox from '@material-ui/core/Checkbox';
 export class CategoryFilter extends React.PureComponent {
   constructor(props) {
     super(props);
+    const { filterData, column } = this.props;
 
-    this.state = {
-      checked: false,
-    };
+    const currFilter = _.get(filterData, column.name);
+    if (currFilter === undefined) {
+      this.state = {
+        checked: false,
+      };
+    } else {
+      this.state = {
+        checked: true,
+      };
+    }
   }
 
   static propTypes = {
