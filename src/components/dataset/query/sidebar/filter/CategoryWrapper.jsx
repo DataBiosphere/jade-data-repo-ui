@@ -4,11 +4,14 @@ import PropTypes from 'prop-types';
 import FreetextFilter from './FreetextFilter';
 import CategoryFilterGroup from './CategoryFilterGroup';
 
+const CHECKBOX_THRESHOLD = 10;
+
 export class CategoryWrapper extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
       values: [],
+      originalValues: [],
     };
 
     const { column, dataset, tableName, token, filterStatement } = this.props;
@@ -17,6 +20,7 @@ export class CategoryWrapper extends React.PureComponent {
     bq.getColumnDistinct(column.name, dataset, tableName, token, filterStatement).then(response => {
       this.setState({
         values: response,
+        originalValues: response,
       });
     });
   }
@@ -46,10 +50,10 @@ export class CategoryWrapper extends React.PureComponent {
   }
 
   render() {
-    const { values } = this.state;
+    const { values, originalValues } = this.state;
     const { column, filterData, handleChange } = this.props;
 
-    if (values && values.length <= 10) {
+    if (values && originalValues && originalValues.length <= CHECKBOX_THRESHOLD) {
       return (
         <CategoryFilterGroup
           column={column}
