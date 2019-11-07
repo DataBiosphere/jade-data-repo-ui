@@ -57,6 +57,10 @@ const styles = theme => ({
     flexShrink: 0,
     whiteSpace: 'nowrap',
   },
+  newDrawer: {
+    position: 'absolute',
+    right: '1%',
+  },
   drawerOpen: {
     width: drawerWidth,
     transition: theme.transitions.create('width', {
@@ -177,7 +181,7 @@ export class QueryViewSidebar extends React.PureComponent {
             [classes.drawerClose]: !open,
           })}
           classes={{
-            paper: clsx(classes.drawer, {
+            paper: clsx(classes.drawer, classes.newDrawer, {
               [classes.drawerOpen]: open,
               [classes.drawerClose]: !open,
             }),

@@ -81,23 +81,25 @@ export class QueryView extends React.PureComponent {
 
     return (
       <Fragment>
-        <QueryViewSidebar table={table} />
-        <div className={classes.wrapper}>
-          <Grid container spacing={2} direction="column">
-            <div>
+        <Grid container spacing={0}>
+          <Grid item md={11}>
+            <Grid container spacing={0}>
               <Grid item xs={3}>
                 <QueryViewDropdown options={names} onSelectedItem={this.handleChange} />
               </Grid>
-            </div>
-            <div>
+            </Grid>
+            <Grid container spacing={0}>
               <Grid item xs={12}>
                 <div className={classes.scrollTable}>
                   <QueryViewTable queryResults={queryResults} title={selected} token={token} />
                 </div>
               </Grid>
-            </div>
+            </Grid>
           </Grid>
-        </div>
+          <Grid item md={1}>
+            <QueryViewSidebar table={table} />
+          </Grid>
+        </Grid>
       </Fragment>
     );
   }
