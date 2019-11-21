@@ -16,6 +16,7 @@ const styles = theme => ({
   wrapper: {
     display: 'flex',
     justifyContent: 'center',
+    paddingTop: theme.spacing(1),
     padding: theme.spacing(4),
     margin: theme.spacing(4),
   },
@@ -24,7 +25,7 @@ const styles = theme => ({
     height: '-webkit-fill-available',
   },
   headerArea: {
-    paddingBottom: '3%',
+    paddingBottom: theme.spacing(1),
   },
 });
 
@@ -91,9 +92,9 @@ export class QueryView extends React.PureComponent {
             <div>
               <Grid container spacing={2} className={classes.headerArea}>
                 <Grid item xs={3}>
-                  <Typography variant="h5">{dataset.name}</Typography>
-                </Grid>
-                <Grid item xs={3}>
+                  <Typography variant="h5" className={classes.headerArea}>
+                    {dataset.name}
+                  </Typography>
                   <QueryViewDropdown options={names} onSelectedItem={this.handleChange} />
                 </Grid>
               </Grid>
