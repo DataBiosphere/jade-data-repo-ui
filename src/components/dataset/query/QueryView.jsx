@@ -5,6 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 
 import { applyFilters, runQuery } from 'actions/index';
+import { Typography } from '@material-ui/core';
 import { DB_COLUMNS } from '../../../constants/index';
 
 import QueryViewTable from './QueryViewTable';
@@ -21,6 +22,9 @@ const styles = theme => ({
   scrollTable: {
     overflowY: 'scroll',
     height: '-webkit-fill-available',
+  },
+  headerArea: {
+    paddingBottom: '3%',
   },
 });
 
@@ -85,8 +89,13 @@ export class QueryView extends React.PureComponent {
         <div className={classes.wrapper}>
           <Grid container spacing={2} direction="column">
             <div>
-              <Grid item xs={3}>
-                <QueryViewDropdown options={names} onSelectedItem={this.handleChange} />
+              <Grid container spacing={2} className={classes.headerArea}>
+                <Grid item xs={3}>
+                  <Typography variant="h5">{dataset.name}</Typography>
+                </Grid>
+                <Grid item xs={3}>
+                  <QueryViewDropdown options={names} onSelectedItem={this.handleChange} />
+                </Grid>
               </Grid>
             </div>
             <div>
