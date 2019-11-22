@@ -102,7 +102,12 @@ export class QueryView extends React.PureComponent {
             <div>
               <Grid item xs={12}>
                 <div className={classes.scrollTable}>
-                  <QueryViewTable queryResults={queryResults} title={selected} token={token} />
+                  <QueryViewTable
+                    queryResults={queryResults}
+                    title={selected}
+                    token={token}
+                    table={table}
+                  />
                 </div>
               </Grid>
             </div>

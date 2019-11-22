@@ -39,17 +39,21 @@ export default class BigQuery {
           rawData = response.data;
           query.tokenToUse = rawData.pageToken;
 
-          const columnNames = columns.map(x => x.title);
-
           if (rawData.rows && rawData.rows.length > 0) {
             rawData.rows.forEach(rowData => {
               const row = {};
 
               for (let i = 0; i < rowData.f.length; i++) {
-                const item = rowData.f[i].v;
-                const currColumn = columnNames[i];
+                const currColumn = columns[i];
+                let item;
 
-                row[currColumn] = item;
+                if (currColumn.datatype === 'integer') {
+                  item = this.CommaFormatted(rowData.f[i].v);
+                } else {
+                  item = rowData.f[i].v;
+                }
+
+                row[currColumn.name] = item;
               }
 
               data.push(row);
@@ -64,24 +68,11 @@ export default class BigQuery {
         });
     });
 
-  calculateColumns = queryResults => {
-    const columns = [];
-    if (
-      queryResults.rows !== undefined &&
-      queryResults.schema !== undefined &&
-      queryResults.schema.fields !== undefined
-    ) {
-      queryResults.schema.fields.forEach(colData => {
-        const col = {
-          title: colData.name,
-          field: colData.name,
-        };
-
-        columns.push(col);
-      });
-    }
-    return columns;
+  CommaFormatted = amount => {
+    return amount.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   };
+
+  calculateColumns = columns => columns.map(column => ({ title: column.name, field: column.name }));
 
   calculatePageOptions = (queryResults, maxPageSize) => {
     if (queryResults.totalRows !== undefined) {
