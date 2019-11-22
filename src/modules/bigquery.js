@@ -48,7 +48,7 @@ export default class BigQuery {
                 let item;
 
                 if (currColumn.datatype === 'integer') {
-                  item = this.CommaFormatted(rowData.f[i].v);
+                  item = this.commaFormatted(rowData.f[i].v);
                 } else {
                   item = rowData.f[i].v;
                 }
@@ -68,7 +68,7 @@ export default class BigQuery {
         });
     });
 
-  CommaFormatted = amount => {
+  commaFormatted = amount => {
     return amount.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   };
 
