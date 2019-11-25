@@ -63,7 +63,14 @@ export class CategoryWrapper extends React.PureComponent {
         />
       );
     }
-    return <FreetextFilter column={column} handleChange={handleChange} filterData={filterData} />;
+    return (
+      <FreetextFilter
+        column={column}
+        handleChange={handleChange}
+        filterData={filterData}
+        values={values}
+      />
+    );
   }
 }
 
