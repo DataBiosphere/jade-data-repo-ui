@@ -86,15 +86,16 @@ export class QueryViewTable extends React.PureComponent {
 
   static propTypes = {
     queryResults: PropTypes.object,
+    table: PropTypes.object,
     title: PropTypes.string,
     token: PropTypes.string,
   };
 
   render() {
-    const { queryResults, token } = this.props;
+    const { queryResults, token, table } = this.props;
 
     const bigquery = new BigQuery();
-    const columns = bigquery.calculateColumns(queryResults);
+    const columns = table && bigquery.calculateColumns(table.columns);
     const options = bigquery.calculatePageOptions(queryResults, PAGE_SIZE);
 
     return (
@@ -103,7 +104,7 @@ export class QueryViewTable extends React.PureComponent {
           <MaterialTable
             columns={columns}
             options={options}
-            data={query => bigquery.pageData(query, queryResults, columns, token)}
+            data={query => bigquery.pageData(query, queryResults, table.columns, token)}
             icons={tableIcons}
           />
         )}
