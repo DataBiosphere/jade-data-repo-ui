@@ -69,7 +69,7 @@ export default class BigQuery {
     });
 
   commaFormatted = amount => {
-    return amount.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    return new Intl.NumberFormat('en-US').format(amount);
   };
 
   calculateColumns = columns => columns.map(column => ({ title: column.name, field: column.name }));
