@@ -4,6 +4,7 @@ const errorOverlayMiddleware = require('react-dev-utils/errorOverlayMiddleware')
 const evalSourceMapMiddleware = require('react-dev-utils/evalSourceMapMiddleware');
 const noopServiceWorkerMiddleware = require('react-dev-utils/noopServiceWorkerMiddleware');
 const proxy = require('http-proxy-middleware');
+const proxyUrl = process.env.PROXY_URL || 'http://localhost:8080';
 
 const paths = require('./paths');
 
@@ -53,14 +54,14 @@ module.exports = function(allowedHost) {
       app.use(
         '/api',
         proxy({
-          target: 'http://localhost:8080',
+          target: proxyUrl,
           changeOrigin: true,
         }),
       );
       app.use(
         '/configuration',
         proxy({
-          target: 'http://localhost:8080',
+          target: proxyUrl,
           changeOrigin: true,
         }),
       );
