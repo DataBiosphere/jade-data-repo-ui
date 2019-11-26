@@ -62,11 +62,7 @@ export class RangeFilter extends React.PureComponent {
   handleSliderValue = (event, newValue) => {
     const { handleChange } = this.props;
     this.setState({ value: newValue });
-    handleChange({
-      target: {
-        value: newValue,
-      },
-    });
+    handleChange(newValue);
   };
 
   handleMinLabelValue = event => {

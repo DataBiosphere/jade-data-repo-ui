@@ -43,7 +43,7 @@ export class CategoryFilterGroup extends React.PureComponent {
       delete selectedClone[box.name];
       this.setState({ selected: selectedClone });
     }
-    handleChange({ target: { value: selectedClone } });
+    handleChange(selectedClone);
   };
 
   render() {

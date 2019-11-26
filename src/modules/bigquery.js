@@ -101,7 +101,13 @@ export default class BigQuery {
       const statementClauses = [];
       _.keys(filterMap).forEach(key => {
         if (_.isArray(filterMap[key])) {
-          statementClauses.push(`${key} BETWEEN ${filterMap[key][0]} AND ${filterMap[key][1]}`);
+          if (_.isNumber(filterMap[key][0])) {
+            statementClauses.push(`${key} BETWEEN ${filterMap[key][0]} AND ${filterMap[key][1]}`);
+          } else {
+            statementClauses.push(
+              `${key} = '${filterMap[key][0]}' OR ${key} = '${filterMap[key][1]}'`,
+            );
+          }
         } else if (_.isObject(filterMap[key])) {
           const checkboxes = _.keys(filterMap[key]);
           if (checkboxes.length > 0) {
@@ -136,9 +142,7 @@ export default class BigQuery {
           },
         },
       )
-      .then(response => {
-        return response.data.rows[0].f;
-      });
+      .then(response => response.data.rows[0].f);
   };
 
   getColumnDistinct = (columnName, dataset, tableName, token, filterStatement) => {
@@ -156,8 +160,6 @@ export default class BigQuery {
           },
         },
       )
-      .then(response => {
-        return response.data.rows;
-      });
+      .then(response => response.data.rows);
   };
 }

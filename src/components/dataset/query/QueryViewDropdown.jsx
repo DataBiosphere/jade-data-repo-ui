@@ -46,7 +46,7 @@ export class QueryViewDropdown extends React.PureComponent {
 
     return (
       <form autoComplete="off">
-        <FormControl className={classes.root}>
+        <FormControl variant="outlined" className={classes.root}>
           <Select
             value={values.table}
             onChange={this.handleChange}
