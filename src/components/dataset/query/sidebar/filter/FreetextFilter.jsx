@@ -17,7 +17,7 @@ export class FreetextFilter extends React.PureComponent {
     handleChange(value);
   };
 
-  getOptions = values => values.map(a => a.f[0].v);
+  getOptions = values => (values == null ? [] : values.map(a => a.f[0].v));
 
   render() {
     const { column, values } = this.props;
