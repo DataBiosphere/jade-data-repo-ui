@@ -5,7 +5,7 @@ import { GoogleLogin } from 'react-google-login';
 import { withStyles } from '@material-ui/core/styles';
 
 import Hero from 'assets/media/images/hero.png';
-import { logOut, logIn, getConfiguration } from 'actions/index';
+import { logOut, logIn } from 'actions/index';
 
 const styles = theme => ({
   container: {
@@ -62,11 +62,6 @@ export class WelcomeView extends React.PureComponent {
     configuration: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired,
   };
-
-  componentDidMount() {
-    const { dispatch } = this.props;
-    dispatch(getConfiguration());
-  }
 
   render() {
     const { classes, configuration, dispatch } = this.props;

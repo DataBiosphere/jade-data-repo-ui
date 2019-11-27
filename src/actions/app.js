@@ -117,11 +117,6 @@ export const { hideAlert } = createActions({
   [ActionTypes.HIDE_ALERT]: index => index,
 });
 
-export const { getConfiguration } = createActions({
-  [ActionTypes.GET_CONFIGURATION_SUCCESS]: configuration => configuration,
-  [ActionTypes.GET_CONFIGURATION]: configuration => configuration,
-});
-
 export const { runQuery } = createActions({
   [ActionTypes.RUN_QUERY_SUCCESS]: result => result,
   [ActionTypes.RUN_QUERY]: (projectId, query, maxResults) => ({

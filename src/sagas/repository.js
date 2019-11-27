@@ -352,25 +352,6 @@ export function* getDatasetTablePreview({ payload }) {
 }
 
 /**
- * unauthenticated
- */
-
-export function* getConfiguration() {
-  try {
-    const response = yield call(axios.get, '/configuration');
-    yield put({
-      type: ActionTypes.GET_CONFIGURATION_SUCCESS,
-      configuration: { data: response },
-    });
-  } catch (err) {
-    yield put({
-      type: ActionTypes.EXCEPTION,
-      payload: err,
-    });
-  }
-}
-
-/**
  * bigquery
  */
 
@@ -451,7 +432,6 @@ export default function* root() {
     takeLatest(ActionTypes.ADD_CUSTODIAN_TO_DATASET, addCustodianToDataset),
     takeLatest(ActionTypes.REMOVE_CUSTODIAN_FROM_DATASET, removeCustodianFromDataset),
     takeLatest(ActionTypes.GET_DATASET_TABLE_PREVIEW, getDatasetTablePreview),
-    takeLatest(ActionTypes.GET_CONFIGURATION, getConfiguration),
     takeLatest(ActionTypes.RUN_QUERY, runQuery),
   ]);
 }

@@ -12,7 +12,7 @@ export default {
     {
       [ActionTypes.GET_CONFIGURATION_SUCCESS]: (state, action) =>
         immutable(state, {
-          configuration: { $set: action.configuration.data.data },
+          configuration: { $set: action.configuration },
         }),
     },
     configurationState,
