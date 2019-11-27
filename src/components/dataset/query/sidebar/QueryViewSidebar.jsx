@@ -22,7 +22,6 @@ import { Box } from '@material-ui/core';
 import QueryViewSidebarItem from './QueryViewSidebarItem';
 import QuerySidebarPanel from './QuerySidebarPanel';
 import { applyFilters } from '../../../../actions';
-import { inherits } from 'util';
 
 const drawerWidth = 400;
 
@@ -93,7 +92,6 @@ const styles = theme => ({
   filterPanel: {
     paddingLeft: '10px',
     paddingRight: '10px',
-    paddingBottom: '10px',
   },
   sidebarTitle: {
     flexDirection: 'column',
@@ -105,14 +103,6 @@ const styles = theme => ({
   },
   panelTopBorder: {
     borderTop: `1px solid ${theme.palette.divider}`,
-  },
-  stickyButton: {
-    position: '-webkit-sticky',
-    // eslint-disable-next-line no-dupe-keys
-    position: 'fixed',
-    bottom: '0',
-    width: 'available',
-    margin: theme.spacing(1),
   },
 });
 
@@ -227,6 +217,9 @@ export class QueryViewSidebar extends React.PureComponent {
           <div className={clsx(classes.filterPanel, { [classes.hide]: !open })}>
             <QuerySidebarPanel />
           </div>
+          <Button className={!open ? classes.hide : ''} onClick={this.handleFilters}>
+            Apply Filters
+          </Button>
           <Divider />
           {table &&
             table.name &&
@@ -255,13 +248,6 @@ export class QueryViewSidebar extends React.PureComponent {
                 </ExpansionPanelDetails>
               </ExpansionPanel>
             ))}
-          <Button
-            variant="contained"
-            className={clsx(classes.stickyButton, { [classes.hide]: !open })}
-            onClick={this.handleFilters}
-          >
-            Apply Filters
-          </Button>
         </Drawer>
       </div>
     );
