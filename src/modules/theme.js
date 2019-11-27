@@ -63,5 +63,17 @@ export default createMuiTheme({
         },
       },
     },
+    MuiExpansionPanelSummary: {
+      root: {
+        '&$expanded': {
+          minHeight: 'inherit',
+        },
+      },
+      content: {
+        '&$expanded': {
+          margin: 0,
+        },
+      },
+    },
   },
 });
