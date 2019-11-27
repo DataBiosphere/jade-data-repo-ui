@@ -110,9 +110,15 @@ const styles = theme => ({
     position: 'fixed',
     bottom: '0',
     margin: theme.spacing(1),
+    width: drawerWidth / 2 - theme.spacing(2),
+    backgroundColor: theme.palette.primary.main,
+    '&:hover': {
+      backgroundColor: theme.palette.primary.hover,
+    },
   },
   snapshotButton: {
     right: '0',
+    backgroundColor: `${theme.palette.primary.dark} !important`,
   },
 });
 
