@@ -112,11 +112,6 @@ const styles = theme => ({
     margin: theme.spacing(1),
   },
   snapshotButton: {
-    position: '-webkit-sticky',
-    // eslint-disable-next-line no-dupe-keys
-    position: 'fixed',
-    bottom: '0',
-    margin: theme.spacing(1),
     right: '0',
   },
 });
@@ -273,7 +268,9 @@ export class QueryViewSidebar extends React.PureComponent {
           <Button
             variant="contained"
             disabled
-            className={clsx(classes.snapshotButton, { [classes.hide]: !open })}
+            className={clsx(classes.stickyButton, classes.snapshotButton, {
+              [classes.hide]: !open,
+            })}
           >
             Create Snapshot
           </Button>
