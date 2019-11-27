@@ -22,7 +22,6 @@ import { Box } from '@material-ui/core';
 import QueryViewSidebarItem from './QueryViewSidebarItem';
 import QuerySidebarPanel from './QuerySidebarPanel';
 import { applyFilters } from '../../../../actions';
-import { inherits } from 'util';
 
 const drawerWidth = 400;
 
@@ -111,8 +110,15 @@ const styles = theme => ({
     // eslint-disable-next-line no-dupe-keys
     position: 'fixed',
     bottom: '0',
-    width: 'available',
     margin: theme.spacing(1),
+  },
+  snapshotButton: {
+    position: '-webkit-sticky',
+    // eslint-disable-next-line no-dupe-keys
+    position: 'fixed',
+    bottom: '0',
+    margin: theme.spacing(1),
+    right: '0',
   },
 });
 
@@ -255,12 +261,21 @@ export class QueryViewSidebar extends React.PureComponent {
                 </ExpansionPanelDetails>
               </ExpansionPanel>
             ))}
+
           <Button
             variant="contained"
             className={clsx(classes.stickyButton, { [classes.hide]: !open })}
             onClick={this.handleFilters}
           >
             Apply Filters
+          </Button>
+
+          <Button
+            variant="contained"
+            disabled
+            className={clsx(classes.snapshotButton, { [classes.hide]: !open })}
+          >
+            Create Snapshot
           </Button>
         </Drawer>
       </div>
