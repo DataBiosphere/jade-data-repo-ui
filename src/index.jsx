@@ -75,11 +75,11 @@ export const app = {
         <Provider store={store}>
           <Helmet
             defer={false}
-            htmlAttributes={{ lang: 'pt-br' }}
+            htmlAttributes={{ lang: 'en-us' }}
             encodeSpecialCharacters={true}
             defaultTitle={'Terra Data Repository' || config.title}
             titleTemplate={`%s | ${config.name}`}
-            titleAttributes={{ itemprop: 'name', lang: 'pt-br' }}
+            titleAttributes={{ itemprop: 'name', lang: 'en-us' }}
           />
           <Router history={history}>
             <ThemeProvider theme={globalTheme}>
