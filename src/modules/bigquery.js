@@ -75,7 +75,7 @@ export default class BigQuery {
   };
 
   significantDigits = amount =>
-    new Intl.NumberFormat('en-US', { maximumSignificantDigits: 4 }).format(amount);
+    new Intl.NumberFormat('en-US', { maximumSignificantDigits: 3 }).format(amount);
 
   calculateColumns = columns => columns.map(column => ({ title: column.name, field: column.name }));
 
