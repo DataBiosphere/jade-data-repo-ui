@@ -85,7 +85,7 @@ export class QueryView extends React.PureComponent {
     return (
       <Fragment>
         <Grid container spacing={0} className={classes.wrapper}>
-          <Grid item md={11}>
+          <Grid item xs={11}>
             <Grid container spacing={0}>
               <Grid item xs={3}>
                 <Typography variant="h5" className={classes.headerArea}>
@@ -107,7 +107,7 @@ export class QueryView extends React.PureComponent {
               </Grid>
             </Grid>
           </Grid>
-          <Grid item md={1}>
+          <Grid item xs={1}>
             <QueryViewSidebar table={table} />
           </Grid>
         </Grid>
