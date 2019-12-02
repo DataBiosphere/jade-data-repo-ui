@@ -6,16 +6,18 @@ import { withStyles } from '@material-ui/core/styles';
 
 import Card from '@material-ui/core/Card';
 import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
+import List from '@material-ui/core/List';
+import ListSubheader from '@material-ui/core/ListSubheader';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
 import HighlightOff from '@material-ui/icons/HighlightOff';
 import { applyFilters } from '../../../../actions';
 
-const styles = theme => ({
-  cardPadding: {
-    padding: theme.spacing(3),
-  },
-  noBullets: {
-    listStyleType: 'none',
+const styles = () => ({
+  listHeader: {
+    paddingTop: '16px',
+    paddingBottom: '4px',
+    lineHeight: 'inherit',
   },
 });
 
@@ -36,7 +38,6 @@ export class QuerySidebarPanel extends React.PureComponent {
   render() {
     const { classes, filterData } = this.props;
     const listFilters = _.keys(filterData).map(filter => {
-      let boundFilter = this.clearFilter.bind(this, filter);
       const data = _.get(filterData, filter);
       let dataString = data;
       if (Array.isArray(data)) {
@@ -47,19 +48,28 @@ export class QuerySidebarPanel extends React.PureComponent {
       }
 
       return (
-        <li key={filter}>
-          <strong>{filter}</strong> : {dataString}
-          <Button onClick={boundFilter}>
+        <ListItem dense={true} key={filter}>
+          <ListItemText>
+            <strong>{filter}:</strong> {dataString}
+          </ListItemText>
+          <Button onClick={this.clearFilter}>
             <HighlightOff />
           </Button>
-        </li>
+        </ListItem>
       );
     });
 
     return (
-      <Card className={classes.cardPadding}>
-        <Typography>Properties</Typography>
-        <ul className={classes.noBullets}>{listFilters}</ul>
+      <Card>
+        <List
+          subheader={
+            <ListSubheader className={classes.listHeader} component="div">
+              Properties
+            </ListSubheader>
+          }
+        >
+          {listFilters}
+        </List>
       </Card>
     );
   }

@@ -39,17 +39,23 @@ export default class BigQuery {
           rawData = response.data;
           query.tokenToUse = rawData.pageToken;
 
-          const columnNames = columns.map(x => x.title);
-
           if (rawData.rows && rawData.rows.length > 0) {
             rawData.rows.forEach(rowData => {
               const row = {};
 
               for (let i = 0; i < rowData.f.length; i++) {
-                const item = rowData.f[i].v;
-                const currColumn = columnNames[i];
+                const currColumn = columns[i];
+                let item = rowData.f[i].v;
 
-                row[currColumn] = item;
+                if (currColumn.datatype === 'integer') {
+                  item = this.commaFormatted(item);
+                }
+
+                if (currColumn.datatype === 'float') {
+                  item = this.significantDigits(item);
+                }
+
+                row[currColumn.name] = item;
               }
 
               data.push(row);
@@ -64,24 +70,14 @@ export default class BigQuery {
         });
     });
 
-  calculateColumns = queryResults => {
-    const columns = [];
-    if (
-      queryResults.rows !== undefined &&
-      queryResults.schema !== undefined &&
-      queryResults.schema.fields !== undefined
-    ) {
-      queryResults.schema.fields.forEach(colData => {
-        const col = {
-          title: colData.name,
-          field: colData.name,
-        };
-
-        columns.push(col);
-      });
-    }
-    return columns;
+  commaFormatted = amount => {
+    return new Intl.NumberFormat('en-US').format(amount);
   };
+
+  significantDigits = amount =>
+    new Intl.NumberFormat('en-US', { maximumSignificantDigits: 3 }).format(amount);
+
+  calculateColumns = columns => columns.map(column => ({ title: column.name, field: column.name }));
 
   calculatePageOptions = (queryResults, maxPageSize) => {
     if (queryResults.totalRows !== undefined) {
@@ -110,7 +106,13 @@ export default class BigQuery {
       const statementClauses = [];
       _.keys(filterMap).forEach(key => {
         if (_.isArray(filterMap[key])) {
-          statementClauses.push(`${key} BETWEEN ${filterMap[key][0]} AND ${filterMap[key][1]}`);
+          if (_.isNumber(filterMap[key][0])) {
+            statementClauses.push(`${key} BETWEEN ${filterMap[key][0]} AND ${filterMap[key][1]}`);
+          } else {
+            statementClauses.push(
+              `${key} = '${filterMap[key][0]}' OR ${key} = '${filterMap[key][1]}'`,
+            );
+          }
         } else if (_.isObject(filterMap[key])) {
           const checkboxes = _.keys(filterMap[key]);
           if (checkboxes.length > 0) {
@@ -145,9 +147,7 @@ export default class BigQuery {
           },
         },
       )
-      .then(response => {
-        return response.data.rows[0].f;
-      });
+      .then(response => response.data.rows[0].f);
   };
 
   getColumnDistinct = (columnName, dataset, tableName, token, filterStatement) => {
@@ -165,8 +165,6 @@ export default class BigQuery {
           },
         },
       )
-      .then(response => {
-        return response.data.rows;
-      });
+      .then(response => response.data.rows);
   };
 }

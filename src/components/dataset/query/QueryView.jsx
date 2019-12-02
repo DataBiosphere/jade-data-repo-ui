@@ -5,6 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 
 import { applyFilters, runQuery } from 'actions/index';
+import { Typography } from '@material-ui/core';
 import { DB_COLUMNS } from '../../../constants/index';
 
 import QueryViewTable from './QueryViewTable';
@@ -13,14 +14,16 @@ import QueryViewDropdown from './QueryViewDropdown';
 
 const styles = theme => ({
   wrapper: {
-    display: 'flex',
-    justifyContent: 'center',
+    paddingTop: theme.spacing(0),
     padding: theme.spacing(4),
-    margin: theme.spacing(4),
   },
   scrollTable: {
-    overflowY: 'scroll',
-    height: '-webkit-fill-available',
+    overflowY: 'auto',
+    height: '100%',
+  },
+  headerArea: {
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
   },
 });
 
@@ -81,17 +84,25 @@ export class QueryView extends React.PureComponent {
 
     return (
       <Fragment>
-        <Grid container spacing={0}>
+        <Grid container spacing={0} className={classes.wrapper}>
           <Grid item md={11}>
             <Grid container spacing={0}>
               <Grid item xs={3}>
+                <Typography variant="h5" className={classes.headerArea}>
+                  {dataset.name}
+                </Typography>
                 <QueryViewDropdown options={names} onSelectedItem={this.handleChange} />
               </Grid>
             </Grid>
             <Grid container spacing={0}>
               <Grid item xs={12}>
                 <div className={classes.scrollTable}>
-                  <QueryViewTable queryResults={queryResults} title={selected} token={token} />
+                  <QueryViewTable
+                    queryResults={queryResults}
+                    title={selected}
+                    token={token}
+                    table={table}
+                  />
                 </div>
               </Grid>
             </Grid>

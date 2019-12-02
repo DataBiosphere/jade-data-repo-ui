@@ -15,12 +15,12 @@ export class QueryViewSidebarItem extends React.PureComponent {
     token: PropTypes.string,
   };
 
-  handleChange = event => {
+  handleChange = value => {
     const { column, handleChange } = this.props;
 
     const nameAndValue = {
       name: column.name,
-      value: event.target.value,
+      value,
     };
     handleChange(nameAndValue);
   };

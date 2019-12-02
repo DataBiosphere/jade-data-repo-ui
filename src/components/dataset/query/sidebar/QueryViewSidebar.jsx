@@ -108,6 +108,22 @@ const styles = theme => ({
   panelTopBorder: {
     borderTop: `1px solid ${theme.palette.divider}`,
   },
+  stickyButton: {
+    position: '-webkit-sticky',
+    // eslint-disable-next-line no-dupe-keys
+    position: 'fixed',
+    bottom: '0',
+    margin: theme.spacing(1),
+    width: drawerWidth / 2 - theme.spacing(2),
+    backgroundColor: theme.palette.primary.main,
+    '&:hover': {
+      backgroundColor: theme.palette.primary.hover,
+    },
+  },
+  snapshotButton: {
+    right: '0',
+    backgroundColor: `${theme.palette.primary.dark} !important`,
+  },
 });
 
 export class QueryViewSidebar extends React.PureComponent {
@@ -151,7 +167,7 @@ export class QueryViewSidebar extends React.PureComponent {
     const { filterMap } = this.state;
     const clonedMap = _.clone(filterMap);
 
-    if (value.value.length <= 0) {
+    if (value.value == null || value.value.length === 0) {
       delete clonedMap[value.name];
     } else {
       clonedMap[value.name] = value.value;
@@ -252,6 +268,22 @@ export class QueryViewSidebar extends React.PureComponent {
                 </ExpansionPanelDetails>
               </ExpansionPanel>
             ))}
+          <Button
+            variant="contained"
+            className={clsx(classes.stickyButton, { [classes.hide]: !open })}
+            onClick={this.handleFilters}
+          >
+            Apply Filters
+          </Button>
+          <Button
+            variant="contained"
+            disabled
+            className={clsx(classes.stickyButton, classes.snapshotButton, {
+              [classes.hide]: !open,
+            })}
+          >
+            Create Snapshot
+          </Button>
         </Drawer>
       </div>
     );

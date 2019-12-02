@@ -1,54 +1,42 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import _ from 'lodash';
 
-import Input from '@material-ui/core/Input';
+import TextField from '@material-ui/core/TextField';
+import Chip from '@material-ui/core/Chip';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 
 export class FreetextFilter extends React.PureComponent {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      prevPropsFilterData: props.filterData,
-      currValue: '',
-    };
-  }
-
   static propTypes = {
     column: PropTypes.object,
     filterData: PropTypes.object,
     handleChange: PropTypes.func,
+    values: PropTypes.array,
   };
 
-  static getDerivedStateFromProps(props, state) {
-    if (!_.isEqual(props.filterData, state.prevPropsFilterData)) {
-      return {
-        currValue: _.get(props.filterData, `${props.column.name}`, ''),
-        prevPropsFilterData: props.filterData,
-      };
-    }
-    return null;
-  }
-
-  handleChange = event => {
+  onComplete = (event, value) => {
     const { handleChange } = this.props;
-    this.setState({
-      currValue: event.target.value,
-    });
-    handleChange(event);
+    handleChange(value);
   };
+
+  getOptions = values => (values == null ? [] : values.map(a => a.f[0].v));
 
   render() {
-    const { column } = this.props;
-    const { currValue } = this.state;
+    const { column, values } = this.props;
     return (
-      <Input
-        placeholder={column.name}
-        onChange={this.handleChange}
-        inputProps={{
-          'aria-label': 'description',
-        }}
-        value={currValue}
+      <Autocomplete
+        multiple
+        id={`autocomplete-${column.name}`}
+        options={this.getOptions(values)}
+        // this means the user's choice does not have to match the provided options
+        freeSolo={true}
+        style={{ width: '100%' }}
+        renderInput={params => <TextField {...params} fullWidth />}
+        renderTags={(value, getTagProps) =>
+          value.map((option, index) => (
+            <Chip key={index} variant="outlined" label={option} {...getTagProps({ index })} />
+          ))
+        }
+        onChange={this.onComplete}
       />
     );
   }

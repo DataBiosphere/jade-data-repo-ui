@@ -40,6 +40,7 @@ export default createMuiTheme({
       contrastText: '#FFFFFF',
       light: '#F1F4F7',
       dark: '#AEB3BA',
+      hover: '#8BB858',
     },
     secondary: {
       main: '#74AE43',
@@ -60,6 +61,18 @@ export default createMuiTheme({
       root: {
         '&$expanded': {
           margin: '0px',
+        },
+      },
+    },
+    MuiExpansionPanelSummary: {
+      root: {
+        '&$expanded': {
+          minHeight: 'inherit',
+        },
+      },
+      content: {
+        '&$expanded': {
+          margin: 0,
         },
       },
     },
