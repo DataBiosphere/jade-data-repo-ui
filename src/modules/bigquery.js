@@ -45,12 +45,14 @@ export default class BigQuery {
 
               for (let i = 0; i < rowData.f.length; i++) {
                 const currColumn = columns[i];
-                let item;
+                let item = rowData.f[i].v;
 
                 if (currColumn.datatype === 'integer') {
-                  item = this.commaFormatted(rowData.f[i].v);
-                } else {
-                  item = rowData.f[i].v;
+                  item = this.commaFormatted(item);
+                }
+
+                if (currColumn.datatype === 'float') {
+                  item = this.significantDigits(item);
                 }
 
                 row[currColumn.name] = item;
@@ -71,6 +73,9 @@ export default class BigQuery {
   commaFormatted = amount => {
     return new Intl.NumberFormat('en-US').format(amount);
   };
+
+  significantDigits = amount =>
+    new Intl.NumberFormat('en-US', { maximumSignificantDigits: 3 }).format(amount);
 
   calculateColumns = columns => columns.map(column => ({ title: column.name, field: column.name }));
 
