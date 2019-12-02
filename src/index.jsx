@@ -43,15 +43,17 @@ function bootstrap() {
         });
         getUser({ clientId: configData.clientId })
           .then(user => {
-            store.dispatch(
-              logIn(
-                user.name,
-                user.imageUrl,
-                user.email,
-                user.accessToken,
-                user.accessTokenExpiration,
-              ),
-            );
+            if (user != null) {
+              store.dispatch(
+                logIn(
+                  user.name,
+                  user.imageUrl,
+                  user.email,
+                  user.accessToken,
+                  user.accessTokenExpiration,
+                ),
+              );
+            }
             resolve();
           })
           .catch(reject);

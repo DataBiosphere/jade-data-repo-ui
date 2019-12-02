@@ -24,16 +24,19 @@ export function getUser(options) {
     init(options)
       .then(GoogleAuth => {
         const user = GoogleAuth.currentUser.get();
-        const profile = user.getBasicProfile();
-        const authResponse = user.getAuthResponse(true);
-        resolve({
-          name: profile.getName(),
-          imageUrl: profile.getImageUrl(),
-          email: profile.getEmail(),
-          isSignedIn: user.isSignedIn(),
-          accessToken: authResponse.access_token,
-          accessTokenExpiration: authResponse.expires_at,
-        });
+        if (user.isSignedIn()) {
+          const profile = user.getBasicProfile();
+          const authResponse = user.getAuthResponse(true);
+          resolve({
+            name: profile.getName(),
+            imageUrl: profile.getImageUrl(),
+            email: profile.getEmail(),
+            isSignedIn: user.isSignedIn(),
+            accessToken: authResponse.access_token,
+            accessTokenExpiration: authResponse.expires_at,
+          });
+        }
+        resolve(null);
       })
       .catch(reject);
   });

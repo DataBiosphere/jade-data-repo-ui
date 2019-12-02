@@ -149,7 +149,7 @@ export class WelcomeView extends React.PureComponent {
 
 function mapStateToProps(state) {
   return {
-    configuration: state.configuration.configuration,
+    configuration: state.configuration,
   };
 }
 
