@@ -32,9 +32,8 @@ export const app = {
   fetchRetries: 0,
 
   run() {
-    // waiting for login causes the UI to flash and I *think* could also be breaking deep links
     // We need to do this (in order) before bothering to render:
-    // 1. grab the configuration
+    // 1. grab the configuration + load Google's auth2 library (in parallel)
     // 2. get the client id out of the config and use it to logIn
     // 3. put the config and user details into the store
     // 4. render
