@@ -18,27 +18,40 @@ function init(options) {
   });
 }
 
+function describeUser(user) {
+  const profile = user.getBasicProfile();
+  const authResponse = user.getAuthResponse(true);
+  return {
+    name: profile.getName(),
+    imageUrl: profile.getImageUrl(),
+    email: profile.getEmail(),
+    isSignedIn: user.isSignedIn(),
+    accessToken: authResponse.access_token,
+    accessTokenExpiration: authResponse.expires_at,
+  };
+}
+
 // return a user object that is not tied to the Google API
 export function getUser(options) {
   return new Promise((resolve, reject) => {
     init(options)
       .then(GoogleAuth => {
         const user = GoogleAuth.currentUser.get();
-        if (user.isSignedIn()) {
-          const profile = user.getBasicProfile();
-          const authResponse = user.getAuthResponse(true);
-          resolve({
-            name: profile.getName(),
-            imageUrl: profile.getImageUrl(),
-            email: profile.getEmail(),
-            isSignedIn: user.isSignedIn(),
-            accessToken: authResponse.access_token,
-            accessTokenExpiration: authResponse.expires_at,
-          });
-        }
-        resolve(null);
+        resolve(user.isSignedIn() ? describeUser(user) : null);
       })
       .catch(reject);
+  });
+}
+
+export function renderLoginButton(options) {
+  return new Promise((resolve, reject) => {
+    window.gapi.signin2.render(options.id, {
+      scope: options.scopes.join(' '),
+      theme: 'dark',
+      longtitle: true,
+      onsuccess: user => resolve(describeUser(user)),
+      onfailure: reject,
+    });
   });
 }
 
