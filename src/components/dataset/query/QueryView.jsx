@@ -14,17 +14,15 @@ import QueryViewDropdown from './QueryViewDropdown';
 
 const styles = theme => ({
   wrapper: {
-    display: 'flex',
-    justifyContent: 'center',
-    paddingTop: theme.spacing(1),
+    paddingTop: theme.spacing(0),
     padding: theme.spacing(4),
-    margin: theme.spacing(4),
   },
   scrollTable: {
-    overflowY: 'scroll',
-    height: '-webkit-fill-available',
+    overflowY: 'auto',
+    height: '100%',
   },
   headerArea: {
+    paddingTop: theme.spacing(1),
     paddingBottom: theme.spacing(1),
   },
 });
@@ -86,20 +84,17 @@ export class QueryView extends React.PureComponent {
 
     return (
       <Fragment>
-        <QueryViewSidebar table={table} />
-        <div className={classes.wrapper}>
-          <Grid container spacing={2} direction="column">
-            <div>
-              <Grid container spacing={2} className={classes.headerArea}>
-                <Grid item xs={3}>
-                  <Typography variant="h5" className={classes.headerArea}>
-                    {dataset.name}
-                  </Typography>
-                  <QueryViewDropdown options={names} onSelectedItem={this.handleChange} />
-                </Grid>
+        <Grid container spacing={0} className={classes.wrapper}>
+          <Grid item xs={11}>
+            <Grid container spacing={0}>
+              <Grid item xs={3}>
+                <Typography variant="h5" className={classes.headerArea}>
+                  {dataset.name}
+                </Typography>
+                <QueryViewDropdown options={names} onSelectedItem={this.handleChange} />
               </Grid>
-            </div>
-            <div>
+            </Grid>
+            <Grid container spacing={0}>
               <Grid item xs={12}>
                 <div className={classes.scrollTable}>
                   <QueryViewTable
@@ -110,9 +105,12 @@ export class QueryView extends React.PureComponent {
                   />
                 </div>
               </Grid>
-            </div>
+            </Grid>
           </Grid>
-        </div>
+          <Grid item xs={1}>
+            <QueryViewSidebar table={table} />
+          </Grid>
+        </Grid>
       </Fragment>
     );
   }
