@@ -14,6 +14,7 @@ import Menu from '@material-ui/core/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import Avatar from '@material-ui/core/Avatar';
 
+import { logout } from 'modules/auth';
 import Home from 'routes/Home';
 import Private from 'routes/Private';
 import NotFound from 'routes/NotFound';
@@ -155,7 +156,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export function App(props) {
-  const { user, alerts, dispatch } = props;
+  const { user, alerts, dispatch, configuration } = props;
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -209,8 +210,10 @@ export function App(props) {
                   <MenuItem
                     className={classes.signOutText}
                     onClick={() => {
-                      dispatch(logOut());
-                      handleClose();
+                      logout({ clientId: configuration.clientId }).then(() => {
+                        dispatch(logOut());
+                        handleClose();
+                      });
                     }}
                   >
                     <SignOutSVG className={classes.signOut} />
@@ -247,6 +250,7 @@ export function App(props) {
 
 App.propTypes = {
   alerts: PropTypes.arrayOf(PropTypes.object).isRequired,
+  configuration: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
   user: PropTypes.object.isRequired,
 };
@@ -255,6 +259,7 @@ function mapStateToProps(state) {
   return {
     user: state.user,
     alerts: state.app.alerts,
+    configuration: state.configuration,
   };
 }
 

@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { GoogleLogin } from 'react-google-login';
+import { renderLoginButton } from 'modules/auth';
 import { withStyles } from '@material-ui/core/styles';
 
 import Hero from 'assets/media/images/hero.png';
-import { logOut, logIn, getConfiguration } from 'actions/index';
+import { logOut, logIn } from 'actions/index';
 
 const styles = theme => ({
   container: {
@@ -59,50 +59,32 @@ const styles = theme => ({
 export class WelcomeView extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    configuration: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired,
   };
 
   componentDidMount() {
     const { dispatch } = this.props;
-    dispatch(getConfiguration());
+    const loginOptions = {
+      id: 'signin-button-container',
+      scopes: ['openid', 'profile', 'email', 'https://www.googleapis.com/auth/bigquery'],
+    };
+    renderLoginButton(loginOptions)
+      .then(user =>
+        dispatch(
+          logIn(user.name, user.imageUrl, user.email, user.accessToken, user.accessTokenExpiration),
+        ),
+      )
+      .catch(() => dispatch(logOut()));
   }
 
   render() {
-    const { classes, configuration, dispatch } = this.props;
-
-    const onSignInFailure = () => {
-      dispatch(logOut());
-    };
-
-    const onSignInSuccess = user => {
-      const name = user.profileObj && user.profileObj.name;
-      const image = user.profileObj && user.profileObj.imageUrl;
-      const email = user.profileObj && user.profileObj.email;
-      const token = user.tokenObj && user.tokenObj.access_token;
-      const tokenExpiration = user.tokenObj && user.tokenObj.expires_at; // TODO how can we refresh this when it expires
-      dispatch(logIn(name, image, email, token, tokenExpiration));
-    };
+    const { classes } = this.props;
 
     return (
       <div className={classes.container}>
         <div className={classes.mainContent}>
           <div className={classes.title}>Welcome to the Terra Data Repository</div>
-          <div>
-            {configuration.clientId && (
-              <GoogleLogin // TODO this component may be unuseable once we require a terra registration
-                clientId={configuration.clientId}
-                buttonText="Sign in with Google"
-                onSuccess={onSignInSuccess}
-                onFailure={onSignInFailure}
-                isSignedIn
-                cookiePolicy="single_host_origin"
-                prompt="select_account"
-                scope="openid profile email https://www.googleapis.com/auth/bigquery"
-                theme="dark"
-              />
-            )}
-          </div>
+          <div id="signin-button-container" />
           <div className={classes.newUser}>New User?</div>
           <div className={classes.header}>Terra Data Repository requires a Google account.</div>
           <p>
@@ -152,10 +134,4 @@ export class WelcomeView extends React.PureComponent {
   }
 }
 
-function mapStateToProps(state) {
-  return {
-    configuration: state.configuration.configuration,
-  };
-}
-
-export default connect(mapStateToProps)(withStyles(styles)(WelcomeView));
+export default connect()(withStyles(styles)(WelcomeView));
