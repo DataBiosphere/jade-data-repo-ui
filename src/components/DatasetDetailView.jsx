@@ -55,6 +55,7 @@ export class DatasetDetailView extends React.PureComponent {
   componentDidMount() {
     const { dispatch, match } = this.props;
     const datasetId = match.params.uuid;
+    // TODO: is this useful to have these separated?
     dispatch(getDatasetById(datasetId));
     dispatch(getDatasetPolicy(datasetId));
   }
