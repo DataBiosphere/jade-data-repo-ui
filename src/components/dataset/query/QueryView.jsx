@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 
-import { applyFilters, runQuery } from 'actions/index';
+import { applyFilters, runQuery, getDatasetById } from 'actions/index';
 import { Typography } from '@material-ui/core';
 import { DB_COLUMNS } from '../../../constants/index';
 
@@ -45,14 +45,26 @@ export class QueryView extends React.PureComponent {
     dataset: PropTypes.object,
     dispatch: PropTypes.func.isRequired,
     filterStatement: PropTypes.string,
+    match: PropTypes.object,
     queryResults: PropTypes.object,
     token: PropTypes.string,
   };
 
+  componentDidMount() {
+    const { dispatch, match, dataset } = this.props;
+    const datasetId = match.params.uuid;
+    if (dataset == null || dataset.id !== datasetId) {
+      dispatch(getDatasetById(datasetId));
+    }
+  }
+
   componentDidUpdate(prevProps, prevState) {
     const { dataset, dispatch, filterStatement } = this.props;
     const { selected } = this.state;
-    if (prevProps.filterStatement !== filterStatement || prevState.selected !== selected) {
+    if (
+      this.hasDataset() &&
+      (prevProps.filterStatement !== filterStatement || prevState.selected !== selected)
+    ) {
       dispatch(
         runQuery(
           dataset.dataProject,
@@ -66,10 +78,15 @@ export class QueryView extends React.PureComponent {
     }
   }
 
+  hasDataset() {
+    const { dataset } = this.props;
+    return dataset && dataset.schema;
+  }
+
   handleChange = value => {
     const { dataset, dispatch } = this.props;
-
     const table = dataset.schema.tables.find(t => t.name === value);
+
     this.setState({
       selected: value,
       table,
@@ -77,7 +94,7 @@ export class QueryView extends React.PureComponent {
     dispatch(applyFilters({}));
   };
 
-  render() {
+  realRender() {
     const { classes, dataset, queryResults, token } = this.props;
     const { table, selected } = this.state;
     const names = dataset.schema.tables.map(t => t.name);
@@ -113,6 +130,13 @@ export class QueryView extends React.PureComponent {
         </Grid>
       </Fragment>
     );
+  }
+
+  render() {
+    if (this.hasDataset()) {
+      return this.realRender();
+    }
+    return <div>Loading</div>;
   }
 }
 
