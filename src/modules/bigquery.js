@@ -70,6 +70,38 @@ export default class BigQuery {
         });
     });
 
+  createData = (columns, row) => {
+    let i = 0;
+    let res = {};
+    for (i = 0; i < columns.length; i++) {
+      const column = _.get(columns[i], 'id');
+      const value = row[i];
+      res[column] = value;
+    }
+
+    return res;
+  };
+
+  transformColumns = queryResults => {
+    return _.get(queryResults, 'schema.fields', []).map(field => {
+      return { id: field.name, label: field.name, minWidth: 100 };
+    });
+  };
+
+  transformRows = (queryResults, columns) => {
+    let rows = _.get(queryResults, 'rows', []).map(row => {
+      return _.get(row, 'f', []).map(value => {
+        return _.get(value, 'v', '');
+      });
+    });
+
+    rows = rows.map(row => {
+      return this.createData(columns, row);
+    });
+
+    return rows;
+  };
+
   commaFormatted = amount => {
     return new Intl.NumberFormat('en-US').format(amount);
   };

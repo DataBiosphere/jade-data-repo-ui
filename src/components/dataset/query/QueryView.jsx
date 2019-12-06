@@ -11,6 +11,7 @@ import { DB_COLUMNS } from '../../../constants/index';
 import QueryViewTable from './QueryViewTable';
 import QueryViewSidebar from './sidebar/QueryViewSidebar';
 import QueryViewDropdown from './QueryViewDropdown';
+import MichaelTable from '../../table/MichaelTable';
 
 const styles = theme => ({
   wrapper: {
@@ -82,6 +83,8 @@ export class QueryView extends React.PureComponent {
     const { table, selected } = this.state;
     const names = dataset.schema.tables.map(t => t.name);
 
+    console.log(queryResults);
+
     return (
       <Fragment>
         <Grid container spacing={0} className={classes.wrapper}>
@@ -97,12 +100,13 @@ export class QueryView extends React.PureComponent {
             <Grid container spacing={0}>
               <Grid item xs={12}>
                 <div className={classes.scrollTable}>
-                  <QueryViewTable
+                  {/* <QueryViewTable
                     queryResults={queryResults}
                     title={selected}
                     token={token}
                     table={table}
-                  />
+                  /> */}
+                  <MichaelTable queryResults={queryResults} />
                 </div>
               </Grid>
             </Grid>

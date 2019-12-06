@@ -415,6 +415,27 @@ export function* runQuery({ payload }) {
   }
 }
 
+export function* pageQuery({ payload }) {
+  try {
+    const url = `https://bigquery.googleapis.com/bigquery/v2/projects/${payload.projectId}/queries/${payload.jobId}`;
+    const params = {
+      maxResults: payload.pageSize,
+      pageToken: payload.pageToken,
+    };
+    const response = yield call(authGet, url, params);
+
+    yield put({
+      type: ActionTypes.PAGE_QUERY_SUCCESS,
+      results: response,
+    });
+  } catch (err) {
+    yield put({
+      type: ActionTypes.EXCEPTION,
+      payload: err,
+    });
+  }
+}
+
 /**
  * App Sagas
  */
@@ -433,5 +454,6 @@ export default function* root() {
     takeLatest(ActionTypes.REMOVE_CUSTODIAN_FROM_DATASET, removeCustodianFromDataset),
     takeLatest(ActionTypes.GET_DATASET_TABLE_PREVIEW, getDatasetTablePreview),
     takeLatest(ActionTypes.RUN_QUERY, runQuery),
+    takeLatest(ActionTypes.PAGE_QUERY, pageQuery),
   ]);
 }
