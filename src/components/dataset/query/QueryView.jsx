@@ -8,7 +8,9 @@ import { applyFilters, runQuery, getDatasetById } from 'actions/index';
 import { Typography } from '@material-ui/core';
 import { DB_COLUMNS } from '../../../constants/index';
 
-import QueryViewSidebar from './sidebar/QueryViewSidebar';
+import QueryViewTable from './QueryViewTable';
+// import QueryViewSidebar from './sidebar/QueryViewSidebar';
+import SidebarDrawer from './sidebar/SidebarDrawer';
 import QueryViewDropdown from './QueryViewDropdown';
 import JadeTable from '../../table/JadeTable';
 
@@ -105,27 +107,28 @@ export class QueryView extends React.PureComponent {
     return (
       <Fragment>
         <Grid container spacing={0} className={classes.wrapper}>
-          <Grid item xs={11}>
-            <Grid container spacing={0}>
-              <Grid item xs={3}>
-                <Typography variant="h5" className={classes.headerArea}>
-                  {dataset.name}
-                </Typography>
-                <QueryViewDropdown options={names} onSelectedItem={this.handleChange} />
-              </Grid>
-            </Grid>
-            <Grid container spacing={0}>
-              <Grid item xs={12}>
-                <div className={classes.scrollTable}>
-                  <JadeTable queryResults={queryResults} />
-                </div>
-              </Grid>
+          <Grid container spacing={0}>
+            <Grid item xs={3}>
+              <Typography variant="h5" className={classes.headerArea}>
+                {dataset.name}
+              </Typography>
+              <QueryViewDropdown options={names} onSelectedItem={this.handleChange} />
             </Grid>
           </Grid>
-          <Grid item xs={1}>
-            <QueryViewSidebar table={table} />
+          <Grid container spacing={0}>
+            <Grid item xs={12}>
+              <div className={classes.scrollTable}>
+                <QueryViewTable
+                  queryResults={queryResults}
+                  title={selected}
+                  token={token}
+                  table={table}
+                />
+              </div>
+            </Grid>
           </Grid>
         </Grid>
+        <SidebarDrawer />
       </Fragment>
     );
   }

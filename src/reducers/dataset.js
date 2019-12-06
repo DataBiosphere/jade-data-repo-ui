@@ -18,6 +18,10 @@ export default {
           datasets: { $set: action.datasets.data.data.items },
           datasetsCount: { $set: action.datasets.data.data.total },
         }),
+      [ActionTypes.GET_DATASET_BY_ID]: state =>
+        immutable(state, {
+          dataset: {},
+        }),
       [ActionTypes.GET_DATASET_BY_ID_SUCCESS]: (state, action) =>
         immutable(state, {
           dataset: { $set: action.dataset.data.data },

@@ -39,7 +39,7 @@ export default createMuiTheme({
       main: '#81AB52',
       contrastText: '#FFFFFF',
       light: '#F1F4F7',
-      dark: '#AEB3BA',
+      dark: '#727272',
       hover: '#8BB858',
     },
     secondary: {
