@@ -26,11 +26,12 @@ export function* checkToken() {
   return moment(moment()).isSameOrBefore(parseInt(tokenExpiration, 10));
 }
 
-export function* authGet(url) {
+export function* authGet(url, params = {}) {
   if (yield call(checkToken)) {
     // check expiration time against now
     const token = yield select(getToken);
     return yield call(axios.get, url, {
+      params,
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
     });
   }

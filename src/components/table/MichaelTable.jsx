@@ -44,10 +44,19 @@ export class MichaelTable extends React.PureComponent {
 
   handleChangePage = (event, newPage) => {
     const { dispatch, queryResults } = this.props;
-    const { rowsPerPage } = this.state;
+    const { page, rowsPerPage, pageToTokenMap } = this.state;
+
+    if (page === 0) {
+      pageToTokenMap[0] = undefined;
+    }
+
+    if (newPage > page) {
+      pageToTokenMap[newPage] = queryResults.pageToken;
+    }
+
     dispatch(
       pageQuery(
-        queryResults.pageToken,
+        pageToTokenMap[newPage],
         queryResults.jobReference.projectId,
         queryResults.jobReference.jobId,
         rowsPerPage,
@@ -55,6 +64,7 @@ export class MichaelTable extends React.PureComponent {
     );
     this.setState({
       page: newPage,
+      pageToTokenMap,
     });
   };
 
@@ -63,18 +73,6 @@ export class MichaelTable extends React.PureComponent {
       rowsPerPage: +event.target.value,
       page: 0,
     });
-  };
-
-  createData = (columns, row) => {
-    let i = 0;
-    let res = {};
-    for (i = 0; i < columns.length; i++) {
-      const column = _.get(columns[i], 'id');
-      const value = row[i];
-      res[column] = value;
-    }
-
-    return res;
   };
 
   render() {
@@ -100,7 +98,7 @@ export class MichaelTable extends React.PureComponent {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(row => {
+                {rows.map(row => {
                   return (
                     <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
                       {columns.map(column => {
