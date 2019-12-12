@@ -29,6 +29,19 @@ export default {
           rows: { $set: rows },
         });
       },
+      [ActionTypes.PAGE_QUERY_SUCCESS]: (state, action) => {
+        const bigquery = new BigQuery();
+        const queryResults = action.results.data;
+
+        const columns = bigquery.transformColumns(queryResults);
+        const rows = bigquery.transformRows(queryResults, columns);
+
+        return immutable(state, {
+          queryResults: { $set: queryResults },
+          columns: { $set: columns },
+          rows: { $set: rows },
+        });
+      },
       [ActionTypes.RUN_QUERY]: state =>
         immutable(state, {
           queryResults: { $set: {} },

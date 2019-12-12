@@ -11,13 +11,14 @@ import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { pageQuery } from 'actions/index';
 
 const styles = theme => ({
   root: {
     width: '100%',
   },
   tableWrapper: {
-    // maxHeight: 440,
+    maxHeight: '40em',
     overflow: 'auto',
   },
 });
@@ -29,17 +30,29 @@ export class MichaelTable extends React.PureComponent {
     this.state = {
       page: 0,
       rowsPerPage: 100,
+      pageToTokenMap: {},
     };
   }
 
   static propTypes = {
     classes: PropTypes.object,
     columns: PropTypes.array,
+    dispatch: PropTypes.func.isRequired,
     queryResults: PropTypes.object,
     rows: PropTypes.array,
   };
 
   handleChangePage = (event, newPage) => {
+    const { dispatch, queryResults } = this.props;
+    const { rowsPerPage } = this.state;
+    dispatch(
+      pageQuery(
+        queryResults.pageToken,
+        queryResults.jobReference.projectId,
+        queryResults.jobReference.jobId,
+        rowsPerPage,
+      ),
+    );
     this.setState({
       page: newPage,
     });
