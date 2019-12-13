@@ -7,11 +7,11 @@ import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { pageQuery } from 'actions/index';
+import { MichaelTableHead } from './MichaelTableHead';
 
 const styles = theme => ({
   root: {
@@ -31,6 +31,8 @@ export class MichaelTable extends React.PureComponent {
       page: 0,
       rowsPerPage: 100,
       pageToTokenMap: {},
+      orderBy: '',
+      order: '',
     };
   }
 
@@ -75,28 +77,45 @@ export class MichaelTable extends React.PureComponent {
     });
   };
 
+  createSortHandler = property => {
+    const { order, orderBy } = this.state;
+    let newOrder = '';
+    let newOrderBy = property;
+
+    if (orderBy === property) {
+      if (order === '') {
+        newOrder = 'asc';
+      }
+      if (order === 'asc') {
+        newOrder = 'desc';
+      }
+      if (order === 'desc') {
+        newOrder = '';
+        newOrderBy = '';
+      }
+    }
+
+    this.setState({
+      order: newOrder,
+      orderBy: newOrderBy,
+    });
+  };
+
   render() {
     const { classes, queryResults, columns, rows } = this.props;
-    const { page, rowsPerPage } = this.state;
+    const { page, rowsPerPage, orderBy, order } = this.state;
 
     return (
       <Paper className={classes.root}>
         <div className={classes.tableWrapper}>
           {rows && columns && (
             <Table stickyHeader aria-label="sticky table">
-              <TableHead>
-                <TableRow>
-                  {columns.map(column => (
-                    <TableCell
-                      key={column.id}
-                      align={column.align}
-                      style={{ minWidth: column.minWidth }}
-                    >
-                      {column.label}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              </TableHead>
+              <MichaelTableHead
+                columns={columns}
+                orderBy={orderBy}
+                order={order}
+                createSortHandler={this.createSortHandler}
+              />
               <TableBody>
                 {rows.map(row => {
                   return (
