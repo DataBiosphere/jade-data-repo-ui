@@ -18,7 +18,7 @@ const styles = theme => ({
     width: '100%',
   },
   tableWrapper: {
-    maxHeight: '40em',
+    maxHeight: 'calc(100vh - 300px)',
     overflow: 'auto',
   },
 });
