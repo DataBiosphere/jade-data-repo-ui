@@ -145,7 +145,7 @@ export class JadeTable extends React.PureComponent {
         <TablePagination
           rowsPerPageOptions={[100]}
           component="div"
-          count={queryResults.totalRows}
+          count={parseInt(queryResults.totalRows, 10) || 0}
           rowsPerPage={rowsPerPage}
           page={page}
           onChangePage={this.handleChangePage}

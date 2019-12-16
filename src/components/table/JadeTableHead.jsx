@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { connect } from 'react-redux';
 
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
@@ -18,13 +17,13 @@ export class JadeTableHead extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object,
     columns: PropTypes.array,
-    orderBy: PropTypes.string,
-    order: PropTypes.string,
     createSortHandler: PropTypes.func,
+    order: PropTypes.string,
+    orderBy: PropTypes.string,
   };
 
   render() {
-    const { classes, columns, order, orderBy, createSortHandler } = this.props;
+    const { columns, order, orderBy, createSortHandler } = this.props;
 
     return (
       <TableHead>
@@ -40,7 +39,7 @@ export class JadeTableHead extends React.PureComponent {
                 >
                   <TableSortLabel
                     active={orderBy === column.id}
-                    direction={order}
+                    direction={order !== '' ? order : 'desc'}
                     onClick={() => createSortHandler(column.id)}
                   >
                     {column.label}

@@ -6,11 +6,10 @@ export default class BigQuery {
     this.pageTokenMap = {};
   }
 
-  transformColumns = queryResults => {
-    return _.get(queryResults, 'schema.fields', []).map(field => {
+  transformColumns = queryResults =>
+    _.get(queryResults, 'schema.fields', []).map(field => {
       return { id: field.name, label: field.name, minWidth: 100, type: field.type };
     });
-  };
 
   transformRows = (queryResults, columns) => {
     let rows = _.get(queryResults, 'rows', []).map(row => {
@@ -19,13 +18,7 @@ export default class BigQuery {
       });
     });
 
-    rows = rows.map(row => {
-      return this.createData(columns, row);
-    });
-
-    console.log(rows);
-
-    return rows;
+    return rows.map(row => this.createData(columns, row));
   };
 
   createData = (columns, row) => {
@@ -56,9 +49,7 @@ export default class BigQuery {
     return res;
   };
 
-  commaFormatted = amount => {
-    return new Intl.NumberFormat('en-US').format(amount);
-  };
+  commaFormatted = amount => new Intl.NumberFormat('en-US').format(amount);
 
   significantDigits = amount =>
     new Intl.NumberFormat('en-US', { maximumSignificantDigits: 3 }).format(amount);
