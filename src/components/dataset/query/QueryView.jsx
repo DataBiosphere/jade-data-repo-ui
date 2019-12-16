@@ -10,7 +10,7 @@ import { DB_COLUMNS } from '../../../constants/index';
 
 import QueryViewSidebar from './sidebar/QueryViewSidebar';
 import QueryViewDropdown from './QueryViewDropdown';
-import MichaelTable from '../../table/MichaelTable';
+import JadeTable from '../../table/JadeTable';
 
 const styles = theme => ({
   wrapper: {
@@ -97,7 +97,7 @@ export class QueryView extends React.PureComponent {
             <Grid container spacing={0}>
               <Grid item xs={12}>
                 <div className={classes.scrollTable}>
-                  <MichaelTable queryResults={queryResults} />
+                  <JadeTable queryResults={queryResults} />
                 </div>
               </Grid>
             </Grid>
