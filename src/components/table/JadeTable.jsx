@@ -78,21 +78,19 @@ export class JadeTable extends React.PureComponent {
   };
 
   createSortHandler = property => {
-    const { order, orderBy } = this.state;
+    const { order } = this.state;
     let newOrder = '';
     let newOrderBy = property;
 
-    if (orderBy === property) {
-      if (order === '') {
-        newOrder = 'asc';
-      }
-      if (order === 'asc') {
-        newOrder = 'desc';
-      }
-      if (order === 'desc') {
-        newOrder = '';
-        newOrderBy = '';
-      }
+    if (order === '') {
+      newOrder = 'desc';
+    }
+    if (order === 'asc') {
+      newOrder = '';
+      newOrderBy = '';
+    }
+    if (order === 'desc') {
+      newOrder = 'asc';
     }
 
     this.setState({
