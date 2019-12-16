@@ -6,85 +6,9 @@ export default class BigQuery {
     this.pageTokenMap = {};
   }
 
-  pageData = (query, queryResults, columns, token) =>
-    new Promise(resolve => {
-      let rawData = {};
-      const data = [];
-
-      const { jobId, projectId } = queryResults.jobReference;
-
-      if (query.tokenToUse === undefined && query.page === 0) {
-        this.pageTokenMap[1] = queryResults.pageToken;
-      }
-
-      if (this.pageTokenMap[query.page] === undefined && query.page !== 0) {
-        this.pageTokenMap[query.page] = query.tokenToUse;
-      }
-
-      const url = `https://bigquery.googleapis.com/bigquery/v2/projects/${projectId}/queries/${jobId}`;
-      const params = {
-        maxResults: query.pageSize,
-        pageToken: this.pageTokenMap[query.page],
-      };
-
-      axios
-        .get(url, {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          params,
-        })
-        .then(response => {
-          rawData = response.data;
-          query.tokenToUse = rawData.pageToken;
-
-          if (rawData.rows && rawData.rows.length > 0) {
-            rawData.rows.forEach(rowData => {
-              const row = {};
-
-              for (let i = 0; i < rowData.f.length; i++) {
-                const currColumn = columns[i];
-                let item = rowData.f[i].v;
-
-                if (currColumn.datatype === 'integer') {
-                  item = this.commaFormatted(item);
-                }
-
-                if (currColumn.datatype === 'float') {
-                  item = this.significantDigits(item);
-                }
-
-                row[currColumn.name] = item;
-              }
-
-              data.push(row);
-            });
-          }
-
-          resolve({
-            data,
-            page: query.page,
-            totalCount: parseInt(queryResults.totalRows, 10),
-          });
-        });
-    });
-
-  createData = (columns, row) => {
-    let i = 0;
-    let res = {};
-    for (i = 0; i < columns.length; i++) {
-      const column = _.get(columns[i], 'id');
-      const value = row[i];
-      res[column] = value;
-    }
-
-    return res;
-  };
-
   transformColumns = queryResults => {
     return _.get(queryResults, 'schema.fields', []).map(field => {
-      return { id: field.name, label: field.name, minWidth: 100 };
+      return { id: field.name, label: field.name, minWidth: 100, type: field.type };
     });
   };
 
@@ -99,7 +23,37 @@ export default class BigQuery {
       return this.createData(columns, row);
     });
 
+    console.log(rows);
+
     return rows;
+  };
+
+  createData = (columns, row) => {
+    let i = 0;
+    const res = {};
+    for (i = 0; i < columns.length; i++) {
+      const column = columns[i];
+      const columnId = _.get(column, 'id');
+      const columnType = _.get(column, 'type');
+
+      let value = row[i];
+
+      if (columnType === 'INTEGER') {
+        value = this.commaFormatted(value);
+      }
+
+      if (columnType === 'FLOAT') {
+        value = this.significantDigits(value);
+      }
+
+      if (columnId === 'datarepo_row_id') {
+        res.code = value;
+      } else {
+        res[columnId] = value;
+      }
+    }
+
+    return res;
   };
 
   commaFormatted = amount => {
@@ -110,28 +64,6 @@ export default class BigQuery {
     new Intl.NumberFormat('en-US', { maximumSignificantDigits: 3 }).format(amount);
 
   calculateColumns = columns => columns.map(column => ({ title: column.name, field: column.name }));
-
-  calculatePageOptions = (queryResults, maxPageSize) => {
-    if (queryResults.totalRows !== undefined) {
-      const numRows = parseInt(queryResults.totalRows, 10);
-      let pageSize = 0;
-      if (numRows > maxPageSize) {
-        pageSize = maxPageSize;
-      } else {
-        pageSize = numRows;
-      }
-
-      return {
-        pageSize,
-        pageSizeOptions: [pageSize],
-        showFirstLastPageButtons: false,
-        search: false,
-        showTitle: false,
-        toolbar: false,
-      };
-    }
-    return {};
-  };
 
   buildFilterStatement = filterMap => {
     if (!_.isEmpty(filterMap)) {

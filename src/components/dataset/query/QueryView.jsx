@@ -8,7 +8,6 @@ import { applyFilters, runQuery } from 'actions/index';
 import { Typography } from '@material-ui/core';
 import { DB_COLUMNS } from '../../../constants/index';
 
-import QueryViewTable from './QueryViewTable';
 import QueryViewSidebar from './sidebar/QueryViewSidebar';
 import QueryViewDropdown from './QueryViewDropdown';
 import MichaelTable from '../../table/MichaelTable';
@@ -58,7 +57,7 @@ export class QueryView extends React.PureComponent {
         runQuery(
           dataset.dataProject,
           `#standardSQL
-          SELECT * EXCEPT (${DB_COLUMNS.ROW_ID}) FROM \`${dataset.dataProject}.datarepo_${dataset.name}.${selected}\`
+          SELECT * FROM \`${dataset.dataProject}.datarepo_${dataset.name}.${selected}\`
           ${filterStatement}
           LIMIT ${QUERY_LIMIT}`,
           PAGE_SIZE,
