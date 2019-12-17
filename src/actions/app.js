@@ -138,3 +138,10 @@ export const { pageQuery } = createActions({
 export const { applyFilters } = createActions({
   [ActionTypes.APPLY_FILTERS]: filter => filter,
 });
+
+export const { applySort } = createActions({
+  [ActionTypes.APPLY_SORT]: (property, direction) => ({
+    property,
+    direction,
+  }),
+});
