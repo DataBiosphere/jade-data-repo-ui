@@ -6,10 +6,11 @@ import Grid from '@material-ui/core/Grid';
 
 import { applyFilters, runQuery, getDatasetById } from 'actions/index';
 import { Typography } from '@material-ui/core';
+import FilterList from '@material-ui/icons/FilterList';
 import { DB_COLUMNS } from '../../../constants/index';
 
 import QueryViewTable from './QueryViewTable';
-// import QueryViewSidebar from './sidebar/QueryViewSidebar';
+import QueryViewSidebar from './sidebar/QueryViewSidebar';
 import SidebarDrawer from './sidebar/SidebarDrawer';
 import QueryViewDropdown from './QueryViewDropdown';
 import JadeTable from '../../table/JadeTable';
@@ -128,7 +129,15 @@ export class QueryView extends React.PureComponent {
             </Grid>
           </Grid>
         </Grid>
-        <SidebarDrawer />
+        <SidebarDrawer
+          panels={[
+            {
+              icon: FilterList,
+              width: 400,
+              component: QueryViewSidebar,
+            },
+          ]}
+        />
       </Fragment>
     );
   }

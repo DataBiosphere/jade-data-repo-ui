@@ -76,5 +76,10 @@ export default createMuiTheme({
         },
       },
     },
+    // MuiListItemIcon: {
+    //   root: {
+    //     minWidth: '0px',
+    //   },
+    // },
   },
 });
