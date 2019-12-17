@@ -72,7 +72,7 @@ export class JadeTable extends React.PureComponent {
 
   handleChangeRowsPerPage = event => {
     this.setState({
-      rowsPerPage: +event.target.value,
+      rowsPerPage: parseInt(event.target.value, 10),
       page: 0,
     });
   };
@@ -120,12 +120,12 @@ export class JadeTable extends React.PureComponent {
               <TableBody>
                 {rows.map(row => {
                   return (
-                    <TableRow hover tabIndex={-1} key={row.code}>
+                    <TableRow hover tabIndex={-1} key={row.id}>
                       {columns.map(column => {
                         const value = row[column.id];
                         return (
                           value && (
-                            <TableCell key={`${column.id}-${row.code}`} align={column.align}>
+                            <TableCell key={`${column.id}-${row.id}`} align={column.align}>
                               {column.format && typeof value === 'number'
                                 ? column.format(value)
                                 : value}
