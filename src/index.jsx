@@ -41,7 +41,7 @@ function bootstrap() {
           type: ActionTypes.GET_CONFIGURATION_SUCCESS,
           configuration: configData,
         });
-        getUser({ clientId: configData.clientId })
+        getUser({ client_id: configData.clientId })
           .then(user => {
             if (user != null) {
               store.dispatch(
