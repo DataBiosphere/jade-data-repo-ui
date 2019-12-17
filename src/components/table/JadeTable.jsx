@@ -18,8 +18,15 @@ const styles = theme => ({
     width: '100%',
   },
   tableWrapper: {
-    maxHeight: 'calc(100vh - 300px)',
+    height: 'calc(100vh - 300px)',
     overflow: 'auto',
+  },
+  spinWrapper: {
+    height: 'calc(100% - 60px)',
+    display: 'grid',
+  },
+  spinner: {
+    margin: 'auto',
   },
 });
 
@@ -40,6 +47,7 @@ export class JadeTable extends React.PureComponent {
     classes: PropTypes.object,
     columns: PropTypes.array,
     dispatch: PropTypes.func.isRequired,
+    polling: PropTypes.bool,
     queryResults: PropTypes.object,
     rows: PropTypes.array,
   };
@@ -103,7 +111,7 @@ export class JadeTable extends React.PureComponent {
   };
 
   render() {
-    const { classes, queryResults, columns, rows } = this.props;
+    const { classes, queryResults, columns, rows, polling } = this.props;
     const { page, rowsPerPage, orderBy, order } = this.state;
 
     return (
@@ -117,31 +125,33 @@ export class JadeTable extends React.PureComponent {
                 order={order}
                 createSortHandler={this.createSortHandler}
               />
-              <TableBody>
-                {rows.map(row => {
-                  return (
-                    <TableRow hover tabIndex={-1} key={row.id}>
-                      {columns.map(column => {
-                        const value = row[column.id];
-                        return (
-                          value && (
-                            <TableCell key={`${column.id}-${row.id}`} align={column.align}>
-                              {column.format && typeof value === 'number'
-                                ? column.format(value)
-                                : value}
-                            </TableCell>
-                          )
-                        );
-                      })}
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
+              {!polling && (
+                <TableBody>
+                  {rows.map(row => {
+                    return (
+                      <TableRow hover tabIndex={-1} key={row.id}>
+                        {columns.map(column => {
+                          const value = row[column.id];
+                          return (
+                            value && (
+                              <TableCell key={`${column.id}-${row.id}`} align={column.align}>
+                                {column.format && typeof value === 'number'
+                                  ? column.format(value)
+                                  : value}
+                              </TableCell>
+                            )
+                          );
+                        })}
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              )}
             </Table>
           )}
-          {!rows && !columns && (
-            <div className={classes.root}>
-              <CircularProgress />
+          {polling && (
+            <div className={classes.spinWrapper}>
+              <CircularProgress className={classes.spinner} />
             </div>
           )}
         </div>
@@ -168,6 +178,7 @@ function mapStateToProps(state) {
     queryResults: state.query.queryResults,
     columns: state.query.columns,
     rows: state.query.rows,
+    polling: state.query.polling,
   };
 }
 

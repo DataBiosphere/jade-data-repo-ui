@@ -12,6 +12,7 @@ export const queryState = {
   projectId: '',
   queryResults: {},
   orderBy: '',
+  polling: false,
 };
 
 export default {
@@ -28,6 +29,7 @@ export default {
           queryResults: { $set: queryResults },
           columns: { $set: columns },
           rows: { $set: rows },
+          polling: { $set: false },
         });
       },
       [ActionTypes.PAGE_QUERY_SUCCESS]: (state, action) => {
@@ -46,6 +48,7 @@ export default {
       [ActionTypes.RUN_QUERY]: state =>
         immutable(state, {
           queryResults: { $set: {} },
+          polling: { $set: true },
         }),
       [ActionTypes.APPLY_FILTERS]: (state, action) => {
         const bigquery = new BigQuery();
