@@ -65,6 +65,7 @@ export const ActionTypes = keyMirror({
   POLL_QUERY: undefined,
   PAGE_QUERY: undefined,
   PAGE_QUERY_SUCCESS: undefined,
+  APPLY_SORT: undefined,
 });
 
 /**

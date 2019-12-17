@@ -11,6 +11,7 @@ export const queryState = {
   pageSize: 0,
   projectId: '',
   queryResults: {},
+  orderBy: '',
 };
 
 export default {
@@ -53,6 +54,14 @@ export default {
         return immutable(state, {
           filterData: { $set: action.payload },
           filterStatement: { $set: filterStatement },
+        });
+      },
+      [ActionTypes.APPLY_SORT]: (state, action) => {
+        const bigquery = new BigQuery();
+        const orderBy = bigquery.buildOrderBy(action.payload.property, action.payload.direction);
+
+        return immutable(state, {
+          orderBy: { $set: orderBy },
         });
       },
     },

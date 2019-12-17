@@ -87,6 +87,8 @@ export default class BigQuery {
     return '';
   };
 
+  buildOrderBy = (property, direction) => (property ? `ORDER BY ${property} ${direction}` : '');
+
   getColumnMinMax = (columnName, dataset, tableName, token) => {
     const url = `https://bigquery.googleapis.com/bigquery/v2/projects/${dataset.dataProject}/queries`;
     const query = `SELECT MIN(${columnName}) AS min, MAX(${columnName}) AS max FROM [${dataset.dataProject}.datarepo_${dataset.name}.${tableName}]`;

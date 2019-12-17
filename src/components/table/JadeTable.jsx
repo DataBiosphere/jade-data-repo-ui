@@ -10,7 +10,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { pageQuery } from 'actions/index';
+import { pageQuery, applySort } from 'actions/index';
 import { JadeTableHead } from './JadeTableHead';
 
 const styles = theme => ({
@@ -78,6 +78,7 @@ export class JadeTable extends React.PureComponent {
   };
 
   createSortHandler = property => {
+    const { dispatch } = this.props;
     const { order } = this.state;
     let newOrder = '';
     let newOrderBy = property;
@@ -92,6 +93,8 @@ export class JadeTable extends React.PureComponent {
     if (order === 'desc') {
       newOrder = 'asc';
     }
+
+    dispatch(applySort(newOrderBy, order));
 
     this.setState({
       order: newOrder,

@@ -45,20 +45,26 @@ export class QueryView extends React.PureComponent {
     dataset: PropTypes.object,
     dispatch: PropTypes.func.isRequired,
     filterStatement: PropTypes.string,
+    orderBy: PropTypes.string,
     queryResults: PropTypes.object,
     token: PropTypes.string,
   };
 
   componentDidUpdate(prevProps, prevState) {
-    const { dataset, dispatch, filterStatement } = this.props;
+    const { dataset, dispatch, filterStatement, orderBy } = this.props;
     const { selected } = this.state;
-    if (prevProps.filterStatement !== filterStatement || prevState.selected !== selected) {
+    if (
+      prevProps.filterStatement !== filterStatement ||
+      prevState.selected !== selected ||
+      prevProps.orderBy !== orderBy
+    ) {
       dispatch(
         runQuery(
           dataset.dataProject,
           `#standardSQL
           SELECT * FROM \`${dataset.dataProject}.datarepo_${dataset.name}.${selected}\`
           ${filterStatement}
+          ${orderBy}
           LIMIT ${QUERY_LIMIT}`,
           PAGE_SIZE,
         ),
@@ -117,6 +123,7 @@ function mapStateToProps(state) {
     filterStatement: state.query.filterStatement,
     queryResults: state.query.queryResults,
     token: state.user.token,
+    orderBy: state.query.orderBy,
   };
 }
 

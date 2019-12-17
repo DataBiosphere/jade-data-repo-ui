@@ -371,7 +371,7 @@ function* pollQuery(projectId, jobId) {
         type: ActionTypes.POLL_QUERY,
         payload: { projectId, jobId },
       });
-      yield call(delay, 1000);
+      yield call(delay, 100);
       yield call(pollQuery, projectId, jobId);
     }
   } catch (err) {
@@ -405,7 +405,7 @@ export function* runQuery({ payload }) {
           jobId,
         },
       });
-      yield call(delay, 1000);
+      yield call(delay, 100);
       yield call(pollQuery, payload.projectId, jobId);
     }
   } catch (err) {
