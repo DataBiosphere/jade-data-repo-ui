@@ -26,8 +26,8 @@ export default class BigQuery {
     const res = {};
     for (i = 0; i < columns.length; i++) {
       const column = columns[i];
-      const columnId = _.get(column, 'id');
-      const columnType = _.get(column, 'type');
+      const columnId = column.id;
+      const columnType = column.type;
 
       let value = row[i];
 
@@ -40,7 +40,7 @@ export default class BigQuery {
       }
 
       if (columnId === 'datarepo_row_id') {
-        res.code = value;
+        res.id = value;
       } else {
         res[columnId] = value;
       }
