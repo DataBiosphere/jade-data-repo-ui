@@ -8,9 +8,9 @@ import { applyFilters, runQuery } from 'actions/index';
 import { Typography } from '@material-ui/core';
 import { DB_COLUMNS } from '../../../constants/index';
 
-import QueryViewTable from './QueryViewTable';
 import QueryViewSidebar from './sidebar/QueryViewSidebar';
 import QueryViewDropdown from './QueryViewDropdown';
+import JadeTable from '../../table/JadeTable';
 
 const styles = theme => ({
   wrapper: {
@@ -57,7 +57,7 @@ export class QueryView extends React.PureComponent {
         runQuery(
           dataset.dataProject,
           `#standardSQL
-          SELECT * EXCEPT (${DB_COLUMNS.ROW_ID}) FROM \`${dataset.dataProject}.datarepo_${dataset.name}.${selected}\`
+          SELECT * FROM \`${dataset.dataProject}.datarepo_${dataset.name}.${selected}\`
           ${filterStatement}
           LIMIT ${QUERY_LIMIT}`,
           PAGE_SIZE,
@@ -78,8 +78,8 @@ export class QueryView extends React.PureComponent {
   };
 
   render() {
-    const { classes, dataset, queryResults, token } = this.props;
-    const { table, selected } = this.state;
+    const { classes, dataset, queryResults } = this.props;
+    const { table } = this.state;
     const names = dataset.schema.tables.map(t => t.name);
 
     return (
@@ -97,12 +97,7 @@ export class QueryView extends React.PureComponent {
             <Grid container spacing={0}>
               <Grid item xs={12}>
                 <div className={classes.scrollTable}>
-                  <QueryViewTable
-                    queryResults={queryResults}
-                    title={selected}
-                    token={token}
-                    table={table}
-                  />
+                  <JadeTable queryResults={queryResults} />
                 </div>
               </Grid>
             </Grid>

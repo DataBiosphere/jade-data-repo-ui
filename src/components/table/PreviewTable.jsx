@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import React from 'react';
 import PropTypes from 'prop-types';
-import JadeTable from './JadeTable';
+import LightTable from './LightTable';
 
 export default class PreviewTable extends React.PureComponent {
   static propTypes = {
@@ -28,7 +28,7 @@ export default class PreviewTable extends React.PureComponent {
     }));
     const keyFn = row => row.f[0].v;
     return (
-      <JadeTable
+      <LightTable
         columns={columns}
         rowKey={keyFn}
         rows={table.preview}

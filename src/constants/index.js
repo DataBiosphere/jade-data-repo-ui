@@ -63,6 +63,8 @@ export const ActionTypes = keyMirror({
   APPLY_FILTERS: undefined,
   APPLY_FILTERS_SUCCESS: undefined,
   POLL_QUERY: undefined,
+  PAGE_QUERY: undefined,
+  PAGE_QUERY_SUCCESS: undefined,
 });
 
 /**
