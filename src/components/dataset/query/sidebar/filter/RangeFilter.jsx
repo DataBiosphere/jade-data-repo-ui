@@ -68,14 +68,14 @@ export class RangeFilter extends React.PureComponent {
 
   handleMinLabelValue = event => {
     const { value } = this.state;
-    const newValue = [event.target.value, value[1]];
+    const newValue = [parseInt(event.target.value, 10), value[1]];
 
     this.handleSliderValue(null, newValue);
   };
 
   handleMaxLabelValue = event => {
     const { value } = this.state;
-    const newValue = [value[0], event.target.value];
+    const newValue = [value[0], parseInt(event.target.value, 10)];
 
     this.handleSliderValue(null, newValue);
   };
