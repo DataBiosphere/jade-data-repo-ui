@@ -11,6 +11,7 @@ export class QueryViewSidebarItem extends React.PureComponent {
     filterData: PropTypes.object,
     filterStatement: PropTypes.string,
     handleChange: PropTypes.func,
+    handleFilters: PropTypes.func,
     tableName: PropTypes.string,
     token: PropTypes.string,
   };
@@ -26,7 +27,15 @@ export class QueryViewSidebarItem extends React.PureComponent {
   };
 
   render() {
-    const { column, dataset, filterData, filterStatement, tableName, token } = this.props;
+    const {
+      column,
+      dataset,
+      filterData,
+      filterStatement,
+      handleFilters,
+      tableName,
+      token,
+    } = this.props;
 
     switch (column.datatype) {
       case 'string':
@@ -37,6 +46,7 @@ export class QueryViewSidebarItem extends React.PureComponent {
             filterData={filterData}
             filterStatement={filterStatement}
             handleChange={this.handleChange}
+            handleFilters={handleFilters}
             tableName={tableName}
             token={token}
           />
@@ -49,6 +59,7 @@ export class QueryViewSidebarItem extends React.PureComponent {
             dataset={dataset}
             filterData={filterData}
             handleChange={this.handleChange}
+            handleFilters={handleFilters}
             tableName={tableName}
             token={token}
           />
