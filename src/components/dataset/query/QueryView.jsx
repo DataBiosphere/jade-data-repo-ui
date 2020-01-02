@@ -7,9 +7,7 @@ import Grid from '@material-ui/core/Grid';
 import { applyFilters, runQuery, getDatasetById } from 'actions/index';
 import { Typography } from '@material-ui/core';
 import FilterList from '@material-ui/icons/FilterList';
-import { DB_COLUMNS } from '../../../constants/index';
 
-import QueryViewTable from './QueryViewTable';
 import QueryViewSidebar from './sidebar/QueryViewSidebar';
 import SidebarDrawer from './sidebar/SidebarDrawer';
 import QueryViewDropdown from './QueryViewDropdown';
@@ -102,7 +100,7 @@ export class QueryView extends React.PureComponent {
 
   realRender() {
     const { classes, dataset, queryResults } = this.props;
-    const { table } = this.state;
+    const { table, selected } = this.state;
     const names = dataset.schema.tables.map(t => t.name);
 
     return (
@@ -119,12 +117,7 @@ export class QueryView extends React.PureComponent {
           <Grid container spacing={0}>
             <Grid item xs={12}>
               <div className={classes.scrollTable}>
-                <QueryViewTable
-                  queryResults={queryResults}
-                  title={selected}
-                  token={token}
-                  table={table}
-                />
+                <JadeTable queryResults={queryResults} title={selected} table={table} />
               </div>
             </Grid>
           </Grid>
@@ -155,7 +148,6 @@ function mapStateToProps(state) {
     dataset: state.datasets.dataset,
     filterStatement: state.query.filterStatement,
     queryResults: state.query.queryResults,
-    token: state.user.token,
     orderBy: state.query.orderBy,
   };
 }
