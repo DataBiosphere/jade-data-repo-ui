@@ -46,10 +46,7 @@ export class QueryView extends React.PureComponent {
     dispatch: PropTypes.func.isRequired,
     filterStatement: PropTypes.string,
     match: PropTypes.object,
-<<<<<<< HEAD
-=======
     orderBy: PropTypes.string,
->>>>>>> develop
     queryResults: PropTypes.object,
   };
 
@@ -66,13 +63,9 @@ export class QueryView extends React.PureComponent {
     const { selected } = this.state;
     if (
       this.hasDataset() &&
-<<<<<<< HEAD
-      (prevProps.filterStatement !== filterStatement || prevState.selected !== selected)
-=======
       (prevProps.filterStatement !== filterStatement ||
         prevState.selected !== selected ||
         prevProps.orderBy !== orderBy)
->>>>>>> develop
     ) {
       dispatch(
         runQuery(
@@ -105,13 +98,8 @@ export class QueryView extends React.PureComponent {
   };
 
   realRender() {
-<<<<<<< HEAD
-    const { classes, dataset, queryResults, token } = this.props;
-    const { table, selected } = this.state;
-=======
     const { classes, dataset, queryResults } = this.props;
     const { table } = this.state;
->>>>>>> develop
     const names = dataset.schema.tables.map(t => t.name);
 
     return (
