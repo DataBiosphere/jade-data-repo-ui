@@ -126,6 +126,22 @@ export const { runQuery } = createActions({
   }),
 });
 
+export const { pageQuery } = createActions({
+  [ActionTypes.PAGE_QUERY]: (pageToken, projectId, jobId, pageSize) => ({
+    pageToken,
+    projectId,
+    jobId,
+    pageSize,
+  }),
+});
+
 export const { applyFilters } = createActions({
   [ActionTypes.APPLY_FILTERS]: filter => filter,
+});
+
+export const { applySort } = createActions({
+  [ActionTypes.APPLY_SORT]: (property, direction) => ({
+    property,
+    direction,
+  }),
 });

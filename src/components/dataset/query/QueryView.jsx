@@ -8,9 +8,9 @@ import { applyFilters, runQuery, getDatasetById } from 'actions/index';
 import { Typography } from '@material-ui/core';
 import { DB_COLUMNS } from '../../../constants/index';
 
-import QueryViewTable from './QueryViewTable';
 import QueryViewSidebar from './sidebar/QueryViewSidebar';
 import QueryViewDropdown from './QueryViewDropdown';
+import JadeTable from '../../table/JadeTable';
 
 const styles = theme => ({
   wrapper: {
@@ -46,8 +46,11 @@ export class QueryView extends React.PureComponent {
     dispatch: PropTypes.func.isRequired,
     filterStatement: PropTypes.string,
     match: PropTypes.object,
+<<<<<<< HEAD
+=======
+    orderBy: PropTypes.string,
+>>>>>>> develop
     queryResults: PropTypes.object,
-    token: PropTypes.string,
   };
 
   componentDidMount() {
@@ -59,18 +62,25 @@ export class QueryView extends React.PureComponent {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { dataset, dispatch, filterStatement } = this.props;
+    const { dataset, dispatch, filterStatement, orderBy } = this.props;
     const { selected } = this.state;
     if (
       this.hasDataset() &&
+<<<<<<< HEAD
       (prevProps.filterStatement !== filterStatement || prevState.selected !== selected)
+=======
+      (prevProps.filterStatement !== filterStatement ||
+        prevState.selected !== selected ||
+        prevProps.orderBy !== orderBy)
+>>>>>>> develop
     ) {
       dispatch(
         runQuery(
           dataset.dataProject,
           `#standardSQL
-          SELECT * EXCEPT (${DB_COLUMNS.ROW_ID}) FROM \`${dataset.dataProject}.datarepo_${dataset.name}.${selected}\`
+          SELECT * FROM \`${dataset.dataProject}.datarepo_${dataset.name}.${selected}\`
           ${filterStatement}
+          ${orderBy}
           LIMIT ${QUERY_LIMIT}`,
           PAGE_SIZE,
         ),
@@ -95,8 +105,13 @@ export class QueryView extends React.PureComponent {
   };
 
   realRender() {
+<<<<<<< HEAD
     const { classes, dataset, queryResults, token } = this.props;
     const { table, selected } = this.state;
+=======
+    const { classes, dataset, queryResults } = this.props;
+    const { table } = this.state;
+>>>>>>> develop
     const names = dataset.schema.tables.map(t => t.name);
 
     return (
@@ -114,12 +129,7 @@ export class QueryView extends React.PureComponent {
             <Grid container spacing={0}>
               <Grid item xs={12}>
                 <div className={classes.scrollTable}>
-                  <QueryViewTable
-                    queryResults={queryResults}
-                    title={selected}
-                    token={token}
-                    table={table}
-                  />
+                  <JadeTable queryResults={queryResults} />
                 </div>
               </Grid>
             </Grid>
@@ -146,6 +156,7 @@ function mapStateToProps(state) {
     filterStatement: state.query.filterStatement,
     queryResults: state.query.queryResults,
     token: state.user.token,
+    orderBy: state.query.orderBy,
   };
 }
 

@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 
 import { getSnapshots } from 'actions/index';
-import JadeTable from './JadeTable';
+import LightTable from './LightTable';
 
 const styles = theme => ({
   jadeLink: {
@@ -66,7 +66,7 @@ class SnapshotTable extends React.PureComponent {
     ];
     return (
       <div>
-        <JadeTable
+        <LightTable
           columns={columns}
           handleEnumeration={this.handleFilterSnapshots}
           itemType="snapshots"

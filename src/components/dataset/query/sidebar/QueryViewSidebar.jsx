@@ -96,6 +96,7 @@ const styles = theme => ({
   filterPanel: {
     paddingLeft: '10px',
     paddingRight: '10px',
+    paddingBottom: '10px',
   },
   sidebarTitle: {
     flexDirection: 'column',
@@ -237,9 +238,6 @@ export class QueryViewSidebar extends React.PureComponent {
           <div className={clsx(classes.filterPanel, { [classes.hide]: !open })}>
             <QuerySidebarPanel />
           </div>
-          <Button className={!open ? classes.hide : ''} onClick={this.handleFilters}>
-            Apply Filters
-          </Button>
           <Divider />
           {table &&
             table.name &&

@@ -26,11 +26,12 @@ export function* checkToken() {
   return moment(moment()).isSameOrBefore(parseInt(tokenExpiration, 10));
 }
 
-export function* authGet(url) {
+export function* authGet(url, params = {}) {
   if (yield call(checkToken)) {
     // check expiration time against now
     const token = yield select(getToken);
     return yield call(axios.get, url, {
+      params,
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
     });
   }
@@ -370,7 +371,7 @@ function* pollQuery(projectId, jobId) {
         type: ActionTypes.POLL_QUERY,
         payload: { projectId, jobId },
       });
-      yield call(delay, 1000);
+      yield call(delay, 100);
       yield call(pollQuery, projectId, jobId);
     }
   } catch (err) {
@@ -404,9 +405,30 @@ export function* runQuery({ payload }) {
           jobId,
         },
       });
-      yield call(delay, 1000);
+      yield call(delay, 100);
       yield call(pollQuery, payload.projectId, jobId);
     }
+  } catch (err) {
+    yield put({
+      type: ActionTypes.EXCEPTION,
+      payload: err,
+    });
+  }
+}
+
+export function* pageQuery({ payload }) {
+  try {
+    const url = `https://bigquery.googleapis.com/bigquery/v2/projects/${payload.projectId}/queries/${payload.jobId}`;
+    const params = {
+      maxResults: payload.pageSize,
+      pageToken: payload.pageToken,
+    };
+    const response = yield call(authGet, url, params);
+
+    yield put({
+      type: ActionTypes.PAGE_QUERY_SUCCESS,
+      results: response,
+    });
   } catch (err) {
     yield put({
       type: ActionTypes.EXCEPTION,
@@ -433,5 +455,6 @@ export default function* root() {
     takeLatest(ActionTypes.REMOVE_CUSTODIAN_FROM_DATASET, removeCustodianFromDataset),
     takeLatest(ActionTypes.GET_DATASET_TABLE_PREVIEW, getDatasetTablePreview),
     takeLatest(ActionTypes.RUN_QUERY, runQuery),
+    takeLatest(ActionTypes.PAGE_QUERY, pageQuery),
   ]);
 }

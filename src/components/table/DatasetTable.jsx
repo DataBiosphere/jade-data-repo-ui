@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import moment from 'moment';
 
 import { getDatasets } from 'actions/index';
-import JadeTable from './JadeTable';
+import LightTable from './LightTable';
 
 const styles = theme => ({
   jadeLink: {
@@ -65,7 +65,7 @@ class DatasetTable extends React.PureComponent {
       },
     ];
     return (
-      <JadeTable
+      <LightTable
         columns={columns}
         handleEnumeration={this.handleFilterDatasets}
         itemType="datasets"
