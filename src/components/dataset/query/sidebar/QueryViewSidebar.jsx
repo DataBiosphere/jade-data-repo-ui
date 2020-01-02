@@ -4,11 +4,8 @@ import clsx from 'clsx';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import Drawer from '@material-ui/core/Drawer';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
-import FilterList from '@material-ui/icons/FilterList';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
@@ -29,55 +26,11 @@ const styles = theme => ({
   root: {
     display: 'flex',
   },
-  appBar: {
-    zIndex: theme.zIndex.drawer + 1,
-    transition: theme.transitions.create(['width', 'margin'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-  },
-  appBarShift: {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(['width', 'margin'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  },
   menuButton: {
     'border-radius': '0%',
   },
   hide: {
     display: 'none',
-  },
-  drawer: {
-    backgroundColor: theme.palette.primary.light,
-    top: 'auto',
-    width: drawerWidth,
-    flexShrink: 0,
-    whiteSpace: 'nowrap',
-  },
-  drawerPosition: {
-    position: 'absolute',
-    right: '1em',
-  },
-  drawerOpen: {
-    width: drawerWidth,
-    transition: theme.transitions.create('width', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  },
-  drawerClose: {
-    transition: theme.transitions.create('width', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    overflowX: 'hidden',
-    width: theme.spacing(7) + 1,
-    [theme.breakpoints.up('sm')]: {
-      width: theme.spacing(9) + 1,
-    },
   },
   toolbar: {
     display: 'flex',
@@ -156,14 +109,6 @@ export class QueryViewSidebar extends React.PureComponent {
     }
   }
 
-  handleDrawerOpen = () => {
-    this.setState({ open: true });
-  };
-
-  handleDrawerClose = () => {
-    this.setState({ open: false });
-  };
-
   handleChange = value => {
     const { filterMap } = this.state;
     const clonedMap = _.clone(filterMap);
@@ -189,100 +134,72 @@ export class QueryViewSidebar extends React.PureComponent {
 
     return (
       <div className={classes.root}>
-        <CssBaseline />
-        <Drawer
-          variant="permanent"
-          anchor="right"
-          className={clsx(classes.drawer, {
-            [classes.drawerOpen]: open,
-            [classes.drawerClose]: !open,
-          })}
-          classes={{
-            paper: clsx(classes.drawer, classes.drawerPosition, {
-              [classes.drawerOpen]: open,
-              [classes.drawerClose]: !open,
-            }),
-          }}
-          open={open}
-        >
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={this.handleDrawerOpen}
-            edge="start"
-            className={clsx(classes.menuButton, {
-              [classes.hide]: open,
-            })}
-          >
-            <FilterList />
-          </IconButton>
-          <Box className={!open ? classes.hide : ''}>
-            <Grid container={true} spacing={1}>
-              <Grid item xs={2}>
-                <IconButton
-                  onClick={this.handleDrawerClose}
-                  className={clsx(classes.menuButton, {
-                    [classes.hide]: !open,
-                  })}
-                >
-                  <ChevronRightIcon />
-                </IconButton>
-              </Grid>
-              <Grid item xs={10} className={classes.sidebarTitle}>
-                <Typography variant="h6" display="block">
-                  Data Snapshot
-                </Typography>
-              </Grid>
-            </Grid>
-          </Box>
-          <div className={clsx(classes.filterPanel, { [classes.hide]: !open })}>
-            <QuerySidebarPanel />
-          </div>
-          <Divider />
-          {table &&
-            table.name &&
-            table.columns.map(c => (
-              <ExpansionPanel
-                key={c.name}
-                className={clsx(classes.panelBottomBorder, { [classes.hide]: !open })}
+        <Box className={!open ? classes.hide : ''}>
+          <Grid container={true} spacing={1}>
+            <Grid item xs={2}>
+              <IconButton
+                onClick={this.handleDrawerClose}
+                className={clsx(classes.menuButton, {
+                  [classes.hide]: !open,
+                })}
               >
-                <ExpansionPanelSummary
-                  expandIcon={<ExpandMoreIcon />}
-                  aria-controls={`panel-content-${c.name}`}
-                  id={`panel-header-${c.name}`}
-                >
-                  <Typography className={classes.heading}>{c.name}</Typography>
-                </ExpansionPanelSummary>
-                <ExpansionPanelDetails>
-                  <QueryViewSidebarItem
-                    column={c}
-                    dataset={dataset}
-                    filterData={filterData}
-                    filterStatement={filterStatement}
-                    handleChange={this.handleChange}
-                    tableName={table.name}
-                    token={token}
-                  />
-                </ExpansionPanelDetails>
-              </ExpansionPanel>
-            ))}
-          <Button
-            variant="contained"
-            className={clsx(classes.stickyButton, { [classes.hide]: !open })}
-            onClick={this.handleFilters}
-          >
-            Apply Filters
-          </Button>
-          <Button
-            variant="contained"
-            disabled
-            className={clsx(classes.stickyButton, classes.snapshotButton, {
-              [classes.hide]: !open,
-            })}
-          >
-            Create Snapshot
-          </Button>
-        </Drawer>
+                <ChevronRightIcon />
+              </IconButton>
+            </Grid>
+            <Grid item xs={10} className={classes.sidebarTitle}>
+              <Typography variant="h6" display="block">
+                Data Snapshot
+              </Typography>
+            </Grid>
+          </Grid>
+        </Box>
+        <div className={clsx(classes.filterPanel, { [classes.hide]: !open })}>
+          <QuerySidebarPanel />
+        </div>
+        <Divider />
+        {table &&
+          table.name &&
+          table.columns.map(c => (
+            <ExpansionPanel
+              key={c.name}
+              className={clsx(classes.panelBottomBorder, { [classes.hide]: !open })}
+            >
+              <ExpansionPanelSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls={`panel-content-${c.name}`}
+                id={`panel-header-${c.name}`}
+              >
+                <Typography className={classes.heading}>{c.name}</Typography>
+              </ExpansionPanelSummary>
+              <ExpansionPanelDetails>
+                <QueryViewSidebarItem
+                  column={c}
+                  dataset={dataset}
+                  filterData={filterData}
+                  filterStatement={filterStatement}
+                  handleChange={this.handleChange}
+                  tableName={table.name}
+                  token={token}
+                />
+              </ExpansionPanelDetails>
+            </ExpansionPanel>
+          ))}
+        <Button
+          variant="contained"
+          className={clsx(classes.stickyButton, { [classes.hide]: !open })}
+          onClick={this.handleFilters}
+        >
+          Apply Filters
+        </Button>
+        <Button
+          variant="contained"
+          disabled
+          className={clsx(classes.stickyButton, classes.snapshotButton, {
+            [classes.hide]: !open,
+          })}
+        >
+          Create Snapshot
+        </Button>
       </div>
     );
   }
