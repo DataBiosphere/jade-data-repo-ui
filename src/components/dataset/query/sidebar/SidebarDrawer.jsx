@@ -6,7 +6,7 @@ import clsx from 'clsx';
 
 const styles = theme => ({
   root: {
-    backgroundColor: theme.palette.primary.dark,
+    backgroundColor: theme.palette.primary.light,
     position: 'absolute',
     top: '65px',
     right: '0px',
@@ -18,11 +18,13 @@ const styles = theme => ({
     right: '56px',
     flexShrink: 0,
     whiteSpace: 'nowrap',
+    backgroundColor: theme.palette.primary.lightContrast,
   },
   drawerPosition: {
     position: 'absolute',
   },
   drawerOpen: {
+    width: '400px',
     transition: theme.transitions.create('width', {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
@@ -33,6 +35,11 @@ const styles = theme => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
+    overflowX: 'hidden',
+    width: 0,
+    [theme.breakpoints.up('sm')]: {
+      width: 0,
+    },
   },
   iconList: {
     color: theme.palette.primary.light,
@@ -46,6 +53,8 @@ export class SidebarDrawer extends React.PureComponent {
       open: false,
       currentKey: null,
       PanelComponent: null,
+      table: null,
+      dataset: null,
     };
   }
 
@@ -62,10 +71,10 @@ export class SidebarDrawer extends React.PureComponent {
     this.setState({ open: false });
   };
 
-  handleButtonClick = (key, PanelComponent) => {
+  handleButtonClick = (key, PanelComponent, table, dataset) => {
     const { currentKey, open } = this.state;
     if (currentKey == null || !open) {
-      this.setState({ open: true, currentKey: key, PanelComponent });
+      this.setState({ open: true, currentKey: key, PanelComponent, table, dataset });
     } else {
       this.setState({ open: false, currentKey: null });
     }
@@ -73,35 +82,39 @@ export class SidebarDrawer extends React.PureComponent {
 
   render() {
     const { classes, panels } = this.props;
-    const { open, PanelComponent } = this.state;
+    const { open, PanelComponent, table, dataset } = this.state;
     return (
       <Fragment>
-        {PanelComponent != null && (
-          <Drawer
-            variant="permanent"
-            anchor="right"
-            className={clsx(classes.drawer, {
+        <Drawer
+          variant="permanent"
+          anchor="right"
+          className={clsx(classes.drawer, {
+            [classes.drawerOpen]: open,
+            [classes.drawerClose]: !open,
+          })}
+          classes={{
+            paper: clsx(classes.drawer, classes.drawerPosition, {
               [classes.drawerOpen]: open,
               [classes.drawerClose]: !open,
-            })}
-            classes={{
-              paper: clsx(classes.drawer, classes.drawerPosition, {
-                [classes.drawerOpen]: open,
-                [classes.drawerClose]: !open,
-              }),
-            }}
-            open={open}
-          >
-            <PanelComponent />
-          </Drawer>
-        )}
+            }),
+          }}
+          open={open}
+        >
+          {PanelComponent != null && <PanelComponent open={open} table={table} dataset={dataset} />}
+        </Drawer>
         <Box className={classes.root}>
           <List>
             {panels.map((panel, i) => {
               const IconComponent = panel.icon;
               return (
-                <ListItem button key={i}>
-                  <IconComponent onClick={() => this.handleButtonClick(i, panel.component)} />
+                <ListItem
+                  button
+                  key={i}
+                  onClick={() =>
+                    this.handleButtonClick(i, panel.component, panel.table, panel.dataset)
+                  }
+                >
+                  <IconComponent />
                 </ListItem>
               );
             })}

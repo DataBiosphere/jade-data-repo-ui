@@ -21,6 +21,7 @@ const styles = theme => ({
 class UserList extends React.PureComponent {
   static propTypes = {
     addUser: PropTypes.func,
+    canManageUsers: PropTypes.bool,
     classes: PropTypes.object.isRequired,
     removeUser: PropTypes.func,
     typeOfUsers: PropTypes.string,
@@ -28,7 +29,7 @@ class UserList extends React.PureComponent {
   };
 
   render() {
-    const { addUser, classes, removeUser, typeOfUsers, users } = this.props;
+    const { addUser, canManageUsers, classes, removeUser, typeOfUsers, users } = this.props;
     return (
       <div className={classes.root}>
         <div className={classes.header}>{typeOfUsers}: </div>
@@ -39,12 +40,14 @@ class UserList extends React.PureComponent {
             </Typography>
           ))}
         </div>
-        <ManageUsersModal
-          addUser={addUser}
-          removeUser={removeUser}
-          modalText={`Manage ${typeOfUsers}`}
-          users={users}
-        />
+        {canManageUsers && (
+          <ManageUsersModal
+            addUser={addUser}
+            removeUser={removeUser}
+            modalText={`Manage ${typeOfUsers}`}
+            users={users}
+          />
+        )}
       </div>
     );
   }

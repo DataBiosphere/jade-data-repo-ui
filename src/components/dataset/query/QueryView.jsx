@@ -4,14 +4,16 @@ import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 
-import { applyFilters, runQuery, getDatasetById } from 'actions/index';
+import { applyFilters, runQuery, getDatasetById, getDatasetPolicy } from 'actions/index';
 import { Typography } from '@material-ui/core';
 import FilterList from '@material-ui/icons/FilterList';
+import InfoIcon from '@material-ui/icons/Info';
 
 import QueryViewSidebar from './sidebar/QueryViewSidebar';
 import SidebarDrawer from './sidebar/SidebarDrawer';
 import QueryViewDropdown from './QueryViewDropdown';
 import JadeTable from '../../table/JadeTable';
+import InfoView from './sidebar/panels/InfoView';
 
 const styles = theme => ({
   wrapper: {
@@ -44,6 +46,7 @@ export class QueryView extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object,
     dataset: PropTypes.object,
+    datasetPolicies: PropTypes.object,
     dispatch: PropTypes.func.isRequired,
     filterStatement: PropTypes.string,
     match: PropTypes.object,
@@ -52,10 +55,14 @@ export class QueryView extends React.PureComponent {
   };
 
   componentDidMount() {
-    const { dispatch, match, dataset } = this.props;
+    const { dispatch, match, dataset, datasetPolicies } = this.props;
     const datasetId = match.params.uuid;
     if (dataset == null || dataset.id !== datasetId) {
       dispatch(getDatasetById(datasetId));
+    }
+
+    if (datasetPolicies == null || dataset.id !== datasetId) {
+      dispatch(getDatasetPolicy(datasetId));
     }
   }
 
@@ -115,7 +122,7 @@ export class QueryView extends React.PureComponent {
             </Grid>
           </Grid>
           <Grid container spacing={0}>
-            <Grid item xs={12}>
+            <Grid item xs={11}>
               <div className={classes.scrollTable}>
                 <JadeTable queryResults={queryResults} title={selected} table={table} />
               </div>
@@ -128,6 +135,15 @@ export class QueryView extends React.PureComponent {
               icon: FilterList,
               width: 400,
               component: QueryViewSidebar,
+              table,
+              dataset,
+            },
+            {
+              icon: InfoIcon,
+              width: 400,
+              component: InfoView,
+              table,
+              dataset,
             },
           ]}
         />
@@ -139,6 +155,7 @@ export class QueryView extends React.PureComponent {
     if (this.hasDataset()) {
       return this.realRender();
     }
+    // TODO change to actual loading spinner
     return <div>Loading</div>;
   }
 }
@@ -146,6 +163,7 @@ export class QueryView extends React.PureComponent {
 function mapStateToProps(state) {
   return {
     dataset: state.datasets.dataset,
+    datasetPolicies: state.datasets.datasetPolicies,
     filterStatement: state.query.filterStatement,
     queryResults: state.query.queryResults,
     orderBy: state.query.orderBy,

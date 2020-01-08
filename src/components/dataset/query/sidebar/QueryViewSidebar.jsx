@@ -24,7 +24,8 @@ const drawerWidth = 400;
 
 const styles = theme => ({
   root: {
-    display: 'flex',
+    display: 'block',
+    margin: theme.spacing(1),
   },
   menuButton: {
     'border-radius': '0%',
@@ -47,8 +48,6 @@ const styles = theme => ({
     margin: '0px',
   },
   filterPanel: {
-    paddingLeft: '10px',
-    paddingRight: '10px',
     paddingBottom: '10px',
   },
   sidebarTitle: {
@@ -67,7 +66,7 @@ const styles = theme => ({
     // eslint-disable-next-line no-dupe-keys
     position: 'fixed',
     bottom: '0',
-    margin: theme.spacing(1),
+    marginBottom: theme.spacing(1),
     width: drawerWidth / 2 - theme.spacing(2),
     backgroundColor: theme.palette.primary.main,
     '&:hover': {
@@ -75,8 +74,14 @@ const styles = theme => ({
     },
   },
   snapshotButton: {
-    right: '0',
     backgroundColor: `${theme.palette.primary.dark} !important`,
+  },
+  snapshotButtonContainer: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+  },
+  jadeExpansionPanel: {
+    margin: '10px',
   },
 });
 
@@ -84,7 +89,6 @@ export class QueryViewSidebar extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      open: false,
       filterMap: {},
     };
   }
@@ -95,6 +99,7 @@ export class QueryViewSidebar extends React.PureComponent {
     dispatch: PropTypes.func.isRequired,
     filterData: PropTypes.object,
     filterStatement: PropTypes.string,
+    open: PropTypes.bool,
     table: PropTypes.object,
     token: PropTypes.string,
   };
@@ -129,23 +134,12 @@ export class QueryViewSidebar extends React.PureComponent {
   };
 
   render() {
-    const { classes, dataset, filterData, filterStatement, table, token } = this.props;
-    const { open } = this.state;
+    const { classes, dataset, filterData, filterStatement, open, table, token } = this.props;
 
     return (
       <div className={classes.root}>
         <Box className={!open ? classes.hide : ''}>
           <Grid container={true} spacing={1}>
-            <Grid item xs={2}>
-              <IconButton
-                onClick={this.handleDrawerClose}
-                className={clsx(classes.menuButton, {
-                  [classes.hide]: !open,
-                })}
-              >
-                <ChevronRightIcon />
-              </IconButton>
-            </Grid>
             <Grid item xs={10} className={classes.sidebarTitle}>
               <Typography variant="h6" display="block">
                 Data Snapshot
@@ -171,7 +165,7 @@ export class QueryViewSidebar extends React.PureComponent {
               >
                 <Typography className={classes.heading}>{c.name}</Typography>
               </ExpansionPanelSummary>
-              <ExpansionPanelDetails>
+              <ExpansionPanelDetails className={classes.jadeExpansionPanel}>
                 <QueryViewSidebarItem
                   column={c}
                   dataset={dataset}
@@ -184,22 +178,28 @@ export class QueryViewSidebar extends React.PureComponent {
               </ExpansionPanelDetails>
             </ExpansionPanel>
           ))}
-        <Button
-          variant="contained"
-          className={clsx(classes.stickyButton, { [classes.hide]: !open })}
-          onClick={this.handleFilters}
-        >
-          Apply Filters
-        </Button>
-        <Button
-          variant="contained"
-          disabled
-          className={clsx(classes.stickyButton, classes.snapshotButton, {
-            [classes.hide]: !open,
-          })}
-        >
-          Create Snapshot
-        </Button>
+        <div>
+          <div>
+            <Button
+              variant="contained"
+              className={clsx(classes.stickyButton, { [classes.hide]: !open })}
+              onClick={this.handleFilters}
+            >
+              Apply Filters
+            </Button>
+          </div>
+          <div className={classes.snapshotButtonContainer}>
+            <Button
+              variant="contained"
+              disabled
+              className={clsx(classes.stickyButton, classes.snapshotButton, {
+                [classes.hide]: !open,
+              })}
+            >
+              Create Snapshot
+            </Button>
+          </div>
+        </div>
       </div>
     );
   }
