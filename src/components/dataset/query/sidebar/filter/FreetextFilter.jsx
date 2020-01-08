@@ -10,6 +10,7 @@ export class FreetextFilter extends React.PureComponent {
     column: PropTypes.object,
     filterData: PropTypes.object,
     handleChange: PropTypes.func,
+    handleFilters: PropTypes.func,
     values: PropTypes.array,
   };
 
@@ -19,6 +20,13 @@ export class FreetextFilter extends React.PureComponent {
   };
 
   getOptions = values => (values == null ? [] : values.map(a => a.f[0].v));
+
+  handleReturn = event => {
+    const { handleFilters } = this.props;
+    if (event.key === 'Enter') {
+      handleFilters();
+    }
+  };
 
   render() {
     const { column, values } = this.props;
@@ -37,6 +45,7 @@ export class FreetextFilter extends React.PureComponent {
           ))
         }
         onChange={this.onComplete}
+        onKeyPress={this.handleReturn}
       />
     );
   }
