@@ -31,6 +31,7 @@ export class CategoryWrapper extends React.PureComponent {
     filterData: PropTypes.object,
     filterStatement: PropTypes.string,
     handleChange: PropTypes.func,
+    handleFilters: PropTypes.func,
     tableName: PropTypes.string,
     token: PropTypes.string,
   };
@@ -51,7 +52,7 @@ export class CategoryWrapper extends React.PureComponent {
 
   render() {
     const { values, originalValues } = this.state;
-    const { column, filterData, handleChange } = this.props;
+    const { column, filterData, handleChange, handleFilters } = this.props;
 
     if (values && originalValues && originalValues.length <= CHECKBOX_THRESHOLD) {
       return (
@@ -67,6 +68,7 @@ export class CategoryWrapper extends React.PureComponent {
       <FreetextFilter
         column={column}
         handleChange={handleChange}
+        handleFilters={handleFilters}
         filterData={filterData}
         values={values}
       />

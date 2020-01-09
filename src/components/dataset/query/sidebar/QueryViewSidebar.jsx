@@ -172,6 +172,7 @@ export class QueryViewSidebar extends React.PureComponent {
                   filterData={filterData}
                   filterStatement={filterStatement}
                   handleChange={this.handleChange}
+                  handleFilters={this.handleFilters}
                   tableName={table.name}
                   token={token}
                 />

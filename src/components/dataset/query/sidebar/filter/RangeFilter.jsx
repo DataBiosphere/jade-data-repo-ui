@@ -36,6 +36,7 @@ export class RangeFilter extends React.PureComponent {
     dataset: PropTypes.object,
     filterData: PropTypes.object,
     handleChange: PropTypes.func,
+    handleFilters: PropTypes.func,
     tableName: PropTypes.string,
     token: PropTypes.string,
   };
@@ -67,31 +68,43 @@ export class RangeFilter extends React.PureComponent {
 
   handleMinLabelValue = event => {
     const { value } = this.state;
-    const newValue = [event.target.value, value[1]];
+    const newValue = [parseInt(event.target.value, 10), value[1]];
 
     this.handleSliderValue(null, newValue);
   };
 
   handleMaxLabelValue = event => {
     const { value } = this.state;
-    const newValue = [value[0], event.target.value];
+    const newValue = [value[0], parseInt(event.target.value, 10)];
 
     this.handleSliderValue(null, newValue);
   };
 
   render() {
     const { maxVal, minVal, value } = this.state;
+    const { handleFilters } = this.props;
+
     return (
       <div>
         <Grid container={true} spacing={2}>
           <Grid item xs={5}>
-            <RangeInput labelName="min" value={value[0]} handleChange={this.handleMinLabelValue} />
+            <RangeInput
+              labelName="min"
+              value={value[0]}
+              handleChange={this.handleMinLabelValue}
+              handleFilters={handleFilters}
+            />
           </Grid>
           <Grid item xs={2}>
             —
           </Grid>
           <Grid item xs={5}>
-            <RangeInput labelName="max" value={value[1]} handleChange={this.handleMaxLabelValue} />
+            <RangeInput
+              labelName="max"
+              value={value[1]}
+              handleChange={this.handleMaxLabelValue}
+              handleFilters={handleFilters}
+            />
           </Grid>
         </Grid>
         <Grid container={true}>
