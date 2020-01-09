@@ -55,6 +55,7 @@ export class SidebarDrawer extends React.PureComponent {
       PanelComponent: null,
       table: null,
       dataset: null,
+      prevKey: null,
     };
   }
 
@@ -75,6 +76,8 @@ export class SidebarDrawer extends React.PureComponent {
     const { currentKey, open } = this.state;
     if (currentKey == null || !open) {
       this.setState({ open: true, currentKey: key, PanelComponent, table, dataset });
+    } else if (currentKey !== key && open) {
+      this.setState({ currentKey: key, PanelComponent, table, dataset });
     } else {
       this.setState({ open: false, currentKey: null });
     }
