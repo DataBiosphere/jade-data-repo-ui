@@ -14,6 +14,7 @@ export class RangeFilter extends React.PureComponent {
       minVal: 0,
       maxVal: 1000,
       value: [0, 1000],
+      step: 1,
     };
 
     const { column, dataset, tableName, token } = this.props;
@@ -23,10 +24,16 @@ export class RangeFilter extends React.PureComponent {
       const min = parseFloat(response[0].v, 10);
       const max = parseFloat(response[1].v, 10);
 
+      let step = 1;
+      if (max - min <= 1) {
+        step = 0.01;
+      }
+
       this.setState({
         minVal: min,
         maxVal: max,
         value: [min, max],
+        step,
       });
     });
   }
@@ -81,7 +88,7 @@ export class RangeFilter extends React.PureComponent {
   };
 
   render() {
-    const { maxVal, minVal, value } = this.state;
+    const { maxVal, minVal, value, step } = this.state;
     const { handleFilters } = this.props;
 
     return (
@@ -116,6 +123,7 @@ export class RangeFilter extends React.PureComponent {
               aria-labelledby="range-slider"
               min={minVal}
               max={maxVal}
+              step={step}
             />
           </Fragment>
         </Grid>
