@@ -36,7 +36,7 @@
     "test/css/vwunit",
     "test/css/will-change",
     "test/dom/classlist",
-    "test/dom/snapshot",
+    "test/dom/dataset",
     "test/emoji",
     "test/event/deviceorientation-motion",
     "test/eventlistener",
