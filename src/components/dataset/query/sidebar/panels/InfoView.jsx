@@ -34,7 +34,7 @@ const styles = theme => ({
     margin: '6px 0px 6px 0px',
     borderRadius: '3px',
     padding: '3px 3px 3px 5px',
-  }
+  },
 });
 
 export class InfoView extends React.PureComponent {
@@ -59,9 +59,7 @@ export class InfoView extends React.PureComponent {
             <Grid item xs={12}><Typography variant="h6">{dataset.name}</Typography></Grid>
             <Grid item xs={9}>
               <div className={clsx(classes.headerText)}>About this dataset:
-                <Typography>{dataset.description} Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Vitae ultricies leo integer malesuada nunc. Cursus mattis molestie a iaculis. Interdum varius sit amet mattis. Tincidunt eget nullam non nisi. Ipsum dolor sit amet consectetur adipiscing elit ut. Pellentesque eu tincidunt tortor aliquam nulla facilisi cras fermentum odio. Fames ac turpis egestas integer eget aliquet nibh praesent. Non tellus orci ac auctor augue mauris augue neque gravida. Cursus risus at ultrices mi tempus imperdiet. Sit amet nisl purus in mollis nunc. Id eu nisl nunc mi ipsum faucibus vitae aliquet nec. Sed id semper risus in.
-
-</Typography>
+                <Typography>{dataset.description}</Typography>
               </div>
               <div className={clsx(classes.headerText)}>{dataset.schema.tables.length} tables:
               <ul className={classes.tableList}>{tables}</ul>
