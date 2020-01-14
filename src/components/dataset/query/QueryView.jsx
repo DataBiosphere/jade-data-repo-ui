@@ -40,6 +40,7 @@ export class QueryView extends React.PureComponent {
     this.state = {
       selected: '',
       table: null,
+      sidebarWidth: 0,
     };
   }
 
@@ -94,6 +95,10 @@ export class QueryView extends React.PureComponent {
     return dataset && dataset.schema;
   }
 
+  handleDrawerWidth = (width) => {
+    this.setState({ sidebarWidth: width });
+  };
+
   handleChange = value => {
     const { dataset, dispatch } = this.props;
     const table = dataset.schema.tables.find(t => t.name === value);
@@ -107,7 +112,7 @@ export class QueryView extends React.PureComponent {
 
   realRender() {
     const { classes, dataset, queryResults } = this.props;
-    const { table, selected } = this.state;
+    const { table, selected, sidebarWidth } = this.state;
     const names = dataset.schema.tables.map(t => t.name);
 
     return (
@@ -132,20 +137,22 @@ export class QueryView extends React.PureComponent {
         <SidebarDrawer
           panels={[
             {
+              icon: InfoIcon,
+              width: 800,
+              component: InfoView,
+              table,
+              dataset,
+            },
+            {
               icon: FilterList,
               width: 400,
               component: QueryViewSidebar,
               table,
               dataset,
-            },
-            {
-              icon: InfoIcon,
-              width: 400,
-              component: InfoView,
-              table,
-              dataset,
-            },
+            }
           ]}
+          handleDrawerWidth={this.handleDrawerWidth}
+          width = {sidebarWidth}
         />
       </Fragment>
     );

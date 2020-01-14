@@ -32,7 +32,7 @@ class UserList extends React.PureComponent {
     const { addUser, canManageUsers, classes, removeUser, typeOfUsers, users } = this.props;
     return (
       <div className={classes.root}>
-        <div className={classes.header}>{typeOfUsers}: </div>
+        <div className={classes.header}>{typeOfUsers}:</div>
         <div className={classes.values}>
           {users.map(user => (
             <Typography noWrap key={user}>
