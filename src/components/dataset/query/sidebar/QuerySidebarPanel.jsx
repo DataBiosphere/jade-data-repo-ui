@@ -52,7 +52,7 @@ export class QuerySidebarPanel extends React.PureComponent {
           <ListItemText>
             <strong>{filter}:</strong> {dataString}
           </ListItemText>
-          <Button onClick={this.clearFilter}>
+          <Button onClick={() => this.clearFilter(filter)}>
             <HighlightOff />
           </Button>
         </ListItem>
