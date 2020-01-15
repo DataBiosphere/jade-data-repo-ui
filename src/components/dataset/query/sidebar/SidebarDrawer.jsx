@@ -45,7 +45,7 @@ const styles = theme => ({
   },
   active: {
     backgroundColor: theme.palette.primary.lightContrast,
-  }
+  },
 });
 
 export class SidebarDrawer extends React.PureComponent {
@@ -57,14 +57,13 @@ export class SidebarDrawer extends React.PureComponent {
       PanelComponent: null,
       table: null,
       dataset: null,
-      prevKey: null,
     };
   }
 
   static propTypes = {
     classes: PropTypes.object,
-    panels: PropTypes.array,
     handleDrawerWidth: PropTypes.func,
+    panels: PropTypes.array,
     width: PropTypes.number,
   };
 
@@ -79,7 +78,7 @@ export class SidebarDrawer extends React.PureComponent {
   handleButtonClick = (key, PanelComponent, table, dataset, width) => {
     const { currentKey, open } = this.state;
     const { handleDrawerWidth } = this.props;
-    console.log(key);
+
     if (currentKey == null || !open) {
       handleDrawerWidth(width);
       this.setState({ open: true, currentKey: key, PanelComponent, table, dataset });
@@ -118,13 +117,20 @@ export class SidebarDrawer extends React.PureComponent {
             {panels.map((panel, i) => {
               const IconComponent = panel.icon;
               return (
-                <ListItem className={clsx({
-                  [classes.active]: i === currentKey,
-                })}
+                <ListItem
+                  className={clsx({
+                    [classes.active]: i === currentKey,
+                  })}
                   button
                   key={i}
                   onClick={() =>
-                    this.handleButtonClick(i, panel.component, panel.table, panel.dataset, panel.width)
+                    this.handleButtonClick(
+                      i,
+                      panel.component,
+                      panel.table,
+                      panel.dataset,
+                      panel.width,
+                    )
                   }
                 >
                   <IconComponent />
