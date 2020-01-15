@@ -28,23 +28,44 @@ export class QuerySidebarPanel extends React.PureComponent {
     filterData: PropTypes.object,
   };
 
-  clearFilter = filter => {
+  clearFilter = (filter, datum) => {
     const { dispatch, filterData } = this.props;
-    const clonedData = _.clone(filterData);
-    delete clonedData[filter];
+    const clonedData = _.cloneDeep(filterData);
+    const clonedFilter = clonedData[filter];
+    if (Array.isArray(clonedFilter)) {
+      clonedFilter.splice(clonedFilter.indexOf(datum), 1);
+    }
+    if (_.isPlainObject(clonedFilter)) {
+      delete clonedFilter[datum];
+    }
     dispatch(applyFilters(clonedData));
   };
-
   render() {
     const { classes, filterData } = this.props;
     const listFilters = _.keys(filterData).map(filter => {
       const data = _.get(filterData, filter);
       let dataString = data;
       if (Array.isArray(data)) {
-        dataString = _.join(data, ', ');
+        dataString = data.map(datum => {
+          return (
+            <ListItemText>
+              {datum}
+              <Button onClick={() => this.clearFilter(filter, datum)}>
+                <HighlightOff />
+              </Button>
+            </ListItemText>);
+        });
       }
       if (_.isPlainObject(data)) {
-        dataString = _.keys(data).join(', ');
+        dataString = _.keys(data).map(datum => {
+          return (
+            <ListItemText>
+              {datum}
+              <Button onClick={() => this.clearFilter(filter, datum)}>
+                <HighlightOff />
+              </Button>
+            </ListItemText>);
+        });
       }
 
       return (
@@ -52,9 +73,6 @@ export class QuerySidebarPanel extends React.PureComponent {
           <ListItemText>
             <strong>{filter}:</strong> {dataString}
           </ListItemText>
-          <Button onClick={() => this.clearFilter(filter)}>
-            <HighlightOff />
-          </Button>
         </ListItem>
       );
     });
