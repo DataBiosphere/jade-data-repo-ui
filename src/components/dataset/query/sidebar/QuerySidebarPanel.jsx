@@ -68,15 +68,15 @@ export class QuerySidebarPanel extends React.PureComponent {
         if (_.isPlainObject(data.value)) {
           dataString = _.keys(data.value);
         }
-        dataString = dataString.map((datum, i) => {
-          return (
+        dataString = dataString.map((datum, i) => (
             <ListItemText key={i}>
               {datum}
               <Button onClick={() => this.clearFilter(filter, datum)}>
                 <HighlightOff />
               </Button>
-            </ListItemText>);
-        });
+            </ListItemText>
+          );
+        );
       }
 
       return (

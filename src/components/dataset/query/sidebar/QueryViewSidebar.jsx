@@ -120,7 +120,6 @@ const styles = theme => ({
     '&:hover': {
       backgroundColor: theme.palette.primary.hover,
     },
-
   },
   snapshotButton: {
     right: '0',
