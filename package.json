@@ -63,7 +63,7 @@
     "react-redux-form": "^1.16.14",
     "react-router-dom": "^5.1.2",
     "react-select": "^3.0.8",
-    "react-transition-group": "^2.9.0",
+    "react-transition-group": "^4.3.0",
     "react-window": "^1.8.5",
     "redux": "^4.0.5",
     "redux-actions": "^2.6.5",
