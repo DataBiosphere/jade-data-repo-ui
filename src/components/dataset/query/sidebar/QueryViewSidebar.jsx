@@ -119,7 +119,7 @@ const styles = theme => ({
     backgroundColor: theme.palette.primary.main,
     '&:hover': {
       backgroundColor: theme.palette.primary.hover,
-    }
+    },
 
   },
   snapshotButton: {
@@ -173,8 +173,8 @@ export class QueryViewSidebar extends React.PureComponent {
     } else {
       clonedMap[filter.name] = {
         value: filter.value,
-        type: filter.type
-      }
+        type: filter.type,
+      };
     }
     this.setState({ filterMap: clonedMap });
   };

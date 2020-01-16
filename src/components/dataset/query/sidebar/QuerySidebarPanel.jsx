@@ -22,7 +22,7 @@ const styles = () => ({
   },
   rangeInfo: {
     display: 'inline',
-  }
+  },
 });
 
 export class QuerySidebarPanel extends React.PureComponent {
@@ -57,12 +57,12 @@ export class QuerySidebarPanel extends React.PureComponent {
       let dataString = data.value;
       if (data.type === 'range') {
         dataString = (
-        <span>
-          <Typography className={classes.rangeInfo}>{_.join(data.value, ' \u2013 ')}</Typography>
-          <Button className={classes.rangeInfo} onClick={() => this.clearFilter(filter)}>
-            <HighlightOff />
-          </Button>
-        </span>
+          <span>
+            <Typography className={classes.rangeInfo}>{_.join(data.value, ' \u2013 ')}</Typography>
+            <Button className={classes.rangeInfo} onClick={() => this.clearFilter(filter)}>
+              <HighlightOff />
+            </Button>
+          </span>
         );
       } else {
         if (_.isPlainObject(data.value)) {
