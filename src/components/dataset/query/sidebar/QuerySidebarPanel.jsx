@@ -75,7 +75,7 @@ export class QuerySidebarPanel extends React.PureComponent {
                 <HighlightOff />
               </Button>
             </ListItemText>
-          );
+          )
         );
       }
 
