@@ -122,7 +122,7 @@
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
     "bfj": "^7.0.2",
     "bundlesize": "^0.17.2",
-    "case-sensitive-paths-webpack-plugin": "^2.2.0",
+    "case-sensitive-paths-webpack-plugin": "^2.3.0",
     "chalk": "^2.4.2",
     "circular-dependency-plugin": "^5.2.0",
     "css-loader": "^2.1.1",
