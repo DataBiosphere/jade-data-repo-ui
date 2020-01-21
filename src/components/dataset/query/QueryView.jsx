@@ -6,7 +6,6 @@ import Grid from '@material-ui/core/Grid';
 
 import { applyFilters, runQuery, getDatasetById } from 'actions/index';
 import { Typography } from '@material-ui/core';
-import { DB_COLUMNS } from '../../../constants/index';
 
 import QueryViewSidebar from './sidebar/QueryViewSidebar';
 import QueryViewDropdown from './QueryViewDropdown';
