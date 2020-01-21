@@ -8,3 +8,5 @@ node_modules/
 reports/
 webpack.stats.json
 .idea
+.tern-project
+.DS_Store

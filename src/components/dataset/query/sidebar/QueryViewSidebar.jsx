@@ -26,6 +26,10 @@ const styles = theme => ({
   root: {
     display: 'block',
     margin: theme.spacing(1),
+    overflowY: 'auto',
+    overflowX: 'hidden',
+    maxHeight: 'calc(100vh - 120px)',
+    borderRadius: '0px 0px 5px 5px',
   },
   menuButton: {
     'border-radius': '0%',
