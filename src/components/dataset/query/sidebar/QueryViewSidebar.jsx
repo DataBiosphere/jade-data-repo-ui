@@ -182,7 +182,8 @@ export class QueryViewSidebar extends React.PureComponent {
                 />
               </ExpansionPanelDetails>
             </ExpansionPanel>
-          ))}
+          ))
+        }
         <div>
           <div>
             <Button
