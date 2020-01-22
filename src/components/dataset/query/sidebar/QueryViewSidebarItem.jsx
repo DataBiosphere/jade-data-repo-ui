@@ -18,12 +18,13 @@ export class QueryViewSidebarItem extends React.PureComponent {
 
   handleChange = value => {
     const { column, handleChange } = this.props;
-
-    const nameAndValue = {
+    const type = column.datatype === 'string' ? 'value' : 'range';
+    const nameValueType = {
       name: column.name,
       value,
+      type,
     };
-    handleChange(nameAndValue);
+    handleChange(nameValueType);
   };
 
   render() {
@@ -36,7 +37,6 @@ export class QueryViewSidebarItem extends React.PureComponent {
       tableName,
       token,
     } = this.props;
-
     switch (column.datatype) {
       case 'string':
         return (

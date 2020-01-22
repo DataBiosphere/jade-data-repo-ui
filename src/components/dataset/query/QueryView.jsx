@@ -95,7 +95,7 @@ export class QueryView extends React.PureComponent {
     return dataset && dataset.schema;
   }
 
-  handleDrawerWidth = (width) => {
+  handleDrawerWidth = width => {
     this.setState({ sidebarWidth: width });
   };
 
@@ -149,10 +149,10 @@ export class QueryView extends React.PureComponent {
               component: QueryViewSidebar,
               table,
               dataset,
-            }
+            },
           ]}
           handleDrawerWidth={this.handleDrawerWidth}
-          width = {sidebarWidth}
+          width={sidebarWidth}
         />
       </Fragment>
     );
