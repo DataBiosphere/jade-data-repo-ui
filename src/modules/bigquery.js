@@ -60,22 +60,23 @@ export default class BigQuery {
     if (!_.isEmpty(filterMap)) {
       const statementClauses = [];
       _.keys(filterMap).forEach(key => {
-        if (_.isArray(filterMap[key])) {
-          if (_.isNumber(filterMap[key][0])) {
-            statementClauses.push(`${key} BETWEEN ${filterMap[key][0]} AND ${filterMap[key][1]}`);
+        const keyValue = filterMap[key].value;
+        if (_.isArray(keyValue)) {
+          if (_.isNumber(keyValue[0])) {
+            statementClauses.push(`${key} BETWEEN ${keyValue[0]} AND ${keyValue[1]}`);
           } else {
             statementClauses.push(
-              `${key} = '${filterMap[key][0]}' OR ${key} = '${filterMap[key][1]}'`,
+              `${key} = '${keyValue[0]}' OR ${key} = '${keyValue[1]}'`,
             );
           }
-        } else if (_.isObject(filterMap[key])) {
-          const checkboxes = _.keys(filterMap[key]);
+        } else if (_.isObject(keyValue)) {
+          const checkboxes = _.keys(keyValue);
           if (checkboxes.length > 0) {
             const checkboxValues = checkboxes.map(checkboxValue => `"${checkboxValue}"`).join(',');
             statementClauses.push(`${key} IN (${checkboxValues})`);
           }
         } else {
-          const values = filterMap[key].split(',').map(val => `${key}='${val}'`);
+          const values = keyValue.split(',').map(val => `${key}='${val}'`);
           statementClauses.push(values.join(' OR '));
         }
       });

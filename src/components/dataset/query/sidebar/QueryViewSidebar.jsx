@@ -26,10 +26,13 @@ const styles = theme => ({
   root: {
     display: 'block',
     margin: theme.spacing(1),
+<<<<<<< HEAD
     overflowY: 'auto',
     overflowX: 'hidden',
     maxHeight: 'calc(100vh - 120px)',
     borderRadius: '0px 0px 5px 5px',
+=======
+>>>>>>> develop
   },
   menuButton: {
     'border-radius': '0%',
@@ -118,14 +121,28 @@ export class QueryViewSidebar extends React.PureComponent {
     }
   }
 
+<<<<<<< HEAD
   handleChange = value => {
+=======
+  handleDrawerOpen = () => {
+    this.setState({ open: true });
+  };
+
+  handleDrawerClose = () => {
+    this.setState({ open: false });
+  };
+
+  handleChange = filter => {
+>>>>>>> develop
     const { filterMap } = this.state;
     const clonedMap = _.clone(filterMap);
-
-    if (value.value == null || value.value.length === 0) {
-      delete clonedMap[value.name];
+    if (filter.value == null || filter.value.length === 0) {
+      delete clonedMap[filter.name];
     } else {
-      clonedMap[value.name] = value.value;
+      clonedMap[filter.name] = {
+        value: filter.value,
+        type: filter.type,
+      };
     }
     this.setState({ filterMap: clonedMap });
   };
@@ -133,7 +150,6 @@ export class QueryViewSidebar extends React.PureComponent {
   handleFilters = () => {
     const { dispatch } = this.props;
     const { filterMap } = this.state;
-
     dispatch(applyFilters(filterMap));
   };
 
@@ -182,8 +198,12 @@ export class QueryViewSidebar extends React.PureComponent {
                 />
               </ExpansionPanelDetails>
             </ExpansionPanel>
+<<<<<<< HEAD
           ))
         }
+=======
+          ))}
+>>>>>>> develop
         <div>
           <div>
             <Button

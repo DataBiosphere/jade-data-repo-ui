@@ -9,4 +9,7 @@ reports/
 webpack.stats.json
 .idea
 .tern-project
+<<<<<<< HEAD
 .DS_Store
+=======
+>>>>>>> develop

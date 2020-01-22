@@ -139,8 +139,8 @@ module.exports = webpackEnv => {
       ].filter(Boolean),
     },
     output: {
-      chunkFilename: isProd ? 'scripts/js/[name].[git-hash].chunk.js' : '[name].chunk.js',
-      filename: isProd ? '[name].[git-hash].js' : '[name].js',
+      chunkFilename: isProd ? 'scripts/js/[name].chunk.js' : '[name].chunk.js',
+      filename: isProd ? '[name].js' : '[name].js',
       path: paths.appBuild,
       pathinfo: isDev,
       publicPath,
@@ -234,7 +234,7 @@ module.exports = webpackEnv => {
                 {
                   loader: 'file',
                   options: {
-                    name: 'static/[name].[git-hash].[ext]',
+                    name: 'static/[name].[ext]',
                   },
                 },
               ],
@@ -261,7 +261,7 @@ module.exports = webpackEnv => {
               // by webpacks internal loaders.
               exclude: [/\.(js|jsx|mjs)$/, /\.html$/, /\.json$/],
               options: {
-                name: 'static/[name].[git-hash].[ext]',
+                name: 'static/[name].[ext]',
               },
             },
             // ** STOP ** Are you adding a new loader?
@@ -342,8 +342,8 @@ module.exports = webpackEnv => {
         new InlineChunkHtmlPlugin(HtmlPlugin, [/runtime~.+[.]js/]),
       isProd &&
         new MiniCssExtractPlugin({
-          filename: 'css/bundle.[git-hash].css',
-          chunkFilename: 'css/bundle.[git-hash].chunk.css',
+          filename: 'css/bundle.css',
+          chunkFilename: 'css/bundle.chunk.css',
         }),
       isDev &&
         new CircularDependencyPlugin({

@@ -110,6 +110,13 @@ export class JadeTable extends React.PureComponent {
     });
   };
 
+  handleArrayValues = value => {
+    if (_.isArray(value)) {
+      return `[${value.map(obj => obj.v).join(', ')}]`;
+    }
+    return value;
+  };
+
   render() {
     const { classes, queryResults, columns, rows, polling } = this.props;
     const { page, rowsPerPage, orderBy, order } = this.state;
@@ -131,7 +138,8 @@ export class JadeTable extends React.PureComponent {
                     return (
                       <TableRow hover tabIndex={-1} key={row.id}>
                         {columns.map(column => {
-                          const value = row[column.id];
+                          const value = this.handleArrayValues(row[column.id]);
+
                           return (
                             value && (
                               <TableCell key={`${column.id}-${row.id}`} align={column.align}>
