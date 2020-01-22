@@ -81,6 +81,7 @@ export class DetailViewHeader extends React.PureComponent {
                 users={custodians}
                 addUser={addCustodian}
                 removeUser={removeCustodian}
+                canManageUsers={true}
               />
             )}
             {readers && (
@@ -89,6 +90,7 @@ export class DetailViewHeader extends React.PureComponent {
                 users={readers}
                 addUser={addReader}
                 removeUser={removeReader}
+                canManageUsers={true}
               />
             )}
           </Card>

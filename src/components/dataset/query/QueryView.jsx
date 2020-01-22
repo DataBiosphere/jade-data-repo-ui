@@ -4,12 +4,16 @@ import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 
-import { applyFilters, runQuery, getDatasetById } from 'actions/index';
+import { applyFilters, runQuery, getDatasetById, getDatasetPolicy } from 'actions/index';
 import { Typography } from '@material-ui/core';
+import FilterList from '@material-ui/icons/FilterList';
+import InfoIcon from '@material-ui/icons/Info';
 
 import QueryViewSidebar from './sidebar/QueryViewSidebar';
+import SidebarDrawer from './sidebar/SidebarDrawer';
 import QueryViewDropdown from './QueryViewDropdown';
 import JadeTable from '../../table/JadeTable';
+import InfoView from './sidebar/panels/InfoView';
 
 const styles = theme => ({
   wrapper: {
@@ -36,12 +40,14 @@ export class QueryView extends React.PureComponent {
     this.state = {
       selected: '',
       table: null,
+      sidebarWidth: 0,
     };
   }
 
   static propTypes = {
     classes: PropTypes.object,
     dataset: PropTypes.object,
+    datasetPolicies: PropTypes.object,
     dispatch: PropTypes.func.isRequired,
     filterStatement: PropTypes.string,
     match: PropTypes.object,
@@ -50,10 +56,14 @@ export class QueryView extends React.PureComponent {
   };
 
   componentDidMount() {
-    const { dispatch, match, dataset } = this.props;
+    const { dispatch, match, dataset, datasetPolicies } = this.props;
     const datasetId = match.params.uuid;
     if (dataset == null || dataset.id !== datasetId) {
       dispatch(getDatasetById(datasetId));
+    }
+
+    if (datasetPolicies == null || dataset.id !== datasetId) {
+      dispatch(getDatasetPolicy(datasetId));
     }
   }
 
@@ -85,6 +95,10 @@ export class QueryView extends React.PureComponent {
     return dataset && dataset.schema;
   }
 
+  handleDrawerWidth = width => {
+    this.setState({ sidebarWidth: width });
+  };
+
   handleChange = value => {
     const { dataset, dispatch } = this.props;
     const table = dataset.schema.tables.find(t => t.name === value);
@@ -98,33 +112,48 @@ export class QueryView extends React.PureComponent {
 
   realRender() {
     const { classes, dataset, queryResults } = this.props;
-    const { table } = this.state;
+    const { table, selected, sidebarWidth } = this.state;
     const names = dataset.schema.tables.map(t => t.name);
 
     return (
       <Fragment>
         <Grid container spacing={0} className={classes.wrapper}>
-          <Grid item xs={11}>
-            <Grid container spacing={0}>
-              <Grid item xs={3}>
-                <Typography variant="h5" className={classes.headerArea}>
-                  {dataset.name}
-                </Typography>
-                <QueryViewDropdown options={names} onSelectedItem={this.handleChange} />
-              </Grid>
-            </Grid>
-            <Grid container spacing={0}>
-              <Grid item xs={12}>
-                <div className={classes.scrollTable}>
-                  <JadeTable queryResults={queryResults} />
-                </div>
-              </Grid>
+          <Grid container spacing={0}>
+            <Grid item xs={3}>
+              <Typography variant="h5" className={classes.headerArea}>
+                {dataset.name}
+              </Typography>
+              <QueryViewDropdown options={names} onSelectedItem={this.handleChange} />
             </Grid>
           </Grid>
-          <Grid item xs={1}>
-            <QueryViewSidebar table={table} />
+          <Grid container spacing={0}>
+            <Grid item xs={11}>
+              <div className={classes.scrollTable}>
+                <JadeTable queryResults={queryResults} title={selected} table={table} />
+              </div>
+            </Grid>
           </Grid>
         </Grid>
+        <SidebarDrawer
+          panels={[
+            {
+              icon: InfoIcon,
+              width: 800,
+              component: InfoView,
+              table,
+              dataset,
+            },
+            {
+              icon: FilterList,
+              width: 400,
+              component: QueryViewSidebar,
+              table,
+              dataset,
+            },
+          ]}
+          handleDrawerWidth={this.handleDrawerWidth}
+          width={sidebarWidth}
+        />
       </Fragment>
     );
   }
@@ -133,6 +162,7 @@ export class QueryView extends React.PureComponent {
     if (this.hasDataset()) {
       return this.realRender();
     }
+    // TODO change to actual loading spinner
     return <div>Loading</div>;
   }
 }
@@ -140,9 +170,9 @@ export class QueryView extends React.PureComponent {
 function mapStateToProps(state) {
   return {
     dataset: state.datasets.dataset,
+    datasetPolicies: state.datasets.datasetPolicies,
     filterStatement: state.query.filterStatement,
     queryResults: state.query.queryResults,
-    token: state.user.token,
     orderBy: state.query.orderBy,
   };
 }
