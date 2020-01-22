@@ -129,7 +129,7 @@
     "cypress": "^3.8.1",
     "cypress-testing-library": "^2.6.0",
     "date-fns": "2.0.0-beta.2",
-    "dotenv": "^6.2.0",
+    "dotenv": "^8.2.0",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.2",
     "enzyme-to-json": "^3.4.3",
