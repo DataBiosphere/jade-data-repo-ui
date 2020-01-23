@@ -24,8 +24,9 @@ const drawerWidth = 400;
 
 const styles = theme => ({
   root: {
-    display: 'block',
     margin: theme.spacing(1),
+    display: 'grid',
+    gridTemplateRows: 'calc(100vh - 125px) 100px',
   },
   menuButton: {
     'border-radius': '0%',
@@ -83,6 +84,16 @@ const styles = theme => ({
   jadeExpansionPanel: {
     margin: '10px',
   },
+  rowOne: {
+    gridRowStart: 1,
+    gridRowEnd: 2,
+    overflowY: 'auto',
+    overflowX: 'hidden',
+  },
+  rowTwo: {
+    gridRowStart: 2,
+    gridRowEnd: 3,
+  },
 });
 
 export class QueryViewSidebar extends React.PureComponent {
@@ -104,7 +115,7 @@ export class QueryViewSidebar extends React.PureComponent {
     token: PropTypes.string,
   };
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     const { filterMap } = this.state;
 
     if (!_.isEqual(nextProps.filterData, filterMap)) {
@@ -147,48 +158,50 @@ export class QueryViewSidebar extends React.PureComponent {
 
     return (
       <div className={classes.root}>
-        <Box className={!open ? classes.hide : ''}>
-          <Grid container={true} spacing={1}>
-            <Grid item xs={10} className={classes.sidebarTitle}>
-              <Typography variant="h6" display="block">
-                Data Snapshot
-              </Typography>
+        <div className={classes.rowOne}>
+          <Box className={!open ? classes.hide : ''}>
+            <Grid container={true} spacing={1}>
+              <Grid item xs={10} className={classes.sidebarTitle}>
+                <Typography variant="h6" display="block">
+                  Data Snapshot
+                </Typography>
+              </Grid>
             </Grid>
-          </Grid>
-        </Box>
-        <div className={clsx(classes.filterPanel, { [classes.hide]: !open })}>
-          <QuerySidebarPanel />
-        </div>
-        <Divider />
-        {table &&
-          table.name &&
-          table.columns.map(c => (
-            <ExpansionPanel
-              key={c.name}
-              className={clsx(classes.panelBottomBorder, { [classes.hide]: !open })}
-            >
-              <ExpansionPanelSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls={`panel-content-${c.name}`}
-                id={`panel-header-${c.name}`}
+          </Box>
+          <div className={clsx(classes.filterPanel, { [classes.hide]: !open })}>
+            <QuerySidebarPanel />
+          </div>
+          <Divider />
+          {table &&
+            table.name &&
+            table.columns.map(c => (
+              <ExpansionPanel
+                key={c.name}
+                className={clsx(classes.panelBottomBorder, { [classes.hide]: !open })}
               >
-                <Typography className={classes.heading}>{c.name}</Typography>
-              </ExpansionPanelSummary>
-              <ExpansionPanelDetails className={classes.jadeExpansionPanel}>
-                <QueryViewSidebarItem
-                  column={c}
-                  dataset={dataset}
-                  filterData={filterData}
-                  filterStatement={filterStatement}
-                  handleChange={this.handleChange}
-                  handleFilters={this.handleFilters}
-                  tableName={table.name}
-                  token={token}
-                />
-              </ExpansionPanelDetails>
-            </ExpansionPanel>
-          ))}
-        <div>
+                <ExpansionPanelSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls={`panel-content-${c.name}`}
+                  id={`panel-header-${c.name}`}
+                >
+                  <Typography className={classes.heading}>{c.name}</Typography>
+                </ExpansionPanelSummary>
+                <ExpansionPanelDetails className={classes.jadeExpansionPanel}>
+                  <QueryViewSidebarItem
+                    column={c}
+                    dataset={dataset}
+                    filterData={filterData}
+                    filterStatement={filterStatement}
+                    handleChange={this.handleChange}
+                    handleFilters={this.handleFilters}
+                    tableName={table.name}
+                    token={token}
+                  />
+                </ExpansionPanelDetails>
+              </ExpansionPanel>
+            ))}
+        </div>
+        <div className={classes.rowThree}>
           <div>
             <Button
               variant="contained"
