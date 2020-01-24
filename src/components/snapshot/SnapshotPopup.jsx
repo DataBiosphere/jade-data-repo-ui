@@ -5,19 +5,21 @@ import { connect } from 'react-redux';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import { Dialog, DialogTitle, DialogContent, Paper, Typography, DialogContentText, Button, Grid, ListItem } from '@material-ui/core';
 import { CameraAlt, Edit, PeopleAlt, OpenInNew, Today } from '@material-ui/icons';
+import clsx from 'clsx';
 
 const styles = theme => ({
   snapshotName: {
     backgroundColor: '#F1F4F7',
     borderRadius: '4px 4px 0px 0px',
+  },
+  content: {
     padding: theme.spacing(2),
+  },
+  withIcon: {
     display: 'flex',
     alignItems: 'center',
   },
-  snapshotDetails: {
-    padding: theme.spacing(2),
-  },
-  icon: {
+  inline: {
     marginRight: theme.spacing(1),
   },
   actions: {
@@ -32,8 +34,6 @@ const styles = theme => ({
     paddingBottom: theme.spacing(2),
   },
   date: {
-    display: 'flex',
-    alignItems: 'center',
     color: 'rgba(0, 0, 0, 0.54)',
     textTransform: 'uppercase',
   },
@@ -65,7 +65,7 @@ export class SnapshotPopup extends React.PureComponent {
     const { classes, dataset, filterData } = this.props;
     const { open } = this.state;
 
-    // const listFilters = _.keys(filterData).map(filter => {
+    // const listFilters = _.keys(filterData).map((filter, i) => {
     //   const data = _.get(filterData, filter);
     //   let dataString = data.value;
     //   if (data.type === 'range') {
@@ -78,23 +78,22 @@ export class SnapshotPopup extends React.PureComponent {
     //   }
 
     //   return (
-    //     <Typography variant='body'><strong>{filter}:</strong> {dataString}</Typography>
+    //     <li key={i} className={classes.listItem}><strong>{filter}: </strong>{dataString}</li>
     //   );
     // });
 
     return (
-      <div>
-        <Dialog open={open} onClose={this.handleClose}>
-          <DialogTitle>
-            <Typography variant='h5'>Your data snapshot has been created</Typography>
-          </DialogTitle>
-          <DialogContent>
-            <Paper variant='outlined'>
-              <div className={classes.snapshotName}>
-                <CameraAlt className={classes.icon} />
-                <Typography variant='h6'>V2F Snapshot</Typography>
-              </div>
-              <div className={classes.snapshotDetails}>
+      <Dialog open={open} onClose={this.handleClose}>
+        <DialogTitle>
+          <Typography variant='h5'>Your data snapshot has been created</Typography>
+        </DialogTitle>
+        <DialogContent>
+          <Paper variant='outlined'>
+            <div className={clsx(classes.snapshotName, classes.content, classes.withIcon)}>
+              <CameraAlt className={classes.inline} />
+              <Typography variant='h6'>V2F Snapshot</Typography>
+            </div>
+            <div className={classes.content}>
               <Typography variant='subtitle1' color='primary'>Properties</Typography>
               <div className={classes.bodyText}>
                 <li className={classes.listItem}><strong>ancestry: </strong>AA, EU, Mixed</li>
@@ -105,19 +104,18 @@ export class SnapshotPopup extends React.PureComponent {
               <div className={classes.bodyText}>
                 <li className={classes.listItem}>V2F GWAS Summary Stats</li>
               </div>
-              <div className={classes.date}>
-                <Today className={classes.icon} />Jan 15, 2020
+              <div className={clsx(classes.date, classes.withIcon)}>
+                <Today className={classes.inline} />Jan 15, 2020
               </div>
-              </div>
-            </Paper>
-            <div className={classes.actions}>
-              <Button className={classes.icon} color='primary'><Edit className={classes.icon} />Edit</Button>
-              <Button className={classes.icon} color='primary'><PeopleAlt className={classes.icon} />Share</Button>
-              <Button className={classes.icon} color='primary'><OpenInNew className={classes.icon} />Export</Button>
             </div>
-          </DialogContent>
-        </Dialog>
-      </div>
+          </Paper>
+          <div className={classes.actions}>
+            <Button className={classes.inline} color='primary'><Edit className={classes.inline} />Edit</Button>
+            <Button className={classes.inline} color='primary'><PeopleAlt className={classes.inline} />Share</Button>
+            <Button className={classes.inline} color='primary'><OpenInNew className={classes.inline} />Export</Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     );
   }
 
