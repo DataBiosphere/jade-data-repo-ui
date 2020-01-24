@@ -25,6 +25,7 @@ const styles = theme => ({
   actions: {
     paddingTop: theme.spacing(2),
     paddingBottom: theme.spacing(0.5),
+    textAlign: 'end',
   },
   listItem: {
     listStyleType: 'none',
@@ -112,7 +113,7 @@ export class SnapshotPopup extends React.PureComponent {
           <div className={classes.actions}>
             <Button className={classes.inline} color='primary'><Edit className={classes.inline} />Edit</Button>
             <Button className={classes.inline} color='primary'><PeopleAlt className={classes.inline} />Share</Button>
-            <Button className={classes.inline} color='primary'><OpenInNew className={classes.inline} />Export</Button>
+            <Button color='primary'><OpenInNew className={classes.inline} />Export</Button>
           </div>
         </DialogContent>
       </Dialog>
