@@ -15,7 +15,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 
-import { Box } from '@material-ui/core';
+import { Box, TextField } from '@material-ui/core';
 import QueryViewSidebarItem from './QueryViewSidebarItem';
 import QuerySidebarPanel from './QuerySidebarPanel';
 import { applyFilters } from '../../../../actions';
@@ -26,7 +26,16 @@ const styles = theme => ({
   root: {
     margin: theme.spacing(1),
     display: 'grid',
+  },
+  defaultGrid: {
     gridTemplateRows: 'calc(100vh - 125px) 100px',
+  },
+  createSnapshotGrid: {
+    gridTemplateRows: 'calc(100vh - 200px) 125px',
+  },
+  buttonContainer: {
+    display: 'flex',
+    justifyContent: 'space-between',
   },
   menuButton: {
     'border-radius': '0%',
@@ -94,6 +103,19 @@ const styles = theme => ({
     gridRowStart: 2,
     gridRowEnd: 3,
   },
+  saveButtonContainer: {
+    backgroundColor: theme.palette.primary.light,
+    marginBottom: theme.spacing(1),
+    padding: theme.spacing(1),
+    marginTop: theme.spacing(1),
+  },
+  saveButton: {
+    marginTop: theme.spacing(1),
+    alignSelf: 'flex-start',
+  },
+  cancelButton: {
+    alignSelf: 'flex-end',
+  },
 });
 
 export class QueryViewSidebar extends React.PureComponent {
@@ -101,6 +123,7 @@ export class QueryViewSidebar extends React.PureComponent {
     super(props);
     this.state = {
       filterMap: {},
+      isSavingSnapshot: false,
     };
   }
 
@@ -133,6 +156,10 @@ export class QueryViewSidebar extends React.PureComponent {
     this.setState({ open: false });
   };
 
+  handleCreateSnapshot = isSaving => {
+    this.setState({ isSavingSnapshot: isSaving });
+  };
+
   handleChange = filter => {
     const { filterMap } = this.state;
     const clonedMap = _.clone(filterMap);
@@ -155,9 +182,17 @@ export class QueryViewSidebar extends React.PureComponent {
 
   render() {
     const { classes, dataset, filterData, filterStatement, open, table, token } = this.props;
+    const { isSavingSnapshot } = this.state;
+
+    console.log(isSavingSnapshot);
 
     return (
-      <div className={classes.root}>
+      <div
+        className={clsx(classes.root, {
+          [classes.defaultGrid]: !isSavingSnapshot,
+          [classes.createSnapshotGrid]: isSavingSnapshot,
+        })}
+      >
         <div className={classes.rowOne}>
           <Box className={!open ? classes.hide : ''}>
             <Grid container={true} spacing={1}>
@@ -201,28 +236,51 @@ export class QueryViewSidebar extends React.PureComponent {
               </ExpansionPanel>
             ))}
         </div>
-        <div className={classes.rowThree}>
-          <div>
-            <Button
-              variant="contained"
-              className={clsx(classes.stickyButton, { [classes.hide]: !open })}
-              onClick={this.handleFilters}
-            >
-              Apply Filters
-            </Button>
+        {!isSavingSnapshot && (
+          <div className={classes.rowTwo}>
+            <div>
+              <Button
+                variant="contained"
+                className={clsx(classes.stickyButton, { [classes.hide]: !open })}
+                onClick={this.handleFilters}
+              >
+                Apply Filters
+              </Button>
+            </div>
+            <div className={classes.snapshotButtonContainer}>
+              <Button
+                variant="contained"
+                className={clsx(classes.stickyButton, classes.snapshotButton, {
+                  [classes.hide]: !open,
+                })}
+                onClick={() => this.handleCreateSnapshot(true)}
+              >
+                Create Snapshot
+              </Button>
+            </div>
           </div>
-          <div className={classes.snapshotButtonContainer}>
-            <Button
-              variant="contained"
-              disabled
-              className={clsx(classes.stickyButton, classes.snapshotButton, {
-                [classes.hide]: !open,
-              })}
-            >
-              Create Snapshot
-            </Button>
+        )}
+        {isSavingSnapshot && (
+          <div className={clsx(classes.rowTwo, classes.saveButtonContainer)}>
+            <TextField id="snapshotName" label="Snapshot Name" />
+            <div className={classes.buttonContainer}>
+              <Button
+                variant="contained"
+                className={clsx(classes.saveButton, { [classes.hide]: !open })}
+                onClick={() => this.handleCreateSnapshot(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="contained"
+                className={clsx(classes.cancelButton, { [classes.hide]: !open })}
+                onClick={this.handleFilters}
+              >
+                Save Snapshot
+              </Button>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     );
   }
