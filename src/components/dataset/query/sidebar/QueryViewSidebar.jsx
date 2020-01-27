@@ -183,8 +183,6 @@ export class QueryViewSidebar extends React.PureComponent {
     const { classes, dataset, filterData, filterStatement, open, table, token } = this.props;
     const { isSavingSnapshot } = this.state;
 
-    console.log(isSavingSnapshot);
-
     return (
       <div
         className={clsx(classes.root, {
