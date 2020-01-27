@@ -5,8 +5,6 @@ import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import Divider from '@material-ui/core/Divider';
-import IconButton from '@material-ui/core/IconButton';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
@@ -15,10 +13,11 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 
-import { Box, TextField } from '@material-ui/core';
+import { Box } from '@material-ui/core';
 import QueryViewSidebarItem from './QueryViewSidebarItem';
 import QuerySidebarPanel from './QuerySidebarPanel';
 import { applyFilters } from '../../../../actions';
+import CreateSnapshotPanel from './panels/CreateSnapshotPanel';
 
 const drawerWidth = 400;
 
@@ -261,25 +260,7 @@ export class QueryViewSidebar extends React.PureComponent {
           </div>
         )}
         {isSavingSnapshot && (
-          <div className={clsx(classes.rowTwo, classes.saveButtonContainer)}>
-            <TextField id="snapshotName" label="Snapshot Name" />
-            <div className={classes.buttonContainer}>
-              <Button
-                variant="contained"
-                className={clsx(classes.saveButton, { [classes.hide]: !open })}
-                onClick={() => this.handleCreateSnapshot(false)}
-              >
-                Cancel
-              </Button>
-              <Button
-                variant="contained"
-                className={clsx(classes.cancelButton, { [classes.hide]: !open })}
-                onClick={this.handleFilters}
-              >
-                Save Snapshot
-              </Button>
-            </div>
-          </div>
+          <CreateSnapshotPanel handleCreateSnapshot={this.handleCreateSnapshot} />
         )}
       </div>
     );
