@@ -2,10 +2,12 @@ import React from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withStyles, makeStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import { Dialog, DialogTitle, DialogContent, Paper, Typography, DialogContentText, Button, Grid, ListItem } from '@material-ui/core';
 import { CameraAlt, Edit, PeopleAlt, OpenInNew, Today } from '@material-ui/icons';
 import clsx from 'clsx';
+import { openSnapshotDialog } from '../../actions';
+import moment from 'moment';
 
 const styles = theme => ({
   snapshotName: {
@@ -41,50 +43,51 @@ const styles = theme => ({
 });
 
 export class SnapshotPopup extends React.PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {
-      open: true,
-    };
-  }
 
   static propTypes = {
     classes: PropTypes.object,
-    dataset: PropTypes.object,
+    datasets: PropTypes.array,
     filterData: PropTypes.object,
-  };
-
-  handleOpen = () => {
-    this.setState({ open: true });
+    variants: PropTypes.number,
   };
 
   handleClose = () => {
-    this.setState({ open: false });
+    const { dispatch } = this.props;
+    dispatch(openSnapshotDialog(false));
   };
 
   render() {
-    const { classes, dataset, filterData } = this.props;
-    const { open } = this.state;
+    const { classes, datasets, filterData, isOpen, variants } = this.props;
 
-    // const listFilters = _.keys(filterData).map((filter, i) => {
-    //   const data = _.get(filterData, filter);
-    //   let dataString = data.value;
-    //   if (data.type === 'range') {
-    //     dataString = _.join(data.value, ' \u2013 ');
-    //   } else {
-    //     if (_.isPlainObject(data.value)) {
-    //       dataString = _.keys(data.value);
-    //     }
-    //     dataString = _.join(dataString, ', ');
-    //   }
+    const numDatasets = datasets.length; 
+    const datasetLabel = numDatasets == 1 ? 'Dataset' : 'Datasets';
+    const variantLabel = variants == 1 ? 'Variant' : 'Variants';
 
-    //   return (
-    //     <li key={i} className={classes.listItem}><strong>{filter}: </strong>{dataString}</li>
-    //   );
-    // });
+    const properties = _.keys(filterData).map((filter, i) => {
+      const data = _.get(filterData, filter);
+      let dataString = data.value;
+      if (data.type === 'range') {
+        dataString = _.join(data.value, ' \u2013 ');
+      } else {
+        if (_.isPlainObject(data.value)) {
+          dataString = _.keys(data.value);
+        }
+        dataString = _.join(dataString, ', ');
+      }
+
+      return (
+        <li key={i} className={classes.listItem}><strong>{filter}: </strong>{dataString}</li>
+      );
+    });
+
+    const sources = datasets.map(dataset => {
+      return (
+      <li key={dataset.id} className={classes.listItem}>{dataset.name}</li>
+      )
+    });
 
     return (
-      <Dialog open={open} onClose={this.handleClose}>
+      <Dialog open={isOpen} onClose={this.handleClose}>
         <DialogTitle>
           <Typography variant='h5'>Your data snapshot has been created</Typography>
         </DialogTitle>
@@ -95,18 +98,19 @@ export class SnapshotPopup extends React.PureComponent {
               <Typography variant='h6'>V2F Snapshot</Typography>
             </div>
             <div className={classes.content}>
+              <div className={classes.bodyText}>
+                <Typography variant="h6">{numDatasets} {datasetLabel} | {variants} {variantLabel}</Typography>
+              </div>
               <Typography variant='subtitle1' color='primary'>Properties</Typography>
               <div className={classes.bodyText}>
-                <li className={classes.listItem}><strong>ancestry: </strong>AA, EU, Mixed</li>
-                <li className={classes.listItem}><strong>phenotype: </strong>CHOL, K</li>
-                <li className={classes.listItem}><strong>p value: </strong>0.49 {'\u2013'} 0.68</li>
+                {properties}
               </div>
               <Typography variant='subtitle1' color='primary'>Sources</Typography>
               <div className={classes.bodyText}>
-                <li className={classes.listItem}>V2F GWAS Summary Stats</li>
+                {sources}
               </div>
               <div className={clsx(classes.date, classes.withIcon)}>
-                <Today className={classes.inline} />Jan 15, 2020
+                <Today className={classes.inline} />{moment().format('ll')}
               </div>
             </div>
           </Paper>
@@ -124,8 +128,10 @@ export class SnapshotPopup extends React.PureComponent {
 
 function mapStateToProps(state) {
   return {
-    dataset: state.datasets.dataset,
+    isOpen: state.snapshots.dialogIsOpen,
+    datasets: state.datasets.datasets,
     filterData: state.query.filterData,
+    variants: state.query.queryResults.totalRows,
   }
 }
 
