@@ -91,7 +91,7 @@ export class SnapshotPopup extends React.PureComponent {
             </div>
             <div className={classes.content}>
               <div className={classes.bodyText}>
-                <Typography variant="h6">1 Dataset | {variants} {variantLabel}</Typography>
+                <Typography variant="h6">{variants} {variantLabel}</Typography>
               </div>
               <Typography variant='subtitle1' color='primary'>Properties</Typography>
               <div className={classes.bodyText}>
