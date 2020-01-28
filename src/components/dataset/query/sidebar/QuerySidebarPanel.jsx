@@ -5,14 +5,12 @@ import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 
 import Card from '@material-ui/core/Card';
-import Button from '@material-ui/core/Button';
 import List from '@material-ui/core/List';
-import Typography from '@material-ui/core/Typography';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import HighlightOff from '@material-ui/icons/HighlightOff';
 import { applyFilters } from '../../../../actions';
+import { Chip } from '@material-ui/core';
 
 const styles = () => ({
   listHeader: {
@@ -23,6 +21,9 @@ const styles = () => ({
   rangeInfo: {
     display: 'inline',
   },
+  inline: {
+    margin: '2px',
+  }
 });
 
 export class QuerySidebarPanel extends React.PureComponent {
@@ -37,9 +38,8 @@ export class QuerySidebarPanel extends React.PureComponent {
     const clonedData = _.cloneDeep(filterData);
     const clonedFilter = clonedData[filter];
     const filterValue = clonedFilter.value;
-    if (clonedFilter.type === 'range') {
-      delete clonedData[filter];
-    } else {
+
+    if (clonedFilter.type !== 'range') {
       if (Array.isArray(filterValue)) {
         filterValue.splice(filterValue.indexOf(datum), 1);
       }
@@ -47,6 +47,11 @@ export class QuerySidebarPanel extends React.PureComponent {
         delete filterValue[datum];
       }
     }
+
+    if (_.isEmpty(filterValue) || clonedFilter.type === 'range') {
+      delete clonedData[filter];
+    }
+
     dispatch(applyFilters(clonedData));
   };
 
@@ -57,24 +62,23 @@ export class QuerySidebarPanel extends React.PureComponent {
       let dataString = data.value;
       if (data.type === 'range') {
         dataString = (
-          <span>
-            <Typography className={classes.rangeInfo}>{_.join(data.value, ' \u2013 ')}</Typography>
-            <Button className={classes.rangeInfo} onClick={() => this.clearFilter(filter)}>
-              <HighlightOff />
-            </Button>
-          </span>
+          <Chip
+            onDelete={() => this.clearFilter(filter)}
+            className={classes.inline}
+            label={_.join(data.value, ' \u2013 ')}
+          />
         );
       } else {
         if (_.isPlainObject(data.value)) {
           dataString = _.keys(data.value);
         }
         dataString = dataString.map((datum, i) => (
-            <ListItemText key={i}>
-              {datum}
-              <Button onClick={() => this.clearFilter(filter, datum)}>
-                <HighlightOff />
-              </Button>
-            </ListItemText>
+          <Chip
+            key={i}
+            onDelete={() => this.clearFilter(filter, datum)}
+            className={classes.inline}
+            label={datum}
+          />
           )
         );
       }
