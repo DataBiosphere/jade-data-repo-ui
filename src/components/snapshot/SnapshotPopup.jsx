@@ -46,7 +46,7 @@ export class SnapshotPopup extends React.PureComponent {
 
   static propTypes = {
     classes: PropTypes.object,
-    datasets: PropTypes.array,
+    dataset: PropTypes.object,
     filterData: PropTypes.object,
     variants: PropTypes.number,
   };
@@ -57,10 +57,8 @@ export class SnapshotPopup extends React.PureComponent {
   };
 
   render() {
-    const { classes, datasets, filterData, isOpen, variants } = this.props;
+    const { classes, dataset, filterData, isOpen, variants } = this.props;
 
-    const numDatasets = datasets.length; 
-    const datasetLabel = numDatasets == 1 ? 'Dataset' : 'Datasets';
     const variantLabel = variants == 1 ? 'Variant' : 'Variants';
 
     const properties = _.keys(filterData).map((filter, i) => {
@@ -80,12 +78,6 @@ export class SnapshotPopup extends React.PureComponent {
       );
     });
 
-    const sources = datasets.map(dataset => {
-      return (
-      <li key={dataset.id} className={classes.listItem}>{dataset.name}</li>
-      )
-    });
-
     return (
       <Dialog open={isOpen} onClose={this.handleClose}>
         <DialogTitle>
@@ -99,7 +91,7 @@ export class SnapshotPopup extends React.PureComponent {
             </div>
             <div className={classes.content}>
               <div className={classes.bodyText}>
-                <Typography variant="h6">{numDatasets} {datasetLabel} | {variants} {variantLabel}</Typography>
+                <Typography variant="h6">1 Dataset | {variants} {variantLabel}</Typography>
               </div>
               <Typography variant='subtitle1' color='primary'>Properties</Typography>
               <div className={classes.bodyText}>
@@ -107,7 +99,7 @@ export class SnapshotPopup extends React.PureComponent {
               </div>
               <Typography variant='subtitle1' color='primary'>Sources</Typography>
               <div className={classes.bodyText}>
-                {sources}
+                <li className={classes.listItem}>{dataset.name}</li>
               </div>
               <div className={clsx(classes.date, classes.withIcon)}>
                 <Today className={classes.inline} />{moment().format('ll')}
@@ -129,7 +121,7 @@ export class SnapshotPopup extends React.PureComponent {
 function mapStateToProps(state) {
   return {
     isOpen: state.snapshots.dialogIsOpen,
-    datasets: state.datasets.datasets,
+    dataset: state.datasets.dataset,
     filterData: state.query.filterData,
     variants: state.query.queryResults.totalRows,
   }
