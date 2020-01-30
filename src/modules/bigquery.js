@@ -68,9 +68,7 @@ export default class BigQuery {
             const selections = keyValue.map(selection => `"${selection}"`).join(',');
             statementClauses.push(`${key} IN (${selections})`);
           } else {
-            statementClauses.push(
-              `${key} = '${keyValue[0]}' OR ${key} = '${keyValue[1]}'`,
-            );
+            statementClauses.push(`${key} = '${keyValue[0]}' OR ${key} = '${keyValue[1]}'`);
           }
         } else if (_.isObject(keyValue)) {
           const checkboxes = _.keys(keyValue);
