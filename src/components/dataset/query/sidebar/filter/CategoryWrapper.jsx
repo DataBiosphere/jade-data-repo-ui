@@ -52,8 +52,7 @@ export class CategoryWrapper extends React.PureComponent {
 
   render() {
     const { values, originalValues } = this.state;
-    const { column, filterData, handleChange, handleFilters } = this.props;
-
+    const { column, filterData, handleChange, handleFilters, tableName } = this.props;
     if (values && originalValues && originalValues.length <= CHECKBOX_THRESHOLD) {
       return (
         <CategoryFilterGroup
@@ -61,6 +60,7 @@ export class CategoryWrapper extends React.PureComponent {
           filterData={filterData}
           handleChange={handleChange}
           values={values}
+          table={tableName}
         />
       );
     }

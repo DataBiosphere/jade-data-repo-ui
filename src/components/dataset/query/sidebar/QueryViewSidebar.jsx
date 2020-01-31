@@ -159,29 +159,36 @@ export class QueryViewSidebar extends React.PureComponent {
     this.setState({ isSavingSnapshot: isSaving });
   };
 
-  handleChange = filter => {
+  handleChange = (filter, table) => {
     const { filterMap } = this.state;
-    const clonedMap = _.clone(filterMap);
+    const clonedMap = _.cloneDeep(filterMap);
     if (filter.value == null || filter.value.length === 0) {
-      delete clonedMap[filter.name];
+      delete clonedMap[table][filter.name];
+      if (_.isEmpty(clonedMap[table])) {
+        delete clonedMap[table];
+      }
     } else {
-      clonedMap[filter.name] = {
-        value: filter.value,
-        type: filter.type,
-      };
+      if (_.isPlainObject(clonedMap[table])) {
+        clonedMap[table][filter.name] = {
+          value: filter.value,
+          type: filter.type,
+        }
+      } else {
+        clonedMap[table] = {
+          [filter.name]: {
+            value: filter.value,
+            type: filter.type,
+          }
+        };
+      }
     }
     this.setState({ filterMap: clonedMap });
   };
 
   handleFilters = () => {
-    const { dispatch, table } = this.props;
+    const { dispatch } = this.props;
     const { filterMap } = this.state;
-    const tableName = table.name;
-    dispatch(
-      applyFilters({
-        [tableName]: filterMap,
-      }),
-    );
+    dispatch(applyFilters(filterMap));
   };
 
   render() {

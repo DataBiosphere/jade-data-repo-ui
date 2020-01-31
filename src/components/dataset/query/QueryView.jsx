@@ -80,7 +80,7 @@ export class QueryView extends React.PureComponent {
         runQuery(
           dataset.dataProject,
           `#standardSQL
-          SELECT * FROM \`${dataset.dataProject}.datarepo_${dataset.name}.${selected}\`
+          SELECT ${selected}.* FROM \`${dataset.dataProject}.datarepo_${dataset.name}.${selected}\` AS ${selected}
           ${filterStatement}
           ${orderBy}
           LIMIT ${QUERY_LIMIT}`,
@@ -107,7 +107,7 @@ export class QueryView extends React.PureComponent {
       selected: value,
       table,
     });
-    // dispatch(applyFilters({}));
+    dispatch(applyFilters({}));
   };
 
   realRender() {
