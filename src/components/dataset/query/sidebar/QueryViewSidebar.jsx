@@ -174,13 +174,17 @@ export class QueryViewSidebar extends React.PureComponent {
   };
 
   handleFilters = () => {
-    const { dispatch, table } = this.props;
+    const { dispatch, table, dataset } = this.props;
     const { filterMap } = this.state;
     const tableName = table.name;
     dispatch(
-      applyFilters({
-        [tableName]: filterMap,
-      }),
+      applyFilters(
+        {
+          [tableName]: filterMap,
+        },
+        dataset.schema.relationships,
+        tableName,
+      ),
     );
   };
 

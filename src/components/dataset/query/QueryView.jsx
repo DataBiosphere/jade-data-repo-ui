@@ -47,7 +47,7 @@ export class QueryView extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object,
     dataset: PropTypes.object,
-    datasetPolicies: PropTypes.object,
+    datasetPolicies: PropTypes.array,
     dispatch: PropTypes.func.isRequired,
     filterStatement: PropTypes.string,
     match: PropTypes.object,

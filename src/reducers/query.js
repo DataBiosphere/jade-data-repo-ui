@@ -52,7 +52,14 @@ export default {
         }),
       [ActionTypes.APPLY_FILTERS]: (state, action) => {
         const bigquery = new BigQuery();
-        const filterStatement = bigquery.buildFilterStatement(action.payload);
+        const filterStatement = bigquery.buildFilterStatement(action.payload.filters);
+        const joinStatement = bigquery.buildJoinStatement(
+          action.payload.filters,
+          action.payload.schema,
+          action.payload.table,
+        );
+
+        console.log(joinStatement);
 
         return immutable(state, {
           filterData: { $set: action.payload },
