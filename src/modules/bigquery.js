@@ -57,6 +57,7 @@ export default class BigQuery {
   calculateColumns = columns => columns.map(column => ({ title: column.name, field: column.name }));
 
   buildFilterStatement = filterMap => {
+    console.log(filterMap);
     if (!_.isEmpty(filterMap)) {
       const tableClauses = [];
 

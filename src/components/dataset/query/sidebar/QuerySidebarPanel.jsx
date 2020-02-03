@@ -62,12 +62,15 @@ export class QuerySidebarPanel extends React.PureComponent {
   render() {
     const { classes, filterData } = this.props;
     const listTables = _.keys(filterData).map(table => {
-      const listFilters = _.keys(filterData[table]).map(filter => {
+      const listFilters = _.keys(filterData.filters[table]).map(filter => {
         const data = _.get(filterData[table], filter);
-        console.log('JEREMY');
+        console.log('filterData[table]');
+        console.log(filterData[table]);
         console.log(data);
         console.log(filterData);
         let dataString = data.value;
+        console.log('DATA VALUE');
+        console.log(data.value);
         if (data.type === 'range') {
           dataString = (
             <Chip
@@ -80,6 +83,8 @@ export class QuerySidebarPanel extends React.PureComponent {
           if (_.isPlainObject(data.value)) {
             dataString = _.keys(data.value);
           }
+          console.log('before map');
+          console.log(dataString);
           dataString = dataString.map((datum, i) => (
             <Chip
               key={i}
