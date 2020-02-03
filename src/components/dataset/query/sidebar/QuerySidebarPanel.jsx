@@ -23,7 +23,7 @@ const styles = () => ({
   },
   inline: {
     margin: '2px',
-  }
+  },
 });
 
 export class QuerySidebarPanel extends React.PureComponent {
@@ -63,41 +63,43 @@ export class QuerySidebarPanel extends React.PureComponent {
     const { classes, filterData } = this.props;
     const listTables = _.keys(filterData).map(table => {
       const listFilters = _.keys(filterData[table]).map(filter => {
-      const data = _.get(filterData[table], filter);
-      let dataString = data.value;
-      if (data.type === 'range') {
-        dataString = (
-          <Chip
-            onDelete={() => this.clearFilter(table, filter)}
-            className={classes.inline}
-            label={_.join(data.value, ' \u2013 ')}
-          />
-        );
-      } else {
-        if (_.isPlainObject(data.value)) {
-          dataString = _.keys(data.value);
+        const data = _.get(filterData[table], filter);
+        console.log('JEREMY');
+        console.log(data);
+        console.log(filterData);
+        let dataString = data.value;
+        if (data.type === 'range') {
+          dataString = (
+            <Chip
+              onDelete={() => this.clearFilter(table, filter)}
+              className={classes.inline}
+              label={_.join(data.value, ' \u2013 ')}
+            />
+          );
+        } else {
+          if (_.isPlainObject(data.value)) {
+            dataString = _.keys(data.value);
+          }
+          dataString = dataString.map((datum, i) => (
+            <Chip
+              key={i}
+              onDelete={() => this.clearFilter(table, filter, datum)}
+              className={classes.inline}
+              label={datum}
+            />
+          ));
         }
-        dataString = dataString.map((datum, i) => (
-          <Chip
-            key={i}
-            onDelete={() => this.clearFilter(table, filter, datum)}
-            className={classes.inline}
-            label={datum}
-          />
-          )
-        );
-      }
 
-      return (
-        <ListItem dense={true} key={filter}>
-          <ListItemText>
-            <strong>{filter}:</strong> {dataString}
-          </ListItemText>
-        </ListItem>
-      );
+        return (
+          <ListItem dense={true} key={filter}>
+            <ListItemText>
+              <strong>{filter}:</strong> {dataString}
+            </ListItemText>
+          </ListItem>
+        );
+      });
+      return listFilters;
     });
-    return listFilters;
-  });
 
     return (
       <Card>

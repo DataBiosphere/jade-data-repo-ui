@@ -148,7 +148,7 @@ export default class BigQuery {
   constructGraph = schema => {
     const neighbors = {}; // Key = vertex, value = array of neighbors.
 
-    _.forEach(schema).map(relationship => {
+    _.forEach(schema, relationship => {
       const u = relationship.from.table;
       const v = relationship.to.table;
 

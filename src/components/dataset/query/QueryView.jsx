@@ -107,7 +107,7 @@ export class QueryView extends React.PureComponent {
       selected: value,
       table,
     });
-    dispatch(applyFilters({}));
+    // dispatch(applyFilters({}));
   };
 
   realRender() {
