@@ -49,6 +49,7 @@ export class SnapshotPopup extends React.PureComponent {
     dataset: PropTypes.object,
     filterData: PropTypes.object,
     variants: PropTypes.number,
+    snapshot: PropTypes.object,
   };
 
   handleClose = () => {
@@ -57,7 +58,7 @@ export class SnapshotPopup extends React.PureComponent {
   };
 
   render() {
-    const { classes, dataset, filterData, isOpen, variants } = this.props;
+    const { classes, dataset, filterData, isOpen, variants, snapshot } = this.props;
 
     const variantLabel = variants == 1 ? 'Variant' : 'Variants';
 
@@ -87,7 +88,7 @@ export class SnapshotPopup extends React.PureComponent {
           <Paper variant='outlined'>
             <div className={clsx(classes.snapshotName, classes.content, classes.withIcon)}>
               <CameraAlt className={classes.inline} />
-              <Typography variant='h6'>V2F Snapshot</Typography>
+              <Typography variant='h6'>{snapshot.name}</Typography>
             </div>
             <div className={classes.content}>
               <div className={classes.bodyText}>
@@ -124,6 +125,7 @@ function mapStateToProps(state) {
     dataset: state.datasets.dataset,
     filterData: state.query.filterData,
     variants: state.query.queryResults.totalRows,
+    snapshot: state.snapshots.snapshot,
   }
 }
 
