@@ -102,7 +102,6 @@ export class QueryView extends React.PureComponent {
   handleChange = value => {
     const { dataset, dispatch } = this.props;
     const table = dataset.schema.tables.find(t => t.name === value);
-
     this.setState({
       selected: value,
       table,

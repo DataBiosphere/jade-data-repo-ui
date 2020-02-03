@@ -57,7 +57,6 @@ export default class BigQuery {
   calculateColumns = columns => columns.map(column => ({ title: column.name, field: column.name }));
 
   buildFilterStatement = filterMap => {
-    console.log(filterMap);
     if (!_.isEmpty(filterMap)) {
       const tableClauses = [];
 
@@ -206,6 +205,7 @@ export default class BigQuery {
 
   buildJoinStatement = (filterMap, schema, table) => {
     const tables = _.keys(filterMap);
+    console.log(tables[0]);
     console.log(table);
     const graph = this.constructGraph(schema);
     console.log(graph);

@@ -31,10 +31,11 @@ export class QuerySidebarPanel extends React.PureComponent {
     classes: PropTypes.object,
     dispatch: PropTypes.func.isRequired,
     filterData: PropTypes.object,
+    relationships: PropTypes.array,
   };
 
   clearFilter = (table, filter, datum) => {
-    const { dispatch, filterData } = this.props;
+    const { dispatch, filterData, relationships } = this.props;
     const clonedData = _.cloneDeep(filterData);
     const clonedFilter = clonedData[table][filter];
     const filterValue = clonedFilter.value;
@@ -56,21 +57,15 @@ export class QuerySidebarPanel extends React.PureComponent {
       delete clonedData[table];
     }
 
-    dispatch(applyFilters(clonedData));
+    dispatch(applyFilters(clonedData, relationships, table));
   };
 
   render() {
     const { classes, filterData } = this.props;
     const listTables = _.keys(filterData).map(table => {
-      const listFilters = _.keys(filterData.filters[table]).map(filter => {
+      const listFilters = _.keys(filterData[table]).map(filter => {
         const data = _.get(filterData[table], filter);
-        console.log('filterData[table]');
-        console.log(filterData[table]);
-        console.log(data);
-        console.log(filterData);
         let dataString = data.value;
-        console.log('DATA VALUE');
-        console.log(data.value);
         if (data.type === 'range') {
           dataString = (
             <Chip
@@ -83,8 +78,6 @@ export class QuerySidebarPanel extends React.PureComponent {
           if (_.isPlainObject(data.value)) {
             dataString = _.keys(data.value);
           }
-          console.log('before map');
-          console.log(dataString);
           dataString = dataString.map((datum, i) => (
             <Chip
               key={i}
@@ -125,6 +118,7 @@ export class QuerySidebarPanel extends React.PureComponent {
 function mapStateToProps(state) {
   return {
     filterData: state.query.filterData,
+    relationships: state.datasets.dataset.schema.relationships,
   };
 }
 

@@ -59,10 +59,11 @@ export default {
           action.payload.table,
         );
 
+        console.log("join statement");
         console.log(joinStatement);
 
         return immutable(state, {
-          filterData: { $set: action.payload },
+          filterData: { $set: action.payload.filters },
           filterStatement: { $set: filterStatement },
         });
       },
