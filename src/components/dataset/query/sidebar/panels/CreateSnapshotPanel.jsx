@@ -29,10 +29,11 @@ export class CreateSnapshotPanel extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object,
     handleCreateSnapshot: PropTypes.func,
+    handleSaveSnapshot: PropTypes.func,
   };
 
   render() {
-    const { classes, handleCreateSnapshot } = this.props;
+    const { classes, handleCreateSnapshot, handleSaveSnapshot } = this.props;
 
     return (
       <div className={clsx(classes.rowTwo, classes.saveButtonContainer)}>
@@ -48,6 +49,7 @@ export class CreateSnapshotPanel extends React.PureComponent {
           <Button
             variant="contained"
             className={clsx(classes.cancelButton, { [classes.hide]: !open })}
+            onClick={() => handleSaveSnapshot()}
           >
             Save Snapshot
           </Button>

@@ -6,6 +6,7 @@ import Tooltip from '@material-ui/core/Tooltip/Tooltip';
 
 import SnapshotTable from './table/SnapshotTable';
 import Add from './icons/Add';
+import SnapshotPopup from './snapshot/SnapshotPopup';
 
 const styles = theme => ({
   wrapper: {
@@ -42,6 +43,7 @@ class SnapshotView extends React.PureComponent {
             <SnapshotTable />
           </div>
         </div>
+        <SnapshotPopup />
       </div>
     );
   }
