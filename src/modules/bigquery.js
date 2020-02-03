@@ -64,6 +64,9 @@ export default class BigQuery {
         if (_.isArray(keyValue)) {
           if (_.isNumber(keyValue[0])) {
             statementClauses.push(`${key} BETWEEN ${keyValue[0]} AND ${keyValue[1]}`);
+          } else if (_.isString(keyValue[0])) {
+            const selections = keyValue.map(selection => `"${selection}"`).join(',');
+            statementClauses.push(`${key} IN (${selections})`);
           } else {
             statementClauses.push(
               `${key} = '${keyValue[0]}' OR ${key} = '${keyValue[1]}'`,
