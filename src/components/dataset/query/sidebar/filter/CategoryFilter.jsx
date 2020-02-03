@@ -8,9 +8,9 @@ import Checkbox from '@material-ui/core/Checkbox';
 export class CategoryFilter extends React.PureComponent {
   constructor(props) {
     super(props);
-    const { filterData, column } = this.props;
-
-    const currFilter = _.get(filterData, column.name);
+    const { filterData, column, table } = this.props;
+    const currTable = _.get(filterData, table);
+    const currFilter = _.get(currTable, column.name);
     if (currFilter === undefined) {
       this.state = {
         checked: false,
@@ -28,11 +28,13 @@ export class CategoryFilter extends React.PureComponent {
     filterData: PropTypes.object,
     handleChange: PropTypes.func,
     name: PropTypes.string,
+    table: PropTypes.string,
   };
 
   componentWillReceiveProps(nextProps) {
-    const { column, filterData } = this.props;
-    const currFilter = _.get(nextProps.filterData, column.name);
+    const { column, filterData, table } = this.props;
+    const currTable = _.get(nextProps.filterData, table);
+    const currFilter = _.get(currTable, column.name);
 
     if (nextProps.filterData !== filterData && currFilter === undefined) {
       this.setState({

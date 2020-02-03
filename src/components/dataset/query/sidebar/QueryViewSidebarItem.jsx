@@ -17,14 +17,14 @@ export class QueryViewSidebarItem extends React.PureComponent {
   };
 
   handleChange = value => {
-    const { column, handleChange } = this.props;
+    const { column, handleChange, tableName } = this.props;
     const type = column.datatype === 'string' ? 'value' : 'range';
     const nameValueType = {
       name: column.name,
       value,
       type,
     };
-    handleChange(nameValueType);
+    handleChange(nameValueType, tableName);
   };
 
   render() {

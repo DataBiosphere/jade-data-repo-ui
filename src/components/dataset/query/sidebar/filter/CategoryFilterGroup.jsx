@@ -18,6 +18,7 @@ export class CategoryFilterGroup extends React.PureComponent {
     filterData: PropTypes.object,
     handleChange: PropTypes.func,
     values: PropTypes.array,
+    table: PropTypes.string,
   };
 
   static getDerivedStateFromProps(props, state) {
@@ -47,7 +48,7 @@ export class CategoryFilterGroup extends React.PureComponent {
   };
 
   render() {
-    const { column, filterData, values } = this.props;
+    const { column, filterData, values, table } = this.props;
     const checkboxes = values.map(value => {
       const name = value.f[0].v;
       const count = value.f[1].v;
@@ -59,6 +60,7 @@ export class CategoryFilterGroup extends React.PureComponent {
             handleChange={this.handleChange}
             name={name}
             count={count}
+            table={table}
           />
         </div>
       );

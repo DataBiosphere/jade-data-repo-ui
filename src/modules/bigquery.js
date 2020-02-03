@@ -57,35 +57,54 @@ export default class BigQuery {
   calculateColumns = columns => columns.map(column => ({ title: column.name, field: column.name }));
 
   buildFilterStatement = filterMap => {
-    // if (!_.isEmpty(filterMap)) {
-    //   const statementClauses = [];
-    //   _.keys(filterMap).forEach(key => {
-    //     const keyValue = filterMap[key].value;
-    //     if (_.isArray(keyValue)) {
-    //       if (_.isNumber(keyValue[0])) {
-    //         statementClauses.push(`${key} BETWEEN ${keyValue[0]} AND ${keyValue[1]}`);
-    //       } else if (_.isString(keyValue[0])) {
-    //         const selections = keyValue.map(selection => `"${selection}"`).join(',');
-    //         statementClauses.push(`${key} IN (${selections})`);
-    //       } else {
-    //         statementClauses.push(`${key} = '${keyValue[0]}' OR ${key} = '${keyValue[1]}'`);
-    //       }
-    //     } else if (_.isObject(keyValue)) {
-    //       const checkboxes = _.keys(keyValue);
-    //       if (checkboxes.length > 0) {
-    //         const checkboxValues = checkboxes.map(checkboxValue => `"${checkboxValue}"`).join(',');
-    //         statementClauses.push(`${key} IN (${checkboxValues})`);
-    //       }
-    //     } else {
-    //       const values = keyValue.split(',').map(val => `${key}='${val}'`);
-    //       statementClauses.push(values.join(' OR '));
-    //     }
-    //   });
+    if (!_.isEmpty(filterMap)) {
+      const tableClauses = [];
 
-    //   if (!_.isEmpty(statementClauses)) {
-    //     return `WHERE ${statementClauses.join(' AND ')}`;
-    //   }
-    // }
+      _.keys(filterMap).forEach(table => {
+        const filters = filterMap[table];
+
+        if (!_.isEmpty(filters)) {
+          const statementClauses = [];
+
+          _.keys(filters).forEach(key => {
+            const property = `${table}.${key}`;
+            const keyValue = filters[key].value;
+
+            if (_.isArray(keyValue)) {
+              if (_.isNumber(keyValue[0])) {
+                statementClauses.push(`${property} BETWEEN ${keyValue[0]} AND ${keyValue[1]}`);
+              } else if (_.isString(keyValue[0])) {
+                const selections = keyValue.map(selection => `"${selection}"`).join(',');
+                statementClauses.push(`${property} IN (${selections})`);
+              } else {
+                statementClauses.push(
+                  `${property} = '${keyValue[0]}' OR ${property} = '${keyValue[1]}'`,
+                );
+              }
+            } else if (_.isObject(keyValue)) {
+              const checkboxes = _.keys(keyValue);
+              if (checkboxes.length > 0) {
+                const checkboxValues = checkboxes
+                  .map(checkboxValue => `"${checkboxValue}"`)
+                  .join(',');
+                statementClauses.push(`${property} IN (${checkboxValues})`);
+              }
+            } else {
+              const values = keyValue.split(',').map(val => `${key}='${val}'`);
+              statementClauses.push(values.join(' OR '));
+            }
+          });
+
+          if (!_.isEmpty(statementClauses)) {
+            tableClauses.push(statementClauses.join(' AND '));
+          }
+        }
+      });
+
+      if (!_.isEmpty(tableClauses)) {
+        return `WHERE ${tableClauses.join(' AND ')}`;
+      }
+    }
     return '';
   };
 
@@ -111,8 +130,7 @@ export default class BigQuery {
 
   getColumnDistinct = (columnName, dataset, tableName, token, filterStatement) => {
     const url = `https://bigquery.googleapis.com/bigquery/v2/projects/${dataset.dataProject}/queries`;
-    const query = `SELECT ${columnName}, COUNT(*) FROM [${dataset.dataProject}.datarepo_${dataset.name}.${tableName}] ${filterStatement} GROUP BY ${columnName}`;
-
+    const query = `SELECT ${tableName}.${columnName}, COUNT(*) FROM [${dataset.dataProject}.datarepo_${dataset.name}.${tableName}] AS ${tableName} ${filterStatement} GROUP BY ${tableName}.${columnName}`;
     return axios
       .post(
         url,

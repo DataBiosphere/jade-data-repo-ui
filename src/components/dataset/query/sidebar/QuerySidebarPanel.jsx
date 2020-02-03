@@ -33,10 +33,10 @@ export class QuerySidebarPanel extends React.PureComponent {
     filterData: PropTypes.object,
   };
 
-  clearFilter = (filter, datum) => {
+  clearFilter = (table, filter, datum) => {
     const { dispatch, filterData } = this.props;
     const clonedData = _.cloneDeep(filterData);
-    const clonedFilter = clonedData[filter];
+    const clonedFilter = clonedData[table][filter];
     const filterValue = clonedFilter.value;
 
     if (clonedFilter.type !== 'range') {
@@ -49,7 +49,11 @@ export class QuerySidebarPanel extends React.PureComponent {
     }
 
     if (_.isEmpty(filterValue) || clonedFilter.type === 'range') {
-      delete clonedData[filter];
+      delete clonedData[table][filter];
+    }
+
+    if (_.isEmpty(clonedData[table])) {
+      delete clonedData[table];
     }
 
     dispatch(applyFilters(clonedData));
@@ -57,13 +61,14 @@ export class QuerySidebarPanel extends React.PureComponent {
 
   render() {
     const { classes, filterData } = this.props;
-    const listFilters = _.keys(filterData).map(filter => {
-      const data = _.get(filterData, filter);
+    const listTables = _.keys(filterData).map(table => {
+      const listFilters = _.keys(filterData[table]).map(filter => {
+      const data = _.get(filterData[table], filter);
       let dataString = data.value;
       if (data.type === 'range') {
         dataString = (
           <Chip
-            onDelete={() => this.clearFilter(filter)}
+            onDelete={() => this.clearFilter(table, filter)}
             className={classes.inline}
             label={_.join(data.value, ' \u2013 ')}
           />
@@ -75,7 +80,7 @@ export class QuerySidebarPanel extends React.PureComponent {
         dataString = dataString.map((datum, i) => (
           <Chip
             key={i}
-            onDelete={() => this.clearFilter(filter, datum)}
+            onDelete={() => this.clearFilter(table, filter, datum)}
             className={classes.inline}
             label={datum}
           />
@@ -91,6 +96,8 @@ export class QuerySidebarPanel extends React.PureComponent {
         </ListItem>
       );
     });
+    return listFilters;
+  });
 
     return (
       <Card>
@@ -101,7 +108,7 @@ export class QuerySidebarPanel extends React.PureComponent {
             </ListSubheader>
           }
         >
-          {listFilters}
+          {listTables}
         </List>
       </Card>
     );
