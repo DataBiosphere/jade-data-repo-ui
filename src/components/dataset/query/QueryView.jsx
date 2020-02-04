@@ -49,7 +49,9 @@ export class QueryView extends React.PureComponent {
     dataset: PropTypes.object,
     datasetPolicies: PropTypes.array,
     dispatch: PropTypes.func.isRequired,
+    filterData: PropTypes.object,
     filterStatement: PropTypes.string,
+    joinStatement: PropTypes.string,
     match: PropTypes.object,
     orderBy: PropTypes.string,
     queryResults: PropTypes.object,
@@ -68,7 +70,7 @@ export class QueryView extends React.PureComponent {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { dataset, dispatch, filterStatement, orderBy } = this.props;
+    const { dataset, dispatch, filterStatement, joinStatement, orderBy } = this.props;
     const { selected } = this.state;
     if (
       this.hasDataset() &&
@@ -81,6 +83,7 @@ export class QueryView extends React.PureComponent {
           dataset.dataProject,
           `#standardSQL
           SELECT ${selected}.* FROM \`${dataset.dataProject}.datarepo_${dataset.name}.${selected}\` AS ${selected}
+          ${joinStatement}
           ${filterStatement}
           ${orderBy}
           LIMIT ${QUERY_LIMIT}`,
@@ -100,13 +103,13 @@ export class QueryView extends React.PureComponent {
   };
 
   handleChange = value => {
-    const { dataset, dispatch } = this.props;
+    const { dataset, dispatch, filterData } = this.props;
     const table = dataset.schema.tables.find(t => t.name === value);
     this.setState({
       selected: value,
       table,
     });
-    // dispatch(applyFilters({}));
+    dispatch(applyFilters(filterData, dataset.schema.relationships, value, dataset));
   };
 
   realRender() {
@@ -172,6 +175,8 @@ function mapStateToProps(state) {
     dataset: state.datasets.dataset,
     datasetPolicies: state.datasets.datasetPolicies,
     filterStatement: state.query.filterStatement,
+    filterData: state.query.filterData,
+    joinStatement: state.query.joinStatement,
     queryResults: state.query.queryResults,
     orderBy: state.query.orderBy,
   };

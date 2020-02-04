@@ -29,13 +29,14 @@ const styles = () => ({
 export class QuerySidebarPanel extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object,
+    dataset: PropTypes.object,
     dispatch: PropTypes.func.isRequired,
     filterData: PropTypes.object,
-    relationships: PropTypes.array,
   };
 
   clearFilter = (table, filter, datum) => {
-    const { dispatch, filterData, relationships } = this.props;
+    const { dispatch, filterData, dataset } = this.props;
+    const { relationships } = dataset.schema;
     const clonedData = _.cloneDeep(filterData);
     const clonedFilter = clonedData[table][filter];
     const filterValue = clonedFilter.value;
@@ -57,7 +58,7 @@ export class QuerySidebarPanel extends React.PureComponent {
       delete clonedData[table];
     }
 
-    dispatch(applyFilters(clonedData, relationships, table));
+    dispatch(applyFilters(clonedData, relationships, table, dataset));
   };
 
   render() {
@@ -118,7 +119,7 @@ export class QuerySidebarPanel extends React.PureComponent {
 function mapStateToProps(state) {
   return {
     filterData: state.query.filterData,
-    relationships: state.datasets.dataset.schema.relationships,
+    dataset: state.datasets.dataset,
   };
 }
 

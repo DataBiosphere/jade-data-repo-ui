@@ -169,7 +169,7 @@ export default class BigQuery {
 
   bfs = (graph, source, target) => {
     if (source === target) {
-      return source;
+      return [source];
     }
     let queue = [source];
     let visited = { source: true };
@@ -194,7 +194,6 @@ export default class BigQuery {
           }
           path.push(u);
           path.reverse();
-          console.log(path.join(' &rarr; '));
           return path;
         }
         predecessor[v] = u;
@@ -203,15 +202,47 @@ export default class BigQuery {
     }
   };
 
-  buildJoinStatement = (filterMap, schema, table) => {
-    const tables = _.keys(filterMap);
-    console.log(tables[0]);
-    console.log(table);
-    const graph = this.constructGraph(schema);
-    console.log(graph);
-    const path = this.bfs(graph, table, 'ancestry_specific_meta_analysis');
-    console.log(path);
+  findRelationshipData = (schema, source, target) => {
+    // eslint-disable-next-line consistent-return
+    let result = {};
+    schema.forEach(relationship => {
+      if (relationship.from.table === source && relationship.to.table === target) {
+        result = relationship;
+      }
 
-    return '';
+      if (relationship.from.table === target && relationship.to.table === source) {
+        result = {
+          to: relationship.from,
+          from: relationship.to,
+          name: relationship.name,
+        };
+      }
+    });
+    return result;
+  };
+
+  buildJoinStatement = (filterMap, schema, table, dataset) => {
+    const tables = _.keys(filterMap);
+    const graph = this.constructGraph(schema);
+    let joins = [];
+
+    if (!tables.includes(table)) {
+      tables.push(table);
+    }
+
+    tables.forEach(target => {
+      const path = this.bfs(graph, table, target);
+
+      for (let i = 1; i < path.length; i++) {
+        const currTable = path[i];
+        const prevTable = path[i - 1];
+        const relationship = this.findRelationshipData(schema, currTable, prevTable);
+        const joinString = `JOIN \`${dataset.dataProject}.datarepo_${dataset.name}.${relationship.from.table}\` AS ${relationship.from.table} ON ${relationship.from.table}.${relationship.from.column} = ${relationship.to.table}.${relationship.to.column}`;
+        joins.push(joinString);
+      }
+    });
+
+    joins = _.uniq(joins);
+    return joins.join(' ');
   };
 }
