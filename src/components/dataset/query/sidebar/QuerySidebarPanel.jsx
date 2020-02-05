@@ -32,10 +32,11 @@ export class QuerySidebarPanel extends React.PureComponent {
     dataset: PropTypes.object,
     dispatch: PropTypes.func.isRequired,
     filterData: PropTypes.object,
+    selected: PropTypes.string,
   };
 
   clearFilter = (table, filter, datum) => {
-    const { dispatch, filterData, dataset } = this.props;
+    const { dispatch, filterData, dataset, selected } = this.props;
     const { relationships } = dataset.schema;
     const clonedData = _.cloneDeep(filterData);
     const clonedFilter = clonedData[table][filter];
@@ -58,7 +59,7 @@ export class QuerySidebarPanel extends React.PureComponent {
       delete clonedData[table];
     }
 
-    dispatch(applyFilters(clonedData, relationships, table, dataset));
+    dispatch(applyFilters(clonedData, relationships, selected, dataset));
   };
 
   render() {

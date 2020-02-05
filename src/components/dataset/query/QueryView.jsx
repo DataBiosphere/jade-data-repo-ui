@@ -156,6 +156,7 @@ export class QueryView extends React.PureComponent {
           handleDrawerWidth={this.handleDrawerWidth}
           width={sidebarWidth}
           table={table}
+          selected={selected}
         />
       </Fragment>
     );

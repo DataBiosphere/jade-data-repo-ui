@@ -63,6 +63,7 @@ export class SidebarDrawer extends React.PureComponent {
     classes: PropTypes.object,
     handleDrawerWidth: PropTypes.func,
     panels: PropTypes.array,
+    selected: PropTypes.string,
     width: PropTypes.number,
     table: PropTypes.object,
   };
@@ -91,7 +92,7 @@ export class SidebarDrawer extends React.PureComponent {
   };
 
   render() {
-    const { panels, classes, table } = this.props;
+    const { panels, classes, table, selected } = this.props;
     const { open, PanelComponent, dataset, currentKey } = this.state;
 
     return (
@@ -111,7 +112,9 @@ export class SidebarDrawer extends React.PureComponent {
           }}
           open={open}
         >
-          {PanelComponent != null && <PanelComponent open={open} table={table} dataset={dataset} />}
+          {PanelComponent != null && (
+            <PanelComponent open={open} table={table} dataset={dataset} selected={selected} />
+          )}
         </Drawer>
         <Box className={classes.root}>
           <List>

@@ -134,6 +134,7 @@ export class QueryViewSidebar extends React.PureComponent {
     filterStatement: PropTypes.string,
     joinStatement: PropTypes.string,
     open: PropTypes.bool,
+    selected: PropTypes.string,
     table: PropTypes.object,
     token: PropTypes.string,
   };
@@ -201,6 +202,7 @@ export class QueryViewSidebar extends React.PureComponent {
       table,
       token,
       joinStatement,
+      selected,
     } = this.props;
     const { isSavingSnapshot } = this.state;
 
@@ -222,7 +224,7 @@ export class QueryViewSidebar extends React.PureComponent {
             </Grid>
           </Box>
           <div className={clsx(classes.filterPanel, { [classes.hide]: !open })}>
-            <QuerySidebarPanel />
+            <QuerySidebarPanel selected={selected} />
           </div>
           <Divider />
           {table &&
