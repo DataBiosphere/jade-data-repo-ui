@@ -10,6 +10,7 @@ export class QueryViewSidebarItem extends React.PureComponent {
     dataset: PropTypes.object,
     filterData: PropTypes.object,
     filterStatement: PropTypes.string,
+    joinStatement: PropTypes.string,
     handleChange: PropTypes.func,
     handleFilters: PropTypes.func,
     tableName: PropTypes.string,
@@ -33,6 +34,7 @@ export class QueryViewSidebarItem extends React.PureComponent {
       dataset,
       filterData,
       filterStatement,
+      joinStatement,
       handleFilters,
       tableName,
       token,
@@ -45,6 +47,7 @@ export class QueryViewSidebarItem extends React.PureComponent {
             dataset={dataset}
             filterData={filterData}
             filterStatement={filterStatement}
+            joinStatement={joinStatement}
             handleChange={this.handleChange}
             handleFilters={handleFilters}
             tableName={tableName}

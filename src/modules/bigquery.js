@@ -112,12 +112,15 @@ export default class BigQuery {
 
   getColumnMinMax = (columnName, dataset, tableName, token) => {
     const url = `https://bigquery.googleapis.com/bigquery/v2/projects/${dataset.dataProject}/queries`;
-    const query = `SELECT MIN(${columnName}) AS min, MAX(${columnName}) AS max FROM [${dataset.dataProject}.datarepo_${dataset.name}.${tableName}]`;
+    const query = `SELECT MIN(${columnName}) AS min, MAX(${columnName}) AS max FROM \`${dataset.dataProject}.datarepo_${dataset.name}.${tableName}\``;
 
     return axios
       .post(
         url,
-        { query },
+        {
+          query,
+          useLegacySql: false,
+        },
         {
           headers: {
             'Content-Type': 'application/json',
@@ -128,13 +131,16 @@ export default class BigQuery {
       .then(response => response.data.rows[0].f);
   };
 
-  getColumnDistinct = (columnName, dataset, tableName, token, filterStatement) => {
+  getColumnDistinct = (columnName, dataset, tableName, token, filterStatement, joinStatement) => {
     const url = `https://bigquery.googleapis.com/bigquery/v2/projects/${dataset.dataProject}/queries`;
-    const query = `SELECT ${tableName}.${columnName}, COUNT(*) FROM [${dataset.dataProject}.datarepo_${dataset.name}.${tableName}] AS ${tableName} ${filterStatement} GROUP BY ${tableName}.${columnName}`;
+    const query = `SELECT ${tableName}.${columnName}, COUNT(*) FROM \`${dataset.dataProject}.datarepo_${dataset.name}.${tableName}\` AS ${tableName} ${joinStatement} ${filterStatement} GROUP BY ${tableName}.${columnName}`;
     return axios
       .post(
         url,
-        { query },
+        {
+          query,
+          useLegacySql: false,
+        },
         {
           headers: {
             'Content-Type': 'application/json',

@@ -14,10 +14,17 @@ export class CategoryWrapper extends React.PureComponent {
       originalValues: [],
     };
 
-    const { column, dataset, tableName, token, filterStatement } = this.props;
+    const { column, dataset, tableName, token, filterStatement, joinStatement } = this.props;
     const bq = new BigQuery();
 
-    bq.getColumnDistinct(column.name, dataset, tableName, token, filterStatement).then(response => {
+    bq.getColumnDistinct(
+      column.name,
+      dataset,
+      tableName,
+      token,
+      filterStatement,
+      joinStatement,
+    ).then(response => {
       this.setState({
         values: response,
         originalValues: response,
@@ -30,6 +37,7 @@ export class CategoryWrapper extends React.PureComponent {
     dataset: PropTypes.object,
     filterData: PropTypes.object,
     filterStatement: PropTypes.string,
+    joinStatement: PropTypes.string,
     handleChange: PropTypes.func,
     handleFilters: PropTypes.func,
     tableName: PropTypes.string,
@@ -37,16 +45,21 @@ export class CategoryWrapper extends React.PureComponent {
   };
 
   componentDidUpdate(prevProps) {
-    const { column, dataset, tableName, token, filterStatement } = this.props;
+    const { column, dataset, tableName, token, filterStatement, joinStatement } = this.props;
     if (filterStatement !== prevProps.filterStatement) {
       const bq = new BigQuery();
-      bq.getColumnDistinct(column.name, dataset, tableName, token, filterStatement).then(
-        response => {
-          this.setState({
-            values: response,
-          });
-        },
-      );
+      bq.getColumnDistinct(
+        column.name,
+        dataset,
+        tableName,
+        token,
+        filterStatement,
+        joinStatement,
+      ).then(response => {
+        this.setState({
+          values: response,
+        });
+      });
     }
   }
 
