@@ -60,8 +60,6 @@ export default {
           action.payload.dataset,
         );
 
-        console.log(joinStatement);
-
         return immutable(state, {
           filterData: { $set: action.payload.filters },
           filterStatement: { $set: filterStatement },

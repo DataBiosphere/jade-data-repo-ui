@@ -40,7 +40,7 @@ export default class BigQuery {
       }
 
       if (columnId === 'datarepo_row_id') {
-        res.id = value;
+        res.datarepo_id = value;
       } else {
         res[columnId] = value;
       }
