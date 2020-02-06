@@ -28,6 +28,11 @@ const styles = () => ({
 });
 
 export class QuerySidebarPanel extends React.PureComponent {
+  constructor(props) {
+    this.state = {
+      openLists: {},
+    }
+  }
   static propTypes = {
     classes: PropTypes.object,
     dataset: PropTypes.object,
@@ -36,13 +41,21 @@ export class QuerySidebarPanel extends React.PureComponent {
     selected: PropTypes.string,
   };
 
+  handleExpand = (open) => {
+    const { selected } = this.props;
+    this.setState({openLists: {[selected]: open}})
+  }
+
   render() {
     const { classes, filterData, selected } = this.props;
+    const { openLists } = this.state;
     const listTables = _.keys(filterData).map(table => {
       return (
         <AppliedFilterList
           table={table}
           selected={selected}
+          handleExpand={this.handleExpand}
+          open={openLists[selected]}
         />
       ); 
     });

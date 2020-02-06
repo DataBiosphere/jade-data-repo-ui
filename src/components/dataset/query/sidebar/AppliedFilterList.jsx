@@ -31,8 +31,7 @@ const styles = theme => ({
   },
   box: {
     margin: '8px 16px 8px 16px',
-  }
-
+  },
 });
 
 const StyledBadge = withStyles(theme => ({
@@ -44,13 +43,6 @@ const StyledBadge = withStyles(theme => ({
 }))(Badge);
 
 export class AppliedFilterList extends React.PureComponent {
-  constructor(props) {
-    super(props);
-    const { table, selected } = this.props;
-    this.state = {
-      open: (table == selected),
-    };
-  }
 
   static propTypes = {
     classes: PropTypes.object,
@@ -59,6 +51,8 @@ export class AppliedFilterList extends React.PureComponent {
     dispatch: PropTypes.func.isRequired,
     selected: PropTypes.string,
     table: PropTypes.string,
+    handleExpand: PropTypes.func,
+    open: PropTypes.bool,
   };
 
   clearFilter = (table, filter, datum) => {
@@ -88,18 +82,14 @@ export class AppliedFilterList extends React.PureComponent {
     dispatch(applyFilters(clonedData, relationships, selected, dataset));
   };
 
-  handleExpandList = () => {
-    const { open } = this.state;
-    this.setState({ open: !open});
-  }
 
   render() {
-    const { classes, filterData, table } = this.props;
-    const { open } = this.state;
+    const { classes, filterData, table, handleExpand, open } = this.props;
     let numFilters = 0;
     const listFilters = _.keys(filterData[table]).map(filter => {
       const data = _.get(filterData[table], filter);
       let dataString = data.value;
+
       if (data.type === 'range') {
         dataString = (
           <Chip
@@ -109,11 +99,12 @@ export class AppliedFilterList extends React.PureComponent {
           />
         );
         numFilters++;
-      } else {
+      } 
+      
+      else {
         if (_.isPlainObject(data.value)) {
           dataString = _.keys(data.value);
         }
-        numFilters += dataString.length;
         dataString = dataString.map((datum, i) => (
           <Chip
             key={i}
@@ -122,6 +113,7 @@ export class AppliedFilterList extends React.PureComponent {
             label={datum}
           />
         ));
+        numFilters += dataString.length;
       }
 
       return (
@@ -140,7 +132,7 @@ export class AppliedFilterList extends React.PureComponent {
 
     return (
       <div>
-        <ListItem className={classes.tableName} button onClick={() => this.handleExpandList()}>
+        <ListItem className={classes.tableName} button onClick={() => handleExpand(!open)}>
           {table}
           {open ? <ExpandLess /> : <StyledBadge badgeContent={numFilters}/>}
         </ListItem>
