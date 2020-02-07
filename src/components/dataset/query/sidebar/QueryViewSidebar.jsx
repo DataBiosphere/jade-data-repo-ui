@@ -133,7 +133,9 @@ export class QueryViewSidebar extends React.PureComponent {
     dispatch: PropTypes.func.isRequired,
     filterData: PropTypes.object,
     filterStatement: PropTypes.string,
+    joinStatement: PropTypes.string,
     open: PropTypes.bool,
+    selected: PropTypes.string,
     table: PropTypes.object,
     token: PropTypes.string,
   };
@@ -160,24 +162,35 @@ export class QueryViewSidebar extends React.PureComponent {
     this.setState({ isSavingSnapshot: isSaving });
   };
 
-  handleChange = filter => {
+  handleChange = (filter, table) => {
     const { filterMap } = this.state;
-    const clonedMap = _.clone(filterMap);
+    const clonedMap = _.cloneDeep(filterMap);
     if (filter.value == null || filter.value.length === 0) {
-      delete clonedMap[filter.name];
-    } else {
-      clonedMap[filter.name] = {
+      delete clonedMap[table][filter.name];
+      if (_.isEmpty(clonedMap[table])) {
+        delete clonedMap[table];
+      }
+    } else if (_.isPlainObject(clonedMap[table])) {
+      clonedMap[table][filter.name] = {
         value: filter.value,
         type: filter.type,
+      };
+    } else {
+      clonedMap[table] = {
+        [filter.name]: {
+          value: filter.value,
+          type: filter.type,
+        },
       };
     }
     this.setState({ filterMap: clonedMap });
   };
 
   handleFilters = () => {
-    const { dispatch } = this.props;
+    const { dispatch, table, dataset } = this.props;
     const { filterMap } = this.state;
-    dispatch(applyFilters(filterMap));
+    const tableName = table.name;
+    dispatch(applyFilters(filterMap, dataset.schema.relationships, tableName, dataset));
   };
 
   handleSaveSnapshot = () => {
@@ -187,7 +200,17 @@ export class QueryViewSidebar extends React.PureComponent {
   };
 
   render() {
-    const { classes, dataset, filterData, filterStatement, open, table, token } = this.props;
+    const {
+      classes,
+      dataset,
+      filterData,
+      filterStatement,
+      open,
+      table,
+      token,
+      joinStatement,
+      selected,
+    } = this.props;
     const { isSavingSnapshot } = this.state;
 
     return (
@@ -208,7 +231,7 @@ export class QueryViewSidebar extends React.PureComponent {
             </Grid>
           </Box>
           <div className={clsx(classes.filterPanel, { [classes.hide]: !open })}>
-            <QuerySidebarPanel />
+            <QuerySidebarPanel selected={selected} />
           </div>
           <Divider />
           {table &&
@@ -231,6 +254,7 @@ export class QueryViewSidebar extends React.PureComponent {
                     dataset={dataset}
                     filterData={filterData}
                     filterStatement={filterStatement}
+                    joinStatement={joinStatement}
                     handleChange={this.handleChange}
                     handleFilters={this.handleFilters}
                     tableName={table.name}
@@ -277,6 +301,7 @@ function mapStateToProps(state) {
     dataset: state.datasets.dataset,
     filterData: state.query.filterData,
     filterStatement: state.query.filterStatement,
+    joinStatement: state.query.joinStatement,
     token: state.user.token,
   };
 }

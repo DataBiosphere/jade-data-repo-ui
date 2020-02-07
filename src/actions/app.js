@@ -136,7 +136,12 @@ export const { pageQuery } = createActions({
 });
 
 export const { applyFilters } = createActions({
-  [ActionTypes.APPLY_FILTERS]: filter => filter,
+  [ActionTypes.APPLY_FILTERS]: (filters, schema, table, dataset) => ({
+    filters,
+    schema,
+    table,
+    dataset,
+  }),
 });
 
 export const { applySort } = createActions({

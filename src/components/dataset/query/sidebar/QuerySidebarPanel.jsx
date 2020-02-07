@@ -23,20 +23,23 @@ const styles = () => ({
   },
   inline: {
     margin: '2px',
-  }
+  },
 });
 
 export class QuerySidebarPanel extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object,
+    dataset: PropTypes.object,
     dispatch: PropTypes.func.isRequired,
     filterData: PropTypes.object,
+    selected: PropTypes.string,
   };
 
-  clearFilter = (filter, datum) => {
-    const { dispatch, filterData } = this.props;
+  clearFilter = (table, filter, datum) => {
+    const { dispatch, filterData, dataset, selected } = this.props;
+    const { relationships } = dataset.schema;
     const clonedData = _.cloneDeep(filterData);
-    const clonedFilter = clonedData[filter];
+    const clonedFilter = clonedData[table][filter];
     const filterValue = clonedFilter.value;
 
     if (clonedFilter.type !== 'range') {
@@ -49,47 +52,56 @@ export class QuerySidebarPanel extends React.PureComponent {
     }
 
     if (_.isEmpty(filterValue) || clonedFilter.type === 'range') {
-      delete clonedData[filter];
+      delete clonedData[table][filter];
     }
 
-    dispatch(applyFilters(clonedData));
+    if (_.isEmpty(clonedData[table])) {
+      delete clonedData[table];
+    }
+
+    dispatch(applyFilters(clonedData, relationships, selected, dataset));
   };
 
   render() {
     const { classes, filterData } = this.props;
-    const listFilters = _.keys(filterData).map(filter => {
-      const data = _.get(filterData, filter);
-      let dataString = data.value;
-      if (data.type === 'range') {
-        dataString = (
-          <Chip
-            onDelete={() => this.clearFilter(filter)}
-            className={classes.inline}
-            label={_.join(data.value, ' \u2013 ')}
-          />
-        );
-      } else {
-        if (_.isPlainObject(data.value)) {
-          dataString = _.keys(data.value);
-        }
-        dataString = dataString.map((datum, i) => (
-          <Chip
-            key={i}
-            onDelete={() => this.clearFilter(filter, datum)}
-            className={classes.inline}
-            label={datum}
-          />
-          )
-        );
-      }
+    // emdash used as the long dash in between values
+    const emdash = ' \u2013 ';
 
-      return (
-        <ListItem dense={true} key={filter}>
-          <ListItemText>
-            <strong>{filter}:</strong> {dataString}
-          </ListItemText>
-        </ListItem>
-      );
+    const listTables = _.keys(filterData).map(table => {
+      const listFilters = _.keys(filterData[table]).map(filter => {
+        const data = _.get(filterData[table], filter);
+        let dataString = data.value;
+        if (data.type === 'range') {
+          dataString = (
+            <Chip
+              onDelete={() => this.clearFilter(table, filter)}
+              className={classes.inline}
+              label={_.join(data.value, emdash)}
+            />
+          );
+        } else {
+          if (_.isPlainObject(data.value)) {
+            dataString = _.keys(data.value);
+          }
+          dataString = dataString.map((datum, i) => (
+            <Chip
+              key={i}
+              onDelete={() => this.clearFilter(table, filter, datum)}
+              className={classes.inline}
+              label={datum}
+            />
+          ));
+        }
+
+        return (
+          <ListItem dense={true} key={filter}>
+            <ListItemText>
+              <strong>{filter}:</strong> {dataString}
+            </ListItemText>
+          </ListItem>
+        );
+      });
+      return listFilters;
     });
 
     return (
@@ -101,7 +113,7 @@ export class QuerySidebarPanel extends React.PureComponent {
             </ListSubheader>
           }
         >
-          {listFilters}
+          {listTables}
         </List>
       </Card>
     );
@@ -111,6 +123,7 @@ export class QuerySidebarPanel extends React.PureComponent {
 function mapStateToProps(state) {
   return {
     filterData: state.query.filterData,
+    dataset: state.datasets.dataset,
   };
 }
 

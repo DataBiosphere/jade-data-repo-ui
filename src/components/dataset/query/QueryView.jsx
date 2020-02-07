@@ -47,9 +47,11 @@ export class QueryView extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object,
     dataset: PropTypes.object,
-    datasetPolicies: PropTypes.object,
+    datasetPolicies: PropTypes.array,
     dispatch: PropTypes.func.isRequired,
+    filterData: PropTypes.object,
     filterStatement: PropTypes.string,
+    joinStatement: PropTypes.string,
     match: PropTypes.object,
     orderBy: PropTypes.string,
     queryResults: PropTypes.object,
@@ -68,7 +70,7 @@ export class QueryView extends React.PureComponent {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { dataset, dispatch, filterStatement, orderBy } = this.props;
+    const { dataset, dispatch, filterStatement, joinStatement, orderBy } = this.props;
     const { selected } = this.state;
     if (
       this.hasDataset() &&
@@ -80,7 +82,8 @@ export class QueryView extends React.PureComponent {
         runQuery(
           dataset.dataProject,
           `#standardSQL
-          SELECT * FROM \`${dataset.dataProject}.datarepo_${dataset.name}.${selected}\`
+          SELECT DISTINCT ${selected}.* FROM \`${dataset.dataProject}.datarepo_${dataset.name}.${selected}\` AS ${selected}
+          ${joinStatement}
           ${filterStatement}
           ${orderBy}
           LIMIT ${QUERY_LIMIT}`,
@@ -100,14 +103,13 @@ export class QueryView extends React.PureComponent {
   };
 
   handleChange = value => {
-    const { dataset, dispatch } = this.props;
+    const { dataset, dispatch, filterData } = this.props;
     const table = dataset.schema.tables.find(t => t.name === value);
-
     this.setState({
       selected: value,
       table,
     });
-    dispatch(applyFilters({}));
+    dispatch(applyFilters(filterData, dataset.schema.relationships, value, dataset));
   };
 
   realRender() {
@@ -153,6 +155,8 @@ export class QueryView extends React.PureComponent {
           ]}
           handleDrawerWidth={this.handleDrawerWidth}
           width={sidebarWidth}
+          table={table}
+          selected={selected}
         />
       </Fragment>
     );
@@ -172,6 +176,8 @@ function mapStateToProps(state) {
     dataset: state.datasets.dataset,
     datasetPolicies: state.datasets.datasetPolicies,
     filterStatement: state.query.filterStatement,
+    filterData: state.query.filterData,
+    joinStatement: state.query.joinStatement,
     queryResults: state.query.queryResults,
     orderBy: state.query.orderBy,
   };

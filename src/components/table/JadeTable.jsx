@@ -135,14 +135,19 @@ export class JadeTable extends React.PureComponent {
               {!polling && (
                 <TableBody>
                   {rows.map(row => {
+                    const drId = row.datarepo_id;
+
                     return (
-                      <TableRow hover tabIndex={-1} key={row.id}>
+                      <TableRow hover tabIndex={-1} key={`${row.id}-${drId}`}>
                         {columns.map(column => {
                           const value = this.handleArrayValues(row[column.id]);
 
                           return (
                             value && (
-                              <TableCell key={`${column.id}-${row.id}`} align={column.align}>
+                              <TableCell
+                                key={`${column.id}-${row.id}-${drId}`}
+                                align={column.align}
+                              >
                                 {column.format && typeof value === 'number'
                                   ? column.format(value)
                                   : value}

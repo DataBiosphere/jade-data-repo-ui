@@ -52,11 +52,18 @@ export default {
         }),
       [ActionTypes.APPLY_FILTERS]: (state, action) => {
         const bigquery = new BigQuery();
-        const filterStatement = bigquery.buildFilterStatement(action.payload);
+        const filterStatement = bigquery.buildFilterStatement(action.payload.filters);
+        const joinStatement = bigquery.buildJoinStatement(
+          action.payload.filters,
+          action.payload.schema,
+          action.payload.table,
+          action.payload.dataset,
+        );
 
         return immutable(state, {
-          filterData: { $set: action.payload },
+          filterData: { $set: action.payload.filters },
           filterStatement: { $set: filterStatement },
+          joinStatement: { $set: joinStatement },
         });
       },
       [ActionTypes.APPLY_SORT]: (state, action) => {

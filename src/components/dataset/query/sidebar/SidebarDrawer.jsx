@@ -55,7 +55,6 @@ export class SidebarDrawer extends React.PureComponent {
       open: false,
       currentKey: null,
       PanelComponent: null,
-      table: null,
       dataset: null,
     };
   }
@@ -64,7 +63,9 @@ export class SidebarDrawer extends React.PureComponent {
     classes: PropTypes.object,
     handleDrawerWidth: PropTypes.func,
     panels: PropTypes.array,
+    selected: PropTypes.string,
     width: PropTypes.number,
+    table: PropTypes.object,
   };
 
   handleDrawerOpen = () => {
@@ -75,24 +76,25 @@ export class SidebarDrawer extends React.PureComponent {
     this.setState({ open: false });
   };
 
-  handleButtonClick = (key, PanelComponent, table, dataset, width) => {
+  handleButtonClick = (key, PanelComponent, dataset, width) => {
     const { currentKey, open } = this.state;
     const { handleDrawerWidth } = this.props;
 
     if (currentKey == null || !open) {
       handleDrawerWidth(width);
-      this.setState({ open: true, currentKey: key, PanelComponent, table, dataset });
+      this.setState({ open: true, currentKey: key, PanelComponent, dataset });
     } else if (currentKey !== key && open) {
       handleDrawerWidth(width);
-      this.setState({ currentKey: key, PanelComponent, table, dataset });
+      this.setState({ currentKey: key, PanelComponent, dataset });
     } else {
       this.setState({ open: false, currentKey: null });
     }
   };
 
   render() {
-    const { panels, classes } = this.props;
-    const { open, PanelComponent, table, dataset, currentKey } = this.state;
+    const { panels, classes, table, selected } = this.props;
+    const { open, PanelComponent, dataset, currentKey } = this.state;
+
     return (
       <Fragment>
         <Drawer
@@ -110,7 +112,9 @@ export class SidebarDrawer extends React.PureComponent {
           }}
           open={open}
         >
-          {PanelComponent != null && <PanelComponent open={open} table={table} dataset={dataset} />}
+          {PanelComponent != null && (
+            <PanelComponent open={open} table={table} dataset={dataset} selected={selected} />
+          )}
         </Drawer>
         <Box className={classes.root}>
           <List>
@@ -124,13 +128,7 @@ export class SidebarDrawer extends React.PureComponent {
                   button
                   key={i}
                   onClick={() =>
-                    this.handleButtonClick(
-                      i,
-                      panel.component,
-                      panel.table,
-                      panel.dataset,
-                      panel.width,
-                    )
+                    this.handleButtonClick(i, panel.component, panel.dataset, panel.width)
                   }
                 >
                   <IconComponent />

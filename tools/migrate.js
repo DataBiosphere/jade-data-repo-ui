@@ -3,7 +3,7 @@
 /**
  * This script will copy a subset of production dataset into another environment
  *
- * npm run rolldown V2F_GWAS_Summary_Stats -- --env=dev --suffix=jh --cutoff=1000
+ * npm run rolldown V2F_GWAS_Summary_Stats -- --env=dev --suffix=my --cutoff=100000000
  *
  * (note the required -- to separate npm flags from script flags)
  */
