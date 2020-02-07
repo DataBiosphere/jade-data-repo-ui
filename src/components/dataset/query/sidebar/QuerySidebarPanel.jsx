@@ -64,6 +64,9 @@ export class QuerySidebarPanel extends React.PureComponent {
 
   render() {
     const { classes, filterData } = this.props;
+    // emdash used as the long dash in between values
+    const emdash = ' \u2013 ';
+
     const listTables = _.keys(filterData).map(table => {
       const listFilters = _.keys(filterData[table]).map(filter => {
         const data = _.get(filterData[table], filter);
@@ -73,7 +76,7 @@ export class QuerySidebarPanel extends React.PureComponent {
             <Chip
               onDelete={() => this.clearFilter(table, filter)}
               className={classes.inline}
-              label={_.join(data.value, ' \u2013 ')}
+              label={_.join(data.value, emdash)}
             />
           );
         } else {
