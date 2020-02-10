@@ -150,3 +150,7 @@ export const { applySort } = createActions({
     direction,
   }),
 });
+
+export const { openSnapshotDialog } = createActions({
+  [ActionTypes.OPEN_SNAPSHOT_DIALOG]: isOpen => isOpen,
+});

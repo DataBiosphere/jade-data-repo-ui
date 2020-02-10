@@ -66,6 +66,7 @@ export const ActionTypes = keyMirror({
   PAGE_QUERY: undefined,
   PAGE_QUERY_SUCCESS: undefined,
   APPLY_SORT: undefined,
+  OPEN_SNAPSHOT_DIALOG: undefined,
 });
 
 /**

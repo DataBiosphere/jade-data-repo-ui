@@ -16,7 +16,8 @@ import Grid from '@material-ui/core/Grid';
 import { Box } from '@material-ui/core';
 import QueryViewSidebarItem from './QueryViewSidebarItem';
 import QuerySidebarPanel from './QuerySidebarPanel';
-import { applyFilters } from '../../../../actions';
+import { applyFilters, openSnapshotDialog } from '../../../../actions';
+import { push } from 'modules/hist';
 import CreateSnapshotPanel from './panels/CreateSnapshotPanel';
 
 const drawerWidth = 400;
@@ -192,6 +193,12 @@ export class QueryViewSidebar extends React.PureComponent {
     dispatch(applyFilters(filterMap, dataset.schema.relationships, tableName, dataset));
   };
 
+  handleSaveSnapshot = () => {
+    const { dispatch } = this.props;
+    push('/snapshots');
+    dispatch(openSnapshotDialog(true));
+  };
+
   render() {
     const {
       classes,
@@ -282,7 +289,10 @@ export class QueryViewSidebar extends React.PureComponent {
           </div>
         )}
         {isSavingSnapshot && (
-          <CreateSnapshotPanel handleCreateSnapshot={this.handleCreateSnapshot} />
+          <CreateSnapshotPanel
+            handleCreateSnapshot={this.handleCreateSnapshot}
+            handleSaveSnapshot={this.handleSaveSnapshot}
+          />
         )}
       </div>
     );

@@ -166,8 +166,8 @@ export default class BigQuery {
       if (neighbors[v] === undefined) {
         // Also add the edge v -> u in order
         neighbors[v] = []; // to implement an undirected graph.
-      } // For a directed graph, delete
-      neighbors[v].push(u); // these four lines.
+      }
+      neighbors[v].push(u);
     });
 
     return neighbors;
