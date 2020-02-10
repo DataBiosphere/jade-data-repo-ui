@@ -8,19 +8,18 @@ import Card from '@material-ui/core/Card';
 import List from '@material-ui/core/List';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
 import { applyFilters } from '../../../../actions';
-import { Chip, Typography, Collapse, Badge, Avatar } from '@material-ui/core';
-import { ExpandLess, ExpandMore, TableChart, ArrowRight, ArrowDropDown } from '@material-ui/icons';
+import { Chip, Collapse, Badge } from '@material-ui/core';
+import { ExpandLess } from '@material-ui/icons';
 
 const styles = theme => ({
   filterHeader: {
-    paddingTop: '8px',
-    paddingBottom: '4px',
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(0.5),
     lineHeight: 'inherit',
   },
   rangeInfo: {
-    display: 'inline',
+    display: 'inline-block',
   },
   inline: {
     margin: '2px',
@@ -30,7 +29,9 @@ const styles = theme => ({
     fontWeight: 500,
   },
   box: {
-    margin: '8px 16px 8px 16px',
+    margin: `${theme.spacing(1)}px ${theme.spacing(2)}px ${theme.spacing(1)}px ${theme.spacing(
+      2,
+    )}px`,
   },
 });
 
@@ -43,6 +44,12 @@ const StyledBadge = withStyles(theme => ({
 }))(Badge);
 
 export class AppliedFilterList extends React.PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      open: true,
+    };
+  }
 
   static propTypes = {
     classes: PropTypes.object,
@@ -51,8 +58,11 @@ export class AppliedFilterList extends React.PureComponent {
     dispatch: PropTypes.func.isRequired,
     selected: PropTypes.string,
     table: PropTypes.string,
-    handleExpand: PropTypes.func,
-    open: PropTypes.bool,
+  };
+
+  handleExpand = () => {
+    const { open } = this.state;
+    this.setState({ open: !open });
   };
 
   clearFilter = (table, filter, datum) => {
@@ -82,9 +92,9 @@ export class AppliedFilterList extends React.PureComponent {
     dispatch(applyFilters(clonedData, relationships, selected, dataset));
   };
 
-
   render() {
-    const { classes, filterData, table, handleExpand, open } = this.props;
+    const { classes, filterData, table } = this.props;
+    const { open } = this.state;
     let numFilters = 0;
     const listFilters = _.keys(filterData[table]).map(filter => {
       const data = _.get(filterData[table], filter);
@@ -99,9 +109,7 @@ export class AppliedFilterList extends React.PureComponent {
           />
         );
         numFilters++;
-      } 
-      
-      else {
+      } else {
         if (_.isPlainObject(data.value)) {
           dataString = _.keys(data.value);
         }
@@ -125,24 +133,26 @@ export class AppliedFilterList extends React.PureComponent {
             </ListSubheader>
           }
         >
-          <ListItem dense={true}>{dataString}</ListItem>
+          <ListItem className={classes.rangeInfo} dense={true}>
+            {dataString}
+          </ListItem>
         </List>
       );
     });
 
     return (
       <div>
-        <ListItem className={classes.tableName} button onClick={() => handleExpand(!open)}>
+        <ListItem className={classes.tableName} button onClick={() => this.handleExpand()}>
           {table}
-          {open ? <ExpandLess /> : <StyledBadge badgeContent={numFilters}/>}
+          {open ? <ExpandLess /> : <StyledBadge badgeContent={numFilters} />}
         </ListItem>
         <Collapse in={open} timeout="auto" unmountOnExit>
-          <Card variant='outlined' className={classes.box}>
+          <Card variant="outlined" className={classes.box}>
             {listFilters}
           </Card>
         </Collapse>
       </div>
-    )
+    );
   }
 }
 

@@ -7,10 +7,6 @@ import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import List from '@material-ui/core/List';
 import ListSubheader from '@material-ui/core/ListSubheader';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import { applyFilters } from '../../../../actions';
-import { Chip, Typography, Collapse } from '@material-ui/core';
 import AppliedFilterList from './AppliedFilterList';
 
 const styles = () => ({
@@ -28,11 +24,6 @@ const styles = () => ({
 });
 
 export class QuerySidebarPanel extends React.PureComponent {
-  constructor(props) {
-    this.state = {
-      openLists: {},
-    }
-  }
   static propTypes = {
     classes: PropTypes.object,
     dataset: PropTypes.object,
@@ -41,34 +32,15 @@ export class QuerySidebarPanel extends React.PureComponent {
     selected: PropTypes.string,
   };
 
-  handleExpand = (open) => {
-    const { selected } = this.props;
-    this.setState({openLists: {[selected]: open}})
-  }
-
   render() {
-    const { classes, filterData, selected } = this.props;
-    const { openLists } = this.state;
+    const { filterData, selected } = this.props;
     const listTables = _.keys(filterData).map(table => {
-      return (
-        <AppliedFilterList
-          table={table}
-          selected={selected}
-          handleExpand={this.handleExpand}
-          open={openLists[selected]}
-        />
-      ); 
+      return <AppliedFilterList table={table} selected={selected} />;
     });
 
     return (
       <Card>
-        <List
-          subheader={
-            <ListSubheader component="div">
-              Properties
-            </ListSubheader>
-          }
-        >
+        <List subheader={<ListSubheader component="div">Properties</ListSubheader>}>
           {listTables}
         </List>
       </Card>
