@@ -19,7 +19,7 @@ const styles = () => ({
   inline: {
     margin: '2px',
   },
-  help: {
+  load: {
     lineHeight: '48px',
     margin: '22px 0px 22px 0px',
   },
@@ -49,7 +49,7 @@ export class QuerySidebarPanel extends React.PureComponent {
         <List
           subheader={
             <ListSubheader component="div">
-              {polling ? <LinearProgress className={classes.help} /> : `${results} ${resultsLabel}`}
+              {polling ? <LinearProgress className={classes.load} /> : `${results} ${resultsLabel}`}
             </ListSubheader>
           }
         >
