@@ -8,17 +8,6 @@ import { Card, List, ListSubheader, LinearProgress } from '@material-ui/core';
 import AppliedFilterList from './AppliedFilterList';
 
 const styles = () => ({
-  filterHeader: {
-    paddingTop: '4px',
-    paddingBottom: '4px',
-    lineHeight: 'inherit',
-  },
-  rangeInfo: {
-    display: 'inline',
-  },
-  inline: {
-    margin: '2px',
-  },
   load: {
     lineHeight: '48px',
     margin: '22px 0px 22px 0px',
