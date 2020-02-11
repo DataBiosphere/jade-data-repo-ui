@@ -289,7 +289,10 @@ export class QueryViewSidebar extends React.PureComponent {
           </div>
         )}
         {isSavingSnapshot && (
-          <CreateSnapshotPanel handleCreateSnapshot={this.handleCreateSnapshot} handleSaveSnapshot={this.handleSaveSnapshot}/>
+          <CreateSnapshotPanel
+            handleCreateSnapshot={this.handleCreateSnapshot}
+            handleSaveSnapshot={this.handleSaveSnapshot}
+          />
         )}
       </div>
     );
