@@ -11,7 +11,8 @@ export class FreetextFilter extends React.PureComponent {
     filterData: PropTypes.object,
     handleChange: PropTypes.func,
     handleFilters: PropTypes.func,
-    values: PropTypes.array,
+    originalValues: PropTypes.object,
+    values: PropTypes.object,
   };
 
   onComplete = (event, value) => {
@@ -19,7 +20,7 @@ export class FreetextFilter extends React.PureComponent {
     handleChange(value);
   };
 
-  getOptions = values => (values == null ? [] : values.map(a => a.f[0].v));
+  // getOptions = values => (values == null ? [] : _.keys(values));
 
   handleReturn = event => {
     const { handleFilters } = this.props;
@@ -34,7 +35,7 @@ export class FreetextFilter extends React.PureComponent {
       <Autocomplete
         multiple
         id={`autocomplete-${column.name}`}
-        options={this.getOptions(values)}
+        options={_.keys(values)}
         // this means the user's choice does not have to match the provided options
         freeSolo={true}
         style={{ width: '100%' }}

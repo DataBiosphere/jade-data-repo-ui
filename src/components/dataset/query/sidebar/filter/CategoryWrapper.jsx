@@ -10,8 +10,8 @@ export class CategoryWrapper extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      values: [],
-      originalValues: [],
+      values: {},
+      originalValues: {},
     };
 
     const { column, dataset, tableName, token, filterStatement, joinStatement } = this.props;
@@ -25,9 +25,10 @@ export class CategoryWrapper extends React.PureComponent {
       filterStatement,
       joinStatement,
     ).then(response => {
+      const newResponse = this.transformResponse(response);
       this.setState({
-        values: response,
-        originalValues: response,
+        values: newResponse,
+        originalValues: newResponse,
       });
     });
   }
@@ -44,6 +45,18 @@ export class CategoryWrapper extends React.PureComponent {
     token: PropTypes.string,
   };
 
+  transformResponse = response => {
+    const counts = {};
+    if (response) {
+      response.map(r => {
+        const name = r.f[0].v;
+        const count = r.f[1].v;
+        counts[name] = count;
+      });
+    }
+    return counts;
+  };
+
   componentDidUpdate(prevProps) {
     const { column, dataset, tableName, token, filterStatement, joinStatement } = this.props;
     if (filterStatement !== prevProps.filterStatement) {
@@ -57,7 +70,7 @@ export class CategoryWrapper extends React.PureComponent {
         joinStatement,
       ).then(response => {
         this.setState({
-          values: response,
+          values: this.transformResponse(response),
         });
       });
     }
@@ -66,12 +79,13 @@ export class CategoryWrapper extends React.PureComponent {
   render() {
     const { values, originalValues } = this.state;
     const { column, filterData, handleChange, handleFilters, tableName } = this.props;
-    if (values && originalValues && originalValues.length <= CHECKBOX_THRESHOLD) {
+    if (values && originalValues && _.size(originalValues) <= CHECKBOX_THRESHOLD) {
       return (
         <CategoryFilterGroup
           column={column}
           filterData={filterData}
           handleChange={handleChange}
+          originalValues={originalValues}
           values={values}
           table={tableName}
         />
@@ -83,6 +97,7 @@ export class CategoryWrapper extends React.PureComponent {
         handleChange={handleChange}
         handleFilters={handleFilters}
         filterData={filterData}
+        originalValues={originalValues}
         values={values}
       />
     );
