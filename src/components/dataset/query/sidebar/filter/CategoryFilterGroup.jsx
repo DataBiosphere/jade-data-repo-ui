@@ -25,7 +25,7 @@ export class CategoryFilterGroup extends React.PureComponent {
   static getDerivedStateFromProps(props, state) {
     if (!_.isEqual(props.filterData, state.prevPropsFilterData)) {
       return {
-        selected: _.get(props.filterData, `${props.column.name}`, {}),
+        selected: _.get(props.filterData, `${props.table}.${props.column.name}.value`, {}),
         prevPropsFilterData: props.filterData,
       };
     }

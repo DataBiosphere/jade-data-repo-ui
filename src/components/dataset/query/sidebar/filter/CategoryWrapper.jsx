@@ -59,7 +59,7 @@ export class CategoryWrapper extends React.PureComponent {
 
   componentDidUpdate(prevProps) {
     const { column, dataset, tableName, token, filterStatement, joinStatement } = this.props;
-    if (filterStatement !== prevProps.filterStatement) {
+    if (filterStatement !== prevProps.filterStatement || tableName !== prevProps.tableName) {
       const bq = new BigQuery();
       bq.getColumnDistinct(
         column.name,
@@ -69,9 +69,15 @@ export class CategoryWrapper extends React.PureComponent {
         filterStatement,
         joinStatement,
       ).then(response => {
+        const newResponse = this.transformResponse(response);
         this.setState({
-          values: this.transformResponse(response),
+          values: newResponse,
         });
+        if (tableName !== prevProps.tableName) {
+          this.setState({
+            originalValues: newResponse,
+          });
+        }
       });
     }
   }
