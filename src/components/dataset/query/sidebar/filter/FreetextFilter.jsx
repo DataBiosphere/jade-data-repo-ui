@@ -20,8 +20,6 @@ export class FreetextFilter extends React.PureComponent {
     handleChange(value);
   };
 
-  // getOptions = values => (values == null ? [] : _.keys(values));
-
   handleReturn = event => {
     const { handleFilters } = this.props;
     if (event.key === 'Enter') {
