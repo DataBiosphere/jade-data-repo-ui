@@ -101,11 +101,12 @@ export class AppliedFilterList extends React.PureComponent {
       let dataString = data.value;
 
       if (data.type === 'range') {
+        const enDash = ' \u2013 '; // it's a longer hyphen used to represent numerical ranges
         dataString = (
           <Chip
             onDelete={() => this.clearFilter(table, filter)}
             className={classes.inline}
-            label={_.join(data.value, ' \u2013 ')}
+            label={_.join(data.value, enDash)}
           />
         );
         numFilters++;

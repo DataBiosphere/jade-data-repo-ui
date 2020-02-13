@@ -17,14 +17,15 @@ export class CategoryFilterGroup extends React.PureComponent {
     column: PropTypes.object,
     filterData: PropTypes.object,
     handleChange: PropTypes.func,
-    values: PropTypes.array,
+    originalValues: PropTypes.object,
+    values: PropTypes.object,
     table: PropTypes.string,
   };
 
   static getDerivedStateFromProps(props, state) {
     if (!_.isEqual(props.filterData, state.prevPropsFilterData)) {
       return {
-        selected: _.get(props.filterData, `${props.column.name}`, {}),
+        selected: _.get(props.filterData, `${props.table}.${props.column.name}.value`, {}),
         prevPropsFilterData: props.filterData,
       };
     }
@@ -48,10 +49,9 @@ export class CategoryFilterGroup extends React.PureComponent {
   };
 
   render() {
-    const { column, filterData, values, table } = this.props;
-    const checkboxes = values.map(value => {
-      const name = value.f[0].v;
-      const count = value.f[1].v;
+    const { column, filterData, values, table, originalValues } = this.props;
+    const checkboxes = _.keys(originalValues).map(name => {
+      const count = values.hasOwnProperty(name) ? values[name] : 0;
       return (
         <div key={name}>
           <CategoryFilter
