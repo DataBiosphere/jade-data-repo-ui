@@ -3,7 +3,15 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
-import { Dialog, DialogTitle, DialogContent, Paper, Typography, Button } from '@material-ui/core';
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  Paper,
+  Typography,
+  Button,
+  Chip,
+} from '@material-ui/core';
 import { CameraAlt, Edit, PeopleAlt, OpenInNew, Today } from '@material-ui/icons';
 import clsx from 'clsx';
 import { openSnapshotDialog } from '../../actions';
@@ -11,7 +19,7 @@ import moment from 'moment';
 
 const styles = theme => ({
   snapshotName: {
-    backgroundColor: '#F1F4F7',
+    backgroundColor: theme.palette.primary.light,
     borderRadius: '4px 4px 0px 0px',
   },
   content: {
@@ -36,9 +44,13 @@ const styles = theme => ({
   bodyText: {
     paddingBottom: theme.spacing(2),
   },
-  date: {
+  light: {
     color: 'rgba(0, 0, 0, 0.54)',
-    textTransform: 'uppercase',
+  },
+  chip: {
+    backgroundColor: theme.palette.primary.light,
+    margin: theme.spacing(0.5),
+    marginLeft: '0px',
   },
 });
 
@@ -66,25 +78,29 @@ export class SnapshotPopup extends React.PureComponent {
       const properties = _.keys(filters).map((filter, i) => {
         const data = _.get(filters, filter);
         let dataString = data.value;
+        let dataDisplay;
         if (data.type === 'range') {
-          dataString = _.join(data.value, ' \u2013 ');
+          const enDash = ' \u2013 ';
+          dataString = _.join(data.value, enDash);
+          const label = `${filter}: ${dataString}`;
+          dataDisplay = <Chip key={i} className={classes.chip} label={label} />;
         } else {
           if (_.isPlainObject(data.value)) {
             dataString = _.keys(data.value);
           }
-          dataString = _.join(dataString, ', ');
+          dataDisplay = dataString.map((selection, i) => {
+            const label = `${filter}: ${selection}`;
+            return <Chip key={i} className={classes.chip} label={label} />;
+          });
         }
-        return (
-          <li key={i}>
-            {filter}: {dataString}
-          </li>
-        );
+        return dataDisplay;
       });
 
       return (
-        <li key={i} className={classes.listItem}>
-          {table} {properties}
-        </li>
+        <div className={classes.bodyText} key={i}>
+          <div className={classes.light}>{table}</div>
+          <div>{properties}</div>
+        </div>
       );
     });
 
@@ -108,14 +124,14 @@ export class SnapshotPopup extends React.PureComponent {
               <Typography variant="subtitle1" color="primary">
                 Properties
               </Typography>
-              <div className={classes.bodyText}>{tables}</div>
+              <div>{tables}</div>
               <Typography variant="subtitle1" color="primary">
                 Sources
               </Typography>
               <div className={classes.bodyText}>
                 <li className={classes.listItem}>{dataset.name}</li>
               </div>
-              <div className={clsx(classes.date, classes.withIcon)}>
+              <div className={clsx(classes.light, classes.withIcon)}>
                 <Today className={classes.inline} />
                 {moment().format('ll')}
               </div>
