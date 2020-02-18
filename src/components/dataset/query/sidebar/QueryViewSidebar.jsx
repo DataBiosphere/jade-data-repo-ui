@@ -109,6 +109,7 @@ export class QueryViewSidebar extends React.PureComponent {
     this.state = {
       filterMap: {},
       isSavingSnapshot: false,
+      searchString: '',
     };
   }
 
@@ -184,6 +185,10 @@ export class QueryViewSidebar extends React.PureComponent {
     dispatch(openSnapshotDialog(true));
   };
 
+  handleSearchString = event => {
+    this.setState({ searchString: event.target.value });
+  };
+
   render() {
     const {
       classes,
@@ -196,7 +201,8 @@ export class QueryViewSidebar extends React.PureComponent {
       joinStatement,
       selected,
     } = this.props;
-    const { isSavingSnapshot } = this.state;
+    const { isSavingSnapshot, searchString } = this.state;
+    const filteredColumns = table.columns.filter(column => column.name.startsWith(searchString));
 
     return (
       <div
@@ -220,11 +226,15 @@ export class QueryViewSidebar extends React.PureComponent {
           </div>
           <div className={classes.searchBar}>
             <Search color="primary" fontSize={'small'} />
-            <InputBase placeholder="Search filters" className={classes.inputBase} />
+            <InputBase
+              placeholder="Search filters"
+              className={classes.inputBase}
+              onChange={this.handleSearchString}
+            />
           </div>
           {table &&
             table.name &&
-            table.columns.map(c => (
+            filteredColumns.map(c => (
               <ExpansionPanel
                 key={c.name}
                 className={clsx(classes.panelBottomBorder, { [classes.hide]: !open })}
