@@ -35,13 +35,6 @@ const styles = theme => ({
   createSnapshotGrid: {
     gridTemplateRows: 'calc(100vh - 200px) 125px',
   },
-  buttonContainer: {
-    display: 'flex',
-    justifyContent: 'space-between',
-  },
-  menuButton: {
-    'border-radius': '0%',
-  },
   hide: {
     display: 'none',
   },
@@ -51,13 +44,6 @@ const styles = theme => ({
     justifyContent: 'flex-end',
     padding: '0 8px',
     ...theme.mixins.toolbar,
-  },
-  content: {
-    flexGrow: 1,
-    padding: theme.spacing(3),
-  },
-  noMargin: {
-    margin: '0px',
   },
   filterPanel: {
     marginBottom: '8px',
@@ -69,9 +55,6 @@ const styles = theme => ({
   },
   panelBottomBorder: {
     borderBottom: `1px solid ${theme.palette.divider}`,
-  },
-  panelTopBorder: {
-    borderTop: `1px solid ${theme.palette.divider}`,
   },
   stickyButton: {
     position: '-webkit-sticky',
@@ -104,19 +87,6 @@ const styles = theme => ({
   rowTwo: {
     gridRowStart: 2,
     gridRowEnd: 3,
-  },
-  saveButtonContainer: {
-    backgroundColor: theme.palette.primary.light,
-    marginBottom: theme.spacing(1),
-    padding: theme.spacing(1),
-    marginTop: theme.spacing(1),
-  },
-  saveButton: {
-    marginTop: theme.spacing(1),
-    alignSelf: 'flex-start',
-  },
-  cancelButton: {
-    alignSelf: 'flex-end',
   },
   searchBar: {
     display: 'flex',
@@ -249,9 +219,7 @@ export class QueryViewSidebar extends React.PureComponent {
             <QuerySidebarPanel selected={selected} />
           </div>
           <div className={classes.searchBar}>
-            <div className={classes.searchIcon}>
-              <Search color="primary" fontSize={'small'} />
-            </div>
+            <Search color="primary" fontSize={'small'} />
             <InputBase placeholder="Search filters" className={classes.inputBase} />
           </div>
           {table &&
