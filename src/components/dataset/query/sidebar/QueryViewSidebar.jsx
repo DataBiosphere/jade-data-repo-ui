@@ -4,21 +4,23 @@ import clsx from 'clsx';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import Divider from '@material-ui/core/Divider';
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import Typography from '@material-ui/core/Typography';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid';
-
-import { Box } from '@material-ui/core';
+import {
+  Box,
+  ExpansionPanel,
+  ExpansionPanelSummary,
+  ExpansionPanelDetails,
+  Typography,
+  Button,
+  Grid,
+  InputBase,
+} from '@material-ui/core';
+import { ExpandMore, Search } from '@material-ui/icons';
 import QueryViewSidebarItem from './QueryViewSidebarItem';
 import QuerySidebarPanel from './QuerySidebarPanel';
 import { applyFilters, openSnapshotDialog } from '../../../../actions';
 import { push } from 'modules/hist';
 import CreateSnapshotPanel from './panels/CreateSnapshotPanel';
+import { fade } from '@material-ui/core/styles/colorManipulator';
 
 const drawerWidth = 400;
 
@@ -58,7 +60,7 @@ const styles = theme => ({
     margin: '0px',
   },
   filterPanel: {
-    paddingBottom: '10px',
+    marginBottom: '8px',
   },
   sidebarTitle: {
     flexDirection: 'column',
@@ -115,6 +117,19 @@ const styles = theme => ({
   },
   cancelButton: {
     alignSelf: 'flex-end',
+  },
+  searchBar: {
+    display: 'flex',
+    alignItems: 'center',
+    '&:hover': {
+      backgroundColor: fade(theme.palette.common.white, 0.2),
+    },
+    borderRadius: '4px',
+    marginBottom: '4px',
+    padding: '0px 4px 0px 8px',
+  },
+  inputBase: {
+    paddingLeft: '4px',
   },
 });
 
@@ -233,7 +248,12 @@ export class QueryViewSidebar extends React.PureComponent {
           <div className={clsx(classes.filterPanel, { [classes.hide]: !open })}>
             <QuerySidebarPanel selected={selected} />
           </div>
-          <Divider />
+          <div className={classes.searchBar}>
+            <div className={classes.searchIcon}>
+              <Search color="primary" fontSize={'small'} />
+            </div>
+            <InputBase placeholder="Search filters" className={classes.inputBase} />
+          </div>
           {table &&
             table.name &&
             table.columns.map(c => (
@@ -242,7 +262,7 @@ export class QueryViewSidebar extends React.PureComponent {
                 className={clsx(classes.panelBottomBorder, { [classes.hide]: !open })}
               >
                 <ExpansionPanelSummary
-                  expandIcon={<ExpandMoreIcon />}
+                  expandIcon={<ExpandMore />}
                   aria-controls={`panel-content-${c.name}`}
                   id={`panel-header-${c.name}`}
                 >
