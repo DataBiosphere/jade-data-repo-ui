@@ -202,7 +202,7 @@ export class QueryViewSidebar extends React.PureComponent {
       selected,
     } = this.props;
     const { isSavingSnapshot, searchString } = this.state;
-    const filteredColumns = table.columns.filter(column => column.name.startsWith(searchString));
+    const filteredColumns = table.columns.filter(column => column.name.includes(searchString));
 
     return (
       <div
