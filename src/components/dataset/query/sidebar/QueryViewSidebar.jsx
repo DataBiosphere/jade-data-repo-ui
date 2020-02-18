@@ -4,21 +4,23 @@ import clsx from 'clsx';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import Divider from '@material-ui/core/Divider';
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import Typography from '@material-ui/core/Typography';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid';
-
-import { Box } from '@material-ui/core';
+import {
+  Box,
+  ExpansionPanel,
+  ExpansionPanelSummary,
+  ExpansionPanelDetails,
+  Typography,
+  Button,
+  Grid,
+  InputBase,
+} from '@material-ui/core';
+import { ExpandMore, Search } from '@material-ui/icons';
 import QueryViewSidebarItem from './QueryViewSidebarItem';
 import QuerySidebarPanel from './QuerySidebarPanel';
 import { applyFilters, openSnapshotDialog } from '../../../../actions';
 import { push } from 'modules/hist';
 import CreateSnapshotPanel from './panels/CreateSnapshotPanel';
+import { fade } from '@material-ui/core/styles/colorManipulator';
 
 const drawerWidth = 400;
 
@@ -33,13 +35,6 @@ const styles = theme => ({
   createSnapshotGrid: {
     gridTemplateRows: 'calc(100vh - 200px) 125px',
   },
-  buttonContainer: {
-    display: 'flex',
-    justifyContent: 'space-between',
-  },
-  menuButton: {
-    'border-radius': '0%',
-  },
   hide: {
     display: 'none',
   },
@@ -50,15 +45,8 @@ const styles = theme => ({
     padding: '0 8px',
     ...theme.mixins.toolbar,
   },
-  content: {
-    flexGrow: 1,
-    padding: theme.spacing(3),
-  },
-  noMargin: {
-    margin: '0px',
-  },
   filterPanel: {
-    paddingBottom: '10px',
+    marginBottom: '8px',
   },
   sidebarTitle: {
     flexDirection: 'column',
@@ -67,9 +55,6 @@ const styles = theme => ({
   },
   panelBottomBorder: {
     borderBottom: `1px solid ${theme.palette.divider}`,
-  },
-  panelTopBorder: {
-    borderTop: `1px solid ${theme.palette.divider}`,
   },
   stickyButton: {
     position: '-webkit-sticky',
@@ -103,18 +88,18 @@ const styles = theme => ({
     gridRowStart: 2,
     gridRowEnd: 3,
   },
-  saveButtonContainer: {
-    backgroundColor: theme.palette.primary.light,
-    marginBottom: theme.spacing(1),
-    padding: theme.spacing(1),
-    marginTop: theme.spacing(1),
+  searchBar: {
+    display: 'flex',
+    alignItems: 'center',
+    '&:hover': {
+      backgroundColor: fade(theme.palette.common.white, 0.2),
+    },
+    borderRadius: '4px',
+    marginBottom: '4px',
+    padding: '0px 4px 0px 8px',
   },
-  saveButton: {
-    marginTop: theme.spacing(1),
-    alignSelf: 'flex-start',
-  },
-  cancelButton: {
-    alignSelf: 'flex-end',
+  inputBase: {
+    paddingLeft: '4px',
   },
 });
 
@@ -124,6 +109,7 @@ export class QueryViewSidebar extends React.PureComponent {
     this.state = {
       filterMap: {},
       isSavingSnapshot: false,
+      searchString: '',
     };
   }
 
@@ -199,6 +185,10 @@ export class QueryViewSidebar extends React.PureComponent {
     dispatch(openSnapshotDialog(true));
   };
 
+  handleSearchString = event => {
+    this.setState({ searchString: event.target.value });
+  };
+
   render() {
     const {
       classes,
@@ -211,7 +201,8 @@ export class QueryViewSidebar extends React.PureComponent {
       joinStatement,
       selected,
     } = this.props;
-    const { isSavingSnapshot } = this.state;
+    const { isSavingSnapshot, searchString } = this.state;
+    const filteredColumns = table.columns.filter(column => column.name.includes(searchString));
 
     return (
       <div
@@ -233,16 +224,23 @@ export class QueryViewSidebar extends React.PureComponent {
           <div className={clsx(classes.filterPanel, { [classes.hide]: !open })}>
             <QuerySidebarPanel selected={selected} />
           </div>
-          <Divider />
+          <div className={classes.searchBar}>
+            <Search color="primary" fontSize={'small'} />
+            <InputBase
+              placeholder="Search filters"
+              className={classes.inputBase}
+              onChange={this.handleSearchString}
+            />
+          </div>
           {table &&
             table.name &&
-            table.columns.map(c => (
+            filteredColumns.map(c => (
               <ExpansionPanel
                 key={c.name}
                 className={clsx(classes.panelBottomBorder, { [classes.hide]: !open })}
               >
                 <ExpansionPanelSummary
-                  expandIcon={<ExpandMoreIcon />}
+                  expandIcon={<ExpandMore />}
                   aria-controls={`panel-content-${c.name}`}
                   id={`panel-header-${c.name}`}
                 >
