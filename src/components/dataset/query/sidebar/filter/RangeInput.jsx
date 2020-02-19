@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Input from '@material-ui/core/Input';
+import { TextField, Input } from '@material-ui/core';
 
 export class RangeInput extends React.PureComponent {
   static propTypes = {
@@ -22,12 +22,15 @@ export class RangeInput extends React.PureComponent {
   render() {
     const { handleChange, value } = this.props;
     return (
-      <Input
+      <TextField
         onChange={handleChange}
-        readOnly={false}
+        variant="outlined"
+        margin="dense"
         value={value}
         onKeyPress={this.handleReturn}
-      />
+      >
+        <Input readOnly={false} />
+      </TextField>
     );
   }
 }

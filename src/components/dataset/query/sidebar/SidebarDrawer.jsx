@@ -6,7 +6,7 @@ import clsx from 'clsx';
 
 const styles = theme => ({
   root: {
-    backgroundColor: theme.palette.primary.light,
+    backgroundColor: theme.palette.primary.lightContrast,
     position: 'absolute',
     top: '65px',
     right: '0px',
@@ -17,7 +17,7 @@ const styles = theme => ({
     top: '65px',
     right: '56px',
     flexShrink: 0,
-    backgroundColor: theme.palette.primary.lightContrast,
+    backgroundColor: theme.palette.primary.light,
   },
   drawerPosition: {
     position: 'absolute',
@@ -44,7 +44,7 @@ const styles = theme => ({
     color: theme.palette.primary.light,
   },
   active: {
-    backgroundColor: theme.palette.primary.lightContrast,
+    backgroundColor: theme.palette.primary.light,
   },
 });
 

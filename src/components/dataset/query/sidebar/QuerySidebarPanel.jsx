@@ -34,7 +34,7 @@ export class QuerySidebarPanel extends React.PureComponent {
     const resultsLabel = results == 1 ? 'Result' : 'Results';
 
     return (
-      <Card>
+      <Card variant="outlined">
         <List
           subheader={
             <ListSubheader component="div">
