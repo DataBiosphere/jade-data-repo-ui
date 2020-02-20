@@ -62,5 +62,6 @@ sed -e 's/TEMP/<initials>/g' skaffold.yaml.template > skaffold.yaml
 ```
 Run a deployment you must set env var `IMAGE_TAG`
 ```
+npm run build --production
 skaffold run
 ```
