@@ -82,12 +82,8 @@ const styles = theme => ({
   searchBar: {
     display: 'flex',
     alignItems: 'center',
-    '&:hover': {
-      backgroundColor: fade(theme.palette.primary.lightContrast, 0.2),
-    },
     borderRadius: '4px',
-    marginBottom: '4px',
-    padding: '0px 4px 0px 8px',
+    padding: '0px 16px 0px 16px',
   },
   inputBase: {
     paddingLeft: '4px',
@@ -95,6 +91,11 @@ const styles = theme => ({
   tableName: {
     justifyContent: 'space-between',
     fontWeight: '500',
+  },
+  highlighted: {
+    backgroundColor: 'rgba(0,0,0,0.04)',
+    borderRadius: '4px',
+    paddingBottom: '4px',
   },
 });
 
@@ -229,18 +230,18 @@ export class QueryViewSidebar extends React.PureComponent {
           <div className={clsx(classes.filterPanel, { [classes.hide]: !open })}>
             <QuerySidebarPanel selected={selected} />
           </div>
-          <div className={classes.searchBar}>
+          <ListItem button className={classes.searchBar}>
             <Search color="primary" fontSize={'small'} />
             <InputBase
               placeholder="Search filters"
               className={classes.inputBase}
               onChange={this.handleSearchString}
             />
-          </div>
+          </ListItem>
           {table &&
             table.name &&
             filteredColumns.map(c => (
-              <div>
+              <div className={clsx({ [classes.highlighted]: c.name === openFilter })}>
                 <ListItem
                   button
                   className={classes.tableName}
