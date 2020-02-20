@@ -11,7 +11,6 @@ import QuerySidebarPanel from './QuerySidebarPanel';
 import { applyFilters, openSnapshotDialog } from '../../../../actions';
 import { push } from 'modules/hist';
 import CreateSnapshotPanel from './panels/CreateSnapshotPanel';
-import { fade } from '@material-ui/core/styles/colorManipulator';
 
 const drawerWidth = 400;
 
@@ -66,8 +65,8 @@ const styles = theme => ({
     display: 'flex',
     justifyContent: 'flex-end',
   },
-  jadeExpansionPanel: {
-    padding: `0px ${theme.spacing(2)}px 0px ${theme.spacing(2)}px`,
+  panelContent: {
+    padding: `0px ${theme.spacing(2)}px`,
   },
   rowOne: {
     gridRowStart: 1,
@@ -83,19 +82,18 @@ const styles = theme => ({
     display: 'flex',
     alignItems: 'center',
     borderRadius: '4px',
-    padding: '0px 16px 0px 16px',
   },
   inputBase: {
-    paddingLeft: '4px',
+    paddingLeft: theme.spacing(0.5),
   },
-  tableName: {
+  filterListItem: {
     justifyContent: 'space-between',
     fontWeight: '500',
   },
   highlighted: {
     backgroundColor: 'rgba(0,0,0,0.04)',
     borderRadius: '4px',
-    paddingBottom: '4px',
+    paddingBottom: theme.spacing(0.5),
   },
 });
 
@@ -230,7 +228,7 @@ export class QueryViewSidebar extends React.PureComponent {
           <div className={clsx(classes.filterPanel, { [classes.hide]: !open })}>
             <QuerySidebarPanel selected={selected} />
           </div>
-          <ListItem button className={classes.searchBar}>
+          <ListItem button className={clsx(classes.searchBar, classes.panelContent)}>
             <Search color="primary" fontSize={'small'} />
             <InputBase
               placeholder="Search filters"
@@ -244,7 +242,7 @@ export class QueryViewSidebar extends React.PureComponent {
               <div className={clsx({ [classes.highlighted]: c.name === openFilter })}>
                 <ListItem
                   button
-                  className={classes.tableName}
+                  className={classes.filterListItem}
                   onClick={() => this.handleOpenFilter(c.name)}
                 >
                   {c.name}
@@ -253,7 +251,7 @@ export class QueryViewSidebar extends React.PureComponent {
                 <Collapse
                   in={c.name === openFilter}
                   timeout="auto"
-                  className={classes.jadeExpansionPanel}
+                  className={classes.panelContent}
                 >
                   <QueryViewSidebarItem
                     column={c}
