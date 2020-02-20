@@ -54,3 +54,14 @@ avn setup
 - cypress 3.0.x
 
 `npm run test:e2e`
+
+## skaffold
+To render your own local skffold.yaml run the following with your initials
+```
+sed -e 's/TEMP/<initials>/g' skaffold.yaml.template > skaffold.yaml
+```
+Run a deployment you must set env var `IMAGE_TAG`
+```
+npm run build --production
+skaffold run
+```
