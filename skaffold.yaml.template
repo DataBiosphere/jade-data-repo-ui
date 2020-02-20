@@ -6,9 +6,9 @@ build:
       variant: AbbrevCommitSha
   artifacts:
   - image: gcr.io/broad-jade-dev/jade-data-repo-ui
-  docker:
-    buildArgs:
-      ENV: production
+    docker:
+      buildArgs:
+        ENV: production
 deploy:
   helm:
     flags:
