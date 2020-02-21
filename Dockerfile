@@ -1,8 +1,6 @@
 FROM node:12
 WORKDIR /app
 COPY package* ./
-# COPY tools /usr/src/app/tools
-# COPY config /usr/src/app/config
 RUN npm install
 COPY . .
 RUN npm run build --production
