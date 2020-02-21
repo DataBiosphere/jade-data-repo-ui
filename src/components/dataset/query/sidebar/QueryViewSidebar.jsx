@@ -4,23 +4,13 @@ import clsx from 'clsx';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import {
-  Box,
-  ExpansionPanel,
-  ExpansionPanelSummary,
-  ExpansionPanelDetails,
-  Typography,
-  Button,
-  Grid,
-  InputBase,
-} from '@material-ui/core';
-import { ExpandMore, Search } from '@material-ui/icons';
+import { Box, Typography, Button, Grid, InputBase, ListItem, Collapse } from '@material-ui/core';
+import { ExpandMore, ExpandLess, Search } from '@material-ui/icons';
 import QueryViewSidebarItem from './QueryViewSidebarItem';
 import QuerySidebarPanel from './QuerySidebarPanel';
 import { applyFilters, openSnapshotDialog } from '../../../../actions';
 import { push } from 'modules/hist';
 import CreateSnapshotPanel from './panels/CreateSnapshotPanel';
-import { fade } from '@material-ui/core/styles/colorManipulator';
 
 const drawerWidth = 400;
 
@@ -75,8 +65,8 @@ const styles = theme => ({
     display: 'flex',
     justifyContent: 'flex-end',
   },
-  jadeExpansionPanel: {
-    margin: '10px',
+  panelContent: {
+    padding: `0px ${theme.spacing(2)}px`,
   },
   rowOne: {
     gridRowStart: 1,
@@ -91,15 +81,19 @@ const styles = theme => ({
   searchBar: {
     display: 'flex',
     alignItems: 'center',
-    '&:hover': {
-      backgroundColor: fade(theme.palette.common.white, 0.2),
-    },
     borderRadius: '4px',
-    marginBottom: '4px',
-    padding: '0px 4px 0px 8px',
   },
   inputBase: {
-    paddingLeft: '4px',
+    paddingLeft: theme.spacing(0.5),
+  },
+  filterListItem: {
+    justifyContent: 'space-between',
+    fontWeight: '500',
+  },
+  highlighted: {
+    backgroundColor: theme.palette.primary.focus,
+    borderRadius: '4px',
+    paddingBottom: theme.spacing(0.5),
   },
 });
 
@@ -110,6 +104,7 @@ export class QueryViewSidebar extends React.PureComponent {
       filterMap: {},
       isSavingSnapshot: false,
       searchString: '',
+      openFilter: {},
     };
   }
 
@@ -189,6 +184,15 @@ export class QueryViewSidebar extends React.PureComponent {
     this.setState({ searchString: event.target.value });
   };
 
+  handleOpenFilter = filter => {
+    const { openFilter } = this.state;
+    if (filter === openFilter) {
+      this.setState({ openFilter: {} });
+    } else {
+      this.setState({ openFilter: filter });
+    }
+  };
+
   render() {
     const {
       classes,
@@ -201,7 +205,7 @@ export class QueryViewSidebar extends React.PureComponent {
       joinStatement,
       selected,
     } = this.props;
-    const { isSavingSnapshot, searchString } = this.state;
+    const { isSavingSnapshot, searchString, openFilter } = this.state;
     const filteredColumns = table.columns.filter(column => column.name.includes(searchString));
 
     return (
@@ -224,29 +228,27 @@ export class QueryViewSidebar extends React.PureComponent {
           <div className={clsx(classes.filterPanel, { [classes.hide]: !open })}>
             <QuerySidebarPanel selected={selected} />
           </div>
-          <div className={classes.searchBar}>
+          <ListItem button className={clsx(classes.searchBar, classes.panelContent)}>
             <Search color="primary" fontSize={'small'} />
             <InputBase
               placeholder="Search filters"
               className={classes.inputBase}
               onChange={this.handleSearchString}
             />
-          </div>
+          </ListItem>
           {table &&
             table.name &&
             filteredColumns.map(c => (
-              <ExpansionPanel
-                key={c.name}
-                className={clsx(classes.panelBottomBorder, { [classes.hide]: !open })}
-              >
-                <ExpansionPanelSummary
-                  expandIcon={<ExpandMore />}
-                  aria-controls={`panel-content-${c.name}`}
-                  id={`panel-header-${c.name}`}
+              <div className={clsx({ [classes.highlighted]: c === openFilter })}>
+                <ListItem
+                  button
+                  className={classes.filterListItem}
+                  onClick={() => this.handleOpenFilter(c)}
                 >
-                  <Typography className={classes.heading}>{c.name}</Typography>
-                </ExpansionPanelSummary>
-                <ExpansionPanelDetails className={classes.jadeExpansionPanel}>
+                  {c.name}
+                  {c === openFilter ? <ExpandLess /> : <ExpandMore />}
+                </ListItem>
+                <Collapse in={c === openFilter} timeout="auto" className={classes.panelContent}>
                   <QueryViewSidebarItem
                     column={c}
                     dataset={dataset}
@@ -258,8 +260,8 @@ export class QueryViewSidebar extends React.PureComponent {
                     tableName={table.name}
                     token={token}
                   />
-                </ExpansionPanelDetails>
-              </ExpansionPanel>
+                </Collapse>
+              </div>
             ))}
         </div>
         {!isSavingSnapshot && (

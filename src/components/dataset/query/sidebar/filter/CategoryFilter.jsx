@@ -60,7 +60,13 @@ export class CategoryFilter extends React.PureComponent {
     return (
       <FormControlLabel
         control={
-          <Checkbox checked={checked} onChange={this.handleChange} value={name} color="primary" />
+          <Checkbox
+            checked={checked}
+            onChange={this.handleChange}
+            value={name}
+            color="primary"
+            size="small"
+          />
         }
         label={`${name} (${count})`}
       />

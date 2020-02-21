@@ -37,7 +37,9 @@ export class FreetextFilter extends React.PureComponent {
         // this means the user's choice does not have to match the provided options
         freeSolo={true}
         style={{ width: '100%' }}
-        renderInput={params => <TextField {...params} fullWidth />}
+        renderInput={params => (
+          <TextField {...params} fullWidth variant="outlined" margin="dense" />
+        )}
         renderTags={(value, getTagProps) =>
           value.map((option, index) => (
             <Chip key={index} variant="outlined" label={option} {...getTagProps({ index })} />
