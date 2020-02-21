@@ -42,6 +42,7 @@ export default createMuiTheme({
       lightContrast: '#D9DCDE',
       dark: '#727272',
       hover: '#8BB858',
+      focus: 'rgba(0,0,0,0.04)',
     },
     secondary: {
       main: '#74AE43',

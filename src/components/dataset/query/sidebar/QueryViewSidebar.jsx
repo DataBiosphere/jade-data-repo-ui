@@ -91,7 +91,7 @@ const styles = theme => ({
     fontWeight: '500',
   },
   highlighted: {
-    backgroundColor: 'rgba(0,0,0,0.04)',
+    backgroundColor: theme.palette.primary.focus,
     borderRadius: '4px',
     paddingBottom: theme.spacing(0.5),
   },
@@ -104,7 +104,7 @@ export class QueryViewSidebar extends React.PureComponent {
       filterMap: {},
       isSavingSnapshot: false,
       searchString: '',
-      openFilter: '',
+      openFilter: {},
     };
   }
 
@@ -187,7 +187,7 @@ export class QueryViewSidebar extends React.PureComponent {
   handleOpenFilter = filter => {
     const { openFilter } = this.state;
     if (filter === openFilter) {
-      this.setState({ openFilter: '' });
+      this.setState({ openFilter: {} });
     } else {
       this.setState({ openFilter: filter });
     }
@@ -239,20 +239,16 @@ export class QueryViewSidebar extends React.PureComponent {
           {table &&
             table.name &&
             filteredColumns.map(c => (
-              <div className={clsx({ [classes.highlighted]: c.name === openFilter })}>
+              <div className={clsx({ [classes.highlighted]: c === openFilter })}>
                 <ListItem
                   button
                   className={classes.filterListItem}
-                  onClick={() => this.handleOpenFilter(c.name)}
+                  onClick={() => this.handleOpenFilter(c)}
                 >
                   {c.name}
-                  {c.name === openFilter ? <ExpandLess /> : <ExpandMore />}
+                  {c === openFilter ? <ExpandLess /> : <ExpandMore />}
                 </ListItem>
-                <Collapse
-                  in={c.name === openFilter}
-                  timeout="auto"
-                  className={classes.panelContent}
-                >
+                <Collapse in={c === openFilter} timeout="auto" className={classes.panelContent}>
                   <QueryViewSidebarItem
                     column={c}
                     dataset={dataset}
