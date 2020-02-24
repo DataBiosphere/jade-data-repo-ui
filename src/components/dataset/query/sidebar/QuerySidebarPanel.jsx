@@ -4,8 +4,9 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 
-import { Card, List, ListSubheader, LinearProgress } from '@material-ui/core';
+import { Card, List, ListSubheader, LinearProgress, Button } from '@material-ui/core';
 import AppliedFilterList from './AppliedFilterList';
+import { applyFilters } from '../../../../actions';
 
 const styles = () => ({
   load: {
@@ -23,6 +24,11 @@ export class QuerySidebarPanel extends React.PureComponent {
     results: PropTypes.number,
     polling: PropTypes.bool,
     selected: PropTypes.string,
+  };
+
+  clearAllFilters = () => {
+    const { dispatch } = this.props;
+    dispatch(applyFilters({}));
   };
 
   render() {
@@ -44,6 +50,7 @@ export class QuerySidebarPanel extends React.PureComponent {
         >
           {listTables}
         </List>
+        {_.keys(filterData).length > 0 && <Button onClick={this.clearAllFilters}>Clear all</Button>}
       </Card>
     );
   }

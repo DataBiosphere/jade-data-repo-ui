@@ -24,14 +24,14 @@ export class CategoryFilter extends React.PureComponent {
 
   static propTypes = {
     column: PropTypes.object,
-    count: PropTypes.string,
+    count: PropTypes.number,
     filterData: PropTypes.object,
     handleChange: PropTypes.func,
     name: PropTypes.string,
     table: PropTypes.string,
   };
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     const { column, filterData, table } = this.props;
     const currTable = _.get(nextProps.filterData, table);
     const currFilter = _.get(currTable, column.name);
