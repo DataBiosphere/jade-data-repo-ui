@@ -11,6 +11,7 @@ import { ThemeProvider } from '@material-ui/styles';
 import axios from 'axios';
 import { logIn } from 'actions/index';
 import { ActionTypes } from 'constants/index';
+import { ConnectedRouter } from 'connected-react-router';
 
 import { store } from 'store/index';
 

@@ -8,10 +8,15 @@ import { Card, List, ListSubheader, LinearProgress, Button } from '@material-ui/
 import AppliedFilterList from './AppliedFilterList';
 import { applyFilters } from '../../../../actions';
 
-const styles = () => ({
+const styles = theme => ({
   load: {
     lineHeight: '48px',
     margin: '22px 0px 22px 0px',
+  },
+  clearButton: {
+    float: 'right',
+    margin: theme.spacing(1),
+    fontSize: '12px',
   },
 });
 
@@ -50,7 +55,11 @@ export class QuerySidebarPanel extends React.PureComponent {
         >
           {listTables}
         </List>
-        {_.keys(filterData).length > 0 && <Button onClick={this.clearAllFilters}>Clear all</Button>}
+        {_.keys(filterData).length > 0 && (
+          <Button className={classes.clearButton} onClick={this.clearAllFilters}>
+            Clear all
+          </Button>
+        )}
       </Card>
     );
   }

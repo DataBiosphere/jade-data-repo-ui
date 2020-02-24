@@ -1,6 +1,6 @@
 import { handleActions } from 'redux-actions';
 import immutable from 'immutability-helper';
-
+import { LOCATION_CHANGE } from 'connected-react-router';
 import { ActionTypes } from 'constants/index';
 import BigQuery from 'modules/bigquery';
 
@@ -73,6 +73,18 @@ export default {
         return immutable(state, {
           orderBy: { $set: orderBy },
         });
+      },
+      [LOCATION_CHANGE]: (state, action) => {
+        if (!action.payload.location.pathname.includes('/query')) {
+          return immutable(state, {
+            filterData: { $set: {} },
+            filterStatement: { $set: '' },
+            joinStatement: { $set: '' },
+            queryResults: { $set: {} },
+            polling: { $set: false },
+          });
+        }
+        return state;
       },
     },
     queryState,
