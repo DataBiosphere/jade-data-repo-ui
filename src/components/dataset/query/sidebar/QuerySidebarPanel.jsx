@@ -26,7 +26,7 @@ export class QuerySidebarPanel extends React.PureComponent {
     dataset: PropTypes.object,
     dispatch: PropTypes.func.isRequired,
     filterData: PropTypes.object,
-    results: PropTypes.number,
+    results: PropTypes.string,
     polling: PropTypes.bool,
     selected: PropTypes.string,
   };
