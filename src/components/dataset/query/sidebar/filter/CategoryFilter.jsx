@@ -36,9 +36,9 @@ export class CategoryFilter extends React.PureComponent {
   static getDerivedStateFromProps(props, state) {
     if (props.filterData !== state.prevPropsFilterData) {
       const currTable = _.get(props.filterData, props.table);
-      const currFilter = _.get(_.get(currTable, props.column.name), 'value', {});
-      const currValue = _.get(currFilter, props.name);
-      if (currTable === undefined || currValue === undefined) {
+      const currFilter = _.get(currTable, props.column.name);
+      const currValue = _.get(currFilter, `value.${props.name}`);
+      if (currValue === undefined) {
         return {
           checked: false,
         };
