@@ -14,10 +14,12 @@ export class CategoryFilter extends React.PureComponent {
     if (currFilter === undefined) {
       this.state = {
         checked: false,
+        prevPropsFilterData: filterData,
       };
     } else {
       this.state = {
         checked: true,
+        prevPropsFilterData: filterData,
       };
     }
   }
@@ -31,16 +33,18 @@ export class CategoryFilter extends React.PureComponent {
     table: PropTypes.string,
   };
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    const { column, filterData, table } = this.props;
-    const currTable = _.get(nextProps.filterData, table);
-    const currFilter = _.get(currTable, column.name);
-
-    if (nextProps.filterData !== filterData && currFilter === undefined) {
-      this.setState({
-        checked: false,
-      });
+  static getDerivedStateFromProps(props, state) {
+    if (props.filterData !== state.prevPropsFilterData) {
+      const currTable = _.get(props.filterData, props.table);
+      const currFilter = _.get(_.get(currTable, props.column.name), 'value', {});
+      const currValue = _.get(currFilter, props.name);
+      if (currTable === undefined || currValue === undefined) {
+        return {
+          checked: false,
+        };
+      }
     }
+    return null;
   }
 
   handleChange = event => {
