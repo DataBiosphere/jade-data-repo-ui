@@ -9,7 +9,6 @@ import { ExpandMore, ExpandLess, Search } from '@material-ui/icons';
 import QueryViewSidebarItem from './QueryViewSidebarItem';
 import QuerySidebarPanel from './QuerySidebarPanel';
 import { applyFilters, openSnapshotDialog } from '../../../../actions';
-import { push } from 'modules/hist';
 import CreateSnapshotPanel from './panels/CreateSnapshotPanel';
 
 const drawerWidth = 400;

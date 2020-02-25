@@ -3,6 +3,7 @@ import { Router, Link, Switch, Route } from 'react-router-dom';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import { withStyles } from '@material-ui/core/styles';
+import { ConnectedRouter } from 'connected-react-router';
 import PropTypes from 'prop-types';
 import history from 'modules/hist';
 
@@ -50,53 +51,59 @@ class Private extends React.Component {
   render() {
     const { classes } = this.props;
     return (
-      <Router history={history}>
-        <div className={classes.wrapper}>
-          <Route
-            path="/"
-            render={({ location }) => (
-              <Fragment>
-                <Tabs
-                  value={Private.prefixMatcher.exec(location.pathname)[0]}
-                  classes={{ root: classes.tabsRoot, indicator: classes.tabsIndicator }}
-                >
-                  <Tab
-                    label="Home"
-                    component={Link}
-                    value="/"
-                    to="/"
-                    classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
-                  />
-                  <Tab
-                    label="Datasets"
-                    component={Link}
-                    value="/datasets"
-                    to="/datasets"
-                    classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
-                  />
-                  <Tab
-                    label="Snapshots"
-                    component={Link}
-                    value="/snapshots"
-                    to="/snapshots"
-                    classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
-                  />
-                </Tabs>
-                <Switch>
-                  <Route exact path="/" component={HomeView} />
-                  <Route exact path="/datasets" component={DatasetsView} />
-                  <Route exact path="/datasets/details/:uuid" component={DatasetDetailView} />
-                  <Route exact path="/datasets/details/:uuid/query" component={QueryView} />
-                  <Route exact path="/snapshots" component={SnapshotView} />
-                  <Route exact path="/snapshots/create" component={SnapshotCreateView} />
-                  <Route exact path="/snapshots/requests/:jobId" component={SnapshotPreviewView} />
-                  <Route exact path="/snapshots/details/:uuid" component={SnapshotDetailView} />
-                </Switch>
-              </Fragment>
-            )}
-          />
-        </div>
-      </Router>
+      <ConnectedRouter history={history}>
+        <Router history={history}>
+          <div className={classes.wrapper}>
+            <Route
+              path="/"
+              render={({ location }) => (
+                <Fragment>
+                  <Tabs
+                    value={Private.prefixMatcher.exec(location.pathname)[0]}
+                    classes={{ root: classes.tabsRoot, indicator: classes.tabsIndicator }}
+                  >
+                    <Tab
+                      label="Home"
+                      component={Link}
+                      value="/"
+                      to="/"
+                      classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
+                    />
+                    <Tab
+                      label="Datasets"
+                      component={Link}
+                      value="/datasets"
+                      to="/datasets"
+                      classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
+                    />
+                    <Tab
+                      label="Snapshots"
+                      component={Link}
+                      value="/snapshots"
+                      to="/snapshots"
+                      classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
+                    />
+                  </Tabs>
+                  <Switch>
+                    <Route exact path="/" component={HomeView} />
+                    <Route exact path="/datasets" component={DatasetsView} />
+                    <Route exact path="/datasets/details/:uuid" component={DatasetDetailView} />
+                    <Route exact path="/datasets/details/:uuid/query" component={QueryView} />
+                    <Route exact path="/snapshots" component={SnapshotView} />
+                    <Route exact path="/snapshots/create" component={SnapshotCreateView} />
+                    <Route
+                      exact
+                      path="/snapshots/requests/:jobId"
+                      component={SnapshotPreviewView}
+                    />
+                    <Route exact path="/snapshots/details/:uuid" component={SnapshotDetailView} />
+                  </Switch>
+                </Fragment>
+              )}
+            />
+          </div>
+        </Router>
+      </ConnectedRouter>
     );
   }
 }

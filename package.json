@@ -37,6 +37,7 @@
     "classlist-polyfill": "^1.2.0",
     "classnames": "^2.2.6",
     "clsx": "^1.0.4",
+    "connected-react-router": "^6.7.0",
     "date-fns": "2.0.0-beta.2",
     "ease-component": "^1.0.0",
     "events-polyfill": "^2.1.2",
@@ -46,8 +47,8 @@
     "http-proxy-middleware": "^0.20.0",
     "immutability-helper": "^3.0.1",
     "jest-cli": "^24.9.0",
-    "jsonfile": "^4.0.0",
     "js-combinatorics": "^0.5.5",
+    "jsonfile": "^4.0.0",
     "jss-plugin-extend": "^10.0.3",
     "lodash": "^4.17.15",
     "mobile-detect": "^1.4.4",
@@ -240,7 +241,7 @@
   },
   "husky": {
     "hooks": {
-      "post-merge": "node tools update"
+      "post-merge": "npm install"
     }
   },
   "browserslist": [

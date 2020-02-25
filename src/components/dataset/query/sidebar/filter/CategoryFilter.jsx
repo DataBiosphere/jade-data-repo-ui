@@ -14,33 +14,37 @@ export class CategoryFilter extends React.PureComponent {
     if (currFilter === undefined) {
       this.state = {
         checked: false,
+        prevPropsFilterData: filterData,
       };
     } else {
       this.state = {
         checked: true,
+        prevPropsFilterData: filterData,
       };
     }
   }
 
   static propTypes = {
     column: PropTypes.object,
-    count: PropTypes.string,
+    count: PropTypes.number,
     filterData: PropTypes.object,
     handleChange: PropTypes.func,
     name: PropTypes.string,
     table: PropTypes.string,
   };
 
-  componentWillReceiveProps(nextProps) {
-    const { column, filterData, table } = this.props;
-    const currTable = _.get(nextProps.filterData, table);
-    const currFilter = _.get(currTable, column.name);
-
-    if (nextProps.filterData !== filterData && currFilter === undefined) {
-      this.setState({
-        checked: false,
-      });
+  static getDerivedStateFromProps(props, state) {
+    if (props.filterData !== state.prevPropsFilterData) {
+      const currTable = _.get(props.filterData, props.table);
+      const currFilter = _.get(currTable, props.column.name);
+      const currValue = _.get(currFilter, `value.${props.name}`);
+      if (currValue === undefined) {
+        return {
+          checked: false,
+        };
+      }
     }
+    return null;
   }
 
   handleChange = event => {
