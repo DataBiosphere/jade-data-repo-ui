@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import _ from 'lodash';
 
 import TextField from '@material-ui/core/TextField';
 import Chip from '@material-ui/core/Chip';
