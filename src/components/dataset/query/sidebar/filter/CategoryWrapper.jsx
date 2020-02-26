@@ -1,4 +1,5 @@
 import React from 'react';
+import _ from 'lodash';
 import BigQuery from 'modules/bigquery';
 import PropTypes from 'prop-types';
 import FreetextFilter from './FreetextFilter';
