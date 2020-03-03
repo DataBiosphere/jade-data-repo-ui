@@ -163,7 +163,7 @@
     "html-loader": "^0.5.5",
     "html-webpack-plugin": "^4.0.0-beta.11",
     "husky": "^4.2.3",
-    "image-webpack-loader": "^4.6.0",
+    "image-webpack-loader": "^6.0.0",
     "inquirer": "^6.5.2",
     "is-ci-cli": "^1.1.1",
     "jest": "^25.1.0",
