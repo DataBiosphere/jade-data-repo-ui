@@ -216,7 +216,7 @@ module.exports = webpackEnv => {
                       optimizationLevel: 5,
                     },
                     pngquant: {
-                      quality: '75-90',
+                      quality: [0.75, 0.9],
                     },
                   },
                 },
