@@ -52,7 +52,7 @@
     "jss-plugin-extend": "^10.0.3",
     "lodash": "^4.17.15",
     "mobile-detect": "^1.4.4",
-    "modernizr": "^3.8.0",
+    "modernizr": "^3.9.1",
     "moment": "^2.24.0",
     "polished": "^3.4.2",
     "prop-types": "^15.7.2",
