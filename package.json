@@ -132,7 +132,7 @@
     "chalk": "^3.0.0",
     "circular-dependency-plugin": "^5.2.0",
     "css-loader": "^2.1.1",
-    "cypress": "^3.8.2",
+    "cypress": "^4.1.0",
     "cypress-testing-library": "^2.6.0",
     "date-fns": "2.10.0",
     "dotenv": "^8.2.0",
