@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
-import history from '../modules/hist';
 
 import { logIn } from '../actions/index';
 
@@ -22,15 +21,20 @@ export class HeadlessLogin extends React.PureComponent {
 
   componentDidMount() {
     const { dispatch } = this.props;
-    const [throwaway, login, token] = history.location.pathname.split('/');
 
-    dispatch(logIn('user.name', 'user.imageUrl', 'user.email', token, 1615064728000));
+    dispatch(
+      logIn(
+        'user.name',
+        'user.imageUrl',
+        'user.email',
+        process.env.REACT_APP_GOOGLE_TOKEN,
+        1615064728000,
+      ),
+    );
   }
 
   render() {
-    const { classes, dispatch } = this.props;
-
-    return <div></div>;
+    return <div />;
   }
 }
 

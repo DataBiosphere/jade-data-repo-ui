@@ -243,7 +243,7 @@ export function App(props) {
           />
           <RoutePublic
             isAuthenticated={user.isAuthenticated}
-            path="/login/:token"
+            path="/login/e2e"
             exact
             component={HeadlessLogin}
           />
