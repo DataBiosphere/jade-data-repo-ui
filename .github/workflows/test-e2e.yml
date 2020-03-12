@@ -1,0 +1,4 @@
+name: Run e2e tests
+on: pull_request
+jobs:
+  run_e2e_tests:
