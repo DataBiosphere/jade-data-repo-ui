@@ -1,4 +1,58 @@
-name: Run e2e tests
-on: pull_request
+# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: e2e
+
+on:
+  push
+
 jobs:
-  run_e2e_tests:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [12.x]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: Check out the repository
+      uses: actions/checkout@v1
+    - name: "Get Vault token"
+      # pull in GitHub secrets as environment variables
+      env:
+        ROLE_ID: ${{ secrets.ROLE_ID }}
+        SECRET_ID: ${{ secrets.SECRET_ID }}
+        VAULT_ADDR: ${{ secrets.VAULT_ADDR }}
+        GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+        GOOGLE_SA_CERT: ${{ secrets.GOOGLE_SA_CERT }}
+      run: |
+        export VAULT_TOKEN=$(curl \
+          --request POST \
+          --data '{"role_id":"'"${ROLE_ID}"'","secret_id":"'"${SECRET_ID}"'"}' \
+          ${VAULT_ADDR}/v1/auth/approle/login | jq -r .auth.client_token)
+        vault read -format=json secret/dsde/datarepo/dev/sa-key.json | \
+          jq .data > $GOOGLE_APPLICATION_CREDENTIALS
+        jq -r .private_key $GOOGLE_APPLICATION_CREDENTIALS > $GOOGLE_SA_CERT
+        chmod 600 $GOOGLE_SA_CERT
+    - name: "Configure Google Cloud SDK"
+      env:
+        INTEGRATION_ZONE: us-central1
+        INTEGRATION_PROJECT: broad-jade-integration
+        CLUSTER_NAME: integration-master
+        GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+      run: |
+        # authenticate against google cloud with the vault token json
+        gcloud auth activate-service-account --key-file $GOOGLE_APPLICATION_CREDENTIALS
+        # configure integration prerequisites
+        gcloud config set compute/zone ${INTEGRATION_ZONE}
+        gcloud config set project ${INTEGRATION_PROJECT}
+        gcloud auth configure-docker
+        gcloud components install kubectl
+    - run: npm start
+      env:
+        CI: true
