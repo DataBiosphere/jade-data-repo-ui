@@ -1,17 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import { withStyles } from '@material-ui/core/styles';
 
 import { logIn } from '../actions/index';
-
-const styles = theme => ({
-  alignItems: 'center',
-  display: 'flex',
-  flexDirection: 'column',
-  fontFamily: theme.typography.fontFamily,
-  minHeight: '100vh',
-});
 
 export class HeadlessLogin extends React.PureComponent {
   static propTypes = {
@@ -40,7 +31,7 @@ export class HeadlessLogin extends React.PureComponent {
 
 /* istanbul ignore next */
 function mapStateToProps(state) {
-  return { user: state.user };
+  return {};
 }
 
-export default connect(mapStateToProps)(withStyles(styles)(HeadlessLogin));
+export default connect(mapStateToProps)(HeadlessLogin);
