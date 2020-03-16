@@ -70,8 +70,7 @@ jobs:
         gcloud config set project ${INTEGRATION_PROJECT}
 
         gcloud auth configure-docker
-        gcloud components install kubectl
-
+        sudo apt-get install kubectl
         # get the current authorized list of IPs from kubernetes and add the
         # GitHub Action runner IP to the list as unknown IPs cannot otherwise
         # interact with kubernetes
