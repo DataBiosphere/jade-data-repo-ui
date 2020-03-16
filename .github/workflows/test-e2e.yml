@@ -110,14 +110,21 @@ jobs:
           find_namespace
         }
         find_namespace
-    # Build the Docker image
-    - name: Build new api container and push to gcr
+    - name: Build new ui container
       env:
         DEV_PROJECT: broad-jade-dev
       run: |
         GCR_TAG=$(git rev-parse --short HEAD)
         echo "::set-env name=GCR_TAG::${GCR_TAG}"
         npm build
+    # Build the Docker image
+    - name: Build
+      run: |
+        docker build -t gcr.io/broad-jade-dev/jade-data-repo-ui:${GCR_TAG} .
+    # Push the Docker image to Google Container Registry
+    - name: Publish
+      run: |
+        docker push gcr.io/broad-jade-dev/jade-data-repo-ui:${GCR_TAG}
     - name: Deploying new image to kubernetes
       env:
         DEV_PROJECT: broad-jade-dev
