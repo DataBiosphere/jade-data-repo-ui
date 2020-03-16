@@ -55,20 +55,40 @@ jobs:
           jq .data > $GOOGLE_APPLICATION_CREDENTIALS
         jq -r .private_key $GOOGLE_APPLICATION_CREDENTIALS > $GOOGLE_SA_CERT
         chmod 600 $GOOGLE_SA_CERT
-    - name: "Configure Google Cloud SDK"
-      env:
-        INTEGRATION_ZONE: us-central1
-        INTEGRATION_PROJECT: broad-jade-integration
-        CLUSTER_NAME: integration-master
-        GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
-      run: |
-        # authenticate against google cloud with the vault token json
-        gcloud auth activate-service-account --key-file $GOOGLE_APPLICATION_CREDENTIALS
-        # configure integration prerequisites
-        gcloud config set compute/zone ${INTEGRATION_ZONE}
-        gcloud config set project ${INTEGRATION_PROJECT}
-        gcloud auth configure-docker
-        gcloud components install kubectl
+      - name: "Configure Google Cloud SDK"
+        env:
+          INTEGRATION_ZONE: us-central1
+          INTEGRATION_PROJECT: broad-jade-integration
+          CLUSTER_NAME: integration-master
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+        run: |
+          # authenticate against google cloud with the vault token json
+          gcloud auth activate-service-account --key-file $GOOGLE_APPLICATION_CREDENTIALS
+
+          # configure integration prerequisites
+          gcloud config set compute/zone ${INTEGRATION_ZONE}
+          gcloud config set project ${INTEGRATION_PROJECT}
+
+          gcloud auth configure-docker
+          gcloud components install kubectl
+
+          # get the current authorized list of IPs from kubernetes and add the
+          # GitHub Action runner IP to the list as unknown IPs cannot otherwise
+          # interact with kubernetes
+          CUR_IPS=$(gcloud container clusters describe ${CLUSTER_NAME} --format json | \
+            jq -r '[.masterAuthorizedNetworksConfig.cidrBlocks[] | .cidrBlock]')
+          RUNNER_IP=$(curl 'https://api.ipify.org/?format=text' | xargs printf '[ "%s/32" ]')
+          NEW_IPS=$(printf '%s\n' $CUR_IPS $RUNNER_IP | jq -s -r 'add | unique | join(",")')
+          echo "::set-env name=RUNNER_IP::${RUNNER_IP}"
+
+          gcloud container clusters update ${CLUSTER_NAME} \
+            --enable-master-authorized-networks \
+            --master-authorized-networks ${NEW_IPS}
+
+          # necessary to be able to push containers into kubernetes
+          gcloud container clusters get-credentials ${CLUSTER_NAME}
+          # export CLUSTER_NAME so it can be used during cleanup
+          echo "::set-env name=CLUSTER_NAME::${CLUSTER_NAME}"
     - name: Check for available namespace to run tests in
       run: |
         NAMESPACES=("integration")
