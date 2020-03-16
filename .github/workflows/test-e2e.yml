@@ -118,8 +118,8 @@ jobs:
           npm run build
       # Build the Docker image
       - name: Build
-        printf "debug list\n $(ls -al)"
         run: |
+          printf "debug list\n $(ls -al)"
           docker build -t gcr.io/broad-jade-dev/jade-data-repo-ui:${GCR_TAG} .
       # Push the Docker image to Google Container Registry
       - name: Publish
