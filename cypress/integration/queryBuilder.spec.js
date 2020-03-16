@@ -1,6 +1,6 @@
 describe('test query builder functionality', () => {
   it('basic test', () => {
-    cy.visit(`/login/${Cypress.env('GOOGLE_TOKEN')}`);
+    cy.visit('/login/e2e');
     cy.contains('V2F_GWAS_Summary_Stats').click();
     cy.get('p')
       .contains('V2F_GWAS_Summary_Stats')
