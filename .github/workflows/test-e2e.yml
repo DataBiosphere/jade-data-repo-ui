@@ -3,8 +3,7 @@
 
 name: e2e
 
-on:
-  push
+on: push
 
 jobs:
   build:
@@ -16,145 +15,146 @@ jobs:
         node-version: [12.x]
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - name: Check out the repository
-      uses: actions/checkout@v1
-    - name: Install Helm v3 on runner
-      uses: azure/setup-helm@v1
-      with:
-        version: 'v3.1.1'
-      id: install
-    - name: Install helm plugins and repos for charts
-      run: |
-        helm plugin install https://github.com/thomastaylor312/helm-namespace
-        helm repo add datarepo-helm https://broadinstitute.github.io/datarepo-helm
-        helm repo update
-    - name: "Install Vault"
-      uses: broadinstitute/setup-vault@v1
-      with:
-        version: "1.3"
-      # the vault token and private key are used for connected and integration tests
-    - name: "Get Vault token"
-      # pull in GitHub secrets as environment variables
-      env:
-        ROLE_ID: ${{ secrets.ROLE_ID }}
-        SECRET_ID: ${{ secrets.SECRET_ID }}
-        VAULT_ADDR: ${{ secrets.VAULT_ADDR }}
-        GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
-        GOOGLE_SA_CERT: ${{ secrets.GOOGLE_SA_CERT }}
-      run: |
-        export VAULT_TOKEN=$(curl \
-          --request POST \
-          --data '{"role_id":"'"${ROLE_ID}"'","secret_id":"'"${SECRET_ID}"'"}' \
-          ${VAULT_ADDR}/v1/auth/approle/login | jq -r .auth.client_token)
-        vault read -format=json secret/dsde/datarepo/dev/sa-key.json | \
-          jq .data > $GOOGLE_APPLICATION_CREDENTIALS
-        jq -r .private_key $GOOGLE_APPLICATION_CREDENTIALS > $GOOGLE_SA_CERT
-        chmod 600 $GOOGLE_SA_CERT
-    - name: "Configure Google Cloud SDK"
-      env:
-        INTEGRATION_ZONE: us-central1
-        INTEGRATION_PROJECT: broad-jade-integration
-        CLUSTER_NAME: integration-master
-        GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
-      run: |
-        # authenticate against google cloud with the vault token json
-        gcloud auth activate-service-account --key-file $GOOGLE_APPLICATION_CREDENTIALS
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Check out the repository
+        uses: actions/checkout@v1
+      - name: Install Helm v3 on runner
+        uses: azure/setup-helm@v1
+        with:
+          version: 'v3.1.1'
+        id: install
+      - name: Install helm plugins and repos for charts
+        run: |
+          helm plugin install https://github.com/thomastaylor312/helm-namespace
+          helm repo add datarepo-helm https://broadinstitute.github.io/datarepo-helm
+          helm repo update
+      - name: 'Install Vault'
+        uses: broadinstitute/setup-vault@v1
+        with:
+          version: '1.3'
+        # the vault token and private key are used for connected and integration tests
+      - name: 'Get Vault token'
+        # pull in GitHub secrets as environment variables
+        env:
+          ROLE_ID: ${{ secrets.ROLE_ID }}
+          SECRET_ID: ${{ secrets.SECRET_ID }}
+          VAULT_ADDR: ${{ secrets.VAULT_ADDR }}
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+          GOOGLE_SA_CERT: ${{ secrets.GOOGLE_SA_CERT }}
+        run: |
+          export VAULT_TOKEN=$(curl \
+            --request POST \
+            --data '{"role_id":"'"${ROLE_ID}"'","secret_id":"'"${SECRET_ID}"'"}' \
+            ${VAULT_ADDR}/v1/auth/approle/login | jq -r .auth.client_token)
+          vault read -format=json secret/dsde/datarepo/dev/sa-key.json | \
+            jq .data > $GOOGLE_APPLICATION_CREDENTIALS
+          jq -r .private_key $GOOGLE_APPLICATION_CREDENTIALS > $GOOGLE_SA_CERT
+          chmod 600 $GOOGLE_SA_CERT
+      - name: 'Configure Google Cloud SDK'
+        env:
+          INTEGRATION_ZONE: us-central1
+          INTEGRATION_PROJECT: broad-jade-integration
+          CLUSTER_NAME: integration-master
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+        run: |
+          # authenticate against google cloud with the vault token json
+          gcloud auth activate-service-account --key-file $GOOGLE_APPLICATION_CREDENTIALS
 
-        # configure integration prerequisites
-        gcloud config set compute/zone ${INTEGRATION_ZONE}
-        gcloud config set project ${INTEGRATION_PROJECT}
+          # configure integration prerequisites
+          gcloud config set compute/zone ${INTEGRATION_ZONE}
+          gcloud config set project ${INTEGRATION_PROJECT}
 
-        gcloud auth configure-docker
-        sudo apt-get install kubectl
-        # get the current authorized list of IPs from kubernetes and add the
-        # GitHub Action runner IP to the list as unknown IPs cannot otherwise
-        # interact with kubernetes
-        CUR_IPS=$(gcloud container clusters describe ${CLUSTER_NAME} --format json | \
-          jq -r '[.masterAuthorizedNetworksConfig.cidrBlocks[] | .cidrBlock]')
-        RUNNER_IP=$(curl 'https://api.ipify.org/?format=text' | xargs printf '[ "%s/32" ]')
-        NEW_IPS=$(printf '%s\n' $CUR_IPS $RUNNER_IP | jq -s -r 'add | unique | join(",")')
-        echo "::set-env name=RUNNER_IP::${RUNNER_IP}"
+          gcloud auth configure-docker
+          sudo apt-get install kubectl
+          # get the current authorized list of IPs from kubernetes and add the
+          # GitHub Action runner IP to the list as unknown IPs cannot otherwise
+          # interact with kubernetes
+          CUR_IPS=$(gcloud container clusters describe ${CLUSTER_NAME} --format json | \
+            jq -r '[.masterAuthorizedNetworksConfig.cidrBlocks[] | .cidrBlock]')
+          RUNNER_IP=$(curl 'https://api.ipify.org/?format=text' | xargs printf '[ "%s/32" ]')
+          NEW_IPS=$(printf '%s\n' $CUR_IPS $RUNNER_IP | jq -s -r 'add | unique | join(",")')
+          echo "::set-env name=RUNNER_IP::${RUNNER_IP}"
 
-        gcloud container clusters update ${CLUSTER_NAME} \
-          --enable-master-authorized-networks \
-          --master-authorized-networks ${NEW_IPS}
-
-        # necessary to be able to push containers into kubernetes
-        gcloud container clusters get-credentials ${CLUSTER_NAME}
-        # export CLUSTER_NAME so it can be used during cleanup
-        echo "::set-env name=CLUSTER_NAME::${CLUSTER_NAME}"
-    - name: Check for available namespace to run tests in
-      run: |
-        NAMESPACES=("integration")
-        find_namespace ()
-        {
-          for i in "${NAMESPACES[@]}"
-          do
-            if kubectl get secrets -n ${i} ${i}-inuse > /dev/null 2>&1; then
-              printf "Namespace ${i} in use Skipping\n"
-            else
-              printf "Namespace ${i} not in use Deploying integration test to ${i}\n"
-              kubectl create secret generic ${i}-inuse --from-literal=inuse=${i} -n ${i}
-              tail=$(echo $i | awk -F- {'print $2'})
-              echo "::set-env name=IT_JADE_API_URL::https://jade.datarepo-integration.broadinstitute.org"
-              echo "::set-env name=NAMESPACEINUSE::${i}"
-              return 0
-            fi
-          done
-          sleep 60
-          find_namespace
-        }
-        find_namespace
-    - name: Build new ui container
-      env:
-        DEV_PROJECT: broad-jade-dev
-      run: |
-        GCR_TAG=$(git rev-parse --short HEAD)
-        echo "::set-env name=GCR_TAG::${GCR_TAG}"
-        npm build
-    # Build the Docker image
-    - name: Build
-      run: |
-        docker build -t gcr.io/broad-jade-dev/jade-data-repo-ui:${GCR_TAG} .
-    # Push the Docker image to Google Container Registry
-    - name: Publish
-      run: |
-        docker push gcr.io/broad-jade-dev/jade-data-repo-ui:${GCR_TAG}
-    - name: Deploying new image to kubernetes
-      env:
-        DEV_PROJECT: broad-jade-dev
-        SECRET_CHART_VERSION: 0.0.4
-        DEPLOY_CHART_VERSION: 0.0.7
-      run: |
-        helm namespace upgrade ${NAMESPACEINUSE}-secrets datarepo-helm/create-secret-manager-secret --version=${SECRET_CHART_VERSION} \
-          --install --namespace ${NAMESPACEINUSE} -f \
-          "https://raw.githubusercontent.com/broadinstitute/datarepo-helm-definitions/master/integration/${NAMESPACEINUSE}/${NAMESPACEINUSE}Secrets.yaml"
-        helm namespace upgrade ${NAMESPACEINUSE}-jade datarepo-helm/datarepo --version=${DEPLOY_CHART_VERSION} --install \
-          --namespace ${NAMESPACEINUSE} -f \
-          "https://raw.githubusercontent.com/broadinstitute/datarepo-helm-definitions/master/integration/${NAMESPACEINUSE}/${NAMESPACEINUSE}Deployment.yaml" \
-          --set "datarepo-ui.image.tag=${GCR_TAG}"
-    - run: npm start
-      env:
-        CI: true
-    - name: "Post test cleanup namespace lock"
-      if: always()
-      run: kubectl delete secret -n ${NAMESPACEINUSE} "${NAMESPACEINUSE}-inuse"
-    - name: "Post test cleanup whitelistips"
-      if: always()
-      run: |
-        # export the original IP list so it can be restored during cleanup
-        CUR_IPS=$(gcloud container clusters describe ${CLUSTER_NAME} --format json | \
-          jq -r '[ .masterAuthorizedNetworksConfig.cidrBlocks[] | .cidrBlock ]')
-        RUNNER_IP=$(echo ${RUNNER_IP}| jq -r '.[0]')
-        RESTORE_IPS=$(printf '%s\n' $CUR_IPS | jq -r --arg RUNNER_IP "$RUNNER_IP" '. - [ $RUNNER_IP ] | unique | join(",")')
-        # restore the original list of authorized IPs if they exist
-        if [ ! -z "${RESTORE_IPS}" ]; then
           gcloud container clusters update ${CLUSTER_NAME} \
             --enable-master-authorized-networks \
-            --master-authorized-networks ${RESTORE_IPS}
-        fi
+            --master-authorized-networks ${NEW_IPS}
+
+          # necessary to be able to push containers into kubernetes
+          gcloud container clusters get-credentials ${CLUSTER_NAME}
+          # export CLUSTER_NAME so it can be used during cleanup
+          echo "::set-env name=CLUSTER_NAME::${CLUSTER_NAME}"
+      - name: Check for available namespace to run tests in
+        run: |
+          NAMESPACES=("integration")
+          find_namespace ()
+          {
+            for i in "${NAMESPACES[@]}"
+            do
+              if kubectl get secrets -n ${i} ${i}-inuse > /dev/null 2>&1; then
+                printf "Namespace ${i} in use Skipping\n"
+              else
+                printf "Namespace ${i} not in use Deploying integration test to ${i}\n"
+                kubectl create secret generic ${i}-inuse --from-literal=inuse=${i} -n ${i}
+                tail=$(echo $i | awk -F- {'print $2'})
+                echo "::set-env name=IT_JADE_API_URL::https://jade.datarepo-integration.broadinstitute.org"
+                echo "::set-env name=NAMESPACEINUSE::${i}"
+                return 0
+              fi
+            done
+            sleep 60
+            find_namespace
+          }
+          find_namespace
+      - name: Build new ui container
+        env:
+          DEV_PROJECT: broad-jade-dev
+        run: |
+          GCR_TAG=$(git rev-parse --short HEAD)
+          echo "::set-env name=GCR_TAG::${GCR_TAG}"
+          npm run build
+      # Build the Docker image
+      - name: Build
+        printf "debug list\n $(ls -al)"
+        run: |
+          docker build -t gcr.io/broad-jade-dev/jade-data-repo-ui:${GCR_TAG} .
+      # Push the Docker image to Google Container Registry
+      - name: Publish
+        run: |
+          docker push gcr.io/broad-jade-dev/jade-data-repo-ui:${GCR_TAG}
+      - name: Deploying new image to kubernetes
+        env:
+          DEV_PROJECT: broad-jade-dev
+          SECRET_CHART_VERSION: 0.0.4
+          DEPLOY_CHART_VERSION: 0.0.7
+        run: |
+          helm namespace upgrade ${NAMESPACEINUSE}-secrets datarepo-helm/create-secret-manager-secret --version=${SECRET_CHART_VERSION} \
+            --install --namespace ${NAMESPACEINUSE} -f \
+            "https://raw.githubusercontent.com/broadinstitute/datarepo-helm-definitions/master/integration/${NAMESPACEINUSE}/${NAMESPACEINUSE}Secrets.yaml"
+          helm namespace upgrade ${NAMESPACEINUSE}-jade datarepo-helm/datarepo --version=${DEPLOY_CHART_VERSION} --install \
+            --namespace ${NAMESPACEINUSE} -f \
+            "https://raw.githubusercontent.com/broadinstitute/datarepo-helm-definitions/master/integration/${NAMESPACEINUSE}/${NAMESPACEINUSE}Deployment.yaml" \
+            --set "datarepo-ui.image.tag=${GCR_TAG}"
+      - run: npm start
+        env:
+          CI: true
+      - name: 'Post test cleanup namespace lock'
+        if: always()
+        run: kubectl delete secret -n ${NAMESPACEINUSE} "${NAMESPACEINUSE}-inuse"
+      - name: 'Post test cleanup whitelistips'
+        if: always()
+        run: |
+          # export the original IP list so it can be restored during cleanup
+          CUR_IPS=$(gcloud container clusters describe ${CLUSTER_NAME} --format json | \
+            jq -r '[ .masterAuthorizedNetworksConfig.cidrBlocks[] | .cidrBlock ]')
+          RUNNER_IP=$(echo ${RUNNER_IP}| jq -r '.[0]')
+          RESTORE_IPS=$(printf '%s\n' $CUR_IPS | jq -r --arg RUNNER_IP "$RUNNER_IP" '. - [ $RUNNER_IP ] | unique | join(",")')
+          # restore the original list of authorized IPs if they exist
+          if [ ! -z "${RESTORE_IPS}" ]; then
+            gcloud container clusters update ${CLUSTER_NAME} \
+              --enable-master-authorized-networks \
+              --master-authorized-networks ${RESTORE_IPS}
+          fi
