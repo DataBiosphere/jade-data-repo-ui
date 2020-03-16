@@ -45,6 +45,7 @@ jobs:
           VAULT_ADDR: ${{ secrets.VAULT_ADDR }}
           GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
           GOOGLE_SA_CERT: ${{ secrets.GOOGLE_SA_CERT }}
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
         run: |
           export VAULT_TOKEN=$(curl \
             --request POST \
@@ -143,7 +144,7 @@ jobs:
         run: |
           REACT_APP_GOOGLE_TOKEN=$(gcloud auth print-access-token)
           echo ::add-mask::${REACT_APP_GOOGLE_TOKEN}
-          npx cypress run
+          npx cypress run --record
       - name: 'Post test cleanup namespace lock'
         if: always()
         run: kubectl delete secret -n ${NAMESPACEINUSE} "${NAMESPACEINUSE}-inuse"
