@@ -115,7 +115,7 @@ jobs:
         run: |
           GCR_TAG=$(git rev-parse --short HEAD)
           echo "::set-env name=GCR_TAG::${GCR_TAG}"
-          npm run build
+          npm run-script build
       # Build the Docker image
       - name: Build
         run: |
