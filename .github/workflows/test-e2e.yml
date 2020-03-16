@@ -82,7 +82,7 @@ jobs:
               printf "Namespace ${i} not in use Deploying integration test to ${i}\n"
               kubectl create secret generic ${i}-inuse --from-literal=inuse=${i} -n ${i}
               tail=$(echo $i | awk -F- {'print $2'})
-              echo "::set-env name=IT_JADE_API_URL::https://jade-${tail}.datarepo-integration.broadinstitute.org"
+              echo "::set-env name=IT_JADE_API_URL::https://jade.datarepo-integration.broadinstitute.org"
               echo "::set-env name=NAMESPACEINUSE::${i}"
               return 0
             fi
@@ -111,7 +111,7 @@ jobs:
         helm namespace upgrade ${NAMESPACEINUSE}-jade datarepo-helm/datarepo --version=${DEPLOY_CHART_VERSION} --install \
           --namespace ${NAMESPACEINUSE} -f \
           "https://raw.githubusercontent.com/broadinstitute/datarepo-helm-definitions/master/integration/${NAMESPACEINUSE}/${NAMESPACEINUSE}Deployment.yaml" \
-          --set "datarepo-api.image.tag=${GCR_TAG}"
+          --set "datarepo-ui.image.tag=${GCR_TAG}"
     - run: npm start
       env:
         CI: true
