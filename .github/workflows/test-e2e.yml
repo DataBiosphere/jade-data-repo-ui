@@ -140,7 +140,10 @@ jobs:
             "https://raw.githubusercontent.com/broadinstitute/datarepo-helm-definitions/master/integration/${NAMESPACEINUSE}/${NAMESPACEINUSE}Deployment.yaml" \
             --set "datarepo-ui.image.tag=${GCR_TAG}"
       - name: Cypress run
-        uses: cypress-io/github-action@v1
+        run: |
+          REACT_APP_GOOGLE_TOKEN=$(gcloud auth print-access-token)
+          echo ::add-mask::${REACT_APP_GOOGLE_TOKEN}
+          npx cypress run
       - name: 'Post test cleanup namespace lock'
         if: always()
         run: kubectl delete secret -n ${NAMESPACEINUSE} "${NAMESPACEINUSE}-inuse"

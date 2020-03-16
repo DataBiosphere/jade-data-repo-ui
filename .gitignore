@@ -10,3 +10,4 @@ webpack.stats.json
 .idea
 .tern-project
 skaffold.yaml
+cypress/videos
