@@ -45,7 +45,6 @@ jobs:
           VAULT_ADDR: ${{ secrets.VAULT_ADDR }}
           GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
           GOOGLE_SA_CERT: ${{ secrets.GOOGLE_SA_CERT }}
-          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
         run: |
           export VAULT_TOKEN=$(curl \
             --request POST \
@@ -141,6 +140,8 @@ jobs:
             "https://raw.githubusercontent.com/broadinstitute/datarepo-helm-definitions/master/integration/${NAMESPACEINUSE}/${NAMESPACEINUSE}Deployment.yaml" \
             --set "datarepo-ui.image.tag=${GCR_TAG}"
       - name: Cypress run
+        env:
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
         run: |
           REACT_APP_GOOGLE_TOKEN=$(gcloud auth print-access-token)
           echo ::add-mask::${REACT_APP_GOOGLE_TOKEN}
