@@ -67,7 +67,7 @@ jobs:
         gcloud config set compute/zone ${INTEGRATION_ZONE}
         gcloud config set project ${INTEGRATION_PROJECT}
         gcloud auth configure-docker
-        gcloud components install kubectl
+        sudo apt-get install kubectl
     - name: Check for available namespace to run tests in
       run: |
         NAMESPACES=("integration-1" "integration-2" "integration-3" "integration-4" "integration-5")
