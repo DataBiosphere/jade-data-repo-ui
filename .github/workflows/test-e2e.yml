@@ -139,12 +139,15 @@ jobs:
             --namespace ${NAMESPACEINUSE} -f \
             "https://raw.githubusercontent.com/broadinstitute/datarepo-helm-definitions/master/integration/${NAMESPACEINUSE}/${NAMESPACEINUSE}Deployment.yaml" \
             --set "datarepo-ui.image.tag=${GCR_TAG}"
+      - name: set cypresss env
+        run: |
+          CYPRESS_GOOGLE_TOKEN=$(gcloud auth print-access-token)
+          echo ::add-mask::${CYPRESS_GOOGLE_TOKEN}
+          echo ::set-env name=CYPRESS_GOOGLE_TOKEN::${CYPRESS_GOOGLE_TOKEN}
       - name: Cypress run
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
         run: |
-          CYPRESS_GOOGLE_TOKEN=$(gcloud auth print-access-token)
-          echo ::add-mask::${CYPRESS_GOOGLE_TOKEN}
           npx cypress run --record
       - name: 'Post test cleanup namespace lock'
         if: always()
