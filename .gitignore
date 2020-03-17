@@ -11,3 +11,4 @@ webpack.stats.json
 .tern-project
 skaffold.yaml
 cypress/videos
+cypress/screenshots
