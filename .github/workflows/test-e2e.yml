@@ -143,8 +143,8 @@ jobs:
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
         run: |
-          REACT_APP_GOOGLE_TOKEN=$(gcloud auth print-access-token)
-          echo ::add-mask::${REACT_APP_GOOGLE_TOKEN}
+          CYPRESS_GOOGLE_TOKEN=$(gcloud auth print-access-token)
+          echo ::add-mask::${CYPRESS_GOOGLE_TOKEN}
           npx cypress run --record
       - name: 'Post test cleanup namespace lock'
         if: always()
