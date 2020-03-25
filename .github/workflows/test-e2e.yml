@@ -142,7 +142,7 @@ jobs:
       - name: wait for status checks
         run: |
           kubectl get pod -n ${namespace} -l component=${namespace}-jade-datarepo-ui -o jsonpath='{.items[0].metadata.name}'
-          kubectl describe pod liveness-exec
+          kubectl get deployments -n integration integration-jade-datarepo-ui -o json
       - name: set cypresss env
         run: |
           CYPRESS_GOOGLE_TOKEN=$(gcloud auth print-access-token)
