@@ -141,7 +141,7 @@ jobs:
             --set "datarepo-ui.image.tag=${GCR_TAG}"
       - name: wait for status checks
         run: |
-          kubectl get deployments -n integration integration-jade-datarepo-ui -o json
+          kubectl get deployments -n integration integration-jade-datarepo-ui -o json | jq .status.unavailableReplicas
       - name: set cypresss env
         run: |
           CYPRESS_GOOGLE_TOKEN=$(gcloud auth print-access-token)
