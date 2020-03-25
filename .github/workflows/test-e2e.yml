@@ -141,7 +141,6 @@ jobs:
             --set "datarepo-ui.image.tag=${GCR_TAG}"
       - name: wait for status checks
         run: |
-          kubectl get pod -n ${namespace} -l component=${namespace}-jade-datarepo-ui -o jsonpath='{.items[0].metadata.name}'
           kubectl get deployments -n integration integration-jade-datarepo-ui -o json
       - name: set cypresss env
         run: |
