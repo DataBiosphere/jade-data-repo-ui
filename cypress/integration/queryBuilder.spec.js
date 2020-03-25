@@ -25,9 +25,6 @@ describe('test query builder', () => {
     cy.get('#e2eLoginButton').click();
     cy.contains('V2F_GWAS_Summary_Stats').should('be.visible');
     cy.contains('V2F_GWAS_Summary_Stats').click();
-    cy.get('p')
-      .contains('V2F_GWAS_Summary_Stats')
-      .should('be.visible');
     cy.get('a > .MuiButtonBase-root > .MuiButton-label').click();
     cy.get('div.MuiButtonBase-root:nth-child(2) > svg:nth-child(1)').click();
     cy.get('[data-cy=filterItem]')
