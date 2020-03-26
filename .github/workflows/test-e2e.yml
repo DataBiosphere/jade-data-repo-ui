@@ -89,7 +89,7 @@ jobs:
           echo "::set-env name=CLUSTER_NAME::${CLUSTER_NAME}"
       - name: Check for available namespace to run tests in
         run: |
-          NAMESPACES=("integration")
+          NAMESPACES=("integration-6 integration-7")
           find_namespace ()
           {
             for i in "${NAMESPACES[@]}"
