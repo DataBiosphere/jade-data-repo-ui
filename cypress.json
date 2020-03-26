@@ -1,4 +1,4 @@
 {
   "projectId": "e6ttjx",
-  "baseUrl": "https://jade.datarepo-integration.broadinstitute.org"
+  "baseUrl": "http://local.broadinstitute.org:3000"
 }

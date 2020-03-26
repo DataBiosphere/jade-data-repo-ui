@@ -1,10 +1,5 @@
-# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
-# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
-
 name: e2e
-
 on: push
-
 jobs:
   build:
     if: "!contains( github.event.pull_request.labels.*.name, 'skip-ci')"
@@ -87,28 +82,11 @@ jobs:
           gcloud container clusters get-credentials ${CLUSTER_NAME}
           # export CLUSTER_NAME so it can be used during cleanup
           echo "::set-env name=CLUSTER_NAME::${CLUSTER_NAME}"
-      - name: Check for available namespace to run tests in
-        run: |
-          NAMESPACES=("integration-6" "integration-7")
-          find_namespace ()
-          {
-            for i in "${NAMESPACES[@]}"
-            do
-              if kubectl get secrets -n ${i} ${i}-inuse > /dev/null 2>&1; then
-                printf "Namespace ${i} in use Skipping\n"
-              else
-                printf "Namespace ${i} not in use Deploying integration test to ${i}\n"
-                kubectl create secret generic ${i}-inuse --from-literal=inuse=${i} -n ${i}
-                tail=$(echo $i | awk -F- {'print $2'})
-                echo "::set-env name=IT_JADE_API_URL::https://jade.datarepo-integration.broadinstitute.org"
-                echo "::set-env name=NAMESPACEINUSE::${i}"
-                return 0
-              fi
-            done
-            sleep 60
-            find_namespace
-          }
-          find_namespace
+      - name: "Check for an availble namespace to deploy API to and set state lock"
+        uses: broadinstitute/datarepo-actions@0.1.0
+        with:
+          actions_subcommand: "k8_checknamespace"
+          k8_namespaces: "integration-6,integration-7"
       - name: Build new ui container
         env:
           DEV_PROJECT: broad-jade-dev
@@ -126,19 +104,12 @@ jobs:
       - name: Publish
         run: |
           docker push gcr.io/broad-jade-dev/jade-data-repo-ui:${GCR_TAG}
-      - name: Deploying new image to kubernetes
-        env:
-          DEV_PROJECT: broad-jade-dev
-          SECRET_CHART_VERSION: 0.0.4
-          DEPLOY_CHART_VERSION: 0.0.7
-        run: |
-          helm namespace upgrade ${NAMESPACEINUSE}-secrets datarepo-helm/create-secret-manager-secret --version=${SECRET_CHART_VERSION} \
-            --install --namespace ${NAMESPACEINUSE} -f \
-            "https://raw.githubusercontent.com/broadinstitute/datarepo-helm-definitions/master/integration/${NAMESPACEINUSE}/${NAMESPACEINUSE}Secrets.yaml"
-          helm namespace upgrade ${NAMESPACEINUSE}-jade datarepo-helm/datarepo --version=${DEPLOY_CHART_VERSION} --install \
-            --namespace ${NAMESPACEINUSE} -f \
-            "https://raw.githubusercontent.com/broadinstitute/datarepo-helm-definitions/master/integration/${NAMESPACEINUSE}/${NAMESPACEINUSE}Deployment.yaml" \
-            --set "datarepo-ui.image.tag=${GCR_TAG}"
+      - name: "Deploy to cluster with Helm"
+        uses: broadinstitute/datarepo-actions@0.1.0
+        with:
+          actions_subcommand: "helmdeploy"
+          helm_secret_chart_version: "0.0.4"
+          helm_datarepo_chart_version: "0.0.8"
       - name: wait for status checks
         run: |
           kubectl get deployments -n integration integration-jade-datarepo-ui -o json | jq '.status.unavailableReplicas'
@@ -152,20 +123,13 @@ jobs:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
         run: |
           npx cypress run --record
-      - name: "Post test cleanup namespace lock"
+      - name: "Clean state lock from used Namespace on API deploy"
         if: always()
-        run: kubectl delete secret -n ${NAMESPACEINUSE} "${NAMESPACEINUSE}-inuse"
-      - name: "Post test cleanup whitelistips"
+        uses: broadinstitute/datarepo-actions@0.1.0
+        with:
+          actions_subcommand: "k8_checknamespace_clean"
+      - name: "Clean whitelisted Runner IP"
         if: always()
-        run: |
-          # export the original IP list so it can be restored during cleanup
-          CUR_IPS=$(gcloud container clusters describe ${CLUSTER_NAME} --format json | \
-            jq -r '[ .masterAuthorizedNetworksConfig.cidrBlocks[] | .cidrBlock ]')
-          RUNNER_IP=$(echo ${RUNNER_IP}| jq -r '.[0]')
-          RESTORE_IPS=$(printf '%s\n' $CUR_IPS | jq -r --arg RUNNER_IP "$RUNNER_IP" '. - [ $RUNNER_IP ] | unique | join(",")')
-          # restore the original list of authorized IPs if they exist
-          if [ ! -z "${RESTORE_IPS}" ]; then
-            gcloud container clusters update ${CLUSTER_NAME} \
-              --enable-master-authorized-networks \
-              --master-authorized-networks ${RESTORE_IPS}
-          fi
+        uses: broadinstitute/datarepo-actions@0.1.0
+        with:
+          actions_subcommand: "gcp_whitelist_clean"

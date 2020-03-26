@@ -22,7 +22,8 @@ describe('test query builder', () => {
   it('applies filters', () => {
     cy.contains('V2F_GWAS_Summary_Stats').should('be.visible');
     cy.contains('V2F_GWAS_Summary_Stats').click();
-    cy.get('a > .MuiButtonBase-root > .MuiButton-label').click();
+    cy.wait(2000);
+    cy.get('a > .MuiButtonBase-root > .MuiButton-label', { timeout: 30000 }).click();
     cy.get('div.MuiButtonBase-root:nth-child(2) > svg:nth-child(1)').click();
     cy.get('[data-cy=filterItem]')
       .contains('ancestry')
