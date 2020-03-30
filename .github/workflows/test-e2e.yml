@@ -68,8 +68,12 @@ jobs:
         uses: broadinstitute/datarepo-actions@my-ui-steps
         with:
           actions_subcommand: "k8_checknamespace_clean"
+          role_id: ${{ secrets.ROLE_ID }}
+          secret_id: ${{ secrets.SECRET_ID }}
       - name: "Clean whitelisted Runner IP"
         if: always()
         uses: broadinstitute/datarepo-actions@my-ui-steps
         with:
           actions_subcommand: "gcp_whitelist_clean"
+          role_id: ${{ secrets.ROLE_ID }}
+          secret_id: ${{ secrets.SECRET_ID }}
