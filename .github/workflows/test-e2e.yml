@@ -39,7 +39,7 @@ jobs:
       # Build the Docker image
       - name: Build
         run: |
-          chown $USER:$USER jade-dev-account.pem
+          rm -rf jade-dev-account.pem
           docker build -t gcr.io/broad-jade-dev/jade-data-repo-ui:${GCR_TAG} .
       # Push the Docker image to Google Container Registry
       - name: Publish
