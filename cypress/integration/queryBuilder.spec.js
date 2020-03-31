@@ -8,13 +8,9 @@ describe('test query builder', () => {
     });
     cy.get('#e2eLoginButton').click();
 
-    cy.route('GET', 'api/repository/v1/datasets/c9099f3a-1769-4a46-a777-9331fea0721c').as(
-      'getDataset',
-    );
+    cy.route('GET', 'api/repository/v1/datasets/**').as('getDataset');
 
-    cy.route('GET', 'api/repository/v1/datasets/c9099f3a-1769-4a46-a777-9331fea0721c/policies').as(
-      'getDatasetPolicies',
-    );
+    cy.route('GET', 'api/repository/v1/datasets/**/policies').as('getDatasetPolicies');
   });
 
   it('does render', () => {
@@ -30,7 +26,7 @@ describe('test query builder', () => {
       .click();
   });
 
-  it.only('applies filters', () => {
+  it('applies filters', () => {
     cy.contains('V2F_GWAS_Summary_Stats').should('be.visible');
     cy.contains('V2F_GWAS_Summary_Stats').click();
     cy.wait(['@getDataset', '@getDatasetPolicies']);
