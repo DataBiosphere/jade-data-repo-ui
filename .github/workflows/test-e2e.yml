@@ -53,6 +53,7 @@ jobs:
           actions_subcommand: "helmdeploy"
           helm_secret_chart_version: "0.0.4"
           helm_datarepo_chart_version: "0.0.8"
+          image: "ui"
       - name: wait for status checks
         uses: broadinstitute/datarepo-actions@ms-ui-stuff
         with:
