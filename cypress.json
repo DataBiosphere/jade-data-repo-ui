@@ -1,4 +1,7 @@
 {
   "projectId": "e6ttjx",
-  "baseUrl": "http://local.broadinstitute.org:3000"
+  "viewportWidth": 1920,
+  "viewportHeight": 1080,
+  "defaultCommandTimeout": 60000,
+  "requestTimeout": 120000
 }

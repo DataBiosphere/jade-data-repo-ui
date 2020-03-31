@@ -142,7 +142,7 @@ export class AppliedFilterList extends React.PureComponent {
     });
 
     return (
-      <div>
+      <div data-cy={`appliedFilterList-${table}`}>
         <ListItem className={classes.tableName} button onClick={() => this.handleExpand()}>
           {table}
           {open ? <ExpandLess /> : <StyledBadge badgeContent={numFilters} />}

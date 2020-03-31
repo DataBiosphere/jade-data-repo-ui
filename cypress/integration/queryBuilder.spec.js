@@ -1,19 +1,26 @@
 describe('test query builder', () => {
   beforeEach(() => {
+    cy.server();
     cy.visit('/login/e2e');
-    cy.get('#tokenInput', { timeout: 30000 }).type(Cypress.env('GOOGLE_TOKEN'), {
+    cy.get('#tokenInput').type(Cypress.env('GOOGLE_TOKEN'), {
       log: false,
       delay: 0,
     });
     cy.get('#e2eLoginButton').click();
+
+    cy.route('GET', 'api/repository/v1/datasets/**').as('getDataset');
+
+    cy.route('GET', 'api/repository/v1/datasets/**/policies').as('getDatasetPolicies');
   });
 
   it('does render', () => {
-    cy.contains('V2F_GWAS_Summary_Stats').should('be.visible');
-    cy.contains('V2F_GWAS_Summary_Stats').click();
+    cy.contains('V2F_GWAS_Summary_Stats')
+      .should('be.visible')
+      .click();
     cy.get('p')
       .contains('V2F_GWAS_Summary_Stats')
-      .should('be.visible');
+      .should('be.visible')
+      .click();
     cy.get('a')
       .contains('query dataset')
       .click();
@@ -22,17 +29,14 @@ describe('test query builder', () => {
   it('applies filters', () => {
     cy.contains('V2F_GWAS_Summary_Stats').should('be.visible');
     cy.contains('V2F_GWAS_Summary_Stats').click();
-    cy.wait(2000);
-    cy.get('a > .MuiButtonBase-root > .MuiButton-label', { timeout: 30000 }).click();
+    cy.wait(['@getDataset', '@getDatasetPolicies']);
+    cy.get('[data-cy=queryDatasetButton]').click();
     cy.get('div.MuiButtonBase-root:nth-child(2) > svg:nth-child(1)').click();
     cy.get('[data-cy=filterItem]')
       .contains('ancestry')
       .click();
-    cy.get(
-      '.MuiCollapse-entered > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > label:nth-child(1) > span:nth-child(1) > span:nth-child(1) > input:nth-child(1)',
-    ).click();
-    cy.get('[data-cy="applyFiltersButton"]')
-      .contains('Apply Filters')
-      .click();
+    cy.get('[data-cy=categoryFilterCheckbox-EU]').click();
+    cy.get('[data-cy="applyFiltersButton"]').click();
+    cy.get('[data-cy=appliedFilterList-ancestry_specific_meta_analysis]', {}).should('be.visible');
   });
 });
