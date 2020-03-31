@@ -44,6 +44,8 @@ jobs:
       # Push the Docker image to Google Container Registry
       - name: Publish
         run: |
+          gcloud auth activate-service-account --key-file jade-dev-account.json
+          gcloud auth configure-docker --quiet
           docker push gcr.io/broad-jade-dev/jade-data-repo-ui:${GCR_TAG}
       - name: "Deploy to cluster with Helm"
         uses: broadinstitute/datarepo-actions@my-ui-steps
