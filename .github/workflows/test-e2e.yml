@@ -27,7 +27,7 @@ jobs:
         uses: broadinstitute/datarepo-actions@my-ui-steps
         with:
           actions_subcommand: "k8_checknamespace"
-          k8_namespaces: "integration-6,integration-7"
+          k8_namespaces: "integration-4,integration-5"
       - name: Build new ui container
         env:
           DEV_PROJECT: broad-jade-dev
@@ -39,6 +39,7 @@ jobs:
       # Build the Docker image
       - name: Build
         run: |
+          chown $USER:$USER jade-dev-account.pem
           docker build -t gcr.io/broad-jade-dev/jade-data-repo-ui:${GCR_TAG} .
       # Push the Docker image to Google Container Registry
       - name: Publish
