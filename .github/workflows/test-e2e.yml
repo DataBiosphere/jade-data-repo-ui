@@ -18,13 +18,13 @@ jobs:
       - name: Check out the repository
         uses: actions/checkout@v1
       - name: "Whitelist Runner IP"
-        uses: broadinstitute/datarepo-actions@my-ui-steps
+        uses: broadinstitute/datarepo-actions@ms-ui-stuff
         with:
           actions_subcommand: "gcp_whitelist"
           role_id: ${{ secrets.ROLE_ID }}
           secret_id: ${{ secrets.SECRET_ID }}
       - name: "Check for an availble namespace to deploy API to and set state lock"
-        uses: broadinstitute/datarepo-actions@my-ui-steps
+        uses: broadinstitute/datarepo-actions@ms-ui-stuff
         with:
           actions_subcommand: "k8_checknamespace"
           k8_namespaces: "integration-4,integration-5"
@@ -48,14 +48,15 @@ jobs:
           gcloud auth configure-docker --quiet
           docker push gcr.io/broad-jade-dev/jade-data-repo-ui:${GCR_TAG}
       - name: "Deploy to cluster with Helm"
-        uses: broadinstitute/datarepo-actions@my-ui-steps
+        uses: broadinstitute/datarepo-actions@ms-ui-stuff
         with:
           actions_subcommand: "helmdeploy"
           helm_secret_chart_version: "0.0.4"
           helm_datarepo_chart_version: "0.0.8"
       - name: wait for status checks
-        run: |
-          kubectl get deployments -n integration integration-jade-datarepo-ui -o json | jq '.status.unavailableReplicas'
+        uses: broadinstitute/datarepo-actions@ms-ui-stuff
+        with:
+          actions_subcommand: "wait_for_deployment"
       - name: set cypresss env
         run: |
           CYPRESS_GOOGLE_TOKEN=$(gcloud auth print-access-token)
@@ -68,11 +69,11 @@ jobs:
           npx cypress run --record
       - name: "Clean state lock from used Namespace on API deploy"
         if: always()
-        uses: broadinstitute/datarepo-actions@my-ui-steps
+        uses: broadinstitute/datarepo-actions@ms-ui-stuff
         with:
           actions_subcommand: "k8_checknamespace_clean"
       - name: "Clean whitelisted Runner IP"
         if: always()
-        uses: broadinstitute/datarepo-actions@my-ui-steps
+        uses: broadinstitute/datarepo-actions@ms-ui-stuff
         with:
           actions_subcommand: "gcp_whitelist_clean"
