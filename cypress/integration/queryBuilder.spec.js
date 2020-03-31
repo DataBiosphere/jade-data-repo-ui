@@ -2,7 +2,7 @@ describe('test query builder', () => {
   beforeEach(() => {
     cy.server();
     cy.visit('/login/e2e');
-    cy.get('#tokenInput', { timeout: 30000 }).type(Cypress.env('GOOGLE_TOKEN'), {
+    cy.get('#tokenInput').type(Cypress.env('GOOGLE_TOKEN'), {
       log: false,
       delay: 0,
     });
@@ -41,8 +41,6 @@ describe('test query builder', () => {
       .click();
     cy.get('[data-cy=categoryFilterCheckbox-EU]').click();
     cy.get('[data-cy="applyFiltersButton"]').click();
-    cy.get('[data-cy=appliedFilterList-ancestry_specific_meta_analysis]', {
-      timeout: 60000,
-    }).should('be.visible');
+    cy.get('[data-cy=appliedFilterList-ancestry_specific_meta_analysis]', {}).should('be.visible');
   });
 });

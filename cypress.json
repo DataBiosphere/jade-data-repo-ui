@@ -1,5 +1,7 @@
 {
   "projectId": "e6ttjx",
   "viewportWidth": 1920,
-  "viewportHeight": 1080
+  "viewportHeight": 1080,
+  "defaultCommandTimeout": 60000,
+  "requestTimeout": 120000
 }
