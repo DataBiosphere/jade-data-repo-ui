@@ -51,6 +51,8 @@ jobs:
         uses: broadinstitute/datarepo-actions@my-ui-steps
         with:
           actions_subcommand: "helmdeploy"
+          role_id: ${{ secrets.ROLE_ID }}
+          secret_id: ${{ secrets.SECRET_ID }}
           helm_secret_chart_version: "0.0.4"
           helm_datarepo_chart_version: "0.0.8"
       - name: wait for status checks
