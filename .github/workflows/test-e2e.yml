@@ -60,7 +60,7 @@ jobs:
       - name: set cypresss env
         run: |
           eval $(cat env_vars)
-          echo ::set-env name=CYPRESS_BASE_URL::${NAMESPACEINUSE}
+          echo ::set-env name=CYPRESS_BASE_URL::${IT_JADE_API_URL}
           CYPRESS_GOOGLE_TOKEN=$(gcloud auth print-access-token)
           echo ::add-mask::${CYPRESS_GOOGLE_TOKEN}
           echo ::set-env name=CYPRESS_GOOGLE_TOKEN::${CYPRESS_GOOGLE_TOKEN}
