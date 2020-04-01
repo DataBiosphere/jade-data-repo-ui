@@ -20,12 +20,31 @@ jobs:
           repository: 'broadinstitute/datarepo-helm-definitions'
           token: ${{ secrets.HELM_REPO_TOKEN }}
           path: datarepo-helm-definitions
-      - name: "Build new delevop docker image"
+      - name: "Get gcp credentials"
         uses: broadinstitute/datarepo-actions@0.2.0
         with:
-          actions_subcommand: 'gradlebuild'
+          actions_subcommand: 'skip'
           role_id: ${{ secrets.ROLE_ID }}
           secret_id: ${{ secrets.SECRET_ID }}
+      - name: Build new ui container
+        env:
+          DEV_PROJECT: broad-jade-dev
+        run: |
+          GCR_TAG=$(git rev-parse --short HEAD)
+          echo "::set-env name=GCR_TAG::${GCR_TAG}"
+          npm ci
+          npm run-script build
+      # Build the Docker image
+      - name: Build
+        run: |
+          rm -rf jade-dev-account.pem
+          docker build -t gcr.io/broad-jade-dev/jade-data-repo-ui:${GCR_TAG} .
+      # Push the Docker image to Google Container Registry
+      - name: Publish
+        run: |
+          gcloud auth activate-service-account --key-file jade-dev-account.json
+          gcloud auth configure-docker --quiet
+          docker push gcr.io/broad-jade-dev/jade-data-repo-ui:${GCR_TAG}
       - name: "Check and edit Helm definition for dev"
         uses: broadinstitute/datarepo-actions@0.2.0
         with:
