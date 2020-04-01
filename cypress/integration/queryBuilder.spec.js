@@ -21,6 +21,7 @@ describe('test query builder', () => {
   it('does render', () => {});
 
   it('applies filters', () => {
+    // selects the filter button in the sidebar
     cy.get('div.MuiButtonBase-root:nth-child(2) > svg:nth-child(1)').click();
     cy.get('[data-cy=filterItem]')
       .contains('ancestry')

@@ -30,7 +30,9 @@ export class HeadlessLogin extends React.PureComponent {
     const { dispatch } = this.props;
     const { token } = this.state;
 
-    dispatch(logIn('user.name', 'user.imageUrl', 'user.email', token, 1615064728000));
+    const expireTime = Date.now() + 8640000;
+
+    dispatch(logIn('user.name', 'user.imageUrl', 'user.email', token, expireTime));
   };
 
   render() {
