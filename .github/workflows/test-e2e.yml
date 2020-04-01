@@ -1,0 +1,82 @@
+name: e2e
+on: push
+jobs:
+  build:
+    if: "!contains( github.event.pull_request.labels.*.name, 'skip-ci')"
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [12.x]
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Check out the repository
+        uses: actions/checkout@v1
+      - name: "Whitelist Runner IP"
+        uses: broadinstitute/datarepo-actions@0.2.0
+        with:
+          actions_subcommand: "gcp_whitelist"
+          role_id: ${{ secrets.ROLE_ID }}
+          secret_id: ${{ secrets.SECRET_ID }}
+      - name: "Check for an availble namespace to deploy API to and set state lock"
+        uses: broadinstitute/datarepo-actions@0.2.0
+        with:
+          actions_subcommand: "k8_checknamespace"
+          k8_namespaces: "integration-4,integration-5"
+      - name: Build new ui container
+        env:
+          DEV_PROJECT: broad-jade-dev
+        run: |
+          GCR_TAG=$(git rev-parse --short HEAD)
+          echo "::set-env name=GCR_TAG::${GCR_TAG}"
+          npm ci
+          npm run-script build
+      # Build the Docker image
+      - name: Build
+        run: |
+          rm -rf jade-dev-account.pem
+          docker build -t gcr.io/broad-jade-dev/jade-data-repo-ui:${GCR_TAG} .
+      # Push the Docker image to Google Container Registry
+      - name: Publish
+        run: |
+          gcloud auth activate-service-account --key-file jade-dev-account.json
+          gcloud auth configure-docker --quiet
+          docker push gcr.io/broad-jade-dev/jade-data-repo-ui:${GCR_TAG}
+      - name: "Deploy to cluster with Helm"
+        uses: broadinstitute/datarepo-actions@0.2.0
+        with:
+          actions_subcommand: "helmdeploy"
+          helm_secret_chart_version: "0.0.4"
+          helm_datarepo_chart_version: "0.0.8"
+          helm_imagetag_update: "ui"
+      - name: wait for status checks
+        uses: broadinstitute/datarepo-actions@0.2.0
+        with:
+          actions_subcommand: "wait_for_deployment"
+      - name: set cypresss env
+        run: |
+          eval $(cat env_vars)
+          echo ::set-env name=CYPRESS_BASE_URL::${IT_JADE_API_URL}
+          CYPRESS_GOOGLE_TOKEN=$(gcloud auth print-access-token)
+          echo ::add-mask::${CYPRESS_GOOGLE_TOKEN}
+          echo ::set-env name=CYPRESS_GOOGLE_TOKEN::${CYPRESS_GOOGLE_TOKEN}
+      - name: Cypress run
+        env:
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+        run: |
+          npx cypress run --record
+      - name: "Clean state lock from used Namespace on API deploy"
+        if: always()
+        uses: broadinstitute/datarepo-actions@0.2.0
+        with:
+          actions_subcommand: "k8_checknamespace_clean"
+      - name: "Clean whitelisted Runner IP"
+        if: always()
+        uses: broadinstitute/datarepo-actions@0.2.0
+        with:
+          actions_subcommand: "gcp_whitelist_clean"

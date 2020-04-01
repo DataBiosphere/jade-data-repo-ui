@@ -13,9 +13,8 @@
 // https://on.cypress.io/configuration
 // ***********************************************************
 
-import 'cypress-testing-library/add-commands';
-import './commands';
+// Import commands.js using ES2015 syntax:
+import './commands'
 
-Cypress.Screenshot.defaults({
-  screenshotOnRunFailure: false,
-});
+// Alternatively you can use CommonJS syntax:
+// require('./commands')

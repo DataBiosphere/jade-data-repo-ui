@@ -238,7 +238,10 @@ export class QueryViewSidebar extends React.PureComponent {
           {table &&
             table.name &&
             filteredColumns.map(c => (
-              <div className={clsx({ [classes.highlighted]: c === openFilter })}>
+              <div
+                className={clsx({ [classes.highlighted]: c === openFilter })}
+                data-cy="filterItem"
+              >
                 <ListItem
                   button
                   className={classes.filterListItem}
@@ -270,6 +273,7 @@ export class QueryViewSidebar extends React.PureComponent {
                 variant="contained"
                 className={clsx(classes.stickyButton, { [classes.hide]: !open })}
                 onClick={this.handleFilters}
+                data-cy="applyFiltersButton"
               >
                 Apply Filters
               </Button>
