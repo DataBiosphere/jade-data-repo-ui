@@ -44,7 +44,7 @@
     "fbjs": "^1.0.0",
     "fs-extra": "^9.0.0",
     "history": "^4.10.1",
-    "http-proxy-middleware": "^0.20.0",
+    "http-proxy-middleware": "^1.0.3",
     "immutability-helper": "^3.0.1",
     "jest-cli": "^25.1.0",
     "js-combinatorics": "^0.5.5",
