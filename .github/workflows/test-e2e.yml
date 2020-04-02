@@ -1,14 +1,16 @@
 name: e2e
-on: push
+on:
+  pull_request:
+    branches:
+      - develop
 jobs:
-  build:
-    if: "!contains( github.event.pull_request.labels.*.name, 'skip-ci')"
-    runs-on: ubuntu-latest
-
+  e2e_test:
+    timeout-minutes: 180
     strategy:
       matrix:
         node-version: [12.x]
-
+    if: "!contains( github.event.pull_request.labels.*.name, 'skip-ci')"
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
