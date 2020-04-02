@@ -84,7 +84,7 @@ export class DatasetDetailView extends React.PureComponent {
             removeCustodian={this.removeUser}
           />
           <Link to={`/datasets/details/${dataset.id}/query`}>
-            <Button> query dataset</Button>
+            <Button data-cy="queryDatasetButton"> query dataset</Button>
           </Link>
           {dataset && dataset.schema && <DatasetTablePreview dataset={dataset} />}
         </div>

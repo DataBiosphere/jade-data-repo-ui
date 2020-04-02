@@ -16,6 +16,7 @@ import Avatar from '@material-ui/core/Avatar';
 
 import { logout } from 'modules/auth';
 import Home from 'routes/Home';
+import HeadlessLogin from 'routes/HeadlessLogin';
 import Private from 'routes/Private';
 import NotFound from 'routes/NotFound';
 import Logo from 'components/Logo';
@@ -239,6 +240,12 @@ export function App(props) {
             path="/login"
             exact
             component={Home}
+          />
+          <RoutePublic
+            isAuthenticated={user.isAuthenticated}
+            path="/login/e2e"
+            exact
+            component={HeadlessLogin}
           />
           <RoutePrivate isAuthenticated={user.isAuthenticated} path="/" component={Private} />
           <Route component={NotFound} />

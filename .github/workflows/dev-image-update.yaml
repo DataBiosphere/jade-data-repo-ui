@@ -1,0 +1,69 @@
+name: Update devs ui image
+on:
+  push:
+    branches:
+      - develop
+jobs:
+  update_image:
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: develop
+      - name: 'Checkout datarepo-helm-definitions repo'
+        uses: actions/checkout@v2
+        with:
+          repository: 'broadinstitute/datarepo-helm-definitions'
+          token: ${{ secrets.HELM_REPO_TOKEN }}
+          path: datarepo-helm-definitions
+      - name: "Get gcp credentials"
+        uses: broadinstitute/datarepo-actions@0.2.0
+        with:
+          actions_subcommand: 'skip'
+          role_id: ${{ secrets.ROLE_ID }}
+          secret_id: ${{ secrets.SECRET_ID }}
+      - name: Build new ui container
+        env:
+          DEV_PROJECT: broad-jade-dev
+        run: |
+          GCR_TAG=$(git rev-parse --short HEAD)
+          echo "::set-env name=GCR_TAG::${GCR_TAG}"
+          npm ci
+          npm run-script build
+      # Build the Docker image
+      - name: Build
+        run: |
+          rm -rf jade-dev-account.pem
+          docker build -t gcr.io/broad-jade-dev/jade-data-repo-ui:${GCR_TAG} .
+      # Push the Docker image to Google Container Registry
+      - name: Publish
+        run: |
+          gcloud auth activate-service-account --key-file jade-dev-account.json
+          gcloud auth configure-docker --quiet
+          docker push gcr.io/broad-jade-dev/jade-data-repo-ui:${GCR_TAG}
+      - name: "Check and edit Helm definition for dev"
+        uses: broadinstitute/datarepo-actions@0.2.0
+        with:
+          actions_subcommand: 'deploytagupdate'
+          helm_env_prefix: dev
+          helm_imagetag_update: ui
+      - name: "Check and edit Helm definition for integration"
+        uses: broadinstitute/datarepo-actions@0.2.0
+        with:
+          actions_subcommand: 'deploytagupdate'
+          helm_env_prefix: 'integration-1,integration-2,integration-3,integration-4,integration-5'
+          helm_imagetag_update: ui
+      - name: Slack job status
+        if: always()
+        uses: broadinstitute/action-slack@v2
+        with:
+          status: ${{ job.status }}
+          author_name: Integration Test
+          only_mention_fail: smark,jhert,myessail
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

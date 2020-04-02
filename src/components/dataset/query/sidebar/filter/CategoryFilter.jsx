@@ -70,6 +70,7 @@ export class CategoryFilter extends React.PureComponent {
             value={name}
             color="primary"
             size="small"
+            data-cy={`categoryFilterCheckbox-${name}`}
           />
         }
         label={`${name} (${count})`}
