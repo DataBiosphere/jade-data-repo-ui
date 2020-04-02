@@ -59,7 +59,7 @@
     "qs": "^6.9.1",
     "react": "^16.13.1",
     "react-app-polyfill": "1.0.6",
-    "react-dom": "^16.13.0",
+    "react-dom": "^16.13.1",
     "react-fontawesome": "^1.7.1",
     "react-helmet": "^5.2.1",
     "react-inlinesvg": "^1.2.0",
