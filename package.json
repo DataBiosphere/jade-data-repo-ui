@@ -49,7 +49,7 @@
     "jest-cli": "^25.1.0",
     "js-combinatorics": "^0.5.5",
     "jsonfile": "^4.0.0",
-    "jss-plugin-extend": "^10.0.3",
+    "jss-plugin-extend": "^10.1.1",
     "lodash": "^4.17.15",
     "mobile-detect": "^1.4.4",
     "modernizr": "^3.9.1",
