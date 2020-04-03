@@ -1,14 +1,16 @@
 name: e2e
-on: push
+on:
+  pull_request:
+    branches:
+      - develop
 jobs:
-  build:
-    if: "!contains( github.event.pull_request.labels.*.name, 'skip-ci')"
-    runs-on: ubuntu-latest
-
+  e2e_test:
+    timeout-minutes: 180
     strategy:
       matrix:
         node-version: [12.x]
-
+    if: "!contains( github.event.pull_request.labels.*.name, 'skip-ci')"
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
@@ -53,10 +55,10 @@ jobs:
       - name: 'Deploy to cluster with Helm'
         uses: broadinstitute/datarepo-actions@0.2.0
         with:
-          actions_subcommand: 'helmdeploy'
-          helm_secret_chart_version: '0.0.4'
-          helm_datarepo_chart_version: '0.0.8'
-          helm_imagetag_update: 'ui'
+          actions_subcommand: "helmdeploy"
+          helm_secret_chart_version: "0.0.4"
+          helm_datarepo_chart_version: "0.1.0"
+          helm_imagetag_update: "ui"
       - name: wait for status checks
         uses: broadinstitute/datarepo-actions@0.2.0
         with:
