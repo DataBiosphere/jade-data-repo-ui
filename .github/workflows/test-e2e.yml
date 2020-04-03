@@ -38,9 +38,6 @@ jobs:
           echo "::set-env name=GCR_TAG::${GCR_TAG}"
           npm ci
           npm run-script build
-      - name: check npm start
-        run: |
-          npm start
       # Build the Docker image
       - name: Build
         run: |
@@ -55,10 +52,10 @@ jobs:
       - name: 'Deploy to cluster with Helm'
         uses: broadinstitute/datarepo-actions@0.2.0
         with:
-          actions_subcommand: "helmdeploy"
-          helm_secret_chart_version: "0.0.4"
-          helm_datarepo_chart_version: "0.1.0"
-          helm_imagetag_update: "ui"
+          actions_subcommand: 'helmdeploy'
+          helm_secret_chart_version: '0.0.4'
+          helm_datarepo_chart_version: '0.1.0'
+          helm_imagetag_update: 'ui'
       - name: wait for status checks
         uses: broadinstitute/datarepo-actions@0.2.0
         with:
