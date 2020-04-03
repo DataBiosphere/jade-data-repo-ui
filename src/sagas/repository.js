@@ -192,18 +192,17 @@ export function* getSnapshotPolicy({ payload }) {
   }
 }
 
-export function* addReaderToSnapshot({ payload }) {
-  const { snapshotId } = payload;
-  const reader = payload.users[0];
-  const readerObject = { email: reader };
+export function* addSnapshotPolicyMember({ payload }) {
+  const { snapshotId, user, policy } = payload;
+  const userObject = { email: user };
   try {
     const response = yield call(
       authPost,
-      `/api/repository/v1/snapshots/${snapshotId}/policies/reader/members`,
-      readerObject,
+      `/api/repository/v1/snapshots/${snapshotId}/policies/${policy}/members`,
+      userObject,
     );
     yield put({
-      type: ActionTypes.ADD_READER_TO_SNAPSHOT_SUCCESS,
+      type: ActionTypes.ADD_SNAPSHOT_POLICY_MEMBER_SUCCESS,
       snapshot: { data: response },
     });
   } catch (err) {
@@ -446,7 +445,7 @@ export default function* root() {
     takeLatest(ActionTypes.GET_SNAPSHOTS, getSnapshots),
     takeLatest(ActionTypes.GET_SNAPSHOT_BY_ID, getSnapshotById),
     takeLatest(ActionTypes.GET_SNAPSHOT_POLICY, getSnapshotPolicy),
-    takeLatest(ActionTypes.ADD_READER_TO_SNAPSHOT, addReaderToSnapshot),
+    takeLatest(ActionTypes.ADD_SNAPSHOT_POLICY_MEMBER, addSnapshotPolicyMember),
     takeLatest(ActionTypes.REMOVE_READER_FROM_SNAPSHOT, removeReaderFromSnapshot),
     takeLatest(ActionTypes.GET_DATASETS, getDatasets),
     takeLatest(ActionTypes.GET_DATASET_BY_ID, getDatasetById),
