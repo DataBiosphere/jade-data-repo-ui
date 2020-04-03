@@ -44,7 +44,7 @@ jobs:
           echo ::set-env name=HOST::${HOST}
       - name: check npm start
         run: |
-          npm start
+          npm start & npx wait-on http://localhost:3000
       # Build the Docker image
       - name: Build
         run: |
