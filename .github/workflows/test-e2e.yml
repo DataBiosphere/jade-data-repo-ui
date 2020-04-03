@@ -38,6 +38,15 @@ jobs:
           echo "::set-env name=GCR_TAG::${GCR_TAG}"
           npm ci
           npm run-script build
+      - name: set npm env
+        run: |
+          eval $(cat env_vars)
+          echo ::set-env name=HOST::${localhost}
+          HOST=localhost
+          echo ::set-env name=HOST::${HOST}
+      - name: check npm start
+        run: |
+          npm start & npx wait-on http://localhost:3000
       # Build the Docker image
       - name: Build
         run: |
