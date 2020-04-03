@@ -172,6 +172,7 @@ export class ShareSnapshot extends React.PureComponent {
                   className={classes.input}
                   placeholder="enter email addresses"
                   onChange={this.parseEmail}
+                  data-cy="enterEmailBox"
                 />
               )}
               onChange={this.inputEmail}
@@ -201,19 +202,20 @@ export class ShareSnapshot extends React.PureComponent {
               disableElevation={true}
               className={classes.inviteButton}
               onClick={this.invite}
+              data-cy="inviteButton"
             >
               Invite
             </Button>
           </Grid>
         </Grid>
         <Divider />
-        <div className={classes.section}>
+        <div className={classes.section} data-cy="readers">
           {readers.map(reader => (
             <div key={reader} className={clsx(classes.listItem, classes.withIcon)}>
               <div>{reader}</div>
               <div className={classes.withIcon} id={reader} onClick={this.openUserMenu}>
                 can read
-                <IconButton size="small">
+                <IconButton size="small" data-cy="moreButton">
                   <MoreVert />
                 </IconButton>
               </div>
@@ -226,7 +228,7 @@ export class ShareSnapshot extends React.PureComponent {
               </MenuItem>
             ))}
             <Divider />
-            <MenuItem onClick={() => this.removeReader(anchor.id)} dense>
+            <MenuItem onClick={() => this.removeReader(anchor.id)} dense data-cy="removeItem">
               remove
             </MenuItem>
           </Menu>
