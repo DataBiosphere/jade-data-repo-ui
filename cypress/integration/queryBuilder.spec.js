@@ -15,7 +15,6 @@ describe('test query builder', () => {
     cy.contains('V2F_GWAS_Summary_Stats').should('be.visible');
     cy.contains('V2F_GWAS_Summary_Stats').click();
     cy.wait(['@getDataset', '@getDatasetPolicies']);
-    cy.get('[data-cy=queryDatasetButton]').click();
   });
 
   it('does render', () => {});

@@ -87,8 +87,7 @@ class Private extends React.Component {
                   <Switch>
                     <Route exact path="/" component={HomeView} />
                     <Route exact path="/datasets" component={DatasetsView} />
-                    <Route exact path="/datasets/details/:uuid" component={DatasetDetailView} />
-                    <Route exact path="/datasets/details/:uuid/query" component={QueryView} />
+                    <Route exact path="/datasets/details/:uuid" component={QueryView} />
                     <Route exact path="/snapshots" component={SnapshotView} />
                     <Route exact path="/snapshots/create" component={SnapshotCreateView} />
                     <Route
