@@ -215,7 +215,7 @@ export class ShareSnapshot extends React.PureComponent {
               <div>{reader}</div>
               <div className={classes.withIcon} id={reader} onClick={this.openUserMenu}>
                 can read
-                <IconButton size="small" data-cy="moreButton">
+                <IconButton size="small" data-cy={`moreButton-${reader}`}>
                   <MoreVert />
                 </IconButton>
               </div>
