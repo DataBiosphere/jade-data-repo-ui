@@ -31,7 +31,7 @@ describe('test query builder', () => {
     cy.get('[data-cy=appliedFilterList-ancestry_specific_meta_analysis]', {}).should('be.visible');
   });
 
-  it.only('adds/removes readers', () => {
+  it('adds/removes readers', () => {
     // selects the share button in the sidebar
     cy.get('div.MuiButtonBase-root:nth-child(3) > svg:nth-child(1)').click();
     cy.get('[data-cy=enterEmailBox]').type('mkerwin.dev@gmail.com');
