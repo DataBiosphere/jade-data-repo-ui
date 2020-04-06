@@ -50,10 +50,11 @@ export const { removeCustodianFromSnapshot } = createActions({
   }),
 });
 
-export const { addReaderToSnapshot } = createActions({
-  [ActionTypes.ADD_READER_TO_SNAPSHOT]: (snapshotId, users) => ({
+export const { addSnapshotPolicyMember } = createActions({
+  [ActionTypes.ADD_SNAPSHOT_POLICY_MEMBER]: (snapshotId, user, policy) => ({
     snapshotId,
-    users,
+    user,
+    policy,
   }),
 });
 

@@ -5,7 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 import {
   getSnapshotById,
   getSnapshotPolicy,
-  addReaderToSnapshot,
+  addSnapshotPolicyMember,
   removeReaderFromSnapshot,
   addCustodianToSnapshot,
   removeCustodianFromSnapshot,
@@ -70,7 +70,7 @@ export class SnapshotDetailView extends React.PureComponent {
 
   addReader = newEmail => {
     const { snapshot, dispatch } = this.props;
-    dispatch(addReaderToSnapshot(snapshot.id, [newEmail]));
+    dispatch(addSnapshotPolicyMember(snapshot.id, newEmail, 'reader'));
   };
 
   removeReader = removeableEmail => {

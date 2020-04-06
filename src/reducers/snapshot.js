@@ -51,7 +51,7 @@ export default {
         immutable(state, {
           snapshotPolicies: { $set: action.snapshot.data.data.policies },
         }),
-      [ActionTypes.ADD_READER_TO_SNAPSHOT_SUCCESS]: (state, action) =>
+      [ActionTypes.ADD_SNAPSHOT_POLICY_MEMBER_SUCCESS]: (state, action) =>
         immutable(state, {
           snapshotPolicies: { $set: action.snapshot.data.data.policies },
         }),
@@ -64,7 +64,7 @@ export default {
           exception: { $set: true },
         }),
       [ActionTypes.OPEN_SNAPSHOT_DIALOG]: (state, action) =>
-        immutable(state, { 
+        immutable(state, {
           dialogIsOpen: { $set: action.payload },
         }),
     },

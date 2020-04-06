@@ -6,14 +6,14 @@ import Grid from '@material-ui/core/Grid';
 
 import { applyFilters, runQuery, getDatasetById, getDatasetPolicy } from 'actions/index';
 import { Typography } from '@material-ui/core';
-import FilterList from '@material-ui/icons/FilterList';
-import InfoIcon from '@material-ui/icons/Info';
+import { FilterList, Info, People } from '@material-ui/icons';
 
 import QueryViewSidebar from './sidebar/QueryViewSidebar';
 import SidebarDrawer from './sidebar/SidebarDrawer';
 import QueryViewDropdown from './QueryViewDropdown';
 import JadeTable from '../../table/JadeTable';
 import InfoView from './sidebar/panels/InfoView';
+import ShareSnapshot from './sidebar/panels/ShareSnapshot';
 
 const styles = theme => ({
   wrapper: {
@@ -139,7 +139,7 @@ export class QueryView extends React.PureComponent {
         <SidebarDrawer
           panels={[
             {
-              icon: InfoIcon,
+              icon: Info,
               width: 800,
               component: InfoView,
               table,
@@ -149,6 +149,13 @@ export class QueryView extends React.PureComponent {
               icon: FilterList,
               width: 400,
               component: QueryViewSidebar,
+              table,
+              dataset,
+            },
+            {
+              icon: People,
+              width: 600,
+              component: ShareSnapshot,
               table,
               dataset,
             },
