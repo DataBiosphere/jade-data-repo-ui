@@ -75,7 +75,7 @@
     "redux-logger": "^3.0.6",
     "redux-saga": "^0.16.2",
     "sass-mediaqueries": "^1.6.1",
-    "scheduler": "^0.19.0",
+    "scheduler": "^0.19.1",
     "scroll": "^3.0.1",
     "scroll-doc": "^0.2.1",
     "tree-changes": "^0.4.0",
