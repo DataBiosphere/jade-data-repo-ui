@@ -160,7 +160,7 @@
     "flow-bin": "^0.122.0",
     "fs-extra": "^9.0.0",
     "git-info-webpack-plugin": "^1.0.2",
-    "html-loader": "^0.5.5",
+    "html-loader": "^1.1.0",
     "html-webpack-plugin": "^4.0.0-beta.11",
     "husky": "^4.2.3",
     "image-webpack-loader": "^6.0.0",
