@@ -1,5 +1,4 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { useState } from 'react';
 import clsx from 'clsx';
 import { withStyles } from '@material-ui/core/styles';
 
@@ -23,40 +22,60 @@ const styles = theme => ({
   cancelButton: {
     alignSelf: 'flex-end',
   },
+  textField: {
+    backgroundColor: theme.palette.common.white,
+    borderRadius: '5px',
+    marginBottom: theme.spacing(1),
+  },
 });
 
-export class CreateSnapshotPanel extends React.PureComponent {
-  static propTypes = {
-    classes: PropTypes.object,
-    handleCreateSnapshot: PropTypes.func,
-    handleSaveSnapshot: PropTypes.func,
-  };
+function CreateSnapshotPanel(props) {
+  const { classes, handleCreateSnapshot, handleSaveSnapshot } = props;
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
 
-  render() {
-    const { classes, handleCreateSnapshot, handleSaveSnapshot } = this.props;
-
-    return (
-      <div className={clsx(classes.rowTwo, classes.saveButtonContainer)}>
-        <TextField id="snapshotName" label="Snapshot Name" />
-        <div className={classes.buttonContainer}>
-          <Button
-            variant="contained"
-            className={clsx(classes.saveButton, { [classes.hide]: !open })}
-            onClick={() => handleCreateSnapshot(false)}
-          >
-            Cancel
-          </Button>
-          <Button
-            variant="contained"
-            className={clsx(classes.cancelButton, { [classes.hide]: !open })}
-            onClick={() => handleSaveSnapshot()}
-          >
-            Save Snapshot
-          </Button>
-        </div>
+  return (
+    <div className={clsx(classes.rowTwo, classes.saveButtonContainer)}>
+      <TextField
+        id="snapshotName"
+        label="Name"
+        variant="outlined"
+        size="small"
+        fullWidth
+        className={classes.textField}
+        onChange={event => setName(event.target.value)}
+        value={name}
+      />
+      <TextField
+        id="snapshotDescription"
+        label="Description"
+        variant="outlined"
+        size="small"
+        multiline
+        rows={3}
+        fullWidth
+        className={classes.textField}
+        onChange={event => setDescription(event.target.value)}
+        value={description}
+      />
+      <div className={classes.buttonContainer}>
+        <Button
+          variant="contained"
+          className={clsx(classes.saveButton, { [classes.hide]: !open })}
+          onClick={() => handleCreateSnapshot(false)}
+        >
+          Cancel
+        </Button>
+        <Button
+          variant="contained"
+          className={clsx(classes.cancelButton, { [classes.hide]: !open })}
+          onClick={() => handleSaveSnapshot()}
+        >
+          Save Snapshot
+        </Button>
       </div>
-    );
-  }
+    </div>
+  );
 }
 
 export default withStyles(styles)(CreateSnapshotPanel);
