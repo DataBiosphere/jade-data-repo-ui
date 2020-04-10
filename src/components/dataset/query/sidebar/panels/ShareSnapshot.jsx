@@ -88,10 +88,13 @@ export class ShareSnapshot extends React.PureComponent {
 
     // emails may be added with the press of the comma key in addition to enter key
     if (currentInput.includes(',')) {
-      const email = _.trimEnd(currentInput, ',');
-      if (email !== '') {
-        usersToAdd.push(email);
-      }
+      const emails = currentInput.split(',');
+      emails.forEach(email => {
+        const trimmed = email.trim();
+        if (trimmed !== '') {
+          usersToAdd.push(trimmed);
+        }
+      });
       this.setState({ usersToAdd, currentInput: '' });
     }
   };
@@ -100,7 +103,8 @@ export class ShareSnapshot extends React.PureComponent {
    * adds the email as a tag to the text box
    */
   inputEmail = (event, value) => {
-    this.setState({ usersToAdd: value, currentInput: '' });
+    const nonEmptyStrings = value.map(string => string.trim()).filter(string => string !== '');
+    this.setState({ usersToAdd: nonEmptyStrings, currentInput: '' });
   };
 
   /**
@@ -108,8 +112,9 @@ export class ShareSnapshot extends React.PureComponent {
    */
   invite = () => {
     const { usersToAdd, currentInput } = this.state;
-    if (currentInput !== '' && !usersToAdd.includes(currentInput)) {
-      usersToAdd.push(currentInput);
+    const trimmed = currentInput.trim();
+    if (trimmed !== '' && !usersToAdd.includes(trimmed)) {
+      usersToAdd.push(trimmed);
     }
     !_.isEmpty(usersToAdd) && this.addReaders(usersToAdd);
     this.setState({ usersToAdd: [], currentInput: '' });

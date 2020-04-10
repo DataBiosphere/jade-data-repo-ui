@@ -48,4 +48,21 @@ describe('test query builder', () => {
       .contains('myessail')
       .should('be.visible');
   });
+
+  it('removes space characters', () => {
+    cy.get('div.MuiButtonBase-root:nth-child(3) > svg:nth-child(1)').click();
+
+    cy.get('[data-cy=enterEmailBox]').type(' ');
+    cy.get('[data-cy=inviteButton]').click();
+    cy.get('[data-cy=readers]').should('not.contain', ' ');
+
+    cy.get('[data-cy=enterEmailBox]').type(' ,');
+    cy.get('[data-cy=inviteButton]').click();
+    cy.get('[data-cy=readers]').should('not.contain', ' ');
+
+    cy.get('[data-cy=enterEmailBox]').type('mac, ken , zie');
+    cy.get('[data-cy=inviteButton]').click();
+    cy.get('[data-cy=readers]').should('not.contain', ' ken ');
+    cy.get('[data-cy=readers]').should('not.contain', ' zie');
+  });
 });
