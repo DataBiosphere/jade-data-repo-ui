@@ -23,9 +23,22 @@ const styles = theme => ({
   cancelButton: {
     alignSelf: 'flex-end',
   },
+  textField: {
+    backgroundColor: theme.palette.common.white,
+    borderRadius: '5px',
+    marginBottom: theme.spacing(1),
+  },
 });
 
 export class CreateSnapshotPanel extends React.PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      name: '',
+      description: '',
+    };
+  }
+
   static propTypes = {
     classes: PropTypes.object,
     handleCreateSnapshot: PropTypes.func,
@@ -34,10 +47,31 @@ export class CreateSnapshotPanel extends React.PureComponent {
 
   render() {
     const { classes, handleCreateSnapshot, handleSaveSnapshot } = this.props;
-
+    const { name, description } = this.state;
     return (
       <div className={clsx(classes.rowTwo, classes.saveButtonContainer)}>
-        <TextField id="snapshotName" label="Snapshot Name" />
+        <TextField
+          id="snapshotName"
+          label="Name"
+          variant="outlined"
+          size="small"
+          fullWidth
+          className={classes.textField}
+          onChange={event => this.setState({ name: event.target.value })}
+          value={name}
+        />
+        <TextField
+          id="snapshotDescription"
+          label="Description"
+          variant="outlined"
+          size="small"
+          multiline
+          rows={3}
+          fullWidth
+          className={classes.textField}
+          onChange={event => this.setState({ description: event.target.value })}
+          value={description}
+        />
         <div className={classes.buttonContainer}>
           <Button
             variant="contained"

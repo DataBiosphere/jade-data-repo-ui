@@ -10,6 +10,7 @@ import QueryViewSidebarItem from './QueryViewSidebarItem';
 import QuerySidebarPanel from './QuerySidebarPanel';
 import { applyFilters, openSnapshotDialog } from '../../../../actions';
 import CreateSnapshotPanel from './panels/CreateSnapshotPanel';
+import { push } from 'modules/hist';
 
 const drawerWidth = 400;
 
@@ -22,7 +23,7 @@ const styles = theme => ({
     gridTemplateRows: 'calc(100vh - 125px) 100px',
   },
   createSnapshotGrid: {
-    gridTemplateRows: 'calc(100vh - 200px) 125px',
+    gridTemplateRows: 'calc(100vh - 275px) 200px',
   },
   hide: {
     display: 'none',
