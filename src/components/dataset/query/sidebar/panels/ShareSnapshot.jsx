@@ -243,11 +243,15 @@ export class ShareSnapshot extends React.PureComponent {
         <Divider />
         <div className={classes.section} data-cy="readers">
           {readers.map((reader) => (
-            <div key={reader} className={clsx(classes.listItem, classes.withIcon)}>
+            <div
+              key={reader}
+              className={clsx(classes.listItem, classes.withIcon)}
+              data-cy="specificReader"
+            >
               <div>{reader}</div>
               <div className={classes.withIcon} id={reader} onClick={this.openUserMenu}>
                 can read
-                <IconButton size="small" data-cy={`moreButton-${reader}`}>
+                <IconButton size="small" data-cy="moreButton">
                   <MoreVert />
                 </IconButton>
               </div>
