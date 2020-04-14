@@ -61,7 +61,7 @@
     "react-app-polyfill": "1.0.6",
     "react-dom": "^16.13.1",
     "react-fontawesome": "^1.7.1",
-    "react-helmet": "^5.2.1",
+    "react-helmet": "^6.0.0",
     "react-inlinesvg": "^1.2.0",
     "react-redux": "^7.2.0",
     "react-redux-form": "^1.16.14",
