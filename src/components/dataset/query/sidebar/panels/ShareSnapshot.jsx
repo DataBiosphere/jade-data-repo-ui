@@ -18,8 +18,9 @@ import {
 import { MoreVert } from '@material-ui/icons';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { actions } from 'react-redux-form';
+import { isEmail } from 'validator';
 
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
     padding: theme.spacing(2),
   },
@@ -60,6 +61,8 @@ export class ShareSnapshot extends React.PureComponent {
       policyName: 'reader',
       currentInput: '',
       anchor: null,
+      hasError: false,
+      errorMsg: '',
     };
   }
 
@@ -73,14 +76,14 @@ export class ShareSnapshot extends React.PureComponent {
   /**
    * handles dropdown selection
    */
-  setPermission = event => {
+  setPermission = (event) => {
     this.setState({ policyName: event.target.value });
   };
 
   /**
    * handles plain text input
    */
-  parseEmail = event => {
+  parseEmail = (event) => {
     const currentInput = event.target.value;
     this.setState({ currentInput });
 
@@ -111,13 +114,31 @@ export class ShareSnapshot extends React.PureComponent {
    * updates the snapshot readers to include users that have been entered
    */
   invite = () => {
+    this.setState({ hasError: false, errorMsg: '' });
+
     const { usersToAdd, currentInput } = this.state;
     const trimmed = currentInput.trim();
     if (trimmed !== '' && !usersToAdd.includes(trimmed)) {
       usersToAdd.push(trimmed);
     }
-    !_.isEmpty(usersToAdd) && this.addReaders(usersToAdd);
-    this.setState({ usersToAdd: [], currentInput: '' });
+
+    let hasError = false;
+    let errorMsg = '';
+    let validUsrs = [];
+    let invalidUsrs = [];
+    _.forEach(usersToAdd, (user) => {
+      console.log(user);
+      if (!isEmail(user)) {
+        console.log('bad input');
+        hasError = true;
+        invalidUsrs.push(user);
+      } else {
+        validUsrs.push(user);
+      }
+    });
+    errorMsg = `Make sure all emails entered are valid. Invalid email(s) entered: ${invalidUsrs}`;
+    !_.isEmpty(validUsrs) && this.addReaders(validUsrs);
+    this.setState({ usersToAdd: [], currentInput: '', hasError, errorMsg });
   };
 
   /**
@@ -143,7 +164,7 @@ export class ShareSnapshot extends React.PureComponent {
     dispatch(actions.change('snapshot.readers', newUsers));
   }
 
-  openUserMenu = event => {
+  openUserMenu = (event) => {
     this.setState({ anchor: event.currentTarget });
   };
 
@@ -153,7 +174,7 @@ export class ShareSnapshot extends React.PureComponent {
 
   render() {
     const { classes, readers } = this.props;
-    const { policyName, currentInput, usersToAdd, anchor } = this.state;
+    const { policyName, currentInput, usersToAdd, anchor, hasError, errorMsg } = this.state;
 
     const permissions = ['can read', 'can discover'];
     const policyNames = ['reader', 'discoverer'];
@@ -164,42 +185,53 @@ export class ShareSnapshot extends React.PureComponent {
           Share Snapshot
         </Typography>
         <Grid container spacing={2} className={classes.section}>
-          <Grid item xs={7}>
-            <Typography variant="subtitle2">People</Typography>
-            <Autocomplete
-              multiple
-              freeSolo
-              renderInput={params => (
-                <TextField
-                  {...params}
-                  variant="outlined"
-                  fullWidth
-                  className={classes.input}
-                  placeholder="enter email addresses"
-                  onChange={this.parseEmail}
-                  data-cy="enterEmailBox"
-                />
-              )}
-              onChange={this.inputEmail}
-              value={usersToAdd}
-              inputValue={currentInput}
-            />
+          <Grid container spacing={2}>
+            <Grid item xs={7}>
+              <Typography variant="subtitle2">People</Typography>
+              <Autocomplete
+                multiple
+                freeSolo
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    variant="outlined"
+                    fullWidth
+                    className={classes.input}
+                    placeholder="enter email addresses"
+                    onChange={this.parseEmail}
+                    data-cy="enterEmailBox"
+                  />
+                )}
+                onChange={this.inputEmail}
+                value={usersToAdd}
+                inputValue={currentInput}
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <Typography variant="subtitle2">Permissions</Typography>
+              <Select
+                value={policyName}
+                variant="outlined"
+                className={classes.input}
+                fullWidth
+                onChange={this.setPermission}
+              >
+                {permissions.map((permission, i) => (
+                  <MenuItem key={i} value={policyNames[i]} disabled={permission === 'can discover'}>
+                    {permission}
+                  </MenuItem>
+                ))}
+              </Select>
+            </Grid>
           </Grid>
-          <Grid item xs={4}>
-            <Typography variant="subtitle2">Permissions</Typography>
-            <Select
-              value={policyName}
-              variant="outlined"
-              className={classes.input}
-              fullWidth
-              onChange={this.setPermission}
-            >
-              {permissions.map((permission, i) => (
-                <MenuItem key={i} value={policyNames[i]} disabled={permission === 'can discover'}>
-                  {permission}
-                </MenuItem>
-              ))}
-            </Select>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              {hasError && (
+                <Typography variant="subtitle2" color="error" data-cy="invalidEmailError">
+                  {errorMsg}
+                </Typography>
+              )}
+            </Grid>
           </Grid>
           <Grid item xs>
             <Button
@@ -215,19 +247,23 @@ export class ShareSnapshot extends React.PureComponent {
         </Grid>
         <Divider />
         <div className={classes.section} data-cy="readers">
-          {readers.map(reader => (
-            <div key={reader} className={clsx(classes.listItem, classes.withIcon)}>
+          {readers.map((reader) => (
+            <div
+              key={reader}
+              className={clsx(classes.listItem, classes.withIcon)}
+              data-cy="specificReader"
+            >
               <div>{reader}</div>
               <div className={classes.withIcon} id={reader} onClick={this.openUserMenu}>
                 can read
-                <IconButton size="small" data-cy={`moreButton-${reader}`}>
+                <IconButton size="small" data-cy="moreButton">
                   <MoreVert />
                 </IconButton>
               </div>
             </div>
           ))}
           <Menu anchorEl={anchor} onClose={this.closeUserMenu} open={anchor !== null}>
-            {permissions.map(permission => (
+            {permissions.map((permission) => (
               <MenuItem onClick={this.closeUserMenu} disabled={permission === 'can discover'} dense>
                 {permission}
               </MenuItem>
