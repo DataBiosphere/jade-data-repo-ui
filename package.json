@@ -78,7 +78,7 @@
     "scheduler": "^0.19.1",
     "scroll": "^3.0.1",
     "scroll-doc": "^0.2.1",
-    "tree-changes": "^0.4.0",
+    "tree-changes": "^0.5.1",
     "universalify": "1.0.0",
     "uuid": "^7.0.3",
     "validator": "^13.0.0",
