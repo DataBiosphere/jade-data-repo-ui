@@ -164,7 +164,7 @@
     "html-webpack-plugin": "^4.2.0",
     "husky": "^4.2.3",
     "image-webpack-loader": "^6.0.0",
-    "inquirer": "^7.0.5",
+    "inquirer": "^7.1.0",
     "is-ci-cli": "^2.0.0",
     "jest": "^25.3.0",
     "jest-chain": "^1.1.2",
