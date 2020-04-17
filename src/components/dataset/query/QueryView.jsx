@@ -1,4 +1,5 @@
 import React, { Fragment } from 'react';
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
@@ -15,7 +16,7 @@ import JadeTable from '../../table/JadeTable';
 import InfoView from './sidebar/panels/InfoView';
 import ShareSnapshot from './sidebar/panels/ShareSnapshot';
 
-const styles = theme => ({
+const styles = (theme) => ({
   wrapper: {
     paddingTop: theme.spacing(0),
     padding: theme.spacing(4),
@@ -72,17 +73,25 @@ export class QueryView extends React.PureComponent {
   componentDidUpdate(prevProps, prevState) {
     const { dataset, dispatch, filterStatement, joinStatement, orderBy } = this.props;
     const { selected } = this.state;
+
     if (
       this.hasDataset() &&
       (prevProps.filterStatement !== filterStatement ||
         prevState.selected !== selected ||
         prevProps.orderBy !== orderBy)
     ) {
+      const arrayVals = this.findArrayVals(dataset, selected);
+
+      let arraysToExclude = '';
+      if (!_.isEmpty(arrayVals)) {
+        arraysToExclude = `EXCEPT (${arrayVals})`;
+      }
+
       dispatch(
         runQuery(
           dataset.dataProject,
           `#standardSQL
-          SELECT DISTINCT ${selected}.* FROM \`${dataset.dataProject}.datarepo_${dataset.name}.${selected}\` AS ${selected}
+          SELECT DISTINCT ${selected}.* ${arraysToExclude} FROM \`${dataset.dataProject}.datarepo_${dataset.name}.${selected}\` AS ${selected}
           ${joinStatement}
           ${filterStatement}
           ${orderBy}
@@ -93,18 +102,24 @@ export class QueryView extends React.PureComponent {
     }
   }
 
+  findArrayVals = (dataset, table) => {
+    const tableSchema = _.find(dataset.schema.tables, (t) => t.name === table);
+    const withArray = _.filter(tableSchema.columns, (column) => column.array_of === true);
+    return withArray.map((object) => object.name);
+  };
+
   hasDataset() {
     const { dataset } = this.props;
     return dataset && dataset.schema;
   }
 
-  handleDrawerWidth = width => {
+  handleDrawerWidth = (width) => {
     this.setState({ sidebarWidth: width });
   };
 
-  handleChange = value => {
+  handleChange = (value) => {
     const { dataset, dispatch, filterData } = this.props;
-    const table = dataset.schema.tables.find(t => t.name === value);
+    const table = dataset.schema.tables.find((t) => t.name === value);
     this.setState({
       selected: value,
       table,
@@ -115,7 +130,7 @@ export class QueryView extends React.PureComponent {
   realRender() {
     const { classes, dataset, queryResults } = this.props;
     const { table, selected, sidebarWidth } = this.state;
-    const names = dataset.schema.tables.map(t => t.name);
+    const names = dataset.schema.tables.map((t) => t.name);
 
     return (
       <Fragment>
