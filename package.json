@@ -46,7 +46,7 @@
     "history": "^4.10.1",
     "http-proxy-middleware": "^0.20.0",
     "immutability-helper": "^3.0.2",
-    "jest-cli": "^25.3.0",
+    "jest-cli": "^25.4.0",
     "js-combinatorics": "^0.5.5",
     "jsonfile": "^6.0.1",
     "jss-plugin-extend": "^10.1.1",
