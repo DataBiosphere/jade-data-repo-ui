@@ -124,7 +124,7 @@
     "babel-plugin-lodash": "^3.3.4",
     "babel-plugin-named-asset-import": "^0.3.5",
     "babel-plugin-transform-flow-strip-types": "^6.22.0",
-    "babel-plugin-transform-imports": "^1.5.1",
+    "babel-plugin-transform-imports": "^2.0.0",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
     "bfj": "^7.0.2",
     "bundlesize": "^0.18.0",
