@@ -168,7 +168,7 @@
     "is-ci-cli": "^2.0.0",
     "jest": "^25.4.0",
     "jest-chain": "^1.1.2",
-    "jest-environment-jsdom-global": "^1.2.1",
+    "jest-environment-jsdom-global": "^2.0.2",
     "jest-enzyme": "^7.1.2",
     "jest-extended": "^0.11.4",
     "jest-fetch-mock": "^3.0.3",
