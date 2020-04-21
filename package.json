@@ -162,7 +162,7 @@
     "git-info-webpack-plugin": "^1.0.2",
     "html-loader": "^1.1.0",
     "html-webpack-plugin": "^4.2.0",
-    "husky": "^4.2.3",
+    "husky": "^4.2.5",
     "image-webpack-loader": "^6.0.0",
     "inquirer": "^7.1.0",
     "is-ci-cli": "^2.0.0",
