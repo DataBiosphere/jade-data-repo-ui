@@ -23,9 +23,11 @@ describe('test query builder', () => {
     // selects the filter button in the sidebar
     cy.get('div.MuiButtonBase-root:nth-child(2) > svg:nth-child(1)').click();
     cy.get('[data-cy=filterItem]').contains('ancestry').click();
+    cy.get('[data-cy=resultsCount]').should('contain', '100,000,000 Rows');
     cy.get('[data-cy=categoryFilterCheckbox-EU]').click();
     cy.get('[data-cy="applyFiltersButton"]').click();
     cy.get('[data-cy=appliedFilterList-ancestry_specific_meta_analysis]', {}).should('be.visible');
+    cy.get('[data-cy=resultsCount]').should('contain', '67,978,461 Rows');
   });
 
   describe('test share panel', () => {
