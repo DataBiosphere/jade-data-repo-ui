@@ -13,6 +13,7 @@ export const queryState = {
   queryResults: {},
   orderBy: '',
   polling: false,
+  resultsCount: 0,
 };
 
 export default {
@@ -45,7 +46,7 @@ export default {
           rows: { $set: rows },
         });
       },
-      [ActionTypes.RUN_QUERY]: state =>
+      [ActionTypes.RUN_QUERY]: (state) =>
         immutable(state, {
           queryResults: { $set: {} },
           polling: { $set: true },
@@ -86,6 +87,10 @@ export default {
         }
         return state;
       },
+      [ActionTypes.COUNT_RESULTS]: (state, action) =>
+        immutable(state, {
+          resultsCount: { $set: action.payload },
+        }),
     },
     queryState,
   ),
