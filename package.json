@@ -199,7 +199,7 @@
     "sass-loader": "^8.0.2",
     "script-loader": "^0.7.2",
     "serve": "^11.3.0",
-    "source-map-support": "^0.5.17",
+    "source-map-support": "^0.5.19",
     "start-server-and-test": "^1.11.0",
     "style-loader": "^1.1.4",
     "stylelint": "^10.1.0",
