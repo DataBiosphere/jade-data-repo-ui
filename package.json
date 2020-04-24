@@ -131,7 +131,7 @@
     "case-sensitive-paths-webpack-plugin": "^2.3.0",
     "chalk": "^4.0.0",
     "circular-dependency-plugin": "^5.2.0",
-    "css-loader": "^3.5.2",
+    "css-loader": "^3.5.3",
     "cypress": "^4.4.1",
     "cypress-testing-library": "^4.0.0",
     "date-fns": "2.12.0",
