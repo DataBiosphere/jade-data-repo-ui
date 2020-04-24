@@ -201,7 +201,7 @@
     "serve": "^11.3.0",
     "source-map-support": "^0.5.19",
     "start-server-and-test": "^1.11.0",
-    "style-loader": "^1.1.4",
+    "style-loader": "^1.2.0",
     "stylelint": "^13.3.3",
     "stylelint-config-standard": "^20.0.0",
     "stylelint-order": "^4.0.0",
