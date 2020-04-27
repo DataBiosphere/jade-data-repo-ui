@@ -16,9 +16,9 @@ import { ActionTypes, STATUS } from 'constants/index';
  *
  */
 
-export const getToken = state => state.user.token;
-export const getTokenExpiration = state => state.user.tokenExpiration;
-export const getCreateSnapshot = state => state.snapshot;
+export const getToken = (state) => state.user.token;
+export const getTokenExpiration = (state) => state.user.tokenExpiration;
+export const getCreateSnapshot = (state) => state.snapshot;
 
 export function* checkToken() {
   const tokenExpiration = yield select(getTokenExpiration);
@@ -436,6 +436,39 @@ export function* pageQuery({ payload }) {
   }
 }
 
+export function* countResults({ payload }) {
+  try {
+    const url = `https://bigquery.googleapis.com/bigquery/v2/projects/${payload.projectId}/queries`;
+    const body = {
+      query: payload.query,
+    };
+    const response = yield call(authPost, url, body);
+    const { jobComplete } = response.data;
+    const { jobId } = response.data.jobReference;
+    if (jobComplete) {
+      yield put({
+        type: ActionTypes.COUNT_RESULTS_SUCCESS,
+        resultsCount: parseInt(response.data.rows[0].f[0].v),
+      });
+    } else {
+      yield put({
+        type: ActionTypes.POLL_QUERY,
+        payload: {
+          ...payload,
+          jobId,
+        },
+      });
+      yield call(delay, 100);
+      yield call(pollQuery, payload.projectId, jobId);
+    }
+  } catch (err) {
+    yield put({
+      type: ActionTypes.EXCEPTION,
+      payload: err,
+    });
+  }
+}
+
 /**
  * App Sagas
  */
@@ -455,5 +488,6 @@ export default function* root() {
     takeLatest(ActionTypes.GET_DATASET_TABLE_PREVIEW, getDatasetTablePreview),
     takeLatest(ActionTypes.RUN_QUERY, runQuery),
     takeLatest(ActionTypes.PAGE_QUERY, pageQuery),
+    takeLatest(ActionTypes.COUNT_RESULTS, countResults),
   ]);
 }

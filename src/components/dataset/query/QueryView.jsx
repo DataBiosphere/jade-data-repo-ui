@@ -21,7 +21,6 @@ import QueryViewDropdown from './QueryViewDropdown';
 import JadeTable from '../../table/JadeTable';
 import InfoView from './sidebar/panels/InfoView';
 import ShareSnapshot from './sidebar/panels/ShareSnapshot';
-import BigQuery from '../../../modules/bigquery';
 
 const styles = (theme) => ({
   wrapper: {
@@ -95,27 +94,27 @@ export class QueryView extends React.PureComponent {
         arraysToExclude = `EXCEPT (${arrayVals})`;
       }
 
+      const fromClause = `FROM \`${dataset.dataProject}.datarepo_${dataset.name}.${selected}\` AS ${selected}
+          ${joinStatement}
+          ${filterStatement}`;
+
       dispatch(
         runQuery(
           dataset.dataProject,
           `#standardSQL
-          SELECT DISTINCT ${selected}.* ${arraysToExclude} FROM \`${dataset.dataProject}.datarepo_${dataset.name}.${selected}\` AS ${selected}
-          ${joinStatement}
-          ${filterStatement}
+          SELECT DISTINCT ${selected}.* ${arraysToExclude} ${fromClause}
           ${orderBy}
           LIMIT ${QUERY_LIMIT}`,
           PAGE_SIZE,
         ),
       );
-      const bq = new BigQuery();
-      bq.getTotalRows(
-        dataset.dataProject,
-        `#standardSQL
-          SELECT COUNT(*) FROM \`${dataset.dataProject}.datarepo_${dataset.name}.${selected}\` AS ${selected}
-          ${joinStatement}
-          ${filterStatement}`,
-        token,
-      ).then((response) => dispatch(countResults(parseFloat(response))));
+      dispatch(
+        countResults(
+          dataset.dataProject,
+          `#standardSQL
+          SELECT COUNT(1) ${fromClause}`,
+        ),
+      );
     }
   }
 

@@ -120,7 +120,7 @@ export const { hideAlert } = createActions({
 
 export const { runQuery } = createActions({
   [ActionTypes.RUN_QUERY_SUCCESS]: (result) => result,
-  [ActionTypes.RUN_QUERY]: (projectId, query, maxResults) => ({
+  [ActionTypes.RUN_QUERY]: (projectId, query, maxResults, actionType) => ({
     projectId,
     query,
     maxResults,
@@ -157,5 +157,9 @@ export const { openSnapshotDialog } = createActions({
 });
 
 export const { countResults } = createActions({
-  [ActionTypes.COUNT_RESULTS]: (count) => count,
+  [ActionTypes.COUNT_RESULTS]: (projectId, query) => ({
+    projectId,
+    query,
+  }),
+  [ActionTypes.COUNT_RESULTS_SUCCESS]: (count) => count,
 });

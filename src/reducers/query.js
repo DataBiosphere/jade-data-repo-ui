@@ -87,9 +87,9 @@ export default {
         }
         return state;
       },
-      [ActionTypes.COUNT_RESULTS]: (state, action) =>
+      [ActionTypes.COUNT_RESULTS_SUCCESS]: (state, action) =>
         immutable(state, {
-          resultsCount: { $set: action.payload },
+          resultsCount: { $set: action.resultsCount },
         }),
     },
     queryState,

@@ -111,26 +111,6 @@ export default class BigQuery {
 
   buildOrderBy = (property, direction) => (property ? `ORDER BY ${property} ${direction}` : '');
 
-  getTotalRows = (projectId, query, token) => {
-    const url = `https://bigquery.googleapis.com/bigquery/v2/projects/${projectId}/queries`;
-
-    return axios
-      .post(
-        url,
-        {
-          query,
-          useLegacySql: false,
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      )
-      .then((response) => response.data.rows[0].f[0].v);
-  };
-
   getColumnMinMax = (columnName, dataset, tableName, token) => {
     const url = `https://bigquery.googleapis.com/bigquery/v2/projects/${dataset.dataProject}/queries`;
     const query = `SELECT MIN(${columnName}) AS min, MAX(${columnName}) AS max FROM \`${dataset.dataProject}.datarepo_${dataset.name}.${tableName}\``;
