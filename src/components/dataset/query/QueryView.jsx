@@ -62,7 +62,6 @@ export class QueryView extends React.PureComponent {
     match: PropTypes.object,
     orderBy: PropTypes.string,
     queryResults: PropTypes.object,
-    token: PropTypes.string,
   };
 
   componentDidMount() {
@@ -78,7 +77,7 @@ export class QueryView extends React.PureComponent {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { dataset, dispatch, filterStatement, joinStatement, orderBy, token } = this.props;
+    const { dataset, dispatch, filterStatement, joinStatement, orderBy } = this.props;
     const { selected } = this.state;
 
     if (
@@ -218,7 +217,6 @@ function mapStateToProps(state) {
     joinStatement: state.query.joinStatement,
     queryResults: state.query.queryResults,
     orderBy: state.query.orderBy,
-    token: state.user.token,
   };
 }
 
