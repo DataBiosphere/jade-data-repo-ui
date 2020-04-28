@@ -9,14 +9,14 @@ import { createActions } from 'redux-actions';
 import { ActionTypes } from 'constants/index';
 
 export const { createSnapshot } = createActions({
-  [ActionTypes.CREATE_SNAPSHOT]: snapshot => snapshot,
-  [ActionTypes.CREATE_SNAPSHOT_JOB]: snapshot => snapshot,
-  [ActionTypes.CREATE_SNAPSHOT_SUCCESS]: snapshot => snapshot,
-  [ActionTypes.CREATE_SNAPSHOT_FAILURE]: snapshot => snapshot,
+  [ActionTypes.CREATE_SNAPSHOT]: (snapshot) => snapshot,
+  [ActionTypes.CREATE_SNAPSHOT_JOB]: (snapshot) => snapshot,
+  [ActionTypes.CREATE_SNAPSHOT_SUCCESS]: (snapshot) => snapshot,
+  [ActionTypes.CREATE_SNAPSHOT_FAILURE]: (snapshot) => snapshot,
 });
 
 export const { getSnapshots } = createActions({
-  [ActionTypes.GET_SNAPSHOTS_SUCCESS]: snapshots => snapshots,
+  [ActionTypes.GET_SNAPSHOTS_SUCCESS]: (snapshots) => snapshots,
   [ActionTypes.GET_SNAPSHOTS]: (limit, offset, sort, direction, searchString) => ({
     limit,
     offset,
@@ -27,13 +27,13 @@ export const { getSnapshots } = createActions({
 });
 
 export const { getSnapshotById } = createActions({
-  [ActionTypes.GET_SNAPSHOT_BY_ID]: snapshot => snapshot,
-  [ActionTypes.GET_SNAPSHOT_BY_ID_SUCCESS]: snapshot => snapshot,
+  [ActionTypes.GET_SNAPSHOT_BY_ID]: (snapshot) => snapshot,
+  [ActionTypes.GET_SNAPSHOT_BY_ID_SUCCESS]: (snapshot) => snapshot,
 });
 
 export const { getSnapshotPolicy } = createActions({
-  [ActionTypes.GET_SNAPSHOT_POLICY]: policy => policy,
-  [ActionTypes.GET_SNAPSHOT_POLICY_SUCCESS]: policy => policy,
+  [ActionTypes.GET_SNAPSHOT_POLICY]: (policy) => policy,
+  [ActionTypes.GET_SNAPSHOT_POLICY_SUCCESS]: (policy) => policy,
 });
 
 export const { addCustodianToSnapshot } = createActions({
@@ -66,7 +66,7 @@ export const { removeReaderFromSnapshot } = createActions({
 });
 
 export const { getDatasets } = createActions({
-  [ActionTypes.GET_DATASETS_SUCCESS]: datasets => datasets,
+  [ActionTypes.GET_DATASETS_SUCCESS]: (datasets) => datasets,
   [ActionTypes.GET_DATASETS]: (limit, offset, sort, direction, searchString) => ({
     limit,
     offset,
@@ -77,18 +77,18 @@ export const { getDatasets } = createActions({
 });
 
 export const { getDatasetById } = createActions({
-  [ActionTypes.GET_DATASET_BY_ID]: dataset => dataset,
-  [ActionTypes.GET_DATASET_BY_ID_SUCCESS]: dataset => dataset,
+  [ActionTypes.GET_DATASET_BY_ID]: (dataset) => dataset,
+  [ActionTypes.GET_DATASET_BY_ID_SUCCESS]: (dataset) => dataset,
 });
 
 export const { getDatasetPolicy } = createActions({
-  [ActionTypes.GET_DATASET_POLICY]: policy => policy,
-  [ActionTypes.GET_DATASET_POLICY_SUCCESS]: policy => policy,
+  [ActionTypes.GET_DATASET_POLICY]: (policy) => policy,
+  [ActionTypes.GET_DATASET_POLICY_SUCCESS]: (policy) => policy,
 });
 
 export const { getDatasetTablePreview } = createActions({
   [ActionTypes.GET_DATASET_TABLE_PREVIEW]: (dataset, tableName) => ({ dataset, tableName }),
-  [ActionTypes.GET_DATASET_TABLE_PREVIEW_SUCCESS]: _ => _,
+  [ActionTypes.GET_DATASET_TABLE_PREVIEW_SUCCESS]: (_) => _,
 });
 
 export const { addCustodianToDataset } = createActions({
@@ -106,20 +106,20 @@ export const { removeCustodianFromDataset } = createActions({
 });
 
 export const { getJobById } = createActions({
-  [ActionTypes.GET_JOB_BY_ID]: job => job,
-  [ActionTypes.GET_JOB_BY_ID_SUCCESS]: job => job,
+  [ActionTypes.GET_JOB_BY_ID]: (job) => job,
+  [ActionTypes.GET_JOB_BY_ID_SUCCESS]: (job) => job,
 });
 
 export const { clearJobId } = createActions({
-  [ActionTypes.CLEAR_JOB_ID]: job => job,
+  [ActionTypes.CLEAR_JOB_ID]: (job) => job,
 });
 
 export const { hideAlert } = createActions({
-  [ActionTypes.HIDE_ALERT]: index => index,
+  [ActionTypes.HIDE_ALERT]: (index) => index,
 });
 
 export const { runQuery } = createActions({
-  [ActionTypes.RUN_QUERY_SUCCESS]: result => result,
+  [ActionTypes.RUN_QUERY_SUCCESS]: (result) => result,
   [ActionTypes.RUN_QUERY]: (projectId, query, maxResults) => ({
     projectId,
     query,
@@ -153,5 +153,13 @@ export const { applySort } = createActions({
 });
 
 export const { openSnapshotDialog } = createActions({
-  [ActionTypes.OPEN_SNAPSHOT_DIALOG]: isOpen => isOpen,
+  [ActionTypes.OPEN_SNAPSHOT_DIALOG]: (isOpen) => isOpen,
+});
+
+export const { countResults } = createActions({
+  [ActionTypes.COUNT_RESULTS]: (projectId, query) => ({
+    projectId,
+    query,
+  }),
+  [ActionTypes.COUNT_RESULTS_SUCCESS]: (count) => count,
 });

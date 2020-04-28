@@ -6,19 +6,19 @@ export default class BigQuery {
     this.pageTokenMap = {};
   }
 
-  transformColumns = queryResults =>
-    _.get(queryResults, 'schema.fields', []).map(field => {
+  transformColumns = (queryResults) =>
+    _.get(queryResults, 'schema.fields', []).map((field) => {
       return { id: field.name, label: field.name, minWidth: 100, type: field.type };
     });
 
   transformRows = (queryResults, columns) => {
-    let rows = _.get(queryResults, 'rows', []).map(row => {
-      return _.get(row, 'f', []).map(value => {
+    let rows = _.get(queryResults, 'rows', []).map((row) => {
+      return _.get(row, 'f', []).map((value) => {
         return _.get(value, 'v', '');
       });
     });
 
-    return rows.map(row => this.createData(columns, row));
+    return rows.map((row) => this.createData(columns, row));
   };
 
   createData = (columns, row) => {
@@ -49,24 +49,25 @@ export default class BigQuery {
     return res;
   };
 
-  commaFormatted = amount => new Intl.NumberFormat('en-US').format(amount);
+  commaFormatted = (amount) => new Intl.NumberFormat('en-US').format(amount);
 
-  significantDigits = amount =>
+  significantDigits = (amount) =>
     new Intl.NumberFormat('en-US', { maximumSignificantDigits: 3 }).format(amount);
 
-  calculateColumns = columns => columns.map(column => ({ title: column.name, field: column.name }));
+  calculateColumns = (columns) =>
+    columns.map((column) => ({ title: column.name, field: column.name }));
 
-  buildFilterStatement = filterMap => {
+  buildFilterStatement = (filterMap) => {
     if (!_.isEmpty(filterMap)) {
       const tableClauses = [];
 
-      _.keys(filterMap).forEach(table => {
+      _.keys(filterMap).forEach((table) => {
         const filters = filterMap[table];
 
         if (!_.isEmpty(filters)) {
           const statementClauses = [];
 
-          _.keys(filters).forEach(key => {
+          _.keys(filters).forEach((key) => {
             const property = `${table}.${key}`;
             const keyValue = filters[key].value;
 
@@ -74,7 +75,7 @@ export default class BigQuery {
               if (_.isNumber(keyValue[0])) {
                 statementClauses.push(`${property} BETWEEN ${keyValue[0]} AND ${keyValue[1]}`);
               } else if (_.isString(keyValue[0])) {
-                const selections = keyValue.map(selection => `"${selection}"`).join(',');
+                const selections = keyValue.map((selection) => `"${selection}"`).join(',');
                 statementClauses.push(`${property} IN (${selections})`);
               } else {
                 statementClauses.push(
@@ -85,12 +86,12 @@ export default class BigQuery {
               const checkboxes = _.keys(keyValue);
               if (checkboxes.length > 0) {
                 const checkboxValues = checkboxes
-                  .map(checkboxValue => `"${checkboxValue}"`)
+                  .map((checkboxValue) => `"${checkboxValue}"`)
                   .join(',');
                 statementClauses.push(`${property} IN (${checkboxValues})`);
               }
             } else {
-              const values = keyValue.split(',').map(val => `${key}='${val}'`);
+              const values = keyValue.split(',').map((val) => `${key}='${val}'`);
               statementClauses.push(values.join(' OR '));
             }
           });
@@ -128,7 +129,7 @@ export default class BigQuery {
           },
         },
       )
-      .then(response => response.data.rows[0].f);
+      .then((response) => response.data.rows[0].f);
   };
 
   getColumnDistinct = (columnName, dataset, tableName, token, filterStatement, joinStatement) => {
@@ -148,13 +149,13 @@ export default class BigQuery {
           },
         },
       )
-      .then(response => response.data.rows);
+      .then((response) => response.data.rows);
   };
 
-  constructGraph = schema => {
+  constructGraph = (schema) => {
     const neighbors = {}; // Key = vertex, value = array of neighbors.
 
-    _.forEach(schema, relationship => {
+    _.forEach(schema, (relationship) => {
       const u = relationship.from.table;
       const v = relationship.to.table;
 
@@ -211,7 +212,7 @@ export default class BigQuery {
   findRelationshipData = (schema, source, target) => {
     // eslint-disable-next-line consistent-return
     let result = {};
-    schema.forEach(relationship => {
+    schema.forEach((relationship) => {
       if (relationship.from.table === source && relationship.to.table === target) {
         result = relationship;
       }
@@ -236,7 +237,7 @@ export default class BigQuery {
       tables.push(table);
     }
 
-    tables.forEach(target => {
+    tables.forEach((target) => {
       const path = this.bfs(graph, table, target);
 
       for (let i = 1; i < path.length; i++) {

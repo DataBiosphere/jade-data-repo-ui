@@ -8,7 +8,7 @@ import { Card, List, ListSubheader, LinearProgress, Button } from '@material-ui/
 import AppliedFilterList from './AppliedFilterList';
 import { applyFilters } from '../../../../actions';
 
-const styles = theme => ({
+const styles = (theme) => ({
   load: {
     lineHeight: '48px',
     margin: '22px 0px 22px 0px',
@@ -38,18 +38,22 @@ export class QuerySidebarPanel extends React.PureComponent {
 
   render() {
     const { classes, filterData, selected, results, polling } = this.props;
-    const listTables = _.keys(filterData).map(table => {
+    const listTables = _.keys(filterData).map((table) => {
       return <AppliedFilterList table={table} selected={selected} />;
     });
 
-    const resultsLabel = results == 1 ? 'Result' : 'Results';
+    const rowsLabel = results == 1 ? 'Row' : 'Rows';
 
     return (
       <Card variant="outlined">
         <List
           subheader={
-            <ListSubheader component="div">
-              {polling ? <LinearProgress className={classes.load} /> : `${results} ${resultsLabel}`}
+            <ListSubheader component="div" data-cy="resultsCount">
+              {polling ? (
+                <LinearProgress className={classes.load} />
+              ) : (
+                `${results.toLocaleString()} ${rowsLabel}`
+              )}
             </ListSubheader>
           }
         >
@@ -69,7 +73,7 @@ function mapStateToProps(state) {
   return {
     filterData: state.query.filterData,
     dataset: state.datasets.dataset,
-    results: state.query.queryResults.totalRows,
+    results: state.query.resultsCount,
     polling: state.query.polling,
   };
 }

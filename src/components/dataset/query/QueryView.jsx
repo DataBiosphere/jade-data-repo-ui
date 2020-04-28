@@ -5,7 +5,13 @@ import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 
-import { applyFilters, runQuery, getDatasetById, getDatasetPolicy } from 'actions/index';
+import {
+  applyFilters,
+  runQuery,
+  getDatasetById,
+  getDatasetPolicy,
+  countResults,
+} from 'actions/index';
 import { Typography } from '@material-ui/core';
 import { FilterList, Info, People } from '@material-ui/icons';
 
@@ -87,16 +93,25 @@ export class QueryView extends React.PureComponent {
         arraysToExclude = `EXCEPT (${arrayVals})`;
       }
 
+      const fromClause = `FROM \`${dataset.dataProject}.datarepo_${dataset.name}.${selected}\` AS ${selected}
+          ${joinStatement}
+          ${filterStatement}`;
+
       dispatch(
         runQuery(
           dataset.dataProject,
           `#standardSQL
-          SELECT DISTINCT ${selected}.* ${arraysToExclude} FROM \`${dataset.dataProject}.datarepo_${dataset.name}.${selected}\` AS ${selected}
-          ${joinStatement}
-          ${filterStatement}
+          SELECT DISTINCT ${selected}.* ${arraysToExclude} ${fromClause}
           ${orderBy}
           LIMIT ${QUERY_LIMIT}`,
           PAGE_SIZE,
+        ),
+      );
+      dispatch(
+        countResults(
+          dataset.dataProject,
+          `#standardSQL
+          SELECT COUNT(1) ${fromClause}`,
         ),
       );
     }
