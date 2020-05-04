@@ -28,11 +28,14 @@ export class QueryViewSidebarItem extends React.PureComponent {
   };
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevState.filterMap !== this.state.filterMap) {
-      this.setState({ disableButton: _.isEmpty(this.state.filterMap.value) });
+    const { filterData, tableName, column } = this.props;
+    const { filterMap } = this.state;
+    if (!_.isEqual(prevState.filterMap, filterMap)) {
+      this.setState({ disableButton: _.isEmpty(filterMap.value) });
     }
-    if (prevProps.filterData !== this.props.filterData) {
-      this.setState({ disableButton: true });
+    if (!_.isEqual(prevProps.filterData, filterData)) {
+      const filters = _.get(filterData, [tableName, column.name], {});
+      this.setState({ filterMap: filters, disableButton: true });
     }
   }
 
@@ -59,13 +62,14 @@ export class QueryViewSidebarItem extends React.PureComponent {
       tableName,
       token,
     } = this.props;
-    const { disableButton } = this.state;
+    const { disableButton, filterMap } = this.state;
     const item =
       column.datatype === 'string' ? (
         <CategoryWrapper
           column={column}
           dataset={dataset}
           filterData={filterData}
+          filterMap={filterMap}
           filterStatement={filterStatement}
           joinStatement={joinStatement}
           handleChange={this.handleChange}
@@ -78,6 +82,7 @@ export class QueryViewSidebarItem extends React.PureComponent {
           column={column}
           dataset={dataset}
           filterData={filterData}
+          filterMap={filterMap}
           handleChange={this.handleChange}
           handleFilters={handleFilters}
           tableName={tableName}
@@ -89,6 +94,14 @@ export class QueryViewSidebarItem extends React.PureComponent {
     return (
       <div>
         {item}
+        <Button
+          onClick={() => this.setState({ filterMap: {} })}
+          disabled={disableButton}
+          size="small"
+          data-cy={`reset-${column.name}-button`}
+        >
+          Reset Filter
+        </Button>
         <Button
           onClick={this.applyFilters}
           variant="contained"

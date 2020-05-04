@@ -32,7 +32,6 @@ export class RangeFilter extends React.PureComponent {
       this.setState({
         minVal: min,
         maxVal: max,
-        value: [min, max],
         step,
       });
     });
@@ -42,24 +41,15 @@ export class RangeFilter extends React.PureComponent {
     column: PropTypes.object,
     dataset: PropTypes.object,
     filterData: PropTypes.object,
+    filterMap: PropTypes.object,
     handleChange: PropTypes.func,
     handleFilters: PropTypes.func,
     tableName: PropTypes.string,
     token: PropTypes.string,
   };
 
-  componentDidUpdate(prevProps) {
-    const { filterData, tableName, column } = this.props;
-    const { minVal, maxVal } = this.state;
-    if (filterData !== prevProps.filterData) {
-      const value = _.get(filterData, [tableName, column.name, 'value'], [minVal, maxVal]);
-      this.setState({ value });
-    }
-  }
-
   handleSliderValue = (event, newValue) => {
     const { handleChange } = this.props;
-    this.setState({ value: newValue });
     handleChange(newValue);
   };
 
@@ -78,9 +68,9 @@ export class RangeFilter extends React.PureComponent {
   };
 
   render() {
-    const { maxVal, minVal, value, step } = this.state;
-    const { handleFilters } = this.props;
-
+    const { maxVal, minVal, step } = this.state;
+    const { handleFilters, filterMap } = this.props;
+    const value = _.get(filterMap, 'value', [minVal, maxVal]);
     return (
       <div>
         <Grid container={true} spacing={2}>
