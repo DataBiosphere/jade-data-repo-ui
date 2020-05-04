@@ -25,7 +25,7 @@ export class CategoryWrapper extends React.PureComponent {
       token,
       filterStatement,
       joinStatement,
-    ).then(response => {
+    ).then((response) => {
       const newResponse = this.transformResponse(response);
       this.setState({
         values: newResponse,
@@ -46,10 +46,10 @@ export class CategoryWrapper extends React.PureComponent {
     token: PropTypes.string,
   };
 
-  transformResponse = response => {
+  transformResponse = (response) => {
     const counts = {};
     if (response) {
-      response.map(r => {
+      response.map((r) => {
         const name = r.f[0].v;
         const count = r.f[1].v;
         counts[name] = count;
@@ -69,7 +69,7 @@ export class CategoryWrapper extends React.PureComponent {
         token,
         filterStatement,
         joinStatement,
-      ).then(response => {
+      ).then((response) => {
         const newResponse = this.transformResponse(response);
         this.setState({
           values: newResponse,
@@ -106,6 +106,7 @@ export class CategoryWrapper extends React.PureComponent {
         filterData={filterData}
         originalValues={originalValues}
         values={values}
+        table={tableName}
       />
     );
   }

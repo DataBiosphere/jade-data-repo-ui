@@ -14,7 +14,7 @@ import { push } from 'modules/hist';
 
 const drawerWidth = 400;
 
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
     margin: theme.spacing(1),
     display: 'grid',
@@ -139,32 +139,32 @@ export class QueryViewSidebar extends React.PureComponent {
     this.setState({ open: false });
   };
 
-  handleCreateSnapshot = isSaving => {
+  handleCreateSnapshot = (isSaving) => {
     this.setState({ isSavingSnapshot: isSaving });
   };
 
-  handleChange = (filter, table) => {
+  handleChange = (column, filter, table) => {
     const { filterMap } = this.state;
     const clonedMap = _.cloneDeep(filterMap);
     if (filter.value == null || filter.value.length === 0) {
-      delete clonedMap[table][filter.name];
+      delete clonedMap[table][column];
       if (_.isEmpty(clonedMap[table])) {
         delete clonedMap[table];
       }
     } else if (_.isPlainObject(clonedMap[table])) {
-      clonedMap[table][filter.name] = {
+      clonedMap[table][column] = {
         value: filter.value,
         type: filter.type,
       };
     } else {
       clonedMap[table] = {
-        [filter.name]: {
+        [column]: {
           value: filter.value,
           type: filter.type,
         },
       };
     }
-    this.setState({ filterMap: clonedMap });
+    this.setState({ filterMap: clonedMap }, this.handleFilters);
   };
 
   handleFilters = () => {
@@ -180,11 +180,11 @@ export class QueryViewSidebar extends React.PureComponent {
     dispatch(openSnapshotDialog(true));
   };
 
-  handleSearchString = event => {
+  handleSearchString = (event) => {
     this.setState({ searchString: event.target.value });
   };
 
-  handleOpenFilter = filter => {
+  handleOpenFilter = (filter) => {
     const { openFilter } = this.state;
     if (filter === openFilter) {
       this.setState({ openFilter: {} });
@@ -206,7 +206,7 @@ export class QueryViewSidebar extends React.PureComponent {
       selected,
     } = this.props;
     const { isSavingSnapshot, searchString, openFilter } = this.state;
-    const filteredColumns = table.columns.filter(column => column.name.includes(searchString));
+    const filteredColumns = table.columns.filter((column) => column.name.includes(searchString));
 
     return (
       <div
@@ -226,7 +226,7 @@ export class QueryViewSidebar extends React.PureComponent {
             </Grid>
           </Box>
           <div className={clsx(classes.filterPanel, { [classes.hide]: !open })}>
-            <QuerySidebarPanel selected={selected} />
+            <QuerySidebarPanel selected={selected} data-cy="snapshotCard" />
           </div>
           <ListItem button className={clsx(classes.searchBar, classes.panelContent)}>
             <Search color="primary" fontSize={'small'} />
@@ -238,7 +238,7 @@ export class QueryViewSidebar extends React.PureComponent {
           </ListItem>
           {table &&
             table.name &&
-            filteredColumns.map(c => (
+            filteredColumns.map((c) => (
               <div
                 className={clsx({ [classes.highlighted]: c === openFilter })}
                 data-cy="filterItem"
@@ -269,16 +269,6 @@ export class QueryViewSidebar extends React.PureComponent {
         </div>
         {!isSavingSnapshot && (
           <div className={classes.rowTwo}>
-            <div>
-              <Button
-                variant="contained"
-                className={clsx(classes.stickyButton, { [classes.hide]: !open })}
-                onClick={this.handleFilters}
-                data-cy="applyFiltersButton"
-              >
-                Apply Filters
-              </Button>
-            </div>
             <div className={classes.snapshotButtonContainer}>
               <Button
                 variant="contained"

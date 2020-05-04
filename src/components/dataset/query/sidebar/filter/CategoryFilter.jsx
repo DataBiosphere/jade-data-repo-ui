@@ -8,20 +8,9 @@ import Checkbox from '@material-ui/core/Checkbox';
 export class CategoryFilter extends React.PureComponent {
   constructor(props) {
     super(props);
-    const { filterData, column, table } = this.props;
-    const currTable = _.get(filterData, table);
-    const currFilter = _.get(currTable, column.name);
-    if (currFilter === undefined) {
-      this.state = {
-        checked: false,
-        prevPropsFilterData: filterData,
-      };
-    } else {
-      this.state = {
-        checked: true,
-        prevPropsFilterData: filterData,
-      };
-    }
+    this.state = {
+      checked: false,
+    };
   }
 
   static propTypes = {
@@ -33,21 +22,15 @@ export class CategoryFilter extends React.PureComponent {
     table: PropTypes.string,
   };
 
-  static getDerivedStateFromProps(props, state) {
-    if (props.filterData !== state.prevPropsFilterData) {
-      const currTable = _.get(props.filterData, props.table);
-      const currFilter = _.get(currTable, props.column.name);
-      const currValue = _.get(currFilter, `value.${props.name}`);
-      if (currValue === undefined) {
-        return {
-          checked: false,
-        };
-      }
+  componentDidUpdate(prevProps) {
+    const { filterData, table, column, name } = this.props;
+    if (filterData !== prevProps.filterData) {
+      const checked = _.get(filterData, [table, column.name, 'value', name], false);
+      this.setState({ checked });
     }
-    return null;
   }
 
-  handleChange = event => {
+  handleChange = (event) => {
     const { handleChange, name } = this.props;
     this.setState({
       checked: event.target.checked,
