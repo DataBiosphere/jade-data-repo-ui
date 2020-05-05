@@ -9,7 +9,6 @@ export class CategoryFilter extends React.PureComponent {
   static propTypes = {
     column: PropTypes.object,
     count: PropTypes.number,
-    filterData: PropTypes.object,
     filterMap: PropTypes.object,
     handleChange: PropTypes.func,
     name: PropTypes.string,

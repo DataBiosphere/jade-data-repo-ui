@@ -9,7 +9,6 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 export class FreetextFilter extends React.PureComponent {
   static propTypes = {
     column: PropTypes.object,
-    filterData: PropTypes.object,
     handleChange: PropTypes.func,
     handleFilters: PropTypes.func,
     originalValues: PropTypes.object,

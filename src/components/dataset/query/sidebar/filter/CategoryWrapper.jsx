@@ -37,7 +37,6 @@ export class CategoryWrapper extends React.PureComponent {
   static propTypes = {
     column: PropTypes.object,
     dataset: PropTypes.object,
-    filterData: PropTypes.object,
     filterMap: PropTypes.object,
     filterStatement: PropTypes.string,
     joinStatement: PropTypes.string,
@@ -86,12 +85,11 @@ export class CategoryWrapper extends React.PureComponent {
 
   render() {
     const { values, originalValues } = this.state;
-    const { column, filterData, handleChange, handleFilters, tableName, filterMap } = this.props;
+    const { column, handleChange, handleFilters, tableName, filterMap } = this.props;
     if (values && originalValues && _.size(originalValues) <= CHECKBOX_THRESHOLD) {
       return (
         <CategoryFilterGroup
           column={column}
-          filterData={filterData}
           filterMap={filterMap}
           handleChange={handleChange}
           originalValues={originalValues}
@@ -105,7 +103,6 @@ export class CategoryWrapper extends React.PureComponent {
         column={column}
         handleChange={handleChange}
         handleFilters={handleFilters}
-        filterData={filterData}
         filterMap={filterMap}
         originalValues={originalValues}
         values={values}

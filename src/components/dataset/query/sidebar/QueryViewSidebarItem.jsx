@@ -68,7 +68,6 @@ export class QueryViewSidebarItem extends React.PureComponent {
         <CategoryWrapper
           column={column}
           dataset={dataset}
-          filterData={filterData}
           filterMap={filterMap}
           filterStatement={filterStatement}
           joinStatement={joinStatement}
@@ -81,7 +80,6 @@ export class QueryViewSidebarItem extends React.PureComponent {
         <RangeFilter
           column={column}
           dataset={dataset}
-          filterData={filterData}
           filterMap={filterMap}
           handleChange={this.handleChange}
           handleFilters={handleFilters}

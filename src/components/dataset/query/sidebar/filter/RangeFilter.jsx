@@ -40,7 +40,6 @@ export class RangeFilter extends React.PureComponent {
   static propTypes = {
     column: PropTypes.object,
     dataset: PropTypes.object,
-    filterData: PropTypes.object,
     filterMap: PropTypes.object,
     handleChange: PropTypes.func,
     handleFilters: PropTypes.func,
