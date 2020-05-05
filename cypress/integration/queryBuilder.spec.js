@@ -20,23 +20,47 @@ describe('test query builder', () => {
 
   it('does render', () => {});
 
-  it('applies filters', () => {
-    // selects the filter button in the sidebar
-    cy.get('div.MuiButtonBase-root:nth-child(2) > svg:nth-child(1)').click();
+  describe('test filter panel', () => {
+    beforeEach(() => {
+      // selects the filter button in the sidebar
+      cy.get('div.MuiButtonBase-root:nth-child(2) > svg:nth-child(1)').click();
+      cy.get('[data-cy=filterItem]').contains('ancestry').click();
+    });
 
-    cy.get('[data-cy=filterItem]').contains('ancestry').click();
-    cy.get('[data-cy="filter-ancestry-button"]').should('be.disabled');
+    it('applies filters', () => {
+      cy.get('[data-cy="filter-ancestry-button"]').should('be.disabled');
 
-    cy.get('[data-cy=categoryFilterCheckbox-EU]').click();
-    cy.get('[data-cy="filter-ancestry-button"]').should('not.be.disabled');
+      cy.get('[data-cy=categoryFilterCheckbox-EU]').click();
+      cy.get('[data-cy="filter-ancestry-button"]').should('not.be.disabled');
 
-    cy.get('[data-cy="filter-ancestry-button"]').click();
-    cy.get('[data-cy=appliedFilterList-ancestry_specific_meta_analysis]', {}).should('be.visible');
-    cy.get('[data-cy="filter-ancestry-button"]').should('be.disabled');
+      cy.get('[data-cy="filter-ancestry-button"]').click();
 
-    cy.contains('Clear all').click();
-    cy.get('[data-cy="snapshotCard"]').should('not.contain', 'ancestry_specific_meta_analysis');
-    cy.get('[data-cy="filter-ancestry-button"]').should('be.disabled');
+      cy.get('[data-cy=appliedFilterList-ancestry_specific_meta_analysis]').should('be.visible');
+      cy.get('[data-cy="filter-ancestry-button"]').should('be.disabled');
+    });
+
+    it('resets filters', () => {
+      cy.get('[data-cy="reset-ancestry-button"]').should('be.disabled');
+
+      cy.get('[data-cy=categoryFilterCheckbox-EU]').click();
+      cy.get('[data-cy="reset-ancestry-button"]').should('not.be.disabled');
+
+      cy.get('[data-cy="reset-ancestry-button"]').click();
+
+      cy.get('[data-cy="snapshotCard"]').should('not.contain', 'ancestry_specific_meta_analysis');
+      cy.get('[data-cy="reset-ancestry-button"]').should('be.disabled');
+    });
+
+    it('clears filters', () => {
+      cy.get('[data-cy=categoryFilterCheckbox-EU]').click();
+      cy.get('[data-cy="filter-ancestry-button"]').click();
+
+      cy.contains('Clear all').should('be.visible');
+      cy.contains('Clear all').click();
+
+      cy.get('[data-cy="snapshotCard"]').should('not.contain', 'ancestry_specific_meta_analysis');
+      cy.get('[data-cy="filter-ancestry-button"]').should('be.disabled');
+    });
   });
 
   describe('test share panel', () => {
