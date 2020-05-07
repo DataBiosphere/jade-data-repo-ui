@@ -53,7 +53,7 @@
     "lodash": "^4.17.15",
     "mobile-detect": "^1.4.4",
     "modernizr": "^3.10.0",
-    "moment": "^2.24.0",
+    "moment": "^2.25.3",
     "polished": "^3.6.2",
     "prop-types": "^15.7.2",
     "qs": "^6.9.3",
