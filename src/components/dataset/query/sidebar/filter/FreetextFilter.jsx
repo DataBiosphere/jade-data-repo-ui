@@ -28,6 +28,22 @@ export class FreetextFilter extends React.PureComponent {
     }
   };
 
+  onChange = (event) => {
+    const { handleChange } = this.props;
+    const { value } = event.target;
+    let selections;
+    if (value.includes(',')) {
+      selections = value.split(',');
+    } else if (value.includes(' ')) {
+      selections = value.split(' ');
+    } else {
+      return;
+    }
+    const trimmed = _.map(selections, _.trim);
+    const nonEmpty = _.filter(trimmed, (t) => t !== '');
+    handleChange(nonEmpty);
+  };
+
   render() {
     const { filterMap, column, values } = this.props;
     const value = _.get(filterMap, 'value', []);
@@ -40,7 +56,13 @@ export class FreetextFilter extends React.PureComponent {
         freeSolo={true}
         style={{ width: '100%' }}
         renderInput={(params) => (
-          <TextField {...params} fullWidth variant="outlined" margin="dense" />
+          <TextField
+            {...params}
+            fullWidth
+            variant="outlined"
+            margin="dense"
+            onChange={this.onChange}
+          />
         )}
         renderTags={(value, getTagProps) =>
           value.map((option, index) => (

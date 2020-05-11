@@ -52,16 +52,7 @@ export class QueryViewSidebarItem extends React.PureComponent {
   };
 
   render() {
-    const {
-      column,
-      dataset,
-      filterData,
-      filterStatement,
-      joinStatement,
-      handleFilters,
-      tableName,
-      token,
-    } = this.props;
+    const { column, dataset, filterStatement, joinStatement, tableName, token } = this.props;
     const { disableButton, filterMap } = this.state;
     const item =
       column.datatype === 'string' ? (
@@ -72,7 +63,7 @@ export class QueryViewSidebarItem extends React.PureComponent {
           filterStatement={filterStatement}
           joinStatement={joinStatement}
           handleChange={this.handleChange}
-          handleFilters={handleFilters}
+          handleFilters={this.applyFilters}
           tableName={tableName}
           token={token}
         />
@@ -82,7 +73,7 @@ export class QueryViewSidebarItem extends React.PureComponent {
           dataset={dataset}
           filterMap={filterMap}
           handleChange={this.handleChange}
-          handleFilters={handleFilters}
+          handleFilters={this.applyFilters}
           tableName={tableName}
           token={token}
         />
@@ -92,14 +83,6 @@ export class QueryViewSidebarItem extends React.PureComponent {
     return (
       <div>
         {item}
-        <Button
-          onClick={() => this.setState({ filterMap: {} })}
-          disabled={disableButton}
-          size="small"
-          data-cy={`reset-${column.name}-button`}
-        >
-          Reset Filter
-        </Button>
         <Button
           onClick={this.applyFilters}
           variant="contained"

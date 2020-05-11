@@ -39,18 +39,6 @@ describe('test query builder', () => {
       cy.get('[data-cy="filter-ancestry-button"]').should('be.disabled');
     });
 
-    it('resets filters', () => {
-      cy.get('[data-cy="reset-ancestry-button"]').should('be.disabled');
-
-      cy.get('[data-cy=categoryFilterCheckbox-EU]').click();
-      cy.get('[data-cy="reset-ancestry-button"]').should('not.be.disabled');
-
-      cy.get('[data-cy="reset-ancestry-button"]').click();
-
-      cy.get('[data-cy="snapshotCard"]').should('not.contain', 'ancestry_specific_meta_analysis');
-      cy.get('[data-cy="reset-ancestry-button"]').should('be.disabled');
-    });
-
     it('clears filters', () => {
       cy.get('[data-cy=categoryFilterCheckbox-EU]').click();
       cy.get('[data-cy="filter-ancestry-button"]').click();
