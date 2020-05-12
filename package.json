@@ -113,7 +113,7 @@
     "@babel/preset-react": "^7.9.4",
     "@babel/runtime": "^7.9.6",
     "@date-io/date-fns": "2.6.1",
-    "@svgr/webpack": "^5.3.1",
+    "@svgr/webpack": "^5.4.0",
     "ansi-styles": "^4.2.1",
     "babel-core": "^7.0.0-bridge.0",
     "babel-eslint": "^10.1.0",
