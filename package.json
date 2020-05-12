@@ -142,7 +142,7 @@
     "eslint": "^5.16.0",
     "eslint-config-airbnb": "^18.0.1",
     "eslint-config-cypress": "^0.28.0",
-    "eslint-config-prettier": "^6.10.1",
+    "eslint-config-prettier": "^6.11.0",
     "eslint-config-react-app": "^4.0.1",
     "eslint-import-resolver-webpack": "^0.12.1",
     "eslint-loader": "^3.0.4",
