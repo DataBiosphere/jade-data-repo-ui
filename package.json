@@ -202,7 +202,7 @@
     "source-map-support": "^0.5.19",
     "start-server-and-test": "^1.11.0",
     "style-loader": "^1.2.1",
-    "stylelint": "^13.4.0",
+    "stylelint": "^13.4.1",
     "stylelint-config-standard": "^20.0.0",
     "stylelint-order": "^4.0.0",
     "terser-webpack-plugin": "^3.0.1",
