@@ -153,12 +153,14 @@ export class QueryViewSidebar extends React.PureComponent {
       }
     } else if (_.isPlainObject(clonedMap[table])) {
       clonedMap[table][column] = {
+        exclude: filter.exclude,
         value: filter.value,
         type: filter.type,
       };
     } else {
       clonedMap[table] = {
         [column]: {
+          exclude: filter.exclude,
           value: filter.value,
           type: filter.type,
         },

@@ -12,6 +12,7 @@ describe('test query builder', () => {
     });
     cy.get('#e2eLoginButton').click();
 
+    cy.contains('See all Datasets').click();
     cy.contains('Date created').click();
     cy.contains('V2F_GWAS_Summary_Stats').should('be.visible');
     cy.contains('V2F_GWAS_Summary_Stats').click();
@@ -48,6 +49,44 @@ describe('test query builder', () => {
 
       cy.get('[data-cy="snapshotCard"]').should('not.contain', 'ancestry_specific_meta_analysis');
       cy.get('[data-cy="filter-ancestry-button"]').should('be.disabled');
+    });
+
+    it('excludes values', () => {
+      // table should contain these 3 variants to start
+      cy.get('[data-cy=tableBody]').contains('3:187442750:G:A').should('be.visible');
+      cy.get('[data-cy=tableBody]').contains('2:27558797:C:T').should('be.visible');
+      cy.get('[data-cy=tableBody]').contains('6:89977475:T:C').should('be.visible');
+
+      // type variant ids into filter box
+      cy.get('[data-cy=filterItem]').contains('variant_id').click();
+      cy.get('#autocomplete-variant_id').type('3:187442750:G:A\n2:27558797:C:T\n6:89977475:T:C\n');
+
+      // click 'exclude this selection' and apply filter
+      cy.get('[data-cy="exclude-variant_id"]').should('be.visible');
+      cy.get('[data-cy="exclude-variant_id"]').click();
+      cy.get('[data-cy="filter-variant_id-button"]').click();
+
+      // variants should not be returned in query results
+      cy.get('[data-cy=tableBody]').should('not.contain', '3:187442750:G:A');
+      cy.get('[data-cy=tableBody]').should('not.contain', '2:27558797:C:T');
+      cy.get('[data-cy=tableBody]').should('not.contain', '6:89977475:T:C');
+
+      // uncheck 'exclude this selection' and apply filter
+      cy.get('[data-cy="exclude-variant_id"] .MuiCheckbox-root').should(
+        'have.class',
+        'Mui-checked',
+      );
+      cy.get('[data-cy="exclude-variant_id"]').click();
+      cy.get('[data-cy="filter-variant_id-button"]').click();
+
+      // variants should be included in query results
+      cy.get('[data-cy=tableBody]').contains('3:187442750:G:A').should('be.visible');
+      cy.get('[data-cy=tableBody]').contains('2:27558797:C:T').should('be.visible');
+      cy.get('[data-cy=tableBody]').contains('6:89977475:T:C').should('be.visible');
+      cy.get('[data-cy="exclude-variant_id"] .MuiCheckbox-root').should(
+        'not.have.class',
+        'Mui-checked',
+      );
     });
   });
 

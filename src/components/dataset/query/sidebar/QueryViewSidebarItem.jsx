@@ -5,6 +5,13 @@ import PropTypes from 'prop-types';
 import RangeFilter from './filter/RangeFilter';
 import CategoryWrapper from './filter/CategoryWrapper';
 import { Button } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
+
+const styles = (theme) => ({
+  buttonContainer: {
+    textAlign: 'end',
+  },
+});
 
 export class QueryViewSidebarItem extends React.PureComponent {
   constructor(props) {
@@ -16,6 +23,7 @@ export class QueryViewSidebarItem extends React.PureComponent {
   }
 
   static propTypes = {
+    classes: PropTypes.object,
     column: PropTypes.object,
     dataset: PropTypes.object,
     filterData: PropTypes.object,
@@ -27,12 +35,16 @@ export class QueryViewSidebarItem extends React.PureComponent {
     token: PropTypes.string,
   };
 
+  // The 'apply' button should only be enabled when there are new changes to be applied.
+  // Comparing against prevProps and prevState will find if a change has been made.
   componentDidUpdate(prevProps, prevState) {
     const { filterData, tableName, column } = this.props;
     const { filterMap } = this.state;
+    // enable the button when there are unsaved changes
     if (!_.isEqual(prevState.filterMap, filterMap)) {
       this.setState({ disableButton: _.isEmpty(filterMap.value) });
     }
+    // disable the button when filters have just been applied
     if (!_.isEqual(prevProps.filterData, filterData)) {
       const filters = _.get(filterData, [tableName, column.name], {});
       this.setState({ filterMap: filters, disableButton: true });
@@ -41,8 +53,10 @@ export class QueryViewSidebarItem extends React.PureComponent {
 
   handleChange = (value) => {
     const { column } = this.props;
+    const { filterMap } = this.state;
     const type = column.datatype === 'string' ? 'value' : 'range';
-    this.setState({ filterMap: { value, type } });
+    const exclude = _.get(filterMap, 'exclude', false);
+    this.setState({ filterMap: { value, type, exclude } });
   };
 
   applyFilters = () => {
@@ -51,8 +65,22 @@ export class QueryViewSidebarItem extends React.PureComponent {
     handleChange(column.name, filterMap, tableName);
   };
 
+  // mark the filter as 'exclude' when the checkbox has been checked
+  toggleExclude = (boxIsChecked) => {
+    const { filterMap } = this.state;
+    this.setState({ filterMap: { ...filterMap, exclude: boxIsChecked } });
+  };
+
   render() {
-    const { column, dataset, filterStatement, joinStatement, tableName, token } = this.props;
+    const {
+      classes,
+      column,
+      dataset,
+      filterStatement,
+      joinStatement,
+      tableName,
+      token,
+    } = this.props;
     const { disableButton, filterMap } = this.state;
     const item =
       column.datatype === 'string' ? (
@@ -66,6 +94,7 @@ export class QueryViewSidebarItem extends React.PureComponent {
           handleFilters={this.applyFilters}
           tableName={tableName}
           token={token}
+          toggleExclude={this.toggleExclude}
         />
       ) : column.datatype === 'float' || column.datatype === 'integer' ? (
         <RangeFilter
@@ -83,19 +112,21 @@ export class QueryViewSidebarItem extends React.PureComponent {
     return (
       <div>
         {item}
-        <Button
-          onClick={this.applyFilters}
-          variant="contained"
-          disableElevation
-          disabled={disableButton}
-          size="small"
-          data-cy={`filter-${column.name}-button`}
-        >
-          Apply Filter
-        </Button>
+        <div className={classes.buttonContainer}>
+          <Button
+            onClick={this.applyFilters}
+            variant="contained"
+            disableElevation
+            disabled={disableButton}
+            size="small"
+            data-cy={`filter-${column.name}-button`}
+          >
+            Apply
+          </Button>
+        </div>
       </div>
     );
   }
 }
 
-export default QueryViewSidebarItem;
+export default withStyles(styles)(QueryViewSidebarItem);
