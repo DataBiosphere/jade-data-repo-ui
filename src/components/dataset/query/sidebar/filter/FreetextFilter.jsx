@@ -43,20 +43,11 @@ export class FreetextFilter extends React.PureComponent {
     }
   };
 
-  onChange = (event) => {
+  onPaste = (event) => {
     const { handleChange } = this.props;
-    const { value } = event.target;
-    let selections;
-    if (value.includes(',')) {
-      selections = value.split(',');
-    } else if (value.includes(' ')) {
-      selections = value.split(' ');
-    } else {
-      return;
-    }
-    const trimmed = _.map(selections, _.trim);
-    const nonEmpty = _.filter(trimmed, (t) => t !== '');
-    handleChange(nonEmpty);
+    event.preventDefault();
+    const text = event.clipboardData.getData('text');
+    handleChange(text.split(/[ ,\n]+/));
   };
 
   deleteChip = (option) => {
@@ -78,19 +69,16 @@ export class FreetextFilter extends React.PureComponent {
           freeSolo={true}
           style={{ width: '100%' }}
           renderInput={(params) => (
-            <TextField
-              {...params}
-              fullWidth
-              variant="outlined"
-              margin="dense"
-              onChange={this.onChange}
-            />
+            <TextField {...params} fullWidth variant="outlined" margin="dense" />
           )}
           // tags are rendered manually in list under autocomplete box
           renderTags={() => null}
           onChange={this.onComplete}
           onKeyPress={this.handleReturn}
+          onPaste={this.onPaste}
           value={value}
+          forcePopupIcon
+          disableClearable
         />
         {value.map((option, index) => (
           <div key={index} className={classes.listItem}>

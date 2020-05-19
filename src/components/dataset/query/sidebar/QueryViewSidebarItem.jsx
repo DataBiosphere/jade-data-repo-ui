@@ -82,33 +82,40 @@ export class QueryViewSidebarItem extends React.PureComponent {
       token,
     } = this.props;
     const { disableButton, filterMap } = this.state;
-    const item =
-      column.datatype === 'string' ? (
-        <CategoryWrapper
-          column={column}
-          dataset={dataset}
-          filterMap={filterMap}
-          filterStatement={filterStatement}
-          joinStatement={joinStatement}
-          handleChange={this.handleChange}
-          handleFilters={this.applyFilters}
-          tableName={tableName}
-          token={token}
-          toggleExclude={this.toggleExclude}
-        />
-      ) : column.datatype === 'float' || column.datatype === 'integer' ? (
-        <RangeFilter
-          column={column}
-          dataset={dataset}
-          filterMap={filterMap}
-          handleChange={this.handleChange}
-          handleFilters={this.applyFilters}
-          tableName={tableName}
-          token={token}
-        />
-      ) : (
-        <div />
-      );
+    const item = ((datatype) => {
+      switch (datatype) {
+        case 'string':
+          return (
+            <CategoryWrapper
+              column={column}
+              dataset={dataset}
+              filterMap={filterMap}
+              filterStatement={filterStatement}
+              joinStatement={joinStatement}
+              handleChange={this.handleChange}
+              handleFilters={this.applyFilters}
+              tableName={tableName}
+              token={token}
+              toggleExclude={this.toggleExclude}
+            />
+          );
+        case 'float':
+        case 'integer':
+          return (
+            <RangeFilter
+              column={column}
+              dataset={dataset}
+              filterMap={filterMap}
+              handleChange={this.handleChange}
+              handleFilters={this.applyFilters}
+              tableName={tableName}
+              token={token}
+            />
+          );
+        default:
+          return <div />;
+      }
+    })(column.datatype);
     return (
       <div>
         {item}
