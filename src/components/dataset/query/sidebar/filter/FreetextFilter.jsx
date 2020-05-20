@@ -47,7 +47,9 @@ export class FreetextFilter extends React.PureComponent {
     const { handleChange } = this.props;
     event.preventDefault();
     const text = event.clipboardData.getData('text');
-    handleChange(text.split(/[ ,\n]+/));
+    const selections = text.split(/[ ,\n]+/);
+    const nonEmpty = selections.filter((s) => s !== '');
+    handleChange(nonEmpty);
   };
 
   deleteChip = (option) => {
@@ -99,7 +101,7 @@ export class FreetextFilter extends React.PureComponent {
                 onChange={(event) => toggleExclude(event.target.checked)}
               />
             }
-            label={<Typography variant="body2">Exclude this selection</Typography>}
+            label={<Typography variant="body2">Exclude all</Typography>}
             data-cy={`exclude-${column.name}`}
           />
         )}
