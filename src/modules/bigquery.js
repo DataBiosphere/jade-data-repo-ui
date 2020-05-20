@@ -70,13 +70,14 @@ export default class BigQuery {
           _.keys(filters).forEach((key) => {
             const property = `${table}.${key}`;
             const keyValue = filters[key].value;
+            const notClause = filters[key].exclude ? 'NOT' : '';
 
             if (_.isArray(keyValue)) {
               if (_.isNumber(keyValue[0])) {
                 statementClauses.push(`${property} BETWEEN ${keyValue[0]} AND ${keyValue[1]}`);
               } else if (_.isString(keyValue[0])) {
                 const selections = keyValue.map((selection) => `"${selection}"`).join(',');
-                statementClauses.push(`${property} IN (${selections})`);
+                statementClauses.push(`${property} ${notClause} IN (${selections})`);
               } else {
                 statementClauses.push(
                   `${property} = '${keyValue[0]}' OR ${property} = '${keyValue[1]}'`,

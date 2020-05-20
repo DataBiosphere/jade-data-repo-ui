@@ -6,33 +6,29 @@ import { CategoryFilter } from './CategoryFilter';
 export class CategoryFilterGroup extends React.PureComponent {
   constructor(props) {
     super(props);
-    const { filterData } = this.props;
     this.state = {
       selected: {},
-      prevPropsFilterData: filterData,
     };
   }
 
   static propTypes = {
     column: PropTypes.object,
-    filterData: PropTypes.object,
+    filterMap: PropTypes.object,
     handleChange: PropTypes.func,
     originalValues: PropTypes.object,
     values: PropTypes.object,
     table: PropTypes.string,
   };
 
-  static getDerivedStateFromProps(props, state) {
-    if (!_.isEqual(props.filterData, state.prevPropsFilterData)) {
-      return {
-        selected: _.get(props.filterData, `${props.table}.${props.column.name}.value`, {}),
-        prevPropsFilterData: props.filterData,
-      };
+  componentDidUpdate(prevProps) {
+    const { filterMap } = this.props;
+    if (!_.isEqual(filterMap, prevProps.filterMap)) {
+      const selected = _.get(filterMap, 'value', {});
+      this.setState({ selected });
     }
-    return null;
   }
 
-  handleChange = box => {
+  handleChange = (box) => {
     const { handleChange } = this.props;
     const { selected } = this.state;
     const selectedClone = _.clone(selected);
@@ -49,14 +45,14 @@ export class CategoryFilterGroup extends React.PureComponent {
   };
 
   render() {
-    const { column, filterData, values, table, originalValues } = this.props;
-    const checkboxes = _.keys(originalValues).map(name => {
+    const { column, values, table, originalValues, filterMap } = this.props;
+    const checkboxes = _.keys(originalValues).map((name) => {
       const count = values.hasOwnProperty(name) ? parseInt(values[name], 10) : 0;
       return (
         <div key={name}>
           <CategoryFilter
             column={column}
-            filterData={filterData}
+            filterMap={filterMap}
             handleChange={this.handleChange}
             name={name}
             count={count}

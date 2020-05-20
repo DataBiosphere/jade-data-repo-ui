@@ -1,11 +1,29 @@
 import React from 'react';
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 
 import RangeFilter from './filter/RangeFilter';
 import CategoryWrapper from './filter/CategoryWrapper';
+import { Button } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
+
+const styles = (theme) => ({
+  buttonContainer: {
+    textAlign: 'end',
+  },
+});
 
 export class QueryViewSidebarItem extends React.PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      filterMap: {},
+      disableButton: true,
+    };
+  }
+
   static propTypes = {
+    classes: PropTypes.object,
     column: PropTypes.object,
     dataset: PropTypes.object,
     filterData: PropTypes.object,
@@ -17,60 +35,105 @@ export class QueryViewSidebarItem extends React.PureComponent {
     token: PropTypes.string,
   };
 
-  handleChange = value => {
-    const { column, handleChange, tableName } = this.props;
+  // The 'apply' button should only be enabled when there are new changes to be applied.
+  // Comparing against prevProps and prevState will find if a change has been made.
+  componentDidUpdate(prevProps, prevState) {
+    const { filterData, tableName, column } = this.props;
+    const { filterMap } = this.state;
+    // enable the button when there are unsaved changes
+    if (!_.isEqual(prevState.filterMap, filterMap)) {
+      this.setState({ disableButton: _.isEmpty(filterMap.value) });
+    }
+    // disable the button when filters have just been applied
+    if (!_.isEqual(prevProps.filterData, filterData)) {
+      const filters = _.get(filterData, [tableName, column.name], {});
+      this.setState({ filterMap: filters, disableButton: true });
+    }
+  }
+
+  handleChange = (value) => {
+    const { column } = this.props;
+    const { filterMap } = this.state;
     const type = column.datatype === 'string' ? 'value' : 'range';
-    const nameValueType = {
-      name: column.name,
-      value,
-      type,
-    };
-    handleChange(nameValueType, tableName);
+    const exclude = _.get(filterMap, 'exclude', false);
+    this.setState({ filterMap: { value, type, exclude } });
+  };
+
+  applyFilters = () => {
+    const { column, handleChange, tableName } = this.props;
+    const { filterMap } = this.state;
+    handleChange(column.name, filterMap, tableName);
+  };
+
+  // mark the filter as 'exclude' when the checkbox has been checked
+  toggleExclude = (boxIsChecked) => {
+    const { filterMap } = this.state;
+    this.setState({ filterMap: { ...filterMap, exclude: boxIsChecked } });
   };
 
   render() {
     const {
+      classes,
       column,
       dataset,
-      filterData,
       filterStatement,
       joinStatement,
-      handleFilters,
       tableName,
       token,
     } = this.props;
-    switch (column.datatype) {
-      case 'string':
-        return (
-          <CategoryWrapper
-            column={column}
-            dataset={dataset}
-            filterData={filterData}
-            filterStatement={filterStatement}
-            joinStatement={joinStatement}
-            handleChange={this.handleChange}
-            handleFilters={handleFilters}
-            tableName={tableName}
-            token={token}
-          />
-        );
-      case 'float':
-      case 'integer':
-        return (
-          <RangeFilter
-            column={column}
-            dataset={dataset}
-            filterData={filterData}
-            handleChange={this.handleChange}
-            handleFilters={handleFilters}
-            tableName={tableName}
-            token={token}
-          />
-        );
-      default:
-        return <div />;
-    }
+    const { disableButton, filterMap } = this.state;
+    const item = ((datatype) => {
+      switch (datatype) {
+        case 'string':
+          return (
+            <CategoryWrapper
+              column={column}
+              dataset={dataset}
+              filterMap={filterMap}
+              filterStatement={filterStatement}
+              joinStatement={joinStatement}
+              handleChange={this.handleChange}
+              handleFilters={this.applyFilters}
+              tableName={tableName}
+              token={token}
+              toggleExclude={this.toggleExclude}
+            />
+          );
+        case 'float':
+        case 'integer':
+          return (
+            <RangeFilter
+              column={column}
+              dataset={dataset}
+              filterMap={filterMap}
+              handleChange={this.handleChange}
+              handleFilters={this.applyFilters}
+              tableName={tableName}
+              token={token}
+            />
+          );
+        default:
+          return <div />;
+      }
+    })(column.datatype);
+    return (
+      <div>
+        {item}
+        <div className={classes.buttonContainer}>
+          <Button
+            onClick={this.applyFilters}
+            variant="contained"
+            disableElevation
+            disabled={disableButton}
+            size="small"
+            data-cy={`filter-${column.name}-button`}
+          >
+            Apply
+          </Button>
+        </div>
+      </div>
+    );
   }
 }
 
-export default QueryViewSidebarItem;
+export default withStyles(styles)(QueryViewSidebarItem);

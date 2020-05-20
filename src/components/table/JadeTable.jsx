@@ -13,7 +13,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { pageQuery, applySort } from 'actions/index';
 import { JadeTableHead } from './JadeTableHead';
 
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
     width: '100%',
   },
@@ -78,14 +78,14 @@ export class JadeTable extends React.PureComponent {
     });
   };
 
-  handleChangeRowsPerPage = event => {
+  handleChangeRowsPerPage = (event) => {
     this.setState({
       rowsPerPage: parseInt(event.target.value, 10),
       page: 0,
     });
   };
 
-  createSortHandler = property => {
+  createSortHandler = (property) => {
     const { dispatch } = this.props;
     const { order } = this.state;
     let newOrder = '';
@@ -110,9 +110,9 @@ export class JadeTable extends React.PureComponent {
     });
   };
 
-  handleArrayValues = value => {
+  handleArrayValues = (value) => {
     if (_.isArray(value)) {
-      return `[${value.map(obj => obj.v).join(', ')}]`;
+      return `[${value.map((obj) => obj.v).join(', ')}]`;
     }
     return value;
   };
@@ -133,21 +133,18 @@ export class JadeTable extends React.PureComponent {
                 createSortHandler={this.createSortHandler}
               />
               {!polling && (
-                <TableBody>
-                  {rows.map(row => {
+                <TableBody data-cy="tableBody">
+                  {rows.map((row) => {
                     const drId = row.datarepo_id;
 
                     return (
-                      <TableRow hover tabIndex={-1} key={`${row.id}-${drId}`}>
-                        {columns.map(column => {
+                      <TableRow hover tabIndex={-1} key={drId}>
+                        {columns.map((column) => {
                           const value = this.handleArrayValues(row[column.id]);
 
                           return (
                             value && (
-                              <TableCell
-                                key={`${column.id}-${row.id}-${drId}`}
-                                align={column.align}
-                              >
+                              <TableCell key={`${column.id}-${drId}`} align={column.align}>
                                 {column.format && typeof value === 'number'
                                   ? column.format(value)
                                   : value}
