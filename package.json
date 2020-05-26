@@ -110,7 +110,7 @@
     "@babel/polyfill": "^7.8.7",
     "@babel/preset-env": "^7.9.6",
     "@babel/preset-flow": "^7.9.0",
-    "@babel/preset-react": "^7.9.4",
+    "@babel/preset-react": "^7.10.0",
     "@babel/runtime": "^7.9.6",
     "@date-io/date-fns": "2.6.2",
     "@svgr/webpack": "^5.4.0",
