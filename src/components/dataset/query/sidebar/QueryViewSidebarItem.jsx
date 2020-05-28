@@ -85,6 +85,7 @@ export class QueryViewSidebarItem extends React.PureComponent {
     const item = ((datatype) => {
       switch (datatype) {
         case 'string':
+        case 'STRING':
           return (
             <CategoryWrapper
               column={column}
@@ -101,6 +102,8 @@ export class QueryViewSidebarItem extends React.PureComponent {
           );
         case 'float':
         case 'integer':
+        case 'FLOAT':
+        case 'INTEGER':
           return (
             <RangeFilter
               column={column}

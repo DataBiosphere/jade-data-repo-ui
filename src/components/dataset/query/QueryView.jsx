@@ -77,7 +77,14 @@ export class QueryView extends React.PureComponent {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { dataset, dispatch, filterStatement, joinStatement, orderBy } = this.props;
+    const {
+      dataset,
+      dispatch,
+      filterStatement,
+      joinStatement,
+      apiJoinStatement,
+      orderBy,
+    } = this.props;
     const { selected } = this.state;
 
     if (
@@ -214,7 +221,7 @@ function mapStateToProps(state) {
     datasetPolicies: state.datasets.datasetPolicies,
     filterStatement: state.query.filterStatement,
     filterData: state.query.filterData,
-    joinStatement: state.query.joinStatement,
+    joinStatement: state.query.bqJoinStatement,
     queryResults: state.query.queryResults,
     orderBy: state.query.orderBy,
   };

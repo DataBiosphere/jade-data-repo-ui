@@ -8,7 +8,7 @@ import { Box, Typography, Button, Grid, InputBase, ListItem, Collapse } from '@m
 import { ExpandMore, ExpandLess, Search } from '@material-ui/icons';
 import QueryViewSidebarItem from './QueryViewSidebarItem';
 import QuerySidebarPanel from './QuerySidebarPanel';
-import { applyFilters, openSnapshotDialog } from '../../../../actions';
+import { applyFilters, openSnapshotDialog, createSnapshot } from '../../../../actions';
 import CreateSnapshotPanel from './panels/CreateSnapshotPanel';
 import { push } from 'modules/hist';
 
@@ -177,9 +177,11 @@ export class QueryViewSidebar extends React.PureComponent {
   };
 
   handleSaveSnapshot = () => {
-    const { dispatch } = this.props;
-    push('/snapshots');
+    const { dispatch, selected } = this.props;
+    console.log(selected);
+    dispatch(createSnapshot(selected)); // Passing in the name of the table bc the current table is not in join statement
     dispatch(openSnapshotDialog(true));
+    push('/snapshots');
   };
 
   handleSearchString = (event) => {
@@ -300,7 +302,7 @@ function mapStateToProps(state) {
     dataset: state.datasets.dataset,
     filterData: state.query.filterData,
     filterStatement: state.query.filterStatement,
-    joinStatement: state.query.joinStatement,
+    joinStatement: state.query.bqJoinStatement,
     token: state.user.token,
   };
 }

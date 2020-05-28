@@ -229,7 +229,7 @@ export default class BigQuery {
     return result;
   };
 
-  buildJoinStatement = (filterMap, schema, table, dataset) => {
+  buildJoinStatement = (filterMap, schema, table, dataset, inputParameter) => {
     const tables = _.keys(filterMap);
     const graph = this.constructGraph(schema);
     let joins = [];
@@ -245,7 +245,11 @@ export default class BigQuery {
         const currTable = path[i];
         const prevTable = path[i - 1];
         const relationship = this.findRelationshipData(schema, currTable, prevTable);
-        const joinString = `JOIN \`${dataset.dataProject}.datarepo_${dataset.name}.${relationship.from.table}\` AS ${relationship.from.table} ON ${relationship.from.table}.${relationship.from.column} = ${relationship.to.table}.${relationship.to.column}`;
+        const joinQueryString = `JOIN \`${dataset.dataProject}.datarepo_${dataset.name}.${relationship.from.table}\` AS ${relationship.from.table} ON ${relationship.from.table}.${relationship.from.column} = ${relationship.to.table}.${relationship.to.column}`;
+        const joinSnapshotString = `JOIN ${dataset.name}.${relationship.from.table} ON ${dataset.name}.${relationship.from.table}.${relationship.from.column} = ${dataset.name}.${relationship.to.table}.${relationship.to.column}`;
+
+        // JOIN ${ datasetName }.${ rootTable } ON ${ datasetName }.${ rootTable }.id = ${ datasetName }.${ payload }.variant_id ${ query.filterStatement }
+        const joinString = inputParameter ? joinSnapshotString : joinQueryString;
         joins.push(joinString);
       }
     });

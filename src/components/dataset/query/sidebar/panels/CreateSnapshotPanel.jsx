@@ -2,10 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { withStyles } from '@material-ui/core/styles';
+import { actions } from 'react-redux-form';
+import { connect } from 'react-redux';
 
 import { Button, TextField } from '@material-ui/core';
 
-const styles = theme => ({
+const styles = (theme) => ({
   buttonContainer: {
     display: 'flex',
     justifyContent: 'space-between',
@@ -33,20 +35,31 @@ const styles = theme => ({
 export class CreateSnapshotPanel extends React.PureComponent {
   constructor(props) {
     super(props);
+    const { name, description } = this.props.snapshot;
     this.state = {
-      name: '',
-      description: '',
+      name,
+      description,
     };
   }
 
   static propTypes = {
     classes: PropTypes.object,
+    description: PropTypes.string,
     handleCreateSnapshot: PropTypes.func,
     handleSaveSnapshot: PropTypes.func,
+    name: PropTypes.string,
+  };
+
+  saveNameAndDescription = () => {
+    const { dispatch, handleSaveSnapshot } = this.props;
+    const { name, description } = this.state;
+    dispatch(actions.change('snapshot.name', name));
+    dispatch(actions.change('snapshot.description', description));
+    handleSaveSnapshot();
   };
 
   render() {
-    const { classes, handleCreateSnapshot, handleSaveSnapshot } = this.props;
+    const { classes, handleCreateSnapshot } = this.props;
     const { name, description } = this.state;
     return (
       <div className={clsx(classes.rowTwo, classes.saveButtonContainer)}>
@@ -57,7 +70,7 @@ export class CreateSnapshotPanel extends React.PureComponent {
           size="small"
           fullWidth
           className={classes.textField}
-          onChange={event => this.setState({ name: event.target.value })}
+          onChange={(event) => this.setState({ name: event.target.value })}
           value={name}
         />
         <TextField
@@ -69,7 +82,7 @@ export class CreateSnapshotPanel extends React.PureComponent {
           rows={3}
           fullWidth
           className={classes.textField}
-          onChange={event => this.setState({ description: event.target.value })}
+          onChange={(event) => this.setState({ description: event.target.value })}
           value={description}
         />
         <div className={classes.buttonContainer}>
@@ -83,9 +96,9 @@ export class CreateSnapshotPanel extends React.PureComponent {
           <Button
             variant="contained"
             className={clsx(classes.cancelButton, { [classes.hide]: !open })}
-            onClick={() => handleSaveSnapshot()}
+            onClick={this.saveNameAndDescription}
           >
-            Save Snapshot
+            Next
           </Button>
         </div>
       </div>
@@ -93,4 +106,10 @@ export class CreateSnapshotPanel extends React.PureComponent {
   }
 }
 
-export default withStyles(styles)(CreateSnapshotPanel);
+function mapStateToProps(state) {
+  return {
+    snapshot: state.snapshot,
+  };
+}
+
+export default connect(mapStateToProps)(withStyles(styles)(CreateSnapshotPanel));
