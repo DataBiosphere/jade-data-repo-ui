@@ -54,25 +54,16 @@ export default {
       [ActionTypes.APPLY_FILTERS]: (state, action) => {
         const bigquery = new BigQuery();
         const filterStatement = bigquery.buildFilterStatement(action.payload.filters);
-        const bqJoinStatement = bigquery.buildJoinStatement(
+        const joinStatement = bigquery.buildJoinStatement(
           action.payload.filters,
           action.payload.schema,
           action.payload.table,
           action.payload.dataset,
         );
-        const apiJoinStatement = bigquery.buildJoinStatement(
-          action.payload.filters,
-          action.payload.schema,
-          action.payload.table,
-          action.payload.dataset,
-          true,
-        );
-
         return immutable(state, {
           filterData: { $set: action.payload.filters },
           filterStatement: { $set: filterStatement },
-          bqJoinStatement: { $set: bqJoinStatement },
-          apiJoinStatement: { $set: apiJoinStatement },
+          joinStatement: { $set: joinStatement },
         });
       },
       [ActionTypes.APPLY_SORT]: (state, action) => {
@@ -88,7 +79,7 @@ export default {
           return immutable(state, {
             filterData: { $set: {} },
             filterStatement: { $set: '' },
-            bqJoinStatement: { $set: '' },
+            joinStatement: { $set: '' },
             queryResults: { $set: {} },
             polling: { $set: false },
           });

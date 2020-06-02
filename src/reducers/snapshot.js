@@ -1,5 +1,6 @@
 import { handleActions } from 'redux-actions';
 import immutable from 'immutability-helper';
+import BigQuery from 'modules/bigquery';
 
 import { ActionTypes } from 'constants/index';
 
@@ -12,6 +13,8 @@ export const snapshotState = {
   dataset: {},
   snapshotCount: 0,
   dialogIsOpen: false,
+  filterStatement: '',
+  joinStatement: '',
 };
 
 export default {
@@ -38,7 +41,7 @@ export default {
         }),
       [ActionTypes.CREATE_SNAPSHOT_FAILURE]: (state, action) => {
         const successfullyCreatedSnapshots = state.createdSnapshots; // passes a ref or a value?
-        successfullyCreatedSnapshots.filter(snapshot => snapshot.jobId !== action.payload.jobId);
+        successfullyCreatedSnapshots.filter((snapshot) => snapshot.jobId !== action.payload.jobId);
         return immutable(state, {
           createdSnapshots: { $set: successfullyCreatedSnapshots },
         });
@@ -59,7 +62,7 @@ export default {
         immutable(state, {
           snapshotPolicies: { $set: action.snapshot.data.data.policies },
         }),
-      [ActionTypes.EXCEPTION]: state =>
+      [ActionTypes.EXCEPTION]: (state) =>
         immutable(state, {
           exception: { $set: true },
         }),
@@ -67,6 +70,25 @@ export default {
         immutable(state, {
           dialogIsOpen: { $set: action.payload },
         }),
+      [ActionTypes.APPLY_FILTERS]: (state, action) => {
+        const bigquery = new BigQuery();
+        const filterStatement = bigquery.buildSnapshotFilterStatement(
+          action.payload.filters,
+          action.payload.dataset,
+        );
+
+        const joinStatement = bigquery.buildSnapshotJoinStatement(
+          action.payload.filters,
+          action.payload.schema,
+          action.payload.table,
+          action.payload.dataset,
+        );
+
+        return immutable(state, {
+          filterStatement: { $set: filterStatement },
+          joinStatement: { $set: joinStatement },
+        });
+      },
     },
     snapshotState,
   ),

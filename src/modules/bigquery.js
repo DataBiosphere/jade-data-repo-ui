@@ -57,7 +57,11 @@ export default class BigQuery {
   calculateColumns = (columns) =>
     columns.map((column) => ({ title: column.name, field: column.name }));
 
-  buildFilterStatement = (filterMap) => {
+  buildSnapshotFilterStatement = (filterMap, dataset) => {
+    return this.buildFilterStatement(filterMap, dataset);
+  };
+
+  buildFilterStatement = (filterMap, dataset) => {
     if (!_.isEmpty(filterMap)) {
       const tableClauses = [];
 
@@ -68,7 +72,8 @@ export default class BigQuery {
           const statementClauses = [];
 
           _.keys(filters).forEach((key) => {
-            const property = `${table}.${key}`;
+            const datasetName = !dataset ? '' : dataset.name + '.';
+            const property = `${datasetName}${table}.${key}`;
             const keyValue = filters[key].value;
             const notClause = filters[key].exclude ? 'NOT' : '';
 
@@ -229,32 +234,54 @@ export default class BigQuery {
     return result;
   };
 
-  buildJoinStatement = (filterMap, schema, table, dataset, inputParameter) => {
+  // wrapper for query:
+  buildJoinStatement = (filterMap, schema, table, dataset) => {
+    // Add query back in the name later
+    const relationships = this.buildAllJoins(filterMap, schema, table);
+    let joins = relationships.map((relationship) => {
+      const { to, from } = relationship;
+      return `JOIN \`${dataset.dataProject}.datarepo_${dataset.name}.${from.table}\` AS ${from.table} ON ${from.table}.${from.column} = ${to.table}.${to.column}`;
+    });
+    joins = _.uniq(joins);
+    return joins.join(' ');
+  };
+
+  // wrapper for snapshot creation:
+  buildSnapshotJoinStatement = (filterMap, schema, table, dataset) => {
+    if (_.isEmpty(dataset.schema.assets)) {
+      return '';
+    }
+    const rootTable = dataset.schema.assets[0].rootTable; // TODO: asset thing
+    const relationships = this.buildAllJoins(filterMap, schema, table);
+    let joins = relationships.map((relationship) => {
+      const { to, from } = relationship;
+      return `JOIN ${dataset.name}.${from.table} ON ${dataset.name}.${from.table}.${from.column} = ${dataset.name}.${to.table}.${to.column}`;
+    });
+    joins = _.uniq(joins);
+    let fromStatement = '';
+    if (_.isEmpty(joins) && rootTable !== table) {
+      fromStatement = `, ${dataset.name}.${table}`;
+    }
+    return `FROM ${dataset.name}.${rootTable}${fromStatement} ${joins.join(' ')}`;
+  };
+
+  // helper method used by both:
+  buildAllJoins = (filterMap, schema, table) => {
     const tables = _.keys(filterMap);
     const graph = this.constructGraph(schema);
-    let joins = [];
-
+    let relationships = [];
     if (!tables.includes(table)) {
       tables.push(table);
     }
-
     tables.forEach((target) => {
       const path = this.bfs(graph, table, target);
-
       for (let i = 1; i < path.length; i++) {
         const currTable = path[i];
         const prevTable = path[i - 1];
         const relationship = this.findRelationshipData(schema, currTable, prevTable);
-        const joinQueryString = `JOIN \`${dataset.dataProject}.datarepo_${dataset.name}.${relationship.from.table}\` AS ${relationship.from.table} ON ${relationship.from.table}.${relationship.from.column} = ${relationship.to.table}.${relationship.to.column}`;
-        const joinSnapshotString = `JOIN ${dataset.name}.${relationship.from.table} ON ${dataset.name}.${relationship.from.table}.${relationship.from.column} = ${dataset.name}.${relationship.to.table}.${relationship.to.column}`;
-
-        // JOIN ${ datasetName }.${ rootTable } ON ${ datasetName }.${ rootTable }.id = ${ datasetName }.${ payload }.variant_id ${ query.filterStatement }
-        const joinString = inputParameter ? joinSnapshotString : joinQueryString;
-        joins.push(joinString);
+        relationships.push(relationship);
       }
     });
-
-    joins = _.uniq(joins);
-    return joins.join(' ');
+    return relationships;
   };
 }
