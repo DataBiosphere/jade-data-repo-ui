@@ -4,13 +4,23 @@ import clsx from 'clsx';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import { Box, Typography, Button, Grid, InputBase, ListItem, Collapse } from '@material-ui/core';
+import {
+  Box,
+  Typography,
+  Button,
+  Grid,
+  InputBase,
+  ListItem,
+  Collapse,
+  Tooltip,
+} from '@material-ui/core';
 import { ExpandMore, ExpandLess, Search } from '@material-ui/icons';
 import QueryViewSidebarItem from './QueryViewSidebarItem';
 import QuerySidebarPanel from './QuerySidebarPanel';
 import { applyFilters, openSnapshotDialog, createSnapshot } from '../../../../actions';
 import CreateSnapshotPanel from './panels/CreateSnapshotPanel';
 import { push } from 'modules/hist';
+import { NonceProvider } from 'react-select';
 
 const drawerWidth = 400;
 
@@ -94,6 +104,10 @@ const styles = (theme) => ({
     backgroundColor: theme.palette.primary.focus,
     borderRadius: '4px',
     paddingBottom: theme.spacing(0.5),
+  },
+  tooltip: {
+    pointerEvents: 'auto !important',
+    color: 'red',
   },
 });
 
@@ -273,17 +287,23 @@ export class QueryViewSidebar extends React.PureComponent {
         </div>
         {!isSavingSnapshot && (
           <div className={classes.rowTwo}>
-            <div className={classes.snapshotButtonContainer}>
-              <Button
-                variant="contained"
-                className={clsx(classes.stickyButton, classes.snapshotButton, {
-                  [classes.hide]: !open,
-                })}
-                onClick={() => this.handleCreateSnapshot(true)}
-              >
-                Create Snapshot
-              </Button>
-            </div>
+            <Tooltip
+              title={_.isEmpty(dataset.schema.assets) ? 'Please add an asset to this dataset' : ''}
+            >
+              <div className={classes.snapshotButtonContainer}>
+                <Button
+                  variant="contained"
+                  disabled={_.isEmpty(dataset.schema.assets)}
+                  className={clsx(classes.stickyButton, classes.snapshotButton, {
+                    [classes.hide]: !open,
+                    [classes.tooltip]: _.isEmpty(dataset.schema.assets),
+                  })}
+                  onClick={() => this.handleCreateSnapshot(true)}
+                >
+                  Create Snapshot
+                </Button>
+              </div>
+            </Tooltip>
           </div>
         )}
         {isSavingSnapshot && (
@@ -302,7 +322,7 @@ function mapStateToProps(state) {
     dataset: state.datasets.dataset,
     filterData: state.query.filterData,
     filterStatement: state.query.filterStatement,
-    joinStatement: state.query.bqJoinStatement,
+    joinStatement: state.query.joinStatement,
     token: state.user.token,
   };
 }
