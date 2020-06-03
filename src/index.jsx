@@ -22,7 +22,7 @@ function getConfig() {
   return new Promise((resolve, reject) => {
     axios
       .get('/configuration')
-      .then(response => {
+      .then((response) => {
         resolve(response.data);
       })
       .catch(reject);
@@ -37,13 +37,13 @@ function bootstrap() {
     // 3. put the config and user details into the store
     // 4. render
     getConfig()
-      .then(configData => {
+      .then((configData) => {
         store.dispatch({
           type: ActionTypes.GET_CONFIGURATION_SUCCESS,
           configuration: configData,
         });
         getUser({ client_id: configData.clientId })
-          .then(user => {
+          .then((user) => {
             if (user != null) {
               store.dispatch(
                 logIn(
@@ -85,12 +85,15 @@ function render(Component) {
       </Provider>,
       root,
     );
+    if (window.Cypress) {
+      window.store = store;
+    }
   }
 }
 
 bootstrap()
   .then(() => render(App))
-  .catch(err => {
+  .catch((err) => {
     // TODO: display in UI
     console.error(err);
   });

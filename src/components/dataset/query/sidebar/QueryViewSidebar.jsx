@@ -298,6 +298,7 @@ export class QueryViewSidebar extends React.PureComponent {
                     [classes.tooltip]: _.isEmpty(dataset.schema.assets),
                   })}
                   onClick={() => this.handleCreateSnapshot(true)}
+                  data-cy="createSnapshot"
                 >
                   Create Snapshot
                 </Button>
