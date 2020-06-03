@@ -83,9 +83,8 @@ export class QueryViewSidebarItem extends React.PureComponent {
     } = this.props;
     const { disableButton, filterMap } = this.state;
     const item = ((datatype) => {
-      switch (datatype) {
+      switch (_.toLower(datatype)) {
         case 'string':
-        case 'STRING':
           return (
             <CategoryWrapper
               column={column}
@@ -102,8 +101,6 @@ export class QueryViewSidebarItem extends React.PureComponent {
           );
         case 'float':
         case 'integer':
-        case 'FLOAT':
-        case 'INTEGER':
           return (
             <RangeFilter
               column={column}

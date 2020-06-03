@@ -235,8 +235,9 @@ export default class BigQuery {
   };
 
   // wrapper for query:
-  buildJoinStatement = (filterMap, schema, table, dataset) => {
+  buildJoinStatement = (filterMap, table, dataset) => {
     // Add query back in the name later
+    const schema = dataset.schema.relationships;
     const relationships = this.buildAllJoins(filterMap, schema, table);
     let joins = relationships.map((relationship) => {
       const { to, from } = relationship;
@@ -247,10 +248,11 @@ export default class BigQuery {
   };
 
   // wrapper for snapshot creation:
-  buildSnapshotJoinStatement = (filterMap, schema, table, dataset) => {
+  buildSnapshotJoinStatement = (filterMap, table, dataset) => {
     if (_.isEmpty(dataset.schema.assets)) {
       return '';
     }
+    const schema = dataset.schema.relationships;
     const rootTable = dataset.schema.assets[0].rootTable; // TODO: asset thing
     const relationships = this.buildAllJoins(filterMap, schema, table);
     let joins = relationships.map((relationship) => {

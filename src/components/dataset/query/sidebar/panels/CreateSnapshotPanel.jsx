@@ -44,10 +44,9 @@ export class CreateSnapshotPanel extends React.PureComponent {
 
   static propTypes = {
     classes: PropTypes.object,
-    description: PropTypes.string,
     handleCreateSnapshot: PropTypes.func,
     handleSaveSnapshot: PropTypes.func,
-    name: PropTypes.string,
+    snapshot: PropTypes.object,
   };
 
   saveNameAndDescription = () => {

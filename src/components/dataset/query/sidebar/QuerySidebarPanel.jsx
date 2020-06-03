@@ -32,8 +32,8 @@ export class QuerySidebarPanel extends React.PureComponent {
   };
 
   clearAllFilters = () => {
-    const { dispatch } = this.props;
-    dispatch(applyFilters({}));
+    const { dispatch, dataset, selected } = this.props;
+    dispatch(applyFilters({}, selected, dataset));
   };
 
   render() {

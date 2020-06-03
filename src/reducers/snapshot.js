@@ -79,7 +79,6 @@ export default {
 
         const joinStatement = bigquery.buildSnapshotJoinStatement(
           action.payload.filters,
-          action.payload.schema,
           action.payload.table,
           action.payload.dataset,
         );

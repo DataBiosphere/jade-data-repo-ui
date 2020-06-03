@@ -137,9 +137,8 @@ export const { pageQuery } = createActions({
 });
 
 export const { applyFilters } = createActions({
-  [ActionTypes.APPLY_FILTERS]: (filters, schema, table, dataset) => ({
+  [ActionTypes.APPLY_FILTERS]: (filters, table, dataset) => ({
     filters,
-    schema,
     table,
     dataset,
   }),

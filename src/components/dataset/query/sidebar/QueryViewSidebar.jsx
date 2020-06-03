@@ -187,13 +187,12 @@ export class QueryViewSidebar extends React.PureComponent {
     const { dispatch, table, dataset } = this.props;
     const { filterMap } = this.state;
     const tableName = table.name;
-    dispatch(applyFilters(filterMap, dataset.schema.relationships, tableName, dataset));
+    dispatch(applyFilters(filterMap, tableName, dataset));
   };
 
   handleSaveSnapshot = () => {
     const { dispatch, selected } = this.props;
-    console.log(selected);
-    dispatch(createSnapshot(selected)); // Passing in the name of the table bc the current table is not in join statement
+    dispatch(createSnapshot());
     dispatch(openSnapshotDialog(true));
     push('/snapshots');
   };
