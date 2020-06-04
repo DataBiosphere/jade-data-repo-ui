@@ -28,36 +28,45 @@ describe('test query builder', () => {
       cy.get('[data-cy=filterItem]').contains('ancestry').click();
     });
 
-    it.only('creates snapshot query', () => {
-      cy.get('[data-cy="filter-ancestry-button"]').should('be.disabled');
+    describe('test apply filters', () => {
+      // sets up filtering
+      beforeEach(() => {
+        cy.get('[data-cy="filter-ancestry-button"]').should('be.disabled');
 
-      cy.get('[data-cy=categoryFilterCheckbox-EU]').click();
-      cy.get('[data-cy="filter-ancestry-button"]').should('not.be.disabled');
+        cy.get('[data-cy=categoryFilterCheckbox-EU]').click();
+        cy.get('[data-cy="filter-ancestry-button"]').should('not.be.disabled');
 
-      cy.get('[data-cy="filter-ancestry-button"]').click();
+        cy.get('[data-cy="filter-ancestry-button"]').click();
 
-      cy.get('[data-cy=appliedFilterList-ancestry_specific_meta_analysis]').should('be.visible');
-      // cy.get('[data-cy="filter-ancestry-button"]').should('be.disabled');
-      cy.get('[data-cy=createSnapshot]').click();
+        cy.get('[data-cy=appliedFilterList-ancestry_specific_meta_analysis]').should('be.visible');
+      });
 
-      cy.window()
-        .its('store')
-        .invoke('getState')
-        .its('snapshots')
-        .its('joinStatement')
-        .should(
-          'equal',
-          'FROM V2F_GWAS_Summary_Stats.variant, V2F_GWAS_Summary_Stats.ancestry_specific_meta_analysis ',
-        );
-      cy.window()
-        .its('store')
-        .invoke('getState')
-        .its('snapshots')
-        .its('filterStatement')
-        .should(
-          'equal',
-          'WHERE V2F_GWAS_Summary_Stats.ancestry_specific_meta_analysis.ancestry IN ("EU")',
-        );
+      it('applies filters', () => {
+        cy.get('[data-cy="filter-ancestry-button"]').should('be.disabled');
+      });
+
+      it('creates snapshot query', () => {
+        cy.get('[data-cy=createSnapshot]').click();
+
+        cy.window()
+          .its('store')
+          .invoke('getState')
+          .its('snapshots')
+          .its('joinStatement')
+          .should(
+            'equal',
+            'FROM V2F_GWAS_Summary_Stats.variant, V2F_GWAS_Summary_Stats.ancestry_specific_meta_analysis ',
+          );
+        cy.window()
+          .its('store')
+          .invoke('getState')
+          .its('snapshots')
+          .its('filterStatement')
+          .should(
+            'equal',
+            'WHERE V2F_GWAS_Summary_Stats.ancestry_specific_meta_analysis.ancestry IN ("EU")',
+          );
+      });
     });
 
     it('clears filters', () => {
