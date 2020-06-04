@@ -37,9 +37,11 @@ export class CreateSnapshotPanel extends React.PureComponent {
   constructor(props) {
     super(props);
     const { name, description } = this.props.snapshot;
+    const { assetName } = this.props.snapshots;
     this.state = {
       name,
       description,
+      assetName,
     };
   }
 
@@ -54,20 +56,21 @@ export class CreateSnapshotPanel extends React.PureComponent {
 
   saveNameAndDescription = () => {
     const { dispatch, handleSaveSnapshot } = this.props;
-    const { name, description } = this.state;
+    const { name, description, assetName } = this.state;
     dispatch(actions.change('snapshot.name', name));
     dispatch(actions.change('snapshot.description', description));
-    handleSaveSnapshot();
+    handleSaveSnapshot(assetName);
+  };
+
+  handleSelectAsset = (event) => {
+    const assetName = event.target.value;
+    this.setState({
+      assetName,
+    });
   };
 
   render() {
-    const {
-      classes,
-      dataset,
-      handleCreateSnapshot,
-      handleSaveSnapshot,
-      handleSelectAsset,
-    } = this.props;
+    const { classes, dataset, handleCreateSnapshot } = this.props;
     const { name, description } = this.state;
     return (
       <div className={clsx(classes.rowTwo, classes.saveButtonContainer)}>
@@ -96,7 +99,7 @@ export class CreateSnapshotPanel extends React.PureComponent {
         {/* TODO: decide what to do when there's only one asset */}
         <CreateSnapshotDropdown
           options={dataset.schema.assets}
-          onSelectedItem={handleSelectAsset}
+          onSelectedItem={this.handleSelectAsset}
         />
         <div className={classes.buttonContainer}>
           <Button
@@ -122,6 +125,7 @@ export class CreateSnapshotPanel extends React.PureComponent {
 function mapStateToProps(state) {
   return {
     snapshot: state.snapshot,
+    snapshots: state.snapshots,
   };
 }
 

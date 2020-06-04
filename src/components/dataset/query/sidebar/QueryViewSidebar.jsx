@@ -190,9 +190,9 @@ export class QueryViewSidebar extends React.PureComponent {
     dispatch(applyFilters(filterMap, tableName, dataset));
   };
 
-  handleSaveSnapshot = () => {
-    const { dispatch, selected } = this.props;
-    dispatch(createSnapshot());
+  handleSaveSnapshot = (assetName) => {
+    const { dispatch } = this.props;
+    dispatch(createSnapshot(assetName));
     dispatch(openSnapshotDialog(true));
     push('/snapshots');
   };
@@ -208,16 +208,6 @@ export class QueryViewSidebar extends React.PureComponent {
     } else {
       this.setState({ openFilter: filter });
     }
-  };
-
-  handleSelectAsset = (event) => {
-    const { dataset } = this.props;
-    console.log(event);
-    console.log(event.target);
-    const selectedAsset = _.find(dataset.schema.assets, ['name', event.target.value]);
-    this.setState({
-      selectedAsset,
-    });
   };
 
   render() {
