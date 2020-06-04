@@ -32,7 +32,7 @@ const styles = (theme) => ({
     gridTemplateRows: 'calc(100vh - 125px) 100px',
   },
   createSnapshotGrid: {
-    gridTemplateRows: 'calc(100vh - 275px) 200px',
+    gridTemplateRows: 'calc(100vh - 325px) 200px',
   },
   hide: {
     display: 'none',
@@ -212,7 +212,8 @@ export class QueryViewSidebar extends React.PureComponent {
 
   handleSelectAsset = (event) => {
     const { dataset } = this.props;
-
+    console.log(event);
+    console.log(event.target);
     const selectedAsset = _.find(dataset.schema.assets, ['name', event.target.value]);
     this.setState({
       selectedAsset,

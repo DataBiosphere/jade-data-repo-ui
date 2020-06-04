@@ -93,6 +93,7 @@ export class CreateSnapshotPanel extends React.PureComponent {
           onChange={(event) => this.setState({ description: event.target.value })}
           value={description}
         />
+        {/* TODO: decide what to do when there's only one asset */}
         <CreateSnapshotDropdown
           options={dataset.schema.assets}
           onSelectedItem={handleSelectAsset}

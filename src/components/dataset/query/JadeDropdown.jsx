@@ -27,13 +27,15 @@ export class JadeDropdown extends React.PureComponent {
         <FormControl variant="outlined" className={classes.root}>
           <Select
             value={value}
-            onChange={onSelectedItem}
+            onChange={(event) => onSelectedItem(event)}
             inputProps={{
-              name: 'table',
+              name: 'table', // TODO: this needs to be generalized
               id: 'table-select',
             }}
+            displayEmpty
+            renderValue={(value) => (!value ? 'Select Asset' : value)}
           >
-            {options.map(name => (
+            {options.map((name) => (
               <MenuItem key={name} value={name}>
                 {name}
               </MenuItem>
