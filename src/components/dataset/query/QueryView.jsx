@@ -139,7 +139,7 @@ export class QueryView extends React.PureComponent {
       selected: value,
       table,
     });
-    dispatch(applyFilters(filterData, dataset.schema.relationships, value, dataset));
+    dispatch(applyFilters(filterData, value, dataset));
   };
 
   realRender() {

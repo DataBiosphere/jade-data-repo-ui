@@ -19,6 +19,9 @@ import { ActionTypes, STATUS } from 'constants/index';
 export const getToken = (state) => state.user.token;
 export const getTokenExpiration = (state) => state.user.tokenExpiration;
 export const getCreateSnapshot = (state) => state.snapshot;
+export const getSnapshotState = (state) => state.snapshots;
+export const getQuery = (state) => state.query;
+export const getDataset = (state) => state.datasets.dataset;
 
 export function* checkToken() {
   const tokenExpiration = yield select(getTokenExpiration);
@@ -102,17 +105,28 @@ function* pollJobWorker(jobId, jobTypeSuccess, jobTypeFailure) {
 
 export function* createSnapshot() {
   const snapshot = yield select(getCreateSnapshot);
+  const snapshots = yield select(getSnapshotState);
+  const dataset = yield select(getDataset);
+
+  const datasetName = dataset.name;
+  const mode = 'byQuery';
+  const rootTable = dataset.schema.assets[0].rootTable; // TODO: asset thing
+  const drRowId = 'datarepo_row_id';
+
   const snapshotRequest = {
     name: snapshot.name,
+    profileId: dataset.defaultProfileId,
     description: snapshot.description,
     readers: snapshot.readers,
     contents: [
       {
-        source: {
-          datasetName: snapshot.dataset,
-          assetName: snapshot.asset,
+        datasetName,
+        mode,
+        querySpec: {
+          // TODO: be able to select which asset you wanna use (NOT just the first/only one)
+          assetName: dataset.schema.assets[0].name, // maybe no asset???
+          query: `SELECT ${datasetName}.${rootTable}.${drRowId} ${snapshots.joinStatement} ${snapshots.filterStatement}`,
         },
-        rootValues: snapshot.ids,
       },
     ],
   };

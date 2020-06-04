@@ -56,11 +56,9 @@ export default {
         const filterStatement = bigquery.buildFilterStatement(action.payload.filters);
         const joinStatement = bigquery.buildJoinStatement(
           action.payload.filters,
-          action.payload.schema,
           action.payload.table,
           action.payload.dataset,
         );
-
         return immutable(state, {
           filterData: { $set: action.payload.filters },
           filterStatement: { $set: filterStatement },
