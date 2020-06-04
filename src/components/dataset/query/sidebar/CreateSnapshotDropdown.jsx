@@ -13,7 +13,9 @@ export class CreateSnapshotDropdown extends React.PureComponent {
     const { options, onSelectedItem } = this.props;
     const assetNames = options.map((opt) => opt.name);
 
-    return <JadeDropdown options={assetNames} onSelectedItem={onSelectedItem} />;
+    return (
+      <JadeDropdown options={assetNames} onSelectedItem={onSelectedItem} name="Select Asset" />
+    );
   }
 }
 

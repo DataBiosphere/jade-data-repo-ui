@@ -14,13 +14,14 @@ const styles = () => ({
 export class JadeDropdown extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object,
+    name: PropTypes.string,
     onSelectedItem: PropTypes.func,
     options: PropTypes.array,
     value: PropTypes.string,
   };
 
   render() {
-    const { classes, options, onSelectedItem, value } = this.props;
+    const { classes, options, onSelectedItem, value, name } = this.props;
 
     return (
       <form autoComplete="off">
@@ -29,11 +30,11 @@ export class JadeDropdown extends React.PureComponent {
             value={value}
             onChange={(event) => onSelectedItem(event)}
             inputProps={{
-              name: 'table', // TODO: this needs to be generalized
-              id: 'table-select',
+              name,
+              id: `${name}-select`,
             }}
             displayEmpty
-            renderValue={(value) => (!value ? 'Select Asset' : value)}
+            renderValue={(value) => (!value ? name : value)}
           >
             {options.map((name) => (
               <MenuItem key={name} value={name}>

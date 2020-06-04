@@ -42,7 +42,12 @@ export class QueryViewDropdown extends React.PureComponent {
     const { values } = this.state;
 
     return (
-      <JadeDropdown onSelectedItem={this.handleChange} options={options} value={values.table} />
+      <JadeDropdown
+        onSelectedItem={this.handleChange}
+        options={options}
+        value={values.table}
+        name="Select Table"
+      />
     );
   }
 }

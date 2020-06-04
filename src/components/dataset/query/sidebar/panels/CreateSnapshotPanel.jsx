@@ -71,7 +71,7 @@ export class CreateSnapshotPanel extends React.PureComponent {
 
   render() {
     const { classes, dataset, handleCreateSnapshot } = this.props;
-    const { name, description } = this.state;
+    const { name, description, assetName } = this.state;
     return (
       <div className={clsx(classes.rowTwo, classes.saveButtonContainer)}>
         <TextField
@@ -113,6 +113,7 @@ export class CreateSnapshotPanel extends React.PureComponent {
             variant="contained"
             className={clsx(classes.cancelButton, { [classes.hide]: !open })}
             onClick={this.saveNameAndDescription}
+            disabled={assetName === '' || name === ''}
           >
             Next
           </Button>
