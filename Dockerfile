@@ -1,3 +1,2 @@
-FROM nginx:1.15.10-alpine
-COPY ./ops/nginx.conf /etc/nginx/nginx.conf
+FROM nginxinc/nginx-unprivileged:stable-alpine
 COPY ./build /usr/share/nginx/html
