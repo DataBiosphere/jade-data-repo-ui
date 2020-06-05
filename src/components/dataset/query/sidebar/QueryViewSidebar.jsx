@@ -131,6 +131,7 @@ export class QueryViewSidebar extends React.PureComponent {
     joinStatement: PropTypes.string,
     open: PropTypes.bool,
     selected: PropTypes.string,
+    switchPanels: PropTypes.func,
     table: PropTypes.object,
     token: PropTypes.string,
   };
@@ -221,8 +222,9 @@ export class QueryViewSidebar extends React.PureComponent {
       token,
       joinStatement,
       selected,
+      switchPanels,
     } = this.props;
-    const { isSavingSnapshot, searchString, openFilter, selectedAsset } = this.state;
+    const { isSavingSnapshot, searchString, openFilter } = this.state;
     const filteredColumns = table.columns.filter((column) => column.name.includes(searchString));
 
     return (
@@ -312,6 +314,7 @@ export class QueryViewSidebar extends React.PureComponent {
             handleCreateSnapshot={this.handleCreateSnapshot}
             handleSaveSnapshot={this.handleSaveSnapshot}
             handleSelectAsset={this.handleSelectAsset}
+            switchPanels={switchPanels}
           />
         )}
       </div>

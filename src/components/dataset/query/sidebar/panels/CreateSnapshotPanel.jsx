@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 
 import { Button, TextField } from '@material-ui/core';
 import CreateSnapshotDropdown from '../CreateSnapshotDropdown';
+import ShareSnapshot from './ShareSnapshot';
 
 const styles = (theme) => ({
   buttonContainer: {
@@ -52,14 +53,15 @@ export class CreateSnapshotPanel extends React.PureComponent {
     handleSaveSnapshot: PropTypes.func,
     handleSelectAsset: PropTypes.func,
     snapshot: PropTypes.object,
+    switchPanels: PropTypes.func,
   };
 
   saveNameAndDescription = () => {
-    const { dispatch, handleSaveSnapshot } = this.props;
+    const { dispatch, switchPanels } = this.props;
     const { name, description, assetName } = this.state;
     dispatch(actions.change('snapshot.name', name));
     dispatch(actions.change('snapshot.description', description));
-    handleSaveSnapshot(assetName);
+    switchPanels(ShareSnapshot);
   };
 
   handleSelectAsset = (event) => {
