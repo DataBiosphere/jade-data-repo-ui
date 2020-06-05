@@ -103,14 +103,15 @@ function* pollJobWorker(jobId, jobTypeSuccess, jobTypeFailure) {
  * Snapshots.
  */
 
-export function* createSnapshot() {
+export function* createSnapshot({ payload }) {
   const snapshot = yield select(getCreateSnapshot);
   const snapshots = yield select(getSnapshotState);
   const dataset = yield select(getDataset);
 
   const datasetName = dataset.name;
   const mode = 'byQuery';
-  const rootTable = dataset.schema.assets[0].rootTable; // TODO: asset thing
+  const selectedAsset = _.find(dataset.schema.assets, (asset) => asset.name === payload);
+  const rootTable = selectedAsset.rootTable;
   const drRowId = 'datarepo_row_id';
 
   const snapshotRequest = {
@@ -123,8 +124,7 @@ export function* createSnapshot() {
         datasetName,
         mode,
         querySpec: {
-          // TODO: be able to select which asset you wanna use (NOT just the first/only one)
-          assetName: dataset.schema.assets[0].name, // maybe no asset???
+          assetName: payload,
           query: `SELECT ${datasetName}.${rootTable}.${drRowId} ${snapshots.joinStatement} ${snapshots.filterStatement}`,
         },
       },

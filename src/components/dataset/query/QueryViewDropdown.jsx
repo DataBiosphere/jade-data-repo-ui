@@ -1,9 +1,7 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
+import JadeDropdown from './JadeDropdown';
 
 const styles = () => ({
   root: {
@@ -31,7 +29,7 @@ export class QueryViewDropdown extends React.PureComponent {
     options: PropTypes.array,
   };
 
-  handleChange = event => {
+  handleChange = (event) => {
     const { onSelectedItem } = this.props;
     this.setState({
       values: { ...this.values, [event.target.name]: event.target.value },
@@ -44,24 +42,12 @@ export class QueryViewDropdown extends React.PureComponent {
     const { values } = this.state;
 
     return (
-      <form autoComplete="off">
-        <FormControl variant="outlined" className={classes.root}>
-          <Select
-            value={values.table}
-            onChange={this.handleChange}
-            inputProps={{
-              name: 'table',
-              id: 'table-select',
-            }}
-          >
-            {options.map(name => (
-              <MenuItem key={name} value={name}>
-                {name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      </form>
+      <JadeDropdown
+        onSelectedItem={this.handleChange}
+        options={options}
+        value={values.table}
+        name="Select Table"
+      />
     );
   }
 }

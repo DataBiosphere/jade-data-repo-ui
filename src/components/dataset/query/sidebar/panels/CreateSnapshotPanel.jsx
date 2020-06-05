@@ -6,6 +6,7 @@ import { actions } from 'react-redux-form';
 import { connect } from 'react-redux';
 
 import { Button, TextField } from '@material-ui/core';
+import CreateSnapshotDropdown from '../CreateSnapshotDropdown';
 
 const styles = (theme) => ({
   buttonContainer: {
@@ -36,30 +37,41 @@ export class CreateSnapshotPanel extends React.PureComponent {
   constructor(props) {
     super(props);
     const { name, description } = this.props.snapshot;
+    const { assetName } = this.props.snapshots;
     this.state = {
       name,
       description,
+      assetName,
     };
   }
 
   static propTypes = {
     classes: PropTypes.object,
+    dataset: PropTypes.object,
     handleCreateSnapshot: PropTypes.func,
     handleSaveSnapshot: PropTypes.func,
+    handleSelectAsset: PropTypes.func,
     snapshot: PropTypes.object,
   };
 
   saveNameAndDescription = () => {
     const { dispatch, handleSaveSnapshot } = this.props;
-    const { name, description } = this.state;
+    const { name, description, assetName } = this.state;
     dispatch(actions.change('snapshot.name', name));
     dispatch(actions.change('snapshot.description', description));
-    handleSaveSnapshot();
+    handleSaveSnapshot(assetName);
+  };
+
+  handleSelectAsset = (event) => {
+    const assetName = event.target.value;
+    this.setState({
+      assetName,
+    });
   };
 
   render() {
-    const { classes, handleCreateSnapshot } = this.props;
-    const { name, description } = this.state;
+    const { classes, dataset, handleCreateSnapshot } = this.props;
+    const { name, description, assetName } = this.state;
     return (
       <div className={clsx(classes.rowTwo, classes.saveButtonContainer)}>
         <TextField
@@ -84,6 +96,11 @@ export class CreateSnapshotPanel extends React.PureComponent {
           onChange={(event) => this.setState({ description: event.target.value })}
           value={description}
         />
+        {/* TODO: decide what to do when there's only one asset */}
+        <CreateSnapshotDropdown
+          options={dataset.schema.assets}
+          onSelectedItem={this.handleSelectAsset}
+        />
         <div className={classes.buttonContainer}>
           <Button
             variant="contained"
@@ -96,6 +113,7 @@ export class CreateSnapshotPanel extends React.PureComponent {
             variant="contained"
             className={clsx(classes.cancelButton, { [classes.hide]: !open })}
             onClick={this.saveNameAndDescription}
+            disabled={assetName === '' || name === ''}
           >
             Next
           </Button>
@@ -108,6 +126,7 @@ export class CreateSnapshotPanel extends React.PureComponent {
 function mapStateToProps(state) {
   return {
     snapshot: state.snapshot,
+    snapshots: state.snapshots,
   };
 }
 

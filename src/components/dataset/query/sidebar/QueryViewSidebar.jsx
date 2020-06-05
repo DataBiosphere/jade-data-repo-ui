@@ -20,7 +20,6 @@ import QuerySidebarPanel from './QuerySidebarPanel';
 import { applyFilters, openSnapshotDialog, createSnapshot } from '../../../../actions';
 import CreateSnapshotPanel from './panels/CreateSnapshotPanel';
 import { push } from 'modules/hist';
-import { NonceProvider } from 'react-select';
 
 const drawerWidth = 400;
 
@@ -33,7 +32,7 @@ const styles = (theme) => ({
     gridTemplateRows: 'calc(100vh - 125px) 100px',
   },
   createSnapshotGrid: {
-    gridTemplateRows: 'calc(100vh - 275px) 200px',
+    gridTemplateRows: 'calc(100vh - 325px) 200px',
   },
   hide: {
     display: 'none',
@@ -119,6 +118,7 @@ export class QueryViewSidebar extends React.PureComponent {
       isSavingSnapshot: false,
       searchString: '',
       openFilter: {},
+      selectedAsset: {},
     };
   }
 
@@ -190,9 +190,9 @@ export class QueryViewSidebar extends React.PureComponent {
     dispatch(applyFilters(filterMap, tableName, dataset));
   };
 
-  handleSaveSnapshot = () => {
-    const { dispatch, selected } = this.props;
-    dispatch(createSnapshot());
+  handleSaveSnapshot = (assetName) => {
+    const { dispatch } = this.props;
+    dispatch(createSnapshot(assetName));
     dispatch(openSnapshotDialog(true));
     push('/snapshots');
   };
@@ -222,7 +222,7 @@ export class QueryViewSidebar extends React.PureComponent {
       joinStatement,
       selected,
     } = this.props;
-    const { isSavingSnapshot, searchString, openFilter } = this.state;
+    const { isSavingSnapshot, searchString, openFilter, selectedAsset } = this.state;
     const filteredColumns = table.columns.filter((column) => column.name.includes(searchString));
 
     return (
@@ -308,8 +308,10 @@ export class QueryViewSidebar extends React.PureComponent {
         )}
         {isSavingSnapshot && (
           <CreateSnapshotPanel
+            dataset={dataset}
             handleCreateSnapshot={this.handleCreateSnapshot}
             handleSaveSnapshot={this.handleSaveSnapshot}
+            handleSelectAsset={this.handleSelectAsset}
           />
         )}
       </div>

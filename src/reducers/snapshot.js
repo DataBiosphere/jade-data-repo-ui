@@ -5,6 +5,7 @@ import BigQuery from 'modules/bigquery';
 import { ActionTypes } from 'constants/index';
 
 export const snapshotState = {
+  assetName: '',
   createdSnapshots: [],
   snapshot: {},
   snapshots: [],
