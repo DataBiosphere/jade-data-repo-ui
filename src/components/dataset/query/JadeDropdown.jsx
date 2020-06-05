@@ -1,31 +1,22 @@
 import React from 'react';
-import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-
-const styles = () => ({
-  root: {
-    width: '100%',
-  },
-});
+import { MenuItem, FormControl, Select } from '@material-ui/core';
 
 export class JadeDropdown extends React.PureComponent {
   static propTypes = {
-    classes: PropTypes.object,
     name: PropTypes.string,
     onSelectedItem: PropTypes.func,
     options: PropTypes.array,
     value: PropTypes.string,
   };
 
+  // Returns a controlled dropdown component for selecting a single item from a list
   render() {
-    const { classes, options, onSelectedItem, value, name } = this.props;
+    const { options, onSelectedItem, value, name } = this.props;
 
     return (
       <form autoComplete="off">
-        <FormControl variant="outlined" className={classes.root}>
+        <FormControl variant="outlined" fullWidth>
           <Select
             value={value}
             onChange={(event) => onSelectedItem(event)}
@@ -48,4 +39,4 @@ export class JadeDropdown extends React.PureComponent {
   }
 }
 
-export default withStyles(styles)(JadeDropdown);
+export default JadeDropdown;
