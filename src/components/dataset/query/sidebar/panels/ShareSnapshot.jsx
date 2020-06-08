@@ -19,6 +19,11 @@ import { MoreVert } from '@material-ui/icons';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { actions } from 'react-redux-form';
 import { isEmail } from 'validator';
+import { openSnapshotDialog, createSnapshot } from '../../../../../actions';
+import { push } from 'modules/hist';
+
+const drawerWidth = 600;
+const sidebarWidth = 56;
 
 const styles = (theme) => ({
   root: {
@@ -26,12 +31,13 @@ const styles = (theme) => ({
   },
   section: {
     margin: `${theme.spacing(1)}px 0px`,
+    overflowX: 'hidden',
   },
   input: {
     backgroundColor: theme.palette.common.white,
     borderRadius: theme.spacing(0.5),
   },
-  inviteButton: {
+  button: {
     backgroundColor: theme.palette.common.link,
     color: theme.palette.common.white,
     '&:hover': {
@@ -50,6 +56,13 @@ const styles = (theme) => ({
   withIcon: {
     display: 'flex',
     alignItems: 'center',
+  },
+  bottom: {
+    position: 'fixed',
+    bottom: '0',
+    right: `${sidebarWidth + theme.spacing(2)}px`,
+    width: `${drawerWidth - theme.spacing(4)}px`,
+    textAlign: 'end',
   },
 });
 
@@ -172,6 +185,13 @@ export class ShareSnapshot extends React.PureComponent {
     this.setState({ anchor: null });
   };
 
+  saveSnapshot = () => {
+    const { dispatch } = this.props;
+    dispatch(createSnapshot());
+    dispatch(openSnapshotDialog(true));
+    push('/snapshots');
+  };
+
   render() {
     const { classes, readers } = this.props;
     const { policyName, currentInput, usersToAdd, anchor, hasError, errorMsg } = this.state;
@@ -233,17 +253,15 @@ export class ShareSnapshot extends React.PureComponent {
               )}
             </Grid>
           </Grid>
-          <Grid item xs>
-            <Button
-              variant="contained"
-              disableElevation={true}
-              className={classes.inviteButton}
-              onClick={this.invite}
-              data-cy="inviteButton"
-            >
-              Invite
-            </Button>
-          </Grid>
+          <Button
+            variant="contained"
+            disableElevation={true}
+            className={clsx(classes.button, classes.section)}
+            onClick={this.invite}
+            data-cy="inviteButton"
+          >
+            Invite
+          </Button>
         </Grid>
         <Divider />
         <div className={classes.section} data-cy="readers">
@@ -273,6 +291,18 @@ export class ShareSnapshot extends React.PureComponent {
               remove
             </MenuItem>
           </Menu>
+        </div>
+        <div className={classes.bottom}>
+          <Divider />
+          <Button
+            variant="contained"
+            disableElevation={true}
+            className={clsx(classes.button, classes.section)}
+            onClick={this.saveSnapshot}
+            data-cy="releaseDataset"
+          >
+            Release Dataset
+          </Button>
         </div>
       </div>
     );

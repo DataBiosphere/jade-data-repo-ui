@@ -2,9 +2,7 @@ import React from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import FilterPanel from './panels/FilterPanel';
-import { openSnapshotDialog, createSnapshot } from '../../../../actions';
 import CreateSnapshotPanel from './panels/CreateSnapshotPanel';
-import { push } from 'modules/hist';
 
 export class QueryViewSidebar extends React.PureComponent {
   constructor(props) {
@@ -15,7 +13,6 @@ export class QueryViewSidebar extends React.PureComponent {
   }
 
   static propTypes = {
-    dispatch: PropTypes.func.isRequired,
     open: PropTypes.bool,
     selected: PropTypes.string,
     switchPanels: PropTypes.func,
@@ -24,13 +21,6 @@ export class QueryViewSidebar extends React.PureComponent {
 
   handleCreateSnapshot = (isSavingSnapshot) => {
     this.setState({ isSavingSnapshot });
-  };
-
-  handleSaveSnapshot = (assetName) => {
-    const { dispatch } = this.props;
-    dispatch(createSnapshot(assetName));
-    dispatch(openSnapshotDialog(true));
-    push('/snapshots');
   };
 
   render() {

@@ -33,7 +33,7 @@ const styles = (theme) => ({
   },
   textField: {
     backgroundColor: theme.palette.common.white,
-    borderRadius: '5px',
+    borderRadius: theme.shape.borderRadius,
     marginBottom: theme.spacing(1),
   },
 });
@@ -41,8 +41,7 @@ const styles = (theme) => ({
 export class CreateSnapshotPanel extends React.PureComponent {
   constructor(props) {
     super(props);
-    const { name, description } = this.props.snapshot;
-    const { assetName } = this.props.snapshots;
+    const { name, description, assetName } = this.props.snapshot;
     this.state = {
       name,
       description,
@@ -65,6 +64,7 @@ export class CreateSnapshotPanel extends React.PureComponent {
     const { name, description, assetName } = this.state;
     dispatch(actions.change('snapshot.name', name));
     dispatch(actions.change('snapshot.description', description));
+    dispatch(actions.change('snapshot.assetName', assetName));
     switchPanels(ShareSnapshot);
   };
 
@@ -108,6 +108,7 @@ export class CreateSnapshotPanel extends React.PureComponent {
           <CreateSnapshotDropdown
             options={dataset.schema.assets}
             onSelectedItem={this.handleSelectAsset}
+            value={assetName}
           />
         </div>
         <div className={classes.rowTwo}>

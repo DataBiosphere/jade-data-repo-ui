@@ -12,9 +12,10 @@ const initialSnapshotState = {
   description: '',
   readers: [],
   dataset: '',
+  assetName: '',
 };
 
-const reducer = hist =>
+const reducer = (hist) =>
   combineReducers({
     router: connectRouter(hist),
     ...rootReducer,
