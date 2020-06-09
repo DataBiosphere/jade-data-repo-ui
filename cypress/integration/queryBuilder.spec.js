@@ -141,9 +141,16 @@ describe('test query builder', () => {
     });
 
     it('checks invalid email addresses', () => {
-      cy.get('[data-cy=enterEmailBox]').type('maggenzi,myessail@broadinstitute.org');
+      // type invalid email
+      cy.get('[data-cy=enterEmailBox]').type('maggenzi,');
+      cy.get('[data-cy=inviteButton]').should('be.disabled');
+
+      // type valid email
+      cy.get('[data-cy=enterEmailBox]').type('myessail@broadinstitute.org');
+      cy.get('[data-cy=inviteButton]').should('not.be.disabled');
       cy.get('[data-cy=inviteButton]').click();
 
+      // only valid email should be added to readers
       cy.get('[data-cy=readers]').contains('myessail@broadinstitute.org').should('be.visible');
       cy.get('[data-cy=invalidEmailError]').contains('maggenzi').should('be.visible');
     });
