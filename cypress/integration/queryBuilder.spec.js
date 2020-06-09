@@ -163,4 +163,29 @@ describe('test query builder', () => {
       cy.get('[data-cy=readers]').should('not.contain', ' zie@gmail.com');
     });
   });
+
+  describe('test wizard flow', () => {
+    it('transitions to share panel', () => {
+      // open filter panel
+      cy.get('div.MuiButtonBase-root:nth-child(2) > svg:nth-child(1)').click();
+
+      // create snapshot button should open 'Add details' panel
+      cy.get('[data-cy=createSnapshot]').click();
+      cy.contains('Add Details').should('be.visible');
+      cy.get('[data-cy=next]').should('be.disabled');
+
+      // enter snapshot name
+      cy.get('[data-cy=textFieldName]').type('mySnapshot');
+      cy.get('[data-cy=next]').should('be.disabled');
+
+      // select asset
+      cy.get('[data-cy=selectAsset]').click();
+      cy.get('[data-cy=menuItem-Variant]').click();
+      cy.get('[data-cy=next]').should('not.be.disabled');
+
+      // 'next' button should bring user to share panel
+      cy.get('[data-cy=next]').click();
+      cy.contains('Share Snapshot').should('be.visible');
+    });
+  });
 });

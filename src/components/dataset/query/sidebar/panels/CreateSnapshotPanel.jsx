@@ -91,6 +91,7 @@ export class CreateSnapshotPanel extends React.PureComponent {
             className={classes.textField}
             onChange={(event) => this.setState({ name: event.target.value })}
             value={name}
+            data-cy="textFieldName"
           />
           <Typography variant="subtitle2">Description</Typography>
           <TextField
@@ -109,6 +110,7 @@ export class CreateSnapshotPanel extends React.PureComponent {
             options={dataset.schema.assets}
             onSelectedItem={this.handleSelectAsset}
             value={assetName}
+            data-cy="selectAsset"
           />
         </div>
         <div className={classes.rowTwo}>
@@ -118,6 +120,7 @@ export class CreateSnapshotPanel extends React.PureComponent {
               variant="contained"
               onClick={this.saveNameAndDescription}
               disabled={assetName === '' || name === ''}
+              data-cy="next"
             >
               Next
             </Button>

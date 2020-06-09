@@ -140,9 +140,7 @@ export class ShareSnapshot extends React.PureComponent {
     let validUsrs = [];
     let invalidUsrs = [];
     _.forEach(usersToAdd, (user) => {
-      console.log(user);
       if (!isEmail(user)) {
-        console.log('bad input');
         hasError = true;
         invalidUsrs.push(user);
       } else {
