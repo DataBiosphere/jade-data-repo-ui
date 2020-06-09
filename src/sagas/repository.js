@@ -103,14 +103,14 @@ function* pollJobWorker(jobId, jobTypeSuccess, jobTypeFailure) {
  * Snapshots.
  */
 
-export function* createSnapshot({ payload }) {
+export function* createSnapshot() {
   const snapshot = yield select(getCreateSnapshot);
   const snapshots = yield select(getSnapshotState);
   const dataset = yield select(getDataset);
 
   const datasetName = dataset.name;
   const mode = 'byQuery';
-  const selectedAsset = _.find(dataset.schema.assets, (asset) => asset.name === payload);
+  const selectedAsset = _.find(dataset.schema.assets, (asset) => asset.name === snapshot.assetName);
   const rootTable = selectedAsset.rootTable;
   const drRowId = 'datarepo_row_id';
 
@@ -124,7 +124,7 @@ export function* createSnapshot({ payload }) {
         datasetName,
         mode,
         querySpec: {
-          assetName: payload,
+          assetName: snapshot.assetName,
           query: `SELECT ${datasetName}.${rootTable}.${drRowId} ${snapshots.joinStatement} ${snapshots.filterStatement}`,
         },
       },

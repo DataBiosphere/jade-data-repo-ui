@@ -1,4 +1,5 @@
 import React from 'react';
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { MenuItem, FormControl, Select } from '@material-ui/core';
 
@@ -26,10 +27,11 @@ export class JadeDropdown extends React.PureComponent {
             }}
             displayEmpty
             renderValue={(value) => (!value ? name : value)}
+            data-cy={_.camelCase(name)}
           >
-            {options.map((name) => (
-              <MenuItem key={name} value={name}>
-                {name}
+            {options.map((opt) => (
+              <MenuItem key={opt} value={opt} data-cy={`menuItem-${opt}`}>
+                {opt}
               </MenuItem>
             ))}
           </Select>
