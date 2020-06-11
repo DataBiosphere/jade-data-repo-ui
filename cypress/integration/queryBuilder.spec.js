@@ -156,13 +156,9 @@ describe('test query builder', () => {
     });
 
     it('removes space characters', () => {
-      cy.get('[data-cy=enterEmailBox]').type(' ');
-      cy.get('[data-cy=inviteButton]').click();
-      cy.get('[data-cy=readers]').should('not.contain', ' ');
-
       cy.get('[data-cy=enterEmailBox]').type(' ,');
-      cy.get('[data-cy=inviteButton]').click();
-      cy.get('[data-cy=readers]').should('not.contain', ' ');
+      cy.get('[data-cy=enterEmailBox]').should('not.contain', ' ,');
+      cy.get('[data-cy=inviteButton]').should('be.disabled');
 
       cy.get('[data-cy=enterEmailBox]').type('mac@gmail.com, ken@gmail.com , zie@gmail.com');
       cy.get('[data-cy=inviteButton]').click();
