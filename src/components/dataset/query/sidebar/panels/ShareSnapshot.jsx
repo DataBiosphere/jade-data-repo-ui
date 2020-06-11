@@ -104,13 +104,10 @@ export class ShareSnapshot extends React.PureComponent {
 
     // emails may be added with the press of the comma key in addition to enter key
     if (currentInput.includes(',')) {
-      const emails = currentInput.split(',');
-      emails.forEach((email) => {
-        const trimmed = email.trim();
-        if (trimmed !== '') {
-          usersToAdd.push(trimmed);
-        }
-      });
+      const email = _.trim(currentInput, ', ');
+      if (email) {
+        usersToAdd.push(email);
+      }
       this.setState({ usersToAdd, currentInput: '' });
     }
   };
@@ -121,6 +118,18 @@ export class ShareSnapshot extends React.PureComponent {
   inputEmail = (event, value) => {
     const nonEmptyStrings = value.map((string) => string.trim()).filter((string) => string !== '');
     this.setState({ usersToAdd: nonEmptyStrings, currentInput: '' });
+  };
+
+  /**
+   * allows users to paste a list of emails
+   */
+  onPaste = (event) => {
+    const { usersToAdd } = this.state;
+    event.preventDefault();
+    const text = event.clipboardData.getData('text');
+    const emails = text.split(/[,\s]+/);
+    const nonEmpty = emails.filter((s) => s !== '');
+    this.setState({ usersToAdd: _.concat(usersToAdd, nonEmpty), currentInput: '' });
   };
 
   /**
@@ -147,7 +156,7 @@ export class ShareSnapshot extends React.PureComponent {
         validUsrs.push(user);
       }
     });
-    errorMsg = `Make sure all emails entered are valid. Invalid email(s) entered: ${invalidUsrs}`;
+    errorMsg = `Invalid email(s): ${invalidUsrs.join(', ')}`;
     !_.isEmpty(validUsrs) && this.addReaders(validUsrs);
     this.setState({ usersToAdd: [], currentInput: '', hasError, errorMsg });
   };
@@ -217,6 +226,7 @@ export class ShareSnapshot extends React.PureComponent {
                     className={classes.input}
                     placeholder="enter email addresses"
                     onChange={this.parseEmail}
+                    onPaste={this.onPaste}
                     data-cy="enterEmailBox"
                   />
                 )}
@@ -253,6 +263,7 @@ export class ShareSnapshot extends React.PureComponent {
           </Grid>
           <Button
             variant="contained"
+            disabled={!isEmail(currentInput) && !_.some(usersToAdd, (user) => isEmail(user))}
             disableElevation={true}
             className={clsx(classes.button, classes.section)}
             onClick={this.invite}
