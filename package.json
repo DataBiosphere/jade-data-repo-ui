@@ -81,7 +81,7 @@
     "tree-changes": "^0.5.1",
     "universalify": "1.0.0",
     "uuid": "^8.1.0",
-    "validator": "^13.0.0",
+    "validator": "^13.1.1",
     "webfontloader": "^1.6.28",
     "xlsx": "^0.16.1"
   },
