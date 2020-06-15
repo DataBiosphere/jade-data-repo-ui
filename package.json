@@ -55,6 +55,7 @@
     "modernizr": "^3.11.2",
     "moment": "^2.26.0",
     "polished": "^3.6.4",
+    "prettier-plugin-import-sort": "0.0.4",
     "prop-types": "^15.7.2",
     "qs": "^6.9.4",
     "react": "^16.13.1",

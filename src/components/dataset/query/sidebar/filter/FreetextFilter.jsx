@@ -29,10 +29,12 @@ export class FreetextFilter extends React.PureComponent {
     table: PropTypes.string,
     toggleExclude: PropTypes.func,
     values: PropTypes.object,
+    partialMatching: PropTypes.func,
   };
 
   onComplete = (event, value) => {
-    const { handleChange } = this.props;
+    const { handleChange, partialMatching } = this.props;
+    partialMatching(value);
     handleChange(value);
   };
 
@@ -61,12 +63,13 @@ export class FreetextFilter extends React.PureComponent {
   render() {
     const { classes, filterMap, column, values, toggleExclude } = this.props;
     const value = _.get(filterMap, 'value', []);
+    
     return (
       <div>
         <Autocomplete
           multiple
           id={`autocomplete-${column.name}`}
-          options={_.keys(values)}
+          // options={_.keys(values)}
           // this means the user's choice does not have to match the provided options
           freeSolo={true}
           style={{ width: '100%' }}

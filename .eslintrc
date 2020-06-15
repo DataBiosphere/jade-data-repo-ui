@@ -17,7 +17,7 @@
     "APP__GITHASH": false,
     "APP__VERSION": false
   },
-  "plugins": ["babel", "cypress", "flowtype", "redux-saga"],
+  "plugins": ["babel", "cypress", "flowtype", "redux-saga", "prettier"],
   "settings": {
     "import/resolver": {
       "webpack": {
@@ -138,6 +138,7 @@
       }
     ],
     "jsx-quotes": "warn",
+    "prettier/prettier": "error",
     "react/forbid-prop-types": "off",
     "react/jsx-closing-bracket-location": ["warn", "line-aligned"],
     "react/jsx-first-prop-new-line": ["warn", "multiline"],

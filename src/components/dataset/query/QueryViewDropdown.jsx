@@ -1,4 +1,5 @@
 import React from 'react';
+import _ from 'lodash';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -22,7 +23,6 @@ export class QueryViewDropdown extends React.PureComponent {
         name: '',
       },
     };
-    onSelectedItem(options[0]);
   }
 
   static propTypes = {
@@ -30,6 +30,22 @@ export class QueryViewDropdown extends React.PureComponent {
     onSelectedItem: PropTypes.func,
     options: PropTypes.array,
   };
+
+  componentDidUpdate(prevProps) {
+    const { options, onSelectedItem } = this.props;
+    console.log(options);
+    console.log(prevProps.options);
+    console.log(options !== prevProps.options);
+    if (!_.isEqual(options, prevProps.options)) {
+      onSelectedItem(options[0]);
+      this.setState({
+        values: {
+          table: options[0],
+          name: '',
+        },
+      });
+    }
+  }
 
   handleChange = event => {
     const { onSelectedItem } = this.props;
