@@ -10,13 +10,10 @@ import history from 'modules/hist';
 import HomeView from '../components/HomeView';
 import DatasetsView from '../components/DatasetView';
 import SnapshotView from '../components/SnapshotView';
-import SnapshotCreateView from '../components/SnapshotCreateView';
-import SnapshotPreviewView from '../components/SnapshotPreviewView';
 import SnapshotDetailView from '../components/SnapshotDetailView';
-import DatasetDetailView from '../components/DatasetDetailView';
 import QueryView from '../components/dataset/query/QueryView';
 
-const styles = theme => ({
+const styles = (theme) => ({
   wrapper: {
     fontFamily: theme.typography.fontFamily,
   },
@@ -89,12 +86,6 @@ class Private extends React.Component {
                     <Route exact path="/datasets" component={DatasetsView} />
                     <Route exact path="/datasets/details/:uuid" component={QueryView} />
                     <Route exact path="/snapshots" component={SnapshotView} />
-                    <Route exact path="/snapshots/create" component={SnapshotCreateView} />
-                    <Route
-                      exact
-                      path="/snapshots/requests/:jobId"
-                      component={SnapshotPreviewView}
-                    />
                     <Route exact path="/snapshots/details/:uuid" component={SnapshotDetailView} />
                   </Switch>
                 </Fragment>
