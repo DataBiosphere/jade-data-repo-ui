@@ -1,6 +1,7 @@
 import { handleActions } from 'redux-actions';
 import immutable from 'immutability-helper';
 import BigQuery from 'modules/bigquery';
+import { LOCATION_CHANGE } from 'connected-react-router';
 
 import { ActionTypes } from 'constants/index';
 
@@ -40,6 +41,13 @@ export default {
         immutable(state, {
           snapshot: { $set: action.payload.jobResult },
           dialogIsOpen: { $set: true },
+          // TODO: maybe wrap these in an object
+          filterStatement: { $set: '' },
+          joinStatement: { $set: '' },
+          name: { $set: '' },
+          description: { $set: '' },
+          readers: { $set: [] },
+          assetName: { $set: '' },
         }),
       [ActionTypes.CREATE_SNAPSHOT_FAILURE]: (state, action) => {
         const successfullyCreatedSnapshots = state.createdSnapshots; // passes a ref or a value?
@@ -101,6 +109,17 @@ export default {
         immutable(state, {
           readers: { $set: action.payload },
         }),
+
+      [LOCATION_CHANGE]: (state) => {
+        return immutable(state, {
+          filterStatement: { $set: '' },
+          joinStatement: { $set: '' },
+          name: { $set: '' },
+          description: { $set: '' },
+          readers: { $set: [] },
+          assetName: { $set: '' },
+        });
+      },
     },
     snapshotState,
   ),
