@@ -162,3 +162,15 @@ export const { countResults } = createActions({
   }),
   [ActionTypes.COUNT_RESULTS_SUCCESS]: (count) => count,
 });
+
+export const { snapshotCreateDetails } = createActions({
+  [ActionTypes.SNAPSHOT_CREATE_DETAILS]: (name, description, assetName) => ({
+    name,
+    description,
+    assetName,
+  }),
+});
+
+export const { addReadersToSnapshot } = createActions({
+  [ActionTypes.ADD_READERS_TO_SNAPSHOT]: (readers) => readers,
+});

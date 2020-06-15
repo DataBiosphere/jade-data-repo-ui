@@ -5,7 +5,7 @@ import BigQuery from 'modules/bigquery';
 import { ActionTypes } from 'constants/index';
 
 export const snapshotState = {
-  assetName: '',
+  // snapshot info
   createdSnapshots: [],
   snapshot: {},
   snapshots: [],
@@ -14,8 +14,13 @@ export const snapshotState = {
   dataset: {},
   snapshotCount: 0,
   dialogIsOpen: false,
+  // for snapshot creation
   filterStatement: '',
   joinStatement: '',
+  name: '',
+  description: '',
+  readers: [],
+  assetName: '',
 };
 
 export default {
@@ -27,24 +32,21 @@ export default {
           snapshotCount: { $set: action.snapshots.data.data.total },
         }),
       [ActionTypes.CREATE_SNAPSHOT_JOB]: (state, action) => {
-        const newSnapshotCreation = {
-          jobId: action.payload.jobId,
-          snapshotRequest: action.payload.snapshotRequest,
-        };
         return immutable(state, {
-          createdSnapshots: { $push: [newSnapshotCreation] },
           snapshot: { $set: {} },
         });
       },
       [ActionTypes.CREATE_SNAPSHOT_SUCCESS]: (state, action) =>
         immutable(state, {
           snapshot: { $set: action.payload.jobResult },
+          dialogIsOpen: { $set: true },
         }),
       [ActionTypes.CREATE_SNAPSHOT_FAILURE]: (state, action) => {
         const successfullyCreatedSnapshots = state.createdSnapshots; // passes a ref or a value?
         successfullyCreatedSnapshots.filter((snapshot) => snapshot.jobId !== action.payload.jobId);
         return immutable(state, {
           createdSnapshots: { $set: successfullyCreatedSnapshots },
+          dialogIsOpen: { $set: true },
         });
       },
       [ActionTypes.GET_SNAPSHOT_BY_ID_SUCCESS]: (state, action) =>
@@ -89,6 +91,16 @@ export default {
           joinStatement: { $set: joinStatement },
         });
       },
+      [ActionTypes.SNAPSHOT_CREATE_DETAILS]: (state, action) =>
+        immutable(state, {
+          name: { $set: action.payload.name },
+          description: { $set: action.payload.description },
+          assetName: { $set: action.payload.assetName },
+        }),
+      [ActionTypes.ADD_READERS_TO_SNAPSHOT]: (state, action) =>
+        immutable(state, {
+          readers: { $set: action.payload },
+        }),
     },
     snapshotState,
   ),
