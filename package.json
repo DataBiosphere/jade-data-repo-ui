@@ -129,7 +129,7 @@
     "bfj": "^7.0.2",
     "bundlesize": "^0.18.0",
     "case-sensitive-paths-webpack-plugin": "^2.3.0",
-    "chalk": "^4.0.0",
+    "chalk": "^4.1.0",
     "circular-dependency-plugin": "^5.2.0",
     "css-loader": "^3.6.0",
     "cypress": "^4.8.0",
