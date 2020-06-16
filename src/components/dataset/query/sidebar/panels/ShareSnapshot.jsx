@@ -166,7 +166,6 @@ export class ShareSnapshot extends React.PureComponent {
   addReaders(users) {
     const { dispatch, readers } = this.props;
     if (!readers) {
-      console.log(users);
       dispatch(addReadersToSnapshot(users));
     } else {
       const newUsers = _.difference(users, readers);
@@ -319,7 +318,7 @@ export class ShareSnapshot extends React.PureComponent {
 
 function mapStateToProps(state) {
   return {
-    readers: state.snapshots.readers,
+    readers: state.snapshots.snapshotRequest.readers,
   };
 }
 

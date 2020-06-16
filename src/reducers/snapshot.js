@@ -5,9 +5,17 @@ import { LOCATION_CHANGE } from 'connected-react-router';
 
 import { ActionTypes } from 'constants/index';
 
+const defaultSnapshotRequest = {
+  name: '',
+  description: '',
+  assetName: '',
+  filterStatement: '',
+  joinStatement: '',
+  readers: [],
+};
+
 export const snapshotState = {
   // snapshot info
-  createdSnapshots: [],
   snapshot: {},
   snapshots: [],
   exception: false,
@@ -16,12 +24,7 @@ export const snapshotState = {
   snapshotCount: 0,
   dialogIsOpen: false,
   // for snapshot creation
-  filterStatement: '',
-  joinStatement: '',
-  name: '',
-  description: '',
-  readers: [],
-  assetName: '',
+  snapshotRequest: defaultSnapshotRequest,
 };
 
 export default {
@@ -32,31 +35,19 @@ export default {
           snapshots: { $set: action.snapshots.data.data.items },
           snapshotCount: { $set: action.snapshots.data.data.total },
         }),
-      [ActionTypes.CREATE_SNAPSHOT_JOB]: (state, action) => {
-        return immutable(state, {
+      [ActionTypes.CREATE_SNAPSHOT_JOB]: (state) =>
+        immutable(state, {
           snapshot: { $set: {} },
-        });
-      },
+          dialogIsOpen: { $set: true },
+        }),
       [ActionTypes.CREATE_SNAPSHOT_SUCCESS]: (state, action) =>
         immutable(state, {
           snapshot: { $set: action.payload.jobResult },
-          dialogIsOpen: { $set: true },
-          // TODO: maybe wrap these in an object
-          filterStatement: { $set: '' },
-          joinStatement: { $set: '' },
-          name: { $set: '' },
-          description: { $set: '' },
-          readers: { $set: [] },
-          assetName: { $set: '' },
         }),
-      [ActionTypes.CREATE_SNAPSHOT_FAILURE]: (state, action) => {
-        const successfullyCreatedSnapshots = state.createdSnapshots; // passes a ref or a value?
-        successfullyCreatedSnapshots.filter((snapshot) => snapshot.jobId !== action.payload.jobId);
-        return immutable(state, {
-          createdSnapshots: { $set: successfullyCreatedSnapshots },
-          dialogIsOpen: { $set: true },
-        });
-      },
+      [ActionTypes.CREATE_SNAPSHOT_FAILURE]: (state) =>
+        immutable(state, {
+          dialogIsOpen: { $set: false },
+        }),
       [ActionTypes.GET_SNAPSHOT_BY_ID_SUCCESS]: (state, action) =>
         immutable(state, {
           snapshot: { $set: action.snapshot.data.data },
@@ -83,43 +74,34 @@ export default {
         }),
       [ActionTypes.APPLY_FILTERS]: (state, action) => {
         const bigquery = new BigQuery();
-        const filterStatement = bigquery.buildSnapshotFilterStatement(
-          action.payload.filters,
-          action.payload.dataset,
-        );
+        const { filters, table, dataset } = action.payload;
 
-        const joinStatement = bigquery.buildSnapshotJoinStatement(
-          action.payload.filters,
-          action.payload.table,
-          action.payload.dataset,
-        );
+        const filterStatement = bigquery.buildSnapshotFilterStatement(filters, dataset);
+        const joinStatement = bigquery.buildSnapshotJoinStatement(filters, table, dataset);
+
+        const snapshotRequest = { ...state.snapshotRequest, filterStatement, joinStatement };
 
         return immutable(state, {
-          filterStatement: { $set: filterStatement },
-          joinStatement: { $set: joinStatement },
+          snapshotRequest: { $set: snapshotRequest },
         });
       },
-      [ActionTypes.SNAPSHOT_CREATE_DETAILS]: (state, action) =>
-        immutable(state, {
-          name: { $set: action.payload.name },
-          description: { $set: action.payload.description },
-          assetName: { $set: action.payload.assetName },
-        }),
-      [ActionTypes.ADD_READERS_TO_SNAPSHOT]: (state, action) =>
-        immutable(state, {
-          readers: { $set: action.payload },
-        }),
-
-      [LOCATION_CHANGE]: (state) => {
+      [ActionTypes.SNAPSHOT_CREATE_DETAILS]: (state, action) => {
+        const { name, description, assetName } = action.payload;
+        const snapshotRequest = { ...state.snapshotRequest, name, description, assetName };
         return immutable(state, {
-          filterStatement: { $set: '' },
-          joinStatement: { $set: '' },
-          name: { $set: '' },
-          description: { $set: '' },
-          readers: { $set: [] },
-          assetName: { $set: '' },
+          snapshotRequest: { $set: snapshotRequest },
         });
       },
+      [ActionTypes.ADD_READERS_TO_SNAPSHOT]: (state, action) => {
+        const snapshotRequest = { ...state.snapshotRequest, readers: action.payload };
+        return immutable(state, {
+          snapshotRequest: { $set: snapshotRequest },
+        });
+      },
+      [LOCATION_CHANGE]: (state) =>
+        immutable(state, {
+          snapshotRequest: { $set: defaultSnapshotRequest },
+        }),
     },
     snapshotState,
   ),

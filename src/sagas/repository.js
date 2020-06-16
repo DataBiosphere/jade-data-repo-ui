@@ -105,28 +105,33 @@ function* pollJobWorker(jobId, jobTypeSuccess, jobTypeFailure) {
 export function* createSnapshot() {
   const snapshots = yield select(getSnapshotState);
   const dataset = yield select(getDataset);
+  const {
+    name,
+    description,
+    assetName,
+    filterStatement,
+    joinStatement,
+    readers,
+  } = snapshots.snapshotRequest;
 
   const datasetName = dataset.name;
   const mode = 'byQuery';
-  const selectedAsset = _.find(
-    dataset.schema.assets,
-    (asset) => asset.name === snapshots.assetName,
-  );
+  const selectedAsset = _.find(dataset.schema.assets, (asset) => asset.name === assetName);
   const rootTable = selectedAsset.rootTable;
   const drRowId = 'datarepo_row_id';
 
   const snapshotRequest = {
-    name: snapshots.name,
+    name,
     profileId: dataset.defaultProfileId,
-    description: snapshots.description,
-    readers: snapshots.readers,
+    description,
+    readers,
     contents: [
       {
         datasetName,
         mode,
         querySpec: {
-          assetName: snapshots.assetName,
-          query: `SELECT ${datasetName}.${rootTable}.${drRowId} ${snapshots.joinStatement} ${snapshots.filterStatement}`,
+          assetName,
+          query: `SELECT ${datasetName}.${rootTable}.${drRowId} ${joinStatement} ${filterStatement}`,
         },
       },
     ],

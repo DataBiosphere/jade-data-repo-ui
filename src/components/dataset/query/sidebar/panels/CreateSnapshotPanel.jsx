@@ -42,7 +42,7 @@ const styles = (theme) => ({
 export class CreateSnapshotPanel extends React.PureComponent {
   constructor(props) {
     super(props);
-    const { name, description, assetName } = this.props.snapshots;
+    const { name, description, assetName } = this.props.snapshots.snapshotRequest;
     this.state = {
       name,
       description,
