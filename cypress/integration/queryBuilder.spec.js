@@ -52,6 +52,7 @@ describe('test query builder', () => {
           .its('store')
           .invoke('getState')
           .its('snapshots')
+          .its('snapshotRequest')
           .its('joinStatement')
           .should(
             'equal',
@@ -61,6 +62,7 @@ describe('test query builder', () => {
           .its('store')
           .invoke('getState')
           .its('snapshots')
+          .its('snapshotRequest')
           .its('filterStatement')
           .should(
             'equal',

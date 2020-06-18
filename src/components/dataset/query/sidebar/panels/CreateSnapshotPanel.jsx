@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import { Button, TextField, Typography } from '@material-ui/core';
 import CreateSnapshotDropdown from '../CreateSnapshotDropdown';
 import ShareSnapshot from './ShareSnapshot';
+import { snapshotCreateDetails } from 'actions/index';
 
 const styles = (theme) => ({
   root: {
@@ -41,7 +42,7 @@ const styles = (theme) => ({
 export class CreateSnapshotPanel extends React.PureComponent {
   constructor(props) {
     super(props);
-    const { name, description, assetName } = this.props.snapshot;
+    const { name, description, assetName } = this.props.snapshots.snapshotRequest;
     this.state = {
       name,
       description,
@@ -62,9 +63,7 @@ export class CreateSnapshotPanel extends React.PureComponent {
   saveNameAndDescription = () => {
     const { dispatch, switchPanels } = this.props;
     const { name, description, assetName } = this.state;
-    dispatch(actions.change('snapshot.name', name));
-    dispatch(actions.change('snapshot.description', description));
-    dispatch(actions.change('snapshot.assetName', assetName));
+    dispatch(snapshotCreateDetails(name, description, assetName));
     switchPanels(ShareSnapshot);
   };
 
@@ -133,7 +132,6 @@ export class CreateSnapshotPanel extends React.PureComponent {
 
 function mapStateToProps(state) {
   return {
-    snapshot: state.snapshot,
     snapshots: state.snapshots,
     dataset: state.datasets.dataset,
   };

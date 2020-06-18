@@ -17,9 +17,8 @@ import {
 } from '@material-ui/core';
 import { MoreVert } from '@material-ui/icons';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { actions } from 'react-redux-form';
 import { isEmail } from 'validator';
-import { openSnapshotDialog, createSnapshot } from '../../../../../actions';
+import { createSnapshot, addReadersToSnapshot } from 'actions/index';
 import { push } from 'modules/hist';
 
 const drawerWidth = 600;
@@ -167,10 +166,10 @@ export class ShareSnapshot extends React.PureComponent {
   addReaders(users) {
     const { dispatch, readers } = this.props;
     if (!readers) {
-      dispatch(actions.change('snapshot.readers', users));
+      dispatch(addReadersToSnapshot(users));
     } else {
       const newUsers = _.difference(users, readers);
-      dispatch(actions.change('snapshot.readers', _.concat(readers, newUsers)));
+      dispatch(addReadersToSnapshot(_.concat(readers, newUsers)));
     }
   }
 
@@ -181,7 +180,7 @@ export class ShareSnapshot extends React.PureComponent {
     this.closeUserMenu();
     const { dispatch, readers } = this.props;
     const newUsers = _.without(readers, removeableEmail);
-    dispatch(actions.change('snapshot.readers', newUsers));
+    dispatch(addReadersToSnapshot(newUsers));
   }
 
   openUserMenu = (event) => {
@@ -195,7 +194,6 @@ export class ShareSnapshot extends React.PureComponent {
   saveSnapshot = () => {
     const { dispatch } = this.props;
     dispatch(createSnapshot());
-    dispatch(openSnapshotDialog(true));
     push('/snapshots');
   };
 
@@ -320,7 +318,7 @@ export class ShareSnapshot extends React.PureComponent {
 
 function mapStateToProps(state) {
   return {
-    readers: state.snapshot.readers,
+    readers: state.snapshots.snapshotRequest.readers,
   };
 }
 
