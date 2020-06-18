@@ -75,7 +75,6 @@ export default {
       },
       [LOCATION_CHANGE]: (state, action) => {
         if (!action.payload.location.pathname.includes('/query')) {
-          // michael can you help us with this
           return immutable(state, {
             filterData: { $set: {} },
             filterStatement: { $set: '' },
