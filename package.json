@@ -140,7 +140,7 @@
     "enzyme-adapter-react-16": "^1.15.2",
     "enzyme-to-json": "^3.5.0",
     "eslint": "^5.16.0",
-    "eslint-config-airbnb": "^18.1.0",
+    "eslint-config-airbnb": "^18.2.0",
     "eslint-config-cypress": "^0.28.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-config-react-app": "^4.0.1",
