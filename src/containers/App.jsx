@@ -30,7 +30,7 @@ import SignOutSVG from '../../assets/media/icons/logout-line.svg';
 
 const drawerWidth = 240;
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
     fontFamily: theme.typography.fontFamily,
@@ -135,7 +135,7 @@ const useStyles = makeStyles(theme => ({
     position: 'absolute',
     right: 0,
     width: theme.spacing(40),
-    zIndex: '100',
+    zIndex: 1201,
   },
   userName: {
     height: 15,
@@ -162,7 +162,7 @@ export function App(props) {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
-  const handleMenu = event => {
+  const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
@@ -228,12 +228,13 @@ export function App(props) {
       </AppBar>
       <div className={classes.content}>
         <div className={classes.appBarSpacer} />
-        <div className={classes.errorPanel}>
-          {alerts &&
-            alerts.map((alert, i) => (
+        {alerts.length > 0 && (
+          <div className={classes.errorPanel}>
+            {alerts.map((alert, i) => (
               <Toast dispatch={dispatch} errorMsg={alert && alert.toString()} index={i} key={i} />
             ))}
-        </div>
+          </div>
+        )}
         <Switch>
           <RoutePublic
             isAuthenticated={user.isAuthenticated}

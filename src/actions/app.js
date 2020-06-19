@@ -7,12 +7,16 @@
 import { createActions } from 'redux-actions';
 
 import { ActionTypes } from 'constants/index';
+import { push } from 'modules/hist';
 
 export const { createSnapshot } = createActions({
   [ActionTypes.CREATE_SNAPSHOT]: () => ({}),
   [ActionTypes.CREATE_SNAPSHOT_JOB]: (snapshot) => snapshot,
-  [ActionTypes.CREATE_SNAPSHOT_SUCCESS]: (snapshot) => snapshot,
   [ActionTypes.CREATE_SNAPSHOT_FAILURE]: (snapshot) => snapshot,
+  [ActionTypes.CREATE_SNAPSHOT_SUCCESS]: (snapshot) => {
+    push('/snapshots');
+    return snapshot;
+  },
 });
 
 export const { getSnapshots } = createActions({

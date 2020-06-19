@@ -18,7 +18,7 @@ export default {
           datasets: { $set: action.datasets.data.data.items },
           datasetsCount: { $set: action.datasets.data.data.total },
         }),
-      [ActionTypes.GET_DATASET_BY_ID]: state =>
+      [ActionTypes.GET_DATASET_BY_ID]: (state) =>
         immutable(state, {
           dataset: {},
         }),
@@ -38,12 +38,8 @@ export default {
         immutable(state, {
           datasetPolicies: { $set: action.policy.data.policies },
         }),
-      [ActionTypes.CREATE_SNAPSHOT_JOB]: state =>
-        immutable(state, {
-          dataset: { $set: {} },
-        }),
       [ActionTypes.GET_DATASET_TABLE_PREVIEW_SUCCESS]: (state, action) => {
-        const i = state.dataset.schema.tables.findIndex(table => table.name === action.tableName);
+        const i = state.dataset.schema.tables.findIndex((table) => table.name === action.tableName);
         return immutable(state, {
           dataset: { schema: { tables: { [i]: { preview: { $set: action.preview.data.rows } } } } },
         });

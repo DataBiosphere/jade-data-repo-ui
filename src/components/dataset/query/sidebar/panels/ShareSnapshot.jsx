@@ -19,7 +19,6 @@ import { MoreVert } from '@material-ui/icons';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { isEmail } from 'validator';
 import { createSnapshot, addReadersToSnapshot } from 'actions/index';
-import { push } from 'modules/hist';
 
 const drawerWidth = 600;
 const sidebarWidth = 56;
@@ -194,7 +193,6 @@ export class ShareSnapshot extends React.PureComponent {
   saveSnapshot = () => {
     const { dispatch } = this.props;
     dispatch(createSnapshot());
-    push('/snapshots');
   };
 
   render() {

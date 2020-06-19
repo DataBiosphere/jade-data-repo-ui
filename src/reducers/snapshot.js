@@ -67,6 +67,7 @@ export default {
       [ActionTypes.EXCEPTION]: (state) =>
         immutable(state, {
           exception: { $set: true },
+          dialogIsOpen: { $set: false },
         }),
       [ActionTypes.OPEN_SNAPSHOT_DIALOG]: (state, action) =>
         immutable(state, {
