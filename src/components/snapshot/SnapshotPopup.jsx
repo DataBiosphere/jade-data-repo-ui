@@ -159,13 +159,17 @@ export class SnapshotPopup extends React.PureComponent {
                   {rows.toLocaleString()} {rowLabel}
                 </Typography>
               </div>
-              <Typography variant="subtitle1" color="primary">
-                Properties
-              </Typography>
+              {!_.isEmpty(tables) && (
+                <Typography variant="subtitle1" color="primary">
+                  Properties
+                </Typography>
+              )}
               <div>{tables}</div>
-              <Typography variant="subtitle1" color="primary">
-                Shared With
-              </Typography>
+              {!_.isEmpty(readers) && (
+                <Typography variant="subtitle1" color="primary">
+                  Shared With
+                </Typography>
+              )}
               <div className={classes.bodyText}>
                 {readers.map((r) => (
                   <li className={classes.listItem}>{r}</li>
