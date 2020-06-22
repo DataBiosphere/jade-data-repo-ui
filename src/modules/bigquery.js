@@ -153,9 +153,21 @@ export default class BigQuery {
       .then((response) => response.data.rows);
   };
 
-  getAutocompleteForColumn = (currText, columnName, dataset, tableName, token, filterStatement, joinStatement) => {
+  getAutocompleteForColumn = (
+    currText,
+    columnName,
+    dataset,
+    tableName,
+    token,
+    filterStatement,
+    joinStatement,
+  ) => {
     const url = `https://bigquery.googleapis.com/bigquery/v2/projects/${dataset.dataProject}/queries`;
-    const query = `SELECT ${columnName} FROM \`${dataset.dataProject}.datarepo_${dataset.name}.${tableName}\` AS ${tableName} WHERE ${filterStatement} AND ${columnName} LIKE '%${currText}%' GROUP BY ${tableName}.${columnName}`;
+    const filterOrEmpty = _.isEmpty(filterStatement)
+      ? `WHERE ${columnName} LIKE '%${currText}%'`
+      : `WHERE ${filterStatement} AND ${columnName} LIKE '%${currText}%'`;
+    const joinOrEmpty = _.isEmpty(joinStatement) ? '' : joinStatement;
+    const query = `SELECT ${columnName} FROM \`${dataset.dataProject}.datarepo_${dataset.name}.${tableName}\` AS ${tableName} ${joinOrEmpty} ${filterOrEmpty} GROUP BY ${tableName}.${columnName} LIMIT 50`;
     return axios
       .post(
         url,

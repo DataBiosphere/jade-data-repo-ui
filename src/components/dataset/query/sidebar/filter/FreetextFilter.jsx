@@ -7,6 +7,7 @@ import Chip from '@material-ui/core/Chip';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { withStyles } from '@material-ui/core/styles';
 import { FormControlLabel, Checkbox, Typography } from '@material-ui/core';
+import BigQuery from 'modules/bigquery';
 
 const styles = (theme) => ({
   listItem: {
@@ -19,6 +20,16 @@ const styles = (theme) => ({
 });
 
 export class FreetextFilter extends React.PureComponent {
+  constructor(props) {
+    super(props);
+
+    console.log('in constructor');
+    this.state = {
+      options: [],
+      inputValue: '',
+    };
+  }
+
   static propTypes = {
     classes: PropTypes.object,
     column: PropTypes.object,
@@ -29,13 +40,43 @@ export class FreetextFilter extends React.PureComponent {
     table: PropTypes.string,
     toggleExclude: PropTypes.func,
     values: PropTypes.object,
-    partialMatching: PropTypes.func,
+    options: PropTypes.array,
+    dataset: PropTypes.object,
+    token: PropTypes.string,
   };
 
   onComplete = (event, value) => {
-    const { handleChange, partialMatching } = this.props;
-    partialMatching(value);
-    handleChange(value);
+    const { column, dataset, tableName, token, filterStatement, joinStatement } = this.props;
+    const bq = new BigQuery();
+    console.log(event);
+    console.log(value);
+    bq.getAutocompleteForColumn(
+      value,
+      column.name,
+      dataset,
+      tableName,
+      token,
+      filterStatement,
+      joinStatement,
+    ).then((response) => {
+      const transformedResponse = this.transformResponse(response);
+      console.log('SETTING STATE' + value);
+      this.setState({
+        inputValue: value,
+        options: transformedResponse,
+      });
+    });
+  };
+
+  transformResponse = (response) => {
+    const options = [];
+    if (response) {
+      response.map((r) => {
+        const name = r.f[0].v;
+        options.push(name);
+      });
+    }
+    return options;
   };
 
   handleReturn = (event) => {
@@ -62,14 +103,15 @@ export class FreetextFilter extends React.PureComponent {
 
   render() {
     const { classes, filterMap, column, values, toggleExclude } = this.props;
+    const { options, inputValue } = this.state;
     const value = _.get(filterMap, 'value', []);
-    
+
     return (
       <div>
         <Autocomplete
           multiple
           id={`autocomplete-${column.name}`}
-          // options={_.keys(values)}
+          options={options}
           // this means the user's choice does not have to match the provided options
           freeSolo={true}
           style={{ width: '100%' }}
@@ -78,7 +120,7 @@ export class FreetextFilter extends React.PureComponent {
           )}
           // tags are rendered manually in list under autocomplete box
           renderTags={() => null}
-          onChange={this.onComplete}
+          onInputChange={this.onComplete}
           onKeyPress={this.handleReturn}
           onPaste={this.onPaste}
           value={value}
