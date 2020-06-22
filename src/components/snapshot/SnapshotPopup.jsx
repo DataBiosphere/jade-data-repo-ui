@@ -73,11 +73,13 @@ export class SnapshotPopup extends React.PureComponent {
    * We want to use that snapshot id to get the full object and the policies for the dialog.
    */
   componentDidUpdate(prevProps) {
-    const { dispatch, snapshot } = this.props;
+    const { dispatch, snapshot, policies } = this.props;
     if (_.isEmpty(prevProps.snapshot) && !_.isEmpty(snapshot)) {
-      push('/snapshots');
       dispatch(getSnapshotById(snapshot.id));
       dispatch(getSnapshotPolicy(snapshot.id));
+    }
+    if (_.isEmpty(prevProps.policies) && !_.isEmpty(policies)) {
+      push('/snapshots');
     }
   }
 
@@ -151,7 +153,9 @@ export class SnapshotPopup extends React.PureComponent {
           <Paper variant="outlined">
             <div className={clsx(classes.snapshotName, classes.content, classes.withIcon)}>
               <CameraAlt className={classes.inline} />
-              <Typography variant="h6">{snapshot.name}</Typography>
+              <Typography variant="h6" data-cy="snapshotName">
+                {snapshot.name}
+              </Typography>
             </div>
             <div className={classes.content}>
               <div className={classes.bodyText}>
@@ -170,7 +174,7 @@ export class SnapshotPopup extends React.PureComponent {
                   Shared With
                 </Typography>
               )}
-              <div className={classes.bodyText}>
+              <div className={classes.bodyText} data-cy="snapshotReaders">
                 {readers.map((r) => (
                   <li className={classes.listItem}>{r}</li>
                 ))}
