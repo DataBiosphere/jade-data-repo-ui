@@ -78,17 +78,26 @@ export default {
         const { filters, table, dataset } = action.payload;
 
         const filterStatement = bigquery.buildSnapshotFilterStatement(filters, dataset);
-        const joinStatement = bigquery.buildSnapshotJoinStatement(filters, table, dataset);
 
-        const snapshotRequest = { ...state.snapshotRequest, filterStatement, joinStatement };
+        const snapshotRequest = { ...state.snapshotRequest, filterStatement };
 
         return immutable(state, {
           snapshotRequest: { $set: snapshotRequest },
         });
       },
       [ActionTypes.SNAPSHOT_CREATE_DETAILS]: (state, action) => {
-        const { name, description, assetName } = action.payload;
-        const snapshotRequest = { ...state.snapshotRequest, name, description, assetName };
+        const bigquery = new BigQuery();
+        const { name, description, assetName, filterData, dataset } = action.payload;
+
+        const joinStatement = bigquery.buildSnapshotJoinStatement(filterData, assetName, dataset);
+        const snapshotRequest = {
+          ...state.snapshotRequest,
+          name,
+          description,
+          assetName,
+          joinStatement,
+        };
+
         return immutable(state, {
           snapshotRequest: { $set: snapshotRequest },
         });

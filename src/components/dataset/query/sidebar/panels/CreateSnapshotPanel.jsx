@@ -53,6 +53,7 @@ export class CreateSnapshotPanel extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object,
     dataset: PropTypes.object,
+    filterData: PropTypes.object,
     handleCreateSnapshot: PropTypes.func,
     handleSaveSnapshot: PropTypes.func,
     handleSelectAsset: PropTypes.func,
@@ -61,9 +62,9 @@ export class CreateSnapshotPanel extends React.PureComponent {
   };
 
   saveNameAndDescription = () => {
-    const { dispatch, switchPanels } = this.props;
+    const { dispatch, switchPanels, filterData, dataset } = this.props;
     const { name, description, assetName } = this.state;
-    dispatch(snapshotCreateDetails(name, description, assetName));
+    dispatch(snapshotCreateDetails(name, description, assetName, filterData, dataset));
     switchPanels(ShareSnapshot);
   };
 
@@ -134,6 +135,7 @@ function mapStateToProps(state) {
   return {
     snapshots: state.snapshots,
     dataset: state.datasets.dataset,
+    filterData: state.query.filterData,
   };
 }
 
