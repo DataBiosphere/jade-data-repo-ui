@@ -21,6 +21,7 @@ import QueryViewDropdown from './QueryViewDropdown';
 import JadeTable from '../../table/JadeTable';
 import InfoView from './sidebar/panels/InfoView';
 import ShareSnapshot from './sidebar/panels/ShareSnapshot';
+import SnapshotPopup from '../../snapshot/SnapshotPopup';
 
 const styles = (theme) => ({
   wrapper: {
@@ -195,6 +196,7 @@ export class QueryView extends React.PureComponent {
           table={table}
           selected={selected}
         />
+        <SnapshotPopup />
       </Fragment>
     );
   }

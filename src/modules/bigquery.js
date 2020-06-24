@@ -248,23 +248,20 @@ export default class BigQuery {
   };
 
   // wrapper for snapshot creation:
-  buildSnapshotJoinStatement = (filterMap, table, dataset) => {
+  buildSnapshotJoinStatement = (filterMap, assetName, dataset) => {
     if (_.isEmpty(dataset.schema.assets)) {
       return '';
     }
     const schema = dataset.schema.relationships;
-    const rootTable = dataset.schema.assets[0].rootTable; // TODO: asset thing
-    const relationships = this.buildAllJoins(filterMap, schema, table);
+    const selectedAsset = dataset.schema.assets.find((a) => a.name === assetName);
+    const rootTable = selectedAsset.rootTable;
+    const relationships = this.buildAllJoins(filterMap, schema, rootTable);
     let joins = relationships.map((relationship) => {
       const { to, from } = relationship;
       return `JOIN ${dataset.name}.${from.table} ON ${dataset.name}.${from.table}.${from.column} = ${dataset.name}.${to.table}.${to.column}`;
     });
     joins = _.uniq(joins);
-    let fromStatement = '';
-    if (_.isEmpty(joins) && rootTable !== table) {
-      fromStatement = `, ${dataset.name}.${table}`;
-    }
-    return `FROM ${dataset.name}.${rootTable}${fromStatement} ${joins.join(' ')}`;
+    return `FROM ${dataset.name}.${rootTable} ${joins.join(' ')}`;
   };
 
   // helper method used by both:

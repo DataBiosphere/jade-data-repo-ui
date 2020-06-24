@@ -53,16 +53,6 @@ describe('test query builder', () => {
           .invoke('getState')
           .its('snapshots')
           .its('snapshotRequest')
-          .its('joinStatement')
-          .should(
-            'equal',
-            'FROM V2F_GWAS_Summary_Stats.variant, V2F_GWAS_Summary_Stats.ancestry_specific_meta_analysis ',
-          );
-        cy.window()
-          .its('store')
-          .invoke('getState')
-          .its('snapshots')
-          .its('snapshotRequest')
           .its('filterStatement')
           .should(
             'equal',
@@ -191,6 +181,13 @@ describe('test query builder', () => {
       // 'next' button should bring user to share panel
       cy.get('[data-cy=next]').click();
       cy.contains('Share Snapshot').should('be.visible');
+      cy.window()
+        .its('store')
+        .invoke('getState')
+        .its('snapshots')
+        .its('snapshotRequest')
+        .its('joinStatement')
+        .should('equal', 'FROM V2F_GWAS_Summary_Stats.variant ');
     });
   });
 });

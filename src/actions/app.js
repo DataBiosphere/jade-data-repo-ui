@@ -164,10 +164,12 @@ export const { countResults } = createActions({
 });
 
 export const { snapshotCreateDetails } = createActions({
-  [ActionTypes.SNAPSHOT_CREATE_DETAILS]: (name, description, assetName) => ({
+  [ActionTypes.SNAPSHOT_CREATE_DETAILS]: (name, description, assetName, filterData, dataset) => ({
     name,
     description,
     assetName,
+    filterData,
+    dataset,
   }),
 });
 

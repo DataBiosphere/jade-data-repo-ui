@@ -67,6 +67,7 @@ export default {
       [ActionTypes.EXCEPTION]: (state) =>
         immutable(state, {
           exception: { $set: true },
+          dialogIsOpen: { $set: false },
         }),
       [ActionTypes.OPEN_SNAPSHOT_DIALOG]: (state, action) =>
         immutable(state, {
@@ -74,20 +75,27 @@ export default {
         }),
       [ActionTypes.APPLY_FILTERS]: (state, action) => {
         const bigquery = new BigQuery();
-        const { filters, table, dataset } = action.payload;
+        const { filters, dataset } = action.payload;
 
         const filterStatement = bigquery.buildSnapshotFilterStatement(filters, dataset);
-        const joinStatement = bigquery.buildSnapshotJoinStatement(filters, table, dataset);
-
-        const snapshotRequest = { ...state.snapshotRequest, filterStatement, joinStatement };
 
         return immutable(state, {
-          snapshotRequest: { $set: snapshotRequest },
+          snapshotRequest: { filterStatement: { $set: filterStatement } },
         });
       },
       [ActionTypes.SNAPSHOT_CREATE_DETAILS]: (state, action) => {
-        const { name, description, assetName } = action.payload;
-        const snapshotRequest = { ...state.snapshotRequest, name, description, assetName };
+        const bigquery = new BigQuery();
+        const { name, description, assetName, filterData, dataset } = action.payload;
+
+        const joinStatement = bigquery.buildSnapshotJoinStatement(filterData, assetName, dataset);
+        const snapshotRequest = {
+          ...state.snapshotRequest,
+          name,
+          description,
+          assetName,
+          joinStatement,
+        };
+
         return immutable(state, {
           snapshotRequest: { $set: snapshotRequest },
         });

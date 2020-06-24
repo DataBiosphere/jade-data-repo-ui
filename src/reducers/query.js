@@ -74,7 +74,8 @@ export default {
         });
       },
       [LOCATION_CHANGE]: (state, action) => {
-        if (!action.payload.location.pathname.includes('/query')) {
+        if (action.payload.location.pathname.includes('/datasets/details/')) {
+          // michael can you help us with this
           return immutable(state, {
             filterData: { $set: {} },
             filterStatement: { $set: '' },
