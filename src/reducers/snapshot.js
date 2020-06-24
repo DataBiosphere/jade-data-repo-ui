@@ -75,14 +75,12 @@ export default {
         }),
       [ActionTypes.APPLY_FILTERS]: (state, action) => {
         const bigquery = new BigQuery();
-        const { filters, table, dataset } = action.payload;
+        const { filters, dataset } = action.payload;
 
         const filterStatement = bigquery.buildSnapshotFilterStatement(filters, dataset);
 
-        const snapshotRequest = { ...state.snapshotRequest, filterStatement };
-
         return immutable(state, {
-          snapshotRequest: { $set: snapshotRequest },
+          snapshotRequest: { filterStatement: { $set: filterStatement } },
         });
       },
       [ActionTypes.SNAPSHOT_CREATE_DETAILS]: (state, action) => {

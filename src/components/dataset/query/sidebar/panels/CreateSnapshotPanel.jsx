@@ -1,8 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import clsx from 'clsx';
 import { withStyles } from '@material-ui/core/styles';
-import { actions } from 'react-redux-form';
 import { connect } from 'react-redux';
 
 import { Button, TextField, Typography } from '@material-ui/core';
