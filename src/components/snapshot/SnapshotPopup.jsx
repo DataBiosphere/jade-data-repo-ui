@@ -176,7 +176,9 @@ export class SnapshotPopup extends React.PureComponent {
               )}
               <div className={classes.bodyText} data-cy="snapshotReaders">
                 {readers.map((r) => (
-                  <li className={classes.listItem}>{r}</li>
+                  <li key={r} className={classes.listItem}>
+                    {r}
+                  </li>
                 ))}
               </div>
               <div className={clsx(classes.light, classes.withIcon)}>
