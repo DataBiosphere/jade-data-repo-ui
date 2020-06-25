@@ -75,10 +75,11 @@ export default class BigQuery {
             const datasetName = !dataset ? '' : dataset.name + '.';
             const property = `${datasetName}${table}.${key}`;
             const keyValue = filters[key].value;
+            const isRange = filters[key].type === 'range';
             const notClause = filters[key].exclude ? 'NOT' : '';
 
             if (_.isArray(keyValue)) {
-              if (_.isNumber(keyValue[0])) {
+              if (isRange) {
                 statementClauses.push(`${property} BETWEEN ${keyValue[0]} AND ${keyValue[1]}`);
               } else if (_.isString(keyValue[0])) {
                 const selections = keyValue.map((selection) => `"${selection}"`).join(',');

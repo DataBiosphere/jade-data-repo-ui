@@ -11,9 +11,8 @@ export class RangeFilter extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      minVal: 0,
-      maxVal: 1000,
-      value: [0, 1000],
+      minVal: '0',
+      maxVal: '1000',
       step: 1,
     };
 
@@ -21,8 +20,8 @@ export class RangeFilter extends React.PureComponent {
     const bq = new BigQuery();
 
     bq.getColumnMinMax(column.name, dataset, tableName, token).then((response) => {
-      const min = parseFloat(response[0].v, 10);
-      const max = parseFloat(response[1].v, 10);
+      const min = response[0].v;
+      const max = response[1].v;
 
       let step = 1;
       if (max - min <= 1) {
@@ -53,15 +52,19 @@ export class RangeFilter extends React.PureComponent {
   };
 
   handleMinLabelValue = (event) => {
-    const { value } = this.state;
-    const newValue = [parseInt(event.target.value, 10), value[1]];
+    const { filterMap } = this.props;
+    const { maxVal } = this.state;
+    const upper = _.get(filterMap, ['value', 1], maxVal);
+    const newValue = [event.target.value, upper];
 
     this.handleSliderValue(null, newValue);
   };
 
   handleMaxLabelValue = (event) => {
-    const { value } = this.state;
-    const newValue = [value[0], parseInt(event.target.value, 10)];
+    const { filterMap } = this.props;
+    const { minVal } = this.state;
+    const lower = _.get(filterMap, ['value', 0], minVal);
+    const newValue = [lower, event.target.value];
 
     this.handleSliderValue(null, newValue);
   };
@@ -96,12 +99,12 @@ export class RangeFilter extends React.PureComponent {
         <Grid container={true}>
           <Fragment>
             <Slider
-              value={value}
+              value={value.map(parseFloat)}
               onChange={this.handleSliderValue}
               valueLabelDisplay="off"
               aria-labelledby="range-slider"
-              min={minVal}
-              max={maxVal}
+              min={parseFloat(minVal)}
+              max={parseFloat(maxVal)}
               step={step}
             />
           </Fragment>
