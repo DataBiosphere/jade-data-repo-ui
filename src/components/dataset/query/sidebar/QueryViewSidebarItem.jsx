@@ -42,7 +42,7 @@ export class QueryViewSidebarItem extends React.PureComponent {
     const { filterMap } = this.state;
     // enable the button when there are unsaved changes
     if (!_.isEqual(prevState.filterMap, filterMap)) {
-      this.setState({ disableButton: _.isEmpty(filterMap.value) });
+      this.setState({ disableButton: this.invalidChange(filterMap) });
     }
     // disable the button when filters have just been applied
     if (!_.isEqual(prevProps.filterData, filterData)) {
@@ -69,6 +69,14 @@ export class QueryViewSidebarItem extends React.PureComponent {
   toggleExclude = (boxIsChecked) => {
     const { filterMap } = this.state;
     this.setState({ filterMap: { ...filterMap, exclude: boxIsChecked } });
+  };
+
+  invalidChange = (filterMap) => {
+    const { value } = filterMap;
+    if (filterMap.type === 'range') {
+      return _.some(value, (v) => v.endsWith('.')) || parseFloat(value[0]) >= parseFloat(value[1]);
+    }
+    return _.isEmpty(value);
   };
 
   render() {
