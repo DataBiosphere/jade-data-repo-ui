@@ -75,7 +75,7 @@ export class QueryViewSidebarItem extends React.PureComponent {
     const { value } = filterMap;
     if (filterMap.type === 'range') {
       const badNumber = (number) => number === '' || number.endsWith('.') || isNaN(number);
-      return _.some(value, badNumber) || parseFloat(value[0]) >= parseFloat(value[1]);
+      return _.some(value, badNumber) || parseFloat(value[0]) > parseFloat(value[1]);
     }
     return _.isEmpty(value);
   };
