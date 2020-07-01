@@ -8,10 +8,10 @@ export class RangeInput extends React.PureComponent {
     handleChange: PropTypes.func,
     handleFilters: PropTypes.func,
     labelName: PropTypes.string,
-    value: PropTypes.number,
+    value: PropTypes.string,
   };
 
-  handleReturn = event => {
+  handleReturn = (event) => {
     const { handleFilters } = this.props;
 
     if (event.key === 'Enter') {

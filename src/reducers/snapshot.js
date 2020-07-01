@@ -1,10 +1,21 @@
 import { handleActions } from 'redux-actions';
 import immutable from 'immutability-helper';
+import BigQuery from 'modules/bigquery';
+import { LOCATION_CHANGE } from 'connected-react-router';
 
 import { ActionTypes } from 'constants/index';
 
+const defaultSnapshotRequest = {
+  name: '',
+  description: '',
+  assetName: '',
+  filterStatement: '',
+  joinStatement: '',
+  readers: [],
+};
+
 export const snapshotState = {
-  createdSnapshots: [],
+  // snapshot info
   snapshot: {},
   snapshots: [],
   exception: false,
@@ -12,6 +23,8 @@ export const snapshotState = {
   dataset: {},
   snapshotCount: 0,
   dialogIsOpen: false,
+  // for snapshot creation
+  snapshotRequest: defaultSnapshotRequest,
 };
 
 export default {
@@ -22,27 +35,19 @@ export default {
           snapshots: { $set: action.snapshots.data.data.items },
           snapshotCount: { $set: action.snapshots.data.data.total },
         }),
-      [ActionTypes.CREATE_SNAPSHOT_JOB]: (state, action) => {
-        const newSnapshotCreation = {
-          jobId: action.payload.jobId,
-          snapshotRequest: action.payload.snapshotRequest,
-        };
-        return immutable(state, {
-          createdSnapshots: { $push: [newSnapshotCreation] },
+      [ActionTypes.CREATE_SNAPSHOT_JOB]: (state) =>
+        immutable(state, {
           snapshot: { $set: {} },
-        });
-      },
+          dialogIsOpen: { $set: true },
+        }),
       [ActionTypes.CREATE_SNAPSHOT_SUCCESS]: (state, action) =>
         immutable(state, {
           snapshot: { $set: action.payload.jobResult },
         }),
-      [ActionTypes.CREATE_SNAPSHOT_FAILURE]: (state, action) => {
-        const successfullyCreatedSnapshots = state.createdSnapshots; // passes a ref or a value?
-        successfullyCreatedSnapshots.filter(snapshot => snapshot.jobId !== action.payload.jobId);
-        return immutable(state, {
-          createdSnapshots: { $set: successfullyCreatedSnapshots },
-        });
-      },
+      [ActionTypes.CREATE_SNAPSHOT_FAILURE]: (state) =>
+        immutable(state, {
+          dialogIsOpen: { $set: false },
+        }),
       [ActionTypes.GET_SNAPSHOT_BY_ID_SUCCESS]: (state, action) =>
         immutable(state, {
           snapshot: { $set: action.snapshot.data.data },
@@ -59,13 +64,51 @@ export default {
         immutable(state, {
           snapshotPolicies: { $set: action.snapshot.data.data.policies },
         }),
-      [ActionTypes.EXCEPTION]: state =>
+      [ActionTypes.EXCEPTION]: (state) =>
         immutable(state, {
           exception: { $set: true },
+          dialogIsOpen: { $set: false },
         }),
       [ActionTypes.OPEN_SNAPSHOT_DIALOG]: (state, action) =>
         immutable(state, {
           dialogIsOpen: { $set: action.payload },
+        }),
+      [ActionTypes.APPLY_FILTERS]: (state, action) => {
+        const bigquery = new BigQuery();
+        const { filters, dataset } = action.payload;
+
+        const filterStatement = bigquery.buildSnapshotFilterStatement(filters, dataset);
+
+        return immutable(state, {
+          snapshotRequest: { filterStatement: { $set: filterStatement } },
+        });
+      },
+      [ActionTypes.SNAPSHOT_CREATE_DETAILS]: (state, action) => {
+        const bigquery = new BigQuery();
+        const { name, description, assetName, filterData, dataset } = action.payload;
+
+        const joinStatement = bigquery.buildSnapshotJoinStatement(filterData, assetName, dataset);
+        const snapshotRequest = {
+          ...state.snapshotRequest,
+          name,
+          description,
+          assetName,
+          joinStatement,
+        };
+
+        return immutable(state, {
+          snapshotRequest: { $set: snapshotRequest },
+        });
+      },
+      [ActionTypes.ADD_READERS_TO_SNAPSHOT]: (state, action) => {
+        const snapshotRequest = { ...state.snapshotRequest, readers: action.payload };
+        return immutable(state, {
+          snapshotRequest: { $set: snapshotRequest },
+        });
+      },
+      [LOCATION_CHANGE]: (state) =>
+        immutable(state, {
+          snapshotRequest: { $set: defaultSnapshotRequest },
         }),
     },
     snapshotState,

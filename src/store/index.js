@@ -1,5 +1,4 @@
 import { applyMiddleware, createStore, compose, combineReducers } from 'redux';
-import { createForms } from 'react-redux-form';
 import { connectRouter } from 'connected-react-router';
 
 import rootSaga from 'sagas/index';
@@ -7,18 +6,10 @@ import rootReducer from 'reducers/index';
 import history from 'modules/hist';
 import middleware, { sagaMiddleware } from './middleware';
 
-const initialSnapshotState = {
-  name: '',
-  description: '',
-  readers: [],
-  dataset: '',
-};
-
-const reducer = hist =>
+const reducer = (hist) =>
   combineReducers({
     router: connectRouter(hist),
     ...rootReducer,
-    ...createForms({ snapshot: initialSnapshotState }),
   });
 
 const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

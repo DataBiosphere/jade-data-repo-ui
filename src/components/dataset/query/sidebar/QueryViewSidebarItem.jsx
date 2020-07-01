@@ -42,7 +42,7 @@ export class QueryViewSidebarItem extends React.PureComponent {
     const { filterMap } = this.state;
     // enable the button when there are unsaved changes
     if (!_.isEqual(prevState.filterMap, filterMap)) {
-      this.setState({ disableButton: _.isEmpty(filterMap.value) });
+      this.setState({ disableButton: this.invalidChange(filterMap) });
     }
     // disable the button when filters have just been applied
     if (!_.isEqual(prevProps.filterData, filterData)) {
@@ -71,6 +71,15 @@ export class QueryViewSidebarItem extends React.PureComponent {
     this.setState({ filterMap: { ...filterMap, exclude: boxIsChecked } });
   };
 
+  invalidChange = (filterMap) => {
+    const { value } = filterMap;
+    if (filterMap.type === 'range') {
+      const badNumber = (number) => number === '' || number.endsWith('.') || isNaN(number);
+      return _.some(value, badNumber) || parseFloat(value[0]) > parseFloat(value[1]);
+    }
+    return _.isEmpty(value);
+  };
+
   render() {
     const {
       classes,
@@ -83,7 +92,7 @@ export class QueryViewSidebarItem extends React.PureComponent {
     } = this.props;
     const { disableButton, filterMap } = this.state;
     const item = ((datatype) => {
-      switch (datatype) {
+      switch (_.toLower(datatype)) {
         case 'string':
           return (
             <CategoryWrapper

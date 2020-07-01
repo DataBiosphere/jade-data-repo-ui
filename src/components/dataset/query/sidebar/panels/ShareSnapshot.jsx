@@ -17,8 +17,11 @@ import {
 } from '@material-ui/core';
 import { MoreVert } from '@material-ui/icons';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { actions } from 'react-redux-form';
 import { isEmail } from 'validator';
+import { createSnapshot, addReadersToSnapshot } from 'actions/index';
+
+const drawerWidth = 600;
+const sidebarWidth = 56;
 
 const styles = (theme) => ({
   root: {
@@ -26,12 +29,13 @@ const styles = (theme) => ({
   },
   section: {
     margin: `${theme.spacing(1)}px 0px`,
+    overflowX: 'hidden',
   },
   input: {
     backgroundColor: theme.palette.common.white,
     borderRadius: theme.spacing(0.5),
   },
-  inviteButton: {
+  button: {
     backgroundColor: theme.palette.common.link,
     color: theme.palette.common.white,
     '&:hover': {
@@ -50,6 +54,13 @@ const styles = (theme) => ({
   withIcon: {
     display: 'flex',
     alignItems: 'center',
+  },
+  bottom: {
+    position: 'fixed',
+    bottom: '0',
+    right: `${sidebarWidth + theme.spacing(2)}px`,
+    width: `${drawerWidth - theme.spacing(4)}px`,
+    textAlign: 'end',
   },
 });
 
@@ -91,13 +102,10 @@ export class ShareSnapshot extends React.PureComponent {
 
     // emails may be added with the press of the comma key in addition to enter key
     if (currentInput.includes(',')) {
-      const emails = currentInput.split(',');
-      emails.forEach(email => {
-        const trimmed = email.trim();
-        if (trimmed !== '') {
-          usersToAdd.push(trimmed);
-        }
-      });
+      const email = _.trim(currentInput, ', ');
+      if (email) {
+        usersToAdd.push(email);
+      }
       this.setState({ usersToAdd, currentInput: '' });
     }
   };
@@ -106,8 +114,20 @@ export class ShareSnapshot extends React.PureComponent {
    * adds the email as a tag to the text box
    */
   inputEmail = (event, value) => {
-    const nonEmptyStrings = value.map(string => string.trim()).filter(string => string !== '');
+    const nonEmptyStrings = value.map((string) => string.trim()).filter((string) => string !== '');
     this.setState({ usersToAdd: nonEmptyStrings, currentInput: '' });
+  };
+
+  /**
+   * allows users to paste a list of emails
+   */
+  onPaste = (event) => {
+    const { usersToAdd } = this.state;
+    event.preventDefault();
+    const text = event.clipboardData.getData('text');
+    const emails = text.split(/[,\s]+/);
+    const nonEmpty = emails.filter((s) => s !== '');
+    this.setState({ usersToAdd: _.concat(usersToAdd, nonEmpty), currentInput: '' });
   };
 
   /**
@@ -127,16 +147,14 @@ export class ShareSnapshot extends React.PureComponent {
     let validUsrs = [];
     let invalidUsrs = [];
     _.forEach(usersToAdd, (user) => {
-      console.log(user);
       if (!isEmail(user)) {
-        console.log('bad input');
         hasError = true;
         invalidUsrs.push(user);
       } else {
         validUsrs.push(user);
       }
     });
-    errorMsg = `Make sure all emails entered are valid. Invalid email(s) entered: ${invalidUsrs}`;
+    errorMsg = `Invalid email(s): ${invalidUsrs.join(', ')}`;
     !_.isEmpty(validUsrs) && this.addReaders(validUsrs);
     this.setState({ usersToAdd: [], currentInput: '', hasError, errorMsg });
   };
@@ -147,10 +165,10 @@ export class ShareSnapshot extends React.PureComponent {
   addReaders(users) {
     const { dispatch, readers } = this.props;
     if (!readers) {
-      dispatch(actions.change('snapshot.readers', users));
+      dispatch(addReadersToSnapshot(users));
     } else {
       const newUsers = _.difference(users, readers);
-      dispatch(actions.change('snapshot.readers', _.concat(readers, newUsers)));
+      dispatch(addReadersToSnapshot(_.concat(readers, newUsers)));
     }
   }
 
@@ -161,7 +179,7 @@ export class ShareSnapshot extends React.PureComponent {
     this.closeUserMenu();
     const { dispatch, readers } = this.props;
     const newUsers = _.without(readers, removeableEmail);
-    dispatch(actions.change('snapshot.readers', newUsers));
+    dispatch(addReadersToSnapshot(newUsers));
   }
 
   openUserMenu = (event) => {
@@ -170,6 +188,11 @@ export class ShareSnapshot extends React.PureComponent {
 
   closeUserMenu = () => {
     this.setState({ anchor: null });
+  };
+
+  saveSnapshot = () => {
+    const { dispatch } = this.props;
+    dispatch(createSnapshot());
   };
 
   render() {
@@ -199,6 +222,7 @@ export class ShareSnapshot extends React.PureComponent {
                     className={classes.input}
                     placeholder="enter email addresses"
                     onChange={this.parseEmail}
+                    onPaste={this.onPaste}
                     data-cy="enterEmailBox"
                   />
                 )}
@@ -233,17 +257,16 @@ export class ShareSnapshot extends React.PureComponent {
               )}
             </Grid>
           </Grid>
-          <Grid item xs>
-            <Button
-              variant="contained"
-              disableElevation={true}
-              className={classes.inviteButton}
-              onClick={this.invite}
-              data-cy="inviteButton"
-            >
-              Invite
-            </Button>
-          </Grid>
+          <Button
+            variant="contained"
+            disabled={!isEmail(currentInput) && !_.some(usersToAdd, (user) => isEmail(user))}
+            disableElevation={true}
+            className={clsx(classes.button, classes.section)}
+            onClick={this.invite}
+            data-cy="inviteButton"
+          >
+            Invite
+          </Button>
         </Grid>
         <Divider />
         <div className={classes.section} data-cy="readers">
@@ -274,6 +297,18 @@ export class ShareSnapshot extends React.PureComponent {
             </MenuItem>
           </Menu>
         </div>
+        <div className={classes.bottom}>
+          <Divider />
+          <Button
+            variant="contained"
+            disableElevation={true}
+            className={clsx(classes.button, classes.section)}
+            onClick={this.saveSnapshot}
+            data-cy="releaseDataset"
+          >
+            Release Dataset
+          </Button>
+        </div>
       </div>
     );
   }
@@ -281,7 +316,7 @@ export class ShareSnapshot extends React.PureComponent {
 
 function mapStateToProps(state) {
   return {
-    readers: state.snapshot.readers,
+    readers: state.snapshots.snapshotRequest.readers,
   };
 }
 

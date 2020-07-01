@@ -69,6 +69,8 @@ export const ActionTypes = keyMirror({
   OPEN_SNAPSHOT_DIALOG: undefined,
   COUNT_RESULTS: undefined,
   COUNT_RESULTS_SUCCESS: undefined,
+  SNAPSHOT_CREATE_DETAILS: undefined,
+  ADD_READERS_TO_SNAPSHOT: undefined,
 });
 
 /**

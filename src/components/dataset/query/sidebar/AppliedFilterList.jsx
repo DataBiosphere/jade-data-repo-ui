@@ -12,7 +12,7 @@ import { applyFilters } from '../../../../actions';
 import { Chip, Collapse, Badge } from '@material-ui/core';
 import { ExpandLess } from '@material-ui/icons';
 
-const styles = theme => ({
+const styles = (theme) => ({
   filterHeader: {
     paddingTop: theme.spacing(1),
     paddingBottom: theme.spacing(0.5),
@@ -35,7 +35,7 @@ const styles = theme => ({
   },
 });
 
-const StyledBadge = withStyles(theme => ({
+const StyledBadge = withStyles((theme) => ({
   badge: {
     right: 12,
     top: 0,
@@ -67,7 +67,6 @@ export class AppliedFilterList extends React.PureComponent {
 
   clearFilter = (table, filter, datum) => {
     const { dispatch, filterData, dataset, selected } = this.props;
-    const { relationships } = dataset.schema;
     const clonedData = _.cloneDeep(filterData);
     const clonedFilter = clonedData[table][filter];
     const filterValue = clonedFilter.value;
@@ -89,14 +88,14 @@ export class AppliedFilterList extends React.PureComponent {
       delete clonedData[table];
     }
 
-    dispatch(applyFilters(clonedData, relationships, selected, dataset));
+    dispatch(applyFilters(clonedData, selected, dataset));
   };
 
   render() {
     const { classes, filterData, table } = this.props;
     const { open } = this.state;
     let numFilters = 0;
-    const listFilters = _.keys(filterData[table]).map(filter => {
+    const listFilters = _.keys(filterData[table]).map((filter) => {
       const data = _.get(filterData[table], filter);
       let dataString = data.value;
 

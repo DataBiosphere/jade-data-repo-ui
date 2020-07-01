@@ -9,7 +9,7 @@ import { createActions } from 'redux-actions';
 import { ActionTypes } from 'constants/index';
 
 export const { createSnapshot } = createActions({
-  [ActionTypes.CREATE_SNAPSHOT]: (snapshot) => snapshot,
+  [ActionTypes.CREATE_SNAPSHOT]: () => ({}),
   [ActionTypes.CREATE_SNAPSHOT_JOB]: (snapshot) => snapshot,
   [ActionTypes.CREATE_SNAPSHOT_SUCCESS]: (snapshot) => snapshot,
   [ActionTypes.CREATE_SNAPSHOT_FAILURE]: (snapshot) => snapshot,
@@ -137,9 +137,8 @@ export const { pageQuery } = createActions({
 });
 
 export const { applyFilters } = createActions({
-  [ActionTypes.APPLY_FILTERS]: (filters, schema, table, dataset) => ({
+  [ActionTypes.APPLY_FILTERS]: (filters, table, dataset) => ({
     filters,
-    schema,
     table,
     dataset,
   }),
@@ -162,4 +161,18 @@ export const { countResults } = createActions({
     query,
   }),
   [ActionTypes.COUNT_RESULTS_SUCCESS]: (count) => count,
+});
+
+export const { snapshotCreateDetails } = createActions({
+  [ActionTypes.SNAPSHOT_CREATE_DETAILS]: (name, description, assetName, filterData, dataset) => ({
+    name,
+    description,
+    assetName,
+    filterData,
+    dataset,
+  }),
+});
+
+export const { addReadersToSnapshot } = createActions({
+  [ActionTypes.ADD_READERS_TO_SNAPSHOT]: (readers) => readers,
 });

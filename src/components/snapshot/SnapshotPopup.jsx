@@ -11,13 +11,14 @@ import {
   Typography,
   Button,
   Chip,
+  CircularProgress,
 } from '@material-ui/core';
 import { CameraAlt, Edit, PeopleAlt, OpenInNew, Today } from '@material-ui/icons';
 import clsx from 'clsx';
-import { openSnapshotDialog } from '../../actions';
-import moment from 'moment';
+import { openSnapshotDialog, getSnapshotById, getSnapshotPolicy } from 'actions/index';
+import { push } from 'modules/hist';
 
-const styles = theme => ({
+const styles = (theme) => ({
   snapshotName: {
     backgroundColor: theme.palette.primary.light,
     borderRadius: '4px 4px 0px 0px',
@@ -52,16 +53,35 @@ const styles = theme => ({
     margin: theme.spacing(0.5),
     marginLeft: '0px',
   },
+  centered: {
+    textAlign: 'center',
+  },
 });
 
 export class SnapshotPopup extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object,
     dataset: PropTypes.object,
+    dispatch: PropTypes.func.isRequired,
     filterData: PropTypes.object,
-    variants: PropTypes.number,
+    policies: PropTypes.arrayOf(PropTypes.object),
     snapshot: PropTypes.object,
   };
+
+  /**
+   * When a snapshot gets created, the empty snapshot prop gets populated with a brief summary.
+   * We want to use that snapshot id to get the full object and the policies for the dialog.
+   */
+  componentDidUpdate(prevProps) {
+    const { dispatch, snapshot, policies } = this.props;
+    if (_.isEmpty(prevProps.snapshot) && !_.isEmpty(snapshot)) {
+      dispatch(getSnapshotById(snapshot.id));
+      dispatch(getSnapshotPolicy(snapshot.id));
+    }
+    if (_.isEmpty(prevProps.policies) && !_.isEmpty(policies)) {
+      push('/snapshots');
+    }
+  }
 
   handleClose = () => {
     const { dispatch } = this.props;
@@ -69,9 +89,28 @@ export class SnapshotPopup extends React.PureComponent {
   };
 
   render() {
-    const { classes, dataset, filterData, isOpen, variants, snapshot } = this.props;
+    const { classes, dataset, filterData, isOpen, snapshot, policies } = this.props;
 
-    const variantLabel = variants == 1 ? 'Variant' : 'Variants';
+    const notReady = _.some([snapshot, policies, snapshot.source, snapshot.tables], _.isEmpty);
+    if (notReady) {
+      return (
+        <Dialog open={isOpen}>
+          <DialogTitle>
+            <Typography variant="h5">Your data snapshot is being created</Typography>
+          </DialogTitle>
+          <DialogContent>
+            {/* TODO: Make this loading state more descriptive */}
+            <div className={clsx(classes.centered, classes.content)}>
+              <CircularProgress />
+            </div>
+          </DialogContent>
+        </Dialog>
+      );
+    }
+
+    // this number represents the total rows in the snapshot, i.e. the sum over all tables
+    const rows = snapshot.tables.map((t) => t.rowCount).reduce((a, b) => a + b);
+    const rowLabel = rows == 1 ? 'Row' : 'Rows';
 
     const tables = _.keys(filterData).map((table, i) => {
       const filters = _.get(filterData, table);
@@ -95,7 +134,6 @@ export class SnapshotPopup extends React.PureComponent {
         }
         return dataDisplay;
       });
-
       return (
         <div className={classes.bodyText} key={i}>
           <div className={classes.light}>{table}</div>
@@ -103,6 +141,8 @@ export class SnapshotPopup extends React.PureComponent {
         </div>
       );
     });
+
+    const readers = policies.find((p) => p.name === 'reader').members;
 
     return (
       <Dialog open={isOpen} onClose={this.handleClose}>
@@ -113,27 +153,37 @@ export class SnapshotPopup extends React.PureComponent {
           <Paper variant="outlined">
             <div className={clsx(classes.snapshotName, classes.content, classes.withIcon)}>
               <CameraAlt className={classes.inline} />
-              <Typography variant="h6">{snapshot.name}</Typography>
+              <Typography variant="h6" data-cy="snapshotName">
+                {snapshot.name}
+              </Typography>
             </div>
             <div className={classes.content}>
               <div className={classes.bodyText}>
                 <Typography variant="h6">
-                  {variants} {variantLabel}
+                  {rows.toLocaleString()} {rowLabel}
                 </Typography>
               </div>
-              <Typography variant="subtitle1" color="primary">
-                Properties
-              </Typography>
+              {!_.isEmpty(tables) && (
+                <Typography variant="subtitle1" color="primary">
+                  Properties
+                </Typography>
+              )}
               <div>{tables}</div>
-              <Typography variant="subtitle1" color="primary">
-                Sources
-              </Typography>
-              <div className={classes.bodyText}>
-                <li className={classes.listItem}>{dataset.name}</li>
+              {!_.isEmpty(readers) && (
+                <Typography variant="subtitle1" color="primary">
+                  Shared With
+                </Typography>
+              )}
+              <div className={classes.bodyText} data-cy="snapshotReaders">
+                {readers.map((r) => (
+                  <li key={r} className={classes.listItem}>
+                    {r}
+                  </li>
+                ))}
               </div>
               <div className={clsx(classes.light, classes.withIcon)}>
                 <Today className={classes.inline} />
-                {moment().format('ll')}
+                {new Date(snapshot.createdDate).toLocaleString()}
               </div>
             </div>
           </Paper>
@@ -162,8 +212,8 @@ function mapStateToProps(state) {
     isOpen: state.snapshots.dialogIsOpen,
     dataset: state.datasets.dataset,
     filterData: state.query.filterData,
-    variants: state.query.queryResults.totalRows,
     snapshot: state.snapshots.snapshot,
+    policies: state.snapshots.snapshotPolicies,
   };
 }
 

@@ -4,7 +4,7 @@ import { withStyles, makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
     backgroundColor: theme.palette.primary.lightContrast,
     position: 'absolute',
@@ -22,7 +22,7 @@ const styles = theme => ({
   drawerPosition: {
     position: 'absolute',
   },
-  drawerOpen: props => ({
+  drawerOpen: (props) => ({
     width: props.width,
     transition: theme.transitions.create('width', {
       easing: theme.transitions.easing.sharp,
@@ -40,9 +40,6 @@ const styles = theme => ({
       width: 0,
     },
   },
-  iconList: {
-    color: theme.palette.primary.light,
-  },
   active: {
     backgroundColor: theme.palette.primary.light,
   },
@@ -52,10 +49,7 @@ export class SidebarDrawer extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      open: false,
-      currentKey: null,
       PanelComponent: null,
-      dataset: null,
     };
   }
 
@@ -68,33 +62,23 @@ export class SidebarDrawer extends React.PureComponent {
     table: PropTypes.object,
   };
 
-  handleDrawerOpen = () => {
-    this.setState({ open: true });
-  };
+  handleOpenPanel = (PanelComponent) => {
+    const { handleDrawerWidth, panels } = this.props;
+    // look through panels prop for the width of the given PanelComponent
+    const { width } = panels.find((panel) => panel.component === PanelComponent);
 
-  handleDrawerClose = () => {
-    this.setState({ open: false });
-  };
-
-  handleButtonClick = (key, PanelComponent, dataset, width) => {
-    const { currentKey, open } = this.state;
-    const { handleDrawerWidth } = this.props;
-
-    if (currentKey == null || !open) {
-      handleDrawerWidth(width);
-      this.setState({ open: true, currentKey: key, PanelComponent, dataset });
-    } else if (currentKey !== key && open) {
-      handleDrawerWidth(width);
-      this.setState({ currentKey: key, PanelComponent, dataset });
+    if (this.state.PanelComponent === PanelComponent) {
+      this.setState({ PanelComponent: null });
     } else {
-      this.setState({ open: false, currentKey: null });
+      handleDrawerWidth(width);
+      this.setState({ PanelComponent });
     }
   };
 
   render() {
     const { panels, classes, table, selected } = this.props;
-    const { open, PanelComponent, dataset, currentKey } = this.state;
-
+    const { PanelComponent } = this.state;
+    const open = PanelComponent !== null;
     return (
       <Fragment>
         <Drawer
@@ -113,7 +97,12 @@ export class SidebarDrawer extends React.PureComponent {
           open={open}
         >
           {PanelComponent != null && (
-            <PanelComponent open={open} table={table} dataset={dataset} selected={selected} />
+            <PanelComponent
+              open={open}
+              table={table}
+              selected={selected}
+              switchPanels={this.handleOpenPanel}
+            />
           )}
         </Drawer>
         <Box className={classes.root}>
@@ -123,13 +112,11 @@ export class SidebarDrawer extends React.PureComponent {
               return (
                 <ListItem
                   className={clsx({
-                    [classes.active]: i === currentKey,
+                    [classes.active]: panel.component === PanelComponent,
                   })}
                   button
                   key={i}
-                  onClick={() =>
-                    this.handleButtonClick(i, panel.component, panel.dataset, panel.width)
-                  }
+                  onClick={() => this.handleOpenPanel(panel.component)}
                 >
                   <IconComponent />
                 </ListItem>

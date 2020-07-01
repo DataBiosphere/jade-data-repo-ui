@@ -28,16 +28,37 @@ describe('test query builder', () => {
       cy.get('[data-cy=filterItem]').contains('ancestry').click();
     });
 
-    it('applies filters', () => {
-      cy.get('[data-cy="filter-ancestry-button"]').should('be.disabled');
+    describe('test apply filters', () => {
+      // sets up filtering
+      beforeEach(() => {
+        cy.get('[data-cy="filter-ancestry-button"]').should('be.disabled');
 
-      cy.get('[data-cy=categoryFilterCheckbox-EU]').click();
-      cy.get('[data-cy="filter-ancestry-button"]').should('not.be.disabled');
+        cy.get('[data-cy=categoryFilterCheckbox-EU]').click();
+        cy.get('[data-cy="filter-ancestry-button"]').should('not.be.disabled');
 
-      cy.get('[data-cy="filter-ancestry-button"]').click();
+        cy.get('[data-cy="filter-ancestry-button"]').click();
 
-      cy.get('[data-cy=appliedFilterList-ancestry_specific_meta_analysis]').should('be.visible');
-      cy.get('[data-cy="filter-ancestry-button"]').should('be.disabled');
+        cy.get('[data-cy=appliedFilterList-ancestry_specific_meta_analysis]').should('be.visible');
+      });
+
+      it('applies filters', () => {
+        cy.get('[data-cy="filter-ancestry-button"]').should('be.disabled');
+      });
+
+      it('creates snapshot query', () => {
+        cy.get('[data-cy=createSnapshot]').click();
+
+        cy.window()
+          .its('store')
+          .invoke('getState')
+          .its('snapshots')
+          .its('snapshotRequest')
+          .its('filterStatement')
+          .should(
+            'equal',
+            'WHERE V2F_GWAS_Summary_Stats.ancestry_specific_meta_analysis.ancestry IN ("EU")',
+          );
+      });
     });
 
     it('clears filters', () => {
@@ -112,26 +133,61 @@ describe('test query builder', () => {
     });
 
     it('checks invalid email addresses', () => {
-      cy.get('[data-cy=enterEmailBox]').type('maggenzi,myessail@broadinstitute.org');
+      // type invalid email
+      cy.get('[data-cy=enterEmailBox]').type('maggenzi,');
+      cy.get('[data-cy=inviteButton]').should('be.disabled');
+
+      // type valid email
+      cy.get('[data-cy=enterEmailBox]').type('myessail@broadinstitute.org');
+      cy.get('[data-cy=inviteButton]').should('not.be.disabled');
       cy.get('[data-cy=inviteButton]').click();
 
+      // only valid email should be added to readers
       cy.get('[data-cy=readers]').contains('myessail@broadinstitute.org').should('be.visible');
       cy.get('[data-cy=invalidEmailError]').contains('maggenzi').should('be.visible');
     });
 
     it('removes space characters', () => {
-      cy.get('[data-cy=enterEmailBox]').type(' ');
-      cy.get('[data-cy=inviteButton]').click();
-      cy.get('[data-cy=readers]').should('not.contain', ' ');
-
       cy.get('[data-cy=enterEmailBox]').type(' ,');
-      cy.get('[data-cy=inviteButton]').click();
-      cy.get('[data-cy=readers]').should('not.contain', ' ');
+      cy.get('[data-cy=enterEmailBox]').should('not.contain', ' ,');
+      cy.get('[data-cy=inviteButton]').should('be.disabled');
 
       cy.get('[data-cy=enterEmailBox]').type('mac@gmail.com, ken@gmail.com , zie@gmail.com');
       cy.get('[data-cy=inviteButton]').click();
       cy.get('[data-cy=readers]').should('not.contain', ' ken@gmail.com ');
       cy.get('[data-cy=readers]').should('not.contain', ' zie@gmail.com');
+    });
+  });
+
+  describe('test wizard flow', () => {
+    it('transitions to share panel', () => {
+      // open filter panel
+      cy.get('div.MuiButtonBase-root:nth-child(2) > svg:nth-child(1)').click();
+
+      // create snapshot button should open 'Add details' panel
+      cy.get('[data-cy=createSnapshot]').click();
+      cy.contains('Add Details').should('be.visible');
+      cy.get('[data-cy=next]').should('be.disabled');
+
+      // enter snapshot name
+      cy.get('[data-cy=textFieldName]').type('mySnapshot');
+      cy.get('[data-cy=next]').should('be.disabled');
+
+      // select asset
+      cy.get('[data-cy=selectAsset]').click();
+      cy.get('[data-cy=menuItem-Variant]').click();
+      cy.get('[data-cy=next]').should('not.be.disabled');
+
+      // 'next' button should bring user to share panel
+      cy.get('[data-cy=next]').click();
+      cy.contains('Share Snapshot').should('be.visible');
+      cy.window()
+        .its('store')
+        .invoke('getState')
+        .its('snapshots')
+        .its('snapshotRequest')
+        .its('joinStatement')
+        .should('equal', 'FROM V2F_GWAS_Summary_Stats.variant ');
     });
   });
 });

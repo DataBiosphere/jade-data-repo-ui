@@ -18,7 +18,9 @@ import { ActionTypes, STATUS } from 'constants/index';
 
 export const getToken = (state) => state.user.token;
 export const getTokenExpiration = (state) => state.user.tokenExpiration;
-export const getCreateSnapshot = (state) => state.snapshot;
+export const getSnapshotState = (state) => state.snapshots;
+export const getQuery = (state) => state.query;
+export const getDataset = (state) => state.datasets.dataset;
 
 export function* checkToken() {
   const tokenExpiration = yield select(getTokenExpiration);
@@ -101,18 +103,36 @@ function* pollJobWorker(jobId, jobTypeSuccess, jobTypeFailure) {
  */
 
 export function* createSnapshot() {
-  const snapshot = yield select(getCreateSnapshot);
+  const snapshots = yield select(getSnapshotState);
+  const dataset = yield select(getDataset);
+  const {
+    name,
+    description,
+    assetName,
+    filterStatement,
+    joinStatement,
+    readers,
+  } = snapshots.snapshotRequest;
+
+  const datasetName = dataset.name;
+  const mode = 'byQuery';
+  const selectedAsset = _.find(dataset.schema.assets, (asset) => asset.name === assetName);
+  const rootTable = selectedAsset.rootTable;
+  const drRowId = 'datarepo_row_id';
+
   const snapshotRequest = {
-    name: snapshot.name,
-    description: snapshot.description,
-    readers: snapshot.readers,
+    name,
+    profileId: dataset.defaultProfileId,
+    description,
+    readers,
     contents: [
       {
-        source: {
-          datasetName: snapshot.dataset,
-          assetName: snapshot.asset,
+        datasetName,
+        mode,
+        querySpec: {
+          assetName,
+          query: `SELECT ${datasetName}.${rootTable}.${drRowId} ${joinStatement} ${filterStatement}`,
         },
-        rootValues: snapshot.ids,
       },
     ],
   };
