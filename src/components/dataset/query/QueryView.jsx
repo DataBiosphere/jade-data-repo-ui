@@ -148,8 +148,6 @@ export class QueryView extends React.PureComponent {
     const { table, selected, sidebarWidth } = this.state;
     const names = dataset.schema.tables.map((t) => t.name);
 
-    console.log(names);
-
     return (
       <Fragment>
         <Grid container spacing={0} className={classes.wrapper}>

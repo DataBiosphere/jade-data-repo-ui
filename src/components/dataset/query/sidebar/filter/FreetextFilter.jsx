@@ -25,7 +25,6 @@ export class FreetextFilter extends React.PureComponent {
   constructor(props) {
     super(props);
 
-    console.log('in constructor');
     this.state = {
       options: [],
       inputValue: '',
@@ -79,7 +78,6 @@ export class FreetextFilter extends React.PureComponent {
     );
 
     const transformedResponse = this.transformResponse(response);
-    console.log('SETTING STATE' + value);
     this.setState({
       options: transformedResponse,
     });
@@ -133,7 +131,6 @@ export class FreetextFilter extends React.PureComponent {
           )}
           // tags are rendered manually in list under autocomplete box
           renderTags={() => null}
-          // onInputChange={this.onComplete}
           inputValue={inputValue}
           onKeyPress={this.handleReturn}
           onPaste={this.onPaste}
