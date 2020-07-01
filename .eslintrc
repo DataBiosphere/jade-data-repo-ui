@@ -1,11 +1,5 @@
 {
-  "extends": [
-    "airbnb",
-    "plugin:prettier/recommended",
-    "prettier/flowtype",
-    "prettier/react",
-    "prettier"
-  ],
+  "extends": ["airbnb", "plugin:prettier/recommended", "prettier/flowtype", "prettier/react"],
   "parser": "babel-eslint",
   "env": {
     "browser": true,
@@ -23,7 +17,7 @@
     "APP__GITHASH": false,
     "APP__VERSION": false
   },
-  "plugins": ["babel", "cypress", "flowtype", "redux-saga", "prettier"],
+  "plugins": ["babel", "cypress", "flowtype", "redux-saga"],
   "settings": {
     "import/resolver": {
       "webpack": {
@@ -144,7 +138,6 @@
       }
     ],
     "jsx-quotes": "warn",
-    "prettier/prettier": "error",
     "react/forbid-prop-types": "off",
     "react/jsx-closing-bracket-location": ["warn", "line-aligned"],
     "react/jsx-first-prop-new-line": ["warn", "multiline"],
