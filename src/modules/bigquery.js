@@ -1,5 +1,6 @@
 import axios from 'axios';
 import _ from 'lodash';
+import AwesomeDebouncePromise from 'awesome-debounce-promise';
 
 export default class BigQuery {
   constructor() {
@@ -184,6 +185,8 @@ export default class BigQuery {
       )
       .then((response) => response.data.rows);
   };
+
+  getAutocompleteForColumnDebounced = AwesomeDebouncePromise(this.getAutocompleteForColumn, 500);
 
   constructGraph = (schema) => {
     const neighbors = {}; // Key = vertex, value = array of neighbors.

@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 
+import AwesomeDebouncePromise from 'awesome-debounce-promise';
+
 import TextField from '@material-ui/core/TextField';
 import Chip from '@material-ui/core/Chip';
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -27,6 +29,7 @@ export class FreetextFilter extends React.PureComponent {
     this.state = {
       options: [],
       inputValue: '',
+      bq: new BigQuery(),
     };
   }
 
@@ -45,29 +48,6 @@ export class FreetextFilter extends React.PureComponent {
     token: PropTypes.string,
   };
 
-  onComplete = (event, value) => {
-    const { column, dataset, tableName, token, filterStatement, joinStatement } = this.props;
-    const bq = new BigQuery();
-    console.log(event);
-    console.log(value);
-    bq.getAutocompleteForColumn(
-      value,
-      column.name,
-      dataset,
-      tableName,
-      token,
-      filterStatement,
-      joinStatement,
-    ).then((response) => {
-      const transformedResponse = this.transformResponse(response);
-      console.log('SETTING STATE' + value);
-      this.setState({
-        inputValue: value,
-        options: transformedResponse,
-      });
-    });
-  };
-
   transformResponse = (response) => {
     const options = [];
     if (response) {
@@ -77,6 +57,32 @@ export class FreetextFilter extends React.PureComponent {
       });
     }
     return options;
+  };
+
+  onComplete = async (event) => {
+    const { column, dataset, tableName, token, filterStatement, joinStatement } = this.props;
+    const { bq } = this.state;
+    const value = event.target.value;
+
+    this.setState({
+      inputValue: value,
+    });
+
+    const response = await bq.getAutocompleteForColumnDebounced(
+      value,
+      column.name,
+      dataset,
+      tableName,
+      token,
+      filterStatement,
+      joinStatement,
+    );
+
+    const transformedResponse = this.transformResponse(response);
+    console.log('SETTING STATE' + value);
+    this.setState({
+      options: transformedResponse,
+    });
   };
 
   handleReturn = (event) => {
@@ -109,6 +115,7 @@ export class FreetextFilter extends React.PureComponent {
     return (
       <div>
         <Autocomplete
+          debug={true}
           multiple
           id={`autocomplete-${column.name}`}
           options={options}
@@ -116,11 +123,18 @@ export class FreetextFilter extends React.PureComponent {
           freeSolo={true}
           style={{ width: '100%' }}
           renderInput={(params) => (
-            <TextField {...params} fullWidth variant="outlined" margin="dense" />
+            <TextField
+              {...params}
+              fullWidth
+              variant="outlined"
+              margin="dense"
+              onChange={this.onComplete}
+            />
           )}
           // tags are rendered manually in list under autocomplete box
           renderTags={() => null}
-          onInputChange={this.onComplete}
+          // onInputChange={this.onComplete}
+          inputValue={inputValue}
           onKeyPress={this.handleReturn}
           onPaste={this.onPaste}
           value={value}
