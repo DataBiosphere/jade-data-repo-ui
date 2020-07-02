@@ -20,7 +20,6 @@ jobs:
       - name: Check out the repository
         uses: actions/checkout@v1
       - name: npm ci
-        run: |
-          npm ci
+        run: npm ci
       - name: Run ESLint
-        run: eslint . --ext .js,.jsx,.ts,.tsx
+        run: npm run lint
