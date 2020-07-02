@@ -143,12 +143,8 @@ export class JadeTable extends React.PureComponent {
                           const value = this.handleArrayValues(row[column.id]);
 
                           return (
-                            value && (
-                              <TableCell key={`${column.id}-${drId}`} align={column.align}>
-                                {column.format && typeof value === 'number'
-                                  ? column.format(value)
-                                  : value}
-                              </TableCell>
+                            !_.isUndefined(value) && (
+                              <TableCell key={`${column.id}-${drId}`}>{value}</TableCell>
                             )
                           );
                         })}
