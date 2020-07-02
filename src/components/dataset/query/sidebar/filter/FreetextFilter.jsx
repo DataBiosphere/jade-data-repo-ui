@@ -2,8 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 
-import AwesomeDebouncePromise from 'awesome-debounce-promise';
-
 import TextField from '@material-ui/core/TextField';
 import Chip from '@material-ui/core/Chip';
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -35,16 +33,19 @@ export class FreetextFilter extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object,
     column: PropTypes.object,
+    dataset: PropTypes.object,
     filterMap: PropTypes.object,
+    filterStatement: PropTypes.string,
     handleChange: PropTypes.func,
     handleFilters: PropTypes.func,
+    joinStatement: PropTypes.string,
+    options: PropTypes.array,
     originalValues: PropTypes.object,
     table: PropTypes.string,
+    tableName: PropTypes.string,
     toggleExclude: PropTypes.func,
-    values: PropTypes.object,
-    options: PropTypes.array,
-    dataset: PropTypes.object,
     token: PropTypes.string,
+    values: PropTypes.object,
   };
 
   transformResponse = (response) => {
@@ -58,10 +59,10 @@ export class FreetextFilter extends React.PureComponent {
     return options;
   };
 
-  onComplete = async (event) => {
+  onInputChange = async (event) => {
     const { column, dataset, tableName, token, filterStatement, joinStatement } = this.props;
     const { bq } = this.state;
-    const value = event.target.value;
+    const { value } = event.target;
 
     this.setState({
       inputValue: value,
@@ -81,6 +82,11 @@ export class FreetextFilter extends React.PureComponent {
     this.setState({
       options: transformedResponse,
     });
+  };
+
+  onChange = (event, value) => {
+    const { handleChange } = this.props;
+    handleChange(value);
   };
 
   handleReturn = (event) => {
@@ -106,7 +112,7 @@ export class FreetextFilter extends React.PureComponent {
   };
 
   render() {
-    const { classes, filterMap, column, values, toggleExclude } = this.props;
+    const { classes, filterMap, column, toggleExclude } = this.props;
     const { options, inputValue } = this.state;
     const value = _.get(filterMap, 'value', []);
 
@@ -126,7 +132,7 @@ export class FreetextFilter extends React.PureComponent {
               fullWidth
               variant="outlined"
               margin="dense"
-              onChange={this.onComplete}
+              onChange={this.onInputChange}
             />
           )}
           // tags are rendered manually in list under autocomplete box
@@ -134,6 +140,7 @@ export class FreetextFilter extends React.PureComponent {
           inputValue={inputValue}
           onKeyPress={this.handleReturn}
           onPaste={this.onPaste}
+          onChange={this.onChange}
           value={value}
           forcePopupIcon
           disableClearable
