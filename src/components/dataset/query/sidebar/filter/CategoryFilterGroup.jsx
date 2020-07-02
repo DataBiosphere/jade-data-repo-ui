@@ -47,8 +47,7 @@ export class CategoryFilterGroup extends React.PureComponent {
   render() {
     const { column, values, table, originalValues, filterMap } = this.props;
     const checkboxes = _.keys(originalValues).map((name) => {
-      const { hasOwnProperty } = values;
-      const count = hasOwnProperty(name) ? parseInt(values[name], 10) : 0;
+      const count = parseInt(_.get(values, name, '0'), 10);
       return (
         <div key={name}>
           <CategoryFilter

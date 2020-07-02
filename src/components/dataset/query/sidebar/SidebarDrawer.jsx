@@ -65,8 +65,8 @@ export class SidebarDrawer extends React.PureComponent {
   handleOpenPanel = (InputPanelComponent) => {
     const { handleDrawerWidth, panels } = this.props;
     const { PanelComponent } = this.state;
-    // look through panels prop for the width of the given PanelComponent
-    const { width } = panels.find((panel) => panel.component === PanelComponent);
+    // look through panels prop for the width of the given InputPanelComponent
+    const { width } = panels.find((panel) => panel.component === InputPanelComponent);
 
     if (PanelComponent === InputPanelComponent) {
       this.setState({ PanelComponent: null });
