@@ -29,7 +29,7 @@ export class JadeTableHead extends React.PureComponent {
       <TableHead>
         <TableRow>
           {columns.map(
-            column =>
+            (column) =>
               column.id !== 'datarepo_row_id' && (
                 <TableCell
                   key={column.id}

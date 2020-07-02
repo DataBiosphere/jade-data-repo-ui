@@ -13,6 +13,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { pageQuery, applySort } from 'actions/index';
 import { JadeTableHead } from './JadeTableHead';
 
+// eslint-disable-next-line no-unused-vars
 const styles = (theme) => ({
   root: {
     width: '100%',

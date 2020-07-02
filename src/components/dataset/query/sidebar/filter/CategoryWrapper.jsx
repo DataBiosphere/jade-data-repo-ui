@@ -47,18 +47,6 @@ export class CategoryWrapper extends React.PureComponent {
     toggleExclude: PropTypes.func,
   };
 
-  transformResponse = (response) => {
-    const counts = {};
-    if (response) {
-      response.map((r) => {
-        const name = r.f[0].v;
-        const count = r.f[1].v;
-        counts[name] = count;
-      });
-    }
-    return counts;
-  };
-
   componentDidUpdate(prevProps) {
     const { column, dataset, tableName, token, filterStatement, joinStatement } = this.props;
     if (filterStatement !== prevProps.filterStatement || tableName !== prevProps.tableName) {
@@ -83,6 +71,18 @@ export class CategoryWrapper extends React.PureComponent {
       });
     }
   }
+
+  transformResponse = (response) => {
+    const counts = {};
+    if (response) {
+      response.map((r) => {
+        const name = r.f[0].v;
+        const count = r.f[1].v;
+        counts[name] = count;
+      });
+    }
+    return counts;
+  };
 
   render() {
     const { values, originalValues } = this.state;

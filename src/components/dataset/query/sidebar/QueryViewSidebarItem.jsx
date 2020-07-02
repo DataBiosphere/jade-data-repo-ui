@@ -2,11 +2,12 @@ import React from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 
-import RangeFilter from './filter/RangeFilter';
-import CategoryWrapper from './filter/CategoryWrapper';
 import { Button } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
+import RangeFilter from './filter/RangeFilter';
+import CategoryWrapper from './filter/CategoryWrapper';
 
+// eslint-disable-next-line no-unused-vars
 const styles = (theme) => ({
   buttonContainer: {
     textAlign: 'end',

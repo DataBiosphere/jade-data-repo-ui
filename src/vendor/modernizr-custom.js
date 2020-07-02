@@ -58,5 +58,4 @@ Modernizr.addTest('ios', Modernizr.ipad || Modernizr.ipod || Modernizr.iphone);
 
 Modernizr.addTest('ie', Boolean(BrowserDetect.browser === 'Explorer'));
 
-require('expose?MobileDetect!mobile-detect');
 require('mobile-detect/mobile-detect-modernizr');

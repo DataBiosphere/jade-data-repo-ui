@@ -26,7 +26,7 @@ export default {
           token: { $set: action.payload.token },
           tokenExpiration: { $set: action.payload.tokenExpiration },
         }),
-      [ActionTypes.USER_LOGOUT]: state =>
+      [ActionTypes.USER_LOGOUT]: (state) =>
         immutable(state, {
           isAuthenticated: { $set: false },
           status: { $set: STATUS.IDLE },

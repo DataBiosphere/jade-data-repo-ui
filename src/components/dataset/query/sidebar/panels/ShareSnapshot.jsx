@@ -79,6 +79,7 @@ export class ShareSnapshot extends React.PureComponent {
 
   static propTypes = {
     classes: PropTypes.object,
+    dispatch: PropTypes.func,
     policies: PropTypes.arrayOf(PropTypes.object),
     readers: PropTypes.arrayOf(PropTypes.string),
     snapshot: PropTypes.object,
@@ -144,8 +145,8 @@ export class ShareSnapshot extends React.PureComponent {
 
     let hasError = false;
     let errorMsg = '';
-    let validUsrs = [];
-    let invalidUsrs = [];
+    const validUsrs = [];
+    const invalidUsrs = [];
     _.forEach(usersToAdd, (user) => {
       if (!isEmail(user)) {
         hasError = true;
@@ -155,6 +156,7 @@ export class ShareSnapshot extends React.PureComponent {
       }
     });
     errorMsg = `Invalid email(s): ${invalidUsrs.join(', ')}`;
+    // eslint-disable-next-line no-unused-expressions
     !_.isEmpty(validUsrs) && this.addReaders(validUsrs);
     this.setState({ usersToAdd: [], currentInput: '', hasError, errorMsg });
   };

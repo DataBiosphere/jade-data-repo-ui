@@ -34,7 +34,7 @@ function deploy() {
   const start = Date.now();
   console.log(chalk.blue('Bundling...'));
 
-  return exec('npm run build', errBuild => {
+  return exec('npm run build', (errBuild) => {
     if (errBuild) {
       console.log(chalk.red(errBuild));
       process.exit(1);
@@ -58,7 +58,7 @@ function updateDependencies() {
             console.log(chalk.green('✔ Nothing to update'));
           }
         })
-        .catch(err => {
+        .catch((err) => {
           throw new Error(err);
         }),
     )
@@ -85,7 +85,7 @@ function checkUpstream() {
                 process.exit(1);
               }
             })
-            .catch(err => {
+            .catch((err) => {
               if (err.message.includes('no upstream configured ')) {
                 console.log(chalk.yellow('⚠ Warning'), 'No upstream. Is this a new branch?');
                 return;
@@ -94,7 +94,7 @@ function checkUpstream() {
               console.log(chalk.yellow('⚠ Warning'), err.message);
             });
         })
-        .catch(err => {
+        .catch((err) => {
           throw new Error(err);
         }),
     )

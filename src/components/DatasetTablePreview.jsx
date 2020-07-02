@@ -7,7 +7,7 @@ import TableChart from '@material-ui/icons/TableChartOutlined';
 import PreviewTable from './table/PreviewTable';
 import TablePicker from './TablePicker';
 
-const styles = theme => ({
+const styles = (theme) => ({
   title: {
     color: theme.palette.primary.main,
     fontSize: '24px',
@@ -47,7 +47,7 @@ export class DatasetTablePreview extends React.PureComponent {
     const { dataset } = this.props;
     const { currentTable } = this.state;
     if (dataset && dataset.schema) {
-      return dataset.schema.tables.find(t => t.name === currentTable);
+      return dataset.schema.tables.find((t) => t.name === currentTable);
     }
     return null;
   }
@@ -56,7 +56,7 @@ export class DatasetTablePreview extends React.PureComponent {
     this.setState({ pickerOpen: true });
   };
 
-  pickTable = tableName => {
+  pickTable = (tableName) => {
     this.setState({ pickerOpen: false, currentTable: tableName });
     this.loadPreview(tableName);
   };

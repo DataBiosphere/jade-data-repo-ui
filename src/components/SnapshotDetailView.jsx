@@ -14,7 +14,7 @@ import DetailViewHeader from './DetailViewHeader';
 
 import DatasetTable from './table/DatasetTable';
 
-const styles = theme => ({
+const styles = (theme) => ({
   wrapper: {
     display: 'flex',
     justifyContent: 'center',
@@ -61,40 +61,41 @@ export class SnapshotDetailView extends React.PureComponent {
     snapshotPolicies: PropTypes.arrayOf(PropTypes.object).isRequired,
   };
 
-  componentWillMount() {
+  // TODO: this will be overhauled once we tweak the snapshot view
+  UNSAFE_componentWillMount() {
     const { dispatch, match } = this.props;
     const snapshotId = match.params.uuid;
     dispatch(getSnapshotById(snapshotId));
     dispatch(getSnapshotPolicy(snapshotId));
   }
 
-  addReader = newEmail => {
+  addReader = (newEmail) => {
     const { snapshot, dispatch } = this.props;
     dispatch(addSnapshotPolicyMember(snapshot.id, newEmail, 'reader'));
   };
 
-  removeReader = removeableEmail => {
+  removeReader = (removeableEmail) => {
     const { snapshot, dispatch } = this.props;
     dispatch(removeReaderFromSnapshot(snapshot.id, removeableEmail));
   };
 
-  addCustodian = newEmail => {
+  addCustodian = (newEmail) => {
     const { snapshot, dispatch } = this.props;
     dispatch(addCustodianToSnapshot(snapshot.id, [newEmail]));
   };
 
-  removeCustodian = removeableEmail => {
+  removeCustodian = (removeableEmail) => {
     const { snapshot, dispatch } = this.props;
     dispatch(removeCustodianFromSnapshot(snapshot.id, removeableEmail));
   };
 
   render() {
     const { classes, snapshot, snapshotPolicies } = this.props;
-    const snapshotReadersObj = snapshotPolicies.find(policy => policy.name === 'reader');
+    const snapshotReadersObj = snapshotPolicies.find((policy) => policy.name === 'reader');
     const snapshotReaders = (snapshotReadersObj && snapshotReadersObj.members) || [];
-    const snapshotCustodiansObj = snapshotPolicies.find(policy => policy.name === 'custodian');
+    const snapshotCustodiansObj = snapshotPolicies.find((policy) => policy.name === 'custodian');
     const snapshotCustodians = (snapshotCustodiansObj && snapshotCustodiansObj.members) || [];
-    const datasets = snapshot && snapshot.source && snapshot.source.map(s => s.dataset);
+    const datasets = snapshot && snapshot.source && snapshot.source.map((s) => s.dataset);
     return (
       <div id="snapshot-detail-view" className={classes.wrapper}>
         <div className={classes.width}>

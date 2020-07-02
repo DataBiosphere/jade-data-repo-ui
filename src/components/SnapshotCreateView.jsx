@@ -44,7 +44,7 @@ function getColumnForField(sheet, assetField) {
   return 'A';
 }
 
-const styles = theme => ({
+const styles = (theme) => ({
   wrapper: {
     display: 'flex',
     justifyContent: 'center',
@@ -140,14 +140,17 @@ export class SnapshotCreateView extends React.PureComponent {
   getDatasetOptions(datasets) {
     const datasetOptions =
       datasets.datasets &&
-      datasets.datasets.map(dataset => ({ value: dataset.id, label: dataset.name }));
+      datasets.datasets.map((dataset) => ({ value: dataset.id, label: dataset.name }));
     return datasetOptions;
   }
 
   getAssetOptions(dataset) {
     let assetOptions = [];
     if (dataset && dataset.schema && dataset.schema.assets) {
-      assetOptions = dataset.schema.assets.map(asset => ({ value: asset.name, label: asset.name }));
+      assetOptions = dataset.schema.assets.map((asset) => ({
+        value: asset.name,
+        label: asset.name,
+      }));
     }
     return assetOptions;
   }
@@ -164,17 +167,17 @@ export class SnapshotCreateView extends React.PureComponent {
   removeUser(removeableEmail) {
     const { dispatch, readers } = this.props;
     const newUsers = _.clone(readers);
-    _.remove(newUsers, r => r === removeableEmail);
+    _.remove(newUsers, (r) => r === removeableEmail);
     dispatch(actions.change('snapshot.readers', newUsers));
   }
 
-  parseFile = event => {
+  parseFile = (event) => {
     const { dispatch } = this.props;
     const { files } = event.target;
     const assetField = 'Epic';
     if (files.length > 0) {
       const fileReader = new FileReader();
-      fileReader.addEventListener('load', e => {
+      fileReader.addEventListener('load', (e) => {
         const data = e.target.result;
         const workbook = xlsx.read(data, { type: 'binary' });
         const values = [];
@@ -199,7 +202,7 @@ export class SnapshotCreateView extends React.PureComponent {
   };
 
   render() {
-    const FormRow = props => <div style={{ paddingBottom: '1em' }}>{props.children}</div>;
+    const FormRow = (props) => <div style={{ paddingBottom: '1em' }}>{props.children}</div>;
     const { asset, classes, createdSnapshot, jobId, ids, readers, datasets, dataset } = this.props;
     const datasetOptions = this.getDatasetOptions(datasets);
     const assetOptions = this.getAssetOptions(dataset);
@@ -218,7 +221,7 @@ export class SnapshotCreateView extends React.PureComponent {
                   id="snapshot.name"
                   required
                   validators={{ name: this.validateName }}
-                  component={props => (
+                  component={(props) => (
                     <TextField {...props} placeholder="Snapshot Name" variant="outlined" />
                   )}
                 />
@@ -230,7 +233,7 @@ export class SnapshotCreateView extends React.PureComponent {
                 model="snapshot.description"
                 id="snapshot.description"
                 required
-                component={props => (
+                component={(props) => (
                   <TextField
                     {...props}
                     style={{ width: '800px' }} // fullWidth
@@ -248,12 +251,12 @@ export class SnapshotCreateView extends React.PureComponent {
                 <Control.custom
                   id="snapshot.readers"
                   model="snapshot.readers"
-                  component={props => (
+                  component={(props) => (
                     <ManageUsers
                       {...props}
-                      addUser={newEmail => this.addUser(newEmail)}
+                      addUser={(newEmail) => this.addUser(newEmail)}
                       defaultValue="Add viewer email address"
-                      removeUser={removeableEmail => this.removeUser(removeableEmail)}
+                      removeUser={(removeableEmail) => this.removeUser(removeableEmail)}
                       users={readers}
                     />
                   )}
@@ -265,13 +268,13 @@ export class SnapshotCreateView extends React.PureComponent {
                 id="snapshot.dataset"
                 model="snapshot.dataset"
                 className={classes.selector}
-                component={props => (
+                component={(props) => (
                   <MultiSelect
                     {...props}
-                    onChange={e => this.selectDataset(e.label, e.value)}
+                    onChange={(e) => this.selectDataset(e.label, e.value)}
                     options={datasetOptions}
                     placeholder="Search Datasets"
-                    value={datasetOptions.filter(option => option.value === dataset.id)}
+                    value={datasetOptions.filter((option) => option.value === dataset.id)}
                   />
                 )}
               />
@@ -282,18 +285,18 @@ export class SnapshotCreateView extends React.PureComponent {
                 id="snapshot.asset"
                 model="snapshot.asset"
                 className={classes.selector}
-                component={props => (
+                component={(props) => (
                   <MultiSelect
                     {...props}
                     isDisabled={!dataset.name}
-                    onChange={e => this.selectAsset(e.value)}
+                    onChange={(e) => this.selectAsset(e.value)}
                     options={assetOptions}
                     placeholder={
                       dataset.name
                         ? 'Select Asset Type...'
                         : 'Select Dataset to Select Asset Type...'
                     }
-                    value={assetOptions.filter(option => option.value === asset)}
+                    value={assetOptions.filter((option) => option.value === asset)}
                   />
                 )}
               />
@@ -347,7 +350,7 @@ function mapStateToProps(state) {
   return {
     asset: state.snapshot.asset,
     createdSnapshot: state.snapshots.createdSnapshots.find(
-      snapshotJob => snapshotJob.jobId === state.jobs.jobId,
+      (snapshotJob) => snapshotJob.jobId === state.jobs.jobId,
     ),
     jobId: state.jobs.jobId,
     createdSnapshots: state.snapshots.createdSnapshots,
