@@ -1,0 +1,26 @@
+name: lint
+on:
+  pull_request:
+    branches:
+      - develop
+jobs:
+  lint:
+    timeout-minutes: 180
+    strategy:
+      matrix:
+        node-version: [12.x]
+    if: "!contains( github.event.pull_request.labels.*.name, 'skip-ci')"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Check out the repository
+        uses: actions/checkout@v1
+      - name: npm ci
+        run: |
+          npm ci
+      - name: Run ESLint
+        run: eslint . --ext .js,.jsx,.ts,.tsx
