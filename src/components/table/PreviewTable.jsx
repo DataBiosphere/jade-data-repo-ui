@@ -16,17 +16,17 @@ export default class PreviewTable extends React.PureComponent {
     const columns = table.columns.map((col, j) => ({
       label: col.name,
       property: col.name,
-      render: row => {
+      render: (row) => {
         // the first column is the row id, we won't display it but we do use it for the rowKey below
         const value = row.f[j + 1].v;
         // the value might be an array of objects with values at key `v`. for now join them with a comma
         if (_.isArray(value)) {
-          return value.map(x => x.v).join(', ');
+          return value.map((x) => x.v).join(', ');
         }
         return value;
       },
     }));
-    const keyFn = row => row.f[0].v;
+    const keyFn = (row) => row.f[0].v;
     return (
       <LightTable
         columns={columns}

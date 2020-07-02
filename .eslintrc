@@ -29,6 +29,7 @@
     }
   },
   "rules": {
+    "array-callback-return": "off",
     "arrow-body-style": ["warn", "as-needed"],
     "arrow-parens": "off",
     "block-spacing": "warn",
@@ -51,6 +52,7 @@
     "max-len": "off",
     "newline-per-chained-call": ["warn", { "ignoreChainWithDepth": 5 }],
     "no-case-declarations": "warn",
+    "no-continue": "off",
     "no-mixed-spaces-and-tabs": ["warn", "smart-tabs"],
     "no-multi-spaces": [
       "warn",
@@ -145,6 +147,7 @@
     "react/jsx-indent-props": ["warn", 2],
     "react/jsx-key": "warn",
     "react/jsx-no-target-blank": "off",
+    "react/jsx-props-no-spreading": "off",
     "react/no-array-index-key": "off",
     "react/no-danger": "off",
     "react/no-did-mount-set-state": "warn",

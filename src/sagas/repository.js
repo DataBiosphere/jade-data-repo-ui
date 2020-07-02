@@ -6,6 +6,7 @@ import { all, put, call, select, takeLatest } from 'redux-saga/effects';
 import { delay } from 'redux-saga';
 import axios from 'axios';
 import moment from 'moment';
+import _ from 'lodash';
 
 import { ActionTypes, STATUS } from 'constants/index';
 
@@ -117,7 +118,7 @@ export function* createSnapshot() {
   const datasetName = dataset.name;
   const mode = 'byQuery';
   const selectedAsset = _.find(dataset.schema.assets, (asset) => asset.name === assetName);
-  const rootTable = selectedAsset.rootTable;
+  const { rootTable } = selectedAsset;
   const drRowId = 'datarepo_row_id';
 
   const snapshotRequest = {
@@ -468,7 +469,7 @@ export function* countResults({ payload }) {
     if (jobComplete) {
       yield put({
         type: ActionTypes.COUNT_RESULTS_SUCCESS,
-        resultsCount: parseInt(response.data.rows[0].f[0].v),
+        resultsCount: parseInt(response.data.rows[0].f[0].v, 10),
       });
     } else {
       yield put({

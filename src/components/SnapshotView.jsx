@@ -1,14 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { NavLink } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
-import Tooltip from '@material-ui/core/Tooltip/Tooltip';
 
 import SnapshotTable from './table/SnapshotTable';
-import Add from './icons/Add';
 import SnapshotPopup from './snapshot/SnapshotPopup';
 
-const styles = theme => ({
+const styles = (theme) => ({
   wrapper: {
     display: 'flex',
     justifyContent: 'center',
@@ -36,9 +33,7 @@ class SnapshotView extends React.PureComponent {
     return (
       <div id="snapshots" className={classes.wrapper}>
         <div className={classes.width}>
-          <div className={classes.title}>
-            Snapshots
-          </div>
+          <div className={classes.title}>Snapshots</div>
           <div>
             <SnapshotTable />
           </div>
