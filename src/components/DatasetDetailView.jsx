@@ -13,7 +13,7 @@ import {
 import DetailViewHeader from './DetailViewHeader';
 import DatasetTablePreview from './DatasetTablePreview';
 
-const styles = theme => ({
+const styles = (theme) => ({
   wrapper: {
     display: 'flex',
     justifyContent: 'center',
@@ -60,19 +60,19 @@ export class DatasetDetailView extends React.PureComponent {
     dispatch(getDatasetPolicy(datasetId));
   }
 
-  addUser = newEmail => {
+  addUser = (newEmail) => {
     const { dispatch, dataset } = this.props;
     dispatch(addCustodianToDataset(dataset.id, [newEmail]));
   };
 
-  removeUser = removeableEmail => {
+  removeUser = (removeableEmail) => {
     const { dispatch, dataset } = this.props;
     dispatch(removeCustodianFromDataset(dataset.id, removeableEmail));
   };
 
   render() {
     const { classes, dataset, datasetPolicies } = this.props;
-    const datasetCustodiansObj = datasetPolicies.find(policy => policy.name === 'custodian');
+    const datasetCustodiansObj = datasetPolicies.find((policy) => policy.name === 'custodian');
     const datasetCustodians = (datasetCustodiansObj && datasetCustodiansObj.members) || [];
     return (
       <div className={classes.wrapper}>

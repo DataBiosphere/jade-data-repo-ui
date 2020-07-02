@@ -61,9 +61,9 @@ const styles = (theme) => ({
 export class SnapshotPopup extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object,
-    dataset: PropTypes.object,
     dispatch: PropTypes.func.isRequired,
     filterData: PropTypes.object,
+    isOpen: PropTypes.bool,
     policies: PropTypes.arrayOf(PropTypes.object),
     snapshot: PropTypes.object,
   };
@@ -89,7 +89,7 @@ export class SnapshotPopup extends React.PureComponent {
   };
 
   render() {
-    const { classes, dataset, filterData, isOpen, snapshot, policies } = this.props;
+    const { classes, filterData, isOpen, snapshot, policies } = this.props;
 
     const notReady = _.some([snapshot, policies, snapshot.source, snapshot.tables], _.isEmpty);
     if (notReady) {
@@ -110,11 +110,11 @@ export class SnapshotPopup extends React.PureComponent {
 
     // this number represents the total rows in the snapshot, i.e. the sum over all tables
     const rows = snapshot.tables.map((t) => t.rowCount).reduce((a, b) => a + b);
-    const rowLabel = rows == 1 ? 'Row' : 'Rows';
+    const rowLabel = rows === 1 ? 'Row' : 'Rows';
 
     const tables = _.keys(filterData).map((table, i) => {
       const filters = _.get(filterData, table);
-      const properties = _.keys(filters).map((filter, i) => {
+      const properties = _.keys(filters).map((filter, j) => {
         const data = _.get(filters, filter);
         let dataString = data.value;
         let dataDisplay;
@@ -122,14 +122,14 @@ export class SnapshotPopup extends React.PureComponent {
           const enDash = ' \u2013 ';
           dataString = _.join(data.value, enDash);
           const label = `${filter}: ${dataString}`;
-          dataDisplay = <Chip key={i} className={classes.chip} label={label} />;
+          dataDisplay = <Chip key={j} className={classes.chip} label={label} />;
         } else {
           if (_.isPlainObject(data.value)) {
             dataString = _.keys(data.value);
           }
-          dataDisplay = dataString.map((selection, i) => {
+          dataDisplay = dataString.map((selection, k) => {
             const label = `${filter}: ${selection}`;
-            return <Chip key={i} className={classes.chip} label={label} />;
+            return <Chip key={k} className={classes.chip} label={label} />;
           });
         }
         return dataDisplay;
@@ -210,7 +210,6 @@ export class SnapshotPopup extends React.PureComponent {
 function mapStateToProps(state) {
   return {
     isOpen: state.snapshots.dialogIsOpen,
-    dataset: state.datasets.dataset,
     filterData: state.query.filterData,
     snapshot: state.snapshots.snapshot,
     policies: state.snapshots.snapshotPolicies,

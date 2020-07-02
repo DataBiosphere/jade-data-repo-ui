@@ -26,7 +26,7 @@ export class JadeDropdown extends React.PureComponent {
               id: `${name}-select`,
             }}
             displayEmpty
-            renderValue={(value) => (!value ? name : value)}
+            renderValue={(val) => (!val ? name : val)}
             data-cy={_.camelCase(name)}
           >
             {options.map((opt) => (

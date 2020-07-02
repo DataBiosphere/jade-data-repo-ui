@@ -5,7 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 
 import WelcomeView from '../components/WelcomeView';
 
-const styles = theme => ({
+const styles = (theme) => ({
   alignItems: 'center',
   display: 'flex',
   flexDirection: 'column',

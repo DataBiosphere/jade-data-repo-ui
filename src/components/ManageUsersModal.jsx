@@ -11,7 +11,7 @@ import CloseIcon from '@material-ui/icons/Close';
 
 import ManageUsersView from './ManageUsersView';
 
-const styles = theme => ({
+const styles = (theme) => ({
   wrapper: {
     padding: theme.spacing(4),
     margin: theme.spacing(4),
@@ -45,9 +45,12 @@ const styles = theme => ({
 });
 
 export class ManageUsersModal extends React.PureComponent {
-  state = {
-    open: false,
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      open: false,
+    };
+  }
 
   static propTypes = {
     addUser: PropTypes.func.isRequired,
@@ -93,9 +96,9 @@ export class ManageUsersModal extends React.PureComponent {
           </DialogTitle>
           <DialogContent className={classes.dialogContent}>
             <ManageUsersView
-              addUser={newEmail => addUser(newEmail)}
+              addUser={(newEmail) => addUser(newEmail)}
               defaultValue="Add email addresses"
-              removeUser={removeableEmail => removeUser(removeableEmail)}
+              removeUser={(removeableEmail) => removeUser(removeableEmail)}
               users={users}
             />
           </DialogContent>

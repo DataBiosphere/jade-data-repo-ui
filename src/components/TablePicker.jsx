@@ -6,7 +6,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import { FixedSizeList } from 'react-window';
 
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
     marginTop: '1em',
     marginLeft: '1em',
@@ -45,7 +45,7 @@ export class TablePicker extends React.PureComponent {
           />
         </div>
         <FixedSizeList height={400} width={300} itemSize={46} itemCount={tables.length}>
-          {props => {
+          {(props) => {
             const tableName = tables[props.index].name;
             return (
               <ListItem

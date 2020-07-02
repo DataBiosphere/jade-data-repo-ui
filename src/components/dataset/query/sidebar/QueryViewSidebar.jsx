@@ -1,5 +1,4 @@
 import React from 'react';
-import _ from 'lodash';
 import PropTypes from 'prop-types';
 import FilterPanel from './panels/FilterPanel';
 import CreateSnapshotPanel from './panels/CreateSnapshotPanel';
@@ -39,8 +38,6 @@ export class QueryViewSidebar extends React.PureComponent {
         ) : (
           <CreateSnapshotPanel
             handleCreateSnapshot={this.handleCreateSnapshot}
-            handleSaveSnapshot={this.handleSaveSnapshot}
-            handleSelectAsset={this.handleSelectAsset}
             switchPanels={switchPanels}
           />
         )}

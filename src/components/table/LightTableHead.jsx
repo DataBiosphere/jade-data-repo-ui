@@ -7,7 +7,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Tooltip from '@material-ui/core/Tooltip';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 
-const styles = theme => ({
+const styles = (theme) => ({
   head: {
     color: theme.palette.primary.dark,
     backgroundColor: theme.palette.primary.light,
@@ -29,7 +29,7 @@ export class LightTableHead extends React.PureComponent {
     orderDirection: PropTypes.string.isRequired,
   };
 
-  createSortHandler = property => event => {
+  createSortHandler = (property) => (event) => {
     const { onRequestSort } = this.props;
     onRequestSort(event, property);
   };
@@ -41,7 +41,7 @@ export class LightTableHead extends React.PureComponent {
       <TableHead className={classes.head}>
         <TableRow>
           {columns.map(
-            col => (
+            (col) => (
               <TableCell
                 className={classes.cell}
                 key={col.property}

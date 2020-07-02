@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import ManageUsersModal from './ManageUsersModal';
 
-const styles = theme => ({
+const styles = (theme) => ({
   header: {
     fontSize: '14px',
     lineHeight: '22px',
@@ -34,7 +34,7 @@ class UserList extends React.PureComponent {
       <div className={classes.root}>
         <div className={classes.header}>{typeOfUsers}:</div>
         <div className={classes.values}>
-          {users.map(user => (
+          {users.map((user) => (
             <Typography noWrap key={user}>
               {user}
             </Typography>

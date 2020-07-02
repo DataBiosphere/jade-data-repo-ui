@@ -1,14 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { Link, NavLink } from 'react-router-dom';
-import Tooltip from '@material-ui/core/Tooltip/Tooltip';
+import { Link } from 'react-router-dom';
 
 import SnapshotTable from './table/SnapshotTable';
 import DatasetTable from './table/DatasetTable';
-import Add from './icons/Add';
 
-const styles = theme => ({
+const styles = (theme) => ({
   header: {
     alignItems: 'center',
     color: theme.typography.color,
@@ -72,9 +70,7 @@ class HomeView extends React.PureComponent {
             </Link>
           </div>
           <div className={classes.jadeTableSpacer} />
-          <div className={classes.header}>
-            RECENT SNAPSHOTS
-          </div>
+          <div className={classes.header}>RECENT SNAPSHOTS</div>
           <SnapshotTable summary />
           <div>
             <Link to="/snapshots" className={classes.jadeLink}>

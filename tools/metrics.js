@@ -2,7 +2,7 @@ const logging = require('@google-cloud/logging');
 const { argv } = require('yargs').command(
   'copy',
   'copy metrics from one project into another project',
-  args =>
+  (args) =>
     args
       .option('sourceProject', {
         desc: 'project to copy metrics from',
@@ -30,23 +30,23 @@ function addMetric(metric) {
   };
   client
     .createLogMetric(request)
-    .then(responses => {
+    .then((responses) => {
       const response = responses[0];
       console.log(response);
     })
-    .catch(err => {
+    .catch((err) => {
       console.error(err);
     });
 }
 
 client
   .listLogMetrics({ parent: sourceParent })
-  .then(responses => {
+  .then((responses) => {
     const resources = responses[0];
     for (const resource of resources) {
       addMetric(resource);
     }
   })
-  .catch(err => {
+  .catch((err) => {
     console.error(err);
   });

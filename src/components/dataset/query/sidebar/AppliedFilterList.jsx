@@ -8,9 +8,9 @@ import Card from '@material-ui/core/Card';
 import List from '@material-ui/core/List';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import ListItem from '@material-ui/core/ListItem';
-import { applyFilters } from '../../../../actions';
 import { Chip, Collapse, Badge } from '@material-ui/core';
 import { ExpandLess } from '@material-ui/icons';
+import { applyFilters } from '../../../../actions';
 
 const styles = (theme) => ({
   filterHeader: {
