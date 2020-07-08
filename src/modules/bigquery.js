@@ -8,16 +8,17 @@ export default class BigQuery {
   }
 
   transformColumns = (queryResults) =>
-    _.get(queryResults, 'schema.fields', []).map((field) => {
-      return { id: field.name, label: field.name, minWidth: 100, type: field.type };
-    });
+    _.get(queryResults, 'schema.fields', []).map((field) => ({
+      id: field.name,
+      label: field.name,
+      minWidth: 100,
+      type: field.type,
+    }));
 
   transformRows = (queryResults, columns) => {
-    let rows = _.get(queryResults, 'rows', []).map((row) => {
-      return _.get(row, 'f', []).map((value) => {
-        return _.get(value, 'v', '');
-      });
-    });
+    const rows = _.get(queryResults, 'rows', []).map((row) =>
+      _.get(row, 'f', []).map((value) => _.get(value, 'v', '')),
+    );
 
     return rows.map((row) => this.createData(columns, row));
   };
@@ -58,9 +59,8 @@ export default class BigQuery {
   calculateColumns = (columns) =>
     columns.map((column) => ({ title: column.name, field: column.name }));
 
-  buildSnapshotFilterStatement = (filterMap, dataset) => {
-    return this.buildFilterStatement(filterMap, dataset);
-  };
+  buildSnapshotFilterStatement = (filterMap, dataset) =>
+    this.buildFilterStatement(filterMap, dataset);
 
   buildFilterStatement = (filterMap, dataset) => {
     if (!_.isEmpty(filterMap)) {
@@ -73,7 +73,7 @@ export default class BigQuery {
           const statementClauses = [];
 
           _.keys(filters).forEach((key) => {
-            const datasetName = !dataset ? '' : dataset.name + '.';
+            const datasetName = !dataset ? '' : `${dataset.name}.`;
             const property = `${datasetName}${table}.${key}`;
             const keyValue = filters[key].value;
             const isRange = filters[key].type === 'range';
@@ -172,9 +172,8 @@ export default class BigQuery {
     const url = `https://bigquery.googleapis.com/bigquery/v2/projects/${dataset.dataProject}/queries`;
     const filterOrEmpty = _.isEmpty(filterStatement)
       ? `WHERE ${columnName} LIKE '%${currText}%'`
-      : `WHERE ${filterStatement} AND ${columnName} LIKE '%${currText}%'`;
-    const joinOrEmpty = _.isEmpty(joinStatement) ? '' : joinStatement;
-    const query = `SELECT ${columnName} FROM \`${dataset.dataProject}.datarepo_${dataset.name}.${tableName}\` AS ${tableName} ${joinOrEmpty} ${filterOrEmpty} GROUP BY ${tableName}.${columnName} LIMIT 50`;
+      : `${filterStatement} AND ${columnName} LIKE '%${currText}%'`;
+    const query = `SELECT ${columnName} FROM \`${dataset.dataProject}.datarepo_${dataset.name}.${tableName}\` AS ${tableName} ${joinStatement} ${filterOrEmpty} GROUP BY ${tableName}.${columnName} LIMIT 50`;
     return axios
       .post(
         url,
@@ -220,23 +219,23 @@ export default class BigQuery {
     if (source === target) {
       return [source];
     }
-    let queue = [source];
-    let visited = { source: true };
-    let predecessor = {};
+    const queue = [source];
+    const visited = { source: true };
+    const predecessor = {};
     let tail = 0;
 
     while (tail < queue.length) {
       let u = queue[tail++]; // Pop a vertex off the queue.
-      let neighbors = graph[u];
+      const neighbors = graph[u];
       for (let i = 0; i < neighbors.length; ++i) {
-        let v = neighbors[i];
+        const v = neighbors[i];
         if (visited[v]) {
           continue;
         }
         visited[v] = true;
         if (v === target) {
           // Check if the path is complete.
-          let path = [v]; // If so, backtrack through the path.
+          const path = [v]; // If so, backtrack through the path.
           while (u !== source) {
             path.push(u);
             u = predecessor[u];
@@ -290,7 +289,7 @@ export default class BigQuery {
     }
     const schema = dataset.schema.relationships;
     const selectedAsset = dataset.schema.assets.find((a) => a.name === assetName);
-    const rootTable = selectedAsset.rootTable;
+    const { rootTable } = selectedAsset;
     const relationships = this.buildAllJoins(filterMap, schema, rootTable);
     let joins = relationships.map((relationship) => {
       const { to, from } = relationship;
@@ -304,7 +303,7 @@ export default class BigQuery {
   buildAllJoins = (filterMap, schema, table) => {
     const tables = _.keys(filterMap);
     const graph = this.constructGraph(schema);
-    let relationships = [];
+    const relationships = [];
     if (!tables.includes(table)) {
       tables.push(table);
     }
