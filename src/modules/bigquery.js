@@ -39,6 +39,10 @@ export default class BigQuery {
         if (columnType === 'FLOAT') {
           value = this.significantDigits(value);
         }
+
+        if (columnType === 'TIMESTAMP') {
+          value = new Date(value * 1000).toLocaleString();
+        }
       }
       if (columnId === 'datarepo_row_id') {
         res.datarepo_id = value;
