@@ -86,7 +86,18 @@ export class CategoryWrapper extends React.PureComponent {
 
   render() {
     const { values, originalValues } = this.state;
-    const { column, handleChange, handleFilters, tableName, filterMap, toggleExclude } = this.props;
+    const {
+      column,
+      handleChange,
+      handleFilters,
+      tableName,
+      filterMap,
+      toggleExclude,
+      dataset,
+      token,
+      filterStatement,
+      joinStatement,
+    } = this.props;
     if (values && originalValues && _.size(originalValues) <= CHECKBOX_THRESHOLD) {
       return (
         <CategoryFilterGroup
@@ -109,6 +120,11 @@ export class CategoryWrapper extends React.PureComponent {
         values={values}
         table={tableName}
         toggleExclude={toggleExclude}
+        dataset={dataset}
+        token={token}
+        tableName={tableName}
+        filterStatement={filterStatement}
+        joinStatement={joinStatement}
       />
     );
   }

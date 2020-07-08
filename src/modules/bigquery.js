@@ -1,5 +1,6 @@
 import axios from 'axios';
 import _ from 'lodash';
+import AwesomeDebouncePromise from 'awesome-debounce-promise';
 
 export default class BigQuery {
   constructor() {
@@ -158,6 +159,39 @@ export default class BigQuery {
       )
       .then((response) => response.data.rows);
   };
+
+  getAutocompleteForColumn = (
+    currText,
+    columnName,
+    dataset,
+    tableName,
+    token,
+    filterStatement,
+    joinStatement,
+  ) => {
+    const url = `https://bigquery.googleapis.com/bigquery/v2/projects/${dataset.dataProject}/queries`;
+    const filterOrEmpty = _.isEmpty(filterStatement)
+      ? `WHERE ${columnName} LIKE '%${currText}%'`
+      : `${filterStatement} AND ${columnName} LIKE '%${currText}%'`;
+    const query = `SELECT ${columnName} FROM \`${dataset.dataProject}.datarepo_${dataset.name}.${tableName}\` AS ${tableName} ${joinStatement} ${filterOrEmpty} GROUP BY ${tableName}.${columnName} LIMIT 50`;
+    return axios
+      .post(
+        url,
+        {
+          query,
+          useLegacySql: false,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      )
+      .then((response) => response.data.rows);
+  };
+
+  getAutocompleteForColumnDebounced = AwesomeDebouncePromise(this.getAutocompleteForColumn, 500);
 
   constructGraph = (schema) => {
     const neighbors = {}; // Key = vertex, value = array of neighbors.
