@@ -9,7 +9,7 @@ import { hideAlert } from 'actions/index';
 import ErrorIcon from '../../assets/media/icons/warning-standard-solid.svg';
 import CloseIcon from '../../assets/media/icons/times-line.svg';
 
-const styles = theme => ({
+const styles = (theme) => ({
   card: {
     borderRadius: 5,
     backgroundColor: theme.palette.error.main,

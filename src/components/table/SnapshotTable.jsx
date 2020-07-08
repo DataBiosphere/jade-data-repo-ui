@@ -8,7 +8,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { getSnapshots } from 'actions/index';
 import LightTable from './LightTable';
 
-const styles = theme => ({
+const styles = (theme) => ({
   jadeLink: {
     color: theme.palette.common.link,
     textDecoration: 'none',
@@ -48,7 +48,7 @@ class SnapshotTable extends React.PureComponent {
       {
         label: 'Snapshot Name',
         property: 'name',
-        render: row => (
+        render: (row) => (
           <Link to={`/snapshots/details/${row.id}`} className={classes.jadeLink}>
             {row.name}
           </Link>
@@ -61,7 +61,7 @@ class SnapshotTable extends React.PureComponent {
       {
         label: 'Date created',
         property: 'created_date',
-        render: row => moment(row.createdDate).fromNow(),
+        render: (row) => moment(row.createdDate).fromNow(),
       },
     ];
     return (

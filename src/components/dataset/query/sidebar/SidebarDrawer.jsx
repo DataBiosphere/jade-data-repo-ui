@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import { List, ListItem, Box, Drawer } from '@material-ui/core';
-import { withStyles, makeStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 
@@ -62,16 +62,17 @@ export class SidebarDrawer extends React.PureComponent {
     table: PropTypes.object,
   };
 
-  handleOpenPanel = (PanelComponent) => {
+  handleOpenPanel = (InputPanelComponent) => {
     const { handleDrawerWidth, panels } = this.props;
-    // look through panels prop for the width of the given PanelComponent
-    const { width } = panels.find((panel) => panel.component === PanelComponent);
+    const { PanelComponent } = this.state;
+    // look through panels prop for the width of the given InputPanelComponent
+    const { width } = panels.find((panel) => panel.component === InputPanelComponent);
 
-    if (this.state.PanelComponent === PanelComponent) {
+    if (PanelComponent === InputPanelComponent) {
       this.setState({ PanelComponent: null });
     } else {
       handleDrawerWidth(width);
-      this.setState({ PanelComponent });
+      this.setState({ PanelComponent: InputPanelComponent });
     }
   };
 

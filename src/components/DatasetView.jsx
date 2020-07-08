@@ -6,7 +6,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { getDatasets } from 'actions/index';
 import DatasetTable from './table/DatasetTable';
 
-const styles = theme => ({
+const styles = (theme) => ({
   wrapper: {
     display: 'flex',
     justifyContent: 'center',

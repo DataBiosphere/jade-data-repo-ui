@@ -38,11 +38,11 @@ export class QuerySidebarPanel extends React.PureComponent {
 
   render() {
     const { classes, filterData, selected, results, polling } = this.props;
-    const listTables = _.keys(filterData).map((table) => {
-      return <AppliedFilterList table={table} selected={selected} />;
-    });
+    const listTables = _.keys(filterData).map((table) => (
+      <AppliedFilterList table={table} selected={selected} />
+    ));
 
-    const rowsLabel = results == 1 ? 'Row' : 'Rows';
+    const rowsLabel = results === 1 ? 'Row' : 'Rows';
 
     return (
       <Card variant="outlined">

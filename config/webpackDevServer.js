@@ -4,6 +4,7 @@ const errorOverlayMiddleware = require('react-dev-utils/errorOverlayMiddleware')
 const evalSourceMapMiddleware = require('react-dev-utils/evalSourceMapMiddleware');
 const noopServiceWorkerMiddleware = require('react-dev-utils/noopServiceWorkerMiddleware');
 const proxy = require('http-proxy-middleware');
+
 const proxyUrl = process.env.PROXY_URL || 'http://localhost:8080';
 
 const paths = require('./paths');
@@ -11,7 +12,8 @@ const paths = require('./paths');
 const protocol = process.env.HTTPS === 'true' ? 'https' : 'http';
 const host = process.env.HOST || '0.0.0.0';
 
-module.exports = function(allowedHost) {
+// eslint-disable-next-line space-before-function-paren
+module.exports = function (allowedHost) {
   // noinspection WebpackConfigHighlighting
   return {
     clientLogLevel: 'none',

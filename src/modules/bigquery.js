@@ -32,15 +32,15 @@ export default class BigQuery {
       const columnType = column.type;
 
       let value = row[i];
+      if (value !== null) {
+        if (columnType === 'INTEGER') {
+          value = this.commaFormatted(value);
+        }
 
-      if (columnType === 'INTEGER') {
-        value = this.commaFormatted(value);
+        if (columnType === 'FLOAT') {
+          value = this.significantDigits(value);
+        }
       }
-
-      if (columnType === 'FLOAT') {
-        value = this.significantDigits(value);
-      }
-
       if (columnId === 'datarepo_row_id') {
         res.datarepo_id = value;
       } else {
@@ -215,6 +215,7 @@ export default class BigQuery {
     return neighbors;
   };
 
+  // eslint-disable-next-line consistent-return
   bfs = (graph, source, target) => {
     if (source === target) {
       return [source];

@@ -7,7 +7,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Hero from 'assets/media/images/hero.png';
 import { logOut, logIn } from 'actions/index';
 
-const styles = theme => ({
+const styles = (theme) => ({
   container: {
     display: 'flex',
     flexDirection: 'row',
@@ -69,7 +69,7 @@ export class WelcomeView extends React.PureComponent {
       scopes: ['openid', 'profile', 'email', 'https://www.googleapis.com/auth/bigquery'],
     };
     renderLoginButton(loginOptions)
-      .then(user =>
+      .then((user) =>
         dispatch(
           logIn(user.name, user.imageUrl, user.email, user.accessToken, user.accessTokenExpiration),
         ),

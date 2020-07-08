@@ -31,7 +31,7 @@ const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
 // makes for a smoother build process.
 const shouldInlineRuntimeChunk = process.env.INLINE_RUNTIME_CHUNK !== 'false';
 
-module.exports = webpackEnv => {
+module.exports = (webpackEnv) => {
   const isProd = webpackEnv === 'production';
   const isDev = webpackEnv === 'development';
 
@@ -146,8 +146,8 @@ module.exports = webpackEnv => {
       publicPath,
       // Point sourcemap entries to original disk location (format as URL on Windows)
       devtoolModuleFilenameTemplate: isProd
-        ? info => path.relative(paths.appSrc, info.absoluteResourcePath).replace(/\\/g, '/')
-        : info => path.resolve(info.absoluteResourcePath).replace(/\\/g, '/'),
+        ? (info) => path.relative(paths.appSrc, info.absoluteResourcePath).replace(/\\/g, '/')
+        : (info) => path.resolve(info.absoluteResourcePath).replace(/\\/g, '/'),
     },
     resolve: {
       alias: {

@@ -25,11 +25,11 @@ export default {
         immutable(state, {
           jobId: { $set: action.payload.jobId },
         }),
-      [ActionTypes.CREATE_SNAPSHOT_SUCCESS]: state =>
+      [ActionTypes.CREATE_SNAPSHOT_SUCCESS]: (state) =>
         immutable(state, {
           jobStatus: { $set: STATUS.SUCCESS },
         }),
-      [ActionTypes.CLEAR_JOB_ID]: state =>
+      [ActionTypes.CLEAR_JOB_ID]: (state) =>
         immutable(state, {
           jobId: { $set: '' },
         }),

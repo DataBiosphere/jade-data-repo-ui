@@ -4,9 +4,9 @@ import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 
 import { Button, TextField, Typography } from '@material-ui/core';
+import { snapshotCreateDetails } from 'actions/index';
 import CreateSnapshotDropdown from '../CreateSnapshotDropdown';
 import ShareSnapshot from './ShareSnapshot';
-import { snapshotCreateDetails } from 'actions/index';
 
 const styles = (theme) => ({
   root: {
@@ -40,7 +40,8 @@ const styles = (theme) => ({
 export class CreateSnapshotPanel extends React.PureComponent {
   constructor(props) {
     super(props);
-    const { name, description, assetName } = this.props.snapshots.snapshotRequest;
+    const { snapshots } = this.props;
+    const { name, description, assetName } = snapshots.snapshotRequest;
     this.state = {
       name,
       description,
@@ -51,11 +52,10 @@ export class CreateSnapshotPanel extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object,
     dataset: PropTypes.object,
+    dispatch: PropTypes.func,
     filterData: PropTypes.object,
     handleCreateSnapshot: PropTypes.func,
-    handleSaveSnapshot: PropTypes.func,
-    handleSelectAsset: PropTypes.func,
-    snapshot: PropTypes.object,
+    snapshots: PropTypes.object,
     switchPanels: PropTypes.func,
   };
 

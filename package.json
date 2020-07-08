@@ -219,7 +219,7 @@
     "build": "node tools/build",
     "build:serve": "npm run build && npm run serve",
     "analyze": "NODE_ENV=production webpack --config config/webpack.config.js --profile --json > webpack.stats.json",
-    "lint": "eslint  --ext .js --ext .jsx src config test tools",
+    "lint": "eslint  --ext .js --ext .jsx src config cypress tools",
     "lint:styles": "stylelint 'src/**/*.{js,jsx}'",
     "test": "exit 0",
     "test:coverage": "jest --bail --coverage",

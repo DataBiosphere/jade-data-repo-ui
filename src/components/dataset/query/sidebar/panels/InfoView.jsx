@@ -1,15 +1,14 @@
 import React from 'react';
-import _ from 'lodash';
 import moment from 'moment';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Paper, Typography } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import UserList from '../../../../UserList';
 import Grid from '@material-ui/core/Grid';
+import UserList from '../../../../UserList';
 
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
     display: 'block',
     margin: theme.spacing(1),
@@ -46,28 +45,36 @@ export class InfoView extends React.PureComponent {
 
   render() {
     const { classes, dataset, datasetPolicies } = this.props;
-    const datasetCustodiansObj = datasetPolicies.find(policy => policy.name === 'custodian');
+    const datasetCustodiansObj = datasetPolicies.find((policy) => policy.name === 'custodian');
     const datasetCustodians = (datasetCustodiansObj && datasetCustodiansObj.members) || [];
-    const tables = dataset.schema.tables.map(table => {
-      return(<li className={classes.listItem}><Typography noWrap>{table.name}</Typography></li>)
-    });
+    const tables = dataset.schema.tables.map((table) => (
+      <li className={classes.listItem}>
+        <Typography noWrap>{table.name}</Typography>
+      </li>
+    ));
 
     return (
       <div className={classes.root}>
         <Paper className={classes.paperBody}>
           <Grid container spacing={2}>
-            <Grid item xs={12}><Typography variant="h6">{dataset.name}</Typography></Grid>
+            <Grid item xs={12}>
+              <Typography variant="h6">{dataset.name}</Typography>
+            </Grid>
             <Grid item xs={9}>
-              <div className={clsx(classes.headerText)}>About this dataset:
+              <div className={clsx(classes.headerText)}>
+                About this dataset:
                 <Typography>{dataset.description}</Typography>
               </div>
-              <div className={clsx(classes.headerText)}>{dataset.schema.tables.length} tables:
-              <ul className={classes.tableList}>{tables}</ul>
+              <div className={clsx(classes.headerText)}>
+                {dataset.schema.tables.length} tables:
+                <ul className={classes.tableList}>{tables}</ul>
               </div>
             </Grid>
             <Grid item xs={3}>
               <div className={clsx(classes.headerText)}>Date Created:</div>
-              <Typography className={classes.cardBody}>{moment(dataset.createdDate).fromNow()}</Typography>
+              <Typography className={classes.cardBody}>
+                {moment(dataset.createdDate).fromNow()}
+              </Typography>
               <UserList users={datasetCustodians} typeOfUsers="Custodians" canManageUsers={false} />
             </Grid>
           </Grid>

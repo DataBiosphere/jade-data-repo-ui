@@ -13,7 +13,7 @@ import { fade } from '@material-ui/core/styles/colorManipulator';
 
 import LightTableHead from './LightTableHead';
 
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
     border: `1px solid ${theme.palette.primary.dark}`,
     borderRadius: `${theme.shape.borderRadius}px ${theme.shape.borderRadius}px 0 0`,
@@ -65,13 +65,17 @@ const styles = theme => ({
 const DEFAULT_PAGE_SIZE = 10;
 
 export class LightTable extends React.PureComponent {
-  state = {
-    orderDirection: 'desc',
-    orderBy: 'created_date',
-    page: 0,
-    rowsPerPage: DEFAULT_PAGE_SIZE,
-    searchString: '',
-  };
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      orderDirection: 'desc',
+      orderBy: 'created_date',
+      page: 0,
+      rowsPerPage: DEFAULT_PAGE_SIZE,
+      searchString: '',
+    };
+  }
 
   static propTypes = {
     classes: PropTypes.object.isRequired,
@@ -96,7 +100,7 @@ export class LightTable extends React.PureComponent {
     handleEnumeration(rowsPerPage, offset, sort, newOrder, searchString);
   };
 
-  handleChangeRowsPerPage = event => {
+  handleChangeRowsPerPage = (event) => {
     const { handleEnumeration } = this.props;
     const { orderDirection, orderBy, page, searchString } = this.state;
     const limit = event.target.value;
@@ -113,7 +117,7 @@ export class LightTable extends React.PureComponent {
     handleEnumeration(rowsPerPage, offset, orderBy, orderDirection, searchString);
   };
 
-  handleSearchString = event => {
+  handleSearchString = (event) => {
     const { handleEnumeration } = this.props;
     const { page, orderDirection, orderBy, rowsPerPage } = this.state; // limit
     const offset = page * rowsPerPage;
@@ -158,9 +162,9 @@ export class LightTable extends React.PureComponent {
             />
             <TableBody>
               {rows && rows.length > 0 ? (
-                rows.map(row => (
+                rows.map((row) => (
                   <TableRow key={rowKey ? rowKey(row) : row.id} className={classes.row}>
-                    {columns.map(col => (
+                    {columns.map((col) => (
                       <TableCell key={col.property} style={{ wordBreak: 'break-word' }}>
                         {col.render ? col.render(row) : row[col.property]}
                       </TableCell>

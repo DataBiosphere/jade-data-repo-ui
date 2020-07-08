@@ -9,7 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import UserList from './UserList';
 
-const styles = theme => ({
+const styles = (theme) => ({
   title: {
     color: theme.palette.primary.main,
     fontSize: '44px',

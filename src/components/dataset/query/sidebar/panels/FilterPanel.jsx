@@ -179,7 +179,7 @@ export class FilterPanel extends React.PureComponent {
             <QuerySidebarPanel selected={selected} data-cy="snapshotCard" />
           </div>
           <ListItem button className={clsx(classes.searchBar, classes.panelContent)}>
-            <Search color="primary" fontSize={'small'} />
+            <Search color="primary" fontSize="small" />
             <InputBase
               placeholder="Search filters"
               className={classes.inputBase}

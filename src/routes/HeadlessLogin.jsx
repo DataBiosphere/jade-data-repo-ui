@@ -20,7 +20,7 @@ export class HeadlessLogin extends React.PureComponent {
     dispatch: PropTypes.func.isRequired,
   };
 
-  handleChange = event => {
+  handleChange = (event) => {
     this.setState({
       token: event.target.value,
     });
@@ -48,7 +48,7 @@ export class HeadlessLogin extends React.PureComponent {
   }
 }
 
-/* istanbul ignore next */
+// eslint-disable-next-line no-unused-vars
 function mapStateToProps(state) {
   return {};
 }

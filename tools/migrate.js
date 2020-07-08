@@ -15,7 +15,7 @@ const inquirer = require('inquirer');
 const { argv } = require('yargs').command(
   'rolldown',
   'copy a subset of production data into another environment',
-  args =>
+  (args) =>
     args
       .positional('datasetName', {
         describe: 'name of the dataset to rolldown',
@@ -55,7 +55,7 @@ const targetHost =
     : `https://jade${subdomainSuffix}.datarepo-${argv.env}.broadinstitute.org`;
 
 if (argv.verbose) {
-  axios.interceptors.request.use(request => {
+  axios.interceptors.request.use((request) => {
     console.log('Starting Request', request);
     return request;
   });
@@ -72,11 +72,11 @@ function findDatasetByName(token, name) {
   return new Promise((resolve, reject) => {
     axios
       .get(prodHost + apiPath, { httpsAgent: agent, headers })
-      .then(enumerateResponse => {
-        const dataset = enumerateResponse.data.items.find(d => d.name === name);
+      .then((enumerateResponse) => {
+        const dataset = enumerateResponse.data.items.find((d) => d.name === name);
         axios
           .get(`${prodHost + apiPath}/${dataset.id}`, { httpsAgent: agent, headers })
-          .then(datasetResponse => resolve(datasetResponse.data));
+          .then((datasetResponse) => resolve(datasetResponse.data));
       })
       .catch(reject);
   });
@@ -88,7 +88,7 @@ function createDataset(token, dataset) {
   return new Promise((resolve, reject) => {
     axios
       .post(targetHost + apiPath, dataset, { httpsAgent: agent, headers })
-      .then(summary => resolve(summary.data))
+      .then((summary) => resolve(summary.data))
       .catch(reject);
   });
 }
@@ -106,8 +106,8 @@ function call(shell, fn) {
 }
 
 function switchAccount(email) {
-  return new Promise(resolve => {
-    call(`gcloud config set account ${email} && gcloud auth print-access-token`, data => {
+  return new Promise((resolve) => {
+    call(`gcloud config set account ${email} && gcloud auth print-access-token`, (data) => {
       resolve(data.trim());
     });
   });
@@ -128,7 +128,7 @@ function createProfile(token) {
     };
     axios
       .post(targetHost + apiPath, profile, { httpsAgent: agent, headers })
-      .then(response => resolve(response.data))
+      .then((response) => resolve(response.data))
       .catch(reject);
   });
 }
@@ -137,14 +137,14 @@ function pickOrCreateProfile(token) {
   return new Promise((resolve, reject) => {
     const headers = { Authorization: `Bearer ${token}` };
     const apiPath = '/api/resources/v1/profiles';
-    axios.get(targetHost + apiPath, { httpsAgent: agent, headers }).then(profilesResponse => {
+    axios.get(targetHost + apiPath, { httpsAgent: agent, headers }).then((profilesResponse) => {
       if (profilesResponse.data.items.length === 0) {
         createProfile(token)
-          .then(profile => resolve(profile.id))
+          .then((profile) => resolve(profile.id))
           .catch(reject);
       } else {
         const nameToId = {};
-        profilesResponse.data.items.forEach(profile => {
+        profilesResponse.data.items.forEach((profile) => {
           nameToId[profile.profileName] = profile.id;
         });
         inquirer
@@ -156,7 +156,7 @@ function pickOrCreateProfile(token) {
               choices: Object.keys(nameToId),
             },
           ])
-          .then(answers => resolve(nameToId[answers.devProfile]));
+          .then((answers) => resolve(nameToId[answers.devProfile]));
       }
     });
   });
@@ -168,13 +168,13 @@ function getDataset(token, datasetId) {
     const apiPath = `/api/repository/v1/datasets/${datasetId}`;
     axios
       .get(targetHost + apiPath, { httpsAgent: agent, headers })
-      .then(response => resolve(response.data))
+      .then((response) => resolve(response.data))
       .catch(reject);
   });
 }
 
 function copyDataset(token, dataset) {
-  const datasetReq = Object.assign({}, dataset);
+  const datasetReq = { ...dataset };
   [
     'id',
     'defaultProfileId',
@@ -182,15 +182,15 @@ function copyDataset(token, dataset) {
     'additionalProfileIds',
     'defaultSnapshotId',
     'createdDate',
-  ].forEach(p => delete datasetReq[p]);
+  ].forEach((p) => delete datasetReq[p]);
   return new Promise((resolve, reject) => {
-    pickOrCreateProfile(token).then(profileId => {
+    pickOrCreateProfile(token).then((profileId) => {
       datasetReq.defaultProfileId = profileId;
       // TEMP
       datasetReq.schema.assets[0].rootTable = 'variant';
       datasetReq.schema.assets[0].rootColumn = 'id';
       createDataset(token, datasetReq)
-        .then(summary => getDataset(token, summary.id))
+        .then((summary) => getDataset(token, summary.id))
         .then(resolve)
         .catch(reject);
     });
@@ -201,11 +201,11 @@ function copyDataset(token, dataset) {
 const [command, datasetName] = argv._;
 console.log(`running ${command} for ${datasetName}`);
 
-call('gcloud auth list', loginsStdin => {
+call('gcloud auth list', (loginsStdin) => {
   const logins = loginsStdin
     .split('\n')
     .filter((line, index) => index > 1)
-    .map(line => line.replace(/^[* ]+/, ''));
+    .map((line) => line.replace(/^[* ]+/, ''));
   inquirer
     .prompt([
       {
@@ -221,18 +221,18 @@ call('gcloud auth list', loginsStdin => {
         choices: logins,
       },
     ])
-    .then(answers => {
-      switchAccount(answers.devAccount).then(devToken => {
-        switchAccount(answers.prodAccount).then(prodToken => {
+    .then((answers) => {
+      switchAccount(answers.devAccount).then((devToken) => {
+        switchAccount(answers.prodAccount).then((prodToken) => {
           findDatasetByName(prodToken, datasetName)
-            .then(prodDataset => {
-              copyDataset(devToken, prodDataset).then(targetDataset => {
+            .then((prodDataset) => {
+              copyDataset(devToken, prodDataset).then((targetDataset) => {
                 const prodProject = prodDataset.dataProject;
                 const targetProject = targetDataset.dataProject;
                 const bqDatasetId = `datarepo_${prodDataset.name}`;
                 const bqUrl = `https://www.googleapis.com/bigquery/v2/projects/${targetProject}/jobs`;
                 const headers = { Authorization: `Bearer ${prodToken}` };
-                targetDataset.schema.tables.forEach(table => {
+                targetDataset.schema.tables.forEach((table) => {
                   const config = {
                     configuration: {
                       query: {
@@ -253,7 +253,7 @@ call('gcloud auth list', loginsStdin => {
                 });
               });
             })
-            .catch(e => console.error('something bad happened', e));
+            .catch((e) => console.error('something bad happened', e));
         });
       });
     });

@@ -35,7 +35,7 @@ function describeUser(user) {
 export function getUser(options) {
   return new Promise((resolve, reject) => {
     init(options)
-      .then(GoogleAuth => {
+      .then((GoogleAuth) => {
         const user = GoogleAuth.currentUser.get();
         resolve(user.isSignedIn() ? describeUser(user) : null);
       })
@@ -49,7 +49,7 @@ export function renderLoginButton(options) {
       scope: options.scopes.join(' '),
       theme: 'dark',
       longtitle: true,
-      onsuccess: user => resolve(describeUser(user)),
+      onsuccess: (user) => resolve(describeUser(user)),
       onfailure: reject,
     });
   });
@@ -57,10 +57,8 @@ export function renderLoginButton(options) {
 
 export function logout(options) {
   return new Promise((resolve, reject) => {
-    init(options).then(GoogleAuth => {
-      GoogleAuth.signOut()
-        .then(resolve)
-        .catch(reject);
+    init(options).then((GoogleAuth) => {
+      GoogleAuth.signOut().then(resolve).catch(reject);
     });
   });
 }

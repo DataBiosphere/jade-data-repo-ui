@@ -6,7 +6,7 @@ import Chip from '@material-ui/core/Chip';
 import TextField from '@material-ui/core/TextField';
 import { isEmail } from 'validator';
 
-const styles = theme => ({
+const styles = (theme) => ({
   addButton: {
     margin: theme.spacing(1),
   },
@@ -65,7 +65,7 @@ class ManageUsersView extends React.PureComponent {
     const { emailValid, newEmail } = this.state;
     const userChips =
       !!users &&
-      users.map(user => (
+      users.map((user) => (
         <div key={user}>
           <Chip
             className={classes.chip}
@@ -82,8 +82,8 @@ class ManageUsersView extends React.PureComponent {
         <div className={classes.manageUsers}>
           <TextField
             placeholder={defaultValue || 'Add email address'}
-            onChange={e => this.validateEmail(e.target.value)}
-            onKeyPress={e =>
+            onChange={(e) => this.validateEmail(e.target.value)}
+            onKeyPress={(e) =>
               e.key === 'Enter' && emailValid && e.target && this.addUserClean(e.target.value)
             }
             style={{ width: '300px' }}
