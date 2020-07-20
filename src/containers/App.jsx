@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import { Switch, Route } from 'react-router-dom';
+import ReactNotification from 'react-notifications-component';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -27,6 +28,8 @@ import RoutePublic from 'components/RoutePublic';
 import RoutePrivate from 'components/RoutePrivate';
 import CarrotSVG from '../../assets/media/icons/angle-line.svg';
 import SignOutSVG from '../../assets/media/icons/logout-line.svg';
+
+import 'react-notifications-component/dist/theme.css';
 
 const drawerWidth = 240;
 
@@ -173,6 +176,7 @@ export function App(props) {
   return (
     <div className={classes.root}>
       <CssBaseline />
+      <ReactNotification />
       <AppBar position="absolute" className={classes.appBar}>
         <Toolbar className={classes.toolbar}>
           <Logo />
