@@ -387,10 +387,6 @@ function* pollQuery(projectId, jobId) {
         results: response,
       });
     } else {
-      yield put({
-        type: ActionTypes.POLL_QUERY,
-        payload: { projectId, jobId },
-      });
       yield call(delay, 100);
       yield call(pollQuery, projectId, jobId);
     }
@@ -420,10 +416,6 @@ export function* runQuery({ payload }) {
     } else {
       yield put({
         type: ActionTypes.POLL_QUERY,
-        payload: {
-          ...payload,
-          jobId,
-        },
       });
       yield call(delay, 100);
       yield call(pollQuery, payload.projectId, jobId);
@@ -472,13 +464,6 @@ export function* countResults({ payload }) {
         resultsCount: parseInt(response.data.rows[0].f[0].v, 10),
       });
     } else {
-      yield put({
-        type: ActionTypes.POLL_QUERY,
-        payload: {
-          ...payload,
-          jobId,
-        },
-      });
       yield call(delay, 100);
       yield call(pollQuery, payload.projectId, jobId);
     }
