@@ -70,8 +70,8 @@ describe('test snapshot creation', () => {
 
     cy.contains('See all Datasets').click();
     cy.contains('Date created').click();
-    cy.contains('V2F_GWAS_Summary_Stats').should('be.visible');
-    cy.contains('V2F_GWAS_Summary_Stats').click();
+    cy.contains(/V2F_GWAS_Summary_Stats|V2F_GWAS_Summary_Statistics/g).should('be.visible');
+    cy.contains(/V2F_GWAS_Summary_Stats|V2F_GWAS_Summary_Statistics/g).click();
     cy.wait(['@getDataset', '@getDatasetPolicies']);
   });
 
