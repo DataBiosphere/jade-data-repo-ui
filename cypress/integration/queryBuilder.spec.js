@@ -14,8 +14,8 @@ describe('test query builder', () => {
 
     cy.contains('See all Datasets').click();
     cy.contains('Date created').click();
-    cy.contains('V2F_GWAS_Summary_Stats').should('be.visible');
-    cy.contains('V2F_GWAS_Summary_Stats').click();
+    cy.contains('V2F_GWAS_Summary_Statistics').should('be.visible');
+    cy.contains('V2F_GWAS_Summary_Statistics').click();
     cy.wait(['@getDataset', '@getDatasetPolicies']);
   });
 
@@ -56,7 +56,7 @@ describe('test query builder', () => {
           .its('filterStatement')
           .should(
             'equal',
-            'WHERE V2F_GWAS_Summary_Stats.ancestry_specific_meta_analysis.ancestry IN ("EU")',
+            'WHERE V2F_GWAS_Summary_Statistics.ancestry_specific_meta_analysis.ancestry IN ("EU")',
           );
       });
     });
@@ -187,7 +187,7 @@ describe('test query builder', () => {
         .its('snapshots')
         .its('snapshotRequest')
         .its('joinStatement')
-        .should('equal', 'FROM V2F_GWAS_Summary_Stats.variant ');
+        .should('equal', 'FROM V2F_GWAS_Summary_Statistics.variant ');
     });
   });
 });
