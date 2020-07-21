@@ -80,7 +80,7 @@ describe('test query builder', () => {
 
       // type variant ids into filter box
       cy.get('[data-cy=filterItem]').contains('variant_id').click();
-      cy.get('#autocomplete-variant_id').type('3:187442750:G:A\n2:27558797:C:T\n6:89977475:T:C\n');
+      cy.get('#autocomplete-variant_id').type('3:187442750:G:A,2:27558797:C:T,6:89977475:T:C,');
 
       // click 'exclude this selection' and apply filter
       cy.get('[data-cy="exclude-variant_id"]').should('be.visible');
