@@ -51,7 +51,7 @@
     "js-combinatorics": "^0.6.1",
     "jsonfile": "^6.0.1",
     "jss-plugin-extend": "^10.3.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "mobile-detect": "^1.4.4",
     "modernizr": "^3.11.2",
     "moment": "^2.27.0",
