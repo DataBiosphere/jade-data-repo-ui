@@ -9,7 +9,7 @@ import moment from 'moment';
 import _ from 'lodash';
 
 import { ActionTypes, STATUS } from 'constants/index';
-import { showNotification } from 'modules/helpers';
+import { showNotification } from 'modules/notifications';
 
 /**
  * Switch Menu
