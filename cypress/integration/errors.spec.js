@@ -42,7 +42,7 @@ describe('test error handling', () => {
       status: 200,
       response: { jobComplete: false, jobReference: { jobId: 'jobId' } },
     }).as('getQueryJobResults');
-    cy.wait(['@getDataset', '@getDatasetPolicies', '@getQueryResults']);
+    cy.wait(['@getDataset', '@getDatasetPolicies', '@getQueryResults', '@getQueryJobResults']);
     cy.contains(
       'For large datasets, it can take a few minutes to fetch results from BigQuery. Thank you for your patience.',
     ).should('be.visible');
