@@ -9,6 +9,7 @@ import moment from 'moment';
 import _ from 'lodash';
 
 import { ActionTypes, STATUS } from 'constants/index';
+import { showNotification } from 'modules/helpers';
 
 /**
  * Switch Menu
@@ -22,6 +23,8 @@ export const getTokenExpiration = (state) => state.user.tokenExpiration;
 export const getSnapshotState = (state) => state.snapshots;
 export const getQuery = (state) => state.query;
 export const getDataset = (state) => state.datasets.dataset;
+
+export const timeoutMsg = 'Your session has timed out. Please refresh the page.';
 
 export function* checkToken() {
   const tokenExpiration = yield select(getTokenExpiration);
@@ -38,7 +41,7 @@ export function* authGet(url, params = {}) {
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
     });
   }
-  return false;
+  throw timeoutMsg;
 }
 
 export function* authPost(url, params) {
@@ -49,7 +52,7 @@ export function* authPost(url, params) {
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
     });
   }
-  return false;
+  throw timeoutMsg;
 }
 
 export function* authDelete(url) {
@@ -60,7 +63,7 @@ export function* authDelete(url) {
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
     });
   }
-  return false;
+  throw timeoutMsg;
 }
 
 /**
@@ -92,10 +95,7 @@ function* pollJobWorker(jobId, jobTypeSuccess, jobTypeFailure) {
       yield call(pollJobWorker, jobId, jobTypeSuccess, jobTypeFailure);
     }
   } catch (err) {
-    yield put({
-      type: ActionTypes.EXCEPTION,
-      payload: err,
-    });
+    showNotification(err);
   }
 }
 
@@ -151,9 +151,9 @@ export function* createSnapshot() {
       ActionTypes.CREATE_SNAPSHOT_FAILURE,
     );
   } catch (err) {
+    showNotification(err);
     yield put({
       type: ActionTypes.EXCEPTION,
-      payload: err,
     });
   }
 }
@@ -174,10 +174,7 @@ export function* getSnapshots({ payload }) {
       snapshots: { data: response },
     });
   } catch (err) {
-    yield put({
-      type: ActionTypes.EXCEPTION,
-      payload: err,
-    });
+    showNotification(err);
   }
 }
 
@@ -190,10 +187,7 @@ export function* getSnapshotById({ payload }) {
       snapshot: { data: response },
     });
   } catch (err) {
-    yield put({
-      type: ActionTypes.EXCEPTION,
-      payload: err,
-    });
+    showNotification(err);
   }
 }
 
@@ -206,10 +200,7 @@ export function* getSnapshotPolicy({ payload }) {
       snapshot: { data: response },
     });
   } catch (err) {
-    yield put({
-      type: ActionTypes.EXCEPTION,
-      payload: err,
-    });
+    showNotification(err);
   }
 }
 
@@ -227,10 +218,7 @@ export function* addSnapshotPolicyMember({ payload }) {
       snapshot: { data: response },
     });
   } catch (err) {
-    yield put({
-      type: ActionTypes.EXCEPTION,
-      payload: err,
-    });
+    showNotification(err);
   }
 }
 
@@ -245,10 +233,7 @@ export function* removeReaderFromSnapshot({ payload }) {
       snapshot: { data: response },
     });
   } catch (err) {
-    yield put({
-      type: ActionTypes.EXCEPTION,
-      payload: err,
-    });
+    showNotification(err);
   }
 }
 
@@ -272,10 +257,7 @@ export function* getDatasets({ payload }) {
       datasets: { data: response },
     });
   } catch (err) {
-    yield put({
-      type: ActionTypes.EXCEPTION,
-      payload: err,
-    });
+    showNotification(err);
   }
 }
 
@@ -288,10 +270,7 @@ export function* getDatasetById({ payload }) {
       dataset: { data: response },
     });
   } catch (err) {
-    yield put({
-      type: ActionTypes.EXCEPTION,
-      payload: err,
-    });
+    showNotification(err);
   }
 }
 
@@ -304,10 +283,7 @@ export function* getDatasetPolicy({ payload }) {
       policy: response,
     });
   } catch (err) {
-    yield put({
-      type: ActionTypes.EXCEPTION,
-      payload: err,
-    });
+    showNotification(err);
   }
 }
 
@@ -326,10 +302,7 @@ export function* addCustodianToDataset({ payload }) {
       policy: response,
     });
   } catch (err) {
-    yield put({
-      type: ActionTypes.EXCEPTION,
-      payload: err,
-    });
+    showNotification(err);
   }
 }
 
@@ -344,10 +317,7 @@ export function* removeCustodianFromDataset({ payload }) {
       policy: response,
     });
   } catch (err) {
-    yield put({
-      type: ActionTypes.EXCEPTION,
-      payload: err,
-    });
+    showNotification(err);
   }
 }
 
@@ -365,10 +335,7 @@ export function* getDatasetTablePreview({ payload }) {
       tableName,
     });
   } catch (err) {
-    yield put({
-      type: ActionTypes.EXCEPTION,
-      payload: err,
-    });
+    showNotification(err);
   }
 }
 
@@ -391,10 +358,7 @@ function* pollQuery(projectId, jobId) {
       yield call(pollQuery, projectId, jobId);
     }
   } catch (err) {
-    yield put({
-      type: ActionTypes.EXCEPTION,
-      payload: err,
-    });
+    showNotification(err);
   }
 }
 
@@ -421,10 +385,7 @@ export function* runQuery({ payload }) {
       yield call(pollQuery, payload.projectId, jobId);
     }
   } catch (err) {
-    yield put({
-      type: ActionTypes.EXCEPTION,
-      payload: err,
-    });
+    showNotification(err);
   }
 }
 
@@ -442,10 +403,7 @@ export function* pageQuery({ payload }) {
       results: response,
     });
   } catch (err) {
-    yield put({
-      type: ActionTypes.EXCEPTION,
-      payload: err,
-    });
+    showNotification(err);
   }
 }
 
@@ -468,10 +426,7 @@ export function* countResults({ payload }) {
       yield call(pollQuery, payload.projectId, jobId);
     }
   } catch (err) {
-    yield put({
-      type: ActionTypes.EXCEPTION,
-      payload: err,
-    });
+    showNotification(err);
   }
 }
 
