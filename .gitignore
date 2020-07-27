@@ -12,3 +12,4 @@ webpack.stats.json
 skaffold.yaml
 cypress/videos
 cypress/screenshots
+.DS_Store
