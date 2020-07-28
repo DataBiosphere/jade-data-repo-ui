@@ -185,7 +185,7 @@ export class LightTable extends React.PureComponent {
               )}
             </TableBody>
           </Table>
-          {!summary && rows && rows.length < DEFAULT_PAGE_SIZE && (
+          {!summary && rows && totalCount > rowsPerPage && (
             <TablePagination
               rowsPerPageOptions={ROWS_PER_PAGE}
               component="div"
