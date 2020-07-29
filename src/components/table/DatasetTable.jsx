@@ -1,11 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
 
-import { getDatasets } from 'actions/index';
 import LightTable from './LightTable';
 
 const styles = (theme) => ({
@@ -23,26 +21,12 @@ class DatasetTable extends React.PureComponent {
     classes: PropTypes.object.isRequired,
     datasets: PropTypes.array.isRequired,
     datasetsCount: PropTypes.number,
-    dispatch: PropTypes.func.isRequired,
+    handleFilterDatasets: PropTypes.func,
     summary: PropTypes.bool,
   };
 
-  componentDidMount() {
-    const { dispatch, summary } = this.props;
-    let limit = 5;
-    if (!summary) {
-      limit = 10;
-    }
-    dispatch(getDatasets(limit));
-  }
-
-  handleFilterDatasets = (limit, offset, sort, sortDirection, searchString) => {
-    const { dispatch } = this.props;
-    dispatch(getDatasets(limit, offset, sort, sortDirection, searchString));
-  };
-
   render() {
-    const { classes, summary, datasetsCount, datasets } = this.props;
+    const { classes, datasets, datasetsCount, handleFilterDatasets, summary } = this.props;
     // TODO add back modified_date column
     const columns = [
       {
@@ -67,7 +51,7 @@ class DatasetTable extends React.PureComponent {
     return (
       <LightTable
         columns={columns}
-        handleEnumeration={this.handleFilterDatasets}
+        handleEnumeration={handleFilterDatasets}
         itemType="datasets"
         rows={datasets}
         summary={summary}
@@ -77,12 +61,4 @@ class DatasetTable extends React.PureComponent {
   }
 }
 
-function mapStateToProps(state) {
-  return {
-    datasetsTest: state.datasets,
-    datasets: state.datasets.datasets,
-    datasetsCount: state.datasets.datasetsCount,
-  };
-}
-
-export default connect(mapStateToProps)(withStyles(styles)(DatasetTable));
+export default withStyles(styles)(DatasetTable);

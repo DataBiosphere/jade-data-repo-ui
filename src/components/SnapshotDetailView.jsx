@@ -13,6 +13,7 @@ import {
 import DetailViewHeader from './DetailViewHeader';
 
 import DatasetTable from './table/DatasetTable';
+import _ from 'lodash';
 
 const styles = (theme) => ({
   wrapper: {
@@ -53,6 +54,13 @@ const styles = (theme) => ({
 });
 
 export class SnapshotDetailView extends React.PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      filteredDatasets: null,
+    };
+  }
+
   static propTypes = {
     classes: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired,
@@ -89,8 +97,18 @@ export class SnapshotDetailView extends React.PureComponent {
     dispatch(removeCustodianFromSnapshot(snapshot.id, removeableEmail));
   };
 
+  handleFilterDatasets = (limit, offset, sort, sortDirection, searchString) => {
+    const { snapshot } = this.props;
+    let datasets = snapshot.source.map((s) => s.dataset);
+    datasets = datasets.filter((d) => d.name.toLowerCase().includes(searchString.toLowerCase()));
+    datasets = _.orderBy(datasets, sort, sortDirection);
+    datasets = _.take(_.drop(datasets, offset), limit);
+    this.setState({ filteredDatasets: datasets });
+  };
+
   render() {
     const { classes, snapshot, snapshotPolicies } = this.props;
+    const { filteredDatasets } = this.state;
     const snapshotReadersObj = snapshotPolicies.find((policy) => policy.name === 'reader');
     const snapshotReaders = (snapshotReadersObj && snapshotReadersObj.members) || [];
     const snapshotCustodiansObj = snapshotPolicies.find((policy) => policy.name === 'custodian');
@@ -109,7 +127,11 @@ export class SnapshotDetailView extends React.PureComponent {
             removeReader={this.removeReader}
           />
           {snapshot && snapshot.source && (
-            <DatasetTable rows={datasets} datasetListName="DATASETS IN THIS SNAPSHOT" />
+            <DatasetTable
+              datasets={filteredDatasets || datasets}
+              datasetsCount={snapshot.source.length}
+              handleFilterDatasets={this.handleFilterDatasets}
+            />
           )}
         </div>
       </div>

@@ -1,10 +1,12 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom';
 
 import SnapshotTable from './table/SnapshotTable';
 import DatasetTable from './table/DatasetTable';
+import { getDatasets } from 'actions/index';
 
 const styles = (theme) => ({
   header: {
@@ -54,16 +56,23 @@ const styles = (theme) => ({
 class HomeView extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object.isRequired,
+    datasets: PropTypes.array,
+    dispatch: PropTypes.func.isRequired,
   };
 
+  componentDidMount() {
+    const { dispatch } = this.props;
+    dispatch(getDatasets(5));
+  }
+
   render() {
-    const { classes } = this.props;
+    const { classes, datasets } = this.props;
     return (
       <div className={classes.wrapper}>
         <div className={classes.width}>
           <div className={classes.title}>Terra Data Repository at a glance</div>
           <div className={classes.header}> RECENT DATASETS </div>
-          <DatasetTable summary />
+          <DatasetTable summary datasets={datasets} />
           <div>
             <Link to="/datasets" className={classes.jadeLink}>
               See all Datasets
@@ -83,4 +92,10 @@ class HomeView extends React.PureComponent {
   }
 }
 
-export default withStyles(styles)(HomeView);
+function mapStateToProps(state) {
+  return {
+    datasets: state.datasets.datasets,
+  };
+}
+
+export default connect(mapStateToProps)(withStyles(styles)(HomeView));
