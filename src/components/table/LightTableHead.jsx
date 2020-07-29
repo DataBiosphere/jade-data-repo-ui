@@ -27,6 +27,7 @@ export class LightTableHead extends React.PureComponent {
     onRequestSort: PropTypes.func.isRequired,
     orderBy: PropTypes.string.isRequired,
     orderDirection: PropTypes.string.isRequired,
+    summary: PropTypes.bool,
   };
 
   createSortHandler = (property) => (event) => {
@@ -35,7 +36,7 @@ export class LightTableHead extends React.PureComponent {
   };
 
   render() {
-    const { classes, columns, orderDirection, orderBy } = this.props;
+    const { classes, columns, orderDirection, orderBy, summary } = this.props;
 
     return (
       <TableHead className={classes.head}>
@@ -49,19 +50,23 @@ export class LightTableHead extends React.PureComponent {
                 padding={col.disablePadding ? 'none' : 'default'}
                 sortDirection={orderBy === col.id ? orderDirection : false}
               >
-                <Tooltip
-                  title="Sort"
-                  placement={col.numeric ? 'bottom-end' : 'bottom-start'}
-                  enterDelay={300}
-                >
-                  <TableSortLabel
-                    active={orderBy === col.property}
-                    direction={orderDirection}
-                    onClick={this.createSortHandler(col.property)}
+                {summary ? (
+                  col.label
+                ) : (
+                  <Tooltip
+                    title="Sort"
+                    placement={col.numeric ? 'bottom-end' : 'bottom-start'}
+                    enterDelay={300}
                   >
-                    {col.label}
-                  </TableSortLabel>
-                </Tooltip>
+                    <TableSortLabel
+                      active={orderBy === col.property}
+                      direction={orderDirection}
+                      onClick={this.createSortHandler(col.property)}
+                    >
+                      {col.label}
+                    </TableSortLabel>
+                  </Tooltip>
+                )}
               </TableCell>
             ),
             this,

@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 
 import SnapshotTable from './table/SnapshotTable';
 import DatasetTable from './table/DatasetTable';
-import { getDatasets } from 'actions/index';
+import { getDatasets, getSnapshots } from 'actions/index';
 
 const styles = (theme) => ({
   header: {
@@ -56,17 +56,19 @@ const styles = (theme) => ({
 class HomeView extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    datasets: PropTypes.array,
+    datasets: PropTypes.array.isRequired,
     dispatch: PropTypes.func.isRequired,
+    snapshots: PropTypes.array.isRequired,
   };
 
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch(getDatasets(5));
+    dispatch(getSnapshots(5));
   }
 
   render() {
-    const { classes, datasets } = this.props;
+    const { classes, datasets, snapshots } = this.props;
     return (
       <div className={classes.wrapper}>
         <div className={classes.width}>
@@ -80,7 +82,7 @@ class HomeView extends React.PureComponent {
           </div>
           <div className={classes.jadeTableSpacer} />
           <div className={classes.header}>RECENT SNAPSHOTS</div>
-          <SnapshotTable summary />
+          <SnapshotTable summary snapshots={snapshots} />
           <div>
             <Link to="/snapshots" className={classes.jadeLink}>
               See all Snapshots
@@ -95,6 +97,7 @@ class HomeView extends React.PureComponent {
 function mapStateToProps(state) {
   return {
     datasets: state.datasets.datasets,
+    snapshots: state.snapshots.snapshots,
   };
 }
 
