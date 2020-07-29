@@ -4,9 +4,9 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom';
 
+import { getDatasets, getSnapshots } from 'actions/index';
 import SnapshotTable from './table/SnapshotTable';
 import DatasetTable from './table/DatasetTable';
-import { getDatasets, getSnapshots } from 'actions/index';
 
 const styles = (theme) => ({
   header: {
