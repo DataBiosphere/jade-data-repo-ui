@@ -54,10 +54,7 @@ describe('test query builder', () => {
           .its('snapshots')
           .its('snapshotRequest')
           .its('filterStatement')
-          .should(
-            'equal',
-            'WHERE V2F_GWAS_Summary_Statistics.ancestry_specific_meta_analysis.ancestry IN ("EU")',
-          );
+          .should('contain', '.ancestry_specific_meta_analysis.ancestry IN ("EU")');
       });
     });
 
@@ -187,7 +184,7 @@ describe('test query builder', () => {
         .its('snapshots')
         .its('snapshotRequest')
         .its('joinStatement')
-        .should('equal', 'FROM V2F_GWAS_Summary_Statistics.variant ');
+        .should('match', /FROM (V2F_GWAS_Summary_Stats|V2F_GWAS_Summary_Statistics).variant /);
     });
   });
 });
