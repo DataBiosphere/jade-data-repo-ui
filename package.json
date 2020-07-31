@@ -86,7 +86,7 @@
     "uuid": "^8.1.0",
     "validator": "^13.1.1",
     "webfontloader": "^1.6.28",
-    "xlsx": "^0.16.2"
+    "xlsx": "^0.16.5"
   },
   "devDependencies": {
     "@babel/core": "^7.11.0",
