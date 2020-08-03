@@ -1,5 +1,17 @@
 #!/usr/bin/env node
 
+/**
+ * How to use this script:
+ *
+ * Example: ingesting hca_mvp from dev to int-5
+ * npm run ingest hca_mvp -- --source-url=https://jade.datarepo-dev.broadinstitute.org --target-url=https://jade-5.datarepo-integration.broadinstitute.org --jc-path=~/broad/jade-data-repo-cli/./build/install/jadecli/bin/jadecli --target-env=broad-jade-int-5-data --target-name=hca_mvp --src-env=broad-jade-dev-data --bucket-name=hca_mvp
+ *
+ * make sure that you have the correct path to your jadecli install, if you have it aliased in your bashrc it should be the same path as there.
+ * also, make sure the source and target environments are the names of the DATA projects!!
+ *
+ * you may need to give yourself permissions to upload to the jade-testdata bucket as well
+ */
+
 const https = require('https');
 const _ = require('lodash');
 const fs = require('fs');
@@ -174,7 +186,14 @@ const { bucketName, jc, targetEnv, targetName, targetUrl, srcEnv } = argv;
     );
     console.log(datasetModel);
 
-    if (bucketName !== '') {
+    const alreadyInBucket = await inquirer.prompt({
+      name: 'confirm',
+      type: 'confirm',
+      message: 'Is this data already in the jade-testdata bucket?',
+      default: false,
+    });
+
+    if (!alreadyInBucket.confirm) {
       // await call(`gsutil mb -p broad-jade-dev gs://jade-testdata/${bucketName}`);
       // bq ls --format=prettyjson broad-jade-dev-data:datarepo_hca_mvp
       const allTables = JSON.parse(
@@ -204,8 +223,6 @@ const { bucketName, jc, targetEnv, targetName, targetUrl, srcEnv } = argv;
         console.log(response);
       }
     }
-    // gsutil mb -p broad-jade-dev gs://jade-testdata/v2f
-    // bq extract --destination_format NEWLINE_DELIMITED_JSON 'broad-jade-dev-data:datarepo_V2F_GWAS_Summary_Stats.ancestry_specific_meta_analysis' gs://jade-testdata/v2f/ancestry_specific_meta_analysis.json
 
     let i = 0;
     for (i = 0; i < tableNames.length; i++) {
