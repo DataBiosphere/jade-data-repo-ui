@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 const https = require('https');
+const _ = require('lodash');
 const fs = require('fs');
 const axios = require('axios');
 const { exec } = require('child_process');
@@ -28,7 +29,13 @@ const { argv } = require('yargs').command(
       })
       .option('target-env', {
         alias: 'targetEnv',
-        desc: 'google project for target environment',
+        desc: 'google (data) project for target environment',
+        default: 'dev',
+        type: 'string',
+      })
+      .option('src-env', {
+        alias: 'srcEnv',
+        desc: 'google (data) project for source environment',
         default: 'dev',
         type: 'string',
       })
@@ -41,6 +48,12 @@ const { argv } = require('yargs').command(
       .option('jc-path', {
         alias: 'jc',
         desc: 'path to run jadecli',
+        default: '',
+        type: 'string',
+      })
+      .option('bucket-name', {
+        alias: 'bucketName',
+        desc: 'name of the bucket to place in jade-testdata',
         default: '',
         type: 'string',
       })
@@ -93,12 +106,14 @@ function findDatasetByName(token, name, host) {
   const headers = { Authorization: `Bearer ${token}` };
   return new Promise((resolve, reject) => {
     axios
-      .get(host + apiPath, { httpsAgent: agent, headers })
+      .get(`${host + apiPath}?filter=${name}`, { httpsAgent: agent, headers })
       .then((enumerateResponse) => {
         const dataset = enumerateResponse.data.items.find((d) => d.name === name);
         axios
           .get(`${host + apiPath}/${dataset.id}`, { httpsAgent: agent, headers })
-          .then((datasetResponse) => resolve(datasetResponse.data));
+          .then((datasetResponse) => {
+            resolve(datasetResponse.data);
+          });
       })
       .catch(reject);
   });
@@ -107,7 +122,7 @@ function findDatasetByName(token, name, host) {
 // unpack positional arguments
 const [command, datasetName] = argv._;
 // unpack others
-const { jc, targetEnv, targetName, targetUrl } = argv;
+const { bucketName, jc, targetEnv, targetName, targetUrl, srcEnv } = argv;
 
 (async () => {
   try {
@@ -119,21 +134,20 @@ const { jc, targetEnv, targetName, targetUrl } = argv;
     const answers = await inquirer.prompt([
       {
         type: 'list',
-        name: 'devAccount',
-        message: 'pick your dev account',
+        name: 'srcAccount',
+        message: 'pick the account to access the src project',
         choices: logins,
       },
       {
         type: 'list',
-        name: 'prodAccount',
-        message: 'pick your production account',
+        name: 'destAccount',
+        message: 'pick the account to access destination project',
         choices: logins,
       },
     ]);
-    const devToken = await switchAccount(answers.devAccount);
-    const prodToken = await switchAccount(answers.prodAccount);
 
-    const srcDataset = await findDatasetByName(devToken, datasetName, argv.sourceUrl);
+    const srcToken = await switchAccount(answers.srcAccount);
+    const srcDataset = await findDatasetByName(srcToken, datasetName, argv.sourceUrl);
     console.log(srcDataset);
     const newSchema = srcDataset.schema;
     newSchema.tables.forEach((table) => delete table.rowCount);
@@ -148,6 +162,7 @@ const { jc, targetEnv, targetName, targetUrl } = argv;
     const tableNames = srcDataset.schema.tables.map((table) => table.name);
     console.log(tableNames);
 
+    const destToken = await switchAccount(answers.destAccount);
     await call(`${jc} session set basepath ${targetUrl}`);
     await call(`${jc} session set projectid ${targetEnv}`);
     console.log(await call(`${jc} session show`));
@@ -159,12 +174,45 @@ const { jc, targetEnv, targetName, targetUrl } = argv;
     );
     console.log(datasetModel);
 
+    if (bucketName !== '') {
+      // await call(`gsutil mb -p broad-jade-dev gs://jade-testdata/${bucketName}`);
+      // bq ls --format=prettyjson broad-jade-dev-data:datarepo_hca_mvp
+      const allTables = JSON.parse(
+        await call(`bq ls --format=json ${srcEnv}:datarepo_${datasetName}`),
+      );
+      const rawTables = _.filter(allTables, (table) =>
+        table.tableReference.tableId.includes('datarepo_raw'),
+      ).map((table) => table.tableReference.tableId);
+
+      const rawTablesToNames = {};
+      rawTables.forEach((rawTable) => {
+        tableNames.forEach((table) => {
+          if (rawTable.includes(table)) {
+            rawTablesToNames[table] = rawTable;
+          }
+        });
+      });
+
+      let i = 0;
+      for (i = 0; i < tableNames.length; i++) {
+        const table = tableNames[i];
+        const rawTableName = _.isEmpty(rawTablesToNames) ? table : rawTablesToNames[table];
+        // eslint-disable-next-line no-await-in-loop
+        const response = await call(
+          `bq extract --destination_format NEWLINE_DELIMITED_JSON '${srcEnv}:datarepo_${datasetName}.${rawTableName}' gs://jade-testdata/${bucketName}/${table}.json`,
+        );
+        console.log(response);
+      }
+    }
+    // gsutil mb -p broad-jade-dev gs://jade-testdata/v2f
+    // bq extract --destination_format NEWLINE_DELIMITED_JSON 'broad-jade-dev-data:datarepo_V2F_GWAS_Summary_Stats.ancestry_specific_meta_analysis' gs://jade-testdata/v2f/ancestry_specific_meta_analysis.json
+
     let i = 0;
     for (i = 0; i < tableNames.length; i++) {
       const table = tableNames[i];
       // eslint-disable-next-line no-await-in-loop
       const response = await call(
-        `${jc} dataset table load --table ${table} --input-gspath gs://jade-testdata/v2f/${table}.json --input-format json ${targetName}`,
+        `${jc} dataset table load --table ${table} --input-gspath gs://jade-testdata/${bucketName}/${table}.json --input-format json ${targetName}`,
       );
       console.log(response);
     }
