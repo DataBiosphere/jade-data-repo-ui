@@ -92,7 +92,7 @@ const agent = new https.Agent({
 
 function call(shell) {
   console.info(`running ${shell}:`);
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     exec(shell, (err, data, stderr) => {
       if (err) {
         console.error(err);
@@ -132,6 +132,7 @@ function findDatasetByName(token, name, host) {
 }
 
 // unpack positional arguments
+// eslint-disable-next-line no-unused-vars
 const [command, datasetName] = argv._;
 // unpack others
 const { bucketName, jc, targetEnv, targetName, targetUrl, srcEnv } = argv;
@@ -174,7 +175,7 @@ const { bucketName, jc, targetEnv, targetName, targetUrl, srcEnv } = argv;
     const tableNames = srcDataset.schema.tables.map((table) => table.name);
     console.log(tableNames);
 
-    const destToken = await switchAccount(answers.destAccount);
+    await switchAccount(answers.destAccount);
     await call(`${jc} session set basepath ${targetUrl}`);
     await call(`${jc} session set projectid ${targetEnv}`);
     console.log(await call(`${jc} session show`));
