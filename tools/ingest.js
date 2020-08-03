@@ -194,8 +194,6 @@ const { bucketName, jc, targetEnv, targetName, targetUrl, srcEnv } = argv;
     });
 
     if (!alreadyInBucket.confirm) {
-      // await call(`gsutil mb -p broad-jade-dev gs://jade-testdata/${bucketName}`);
-      // bq ls --format=prettyjson broad-jade-dev-data:datarepo_hca_mvp
       const allTables = JSON.parse(
         await call(`bq ls --format=json ${srcEnv}:datarepo_${datasetName}`),
       );
