@@ -6,6 +6,7 @@ import BigQuery from 'modules/bigquery';
 
 export const queryState = {
   baseQuery: '',
+  delay: false,
   filterData: {},
   filterStatement: '',
   pageSize: 0,
@@ -31,6 +32,7 @@ export default {
           columns: { $set: columns },
           rows: { $set: rows },
           polling: { $set: false },
+          delay: { $set: false },
         });
       },
       [ActionTypes.PAGE_QUERY_SUCCESS]: (state, action) => {
@@ -50,6 +52,10 @@ export default {
         immutable(state, {
           queryResults: { $set: {} },
           polling: { $set: true },
+        }),
+      [ActionTypes.POLL_QUERY]: (state) =>
+        immutable(state, {
+          delay: { $set: true },
         }),
       [ActionTypes.APPLY_FILTERS]: (state, action) => {
         const bigquery = new BigQuery();

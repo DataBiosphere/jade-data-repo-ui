@@ -86,6 +86,7 @@ export class FreetextFilter extends React.PureComponent {
 
   onChange = (event, value) => {
     const { handleChange } = this.props;
+    this.setState({ inputValue: '' });
     handleChange(value);
   };
 

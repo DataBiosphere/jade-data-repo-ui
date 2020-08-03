@@ -18,7 +18,6 @@ export const snapshotState = {
   // snapshot info
   snapshot: {},
   snapshots: [],
-  exception: false,
   snapshotPolicies: [],
   dataset: {},
   snapshotCount: 0,
@@ -66,7 +65,6 @@ export default {
         }),
       [ActionTypes.EXCEPTION]: (state) =>
         immutable(state, {
-          exception: { $set: true },
           dialogIsOpen: { $set: false },
         }),
       [ActionTypes.OPEN_SNAPSHOT_DIALOG]: (state, action) =>

@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import { Switch, Route } from 'react-router-dom';
+import ReactNotification from 'react-notifications-component';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -20,13 +21,14 @@ import HeadlessLogin from 'routes/HeadlessLogin';
 import Private from 'routes/Private';
 import NotFound from 'routes/NotFound';
 import Logo from 'components/Logo';
-import Toast from 'components/Toast';
 
 import { logOut } from 'actions/index';
 import RoutePublic from 'components/RoutePublic';
 import RoutePrivate from 'components/RoutePrivate';
 import CarrotSVG from '../../assets/media/icons/angle-line.svg';
 import SignOutSVG from '../../assets/media/icons/logout-line.svg';
+
+import 'react-notifications-component/dist/theme.css';
 
 const drawerWidth = 240;
 
@@ -126,17 +128,6 @@ const useStyles = makeStyles((theme) => ({
     height: '100vh',
     overflow: 'auto',
   },
-  errorPanel: {
-    bottom: 100,
-    display: 'flex',
-    flexDirection: 'column-reverse',
-    justifyContent: 'flex-start',
-    minHeight: 100,
-    position: 'absolute',
-    right: 0,
-    width: theme.spacing(40),
-    zIndex: 1201,
-  },
   userName: {
     height: 15,
     fontSize: 12,
@@ -157,7 +148,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export function App(props) {
-  const { user, alerts, dispatch, configuration } = props;
+  const { user, dispatch, configuration } = props;
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -173,6 +164,7 @@ export function App(props) {
   return (
     <div className={classes.root}>
       <CssBaseline />
+      <ReactNotification />
       <AppBar position="absolute" className={classes.appBar}>
         <Toolbar className={classes.toolbar}>
           <Logo />
@@ -228,13 +220,6 @@ export function App(props) {
       </AppBar>
       <div className={classes.content}>
         <div className={classes.appBarSpacer} />
-        {alerts.length > 0 && (
-          <div className={classes.errorPanel}>
-            {alerts.map((alert, i) => (
-              <Toast dispatch={dispatch} errorMsg={alert && alert.toString()} index={i} key={i} />
-            ))}
-          </div>
-        )}
         <Switch>
           <RoutePublic
             isAuthenticated={user.isAuthenticated}
@@ -257,7 +242,6 @@ export function App(props) {
 }
 
 App.propTypes = {
-  alerts: PropTypes.arrayOf(PropTypes.object).isRequired,
   configuration: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
   user: PropTypes.object.isRequired,
@@ -266,7 +250,6 @@ App.propTypes = {
 function mapStateToProps(state) {
   return {
     user: state.user,
-    alerts: state.app.alerts,
     configuration: state.configuration,
   };
 }
