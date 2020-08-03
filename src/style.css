@@ -1,17 +1,25 @@
-@import "../fonts/Montserrat.css";
+@import '../fonts/Montserrat.css';
+@import '~animate.css/animate.css';
 
-body, input, textarea, select, button {
-  font-family: "Montserrat", sans-serif;
+body,
+input,
+textarea,
+select,
+button {
+  font-family: 'Montserrat', sans-serif;
   font-variant-numeric: tabular-nums;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
   height: 100%;
 }
 
@@ -65,7 +73,7 @@ a {
 
 /* Overrides for toast notifications library (react-notifications-component) */
 .notification-default {
-  background-color: #525c6C;
+  background-color: #525c6c;
   border-left: 8px solid #333f52;
 }
 
@@ -76,7 +84,7 @@ a {
 
 .notification-danger {
   background-color: #db3214;
-  border-left: 8px solid #ba250A;
+  border-left: 8px solid #ba250a;
 }
 
 .notification-info {
@@ -85,7 +93,7 @@ a {
 }
 
 .notification-warning {
-  background-color: #f7981C;
+  background-color: #f7981c;
   border-left: 8px solid #dc8412;
 }
 
@@ -94,19 +102,24 @@ a {
   border-left: 8px solid #8a6194;
 }
 
-.notification-item, .notification-item-root, .notification-message, .notification-title {
+.notification-item,
+.notification-item-root,
+.notification-message,
+.notification-title {
   font-family: unset;
 }
 
 /* Styles for content rendered by marked (also used by react-simplemde-editor) */
-.markdown-body a, .simplemde-container .editor-preview a {
+.markdown-body a,
+.simplemde-container .editor-preview a {
   color: #74ae43;
 }
 
-.markdown-body a:hover, .simplemde-container .editor-preview a:hover {
+.markdown-body a:hover,
+.simplemde-container .editor-preview a:hover {
   color: #89bb60;
 }
 
 .markdown-body {
-  font-family: "Montserrat", sans-serif;
+  font-family: 'Montserrat', sans-serif;
 }

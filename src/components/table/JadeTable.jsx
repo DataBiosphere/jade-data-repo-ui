@@ -25,6 +25,9 @@ const styles = (theme) => ({
   spinWrapper: {
     height: 'calc(100% - 60px)',
     display: 'grid',
+    width: 500,
+    textAlign: 'center',
+    margin: 'auto',
   },
   spinner: {
     margin: 'auto',
@@ -47,6 +50,7 @@ export class JadeTable extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object,
     columns: PropTypes.array,
+    delay: PropTypes.bool,
     dispatch: PropTypes.func.isRequired,
     polling: PropTypes.bool,
     queryResults: PropTypes.object,
@@ -119,7 +123,7 @@ export class JadeTable extends React.PureComponent {
   };
 
   render() {
-    const { classes, queryResults, columns, rows, polling } = this.props;
+    const { classes, queryResults, columns, rows, polling, delay } = this.props;
     const { page, rowsPerPage, orderBy, order } = this.state;
 
     return (
@@ -159,6 +163,8 @@ export class JadeTable extends React.PureComponent {
           {polling && (
             <div className={classes.spinWrapper}>
               <CircularProgress className={classes.spinner} />
+              {delay &&
+                'For large datasets, it can take a few minutes to fetch results from BigQuery. Thank you for your patience.'}
             </div>
           )}
         </div>
@@ -179,6 +185,7 @@ export class JadeTable extends React.PureComponent {
 function mapStateToProps(state) {
   return {
     dataset: state.datasets.dataset,
+    delay: state.query.delay,
     filterData: state.query.filterData,
     filterStatement: state.query.filterStatement,
     token: state.user.token,
