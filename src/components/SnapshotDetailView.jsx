@@ -99,11 +99,13 @@ export class SnapshotDetailView extends React.PureComponent {
 
   handleFilterDatasets = (limit, offset, sort, sortDirection, searchString) => {
     const { snapshot } = this.props;
-    let datasets = snapshot.source.map((s) => s.dataset);
-    datasets = datasets.filter((d) => d.name.toLowerCase().includes(searchString.toLowerCase()));
-    datasets = _.orderBy(datasets, sort, sortDirection);
-    datasets = _.take(_.drop(datasets, offset), limit);
-    this.setState({ filteredDatasets: datasets });
+    const datasets = snapshot.source.map((s) => s.dataset);
+    const filtered = datasets.filter((d) =>
+      d.name.toLowerCase().includes(searchString.toLowerCase()),
+    );
+    const sorted = _.orderBy(filtered, sort, sortDirection);
+    const paged = _.take(_.drop(sorted, offset), limit);
+    this.setState({ filteredDatasets: paged });
   };
 
   render() {
