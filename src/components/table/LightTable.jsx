@@ -159,6 +159,7 @@ export class LightTable extends React.PureComponent {
               onRequestSort={this.handleRequestSort}
               orderDirection={orderDirection}
               orderBy={orderBy}
+              summary={summary}
             />
             <TableBody>
               {rows && rows.length > 0 ? (

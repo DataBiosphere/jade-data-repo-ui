@@ -1,7 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 
+import { getSnapshots } from 'actions/index';
 import SnapshotTable from './table/SnapshotTable';
 import SnapshotPopup from './snapshot/SnapshotPopup';
 
@@ -26,16 +28,33 @@ const styles = (theme) => ({
 class SnapshotView extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object.isRequired,
+    dispatch: PropTypes.func.isRequired,
+    snapshotCount: PropTypes.number,
+    snapshots: PropTypes.array.isRequired,
+  };
+
+  componentDidMount() {
+    const { dispatch } = this.props;
+    dispatch(getSnapshots());
+  }
+
+  handleFilterSnapshots = (limit, offset, sort, sortDirection, searchString) => {
+    const { dispatch } = this.props;
+    dispatch(getSnapshots(limit, offset, sort, sortDirection, searchString));
   };
 
   render() {
-    const { classes } = this.props;
+    const { classes, snapshotCount, snapshots } = this.props;
     return (
       <div id="snapshots" className={classes.wrapper}>
         <div className={classes.width}>
           <div className={classes.title}>Snapshots</div>
           <div>
-            <SnapshotTable />
+            <SnapshotTable
+              snapshotCount={snapshotCount}
+              snapshots={snapshots}
+              handleFilterSnapshots={this.handleFilterSnapshots}
+            />
           </div>
         </div>
         <SnapshotPopup />
@@ -44,4 +63,11 @@ class SnapshotView extends React.PureComponent {
   }
 }
 
-export default withStyles(styles)(SnapshotView);
+function mapStateToProps(state) {
+  return {
+    snapshots: state.snapshots.snapshots,
+    snapshotCount: state.snapshots.snapshotCount,
+  };
+}
+
+export default connect(mapStateToProps)(withStyles(styles)(SnapshotView));

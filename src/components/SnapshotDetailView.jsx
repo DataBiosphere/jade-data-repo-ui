@@ -1,4 +1,5 @@
 import React from 'react';
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
@@ -53,6 +54,13 @@ const styles = (theme) => ({
 });
 
 export class SnapshotDetailView extends React.PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      filteredDatasets: null,
+    };
+  }
+
   static propTypes = {
     classes: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired,
@@ -89,8 +97,20 @@ export class SnapshotDetailView extends React.PureComponent {
     dispatch(removeCustodianFromSnapshot(snapshot.id, removeableEmail));
   };
 
+  handleFilterDatasets = (limit, offset, sort, sortDirection, searchString) => {
+    const { snapshot } = this.props;
+    const datasets = snapshot.source.map((s) => s.dataset);
+    const filtered = datasets.filter((d) =>
+      d.name.toLowerCase().includes(searchString.toLowerCase()),
+    );
+    const sorted = _.orderBy(filtered, sort, sortDirection);
+    const paged = _.take(_.drop(sorted, offset), limit);
+    this.setState({ filteredDatasets: paged });
+  };
+
   render() {
     const { classes, snapshot, snapshotPolicies } = this.props;
+    const { filteredDatasets } = this.state;
     const snapshotReadersObj = snapshotPolicies.find((policy) => policy.name === 'reader');
     const snapshotReaders = (snapshotReadersObj && snapshotReadersObj.members) || [];
     const snapshotCustodiansObj = snapshotPolicies.find((policy) => policy.name === 'custodian');
@@ -109,7 +129,11 @@ export class SnapshotDetailView extends React.PureComponent {
             removeReader={this.removeReader}
           />
           {snapshot && snapshot.source && (
-            <DatasetTable rows={datasets} datasetListName="DATASETS IN THIS SNAPSHOT" />
+            <DatasetTable
+              datasets={filteredDatasets || datasets}
+              datasetsCount={snapshot.source.length}
+              handleFilterDatasets={this.handleFilterDatasets}
+            />
           )}
         </div>
       </div>
