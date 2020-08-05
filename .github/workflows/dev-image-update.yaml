@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - develop
+      - my-ui-semver
 jobs:
   update_image:
     strategy:
