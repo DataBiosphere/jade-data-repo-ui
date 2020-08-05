@@ -114,7 +114,7 @@
     "@babel/preset-env": "^7.10.3",
     "@babel/preset-flow": "^7.10.1",
     "@babel/preset-react": "^7.10.1",
-    "@babel/runtime": "^7.11.0",
+    "@babel/runtime": "^7.11.1",
     "@date-io/date-fns": "2.6.2",
     "@svgr/webpack": "^5.4.0",
     "ansi-styles": "^4.2.1",
