@@ -203,7 +203,7 @@
     "script-loader": "^0.7.2",
     "serve": "^11.3.2",
     "source-map-support": "^0.5.19",
-    "start-server-and-test": "^1.11.0",
+    "start-server-and-test": "^1.11.2",
     "style-loader": "^1.2.1",
     "stylelint": "^13.6.1",
     "stylelint-config-standard": "^20.0.0",
