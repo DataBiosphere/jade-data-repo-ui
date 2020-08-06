@@ -125,8 +125,9 @@ export class QueryView extends React.PureComponent {
   };
 
   hasDataset() {
-    const { dataset } = this.props;
-    return dataset && dataset.schema;
+    const { dataset, match } = this.props;
+    const datasetId = match.params.uuid;
+    return dataset && dataset.schema && dataset.id === datasetId;
   }
 
   handleDrawerWidth = (width) => {
