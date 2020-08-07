@@ -240,7 +240,7 @@
     "deploy": "node tools deploy",
     "publish": "node tools publish",
     "bundlesize": "bundlesize",
-    "rolldown": "node --inspect tools/migrate rolldown"
+    "ingest": "node --inspect tools/ingest ingest"
   },
   "husky": {
     "hooks": {
