@@ -3,6 +3,11 @@ on:
   push:
     branches:
       - develop
+env:
+  gcr_google_project: "broad-jade-dev"
+  google_sdk_version: "290.0.1"
+  DEV_PROJECT: broad-jade-dev
+
 jobs:
   update_image:
     strategy:
@@ -13,6 +18,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
         with:
+          fetch-depth: 0
           ref: develop
       - name: "Checkout datarepo-helm-definitions repo"
         uses: actions/checkout@v2
@@ -35,9 +41,12 @@ jobs:
           actions_subcommand: "skip"
           role_id: ${{ secrets.ROLE_ID }}
           secret_id: ${{ secrets.SECRET_ID }}
-      - name: Build new ui container
+      - name: 'Get Previous tag'
+        id: uiprevioustag
+        uses: "broadinstitute/github-action-get-previous-tag@master"
         env:
-          DEV_PROJECT: broad-jade-dev
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+      - name: Build new ui container
         run: |
           GCR_TAG=$(git rev-parse --short HEAD)
           echo "::set-env name=GCR_TAG::${GCR_TAG}"
@@ -47,13 +56,18 @@ jobs:
       - name: Build
         run: |
           rm -rf jade-dev-account.pem
-          docker build -t gcr.io/broad-jade-dev/jade-data-repo-ui:${GCR_TAG} .
+          docker build -t gcr.io/${{ env.gcr_google_project }}/jade-data-repo-ui:${GCR_TAG} .
       # Push the Docker image to Google Container Registry
       - name: Publish
         run: |
           gcloud auth activate-service-account --key-file jade-dev-account.json
           gcloud auth configure-docker --quiet
-          docker push gcr.io/broad-jade-dev/jade-data-repo-ui:${GCR_TAG}
+          docker push gcr.io/${{ env.gcr_google_project }}/jade-data-repo-ui:${GCR_TAG}
+      # senvar version tag
+          gcloud container images \
+          add-tag \
+          gcr.io/${{ env.gcr_google_project }}/${{ matrix.gcr_image }}:"${GCR_TAG}" \
+          gcr.io/${{ env.gcr_google_project }}/${{ matrix.gcr_image }}:"${{ steps.uiprevioustag.outputs.tag }}" --quiet
       - name: "Check and edit Helm definition for dev"
         uses: broadinstitute/datarepo-actions@0.16.0
         with:
