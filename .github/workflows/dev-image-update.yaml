@@ -65,8 +65,8 @@ jobs:
           docker push gcr.io/${{ env.gcr_google_project }}/jade-data-repo-ui:${GCR_TAG}
           gcloud container images \
           add-tag \
-          gcr.io/${{ env.gcr_google_project }}/${{ matrix.gcr_image }}:"${GCR_TAG}" \
-          gcr.io/${{ env.gcr_google_project }}/${{ matrix.gcr_image }}:"${{ steps.uiprevioustag.outputs.tag }}" --quiet
+          gcr.io/${{ env.gcr_google_project }}/jade-data-repo-ui:"${GCR_TAG}" \
+          gcr.io/${{ env.gcr_google_project }}/jade-data-repo-ui:"${{ steps.uiprevioustag.outputs.tag }}" --quiet
       - name: "Check and edit Helm definition for dev"
         uses: broadinstitute/datarepo-actions@0.16.0
         with:
