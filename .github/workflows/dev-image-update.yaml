@@ -41,24 +41,27 @@ jobs:
           actions_subcommand: "skip"
           role_id: ${{ secrets.ROLE_ID }}
           secret_id: ${{ secrets.SECRET_ID }}
+      - name: "Pull down new tags"
+        run: git fetch --all --tags
       - name: 'Get Previous tag'
         id: uiprevioustag
         uses: "broadinstitute/github-action-get-previous-tag@master"
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-      - name: Build new ui container
+      - name: Build nmp build for new ui container
         run: |
+          git pull
           GCR_TAG=$(git rev-parse --short HEAD)
           echo "::set-env name=GCR_TAG::${GCR_TAG}"
           npm ci
           npm run-script build
       # Build the Docker image
-      - name: Build
+      - name: Build docker container
         run: |
           rm -rf jade-dev-account.pem
           docker build -t gcr.io/${{ env.gcr_google_project }}/jade-data-repo-ui:${GCR_TAG} .
       # Push the Docker image to Google Container Registry
-      - name: Publish
+      - name: Publish and tag new docker container to GCR
         run: |
           gcloud auth activate-service-account --key-file jade-dev-account.json
           gcloud auth configure-docker --quiet
