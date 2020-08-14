@@ -431,6 +431,23 @@ export function* countResults({ payload }) {
 }
 
 /**
+ * feature flag stuff
+ */
+
+export function* getFeatures() {
+  try {
+    const url = 'https://sam.dsde-dev.broadinstitute.org/api/groups/v1';
+    const response = yield call(authGet, url);
+    yield put({
+      type: ActionTypes.GET_FEATURES_SUCCESS,
+      groups: response.data,
+    });
+  } catch (err) {
+    showNotification(err);
+  }
+}
+
+/**
  * App Sagas
  */
 export default function* root() {
@@ -450,5 +467,6 @@ export default function* root() {
     takeLatest(ActionTypes.RUN_QUERY, runQuery),
     takeLatest(ActionTypes.PAGE_QUERY, pageQuery),
     takeLatest(ActionTypes.COUNT_RESULTS, countResults),
+    takeLatest(ActionTypes.GET_FEATURES, getFeatures),
   ]);
 }
