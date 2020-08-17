@@ -3,6 +3,8 @@ import immutable from 'immutability-helper';
 
 import { IMAGE, STATUS, ActionTypes } from 'constants/index';
 
+const JADE_FEATURE_PREFIX = 'jade-feature-';
+
 export const userState = {
   isAuthenticated: false,
   status: STATUS.IDLE,
@@ -11,6 +13,7 @@ export const userState = {
   email: '',
   token: '',
   tokenExpiration: '',
+  features: {},
 };
 
 export default {
@@ -31,7 +34,25 @@ export default {
           isAuthenticated: { $set: false },
           status: { $set: STATUS.IDLE },
           image: { $set: IMAGE.DEFAULT },
+          name: { $set: '' },
+          email: { $set: '' },
+          token: { $set: '' },
+          tokenExpiration: { $set: '' },
+          features: { $set: {} },
         }),
+      [ActionTypes.GET_FEATURES_SUCCESS]: (state, action) => {
+        const features = {};
+        action.groups
+          .map((group) => group.groupName)
+          .filter((groupName) => groupName.startsWith(JADE_FEATURE_PREFIX))
+          .map((feature) => feature.substring(JADE_FEATURE_PREFIX.length))
+          .forEach((feature) => {
+            features[feature] = true;
+          });
+        return immutable(state, {
+          features: { $set: features },
+        });
+      },
     },
     userState,
   ),

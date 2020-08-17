@@ -71,6 +71,8 @@ export const ActionTypes = keyMirror({
   COUNT_RESULTS_SUCCESS: undefined,
   SNAPSHOT_CREATE_DETAILS: undefined,
   ADD_READERS_TO_SNAPSHOT: undefined,
+  GET_FEATURES: undefined,
+  GET_FEATURES_SUCCESS: undefined,
 });
 
 /**
