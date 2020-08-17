@@ -12,6 +12,7 @@ import DatasetsView from '../components/DatasetView';
 import SnapshotView from '../components/SnapshotView';
 import SnapshotDetailView from '../components/SnapshotDetailView';
 import QueryView from '../components/dataset/query/QueryView';
+import DataExplorerView from '../components/search/DataExplorerView';
 
 const styles = (theme) => ({
   wrapper: {
@@ -67,6 +68,13 @@ class Private extends React.Component {
                       classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
                     />
                     <Tab
+                      label="Data Explorer"
+                      component={Link}
+                      value="/explorer"
+                      to="/explorer"
+                      classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
+                    />
+                    <Tab
                       label="Datasets"
                       component={Link}
                       value="/datasets"
@@ -83,6 +91,7 @@ class Private extends React.Component {
                   </Tabs>
                   <Switch>
                     <Route exact path="/" component={HomeView} />
+                    <Route exact path="/explorer" component={DataExplorerView} />
                     <Route exact path="/datasets" component={DatasetsView} />
                     <Route exact path="/datasets/details/:uuid" component={QueryView} />
                     <Route exact path="/snapshots" component={SnapshotView} />
