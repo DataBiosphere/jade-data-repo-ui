@@ -17,3 +17,8 @@ export const { userLogin: logIn, userLogout: logOut } = createActions({
   }),
   [ActionTypes.USER_LOGOUT]: () => ({}),
 });
+
+export const { getFeatures } = createActions({
+  [ActionTypes.GET_FEATURES]: () => ({}),
+  [ActionTypes.GET_FEATURES_SUCCESS]: (groups) => groups,
+});
