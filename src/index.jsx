@@ -9,7 +9,7 @@ import history from 'modules/hist';
 import globalTheme from 'modules/theme';
 import { ThemeProvider } from '@material-ui/styles';
 import axios from 'axios';
-import { logIn } from 'actions/index';
+import { logIn, getFeatures } from 'actions/index';
 import { ActionTypes } from 'constants/index';
 
 import { store } from 'store/index';
@@ -53,6 +53,7 @@ function bootstrap() {
                   user.accessTokenExpiration,
                 ),
               );
+              store.dispatch(getFeatures());
             }
             resolve();
           })
