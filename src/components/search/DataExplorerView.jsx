@@ -38,6 +38,7 @@ class DataExplorerView extends React.PureComponent {
   }
 }
 
+// eslint-disable-next-line no-unused-vars
 function mapStateToProps(state) {
   return {};
 }
