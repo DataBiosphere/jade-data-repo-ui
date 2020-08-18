@@ -12,6 +12,7 @@ import DatasetsView from '../components/DatasetView';
 import SnapshotView from '../components/SnapshotView';
 import SnapshotDetailView from '../components/SnapshotDetailView';
 import QueryView from '../components/dataset/query/QueryView';
+import DataExplorerView from '../components/search/DataExplorerView';
 
 const styles = (theme) => ({
   wrapper: {
@@ -41,12 +42,13 @@ const styles = (theme) => ({
 class Private extends React.Component {
   static propTypes = {
     classes: PropTypes.object.isRequired,
+    features: PropTypes.object,
   };
 
   static prefixMatcher = new RegExp('/[^/]*');
 
   render() {
-    const { classes } = this.props;
+    const { classes, features } = this.props;
     return (
       <ConnectedRouter history={history}>
         <Router history={history}>
@@ -66,6 +68,15 @@ class Private extends React.Component {
                       to="/"
                       classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
                     />
+                    {features.searchui && (
+                      <Tab
+                        label="Data Explorer"
+                        component={Link}
+                        value="/explorer"
+                        to="/explorer"
+                        classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
+                      />
+                    )}
                     <Tab
                       label="Datasets"
                       component={Link}
@@ -83,6 +94,9 @@ class Private extends React.Component {
                   </Tabs>
                   <Switch>
                     <Route exact path="/" component={HomeView} />
+                    {features.searchui && (
+                      <Route exact path="/explorer" component={DataExplorerView} />
+                    )}
                     <Route exact path="/datasets" component={DatasetsView} />
                     <Route exact path="/datasets/details/:uuid" component={QueryView} />
                     <Route exact path="/snapshots" component={SnapshotView} />

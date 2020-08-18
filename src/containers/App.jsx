@@ -233,7 +233,12 @@ export function App(props) {
             exact
             component={HeadlessLogin}
           />
-          <RoutePrivate isAuthenticated={user.isAuthenticated} path="/" component={Private} />
+          <RoutePrivate
+            isAuthenticated={user.isAuthenticated}
+            path="/"
+            component={Private}
+            features={user.features}
+          />
           <Route component={NotFound} />
         </Switch>
       </div>

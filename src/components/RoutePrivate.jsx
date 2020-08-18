@@ -2,12 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Route, Redirect } from 'react-router-dom';
 
-const RoutePrivate = ({ component: Component, isAuthenticated, to, ...rest }) => (
+const RoutePrivate = ({ component: Component, features, isAuthenticated, to, ...rest }) => (
   <Route
     {...rest}
     render={(props) =>
       isAuthenticated ? (
-        <Component {...props} />
+        <Component {...props} features={features} />
       ) : (
         <Redirect
           to={{
@@ -22,6 +22,7 @@ const RoutePrivate = ({ component: Component, isAuthenticated, to, ...rest }) =>
 
 RoutePrivate.propTypes = {
   component: PropTypes.oneOfType([PropTypes.func, PropTypes.object]).isRequired,
+  features: PropTypes.object,
   isAuthenticated: PropTypes.bool.isRequired,
   location: PropTypes.object,
   to: PropTypes.string,
