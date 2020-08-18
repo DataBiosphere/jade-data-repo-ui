@@ -2,22 +2,18 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
+import { Divider } from '@material-ui/core';
 
 const styles = (theme) => ({
-  wrapper: {
-    display: 'flex',
-    justifyContent: 'center',
-    padding: theme.spacing(4),
-    margin: theme.spacing(4),
-  },
-  width: {
-    width: '70%',
-  },
   title: {
     color: theme.palette.primary.main,
     fontSize: '54px',
     lineHeight: '66px',
-    paddingBottom: theme.spacing(8),
+    padding: theme.spacing(4),
+  },
+  section: {
+    padding: `${theme.spacing(2)}px ${theme.spacing(4)}px`,
+    margin: `${theme.spacing(1)}px 0px`,
   },
 });
 
@@ -30,10 +26,13 @@ class DataExplorerView extends React.PureComponent {
   render() {
     const { classes } = this.props;
     return (
-      <div className={classes.wrapper}>
-        <div className={classes.width}>
-          <div className={classes.title}>This is the data explorer</div>
-        </div>
+      <div>
+        <div className={classes.title}>Data Explorer</div>
+        <div className={classes.section}>This is where the filter options will go</div>
+        <Divider />
+        <div className={classes.section}>This is where the applied filters will go</div>
+        <Divider />
+        <div className={classes.section}>This is where the dataset results will go</div>
       </div>
     );
   }
