@@ -42,18 +42,17 @@ class DatasetTable extends React.PureComponent {
         property: 'name',
         render: (row) => (
           <div>
-            {features.granular_sharing && (
-              <Link
-                to={
-                  features.granular_sharing
-                    ? `/datasets/${row.id}/details`
-                    : `/datasets/${row.id}/query`
-                }
-                className={classes.jadeLink}
-              >
-                {row.name}
-              </Link>
-            )}
+            <Link
+              to={
+                features.granular_sharing
+                  ? `/datasets/${row.id}/details`
+                  : `/datasets/${row.id}/query`
+              }
+              className={classes.jadeLink}
+            >
+              {row.name}
+            </Link>
+            )
           </div>
         ),
       },
