@@ -64,6 +64,7 @@ export class SnapshotDetailView extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired,
+    features: PropTypes.object,
     match: PropTypes.object.isRequired,
     snapshot: PropTypes.object,
     snapshotPolicies: PropTypes.arrayOf(PropTypes.object).isRequired,
