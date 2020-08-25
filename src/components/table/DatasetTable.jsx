@@ -21,21 +21,38 @@ class DatasetTable extends React.PureComponent {
     classes: PropTypes.object.isRequired,
     datasets: PropTypes.array.isRequired,
     datasetsCount: PropTypes.number,
+    features: PropTypes.object,
     handleFilterDatasets: PropTypes.func,
     summary: PropTypes.bool,
   };
 
   render() {
-    const { classes, datasets, datasetsCount, handleFilterDatasets, summary } = this.props;
+    const {
+      classes,
+      datasets,
+      datasetsCount,
+      features,
+      handleFilterDatasets,
+      summary,
+    } = this.props;
     // TODO add back modified_date column
     const columns = [
       {
         label: 'Dataset Name',
         property: 'name',
         render: (row) => (
-          <Link to={`/datasets/details/${row.id}`} className={classes.jadeLink}>
-            {row.name}
-          </Link>
+          <div>
+            <Link
+              to={
+                features.granular_sharing
+                  ? `/datasets/${row.id}/details`
+                  : `/datasets/${row.id}/query`
+              }
+              className={classes.jadeLink}
+            >
+              {row.name}
+            </Link>
+          </div>
         ),
       },
       {

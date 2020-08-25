@@ -58,6 +58,7 @@ class HomeView extends React.PureComponent {
     classes: PropTypes.object.isRequired,
     datasets: PropTypes.array.isRequired,
     dispatch: PropTypes.func.isRequired,
+    features: PropTypes.object,
     snapshots: PropTypes.array.isRequired,
   };
 
@@ -68,13 +69,13 @@ class HomeView extends React.PureComponent {
   }
 
   render() {
-    const { classes, datasets, snapshots } = this.props;
+    const { classes, datasets, features, snapshots } = this.props;
     return (
       <div className={classes.wrapper}>
         <div className={classes.width}>
           <div className={classes.title}>Terra Data Repository at a glance</div>
           <div className={classes.header}> RECENT DATASETS </div>
-          <DatasetTable summary datasets={datasets} />
+          <DatasetTable summary datasets={datasets} features={features} />
           <div>
             <Link to="/datasets" className={classes.jadeLink}>
               See all Datasets
@@ -97,6 +98,7 @@ class HomeView extends React.PureComponent {
 function mapStateToProps(state) {
   return {
     datasets: state.datasets.datasets,
+    features: state.user.features,
     snapshots: state.snapshots.snapshots,
   };
 }

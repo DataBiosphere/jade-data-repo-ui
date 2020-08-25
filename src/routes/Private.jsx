@@ -11,6 +11,7 @@ import HomeView from '../components/HomeView';
 import DatasetsView from '../components/DatasetView';
 import SnapshotView from '../components/SnapshotView';
 import SnapshotDetailView from '../components/SnapshotDetailView';
+import DatasetDetailView from '../components/dataset/details/DatasetDetailView';
 import QueryView from '../components/dataset/query/QueryView';
 import DataExplorerView from '../components/search/DataExplorerView';
 
@@ -98,7 +99,8 @@ class Private extends React.Component {
                       <Route exact path="/explorer" component={DataExplorerView} />
                     )}
                     <Route exact path="/datasets" component={DatasetsView} />
-                    <Route exact path="/datasets/details/:uuid" component={QueryView} />
+                    <Route exact path="/datasets/:uuid/query" component={QueryView} />
+                    <Route exact path="/datasets/:uuid/details" component={DatasetDetailView} />
                     <Route exact path="/snapshots" component={SnapshotView} />
                     <Route exact path="/snapshots/details/:uuid" component={SnapshotDetailView} />
                   </Switch>
