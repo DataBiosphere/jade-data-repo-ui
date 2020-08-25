@@ -52,7 +52,6 @@ class DatasetTable extends React.PureComponent {
             >
               {row.name}
             </Link>
-            )
           </div>
         ),
       },
