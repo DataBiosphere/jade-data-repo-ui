@@ -25,6 +25,7 @@ class DatasetDetailView extends React.PureComponent {
     dataset: PropTypes.object,
     datasetPolicies: PropTypes.array,
     dispatch: PropTypes.func.isRequired,
+    match: PropTypes.object,
   };
 
   componentDidMount() {
@@ -44,9 +45,8 @@ class DatasetDetailView extends React.PureComponent {
           <DatasetInfoCard dataset={dataset} datasetPolicies={datasetPolicies} />
         </div>
       );
-    } else {
-      return <div />; // TODO: Make this a loading spinner
     }
+    return <div />; // TODO: Make this a loading spinner
   }
 }
 
