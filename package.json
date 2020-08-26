@@ -43,7 +43,7 @@
     "date-fns": "2.14.0",
     "ease-component": "^1.0.0",
     "events-polyfill": "^2.1.2",
-    "fbjs": "^1.0.0",
+    "fbjs": "^2.0.0",
     "fs-extra": "^9.0.1",
     "history": "^4.10.1",
     "http-proxy-middleware": "^0.20.0",
