@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Paper, Typography } from '@material-ui/core';
+import { Paper, Typography, Button } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { Launch } from '@material-ui/icons';
 
@@ -26,6 +26,10 @@ const styles = (theme) => ({
     },
     alignItems: 'center',
     display: 'flex',
+  },
+  button: {
+    color: theme.palette.common.link,
+    border: `1px solid ${theme.palette.common.link}`,
   },
 });
 
@@ -68,6 +72,9 @@ export class DatasetInfoCard extends React.PureComponent {
             </a>
             <Launch fontSize="small" />
           </div>
+          <Button className={classes.button} variant="outlined">
+            Snapshot full dataset
+          </Button>
         </div>
       </Paper>
     );
