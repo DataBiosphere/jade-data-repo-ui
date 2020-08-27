@@ -28,6 +28,7 @@ export default createMuiTheme({
       '"Segoe UI Emoji"',
       '"Segoe UI Symbol"',
     ].join(','),
+    bold: '600',
   },
   palette: {
     common: {
