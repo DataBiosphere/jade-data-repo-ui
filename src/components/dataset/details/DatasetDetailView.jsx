@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import { getDatasetById, getDatasetPolicy } from 'actions/index';
 import DatasetInfoCard from './DatasetInfoCard';
+import CreateFullSnapshotView from './CreateFullSnapshotView';
 
 const styles = (theme) => ({
   root: {
@@ -20,6 +21,13 @@ const styles = (theme) => ({
 });
 
 class DatasetDetailView extends React.PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      creatingSnapshot: false,
+    };
+  }
+
   static propTypes = {
     classes: PropTypes.object,
     dataset: PropTypes.object,
@@ -35,14 +43,27 @@ class DatasetDetailView extends React.PureComponent {
     dispatch(getDatasetPolicy(uuid));
   }
 
+  openSnapshotCreation = (isOpen) => {
+    this.setState({ creatingSnapshot: isOpen });
+  };
+
   render() {
     const { classes, dataset, datasetPolicies, match } = this.props;
+    const { creatingSnapshot } = this.state;
     const { uuid } = match.params;
     if (dataset && datasetPolicies && dataset.id === uuid) {
       return (
         <div className={classes.root}>
           <div className={classes.headerText}>Dataset Information</div>
-          <DatasetInfoCard dataset={dataset} datasetPolicies={datasetPolicies} />
+          <DatasetInfoCard
+            dataset={dataset}
+            datasetPolicies={datasetPolicies}
+            openSnapshotCreation={this.openSnapshotCreation}
+          />
+          <CreateFullSnapshotView
+            open={creatingSnapshot}
+            openSnapshotCreation={this.openSnapshotCreation}
+          />
         </div>
       );
     }

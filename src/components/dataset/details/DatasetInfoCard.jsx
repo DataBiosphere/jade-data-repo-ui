@@ -38,10 +38,11 @@ export class DatasetInfoCard extends React.PureComponent {
     classes: PropTypes.object,
     dataset: PropTypes.object,
     datasetPolicies: PropTypes.array,
+    openSnapshotCreation: PropTypes.func,
   };
 
   render() {
-    const { classes, dataset, datasetPolicies } = this.props;
+    const { classes, dataset, datasetPolicies, openSnapshotCreation } = this.props;
     const datasetCustodiansObj = datasetPolicies.find((policy) => policy.name === 'custodian');
     const datasetCustodians = (datasetCustodiansObj && datasetCustodiansObj.members) || [];
     const bigQueryUrl = `https://console.cloud.google.com/bigquery?project=${dataset.dataProject}&supportedpurview=project&p=${dataset.dataProject}&d=datarepo_${dataset.name}&page=dataset`;
@@ -72,7 +73,11 @@ export class DatasetInfoCard extends React.PureComponent {
             </a>
             <Launch fontSize="small" />
           </div>
-          <Button className={classes.button} variant="outlined">
+          <Button
+            className={classes.button}
+            variant="outlined"
+            onClick={() => openSnapshotCreation(true)}
+          >
             Snapshot full dataset
           </Button>
         </div>
