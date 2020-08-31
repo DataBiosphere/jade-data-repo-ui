@@ -3,15 +3,16 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import { getDatasetById, getDatasetPolicy } from 'actions/index';
+import { Grid, Typography } from '@material-ui/core';
 import DatasetInfoCard from './DatasetInfoCard';
 import CreateFullSnapshotView from './CreateFullSnapshotView';
+import DatasetRelationshipsPanel from './DatasetRelationshipsPanel';
 
 const styles = (theme) => ({
   root: {
     // TODO: expect this to change as more components are added
-    padding: theme.spacing(4),
-    width: '70%',
-    margin: 'auto',
+    margin: theme.spacing(3),
+    height: '100%',
   },
   headerText: {
     fontWeight: theme.typography.bold,
@@ -54,16 +55,31 @@ class DatasetDetailView extends React.PureComponent {
     if (dataset && datasetPolicies && dataset.id === uuid) {
       return (
         <div className={classes.root}>
-          <div className={classes.headerText}>Dataset Information</div>
-          <DatasetInfoCard
-            dataset={dataset}
-            datasetPolicies={datasetPolicies}
-            openSnapshotCreation={this.openSnapshotCreation}
-          />
-          <CreateFullSnapshotView
-            open={creatingSnapshot}
-            openSnapshotCreation={this.openSnapshotCreation}
-          />
+          <Grid container>
+            <Grid xs={12}>
+              <div className={classes.headerText}>
+                <h2>{dataset.name}</h2>
+              </div>
+            </Grid>
+            <Grid container xs={12}>
+              <Grid xs={4}>
+                <div className={classes.headerText}>Dataset Schema (default view)</div>
+                <DatasetRelationshipsPanel dataset={dataset} />
+              </Grid>
+              <Grid xs={8}>
+                <div className={classes.headerText}>Dataset Information</div>
+                <DatasetInfoCard
+                  dataset={dataset}
+                  datasetPolicies={datasetPolicies}
+                  openSnapshotCreation={this.openSnapshotCreation}
+                />
+                <CreateFullSnapshotView
+                  open={creatingSnapshot}
+                  openSnapshotCreation={this.openSnapshotCreation}
+                />
+              </Grid>
+            </Grid>
+          </Grid>
         </div>
       );
     }
