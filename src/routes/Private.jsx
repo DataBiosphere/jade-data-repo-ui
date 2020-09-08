@@ -19,6 +19,8 @@ const styles = (theme) => ({
   wrapper: {
     fontFamily: theme.typography.fontFamily,
     height: 'calc(100% - 64px)',
+    display: 'flex',
+    flexDirection: 'column',
   },
   tabsIndicator: {
     borderBottom: '8px solid #74ae43',
