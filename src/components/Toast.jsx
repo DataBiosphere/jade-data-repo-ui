@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 
-import ErrorIcon from '../../assets/media/icons/warning-standard-solid.svg';
+import { ReactComponent as ErrorIcon } from 'media/icons/warning-standard-solid.svg';
 
 const styles = (theme) => ({
   card: {
