@@ -75,6 +75,7 @@ export class CategoryWrapper extends React.PureComponent {
   transformResponse = (response) => {
     const counts = {};
     if (response) {
+      // eslint-disable-next-line
       response.map((r) => {
         const name = r.f[0].v;
         const count = r.f[1].v;

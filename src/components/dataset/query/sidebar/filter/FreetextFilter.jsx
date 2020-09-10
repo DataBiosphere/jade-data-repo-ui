@@ -51,6 +51,7 @@ export class FreetextFilter extends React.PureComponent {
   transformResponse = (response) => {
     const options = [];
     if (response) {
+      // eslint-disable-next-line
       response.map((r) => {
         const name = r.f[0].v;
         options.push(name);
