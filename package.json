@@ -31,7 +31,7 @@
     "@material-ui/icons": "^4.5.1",
     "@material-ui/lab": "^4.0.0-alpha.40",
     "@material-ui/styles": "^4.10.0",
-    "ajv": "^6.12.2",
+    "ajv": "^6.12.5",
     "animate.css": "^4.1.1",
     "awesome-debounce-promise": "^2.1.0",
     "axios": "^0.20.0",
