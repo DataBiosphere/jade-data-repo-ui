@@ -51,7 +51,7 @@
     "jest-cli": "^26.4.2",
     "js-combinatorics": "^0.6.1",
     "jsonfile": "^6.0.1",
-    "jss-plugin-extend": "^10.3.0",
+    "jss-plugin-extend": "^10.4.0",
     "lodash": "^4.17.19",
     "mobile-detect": "^1.4.4",
     "modernizr": "^3.11.2",
