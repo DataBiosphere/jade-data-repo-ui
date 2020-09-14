@@ -25,8 +25,8 @@ import Logo from 'components/Logo';
 import { logOut } from 'actions/index';
 import RoutePublic from 'components/RoutePublic';
 import RoutePrivate from 'components/RoutePrivate';
-import CarrotSVG from '../../assets/media/icons/angle-line.svg';
-import SignOutSVG from '../../assets/media/icons/logout-line.svg';
+import { ReactComponent as CarrotSVG } from 'media/icons/angle-line.svg';
+import { ReactComponent as SignOutSVG } from 'media/icons/logout-line.svg';
 
 import 'react-notifications-component/dist/theme.css';
 

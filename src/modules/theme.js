@@ -1,5 +1,5 @@
 import { createMuiTheme } from '@material-ui/core/styles';
-import '../../fonts/Montserrat.css';
+import '../media/fonts/Montserrat.css';
 import '../style.css';
 import WebFont from 'webfontloader';
 

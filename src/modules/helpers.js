@@ -1,4 +1,3 @@
-// @flow
 /**
  * Helper functions
  * @module Helpers
@@ -9,7 +8,7 @@
  * @param {Element} elem
  * @returns {{}}
  */
-export function snapshotToObject(elem: Element): Object {
+export function snapshotToObject(elem) {
   const data = {};
   [].forEach.call(elem.attributes, (attr) => {
     if (/^data-/.test(attr.name)) {

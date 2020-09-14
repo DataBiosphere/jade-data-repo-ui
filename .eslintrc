@@ -1,5 +1,5 @@
 {
-  "extends": ["airbnb", "plugin:prettier/recommended", "prettier/flowtype", "prettier/react"],
+  "extends": ["airbnb", "plugin:prettier/recommended", "prettier/react"],
   "parser": "babel-eslint",
   "env": {
     "browser": true,
@@ -17,17 +17,7 @@
     "APP__GITHASH": false,
     "APP__VERSION": false
   },
-  "plugins": ["babel", "cypress", "flowtype", "redux-saga"],
-  "settings": {
-    "import/resolver": {
-      "webpack": {
-        "config": "config/webpack.config.js"
-      }
-    },
-    "flowtype": {
-      "onlyFilesWithFlowAnnotation": true
-    }
-  },
+  "plugins": ["babel", "cypress", "redux-saga"],
   "rules": {
     "array-callback-return": "off",
     "arrow-body-style": ["warn", "as-needed"],
@@ -118,12 +108,9 @@
         ]
       }
     ],
-    "flowtype/require-parameter-type": ["warn", { "excludeArrowFunctions": true }],
-    "flowtype/require-return-type": ["warn", "always", { "excludeArrowFunctions": true }],
-    "flowtype/space-after-type-colon": ["error", "always"],
     "import/no-dynamic-require": "off",
     "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
-    "import/no-unresolved": "warn",
+    "import/no-unresolved": "off",
     "import/no-webpack-loader-syntax": "off",
     "import/no-named-as-default": "off",
     "import/prefer-default-export": "off",

@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { renderLoginButton } from 'modules/auth';
 import { withStyles } from '@material-ui/core/styles';
 
-import Hero from 'assets/media/images/hero.png';
+import Hero from 'media/images/hero.png';
 import { logOut, logIn } from 'actions/index';
 
 const styles = (theme) => ({

@@ -68,7 +68,13 @@ export class DatasetInfoCard extends React.PureComponent {
         </div>
         <div className={classes.flex}>
           <div className={classes.jadeLink}>
-            <a href={bigQueryUrl} target="_blank">
+            <a
+              href={bigQueryUrl}
+              // rel=noopener mitigates security risk here
+              // eslint-disable-next-line
+              target="_blank"
+              rel="noopener"
+            >
               View in SQL Viewer
             </a>
             <Launch fontSize="small" />

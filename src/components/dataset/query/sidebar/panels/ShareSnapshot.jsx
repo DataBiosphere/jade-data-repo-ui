@@ -231,6 +231,7 @@ export class ShareSnapshot extends React.PureComponent {
                 onChange={this.inputEmail}
                 value={usersToAdd}
                 inputValue={currentInput}
+                options={[]}
               />
             </Grid>
             <Grid item xs={4}>
@@ -289,7 +290,12 @@ export class ShareSnapshot extends React.PureComponent {
           ))}
           <Menu anchorEl={anchor} onClose={this.closeUserMenu} open={anchor !== null}>
             {permissions.map((permission) => (
-              <MenuItem onClick={this.closeUserMenu} disabled={permission === 'can discover'} dense>
+              <MenuItem
+                onClick={this.closeUserMenu}
+                disabled={permission === 'can discover'}
+                key={permission}
+                dense
+              >
                 {permission}
               </MenuItem>
             ))}
