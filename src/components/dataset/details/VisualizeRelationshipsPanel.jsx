@@ -32,7 +32,7 @@ const styles = (theme) => ({
   },
 });
 
-export class DatasetRelationshipsPanel extends React.PureComponent {
+export class VisualizeRelationshipsPanel extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object,
     dataset: PropTypes.object,
@@ -44,4 +44,4 @@ export class DatasetRelationshipsPanel extends React.PureComponent {
   }
 }
 
-export default withStyles(styles)(DatasetRelationshipsPanel);
+export default withStyles(styles)(VisualizeRelationshipsPanel);

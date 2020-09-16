@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import React, { useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
@@ -7,7 +7,7 @@ import { getDatasetById, getDatasetPolicy } from 'actions/index';
 import { Grid, Typography } from '@material-ui/core';
 import DatasetInfoCard from './DatasetInfoCard';
 import CreateFullSnapshotView from './CreateFullSnapshotView';
-import DatasetRelationshipsPanel from './DatasetRelationshipsPanel';
+import DatasetRelationshipsPanel from './VisualizeRelationshipsPanel';
 
 const styles = (theme) => ({
   root: {
@@ -15,30 +15,32 @@ const styles = (theme) => ({
     height: '100%',
     display: 'grid',
     gridTemplateColumns: '1fr 2fr',
+    margin: '1rem 0.5rem',
   },
   headerText: {
     fontWeight: theme.typography.bold,
     textTransform: 'uppercase',
   },
   infoColumn: {
-    margin: `${theme.spacing(2)}px ${theme.spacing(1)}px`,
-    display: 'grid',
-    gridColumnStart: 1,
-    gridColumnEnd: 2,
-    gridTemplateRows: '1fr 5fr',
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  infoColumnPanel: {
+    flexGrow: 1,
   },
   mainColumn: {
-    gridColumnStart: 2,
-    gridColumnEnd: 3,
+    display: 'flex',
+    flexDirection: 'column',
+    paddingLeft: '0.5rem',
   },
-  infoColumnRow1: {
-    gridRowStart: 1,
-    gridRowEnd: 2,
+  mainColumnRow1: {},
+  mainColumnRow2: {},
+  mainColumnRow3: {
+    flexGrow: 1,
   },
-  infoColumnRow2: {
-    gridRowStart: 2,
-    gridRowEnd: 3,
-  }
+  spacer: {
+    height: 64,
+  },
 });
 
 const DatasetDetailView = ({
@@ -58,20 +60,30 @@ const DatasetDetailView = ({
   }, []);
 
   return datasetPolicies && dataset && dataset.id === uuid ? (
-    <div className={classes.root}>
-      <div className={classes.infoColumn}>
-        <div className={classes.infoColumnRow1}>
-          <h2>{dataset.name}</h2>
+    <Fragment>
+      <h2 style={{ margin: '0.5rem' }}>{dataset.name}</h2>
+      <div className={classes.root}>
+        <div className={classes.infoColumn}>
           <div className={classes.headerText}>Dataset Schema (default view)</div>
+          <div className={classes.infoColumnPanel}>
+            <DatasetRelationshipsPanel dataset={dataset} />
+          </div>
         </div>
-        <div className={classes.infoColumnRow2}>
-          <DatasetRelationshipsPanel dataset={dataset} />
+        <div className={classes.mainColumn}>
+          <div className={classes.mainColumnRow1}>
+            <div className={classes.datasetInfoContainer}>
+              <div className={classes.headerText}>Dataset Information</div>
+            </div>
+          </div>
+          <div className={classes.mainColumnRow2}>
+            <DatasetInfoCard dataset={dataset} datasetPolicies={datasetPolicies} />
+          </div>
+          <div className={classes.mainColumnRow3}>
+            <div className={classes.headerText}>Dataset Relationships</div>
+          </div>
         </div>
       </div>
-      <div className={classes.mainColumn}>
-        <DatasetInfoCard dataset={dataset} datasetPolicies={datasetPolicies} />
-      </div>
-    </div>
+    </Fragment>
   ) : (
     <div />
   );

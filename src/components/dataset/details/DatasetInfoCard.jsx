@@ -6,7 +6,6 @@ import { Launch } from '@material-ui/icons';
 
 const styles = (theme) => ({
   root: {
-    margin: theme.spacing(1),
     padding: theme.spacing(2),
   },
   headerText: {
