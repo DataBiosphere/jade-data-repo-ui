@@ -1,13 +1,12 @@
-import _ from 'lodash';
 import React, { Fragment, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import { getDatasetById, getDatasetPolicy } from 'actions/index';
-import { Grid, Typography } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
 import DatasetInfoCard from './DatasetInfoCard';
-import CreateFullSnapshotView from './CreateFullSnapshotView';
 import DatasetRelationshipsPanel from './VisualizeRelationshipsPanel';
+import CreateFullSnapshotView from './CreateFullSnapshotView';
 
 const styles = (theme) => ({
   root: {
@@ -73,7 +72,11 @@ const DatasetDetailView = ({
         </div>
         <div className={classes.mainColumn}>
           <div className={classes.headerText}>Dataset Information</div>
-          <DatasetInfoCard />
+          <DatasetInfoCard openSnapshotCreation={setCreatingSnapshot} />
+          <CreateFullSnapshotView
+            open={creatingSnapshot}
+            openSnapshotCreation={setCreatingSnapshot}
+          />
           <div className={classes.mainColumnRow3}>
             <div className={classes.headerText}>Dataset Relationships</div>
           </div>
