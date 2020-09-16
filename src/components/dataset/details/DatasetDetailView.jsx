@@ -33,13 +33,15 @@ const styles = (theme) => ({
     flexDirection: 'column',
     paddingLeft: '0.5rem',
   },
-  mainColumnRow1: {},
-  mainColumnRow2: {},
   mainColumnRow3: {
     flexGrow: 1,
   },
   spacer: {
-    height: 64,
+    height: '4rem',
+  },
+  pageTitle: {
+    margin: '0.5rem',
+    fontWeight: theme.typography.bold,
   },
 });
 
@@ -61,7 +63,7 @@ const DatasetDetailView = ({
 
   return datasetPolicies && dataset && dataset.id === uuid ? (
     <Fragment>
-      <h2 style={{ margin: '0.5rem' }}>{dataset.name}</h2>
+      <Typography className={classes.pageTitle}>{dataset.name}</Typography>
       <div className={classes.root}>
         <div className={classes.infoColumn}>
           <div className={classes.headerText}>Dataset Schema (default view)</div>
@@ -70,14 +72,8 @@ const DatasetDetailView = ({
           </div>
         </div>
         <div className={classes.mainColumn}>
-          <div className={classes.mainColumnRow1}>
-            <div className={classes.datasetInfoContainer}>
-              <div className={classes.headerText}>Dataset Information</div>
-            </div>
-          </div>
-          <div className={classes.mainColumnRow2}>
-            <DatasetInfoCard dataset={dataset} datasetPolicies={datasetPolicies} />
-          </div>
+          <div className={classes.headerText}>Dataset Information</div>
+          <DatasetInfoCard />
           <div className={classes.mainColumnRow3}>
             <div className={classes.headerText}>Dataset Relationships</div>
           </div>

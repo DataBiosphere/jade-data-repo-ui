@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Paper, Typography, Button } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { Launch } from '@material-ui/icons';
+import { connect } from 'react-redux';
 
 const styles = (theme) => ({
   root: {
@@ -15,7 +16,7 @@ const styles = (theme) => ({
   flex: {
     display: 'flex',
     justifyContent: 'space-between',
-    margin: `${theme.spacing(2)}px 0px`,
+    margin: '1rem 0',
   },
   jadeLink: {
     color: theme.palette.common.link,
@@ -91,4 +92,9 @@ export class DatasetInfoCard extends React.PureComponent {
   }
 }
 
-export default withStyles(styles)(DatasetInfoCard);
+const mapStateToProps = ({ datasets: { dataset, datasetPolicies } }) => ({
+  dataset,
+  datasetPolicies,
+});
+
+export default connect(mapStateToProps)(withStyles(styles)(DatasetInfoCard));
