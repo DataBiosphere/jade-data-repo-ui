@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
@@ -7,6 +7,7 @@ import { Typography } from '@material-ui/core';
 import DatasetInfoCard from './DatasetInfoCard';
 import DatasetRelationshipsPanel from './VisualizeRelationshipsPanel';
 import CreateFullSnapshotView from './CreateFullSnapshotView';
+import { useOnMount } from '../../../libs/utils';
 
 const styles = (theme) => ({
   root: {
@@ -32,7 +33,7 @@ const styles = (theme) => ({
     flexDirection: 'column',
     paddingLeft: '0.5rem',
   },
-  mainColumnRow3: {
+  relationshipsArea: {
     flexGrow: 1,
   },
   spacer: {
@@ -55,14 +56,16 @@ const DatasetDetailView = ({
 }) => {
   const [creatingSnapshot, setCreatingSnapshot] = useState(false);
 
-  useEffect(() => {
+  useOnMount(() => {
     dispatch(getDatasetById(uuid));
     dispatch(getDatasetPolicy(uuid));
-  }, []);
+  });
 
   return datasetPolicies && dataset && dataset.id === uuid ? (
     <Fragment>
-      <Typography className={classes.pageTitle}>{dataset.name}</Typography>
+      <Typography variant="h5" className={classes.pageTitle}>
+        {dataset.name}
+      </Typography>
       <div className={classes.root}>
         <div className={classes.infoColumn}>
           <div className={classes.headerText}>Dataset Schema (default view)</div>
@@ -77,7 +80,7 @@ const DatasetDetailView = ({
             open={creatingSnapshot}
             openSnapshotCreation={setCreatingSnapshot}
           />
-          <div className={classes.mainColumnRow3}>
+          <div className={classes.relationshipsArea}>
             <div className={classes.headerText}>Dataset Relationships</div>
           </div>
         </div>
@@ -96,9 +99,10 @@ DatasetDetailView.propTypes = {
   match: PropTypes.object,
 };
 
-const mapStateToProps = ({ datasets: { dataset, datasetPolicies } }) => ({
+const mapStateToProps = ({ datasets: { dataset, datasetPolicies }, dispatch }) => ({
   dataset,
   datasetPolicies,
+  dispatch,
 });
 
 export default connect(mapStateToProps)(withStyles(styles)(DatasetDetailView));
