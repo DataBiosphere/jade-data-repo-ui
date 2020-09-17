@@ -18,6 +18,9 @@ import DataExplorerView from '../components/search/DataExplorerView';
 const styles = (theme) => ({
   wrapper: {
     fontFamily: theme.typography.fontFamily,
+    height: 'calc(100% - 64px)',
+    display: 'flex',
+    flexDirection: 'column',
   },
   tabsIndicator: {
     borderBottom: '8px solid #74ae43',
@@ -38,6 +41,7 @@ const styles = (theme) => ({
     backgroundColor: '#ddebd0',
     color: theme.palette.secondary.dark,
   },
+  component: {},
 });
 
 class Private extends React.Component {
@@ -93,7 +97,7 @@ class Private extends React.Component {
                       classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
                     />
                   </Tabs>
-                  <Switch>
+                  <Switch className={classes.component}>
                     <Route exact path="/" component={HomeView} />
                     {features.searchui && (
                       <Route exact path="/explorer" component={DataExplorerView} />
