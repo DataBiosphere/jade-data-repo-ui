@@ -75,10 +75,10 @@ const DatasetDetailView = ({
         </div>
         <div className={classes.mainColumn}>
           <div className={classes.headerText}>Dataset Information</div>
-          <DatasetInfoCard openSnapshotCreation={setCreatingSnapshot} />
+          <DatasetInfoCard openSnapshotCreation={() => setCreatingSnapshot(true)} />
           <CreateFullSnapshotView
             open={creatingSnapshot}
-            openSnapshotCreation={setCreatingSnapshot}
+            onDismiss={() => setCreatingSnapshot(false)}
           />
           <div className={classes.relationshipsArea}>
             <div className={classes.headerText}>Dataset Relationships</div>

@@ -80,6 +80,7 @@ export class ShareSnapshot extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object,
     dispatch: PropTypes.func,
+    isModal: PropTypes.bool,
     policies: PropTypes.arrayOf(PropTypes.object),
     readers: PropTypes.arrayOf(PropTypes.string),
     snapshot: PropTypes.object,
@@ -198,7 +199,7 @@ export class ShareSnapshot extends React.PureComponent {
   };
 
   render() {
-    const { classes, readers } = this.props;
+    const { classes, isModal, readers } = this.props;
     const { policyName, currentInput, usersToAdd, anchor, hasError, errorMsg } = this.state;
 
     const permissions = ['can read', 'can discover'];
@@ -305,18 +306,20 @@ export class ShareSnapshot extends React.PureComponent {
             </MenuItem>
           </Menu>
         </div>
-        <div className={classes.bottom}>
-          <Divider />
-          <Button
-            variant="contained"
-            disableElevation={true}
-            className={clsx(classes.button, classes.section)}
-            onClick={this.saveSnapshot}
-            data-cy="releaseDataset"
-          >
-            Release Dataset
-          </Button>
-        </div>
+        {!isModal && (
+          <div className={classes.bottom}>
+            <Divider />
+            <Button
+              variant="contained"
+              disableElevation={true}
+              className={clsx(classes.button, classes.section)}
+              onClick={this.saveSnapshot}
+              data-cy="releaseDataset"
+            >
+              Release Dataset
+            </Button>
+          </div>
+        )}
       </div>
     );
   }

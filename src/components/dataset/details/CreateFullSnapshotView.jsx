@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/styles';
 import {
@@ -10,6 +10,8 @@ import {
   TextField,
   Button,
 } from '@material-ui/core';
+import CreateFullSnapshotNamingView from './CreateFullSnapshotNamingView';
+import ShareSnapshot from '../query/sidebar/panels/ShareSnapshot';
 
 const styles = (theme) => ({
   root: {
@@ -23,66 +25,33 @@ const styles = (theme) => ({
   },
 });
 
-class CreateFullSnapshotView extends React.PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {
-      name: '',
-      description: '',
-    };
-  }
+const CreateFullSnapshotView = ({ classes, onDismiss, open }) => {
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
+  const [isSharing, setIsSharing] = useState(false);
 
-  static propTypes = {
-    classes: PropTypes.object,
-    open: PropTypes.bool,
-    openSnapshotCreation: PropTypes.bool,
-  };
+  return (
+    <Dialog open={open} onClose={onDismiss} fullWidth>
+      {isSharing ? (
+        <ShareSnapshot isModal />
+      ) : (
+        <CreateFullSnapshotNamingView
+          description={description}
+          onDismiss={onDismiss}
+          name={name}
+          setDescription={setDescription}
+          setName={setName}
+          setIsSharing={setIsSharing}
+        />
+      )}
+    </Dialog>
+  );
+};
 
-  handleCancel = () => {
-    const { openSnapshotCreation } = this.props;
-    this.setState({ name: '', description: '' });
-    openSnapshotCreation(false);
-  };
-
-  render() {
-    const { classes, open } = this.props;
-    const { name, description } = this.state;
-    return (
-      <Dialog open={open} fullWidth>
-        <DialogTitle>Name and Describe Snapshot</DialogTitle>
-        <DialogContent>
-          <Typography variant="subtitle2">Snapshot Name</Typography>
-          <TextField
-            id="snapshotName"
-            variant="outlined"
-            size="small"
-            fullWidth
-            className={classes.textField}
-            onChange={(event) => this.setState({ name: event.target.value })}
-            value={name}
-          />
-          <Typography variant="subtitle2">Description</Typography>
-          <TextField
-            id="snapshotDescription"
-            variant="outlined"
-            size="small"
-            multiline
-            rows={5}
-            fullWidth
-            className={classes.textField}
-            onChange={(event) => this.setState({ description: event.target.value })}
-            value={description}
-          />
-        </DialogContent>
-        <DialogActions className={classes.buttonContainer}>
-          <Button onClick={this.handleCancel}>Cancel</Button>
-          <Button variant="contained" disabled={name === ''}>
-            Save snapshot
-          </Button>
-        </DialogActions>
-      </Dialog>
-    );
-  }
-}
+CreateFullSnapshotView.propTypes = {
+  classes: PropTypes.object.isRequired,
+  onDismiss: PropTypes.func,
+  open: PropTypes.bool,
+};
 
 export default withStyles(styles)(CreateFullSnapshotView);
