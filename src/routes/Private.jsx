@@ -18,9 +18,10 @@ import DataExplorerView from '../components/search/DataExplorerView';
 const styles = (theme) => ({
   wrapper: {
     fontFamily: theme.typography.fontFamily,
-    height: 'calc(100% - 64px)',
+    height: '100%',
     display: 'flex',
     flexDirection: 'column',
+    flex: 1,
   },
   tabsIndicator: {
     borderBottom: '8px solid #74ae43',
@@ -71,7 +72,7 @@ class Private extends React.Component {
                       component={Link}
                       value="/"
                       to="/"
-                      classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
+                      classes={{ selected: classes.tabSelected }}
                     />
                     {features.searchui && (
                       <Tab
@@ -79,7 +80,7 @@ class Private extends React.Component {
                         component={Link}
                         value="/explorer"
                         to="/explorer"
-                        classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
+                        classes={{ selected: classes.tabSelected }}
                       />
                     )}
                     <Tab
@@ -87,14 +88,14 @@ class Private extends React.Component {
                       component={Link}
                       value="/datasets"
                       to="/datasets"
-                      classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
+                      classes={{ selected: classes.tabSelected }}
                     />
                     <Tab
                       label="Snapshots"
                       component={Link}
                       value="/snapshots"
                       to="/snapshots"
-                      classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
+                      classes={{ selected: classes.tabSelected }}
                     />
                   </Tabs>
                   <Switch className={classes.component}>

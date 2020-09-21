@@ -16,6 +16,7 @@ const styles = (theme) => ({
     display: 'grid',
     gridTemplateColumns: '1fr 2fr',
     margin: '1rem 0.5rem',
+    flex: 1,
   },
   headerText: {
     fontWeight: theme.typography.bold,
