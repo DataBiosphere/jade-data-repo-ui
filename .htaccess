@@ -211,6 +211,7 @@ Options -MultiViews
     AddType text/vnd.rim.location.xloc                  xloc
     AddType text/vtt                                    vtt
     AddType text/x-component                            htc
+    AddType text/css                                    css
 
 </IfModule>
 
