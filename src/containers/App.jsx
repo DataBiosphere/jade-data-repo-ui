@@ -22,11 +22,11 @@ import Private from 'routes/Private';
 import NotFound from 'routes/NotFound';
 import Logo from 'components/Logo';
 
-import { logOut } from 'actions/index';
 import RoutePublic from 'components/RoutePublic';
 import RoutePrivate from 'components/RoutePrivate';
 import { ReactComponent as CarrotSVG } from 'media/icons/angle-line.svg';
 import { ReactComponent as SignOutSVG } from 'media/icons/logout-line.svg';
+import { logOut } from 'actions';
 
 import 'react-notifications-component/dist/theme.css';
 
@@ -35,8 +35,10 @@ const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
+    flexDirection: 'column',
     fontFamily: theme.typography.fontFamily,
     fontWeight: theme.typography.fontWeight,
+    flex: 1,
   },
   grow: {
     flexGrow: 1,
@@ -106,7 +108,6 @@ const useStyles = makeStyles((theme) => ({
     }),
     width: 0,
   },
-  appBarSpacer: theme.mixins.toolbar,
   carrotClose: {
     fill: theme.palette.primary.contrastText,
     height: 19,
@@ -125,7 +126,9 @@ const useStyles = makeStyles((theme) => ({
   },
   content: {
     flexGrow: 1,
-    height: '100vh',
+    paddingTop: 64,
+    display: 'flex',
+    flexDirection: 'column',
   },
   userName: {
     height: 15,
@@ -164,7 +167,7 @@ export function App(props) {
     <div className={classes.root}>
       <CssBaseline />
       <ReactNotification />
-      <AppBar position="absolute" className={classes.appBar}>
+      <AppBar className={classes.appBar}>
         <Toolbar className={classes.toolbar}>
           <Logo />
           <div className={classes.grow} />
@@ -218,7 +221,6 @@ export function App(props) {
         </Toolbar>
       </AppBar>
       <div className={classes.content}>
-        <div className={classes.appBarSpacer} />
         <Switch>
           <RoutePublic
             isAuthenticated={user.isAuthenticated}
