@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/styles';
 import { Dialog } from '@material-ui/core';
 import CreateFullSnapshotNamingView from './CreateFullSnapshotNamingView';
 import ShareSnapshot from '../query/sidebar/panels/ShareSnapshot';
@@ -33,4 +32,4 @@ CreateFullSnapshotView.propTypes = {
   open: PropTypes.bool,
 };
 
-export default withStyles(styles)(CreateFullSnapshotView);
+export default CreateFullSnapshotView;
