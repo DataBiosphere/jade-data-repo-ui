@@ -33,7 +33,7 @@ const CreateFullSnapshotView = ({ classes, onDismiss, open }) => {
   return (
     <Dialog open={open} onClose={onDismiss} fullWidth>
       {isSharing ? (
-        <ShareSnapshot isModal />
+        <ShareSnapshot isModal setIsSharing={() => setIsSharing(false)} onDismiss={onDismiss} />
       ) : (
         <CreateFullSnapshotNamingView
           description={description}

@@ -76,6 +76,7 @@ CreateFullSnapshotNamingView.propTypes = {
   name: PropTypes.string,
   onDismiss: PropTypes.func,
   setDescription: PropTypes.func,
+  setIsSharing: PropTypes.func,
   setName: PropTypes.func,
 };
 
