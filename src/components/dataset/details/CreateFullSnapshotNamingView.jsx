@@ -55,7 +55,8 @@ const CreateFullSnapshotNamingView = ({
         />
         {hasError && (
           <Typography variant="subtitle2" color="error">
-            The name you entered is invalid. Please make sure to enter an alphanumeric name that is less than 64 characters.
+            The name you entered is invalid. Please make sure to enter an alphanumeric name that is
+            less than 64 characters.
           </Typography>
         )}
         <Typography variant="subtitle2">Description</Typography>
