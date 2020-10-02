@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   Button,
@@ -9,6 +9,7 @@ import {
   Typography,
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
+import { validateSnapshotName } from '../../../libs/utils';
 
 const styles = (theme) => ({
   root: {
@@ -31,6 +32,13 @@ const CreateFullSnapshotNamingView = ({
   setIsSharing,
   setName,
 }) => {
+  const [hasError, setHasError] = useState(false);
+
+  const validateNameAndProgress = (snapshotName) => {
+    // eslint-disable-next-line no-unused-expressions
+    validateSnapshotName(snapshotName) ? setIsSharing(true) : setHasError(true);
+  };
+
   return (
     <Fragment>
       <DialogTitle>Name and Describe Snapshot</DialogTitle>
@@ -45,6 +53,11 @@ const CreateFullSnapshotNamingView = ({
           onChange={(event) => setName(event.target.value)}
           value={name}
         />
+        {hasError && (
+          <Typography variant="subtitle2" color="error">
+            The name you entered is invalid. Please make sure to enter an alphanumeric name that is less than 64 characters.
+          </Typography>
+        )}
         <Typography variant="subtitle2">Description</Typography>
         <TextField
           id="snapshotDescription"
@@ -60,7 +73,7 @@ const CreateFullSnapshotNamingView = ({
       </DialogContent>
       <DialogActions className={classes.buttonContainer}>
         <Button onClick={onDismiss}>Cancel</Button>
-        <Button variant="contained" disabled={name === ''} onClick={setIsSharing}>
+        <Button variant="contained" disabled={name === ''} onClick={validateNameAndProgress}>
           Save snapshot
         </Button>
       </DialogActions>
