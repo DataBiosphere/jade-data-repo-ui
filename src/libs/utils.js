@@ -10,5 +10,5 @@ export const useOnMount = (fn) => {
 };
 
 export const validateSnapshotName = (name) => {
-  return name.length > 1 && name.length <= 63 && name.match('^[a-zA-Z0-9][_a-zA-Z0-9]*$');
+  return name.length >= 1 && name.length <= 63 && name.match('^[a-zA-Z0-9][_a-zA-Z0-9]*$');
 };
