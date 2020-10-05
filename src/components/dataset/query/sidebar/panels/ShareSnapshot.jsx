@@ -5,20 +5,19 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import {
-  Typography,
-  Grid,
-  Select,
-  TextField,
-  Menu,
-  MenuItem,
   Button,
   Divider,
   IconButton,
+  Menu,
+  MenuItem,
+  Select,
+  TextField,
+  Typography,
 } from '@material-ui/core';
 import { MoreVert } from '@material-ui/icons';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { isEmail } from 'validator';
-import { createSnapshot, addReadersToSnapshot } from 'actions/index';
+import { addReadersToSnapshot, createSnapshot } from 'actions/index';
 
 const drawerWidth = 600;
 const sidebarWidth = 56;
@@ -30,6 +29,17 @@ const styles = (theme) => ({
   section: {
     margin: `${theme.spacing(1)}px 0px`,
     overflowX: 'hidden',
+  },
+  sharingArea: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  emailEntryArea: {
+    display: 'flex',
+  },
+  emailEntry: {
+    flexGrow: 1,
+    marginRight: '1rem',
   },
   input: {
     backgroundColor: theme.palette.common.white,
@@ -62,6 +72,19 @@ const styles = (theme) => ({
     width: `${drawerWidth - theme.spacing(4)}px`,
     textAlign: 'end',
   },
+  buttonContainer: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    width: 'inherit',
+  },
+  modalBottom: {
+    display: 'flex',
+  },
+  prevButton: {
+    color: theme.palette.common.link,
+    border: `1px solid ${theme.palette.common.link}`,
+    marginRight: '0.5rem',
+  },
 });
 
 export class ShareSnapshot extends React.PureComponent {
@@ -80,8 +103,11 @@ export class ShareSnapshot extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object,
     dispatch: PropTypes.func,
+    isModal: PropTypes.bool,
+    onDismiss: PropTypes.func,
     policies: PropTypes.arrayOf(PropTypes.object),
     readers: PropTypes.arrayOf(PropTypes.string),
+    setIsSharing: PropTypes.func,
     snapshot: PropTypes.object,
   };
 
@@ -198,7 +224,7 @@ export class ShareSnapshot extends React.PureComponent {
   };
 
   render() {
-    const { classes, readers } = this.props;
+    const { classes, isModal, readers, setIsSharing, onDismiss } = this.props;
     const { policyName, currentInput, usersToAdd, anchor, hasError, errorMsg } = this.state;
 
     const permissions = ['can read', 'can discover'];
@@ -209,9 +235,9 @@ export class ShareSnapshot extends React.PureComponent {
         <Typography variant="h6" className={classes.section}>
           Share Snapshot
         </Typography>
-        <Grid container spacing={2} className={classes.section}>
-          <Grid container spacing={2}>
-            <Grid item xs={7}>
+        <div className={classes.sharingArea}>
+          <div className={classes.emailEntryArea}>
+            <div className={classes.emailEntry}>
               <Typography variant="subtitle2">People</Typography>
               <Autocomplete
                 multiple
@@ -233,8 +259,8 @@ export class ShareSnapshot extends React.PureComponent {
                 inputValue={currentInput}
                 options={[]}
               />
-            </Grid>
-            <Grid item xs={4}>
+            </div>
+            <div>
               <Typography variant="subtitle2">Permissions</Typography>
               <Select
                 value={policyName}
@@ -249,28 +275,28 @@ export class ShareSnapshot extends React.PureComponent {
                   </MenuItem>
                 ))}
               </Select>
-            </Grid>
-          </Grid>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              {hasError && (
-                <Typography variant="subtitle2" color="error" data-cy="invalidEmailError">
-                  {errorMsg}
-                </Typography>
-              )}
-            </Grid>
-          </Grid>
-          <Button
-            variant="contained"
-            disabled={!isEmail(currentInput) && !_.some(usersToAdd, (user) => isEmail(user))}
-            disableElevation={true}
-            className={clsx(classes.button, classes.section)}
-            onClick={this.invite}
-            data-cy="inviteButton"
-          >
-            Invite
-          </Button>
-        </Grid>
+            </div>
+          </div>
+          <div>
+            {hasError && (
+              <Typography variant="subtitle2" color="error" data-cy="invalidEmailError">
+                {errorMsg}
+              </Typography>
+            )}
+          </div>
+          <div className={classes.buttonContainer}>
+            <Button
+              variant="contained"
+              disabled={!isEmail(currentInput) && !_.some(usersToAdd, (user) => isEmail(user))}
+              disableElevation={true}
+              className={clsx(classes.button, classes.section, classes.inviteButton)}
+              onClick={this.invite}
+              data-cy="inviteButton"
+            >
+              Invite
+            </Button>
+          </div>
+        </div>
         <Divider />
         <div className={classes.section} data-cy="readers">
           {readers.map((reader) => (
@@ -305,18 +331,32 @@ export class ShareSnapshot extends React.PureComponent {
             </MenuItem>
           </Menu>
         </div>
-        <div className={classes.bottom}>
-          <Divider />
-          <Button
-            variant="contained"
-            disableElevation={true}
-            className={clsx(classes.button, classes.section)}
-            onClick={this.saveSnapshot}
-            data-cy="releaseDataset"
-          >
-            Release Dataset
-          </Button>
-        </div>
+        {!isModal && (
+          <div className={classes.bottom}>
+            <Divider />
+            <Button
+              variant="contained"
+              disableElevation={true}
+              className={clsx(classes.button, classes.section)}
+              onClick={this.saveSnapshot}
+              data-cy="releaseDataset"
+            >
+              Release Dataset
+            </Button>
+          </div>
+        )}
+        {isModal && (
+          <div className={classes.modalBottom}>
+            <Button onClick={onDismiss}>Cancel</Button>
+            <div style={{ flexGrow: 1 }} />
+            <Button className={classes.prevButton} variant="outlined" onClick={setIsSharing}>
+              Previous
+            </Button>
+            <Button className={classes.button} variant="contained">
+              Release Dataset
+            </Button>
+          </div>
+        )}
       </div>
     );
   }
