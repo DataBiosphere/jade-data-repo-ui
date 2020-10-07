@@ -47,7 +47,7 @@
     "lodash": "^4.17.19",
     "mobile-detect": "^1.4.4",
     "modernizr": "^3.11.2",
-    "moment": "^2.29.0",
+    "moment": "^2.29.1",
     "prop-types": "^15.7.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
