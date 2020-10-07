@@ -66,7 +66,7 @@
     "redux-saga": "^0.16.2",
     "validator": "^13.1.17",
     "webfontloader": "^1.6.28",
-    "xlsx": "^0.16.7"
+    "xlsx": "^0.16.8"
   },
   "devDependencies": {
     "@svgr/webpack": "^5.4.0",
