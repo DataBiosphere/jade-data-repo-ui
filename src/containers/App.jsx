@@ -34,11 +34,9 @@ const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    display: 'flex',
-    flexDirection: 'column',
+    height: '100%',
     fontFamily: theme.typography.fontFamily,
     fontWeight: theme.typography.fontWeight,
-    flex: 1,
   },
   grow: {
     flexGrow: 1,
@@ -125,10 +123,8 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   content: {
-    flexGrow: 1,
+    height: '100%',
     paddingTop: 64,
-    display: 'flex',
-    flexDirection: 'column',
   },
   userName: {
     height: 15,

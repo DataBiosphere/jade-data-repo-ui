@@ -21,7 +21,6 @@ const styles = (theme) => ({
     height: '100%',
     display: 'flex',
     flexDirection: 'column',
-    flex: 1,
   },
   tabsIndicator: {
     borderBottom: '8px solid #74ae43',
@@ -42,7 +41,9 @@ const styles = (theme) => ({
     backgroundColor: '#ddebd0',
     color: theme.palette.secondary.dark,
   },
-  component: {},
+  component: {
+    overflow: 'auto',
+  },
 });
 
 class Private extends React.Component {
@@ -98,17 +99,19 @@ class Private extends React.Component {
                       classes={{ selected: classes.tabSelected }}
                     />
                   </Tabs>
-                  <Switch className={classes.component}>
-                    <Route exact path="/" component={HomeView} />
-                    {features.searchui && (
-                      <Route exact path="/explorer" component={DataExplorerView} />
-                    )}
-                    <Route exact path="/datasets" component={DatasetsView} />
-                    <Route exact path="/datasets/:uuid/query" component={QueryView} />
-                    <Route exact path="/datasets/:uuid/details" component={DatasetDetailView} />
-                    <Route exact path="/snapshots" component={SnapshotView} />
-                    <Route exact path="/snapshots/details/:uuid" component={SnapshotDetailView} />
-                  </Switch>
+                  <div className={classes.component}>
+                    <Switch>
+                      <Route exact path="/" component={HomeView} />
+                      {features.searchui && (
+                        <Route exact path="/explorer" component={DataExplorerView} />
+                      )}
+                      <Route exact path="/datasets" component={DatasetsView} />
+                      <Route exact path="/datasets/:uuid/query" component={QueryView} />
+                      <Route exact path="/datasets/:uuid/details" component={DatasetDetailView} />
+                      <Route exact path="/snapshots" component={SnapshotView} />
+                      <Route exact path="/snapshots/details/:uuid" component={SnapshotDetailView} />
+                    </Switch>
+                  </div>
                 </Fragment>
               )}
             />
