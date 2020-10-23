@@ -9,6 +9,15 @@ on:
   pull_request:
     branches:
       - develop
+    paths:
+      - 'src'
+      - 'package.json'
+      - 'cypress.json'
+      - 'cypress'
+      - 'Dockerfile'
+      - 'config-overrides.js'
+      - '.github/workflows/test-e2e.yml'
+      - '!*'
 jobs:
   e2e_test:
     timeout-minutes: 180
