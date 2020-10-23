@@ -77,7 +77,7 @@ jobs:
         uses: broadinstitute/datarepo-actions@ms-integrationrework
         with:
           actions_subcommand: 'helmdeploy'
-          helm_secret_chart_version: '0.0.6'
+          helm_create_secret_manager_secret_version: '0.0.6'
           helm_datarepo_api_chart_version: '0.0.21'
           helm_datarepo_ui_chart_version: '0.0.12'
           helm_gcloud_sqlproxy_chart_version: '0.19.7'
