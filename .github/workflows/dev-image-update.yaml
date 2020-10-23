@@ -4,14 +4,14 @@ on:
     branches:
       - develop
     paths:
-      - 'src'
+      - '!*'
+      - 'src/**'
       - 'package.json'
       - 'cypress.json'
-      - 'cypress'
+      - 'cypress/**'
       - 'Dockerfile'
       - 'config-overrides.js'
       - '.github/workflows/dev-image-update.yaml'
-      - '!*'
 env:
   gcr_google_project: "broad-jade-dev"
   google_sdk_version: "290.0.1"
