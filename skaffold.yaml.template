@@ -33,12 +33,13 @@ deploy:
         valuesFiles:
           - https://raw.githubusercontent.com/broadinstitute/datarepo-helm-definitions/master/dev/TEMP/gcloud-sqlproxy.yaml
       # datarepo-api
-      - name: TEMP-jade-datarepo-api
-        chartPath: ../datarepo-helm/charts/datarepo-api/
-        remote: false
-        namespace: TEMP
-        valuesFiles:
-          - https://raw.githubusercontent.com/broadinstitute/datarepo-helm-definitions/master/dev/TEMP/datarepo-api.yaml
+    - name: TEMP-jade-datarepo-api
+      chartPath: https://github.com/broadinstitute/datarepo-helm/releases/download/datarepo-api-0.0.22/datarepo-api-0.0.22.tgz
+      version: 0.0.22
+      namespace: TEMP
+      remote: true
+      valuesFiles:
+      - https://raw.githubusercontent.com/broadinstitute/datarepo-helm-definitions/master/dev/TEMP/datarepo-api.yaml
       # datarepo-ui
       - name: TEMP-jade-datarepo-ui
         chartPath: https://github.com/broadinstitute/datarepo-helm/releases/download/datarepo-ui-0.0.12/datarepo-ui-0.0.12.tgz
