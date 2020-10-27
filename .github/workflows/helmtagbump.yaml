@@ -1,11 +1,6 @@
 name: Update integration ui helm image tag
 on:
   workflow_dispatch: {}
-env:
-  gcr_google_project: "broad-jade-dev"
-  google_sdk_version: "290.0.1"
-  DEV_PROJECT: broad-jade-dev
-
 jobs:
 # new integration image updater
   integration_helm_tag_update:
