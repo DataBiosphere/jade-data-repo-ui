@@ -46,15 +46,21 @@ jobs:
         uses: docker://mikefarah/yq:latest
         with:
           args: yq w -i datarepo-helm-definitions/integration/integration-6/datarepo-ui.yaml image.tag ${{ steps.uiprevioustag.outputs.tag }}"
-      - name: push commit to datarepo-helm-definitions
-        run: |
-          cd datarepo-helm-definitions
-          git pull
-          git config --global user.email "robot@jade.team"
-          git config --global user.name "imagetagbot"
-          git add integration/integration*
-          git commit -m "Updated ui integration tag - ${{ steps.uiprevioustag.outputs.tag }}"
-          git push origin master
+      - name: Create pull request
+        uses: broadinstitute/create-pull-request@v3 # forked from peter-evans/create-pull-request
+        id: create-pr
+        with:
+          token: ${{ secrets.HELM_REPO_TOKEN }}
+          path: datarepo-helm-definitions
+          commit-message: "Datarepo ui tag version update: ${{ steps.uiprevioustag.outputs.tag }}"
+          committer: datarepo-bot <noreply@github.com>
+          author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
+          title: "Datarepo version update: ${{ steps.uiprevioustag.outputs.tag }}"
+          branch: "version-update/${{ steps.uiprevioustag.outputs.tag }}"
+          body: |
+            Update versions in **${{ steps.uiprevioustag.outputs.tag }}**.
+            *Note: This PR was opened by the [update-env GitHub Actions workflow](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}).*
+          labels: "datarepo,automerge,version-update"
       - name: Slack job status
         if: always()
         uses: broadinstitute/action-slack@v2
