@@ -1,17 +1,6 @@
-name: Update devs ui image
+name: Update integration ui helm image tag
 on:
-  push:
-    branches:
-      - develop
-    paths:
-      - '!*'
-      - 'src/**'
-      - 'package.json'
-      - 'cypress.json'
-      - 'cypress/**'
-      - 'Dockerfile'
-      - 'config-overrides.js'
-      - '.github/workflows/helmtagbump.yaml'
+  workflow_dispatch: {}
 env:
   gcr_google_project: "broad-jade-dev"
   google_sdk_version: "290.0.1"
@@ -36,7 +25,6 @@ jobs:
           repository: 'broadinstitute/datarepo-helm-definitions'
           token: ${{ secrets.HELM_REPO_TOKEN }}
           path: datarepo-helm-definitions
-          fetch-depth: 0
       - name: 'Get git hash short'
         run: |
           echo 'GCR_TAG<<EOF' >> $GITHUB_ENV
@@ -58,7 +46,7 @@ jobs:
         uses: broadinstitute/action-slack@v2
         with:
           status: ${{ job.status }}
-          author_name: Integration Test
+          author_name: ui_helm_bumper
           only_mention_fail: smark,myessail
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
