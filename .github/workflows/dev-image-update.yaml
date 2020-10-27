@@ -96,7 +96,7 @@ jobs:
         with:
           status: ${{ job.status }}
           author_name: Integration Test
-          only_mention_fail: smark,jhert,myessail
+          only_mention_fail: smark,myessail
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
