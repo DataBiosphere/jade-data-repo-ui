@@ -50,7 +50,7 @@ jobs:
         uses: broadinstitute/create-pull-request@v3 # forked from peter-evans/create-pull-request
         id: create-pr
         with:
-          token: ${{ secrets.HELM_REPO_TOKEN }}
+          token: ${{ secrets.HELM_DEF_REPO_TOKEN }}
           path: datarepo-helm-definitions
           commit-message: "Datarepo ui tag version update: ${{ steps.uiprevioustag.outputs.tag }}"
           committer: datarepo-bot <noreply@github.com>
