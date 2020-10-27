@@ -3,6 +3,15 @@ on:
   push:
     branches:
       - develop
+    paths:
+      - '!*'
+      - 'src/**'
+      - 'package.json'
+      - 'cypress.json'
+      - 'cypress/**'
+      - 'Dockerfile'
+      - 'config-overrides.js'
+      - '.github/workflows/dev-image-update.yaml'
 env:
   gcr_google_project: "broad-jade-dev"
   google_sdk_version: "290.0.1"
