@@ -31,9 +31,10 @@ jobs:
           args: yq w -i datarepo-helm-definitions/integration/${{ matrix.namespaces }}/datarepo-ui.yaml image.tag ${{ env.GCR_TAG }}
       - name: push commit to datarepo-helm-definitions
         run: |
+          cd datarepo-helm-definitions
           git config --global user.email "robot@jade.team"
           git config --global user.name "imagetagbot"
-          git add integration/
+          git add integration/integration*
           git commit -m "Updated integration tag - ${{ env.GCR_TAG }}"
           git push origin master
       - name: Slack job status
