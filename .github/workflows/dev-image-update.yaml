@@ -95,29 +95,3 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-# new integration image updater
-  update_integration_helm_tag:
-    strategy:
-      matrix:
-        namespaces: [integration-1,integration-2,integration-3,integration-4,integration-5,integration-6]
-    runs-on: ubuntu-20.04
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          ref: develop
-      - name: 'Checkout datarepo-helm-definitions repo'
-        uses: actions/checkout@v2
-        with:
-          repository: 'broadinstitute/datarepo-helm-definitions'
-          token: ${{ secrets.HELM_REPO_TOKEN }}
-          path: datarepo-helm-definitions
-      - name: 'Get git hash short'
-        run: |
-          echo 'GCR_TAG<<EOF' >> $GITHUB_ENV
-          git rev-parse --short HEAD >> $GITHUB_ENV
-          echo 'EOF' >> $GITHUB_ENV
-      - name: "Find and replace Datarepo Api helm definition value tag"
-        uses: docker://mikefarah/yq:latest
-        with:
-          args: yq w -i datarepo-helm-definitions/integration/${{ matrix.namespaces }}/datarepo-ui.yaml image.tag ${{ GCR_TAG }}
