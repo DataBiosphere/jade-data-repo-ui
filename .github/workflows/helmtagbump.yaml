@@ -53,7 +53,7 @@ jobs:
           git config --global user.email "robot@jade.team"
           git config --global user.name "imagetagbot"
           git add integration/integration*
-          git commit -m "Updated integration tag - ${{ steps.uiprevioustag.outputs.tag }}"
+          git commit -m "Updated ui integration tag - ${{ steps.uiprevioustag.outputs.tag }}"
           git push origin master
       - name: Slack job status
         if: always()
