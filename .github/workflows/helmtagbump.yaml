@@ -4,9 +4,6 @@ on:
 jobs:
 # new integration image updater
   integration_helm_tag_update:
-    strategy:
-      matrix:
-        namespaces: [integration-1,integration-2,integration-3,integration-4,integration-5,integration-6]
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout
@@ -25,10 +22,30 @@ jobs:
           repository: 'broadinstitute/datarepo-helm-definitions'
           token: ${{ secrets.HELM_REPO_TOKEN }}
           path: datarepo-helm-definitions
-      - name: "Find and replace datarepo ui helm definition value tag"
+      - name: "integration-1 find and replace"
         uses: docker://mikefarah/yq:latest
         with:
-          args: yq w -i datarepo-helm-definitions/integration/${{ matrix.namespaces }}/datarepo-ui.yaml image.tag ${{ steps.uiprevioustag.outputs.tag }}"
+          args: yq w -i datarepo-helm-definitions/integration/integration-1/datarepo-ui.yaml image.tag ${{ steps.uiprevioustag.outputs.tag }}"
+      - name: "integration-2 find and replace"
+        uses: docker://mikefarah/yq:latest
+        with:
+          args: yq w -i datarepo-helm-definitions/integration/integration-2/datarepo-ui.yaml image.tag ${{ steps.uiprevioustag.outputs.tag }}"
+      - name: "integration-3 find and replace"
+        uses: docker://mikefarah/yq:latest
+        with:
+          args: yq w -i datarepo-helm-definitions/integration/integration-3/datarepo-ui.yaml image.tag ${{ steps.uiprevioustag.outputs.tag }}"
+      - name: "integration-4 find and replace"
+        uses: docker://mikefarah/yq:latest
+        with:
+          args: yq w -i datarepo-helm-definitions/integration/integration-4/datarepo-ui.yaml image.tag ${{ steps.uiprevioustag.outputs.tag }}"
+      - name: "integration-5 find and replace"
+        uses: docker://mikefarah/yq:latest
+        with:
+          args: yq w -i datarepo-helm-definitions/integration/integration-5/datarepo-ui.yaml image.tag ${{ steps.uiprevioustag.outputs.tag }}"
+      - name: "integration-6 find and replace"
+        uses: docker://mikefarah/yq:latest
+        with:
+          args: yq w -i datarepo-helm-definitions/integration/integration-6/datarepo-ui.yaml image.tag ${{ steps.uiprevioustag.outputs.tag }}"
       - name: push commit to datarepo-helm-definitions
         run: |
           cd datarepo-helm-definitions
@@ -38,13 +55,13 @@ jobs:
           git add integration/integration*
           git commit -m "Updated integration tag - ${{ steps.uiprevioustag.outputs.tag }}"
           git push origin master
-#      - name: Slack job status
-#        if: always()
-#        uses: broadinstitute/action-slack@v2
-#        with:
-#          status: ${{ job.status }}
-#          author_name: ui_helm_bumper
-#          only_mention_fail: smark,myessail
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      - name: Slack job status
+        if: always()
+        uses: broadinstitute/action-slack@v2
+        with:
+          status: ${{ job.status }}
+          author_name: ui_helm_bumper
+          only_mention_fail: smark,myessail
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
