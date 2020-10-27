@@ -1,0 +1,48 @@
+name: Update integration ui helm image tag
+on:
+  workflow_dispatch: {}
+jobs:
+# new integration image updater
+  integration_helm_tag_update:
+    strategy:
+      matrix:
+        namespaces: [integration-1,integration-2,integration-3,integration-4,integration-5,integration-6]
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          ref: develop
+      - name: 'Checkout datarepo-helm-definitions repo'
+        uses: actions/checkout@v2
+        with:
+          repository: 'broadinstitute/datarepo-helm-definitions'
+          token: ${{ secrets.HELM_REPO_TOKEN }}
+          path: datarepo-helm-definitions
+      - name: 'Get git hash short'
+        run: |
+          echo 'GCR_TAG<<EOF' >> $GITHUB_ENV
+          git rev-parse --short HEAD >> $GITHUB_ENV
+          echo 'EOF' >> $GITHUB_ENV
+      - name: "Find and replace datarepo ui helm definition value tag"
+        uses: docker://mikefarah/yq:latest
+        with:
+          args: yq w -i datarepo-helm-definitions/integration/${{ matrix.namespaces }}/datarepo-ui.yaml image.tag ${{ GCR_TAG }}
+      - name: push commit to datarepo-helm-definitions
+        run: |
+          git config --global user.email "robot@jade.team"
+          git config --global user.name "imagetagbot"
+          git add integration/
+          git commit -m "Updated integration tag - ${GCR_TAG}"
+          git push origin master
+      - name: Slack job status
+        if: always()
+        uses: broadinstitute/action-slack@v2
+        with:
+          status: ${{ job.status }}
+          author_name: ui_helm_bumper
+          only_mention_fail: smark,myessail
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
