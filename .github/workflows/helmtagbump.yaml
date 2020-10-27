@@ -28,13 +28,13 @@ jobs:
       - name: "Find and replace datarepo ui helm definition value tag"
         uses: docker://mikefarah/yq:latest
         with:
-          args: yq w -i datarepo-helm-definitions/integration/${{ matrix.namespaces }}/datarepo-ui.yaml image.tag ${{ GCR_TAG }}
+          args: yq w -i datarepo-helm-definitions/integration/${{ matrix.namespaces }}/datarepo-ui.yaml image.tag ${{ env.GCR_TAG }}
       - name: push commit to datarepo-helm-definitions
         run: |
           git config --global user.email "robot@jade.team"
           git config --global user.name "imagetagbot"
           git add integration/
-          git commit -m "Updated integration tag - ${GCR_TAG}"
+          git commit -m "Updated integration tag - ${{ env.GCR_TAG }}"
           git push origin master
       - name: Slack job status
         if: always()
