@@ -30,7 +30,7 @@ jobs:
           echo 'GCR_TAG<<EOF' >> $GITHUB_ENV
           git rev-parse --short HEAD >> $GITHUB_ENV
           echo 'EOF' >> $GITHUB_ENV
-      - name: "Find and replace Datarepo ui helm definition value tag"
+      - name: "Find and replace datarepo ui helm definition value tag"
         uses: docker://mikefarah/yq:latest
         with:
           args: yq w -i datarepo-helm-definitions/integration/${{ matrix.namespaces }}/datarepo-ui.yaml image.tag ${{ GCR_TAG }}
