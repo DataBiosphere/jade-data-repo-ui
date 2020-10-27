@@ -85,12 +85,6 @@ jobs:
           actions_subcommand: "deploytagupdate"
           helm_env_prefix: dev
           helm_imagetag_update: ui
-      - name: "Check and edit Helm definition for integration"
-        uses: broadinstitute/datarepo-actions@0.16.0
-        with:
-          actions_subcommand: "deploytagupdate"
-          helm_env_prefix: "integration-1,integration-2,integration-3,integration-4,integration-5"
-          helm_imagetag_update: ui
       - name: Slack job status
         if: always()
         uses: broadinstitute/action-slack@v2
