@@ -88,8 +88,8 @@ jobs:
       - name: Trigger action to update helm tag
         uses: broadinstitute/workflow-dispatch@v1
         with:
-          workflow: "Update integration ui helm image tag"
-          token: ${{ secrets.GITHUB_TOKEN }}
+          workflow: Update integration ui helm image tag
+          token: ${{ secrets.HELM_DEF_REPO_TOKEN }}
       - name: Slack job status
         if: always()
         uses: broadinstitute/action-slack@v2
