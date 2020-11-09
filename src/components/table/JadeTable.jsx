@@ -161,17 +161,22 @@ export class JadeTable extends React.PureComponent {
               />
               {!polling && (
                 <TableBody data-cy="tableBody">
-                  {rows.map((row) => {
+                  {rows.map((row, i) => {
                     const drId = row.datarepo_id;
 
                     return (
                       <TableRow hover tabIndex={-1} key={drId}>
                         {columns.map((column) => {
                           const value = this.handleArrayValues(row[column.id], column);
-
                           return (
                             !_.isUndefined(value) && (
-                              <TableCell key={`${column.id}-${drId}`} className={classes.cell}>{value}</TableCell>
+                              <TableCell
+                                key={`${column.id}-${drId}`}
+                                className={classes.cell}
+                                data-cy={`cellvalue-${column.id}-${i}`}
+                              >
+                                {value}
+                              </TableCell>
                             )
                           );
                         })}

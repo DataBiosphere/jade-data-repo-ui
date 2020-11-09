@@ -37,6 +37,7 @@ export class JadeTableHead extends React.PureComponent {
                   align={column.numeric ? 'right' : 'left'}
                   padding={column.disablePadding ? 'none' : 'default'}
                   sortDirection={orderBy === column.id ? order : false}
+                  data-cy={`columnheader-${column.id}`}
                 >
                   {column.mode !== COLUMN_MODES.REPEATED && (
                     <TableSortLabel
