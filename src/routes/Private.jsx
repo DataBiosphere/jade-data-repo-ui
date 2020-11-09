@@ -43,6 +43,9 @@ const styles = (theme) => ({
   },
   component: {
     overflow: 'auto',
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
   },
 });
 

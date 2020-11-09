@@ -10,8 +10,8 @@ const styles = (theme) => ({
     padding: theme.spacing(2),
   },
   headerText: {
-    fontWeight: theme.typography.bold,
     textTransform: 'uppercase',
+    fontWeight: 600,
   },
   flex: {
     display: 'flex',
@@ -48,21 +48,21 @@ export class DatasetInfoCard extends React.PureComponent {
     const bigQueryUrl = `https://console.cloud.google.com/bigquery?project=${dataset.dataProject}&supportedpurview=project&p=${dataset.dataProject}&d=datarepo_${dataset.name}&page=dataset`;
 
     return (
-      <Paper className={classes.root}>
-        <Typography variant="h6">{dataset.name}</Typography>
+      <Paper className={classes.root} elevation={4}>
+        <Typography variant="h3">{dataset.name}</Typography>
         <div className={classes.flex}>
-          <div>
-            <div className={classes.headerText}>Description:</div>
-            <Typography>{dataset.description}</Typography>
+          <div style={{ flex: 2 }}>
+            <Typography variant="h6" className={classes.headerText}>Description:</Typography>
+            <Typography>{"Donec ut tellus vitae massa congue tempor. Integer nec scelerisque nisl. Mauris et tincidunt nisl. Morbi vel posuere urna, vitae dictum elit. Pellentesque eget nisl enim.Donec ut tellus vitae massa congue tempor. Integer nec scelerisque nisl. Mauris et tincidunt nisl. Morbi vel posuere urna, vitae dictum elit. Pellentesque eget nisl enim.Donec ut tellus vitae massa congue tempor. Integer nec scelerisque nisl. Mauris et tincidunt nisl. Morbi vel posuere urna, vitae dictum elit. Pellentesque eget nisl enim."}</Typography>
           </div>
-          <div>
-            <div className={classes.headerText}>Custodians:</div>
+          <div style={{ flex: 1, paddingLeft: '1rem', paddingRight: '1rem' }}>
+            <Typography variant="h6" className={classes.headerText}>Custodians:</Typography>
             {datasetCustodians.map((custodian, i) => (
-              <Typography key={i}>{custodian}</Typography>
+              <Typography key={i}>{"Donec ut tellus vitae massa congue tempor. Integer nec scelerisque nisl. Mauris et tincidunt nisl. Morbi vel posuere urna, vitae dictum elit. Pellentesque eget nisl enim."}</Typography>
             ))}
           </div>
-          <div>
-            <div className={classes.headerText}>Date Created:</div>
+          <div style={{ flex: 1 }}>
+            <Typography variant="h6" className={classes.headerText}>Date Created:</Typography>
             <Typography>{new Date(dataset.createdDate).toLocaleDateString()}</Typography>
           </div>
         </div>

@@ -21,7 +21,7 @@ export class VisualizeRelationshipsPanel extends React.PureComponent {
 
   render() {
     const { classes } = this.props;
-    return <Paper className={classes.root} />;
+    return <Paper className={classes.root} elevation={4} />;
   }
 }
 

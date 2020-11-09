@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
@@ -8,19 +8,26 @@ import DatasetInfoCard from './DatasetInfoCard';
 import DatasetRelationshipsPanel from './VisualizeRelationshipsPanel';
 import CreateFullSnapshotView from './CreateFullSnapshotView';
 import { useOnMount } from '../../../libs/utils';
+import SnapshotInfoCard from './SnapshotInfoCard';
+import NewSnapshotButton from './NewSnapshotButton';
 
 const styles = (theme) => ({
+  pageRoot: {
+    padding: '16px 24px',
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%',
+  },
   root: {
     // TODO: expect this to change as more components are added
     height: '100%',
     display: 'grid',
     gridTemplateColumns: '1fr 2fr',
-    margin: '1rem 0.5rem',
     flex: 1,
   },
   headerText: {
-    fontWeight: theme.typography.bold,
     textTransform: 'uppercase',
+    marginBottom: '0.5rem',
   },
   infoColumn: {
     display: 'flex',
@@ -32,19 +39,57 @@ const styles = (theme) => ({
   mainColumn: {
     display: 'flex',
     flexDirection: 'column',
-    paddingLeft: '0.5rem',
+    marginLeft: 40,
   },
-  relationshipsArea: {
+  snapshotsArea: {
     flexGrow: 1,
+    marginTop: '1.5rem',
   },
   spacer: {
     height: '4rem',
   },
   pageTitle: {
-    margin: '0.5rem',
-    fontWeight: theme.typography.bold,
+    marginBottom: '1rem',
+  },
+  snapshotCardsContainer: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fill, minmax(360px, 32%))',
+    gridGap: '1rem',
   },
 });
+
+const fakeSnapshots = [
+  {
+    name: 'fake-snapshot-1',
+    created: '10/10/2020',
+    description: 'this is a fake snapshot',
+  },
+  {
+    name: 'michaels-snapshot',
+    created: '03/13/1997',
+    description: 'this is michael',
+  },
+  {
+    name: 'fake-snapshot-1',
+    created: '10/10/2020',
+    description: 'this is a fake snapshot',
+  },
+  {
+    name: 'michaels-snapshot',
+    created: '03/13/1997',
+    description: 'this is michael',
+  },
+  {
+    name: 'fake-snapshot-1',
+    created: '10/10/2020',
+    description: 'this is a fake snapshot',
+  },
+  {
+    name: 'michaels-snapshot',
+    created: '03/13/1997',
+    description: 'this is michael',
+  },
+];
 
 const DatasetDetailView = ({
   classes,
@@ -62,31 +107,55 @@ const DatasetDetailView = ({
     dispatch(getDatasetPolicy(uuid));
   });
 
+  let snapshotCards = [];
+  snapshotCards.push(<NewSnapshotButton datasetId={dataset.id} />);
+
+  snapshotCards = snapshotCards.concat(
+    fakeSnapshots.map((snapshot) => {
+      return <SnapshotInfoCard snapshot={snapshot} />;
+    }),
+  );
+
+  console.log(
+    fakeSnapshots.map((snapshot) => {
+      return <SnapshotInfoCard snapshot={snapshot} />;
+    }),
+  );
+
+  console.log(snapshotCards);
+
   return datasetPolicies && dataset && dataset.id === uuid ? (
-    <Fragment>
-      <Typography variant="h5" className={classes.pageTitle}>
+    <div className={classes.pageRoot}>
+      <Typography variant="h3" className={classes.pageTitle}>
         {dataset.name}
       </Typography>
       <div className={classes.root}>
         <div className={classes.infoColumn}>
-          <div className={classes.headerText}>Dataset Schema (default view)</div>
+          <Typography variant="h6" className={classes.headerText}>
+            Dataset Schema
+          </Typography>
           <div className={classes.infoColumnPanel}>
             <DatasetRelationshipsPanel dataset={dataset} />
           </div>
         </div>
         <div className={classes.mainColumn}>
-          <div className={classes.headerText}>Dataset Information</div>
+          <Typography variant="h6" className={classes.headerText}>
+            Dataset Information
+          </Typography>
           <DatasetInfoCard openSnapshotCreation={() => setCreatingSnapshot(true)} />
           <CreateFullSnapshotView
             open={creatingSnapshot}
             onDismiss={() => setCreatingSnapshot(false)}
           />
-          <div className={classes.relationshipsArea}>
-            <div className={classes.headerText}>Dataset Relationships</div>
+          <div className={classes.snapshotsArea}>
+            <Typography variant="h6" className={classes.headerText}>
+              Snapshots
+            </Typography>
+            <div className={classes.snapshotCardsContainer}>{snapshotCards}</div>
           </div>
         </div>
       </div>
-    </Fragment>
+    </div>
   ) : (
     <div />
   );
