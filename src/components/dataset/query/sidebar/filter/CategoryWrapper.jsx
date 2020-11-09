@@ -18,20 +18,22 @@ export class CategoryWrapper extends React.PureComponent {
     const { column, dataset, tableName, token, filterStatement, joinStatement } = this.props;
     const bq = new BigQuery();
 
-    bq.getColumnDistinct(
-      column.name,
-      dataset,
-      tableName,
-      token,
-      filterStatement,
-      joinStatement,
-    ).then((response) => {
-      const newResponse = this.transformResponse(response);
-      this.setState({
-        values: newResponse,
-        originalValues: newResponse,
+    if (!column.array_of) {
+      bq.getColumnDistinct(
+        column.name,
+        dataset,
+        tableName,
+        token,
+        filterStatement,
+        joinStatement,
+      ).then((response) => {
+        const newResponse = this.transformResponse(response);
+        this.setState({
+          values: newResponse,
+          originalValues: newResponse,
+        });
       });
-    });
+    }
   }
 
   static propTypes = {
@@ -51,24 +53,31 @@ export class CategoryWrapper extends React.PureComponent {
     const { column, dataset, tableName, token, filterStatement, joinStatement } = this.props;
     if (filterStatement !== prevProps.filterStatement || tableName !== prevProps.tableName) {
       const bq = new BigQuery();
-      bq.getColumnDistinct(
-        column.name,
-        dataset,
-        tableName,
-        token,
-        filterStatement,
-        joinStatement,
-      ).then((response) => {
-        const newResponse = this.transformResponse(response);
+      if (column.array_of) {
         this.setState({
-          values: newResponse,
+          values: {},
+          originalValues: {},
         });
-        if (tableName !== prevProps.tableName) {
+      } else {
+        bq.getColumnDistinct(
+          column.name,
+          dataset,
+          tableName,
+          token,
+          filterStatement,
+          joinStatement,
+        ).then((response) => {
+          const newResponse = this.transformResponse(response);
           this.setState({
-            originalValues: newResponse,
+            values: newResponse,
           });
-        }
-      });
+          if (tableName !== prevProps.tableName) {
+            this.setState({
+              originalValues: newResponse,
+            });
+          }
+        });
+      }
     }
   }
 
