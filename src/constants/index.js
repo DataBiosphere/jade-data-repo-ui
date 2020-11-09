@@ -94,3 +94,9 @@ export const IMAGE = {
 export const DB_COLUMNS = {
   ROW_ID: 'datarepo_row_id',
 };
+
+export const COLUMN_MODES = {
+  NULLABLE: 'NULLABLE',
+  REPEATED: 'REPEATED',
+  REQUIRED: 'REQUIRED',
+};
