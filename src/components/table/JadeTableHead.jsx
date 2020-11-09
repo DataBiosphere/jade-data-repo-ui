@@ -6,6 +6,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
+import { COLUMN_MODES } from '../../constants';
 
 const styles = () => ({
   root: {
@@ -37,13 +38,16 @@ export class JadeTableHead extends React.PureComponent {
                   padding={column.disablePadding ? 'none' : 'default'}
                   sortDirection={orderBy === column.id ? order : false}
                 >
-                  <TableSortLabel
-                    active={orderBy === column.id}
-                    direction={order !== '' ? order : 'desc'}
-                    onClick={() => createSortHandler(column.id)}
-                  >
-                    {column.label}
-                  </TableSortLabel>
+                  {column.mode !== COLUMN_MODES.REPEATED && (
+                    <TableSortLabel
+                      active={orderBy === column.id}
+                      direction={order !== '' ? order : 'desc'}
+                      onClick={() => createSortHandler(column.id)}
+                    >
+                      {column.label}
+                    </TableSortLabel>
+                  )}
+                  {column.mode === COLUMN_MODES.REPEATED && <span>{column.label}</span>}
                 </TableCell>
               ),
           )}
