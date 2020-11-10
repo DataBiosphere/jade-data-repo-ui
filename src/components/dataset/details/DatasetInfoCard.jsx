@@ -52,17 +52,23 @@ export class DatasetInfoCard extends React.PureComponent {
         <Typography variant="h3">{dataset.name}</Typography>
         <div className={classes.flex}>
           <div style={{ flex: 2 }}>
-            <Typography variant="h6" className={classes.headerText}>Description:</Typography>
+            <Typography variant="h6" className={classes.headerText}>
+              Description:
+            </Typography>
             <Typography>{dataset.description}</Typography>
           </div>
           <div style={{ flex: 1, paddingLeft: '1rem', paddingRight: '1rem' }}>
-            <Typography variant="h6" className={classes.headerText}>Custodians:</Typography>
+            <Typography variant="h6" className={classes.headerText}>
+              Custodians:
+            </Typography>
             {datasetCustodians.map((custodian, i) => (
               <Typography key={i}>{custodian}</Typography>
             ))}
           </div>
           <div style={{ flex: 1 }}>
-            <Typography variant="h6" className={classes.headerText}>Date Created:</Typography>
+            <Typography variant="h6" className={classes.headerText}>
+              Date Created:
+            </Typography>
             <Typography>{new Date(dataset.createdDate).toLocaleDateString()}</Typography>
           </div>
         </div>
