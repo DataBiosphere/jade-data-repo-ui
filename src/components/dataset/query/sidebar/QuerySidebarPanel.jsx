@@ -26,7 +26,7 @@ export class QuerySidebarPanel extends React.PureComponent {
     dataset: PropTypes.object,
     dispatch: PropTypes.func.isRequired,
     filterData: PropTypes.object,
-    results: PropTypes.string,
+    results: PropTypes.number,
     polling: PropTypes.bool,
     selected: PropTypes.string,
   };
@@ -38,8 +38,8 @@ export class QuerySidebarPanel extends React.PureComponent {
 
   render() {
     const { classes, filterData, selected, results, polling } = this.props;
-    const listTables = _.keys(filterData).map((table) => (
-      <AppliedFilterList table={table} selected={selected} />
+    const listTables = _.keys(filterData).map((table, i) => (
+      <AppliedFilterList key={`filter-${i}`} table={table} selected={selected} />
     ));
 
     const rowsLabel = results === 1 ? 'Row' : 'Rows';

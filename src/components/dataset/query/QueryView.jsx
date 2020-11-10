@@ -1,5 +1,4 @@
 import React, { Fragment } from 'react';
-import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
@@ -87,13 +86,6 @@ export class QueryView extends React.PureComponent {
         prevState.selected !== selected ||
         prevProps.orderBy !== orderBy)
     ) {
-      const arrayVals = this.findArrayVals(dataset, selected);
-
-      let arraysToExclude = '';
-      if (!_.isEmpty(arrayVals)) {
-        arraysToExclude = `EXCEPT (${arrayVals})`;
-      }
-
       const fromClause = `FROM \`${dataset.dataProject}.datarepo_${dataset.name}.${selected}\` AS ${selected}
           ${joinStatement}
           ${filterStatement}`;
@@ -102,7 +94,7 @@ export class QueryView extends React.PureComponent {
         runQuery(
           dataset.dataProject,
           `#standardSQL
-          SELECT DISTINCT ${selected}.* ${arraysToExclude} ${fromClause}
+          SELECT ${selected}.* ${fromClause}
           ${orderBy}
           LIMIT ${QUERY_LIMIT}`,
           PAGE_SIZE,
@@ -117,12 +109,6 @@ export class QueryView extends React.PureComponent {
       );
     }
   }
-
-  findArrayVals = (dataset, table) => {
-    const tableSchema = _.find(dataset.schema.tables, (t) => t.name === table);
-    const withArray = _.filter(tableSchema.columns, (column) => column.array_of === true);
-    return withArray.map((object) => object.name);
-  };
 
   hasDataset() {
     const { dataset, match } = this.props;
