@@ -53,12 +53,12 @@ export class DatasetInfoCard extends React.PureComponent {
         <div className={classes.flex}>
           <div style={{ flex: 2 }}>
             <Typography variant="h6" className={classes.headerText}>Description:</Typography>
-            <Typography>{"Donec ut tellus vitae massa congue tempor. Integer nec scelerisque nisl. Mauris et tincidunt nisl. Morbi vel posuere urna, vitae dictum elit. Pellentesque eget nisl enim.Donec ut tellus vitae massa congue tempor. Integer nec scelerisque nisl. Mauris et tincidunt nisl. Morbi vel posuere urna, vitae dictum elit. Pellentesque eget nisl enim.Donec ut tellus vitae massa congue tempor. Integer nec scelerisque nisl. Mauris et tincidunt nisl. Morbi vel posuere urna, vitae dictum elit. Pellentesque eget nisl enim."}</Typography>
+            <Typography>{dataset.description}</Typography>
           </div>
           <div style={{ flex: 1, paddingLeft: '1rem', paddingRight: '1rem' }}>
             <Typography variant="h6" className={classes.headerText}>Custodians:</Typography>
             {datasetCustodians.map((custodian, i) => (
-              <Typography key={i}>{"Donec ut tellus vitae massa congue tempor. Integer nec scelerisque nisl. Mauris et tincidunt nisl. Morbi vel posuere urna, vitae dictum elit. Pellentesque eget nisl enim."}</Typography>
+              <Typography key={i}>{custodian}</Typography>
             ))}
           </div>
           <div style={{ flex: 1 }}>
