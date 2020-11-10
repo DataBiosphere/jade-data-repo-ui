@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Button } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
@@ -39,6 +39,11 @@ const NewSnapshotButton = ({ classes, datasetId }) => {
       </Button>
     </Link>
   );
+};
+
+NewSnapshotButton.propTypes = {
+  classes: PropTypes.object,
+  datasetId: PropTypes.string,
 };
 
 export default withStyles(styles)(NewSnapshotButton);
