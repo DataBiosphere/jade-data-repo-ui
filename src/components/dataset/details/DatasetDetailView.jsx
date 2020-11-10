@@ -117,9 +117,7 @@ const DatasetDetailView = ({
   snapshotCards.push(<NewSnapshotButton datasetId={dataset.id} key={dataset.id} />);
 
   snapshotCards = snapshotCards.concat(
-    fakeSnapshots.map((snapshot) => {
-      return <SnapshotInfoCard snapshot={snapshot} key={snapshot.id} />;
-    }),
+    fakeSnapshots.map((snapshot) => <SnapshotInfoCard snapshot={snapshot} key={snapshot.id} />),
   );
 
   return datasetPolicies && dataset && dataset.id === uuid ? (
