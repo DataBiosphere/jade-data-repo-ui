@@ -11,7 +11,7 @@ import { useOnMount } from '../../../libs/utils';
 import SnapshotInfoCard from './SnapshotInfoCard';
 import NewSnapshotButton from './NewSnapshotButton';
 
-const styles = (theme) => ({
+const styles = () => ({
   pageRoot: {
     padding: '16px 24px',
     display: 'flex',
@@ -63,31 +63,37 @@ const fakeSnapshots = [
     name: 'fake-snapshot-1',
     created: '10/10/2020',
     description: 'this is a fake snapshot',
+    id: 1,
   },
   {
     name: 'michaels-snapshot',
     created: '03/13/1997',
     description: 'this is michael',
+    id: 2,
   },
   {
     name: 'fake-snapshot-1',
     created: '10/10/2020',
     description: 'this is a fake snapshot',
+    id: 3,
   },
   {
     name: 'michaels-snapshot',
     created: '03/13/1997',
     description: 'this is michael',
+    id: 4,
   },
   {
     name: 'fake-snapshot-1',
     created: '10/10/2020',
     description: 'this is a fake snapshot',
+    id: 5,
   },
   {
     name: 'michaels-snapshot',
     created: '03/13/1997',
     description: 'this is michael',
+    id: 6,
   },
 ];
 
@@ -108,21 +114,13 @@ const DatasetDetailView = ({
   });
 
   let snapshotCards = [];
-  snapshotCards.push(<NewSnapshotButton datasetId={dataset.id} />);
+  snapshotCards.push(<NewSnapshotButton datasetId={dataset.id} key={dataset.id} />);
 
   snapshotCards = snapshotCards.concat(
     fakeSnapshots.map((snapshot) => {
-      return <SnapshotInfoCard snapshot={snapshot} />;
+      return <SnapshotInfoCard snapshot={snapshot} key={snapshot.id} />;
     }),
   );
-
-  console.log(
-    fakeSnapshots.map((snapshot) => {
-      return <SnapshotInfoCard snapshot={snapshot} />;
-    }),
-  );
-
-  console.log(snapshotCards);
 
   return datasetPolicies && dataset && dataset.id === uuid ? (
     <div className={classes.pageRoot}>
