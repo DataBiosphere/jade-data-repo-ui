@@ -28,7 +28,7 @@
     "@material-ui/lab": "^4.0.0-alpha.40",
     "@material-ui/styles": "^4.10.0",
     "@testing-library/jest-dom": "^5.11.5",
-    "@testing-library/react": "^11.1.1",
+    "@testing-library/react": "^11.1.2",
     "@testing-library/user-event": "^12.2.2",
     "ajv": "^6.12.6",
     "animate.css": "^4.1.1",
