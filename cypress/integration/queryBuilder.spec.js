@@ -157,7 +157,7 @@ describe('test query builder', () => {
   });
 
   describe('test wizard flow', () => {
-    it.only('transitions to share panel', () => {
+    it('transitions to share panel', () => {
       // open filter panel
       cy.get('div.MuiButtonBase-root:nth-child(2) > svg:nth-child(1)').click();
 
