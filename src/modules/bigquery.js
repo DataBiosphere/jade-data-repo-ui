@@ -1,6 +1,9 @@
+// eslint-disable-next-line no-unused-vars
+import React from 'react';
 import axios from 'axios';
 import _ from 'lodash';
 import AwesomeDebouncePromise from 'awesome-debounce-promise';
+import { COLUMN_MODES } from '../constants';
 
 export default class BigQuery {
   constructor() {
@@ -13,6 +16,7 @@ export default class BigQuery {
       label: field.name,
       minWidth: 100,
       type: field.type,
+      mode: field.mode,
     }));
 
   transformRows = (queryResults, columns) => {
@@ -30,19 +34,27 @@ export default class BigQuery {
       const column = columns[i];
       const columnId = column.id;
       const columnType = column.type;
+      const columnMode = column.mode;
 
       let value = row[i];
       if (value !== null) {
+        // Convert into an array if it's not already one
+        if (columnMode !== COLUMN_MODES.REPEATED) {
+          value = [value];
+        } else {
+          value = value.map((v) => v.v);
+        }
+
         if (columnType === 'INTEGER') {
-          value = this.commaFormatted(value);
+          value = value.map((v) => this.commaFormatted(v));
         }
 
         if (columnType === 'FLOAT') {
-          value = this.significantDigits(value);
+          value = value.map((v) => this.significantDigits(v));
         }
 
         if (columnType === 'TIMESTAMP') {
-          value = new Date(value * 1000).toLocaleString();
+          value = value.map((v) => new Date(v * 1000).toLocaleString());
         }
       }
       if (columnId === 'datarepo_row_id') {

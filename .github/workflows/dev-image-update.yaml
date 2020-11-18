@@ -3,6 +3,15 @@ on:
   push:
     branches:
       - develop
+    paths:
+      - '!*'
+      - 'src/**'
+      - 'package.json'
+      - 'cypress.json'
+      - 'cypress/**'
+      - 'Dockerfile'
+      - 'config-overrides.js'
+      - '.github/workflows/dev-image-update.yaml'
 env:
   gcr_google_project: "broad-jade-dev"
   google_sdk_version: "290.0.1"
@@ -76,19 +85,18 @@ jobs:
           actions_subcommand: "deploytagupdate"
           helm_env_prefix: dev
           helm_imagetag_update: ui
-      - name: "Check and edit Helm definition for integration"
-        uses: broadinstitute/datarepo-actions@0.16.0
+      - name: Trigger action to update helm tag
+        uses: broadinstitute/workflow-dispatch@v1
         with:
-          actions_subcommand: "deploytagupdate"
-          helm_env_prefix: "integration-1,integration-2,integration-3,integration-4,integration-5"
-          helm_imagetag_update: ui
+          workflow: Update integration ui helm image tag
+          token: ${{ secrets.HELM_DEF_REPO_TOKEN }}
       - name: Slack job status
         if: always()
         uses: broadinstitute/action-slack@v2
         with:
           status: ${{ job.status }}
           author_name: Integration Test
-          only_mention_fail: smark,jhert,myessail
+          only_mention_fail: smark,myessail
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

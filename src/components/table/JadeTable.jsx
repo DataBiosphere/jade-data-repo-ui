@@ -12,6 +12,8 @@ import TableRow from '@material-ui/core/TableRow';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { pageQuery, applySort } from 'actions/index';
 import { JadeTableHead } from './JadeTableHead';
+import { ellipsis } from '../../libs/styles';
+import { COLUMN_MODES } from '../../constants';
 
 // eslint-disable-next-line no-unused-vars
 const styles = (theme) => ({
@@ -31,6 +33,9 @@ const styles = (theme) => ({
   },
   spinner: {
     margin: 'auto',
+  },
+  cell: {
+    ...ellipsis,
   },
 });
 
@@ -115,9 +120,26 @@ export class JadeTable extends React.PureComponent {
     });
   };
 
-  handleArrayValues = (value) => {
+  handleArrayValues = (value, column) => {
     if (_.isArray(value)) {
-      return `[${value.map((obj) => obj.v).join(', ')}]`;
+      const returnValue = [];
+      if (column.mode === COLUMN_MODES.REPEATED) {
+        returnValue.push(<span key="start">[</span>);
+      }
+      returnValue.push(
+        ...value.flatMap((v, i) => [
+          v,
+          i < value.length - 1 ? (
+            <span key={`sep-${i}`}>
+              ,<br />
+            </span>
+          ) : undefined,
+        ]),
+      );
+      if (column.mode === COLUMN_MODES.REPEATED) {
+        returnValue.push(<span key="end">]</span>);
+      }
+      return returnValue;
     }
     return value;
   };
@@ -139,17 +161,22 @@ export class JadeTable extends React.PureComponent {
               />
               {!polling && (
                 <TableBody data-cy="tableBody">
-                  {rows.map((row) => {
+                  {rows.map((row, i) => {
                     const drId = row.datarepo_id;
 
                     return (
                       <TableRow hover tabIndex={-1} key={drId}>
                         {columns.map((column) => {
-                          const value = this.handleArrayValues(row[column.id]);
-
+                          const value = this.handleArrayValues(row[column.id], column);
                           return (
                             !_.isUndefined(value) && (
-                              <TableCell key={`${column.id}-${drId}`}>{value}</TableCell>
+                              <TableCell
+                                key={`${column.id}-${drId}`}
+                                className={classes.cell}
+                                data-cy={`cellvalue-${column.id}-${i}`}
+                              >
+                                {value}
+                              </TableCell>
                             )
                           );
                         })}

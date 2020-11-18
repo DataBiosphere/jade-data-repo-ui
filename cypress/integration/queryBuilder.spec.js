@@ -13,6 +13,7 @@ describe('test query builder', () => {
     cy.get('#e2eLoginButton').click();
 
     cy.contains('See all Datasets').click();
+    cy.get('[placeholder=Search]').type('V2F_GWAS');
     cy.contains('Date created').click();
     cy.contains(/V2F_GWAS_Summary_Stats|V2F_GWAS_Summary_Statistics/g).should('be.visible');
     cy.contains(/V2F_GWAS_Summary_Stats|V2F_GWAS_Summary_Statistics/g).click();
@@ -20,6 +21,25 @@ describe('test query builder', () => {
   });
 
   it('does render', () => {});
+
+  describe('arrays work as expected', () => {
+    beforeEach(() => {
+      cy.get('[data-cy=selectTable]').click();
+      cy.get('[data-cy=menuItem-feature_consequence]').click();
+    });
+
+    it('does show array values', () => {
+      // Click the header to make sure we don't sort or trigger an error
+      cy.get(`[data-cy=columnheader-consequence_terms]`).click();
+
+      for (let i = 0; i < 100; i++) {
+        cy.get(`[data-cy=cellvalue-consequence_terms-${i}]`).should(
+          'have.text',
+          '[regulatory_region_variant]',
+        );
+      }
+    });
+  });
 
   describe('test filter panel', () => {
     beforeEach(() => {
