@@ -7,7 +7,7 @@ export const easing = 'cubic-bezier(0.35, 0.01, 0.77, 0.34);';
 
 WebFont.load({
   google: {
-    families: ['Montserrat', 'sans-serif'],
+    families: ['Montserrat', 'sans-serif', 'Lato'],
   },
 });
 
@@ -29,6 +29,55 @@ export default createMuiTheme({
       '"Segoe UI Symbol"',
     ].join(','),
     bold: '600',
+    h1: {
+      fontFamily: 'Montserrat',
+      fontWeight: 700,
+      fontSize: '2.5rem',
+      lineHeight: 1.5,
+      letterSpacing: 0,
+    },
+    h2: {
+      fontFamily: 'Montserrat',
+      fontWeight: 700,
+      fontSize: '2rem',
+      lineHeight: 1.5,
+      letterSpacing: 0,
+    },
+    h3: {
+      fontFamily: 'Montserrat',
+      fontWeight: 700,
+      fontSize: '1.5rem',
+      lineHeight: 1.5,
+      letterSpacing: 0,
+    },
+    h4: {
+      fontFamily: 'Montserrat',
+      fontWeight: 700,
+      fontSize: '1.3125rem',
+      lineHeight: 1.524,
+      letterSpacing: 0,
+    },
+    h5: {
+      fontFamily: 'Montserrat',
+      fontWeight: 700,
+      fontSize: '1rem',
+      lineHeight: 1.5,
+      letterSpacing: 0,
+    },
+    h6: {
+      fontFamily: 'Montserrat',
+      fontWeight: 700,
+      fontSize: '0.875rem',
+      lineHeight: 1.714,
+      letterSpacing: 0,
+    },
+    body1: {
+      fontFamily: 'Montserrat',
+      fontWeight: 400,
+      fontSize: '0.875rem',
+      lineHeight: 1.714,
+      letterSpacing: 0,
+    },
   },
   palette: {
     common: {
