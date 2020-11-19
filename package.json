@@ -69,7 +69,7 @@
     "xlsx": "^0.16.8"
   },
   "devDependencies": {
-    "@svgr/webpack": "^5.4.0",
+    "@svgr/webpack": "^5.5.0",
     "customize-cra": "^1.0.0",
     "cypress": "^5.6.0",
     "eslint-config-airbnb": "^18.2.0",
