@@ -64,7 +64,7 @@
     "redux-immutable-state-invariant": "^2.1.0",
     "redux-logger": "^3.0.6",
     "redux-saga": "^0.16.2",
-    "validator": "^13.5.1",
+    "validator": "^13.5.2",
     "webfontloader": "^1.6.28",
     "xlsx": "^0.16.9"
   },
