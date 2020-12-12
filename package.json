@@ -86,7 +86,7 @@
     "inquirer": "^7.3.3",
     "prettier": "^2.2.1",
     "react-app-rewire-hot-loader": "^2.0.1",
-    "react-app-rewired": "^2.1.7",
+    "react-app-rewired": "^2.1.8",
     "react-hot-loader": "^4.13.0",
     "yargs": "^16.2.0"
   },
