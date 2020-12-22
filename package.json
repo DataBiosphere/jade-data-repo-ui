@@ -33,7 +33,7 @@
     "ajv": "^6.12.6",
     "animate.css": "^4.1.1",
     "awesome-debounce-promise": "^2.1.0",
-    "axios": "^0.21.0",
+    "axios": "^0.21.1",
     "babel-plugin-inline-react-svg": "^1.1.2",
     "classlist-polyfill": "^1.2.0",
     "clsx": "^1.1.0",
