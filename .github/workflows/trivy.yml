@@ -9,4 +9,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      # The Dockerfile copies this, so it needs
+      # to exist for the build to succeed
+      # (but it doesn't get scanned)
+      - run: mkdir build
+
       - uses: broadinstitute/dsp-appsec-trivy-action@v1
