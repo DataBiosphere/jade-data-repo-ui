@@ -31,10 +31,6 @@ const styles = (theme) => ({
   },
 });
 
-// http://{TERRA_UI_URL}/#import-data?url={URL_ENCODED_TDR_ROOT_URL}&snapshotId={SNAPSHOT_ID}&snapshotName={SNAPSHOT_NAME}&format=snapshot
-// bvdp-saturn-${ENV}.appspot.com
-
-const TERRA_UI_URL = 'bvdp-saturn-dev.appspot.com';
 const URL_ENCODED_TDR_ROOT_URL = window.location.origin;
 
 export class DetailViewHeader extends React.PureComponent {
@@ -47,6 +43,7 @@ export class DetailViewHeader extends React.PureComponent {
     readers: PropTypes.arrayOf(PropTypes.string),
     removeCustodian: PropTypes.func,
     removeReader: PropTypes.func,
+    terraUrl: PropTypes.string,
   };
 
   render() {
@@ -59,9 +56,10 @@ export class DetailViewHeader extends React.PureComponent {
       readers,
       removeCustodian,
       removeReader,
+      terraUrl,
     } = this.props;
     const loading = _.isNil(of) || _.isEmpty(of);
-    console.log(process);
+
     return (
       <Grid container wrap="nowrap" spacing={2}>
         <Grid item zeroMinWidth xs={8}>
@@ -107,7 +105,7 @@ export class DetailViewHeader extends React.PureComponent {
             <Button className={classes.exportButton} variant="contained" color="primary">
               <a
                 target="_blank"
-                href={`http://${TERRA_UI_URL}/#import-data?url=${URL_ENCODED_TDR_ROOT_URL}&snapshotId=${of.id}&snapshotName=${of.name}&format=snapshot`}
+                href={`http://${terraUrl}/#import-data?url=${URL_ENCODED_TDR_ROOT_URL}&snapshotId=${of.id}&snapshotName=${of.name}&format=snapshot`}
               >
                 Export to Workspace
               </a>

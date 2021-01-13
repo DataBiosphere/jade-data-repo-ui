@@ -111,7 +111,7 @@ export class SnapshotDetailView extends React.PureComponent {
   };
 
   render() {
-    const { classes, features, snapshot, snapshotPolicies } = this.props;
+    const { classes, features, snapshot, snapshotPolicies, terraUrl } = this.props;
     const { filteredDatasets } = this.state;
     const snapshotReadersObj = snapshotPolicies.find((policy) => policy.name === 'reader');
     const snapshotReaders = (snapshotReadersObj && snapshotReadersObj.members) || [];
@@ -129,6 +129,7 @@ export class SnapshotDetailView extends React.PureComponent {
             readers={snapshotReaders}
             addReader={this.addReader}
             removeReader={this.removeReader}
+            terraUrl={terraUrl}
           />
           {snapshot && snapshot.source && (
             <DatasetTable
