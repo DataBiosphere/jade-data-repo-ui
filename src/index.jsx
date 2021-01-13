@@ -17,6 +17,7 @@ import { store } from 'store/index';
 import config from 'config';
 import App from 'containers/App';
 
+// wowie
 function getConfig() {
   return new Promise((resolve, reject) => {
     axios
