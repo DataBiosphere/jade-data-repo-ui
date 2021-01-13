@@ -3,7 +3,7 @@ RUN set -x \
   && git clone https://github.com/DataBiosphere/jade-data-repo-ui \
   && cd jade-data-repo-ui \
   && git checkout $(git describe --tags --abbrev=0) \
-  && npm install \
+  && npm ci \
   && npm run build --production
 
 FROM nginxinc/nginx-unprivileged:stable-alpine
