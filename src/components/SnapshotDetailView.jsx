@@ -68,6 +68,7 @@ export class SnapshotDetailView extends React.PureComponent {
     match: PropTypes.object.isRequired,
     snapshot: PropTypes.object,
     snapshotPolicies: PropTypes.arrayOf(PropTypes.object).isRequired,
+    terraUrl: PropTypes.string,
   };
 
   // TODO: this will be overhauled once we tweak the snapshot view
@@ -148,6 +149,7 @@ function mapStateToProps(state) {
     features: state.user.features,
     snapshot: state.snapshots.snapshot,
     snapshotPolicies: state.snapshots.snapshotPolicies,
+    terraUrl: state.configuration.terraUrl,
   };
 }
 

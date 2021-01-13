@@ -8,6 +8,7 @@ import Card from '@material-ui/core/Card';
 import Typography from '@material-ui/core/Typography';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import UserList from './UserList';
+import Button from '@material-ui/core/Button';
 
 const styles = (theme) => ({
   title: {
@@ -25,7 +26,16 @@ const styles = (theme) => ({
     lineHeight: '22px',
     fontWeight: '600',
   },
+  exportButton: {
+    marginTop: '0.5rem',
+  },
 });
+
+// http://{TERRA_UI_URL}/#import-data?url={URL_ENCODED_TDR_ROOT_URL}&snapshotId={SNAPSHOT_ID}&snapshotName={SNAPSHOT_NAME}&format=snapshot
+// bvdp-saturn-${ENV}.appspot.com
+
+const TERRA_UI_URL = 'bvdp-saturn-dev.appspot.com';
+const URL_ENCODED_TDR_ROOT_URL = window.location.origin;
 
 export class DetailViewHeader extends React.PureComponent {
   static propTypes = {
@@ -51,6 +61,7 @@ export class DetailViewHeader extends React.PureComponent {
       removeReader,
     } = this.props;
     const loading = _.isNil(of) || _.isEmpty(of);
+    console.log(process);
     return (
       <Grid container wrap="nowrap" spacing={2}>
         <Grid item zeroMinWidth xs={8}>
@@ -71,7 +82,7 @@ export class DetailViewHeader extends React.PureComponent {
               <CircularProgress />
             ) : (
               <div>
-                <div className={classes.header}> Date Created: </div>
+                <div className={classes.header}> Date Created:</div>
                 <div className={classes.values}> {moment(of.createdDate).fromNow()} </div>
               </div>
             )}
@@ -93,6 +104,14 @@ export class DetailViewHeader extends React.PureComponent {
                 canManageUsers={true}
               />
             )}
+            <Button className={classes.exportButton} variant="contained" color="primary">
+              <a
+                target="_blank"
+                href={`http://${TERRA_UI_URL}/#import-data?url=${URL_ENCODED_TDR_ROOT_URL}&snapshotId=${of.id}&snapshotName=${of.name}&format=snapshot`}
+              >
+                Export to Workspace
+              </a>
+            </Button>
           </Card>
         </Grid>
       </Grid>
