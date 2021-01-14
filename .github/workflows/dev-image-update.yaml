@@ -62,8 +62,6 @@ jobs:
           git pull
           GCR_TAG=$(git rev-parse --short HEAD)
           echo "GCR_TAG=$(echo ${GCR_TAG})" >> $GITHUB_ENV
-          npm ci
-          npm run-script build
       # Build the Docker image
       - name: Build docker container
         run: |
