@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
+import Tooltip from '@material-ui/core/Tooltip';
 import { Typography } from '@material-ui/core';
 
 const styles = () => ({
@@ -19,7 +20,11 @@ const styles = () => ({
 
 const SnapshotInfoCard = ({ classes, snapshot }) => (
   <Paper className={classes.root} elevation={4}>
-    <Typography variant="h4" className={classes.name}>{snapshot.name}</Typography>
+    <Tooltip title={snapshot.name}>
+      <Typography variant="h4" className={classes.name}>
+      {snapshot.name}
+      </Typography>
+    </Tooltip>
     <Typography>Created on {snapshot.createdDate}</Typography>
     <Typography className={classes.description}>{snapshot.description}</Typography>
   </Paper>
