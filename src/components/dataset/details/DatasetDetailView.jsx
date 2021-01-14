@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
-import { getDatasetById, getDatasetPolicy } from 'actions/index';
+import { getDatasetById, getDatasetPolicy, getSnapshots } from 'actions/index';
 import { Typography } from '@material-ui/core';
 import DatasetInfoCard from './DatasetInfoCard';
 import DatasetRelationshipsPanel from './VisualizeRelationshipsPanel';
@@ -58,45 +58,6 @@ const styles = () => ({
   },
 });
 
-const fakeSnapshots = [
-  {
-    name: 'fake-snapshot-1',
-    created: '10/10/2020',
-    description: 'this is a fake snapshot',
-    id: 1,
-  },
-  {
-    name: 'michaels-snapshot',
-    created: '03/13/1997',
-    description: 'this is michael',
-    id: 2,
-  },
-  {
-    name: 'fake-snapshot-1',
-    created: '10/10/2020',
-    description: 'this is a fake snapshot',
-    id: 3,
-  },
-  {
-    name: 'michaels-snapshot',
-    created: '03/13/1997',
-    description: 'this is michael',
-    id: 4,
-  },
-  {
-    name: 'fake-snapshot-1',
-    created: '10/10/2020',
-    description: 'this is a fake snapshot',
-    id: 5,
-  },
-  {
-    name: 'michaels-snapshot',
-    created: '03/13/1997',
-    description: 'this is michael',
-    id: 6,
-  },
-];
-
 const DatasetDetailView = ({
   classes,
   dataset,
@@ -105,19 +66,22 @@ const DatasetDetailView = ({
   match: {
     params: { uuid },
   },
+  snapshots,
 }) => {
   const [creatingSnapshot, setCreatingSnapshot] = useState(false);
 
   useOnMount(() => {
     dispatch(getDatasetById(uuid));
     dispatch(getDatasetPolicy(uuid));
+    dispatch(getSnapshots(10, 0, 'created_date', 'desc', ''));
+    // TODO un-hardcode and add limit, offset, sort, sortDirection, searchString as changeable
   });
 
   let snapshotCards = [];
   snapshotCards.push(<NewSnapshotButton datasetId={dataset.id} key={dataset.id} />);
 
-  snapshotCards = snapshotCards.concat(
-    fakeSnapshots.map((snapshot) => <SnapshotInfoCard snapshot={snapshot} key={snapshot.id} />),
+  snapshotCards = snapshotCards.concat( // snapshots
+    snapshots.map((snapshot) => <SnapshotInfoCard snapshot={snapshot} key={snapshot.id} />),
   );
 
   return datasetPolicies && dataset && dataset.id === uuid ? (
@@ -163,12 +127,14 @@ DatasetDetailView.propTypes = {
   datasetPolicies: PropTypes.array,
   dispatch: PropTypes.func.isRequired,
   match: PropTypes.object,
+  snapshots: PropTypes.array,
 };
 
-const mapStateToProps = ({ datasets: { dataset, datasetPolicies }, dispatch }) => ({
+const mapStateToProps = ({ datasets: { dataset, datasetPolicies }, dispatch, snapshots: { snapshots } }) => ({
   dataset,
   datasetPolicies,
   dispatch,
+  snapshots,
 });
 
 export default connect(mapStateToProps)(withStyles(styles)(DatasetDetailView));
