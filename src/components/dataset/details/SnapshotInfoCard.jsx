@@ -8,6 +8,10 @@ const styles = () => ({
   root: {
     padding: '1rem',
   },
+  name: {
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+  },
   description: {
     paddingTop: '1rem',
   },
@@ -15,8 +19,8 @@ const styles = () => ({
 
 const SnapshotInfoCard = ({ classes, snapshot }) => (
   <Paper className={classes.root} elevation={4}>
-    <Typography variant="h4">{snapshot.name}</Typography>
-    <Typography>Created on {snapshot.created}</Typography>
+    <Typography variant="h4" className={classes.name}>{snapshot.name}</Typography>
+    <Typography>Created on {snapshot.createdDate}</Typography>
     <Typography className={classes.description}>{snapshot.description}</Typography>
   </Paper>
 );
