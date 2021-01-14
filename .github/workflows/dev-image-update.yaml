@@ -57,6 +57,11 @@ jobs:
         uses: "broadinstitute/github-action-get-previous-tag@master"
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+      - name: Build nmp build for new ui container
+        run: |
+          git pull
+          GCR_TAG=$(git rev-parse --short HEAD)
+          echo "GCR_TAG=$(echo ${GCR_TAG})" >> $GITHUB_ENV
       # Build the Docker image
       - name: Build docker container
         run: |
