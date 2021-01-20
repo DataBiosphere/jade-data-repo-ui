@@ -40,7 +40,9 @@ class SnapshotView extends React.PureComponent {
 
   handleFilterSnapshots = (limit, offset, sort, sortDirection, searchString) => {
     const { dispatch } = this.props;
-    dispatch(getSnapshots(limit, offset, sort, sortDirection, searchString));
+    // TODO: should we allow filtering on dataset id here?
+    datasetIds = [];
+    dispatch(getSnapshots(limit, offset, sort, sortDirection, searchString, datasetIds));
   };
 
   render() {

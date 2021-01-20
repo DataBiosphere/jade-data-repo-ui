@@ -73,7 +73,7 @@ const DatasetDetailView = ({
   useOnMount(() => {
     dispatch(getDatasetById(uuid));
     dispatch(getDatasetPolicy(uuid));
-    dispatch(getSnapshots(10, 0, 'created_date', 'desc', ''));
+    dispatch(getSnapshots(10, 0, 'created_date', 'desc', '', [uuid]));
     // TODO un-hardcode and add limit, offset, sort, sortDirection, searchString as changeable
   });
 
