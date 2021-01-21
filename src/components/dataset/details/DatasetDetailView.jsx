@@ -80,7 +80,7 @@ const DatasetDetailView = ({
   let snapshotCards = [];
   snapshotCards.push(<NewSnapshotButton datasetId={dataset.id} key={dataset.id} />);
 
-  snapshotCards = snapshotCards.concat( // snapshots
+  snapshotCards = snapshotCards.concat(
     snapshots.map((snapshot) => <SnapshotInfoCard snapshot={snapshot} key={snapshot.id} />),
   );
 
