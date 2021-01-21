@@ -130,7 +130,11 @@ DatasetDetailView.propTypes = {
   snapshots: PropTypes.array,
 };
 
-const mapStateToProps = ({ datasets: { dataset, datasetPolicies }, dispatch, snapshots: { snapshots } }) => ({
+const mapStateToProps = ({
+  datasets: { dataset, datasetPolicies },
+  dispatch,
+  snapshots: { snapshots },
+}) => ({
   dataset,
   datasetPolicies,
   dispatch,

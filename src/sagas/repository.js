@@ -167,13 +167,10 @@ export function* getSnapshots({ payload }) {
   const datasetIds = payload.datasetIds || [];
   // TODO what's the best way to stringify this? I bet there's a good library:
   let datasetIdsQuery = '';
-  datasetIds.map(id => datasetIdsQuery = datasetIdsQuery + `&datasetIds=${id}`);
+  datasetIds.map((id) => (datasetIdsQuery += `&datasetIds=${id}`));
   const query = `/api/repository/v1/snapshots?offset=${offset}&limit=${limit}&sort=${sort}&direction=${direction}&filter=${filter}`;
   try {
-    const response = yield call(
-      authGet,
-      query + datasetIdsQuery,
-    );
+    const response = yield call(authGet, query + datasetIdsQuery);
     yield put({
       type: ActionTypes.GET_SNAPSHOTS_SUCCESS,
       snapshots: { data: response },

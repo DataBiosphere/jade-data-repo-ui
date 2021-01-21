@@ -22,7 +22,7 @@ const SnapshotInfoCard = ({ classes, snapshot }) => (
   <Paper className={classes.root} elevation={4}>
     <Tooltip title={snapshot.name}>
       <Typography variant="h4" className={classes.name}>
-      {snapshot.name}
+        {snapshot.name}
       </Typography>
     </Tooltip>
     <Typography>Created on {snapshot.createdDate}</Typography>
