@@ -17,12 +17,13 @@ export const { createSnapshot } = createActions({
 
 export const { getSnapshots } = createActions({
   [ActionTypes.GET_SNAPSHOTS_SUCCESS]: (snapshots) => snapshots,
-  [ActionTypes.GET_SNAPSHOTS]: (limit, offset, sort, direction, searchString) => ({
+  [ActionTypes.GET_SNAPSHOTS]: (limit, offset, sort, direction, searchString, datasetIds) => ({
     limit,
     offset,
     sort,
     direction,
     searchString,
+    datasetIds,
   }),
 });
 
