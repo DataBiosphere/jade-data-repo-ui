@@ -45,7 +45,10 @@ jobs:
         uses: broadinstitute/datarepo-actions@0.29.0
         with:
           actions_subcommand: 'k8_checknamespace'
-          k8_namespaces: 'integration-4,integration-5'
+          # Note: Integration-4 is also set up for UI testing, except that the datasets
+          # have been removed. We'd need to run the "ingest.js" script ingest the datasets
+          # in order to use int-4 again.
+          k8_namespaces: 'integration-5'
       - name: Build new ui container
         env:
           DEV_PROJECT: broad-jade-dev
