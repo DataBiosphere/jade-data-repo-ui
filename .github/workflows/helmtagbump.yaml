@@ -71,3 +71,68 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+  ui_helm_default_chart_tag:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          ref: develop
+      - name: 'Get Previous tag'
+        id: uiprevioustag
+        uses: "broadinstitute/github-action-get-previous-tag@master"
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+      - name: 'Checkout datarepo-helm repo'
+        uses: actions/checkout@v2
+        with:
+          repository: 'broadinstitute/datarepo-helm'
+          token: ${{ secrets.HELM_REPO_TOKEN }}
+          path: datarepo-helm
+      - name: "ui chart default tag find and replace"
+        uses: docker://mikefarah/yq:3
+        with:
+          args: yq w -i datarepo-helm/charts/datarepo-ui/values.yaml image.tag ${{ steps.uiprevioustag.outputs.tag }}"
+      - name: "bump ui chart appVersion"
+        uses: docker://mikefarah/yq:3
+        with:
+          args: yq w -i datarepo-helm/charts/datarepo-ui/Chart.yaml appVersion ${{ steps.uiprevioustag.outputs.tag }}"
+      - name: "get new chart verion"
+        id: new_version
+        run: |
+          version=$(docker run --rm -v ${PWD}:/workdir mikefarah/yq:3 yq r datarepo-helm/charts/datarepo-ui/Chart.yaml 'version')
+          a=(`echo $version | sed 's/\./ /g'`)
+          ((a[2]++))
+          printf "increase default ui version: ${a[2]}\n\n"
+          new_version="${a[0]}.${a[1]}.${a[2]}"
+          echo "::set-output name=new_version::$new_version"
+      - name: "bump ui chart Version"
+        uses: docker://mikefarah/yq:3
+        with:
+          args: yq w -i datarepo-helm/charts/datarepo-ui/Chart.yaml version ${{ steps.new_version.outputs.new_version }}"
+      - name: Create pull request
+        uses: broadinstitute/create-pull-request@v3.5.0 # forked from peter-evans/create-pull-request
+        id: create-pr
+        with:
+          token: ${{ secrets.HELM_DEF_REPO_TOKEN }}
+          path: datarepo-helm-definitions
+          commit-message: "Datarepo ui tag version update: ${{ steps.uiprevioustag.outputs.tag }}"
+          committer: imagetagbot <robot@jade.team>
+          author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
+          title: "Datarepo version update: ${{ steps.uiprevioustag.outputs.tag }}"
+          branch: "version-update/${{ steps.uiprevioustag.outputs.tag }}"
+          body: |
+            Update versions in **${{ steps.uiprevioustag.outputs.tag }}**.
+            *Note: This PR was opened by the [update-env GitHub Actions workflow](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}).*
+          labels: "datarepo,automerge,version-update"
+      - name: Slack job status
+        if: always()
+        uses: broadinstitute/action-slack@v2
+        with:
+          status: ${{ job.status }}
+          author_name: ui_helm_bumper
+          only_mention_fail: smark,myessail
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
