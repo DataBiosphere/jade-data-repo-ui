@@ -116,7 +116,7 @@ jobs:
         id: create-pr
         with:
           token: ${{ secrets.HELM_DEF_REPO_TOKEN }}
-          path: datarepo-helm-definitions
+          path: datarepo-helm
           commit-message: "Datarepo ui tag version update: ${{ steps.uiprevioustag.outputs.tag }}"
           committer: imagetagbot <robot@jade.team>
           author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
