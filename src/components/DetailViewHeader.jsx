@@ -37,6 +37,7 @@ export class DetailViewHeader extends React.PureComponent {
     readers: PropTypes.arrayOf(PropTypes.string),
     removeCustodian: PropTypes.func,
     removeReader: PropTypes.func,
+    canReadPolicies: PropTypes.bool,
   };
 
   render() {
@@ -49,6 +50,7 @@ export class DetailViewHeader extends React.PureComponent {
       readers,
       removeCustodian,
       removeReader,
+      canReadPolicies,
     } = this.props;
     const loading = _.isNil(of) || _.isEmpty(of);
     return (
@@ -75,7 +77,7 @@ export class DetailViewHeader extends React.PureComponent {
                 <div className={classes.values}> {moment(of.createdDate).fromNow()} </div>
               </div>
             )}
-            {custodians && (
+            {custodians && canReadPolicies && (
               <UserList
                 typeOfUsers="Custodians"
                 users={custodians}
@@ -84,7 +86,7 @@ export class DetailViewHeader extends React.PureComponent {
                 canManageUsers={true}
               />
             )}
-            {readers && (
+            {readers && canReadPolicies && (
               <UserList
                 typeOfUsers="Readers"
                 users={readers}

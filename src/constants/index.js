@@ -34,6 +34,7 @@ export const ActionTypes = keyMirror({
   GET_SNAPSHOT_BY_ID_SUCCESS: undefined,
   GET_SNAPSHOT_POLICY: undefined,
   GET_SNAPSHOT_POLICY_SUCCESS: undefined,
+  GET_SNAPSHOT_POLICY_FAILURE: undefined,
   ADD_SNAPSHOT_POLICY_MEMBER: undefined,
   ADD_SNAPSHOT_POLICY_MEMBER_SUCCESS: undefined,
   REMOVE_READER_FROM_SNAPSHOT: undefined,

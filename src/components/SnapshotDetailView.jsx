@@ -68,6 +68,7 @@ export class SnapshotDetailView extends React.PureComponent {
     match: PropTypes.object.isRequired,
     snapshot: PropTypes.object,
     snapshotPolicies: PropTypes.arrayOf(PropTypes.object).isRequired,
+    canReadPolicies: PropTypes.bool,
   };
 
   // TODO: this will be overhauled once we tweak the snapshot view
@@ -110,7 +111,7 @@ export class SnapshotDetailView extends React.PureComponent {
   };
 
   render() {
-    const { classes, features, snapshot, snapshotPolicies } = this.props;
+    const { classes, features, snapshot, snapshotPolicies, canReadPolicies } = this.props;
     const { filteredDatasets } = this.state;
     const snapshotReadersObj = snapshotPolicies.find((policy) => policy.name === 'reader');
     const snapshotReaders = (snapshotReadersObj && snapshotReadersObj.members) || [];
@@ -128,6 +129,7 @@ export class SnapshotDetailView extends React.PureComponent {
             readers={snapshotReaders}
             addReader={this.addReader}
             removeReader={this.removeReader}
+            canReadPolicies={canReadPolicies}
           />
           {snapshot && snapshot.source && (
             <DatasetTable
@@ -148,6 +150,7 @@ function mapStateToProps(state) {
     features: state.user.features,
     snapshot: state.snapshots.snapshot,
     snapshotPolicies: state.snapshots.snapshotPolicies,
+    canReadPolicies: state.snapshots.canReadPolicies,
   };
 }
 

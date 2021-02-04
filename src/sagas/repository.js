@@ -202,7 +202,9 @@ export function* getSnapshotPolicy({ payload }) {
       snapshot: { data: response },
     });
   } catch (err) {
-    showNotification(err);
+    yield put({
+      type: ActionTypes.GET_SNAPSHOT_POLICY_FAILURE,
+    });
   }
 }
 

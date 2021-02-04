@@ -19,6 +19,7 @@ export const snapshotState = {
   snapshot: {},
   snapshots: [],
   snapshotPolicies: [],
+  canReadPolicies: false,
   dataset: {},
   snapshotCount: 0,
   dialogIsOpen: false,
@@ -54,6 +55,12 @@ export default {
       [ActionTypes.GET_SNAPSHOT_POLICY_SUCCESS]: (state, action) =>
         immutable(state, {
           snapshotPolicies: { $set: action.snapshot.data.data.policies },
+          canReadPolicies: { $set: true },
+        }),
+      [ActionTypes.GET_SNAPSHOT_POLICY_FAILURE]: (state) =>
+        immutable(state, {
+          snapshotPolicies: { $set: [] },
+          canReadPolicies: { $set: false },
         }),
       [ActionTypes.ADD_SNAPSHOT_POLICY_MEMBER_SUCCESS]: (state, action) =>
         immutable(state, {
