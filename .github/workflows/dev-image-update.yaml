@@ -1,5 +1,6 @@
 name: Update devs ui image
 on:
+  workflow_dispatch: {}
   push:
     branches:
       - develop
@@ -16,6 +17,10 @@ env:
   gcr_google_project: "broad-jade-dev"
   google_sdk_version: "290.0.1"
   DEV_PROJECT: broad-jade-dev
+  # This must be defined for the bash redirection
+  GOOGLE_APPLICATION_CREDENTIALS: 'jade-dev-account.json'
+  # This must be defined for the bash redirection
+  GOOGLE_SA_CERT: 'jade-dev-account.pem'
 
 jobs:
   update_image:
