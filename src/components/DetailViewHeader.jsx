@@ -29,26 +29,26 @@ const styles = (theme) => ({
 
 export class DetailViewHeader extends React.PureComponent {
   static propTypes = {
-    addCustodian: PropTypes.func,
+    addSteward: PropTypes.func,
     addReader: PropTypes.func,
     classes: PropTypes.object.isRequired,
-    custodians: PropTypes.arrayOf(PropTypes.string).isRequired,
+    stewards: PropTypes.arrayOf(PropTypes.string).isRequired,
     of: PropTypes.object,
     readers: PropTypes.arrayOf(PropTypes.string),
-    removeCustodian: PropTypes.func,
+    removeSteward: PropTypes.func,
     removeReader: PropTypes.func,
     canReadPolicies: PropTypes.bool,
   };
 
   render() {
     const {
-      addCustodian,
+      addSteward,
       addReader,
       classes,
-      custodians,
+      stewards,
       of,
       readers,
-      removeCustodian,
+      removeSteward,
       removeReader,
       canReadPolicies,
     } = this.props;
@@ -77,12 +77,12 @@ export class DetailViewHeader extends React.PureComponent {
                 <div className={classes.values}> {moment(of.createdDate).fromNow()} </div>
               </div>
             )}
-            {custodians && canReadPolicies && (
+            {stewards && canReadPolicies && (
               <UserList
-                typeOfUsers="Custodians"
-                users={custodians}
-                addUser={addCustodian}
-                removeUser={removeCustodian}
+                typeOfUsers="Stewards"
+                users={stewards}
+                addUser={addSteward}
+                removeUser={removeSteward}
                 canManageUsers={true}
               />
             )}

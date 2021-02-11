@@ -37,20 +37,6 @@ export const { getSnapshotPolicy } = createActions({
   [ActionTypes.GET_SNAPSHOT_POLICY_SUCCESS]: (policy) => policy,
 });
 
-export const { addCustodianToSnapshot } = createActions({
-  [ActionTypes.ADD_CUSTODIAN_TO_SNAPSHOT]: (snapshotId, users) => ({
-    snapshotId,
-    users,
-  }),
-});
-
-export const { removeCustodianFromSnapshot } = createActions({
-  [ActionTypes.REMOVE_CUSTODIAN_FROM_SNAPSHOT]: (snapshotId, user) => ({
-    snapshotId,
-    user,
-  }),
-});
-
 export const { addSnapshotPolicyMember } = createActions({
   [ActionTypes.ADD_SNAPSHOT_POLICY_MEMBER]: (snapshotId, user, policy) => ({
     snapshotId,
@@ -59,10 +45,11 @@ export const { addSnapshotPolicyMember } = createActions({
   }),
 });
 
-export const { removeReaderFromSnapshot } = createActions({
-  [ActionTypes.REMOVE_READER_FROM_SNAPSHOT]: (snapshotId, user) => ({
+export const { removeSnapshotPolicyMember } = createActions({
+  [ActionTypes.REMOVE_SNAPSHOT_POLICY_MEMBER]: (snapshotId, user, policy) => ({
     snapshotId,
     user,
+    policy,
   }),
 });
 

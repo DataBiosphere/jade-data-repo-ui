@@ -220,21 +220,22 @@ export function* addSnapshotPolicyMember({ payload }) {
     yield put({
       type: ActionTypes.ADD_SNAPSHOT_POLICY_MEMBER_SUCCESS,
       snapshot: { data: response },
+      policy,
     });
   } catch (err) {
     showNotification(err);
   }
 }
 
-export function* removeReaderFromSnapshot({ payload }) {
-  const { snapshotId } = payload;
-  const reader = payload.user;
-  const url = `/api/repository/v1/snapshots/${snapshotId}/policies/reader/members/${reader}`;
+export function* removeSnapshotPolicyMember({ payload }) {
+  const { snapshotId, user, policy } = payload;
+  const url = `/api/repository/v1/snapshots/${snapshotId}/policies/${policy}/members/${user}`;
   try {
     const response = yield call(authDelete, url);
     yield put({
-      type: ActionTypes.REMOVE_READER_FROM_SNAPSHOT_SUCCESS,
+      type: ActionTypes.REMOVE_SNAPSHOT_POLICY_MEMBER_SUCCESS,
       snapshot: { data: response },
+      policy,
     });
   } catch (err) {
     showNotification(err);
@@ -461,7 +462,7 @@ export default function* root() {
     takeLatest(ActionTypes.GET_SNAPSHOT_BY_ID, getSnapshotById),
     takeLatest(ActionTypes.GET_SNAPSHOT_POLICY, getSnapshotPolicy),
     takeLatest(ActionTypes.ADD_SNAPSHOT_POLICY_MEMBER, addSnapshotPolicyMember),
-    takeLatest(ActionTypes.REMOVE_READER_FROM_SNAPSHOT, removeReaderFromSnapshot),
+    takeLatest(ActionTypes.REMOVE_SNAPSHOT_POLICY_MEMBER, removeSnapshotPolicyMember),
     takeLatest(ActionTypes.GET_DATASETS, getDatasets),
     takeLatest(ActionTypes.GET_DATASET_BY_ID, getDatasetById),
     takeLatest(ActionTypes.GET_DATASET_POLICY, getDatasetPolicy),
