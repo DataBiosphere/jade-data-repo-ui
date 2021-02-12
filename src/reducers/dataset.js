@@ -44,6 +44,7 @@ export default {
           dataset: { schema: { tables: { [i]: { preview: { $set: action.preview.data.rows } } } } },
         });
       },
+      [ActionTypes.USER_LOGOUT]: () => datasetState,
     },
     datasetState,
   ),
