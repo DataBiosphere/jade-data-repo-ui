@@ -61,13 +61,13 @@ export class SnapshotDetailView extends React.PureComponent {
   }
 
   static propTypes = {
+    canReadPolicies: PropTypes.bool,
     classes: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired,
     features: PropTypes.object,
     match: PropTypes.object.isRequired,
     snapshot: PropTypes.object,
     snapshotPolicies: PropTypes.arrayOf(PropTypes.object).isRequired,
-    canReadPolicies: PropTypes.bool,
   };
 
   // TODO: this will be overhauled once we tweak the snapshot view

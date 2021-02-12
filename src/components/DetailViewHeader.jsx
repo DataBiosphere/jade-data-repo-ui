@@ -29,15 +29,15 @@ const styles = (theme) => ({
 
 export class DetailViewHeader extends React.PureComponent {
   static propTypes = {
-    addSteward: PropTypes.func,
     addReader: PropTypes.func,
+    addSteward: PropTypes.func,
+    canReadPolicies: PropTypes.bool,
     classes: PropTypes.object.isRequired,
-    stewards: PropTypes.arrayOf(PropTypes.string).isRequired,
     of: PropTypes.object,
     readers: PropTypes.arrayOf(PropTypes.string),
-    removeSteward: PropTypes.func,
     removeReader: PropTypes.func,
-    canReadPolicies: PropTypes.bool,
+    removeSteward: PropTypes.func,
+    stewards: PropTypes.arrayOf(PropTypes.string).isRequired,
   };
 
   render() {
