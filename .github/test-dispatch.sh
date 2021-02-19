@@ -1,8 +1,8 @@
 #!/bin/bash
-BRANCH="develop"
+BRANCH=$(git branch --show-current)
 TOKEN=$(cat $HOME/.gh_token)
 REPO="DataBiosphere/jade-data-repo-ui"
-WORKFLOW="helmtagbump.yaml"
+WORKFLOW="dev-image-update.yaml"
 
 curl -H "Accept: application/vnd.github.everest-preview+json" \
     -H "Authorization: token ${TOKEN}" \
