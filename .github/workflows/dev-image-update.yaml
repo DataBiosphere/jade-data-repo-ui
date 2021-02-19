@@ -34,6 +34,7 @@ jobs:
         with:
           fetch-depth: 0
           #ref: develop!
+          token: ${{ secrets.BROADBOT_GITHUB_TOKEN }}
       - name: "Checkout datarepo-helm-definitions repo"
         uses: actions/checkout@v2
         with:
