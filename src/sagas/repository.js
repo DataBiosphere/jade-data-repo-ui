@@ -441,6 +441,7 @@ export function* countResults({ payload }) {
 
 export function* getFeatures() {
   try {
+    // TODO: look up from the correct Sam environment
     const url = 'https://sam.dsde-dev.broadinstitute.org/api/groups/v1';
     const response = yield call(authGet, url);
     yield put({
@@ -448,7 +449,7 @@ export function* getFeatures() {
       groups: response.data,
     });
   } catch (err) {
-    showNotification(err);
+    console.warn('Error feature flag information from Sam', err);
   }
 }
 
