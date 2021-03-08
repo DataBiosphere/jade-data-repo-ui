@@ -85,7 +85,7 @@ jobs:
           helm_datarepo_api_chart_version: 0.0.48
           helm_datarepo_ui_chart_version: 0.0.36
           helm_gcloud_sqlproxy_chart_version: 0.19.7
-          helm_oidc_proxy_chart_version: 0.0.19
+          helm_oidc_proxy_chart_version: 0.0.20
           helm_imagetag_update: 'ui'
       - name: wait for status checks
         uses: broadinstitute/datarepo-actions/actions/main@0.39.0
