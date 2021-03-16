@@ -164,11 +164,13 @@ export function* getSnapshots({ payload }) {
   const filter = payload.searchString || '';
   const sort = payload.sort || 'created_date';
   const direction = payload.direction || 'desc';
+  const datasetIds = payload.datasetIds || [];
+  // TODO what's the best way to stringify this? I bet there's a good library:
+  let datasetIdsQuery = '';
+  datasetIds.map((id) => (datasetIdsQuery += `&datasetIds=${id}`));
+  const query = `/api/repository/v1/snapshots?offset=${offset}&limit=${limit}&sort=${sort}&direction=${direction}&filter=${filter}`;
   try {
-    const response = yield call(
-      authGet,
-      `/api/repository/v1/snapshots?offset=${offset}&limit=${limit}&sort=${sort}&direction=${direction}&filter=${filter}`,
-    );
+    const response = yield call(authGet, query + datasetIdsQuery);
     yield put({
       type: ActionTypes.GET_SNAPSHOTS_SUCCESS,
       snapshots: { data: response },
@@ -200,7 +202,9 @@ export function* getSnapshotPolicy({ payload }) {
       snapshot: { data: response },
     });
   } catch (err) {
-    showNotification(err);
+    yield put({
+      type: ActionTypes.GET_SNAPSHOT_POLICY_FAILURE,
+    });
   }
 }
 
@@ -216,21 +220,22 @@ export function* addSnapshotPolicyMember({ payload }) {
     yield put({
       type: ActionTypes.ADD_SNAPSHOT_POLICY_MEMBER_SUCCESS,
       snapshot: { data: response },
+      policy,
     });
   } catch (err) {
     showNotification(err);
   }
 }
 
-export function* removeReaderFromSnapshot({ payload }) {
-  const { snapshotId } = payload;
-  const reader = payload.user;
-  const url = `/api/repository/v1/snapshots/${snapshotId}/policies/reader/members/${reader}`;
+export function* removeSnapshotPolicyMember({ payload }) {
+  const { snapshotId, user, policy } = payload;
+  const url = `/api/repository/v1/snapshots/${snapshotId}/policies/${policy}/members/${user}`;
   try {
     const response = yield call(authDelete, url);
     yield put({
-      type: ActionTypes.REMOVE_READER_FROM_SNAPSHOT_SUCCESS,
+      type: ActionTypes.REMOVE_SNAPSHOT_POLICY_MEMBER_SUCCESS,
       snapshot: { data: response },
+      policy,
     });
   } catch (err) {
     showNotification(err);
@@ -436,6 +441,7 @@ export function* countResults({ payload }) {
 
 export function* getFeatures() {
   try {
+    // TODO: look up from the correct Sam environment
     const url = 'https://sam.dsde-dev.broadinstitute.org/api/groups/v1';
     const response = yield call(authGet, url);
     yield put({
@@ -443,7 +449,7 @@ export function* getFeatures() {
       groups: response.data,
     });
   } catch (err) {
-    showNotification(err);
+    console.warn('Error feature flag information from Sam', err);
   }
 }
 
@@ -457,7 +463,7 @@ export default function* root() {
     takeLatest(ActionTypes.GET_SNAPSHOT_BY_ID, getSnapshotById),
     takeLatest(ActionTypes.GET_SNAPSHOT_POLICY, getSnapshotPolicy),
     takeLatest(ActionTypes.ADD_SNAPSHOT_POLICY_MEMBER, addSnapshotPolicyMember),
-    takeLatest(ActionTypes.REMOVE_READER_FROM_SNAPSHOT, removeReaderFromSnapshot),
+    takeLatest(ActionTypes.REMOVE_SNAPSHOT_POLICY_MEMBER, removeSnapshotPolicyMember),
     takeLatest(ActionTypes.GET_DATASETS, getDatasets),
     takeLatest(ActionTypes.GET_DATASET_BY_ID, getDatasetById),
     takeLatest(ActionTypes.GET_DATASET_POLICY, getDatasetPolicy),

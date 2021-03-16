@@ -33,6 +33,7 @@ export default {
         immutable(state, {
           jobId: { $set: '' },
         }),
+      [ActionTypes.USER_LOGOUT]: () => jobState,
     },
     jobState,
   ),

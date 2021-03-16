@@ -6,6 +6,7 @@ env:
   # This must be defined for the bash redirection
   GOOGLE_SA_CERT: 'jade-dev-account.pem'
 on:
+  workflow_dispatch: {}
   pull_request:
     branches:
       - develop
@@ -35,16 +36,19 @@ jobs:
       - name: Check out the repository
         uses: actions/checkout@v2
       - name: 'Whitelist Runner IP'
-        uses: broadinstitute/datarepo-actions@0.29.0
+        uses: broadinstitute/datarepo-actions/actions/main@0.39.0
         with:
           actions_subcommand: 'gcp_whitelist'
           role_id: ${{ secrets.ROLE_ID }}
           secret_id: ${{ secrets.SECRET_ID }}
       - name: 'Check for an availble namespace to deploy API to and set state lock'
-        uses: broadinstitute/datarepo-actions@0.29.0
+        uses: broadinstitute/datarepo-actions/actions/main@0.39.0
         with:
           actions_subcommand: 'k8_checknamespace'
-          k8_namespaces: 'integration-4,integration-5'
+          # Note: Integration-4 is also set up for UI testing, except that the datasets
+          # have been removed. We'd need to run the "ingest.js" script to ingest the datasets
+          # in order to use int-4 again.
+          k8_namespaces: 'integration-5'
       - name: Build new ui container
         env:
           DEV_PROJECT: broad-jade-dev
@@ -74,19 +78,19 @@ jobs:
           gcloud auth configure-docker --quiet
           docker push gcr.io/broad-jade-dev/jade-data-repo-ui:${GCR_TAG}
       - name: 'Deploy to cluster with Helm'
-        uses: broadinstitute/datarepo-actions@0.29.0
+        uses: broadinstitute/datarepo-actions/actions/main@0.39.0
         with:
           actions_subcommand: 'helmdeploy'
           helm_create_secret_manager_secret_version: '0.0.6'
-          helm_datarepo_api_chart_version: 0.0.23
-          helm_datarepo_ui_chart_version: 0.0.12
+          helm_datarepo_api_chart_version: 0.0.49
+          helm_datarepo_ui_chart_version: 0.0.36
           helm_gcloud_sqlproxy_chart_version: 0.19.7
-          helm_oidc_proxy_chart_version: 0.0.15
+          helm_oidc_proxy_chart_version: 0.0.20
           helm_imagetag_update: 'ui'
       - name: wait for status checks
-        uses: broadinstitute/datarepo-actions@0.29.0
+        uses: broadinstitute/datarepo-actions/actions/main@0.39.0
         with:
-          actions_subcommand: 'wait_for_deployment'
+          actions_subcommand: 'waitfordeployment'
       - name: set cypresss env
         run: |
           eval $(cat env_vars)
@@ -101,11 +105,11 @@ jobs:
           npx cypress run --record
       - name: 'Clean state lock from used Namespace on API deploy'
         if: always()
-        uses: broadinstitute/datarepo-actions@0.29.0
+        uses: broadinstitute/datarepo-actions/actions/main@0.39.0
         with:
           actions_subcommand: 'k8_checknamespace_clean'
       - name: 'Clean whitelisted Runner IP'
         if: always()
-        uses: broadinstitute/datarepo-actions@0.29.0
+        uses: broadinstitute/datarepo-actions/actions/main@0.39.0
         with:
           actions_subcommand: 'gcp_whitelist_clean'

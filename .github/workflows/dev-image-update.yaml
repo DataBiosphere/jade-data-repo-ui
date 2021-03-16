@@ -1,5 +1,6 @@
 name: Update devs ui image
 on:
+  workflow_dispatch: {}
   push:
     branches:
       - develop
@@ -16,6 +17,10 @@ env:
   gcr_google_project: "broad-jade-dev"
   google_sdk_version: "290.0.1"
   DEV_PROJECT: broad-jade-dev
+  # This must be defined for the bash redirection
+  GOOGLE_APPLICATION_CREDENTIALS: 'jade-dev-account.json'
+  # This must be defined for the bash redirection
+  GOOGLE_SA_CERT: 'jade-dev-account.pem'
 
 jobs:
   update_image:
@@ -23,12 +28,14 @@ jobs:
       matrix:
         os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
+    if: "!contains( github.event.sender.login, 'broadbot')"
     steps:
       - name: Checkout
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
           ref: develop
+          token: ${{ secrets.BROADBOT_TOKEN }}
       - name: "Checkout datarepo-helm-definitions repo"
         uses: actions/checkout@v2
         with:
@@ -36,16 +43,16 @@ jobs:
           token: ${{ secrets.HELM_REPO_TOKEN }}
           path: datarepo-helm-definitions
       - name: "Bump the tag to a new version"
-        uses: broadinstitute/datarepo-actions@0.16.0
+        uses: broadinstitute/datarepo-actions/actions/main@0.39.0
         with:
           actions_subcommand: "bumper"
           role_id: ${{ secrets.ROLE_ID }}
           secret_id: ${{ secrets.SECRET_ID }}
           version_file_path: package.json
           version_variable_name: version
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.BROADBOT_TOKEN }}
       - name: "Get gcp credentials"
-        uses: broadinstitute/datarepo-actions@0.16.0
+        uses: broadinstitute/datarepo-actions/actions/main@0.39.0
         with:
           actions_subcommand: "skip"
           role_id: ${{ secrets.ROLE_ID }}
@@ -78,7 +85,7 @@ jobs:
           gcr.io/${{ env.gcr_google_project }}/jade-data-repo-ui:"${GCR_TAG}" \
           gcr.io/${{ env.gcr_google_project }}/jade-data-repo-ui:"${{ steps.uiprevioustag.outputs.tag }}" --quiet
       - name: "Check and edit Helm definition for dev"
-        uses: broadinstitute/datarepo-actions@0.16.0
+        uses: broadinstitute/datarepo-actions/actions/main@0.39.0
         with:
           actions_subcommand: "deploytagupdate"
           helm_env_prefix: dev
@@ -94,7 +101,6 @@ jobs:
         with:
           status: ${{ job.status }}
           author_name: Integration Test
-          only_mention_fail: smark,myessail
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
