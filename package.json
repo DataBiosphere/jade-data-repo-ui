@@ -46,7 +46,7 @@
     "js-combinatorics": "^1.4.5",
     "lodash": "^4.17.21",
     "mobile-detect": "^1.4.5",
-    "modernizr": "^3.11.4",
+    "modernizr": "^3.11.6",
     "moment": "^2.29.1",
     "prop-types": "^15.7.2",
     "react": "^16.14.0",
