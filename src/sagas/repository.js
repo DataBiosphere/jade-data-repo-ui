@@ -7,6 +7,7 @@ import { delay } from 'redux-saga';
 import axios from 'axios';
 import moment from 'moment';
 import _ from 'lodash';
+import { configurationState } from 'reducers/configuration'
 
 import { ActionTypes, STATUS } from 'constants/index';
 import { showNotification } from 'modules/notifications';
@@ -441,8 +442,8 @@ export function* countResults({ payload }) {
 
 export function* getFeatures() {
   try {
-    // TODO: look up from the correct Sam environment
-    const url = 'https://sam.dsde-dev.broadinstitute.org/api/groups/v1';
+    const url = `${configurationState.samUrl}/api/groups/v1`;
+    console.log(url);
     const response = yield call(authGet, url);
     yield put({
       type: ActionTypes.GET_FEATURES_SUCCESS,
