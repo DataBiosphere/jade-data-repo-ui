@@ -7,7 +7,7 @@ import { delay } from 'redux-saga';
 import axios from 'axios';
 import moment from 'moment';
 import _ from 'lodash';
-import { configurationState } from 'reducers/configuration'
+import { configurationState } from 'reducers/configuration';
 
 import { ActionTypes, STATUS } from 'constants/index';
 import { showNotification } from 'modules/notifications';
