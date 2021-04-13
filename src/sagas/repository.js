@@ -444,7 +444,6 @@ export function* getFeatures() {
   try {
     const samUrl = yield select(getSamUrl);
     const url = `${samUrl}/api/groups/v1`;
-    console.log(url);
     const response = yield call(authGet, url);
     yield put({
       type: ActionTypes.GET_FEATURES_SUCCESS,
