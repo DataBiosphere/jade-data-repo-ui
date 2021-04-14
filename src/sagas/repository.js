@@ -23,6 +23,7 @@ export const getTokenExpiration = (state) => state.user.tokenExpiration;
 export const getSnapshotState = (state) => state.snapshots;
 export const getQuery = (state) => state.query;
 export const getDataset = (state) => state.datasets.dataset;
+export const getSamUrl = (state) => state.configuration.samUrl;
 
 export const timeoutMsg = 'Your session has timed out. Please refresh the page.';
 
@@ -441,8 +442,8 @@ export function* countResults({ payload }) {
 
 export function* getFeatures() {
   try {
-    // TODO: look up from the correct Sam environment
-    const url = 'https://sam.dsde-dev.broadinstitute.org/api/groups/v1';
+    const samUrl = yield select(getSamUrl);
+    const url = `${samUrl}/api/groups/v1`;
     const response = yield call(authGet, url);
     yield put({
       type: ActionTypes.GET_FEATURES_SUCCESS,
