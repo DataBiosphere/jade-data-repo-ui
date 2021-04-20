@@ -138,6 +138,7 @@ function render(Component) {
   }
 }
 
+console.log('foobar');
 bootstrap()
   .then(() => render(App))
   .catch((err) => {

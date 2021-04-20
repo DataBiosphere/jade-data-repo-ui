@@ -160,7 +160,6 @@ export function App(props) {
     setAnchorEl(null);
   };
 
-  console.log('foobar');
   return (
     <div className={classes.root}>
       <CssBaseline />
