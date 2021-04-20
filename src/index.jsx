@@ -17,6 +17,17 @@ import { store } from 'store/index';
 import config from 'config';
 import App from 'containers/App';
 
+function checkStatus() {
+  return new Promise((resolve, reject) => {
+    axios
+      .get('/status')
+      .then((response) => {
+        resolve(response);
+      })
+      .catch(reject);
+  });
+}
+
 function getConfig() {
   return new Promise((resolve, reject) => {
     axios
@@ -31,35 +42,71 @@ function getConfig() {
 function bootstrap() {
   return new Promise((resolve, reject) => {
     // We need to do this (in order) before bothering to render:
-    // 1. grab the configuration + load Google's auth2 library (in parallel)
-    // 2. get the client id out of the config and use it to logIn
-    // 3. put the config and user details into the store
-    // 4. render
-    getConfig()
-      .then((configData) => {
+    // 1. Check status of the server
+    // 2. grab the configuration + load Google's auth2 library (in parallel)
+    // 3. get the client id out of the config and use it to logIn
+    // 4. put the config and user details into the store
+    // 5. render
+    checkStatus()
+      .then((response) => {
         store.dispatch({
-          type: ActionTypes.GET_CONFIGURATION_SUCCESS,
-          configuration: configData,
+          type: ActionTypes.GET_SERVER_STATUS_SUCCESS,
+          status: {
+            tdrOperational: true,
+            apiIsUp: true,
+            serverStatus: response.data,
+          },
         });
-        getUser({ client_id: configData.clientId })
-          .then((user) => {
-            if (user != null) {
-              store.dispatch(
-                logIn(
-                  user.name,
-                  user.imageUrl,
-                  user.email,
-                  user.accessToken,
-                  user.accessTokenExpiration,
-                ),
-              );
-              store.dispatch(getFeatures());
-            }
-            resolve();
+        getConfig()
+          .then((configData) => {
+            store.dispatch({
+              type: ActionTypes.GET_CONFIGURATION_SUCCESS,
+              configuration: configData,
+            });
+            getUser({ client_id: configData.clientId })
+              .then((user) => {
+                if (user != null) {
+                  store.dispatch(
+                    logIn(
+                      user.name,
+                      user.imageUrl,
+                      user.email,
+                      user.accessToken,
+                      user.accessTokenExpiration,
+                    ),
+                  );
+                  store.dispatch(getFeatures());
+                }
+                resolve();
+              })
+              .catch(reject);
           })
           .catch(reject);
+        resolve();
       })
-      .catch(reject);
+      .catch((error) => {
+        console.error('The server is down!');
+        if (error.response.status === 504) {
+          store.dispatch({
+            type: ActionTypes.GET_SERVER_STATUS_DOWN,
+            status: {
+              tdrOperational: false,
+              apiIsUp: false,
+              serverStatus: error.response.data,
+            },
+          });
+        } else {
+          store.dispatch({
+            type: ActionTypes.GET_SERVER_STATUS_FAILURE,
+            status: {
+              tdrOperational: false,
+              apiIsUp: true,
+              serverStatus: error.response.data,
+            },
+          });
+        }
+        resolve();
+      });
   });
 }
 

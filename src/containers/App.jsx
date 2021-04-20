@@ -29,6 +29,7 @@ import { ReactComponent as SignOutSVG } from 'media/icons/logout-line.svg';
 import { logOut } from 'actions';
 
 import 'react-notifications-component/dist/theme.css';
+import ServerErrorView from 'components/ServerErrorView';
 
 const drawerWidth = 240;
 
@@ -146,7 +147,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export function App(props) {
-  const { user, dispatch, configuration } = props;
+  const { user, dispatch, configuration, status } = props;
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -159,6 +160,7 @@ export function App(props) {
     setAnchorEl(null);
   };
 
+  console.log('foobar');
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -217,27 +219,30 @@ export function App(props) {
         </Toolbar>
       </AppBar>
       <div className={classes.content}>
-        <Switch>
-          <RoutePublic
-            isAuthenticated={user.isAuthenticated}
-            path="/login"
-            exact
-            component={Home}
-          />
-          <RoutePublic
-            isAuthenticated={user.isAuthenticated}
-            path="/login/e2e"
-            exact
-            component={HeadlessLogin}
-          />
-          <RoutePrivate
-            isAuthenticated={user.isAuthenticated}
-            path="/"
-            component={Private}
-            features={user.features}
-          />
-          <Route component={NotFound} />
-        </Switch>
+        {!status.tdrOperational && <ServerErrorView />}
+        {status.tdrOperational && (
+          <Switch>
+            <RoutePublic
+              isAuthenticated={user.isAuthenticated}
+              path="/login"
+              exact
+              component={Home}
+            />
+            <RoutePublic
+              isAuthenticated={user.isAuthenticated}
+              path="/login/e2e"
+              exact
+              component={HeadlessLogin}
+            />
+            <RoutePrivate
+              isAuthenticated={user.isAuthenticated}
+              path="/"
+              component={Private}
+              features={user.features}
+            />
+            <Route component={NotFound} />
+          </Switch>
+        )}
       </div>
     </div>
   );
@@ -247,12 +252,14 @@ App.propTypes = {
   configuration: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
   user: PropTypes.object.isRequired,
+  status: PropTypes.object.isRequired,
 };
 
 function mapStateToProps(state) {
   return {
     user: state.user,
     configuration: state.configuration,
+    status: state.status,
   };
 }
 

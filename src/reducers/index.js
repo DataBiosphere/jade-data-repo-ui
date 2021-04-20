@@ -4,6 +4,7 @@ import dataset from './dataset';
 import job from './job';
 import configuration from './configuration';
 import query from './query';
+import status from './status';
 
 export default {
   ...user,
@@ -12,4 +13,5 @@ export default {
   ...job,
   ...configuration,
   ...query,
+  ...status,
 };

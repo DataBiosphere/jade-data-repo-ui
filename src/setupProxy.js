@@ -17,4 +17,11 @@ module.exports = (app) => {
       changeOrigin: true,
     }),
   );
+  app.use(
+    '/status',
+    createProxyMiddleware({
+      target: proxyUrl,
+      changeOrigin: true,
+    }),
+  );
 };

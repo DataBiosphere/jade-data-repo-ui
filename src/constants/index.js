@@ -70,6 +70,9 @@ export const ActionTypes = keyMirror({
   ADD_READERS_TO_SNAPSHOT: undefined,
   GET_FEATURES: undefined,
   GET_FEATURES_SUCCESS: undefined,
+  GET_SERVER_STATUS_SUCCESS: undefined,
+  GET_SERVER_STATUS_FAILURE: undefined,
+  GET_SERVER_STATUS_DOWN: undefined,
 });
 
 /**
