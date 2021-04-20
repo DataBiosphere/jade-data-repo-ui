@@ -1,5 +1,6 @@
 name: Update devs ui image
 on:
+  workflow_dispatch: {}
   push:
     branches:
       - develop
@@ -16,6 +17,10 @@ env:
   gcr_google_project: "broad-jade-dev"
   google_sdk_version: "290.0.1"
   DEV_PROJECT: broad-jade-dev
+  # This must be defined for the bash redirection
+  GOOGLE_APPLICATION_CREDENTIALS: 'jade-dev-account.json'
+  # This must be defined for the bash redirection
+  GOOGLE_SA_CERT: 'jade-dev-account.pem'
 
 jobs:
   update_image:
@@ -23,29 +28,31 @@ jobs:
       matrix:
         os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
+    if: "!contains( github.event.sender.login, 'broadbot')"
     steps:
       - name: Checkout
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
           ref: develop
+          token: ${{ secrets.BROADBOT_TOKEN }}
       - name: "Checkout datarepo-helm-definitions repo"
         uses: actions/checkout@v2
         with:
           repository: "broadinstitute/datarepo-helm-definitions"
-          token: ${{ secrets.HELM_REPO_TOKEN }}
+          token: ${{ secrets.BROADBOT_TOKEN }}
           path: datarepo-helm-definitions
       - name: "Bump the tag to a new version"
-        uses: broadinstitute/datarepo-actions@0.16.0
+        uses: broadinstitute/datarepo-actions/actions/main@0.57.0
         with:
           actions_subcommand: "bumper"
           role_id: ${{ secrets.ROLE_ID }}
           secret_id: ${{ secrets.SECRET_ID }}
           version_file_path: package.json
           version_variable_name: version
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.BROADBOT_TOKEN }}
       - name: "Get gcp credentials"
-        uses: broadinstitute/datarepo-actions@0.16.0
+        uses: broadinstitute/datarepo-actions/actions/main@0.57.0
         with:
           actions_subcommand: "skip"
           role_id: ${{ secrets.ROLE_ID }}
@@ -56,14 +63,12 @@ jobs:
         id: uiprevioustag
         uses: "broadinstitute/github-action-get-previous-tag@master"
         env:
-          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          GITHUB_TOKEN: "${{ secrets.BROADBOT_TOKEN }}"
       - name: Build nmp build for new ui container
         run: |
           git pull
           GCR_TAG=$(git rev-parse --short HEAD)
           echo "GCR_TAG=$(echo ${GCR_TAG})" >> $GITHUB_ENV
-          npm ci
-          npm run-script build
       # Build the Docker image
       - name: Build docker container
         run: |
@@ -80,7 +85,7 @@ jobs:
           gcr.io/${{ env.gcr_google_project }}/jade-data-repo-ui:"${GCR_TAG}" \
           gcr.io/${{ env.gcr_google_project }}/jade-data-repo-ui:"${{ steps.uiprevioustag.outputs.tag }}" --quiet
       - name: "Check and edit Helm definition for dev"
-        uses: broadinstitute/datarepo-actions@0.16.0
+        uses: broadinstitute/datarepo-actions/actions/main@0.57.0
         with:
           actions_subcommand: "deploytagupdate"
           helm_env_prefix: dev
@@ -89,14 +94,13 @@ jobs:
         uses: broadinstitute/workflow-dispatch@v1
         with:
           workflow: Update integration ui helm image tag
-          token: ${{ secrets.HELM_DEF_REPO_TOKEN }}
+          token: ${{ secrets.BROADBOT_TOKEN }}
       - name: Slack job status
         if: always()
         uses: broadinstitute/action-slack@v2
         with:
           status: ${{ job.status }}
           author_name: Integration Test
-          only_mention_fail: smark,myessail
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.BROADBOT_TOKEN }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

@@ -35,28 +35,30 @@ const URL_ENCODED_TDR_ROOT_URL = window.location.origin;
 
 export class DetailViewHeader extends React.PureComponent {
   static propTypes = {
-    addCustodian: PropTypes.func,
     addReader: PropTypes.func,
+    addSteward: PropTypes.func,
+    canReadPolicies: PropTypes.bool,
     classes: PropTypes.object.isRequired,
-    custodians: PropTypes.arrayOf(PropTypes.string).isRequired,
     of: PropTypes.object,
     readers: PropTypes.arrayOf(PropTypes.string),
-    removeCustodian: PropTypes.func,
     removeReader: PropTypes.func,
     terraUrl: PropTypes.string,
+    removeSteward: PropTypes.func,
+    stewards: PropTypes.arrayOf(PropTypes.string).isRequired,
   };
 
   render() {
     const {
-      addCustodian,
+      addSteward,
       addReader,
       classes,
-      custodians,
+      stewards,
       of,
       readers,
-      removeCustodian,
+      removeSteward,
       removeReader,
       terraUrl,
+      canReadPolicies,
     } = this.props;
     const loading = _.isNil(of) || _.isEmpty(of);
 
@@ -84,16 +86,16 @@ export class DetailViewHeader extends React.PureComponent {
                 <div className={classes.values}> {moment(of.createdDate).fromNow()} </div>
               </div>
             )}
-            {custodians && (
+            {stewards && canReadPolicies && (
               <UserList
-                typeOfUsers="Custodians"
-                users={custodians}
-                addUser={addCustodian}
-                removeUser={removeCustodian}
+                typeOfUsers="Stewards"
+                users={stewards}
+                addUser={addSteward}
+                removeUser={removeSteward}
                 canManageUsers={true}
               />
             )}
-            {readers && (
+            {readers && canReadPolicies && (
               <UserList
                 typeOfUsers="Readers"
                 users={readers}
