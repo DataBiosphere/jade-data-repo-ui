@@ -26,19 +26,6 @@ const styles = (theme) => ({
     padding: theme.spacing(10),
     width: '60%',
   },
-  newUser: {
-    color: theme.palette.secondary.contrastText,
-    fontSize: '18px',
-    fontWeight: '300',
-    paddingBottom: theme.spacing(2),
-    paddingTop: theme.spacing(8),
-  },
-  terraLink: {
-    color: theme.palette.primary.main,
-    paddingBottom: theme.spacing(4),
-    paddingTop: theme.spacing(2),
-    textDecoration: 'none',
-  },
   header: {
     fontSize: '28px',
     lineHeight: '36px',
@@ -97,10 +84,10 @@ export class ServerErrorView extends React.PureComponent {
     return (
       <div className={classes.container}>
         <div className={classes.mainContent}>
-          <div className={classes.title}>Uh oh, something went wrong!</div>
+          <h1 className={classes.title}>Uh oh, something went wrong!</h1>
           {status.apiIsUp && (
             <div>
-              <h2>
+              <h2 className={classes.warning}>
                 It looks like the Data Repository server is up, but some required services are down.
               </h2>
               <LightTable
@@ -113,7 +100,7 @@ export class ServerErrorView extends React.PureComponent {
           )}
           {!status.apiIsUp && (
             <div>
-              <h2>The Data Repository Server is down!</h2>
+              <h2 className={classes.warning}>The Data Repository server is down!</h2>
               <p>Please check back in later.</p>
             </div>
           )}
