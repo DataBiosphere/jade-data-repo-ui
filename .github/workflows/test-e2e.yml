@@ -94,7 +94,6 @@ jobs:
         uses: broadinstitute/datarepo-actions/actions/wait-for-deployment@sh-dr-1739-increase-wait
         env:
           DEPLOYMENT_TYPE: 'ui'
-          NAMESPACEINUSE: ${{ steps.namespace.outputs.namespace }}
       - name: set cypresss env
         run: |
           eval $(cat env_vars)
