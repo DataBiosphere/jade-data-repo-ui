@@ -185,7 +185,7 @@ export function App(props) {
                 >
                   <CarrotSVG className={open ? classes.carrotOpen : classes.carrotClose} />
                 </Button>
-                <h1>HELLOOOOO</h1>
+                <h1>HELLOOO!</h1>
                 <Menu
                   id="menu-appbar"
                   anchorEl={anchorEl}
