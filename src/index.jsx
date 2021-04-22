@@ -85,7 +85,7 @@ function bootstrap() {
         resolve();
       })
       .catch((error) => {
-        console.error('The server is down!');
+        // The React proxy returns a 504 if the '/status' endpoint can't be reached.
         if (error.response.status === 504) {
           store.dispatch({
             type: ActionTypes.GET_SERVER_STATUS_DOWN,
