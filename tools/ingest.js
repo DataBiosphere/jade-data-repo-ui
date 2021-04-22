@@ -4,7 +4,7 @@
  * How to use this script:
  *
  * Example: ingesting hca_mvp from dev to int-5
- * npm run ingest hca_mvp -- --source-url=https://jade.datarepo-dev.broadinstitute.org --target-url=https://jade-my.datarepo-dev.broadinstitute.org --jc-path=~/broad/jade-data-repo-cli/./build/install/jadecli/bin/jadecli --target-env=broad-jade-my-data --target-name=hca_mvp --src-env=broad-jade-dev-data --bucket-name=hca_mvp
+ * npm run ingest hca_mvp -- --source-url=https://jade.datarepo-dev.broadinstitute.org --target-url=https://jade-5.datarepo-integration.broadinstitute.org --jc-path=~/broad/jade-data-repo-cli/./build/install/jadecli/bin/jadecli --target-env=broad-jade-int-5-data --target-name=hca_mvp --src-env=broad-jade-dev-data --bucket-name=hca_mvp
  *
  * make sure that you have the correct path to your jadecli install, if you have it aliased in your bashrc it should be the same path as there.
  * also, make sure the source and target environments are the names of the DATA projects!!
@@ -18,7 +18,6 @@ const fs = require('fs');
 const axios = require('axios');
 const { exec } = require('child_process');
 const inquirer = require('inquirer');
-const { v4: uuidv4 } = require('uuid');
 const { argv } = require('yargs').command(
   'ingest',
   'copy a subset of production data into another environment',
@@ -177,82 +176,62 @@ const { bucketName, jc, targetEnv, targetName, targetUrl, srcEnv } = argv;
     console.log(tableNames);
 
     await switchAccount(answers.destAccount);
-
-    let token = await call('gcloud auth print-access-token');
-    token = token.replace(/\r?\n|\r/g, '');
-    console.log(token);
-    const config = {
-      headers: { Authorization: `Bearer ${token}` },
-    };
-    console.log(config);
-
+    await call(`${jc} session set basepath ${targetUrl}`);
+    await call(`${jc} session set projectid ${targetEnv}`);
+    console.log(await call(`${jc} session show`));
     const profileName = `${targetName}-profile`;
 
-    const profileRequest = {
-      biller: 'direct',
-      billingAccountId: CORE_BILLING_ACCOUNT_ID,
-      description: 'automated profile request',
-      id: uuidv4(),
-      profileName,
-    };
-    const profileResponse = await axios.post(
-      targetUrl + '/api/resources/v1/profiles',
-      profileRequest,
-      config,
+    await call(`${jc} profile create --name ${profileName} --account ${CORE_BILLING_ACCOUNT_ID}`);
+    const datasetModel = await call(
+      `${jc} dataset create --input-json ./temp.json --profile ${profileName}`,
     );
-    console.log(profileResponse);
+    console.log(datasetModel);
 
-    // await call(`${jc} profile create --name ${profileName} --account ${CORE_BILLING_ACCOUNT_ID}`);
-    // const datasetModel = await call(
-    //   `${jc} dataset create --input-json ./temp.json --profile ${profileName}`,
-    // );
-    // console.log(datasetModel);
-    //
-    // const alreadyInBucket = await inquirer.prompt({
-    //   name: 'confirm',
-    //   type: 'confirm',
-    //   message: 'Is this data already in the jade-testdata bucket?',
-    //   default: false,
-    // });
-    //
-    // if (!alreadyInBucket.confirm) {
-    //   const allTables = JSON.parse(
-    //     await call(`bq ls --format=json ${srcEnv}:datarepo_${datasetName}`),
-    //   );
-    //   const rawTables = _.filter(allTables, (table) =>
-    //     table.tableReference.tableId.includes('datarepo_raw'),
-    //   ).map((table) => table.tableReference.tableId);
-    //
-    //   const rawTablesToNames = {};
-    //   rawTables.forEach((rawTable) => {
-    //     tableNames.forEach((table) => {
-    //       if (rawTable.includes(table)) {
-    //         rawTablesToNames[table] = rawTable;
-    //       }
-    //     });
-    //   });
-    //
-    //   let i = 0;
-    //   for (i = 0; i < tableNames.length; i++) {
-    //     const table = tableNames[i];
-    //     const rawTableName = _.isEmpty(rawTablesToNames) ? table : rawTablesToNames[table];
-    //     // eslint-disable-next-line no-await-in-loop
-    //     const response = await call(
-    //       `bq extract --destination_format NEWLINE_DELIMITED_JSON '${srcEnv}:datarepo_${datasetName}.${rawTableName}' gs://jade-testdata/${bucketName}/${table}.json`,
-    //     );
-    //     console.log(response);
-    //   }
-    // }
-    //
-    // let i = 0;
-    // for (i = 0; i < tableNames.length; i++) {
-    //   const table = tableNames[i];
-    //   // eslint-disable-next-line no-await-in-loop
-    //   const response = await call(
-    //     `${jc} dataset table load --table ${table} --input-gspath gs://jade-testdata/${bucketName}/${table}.json --input-format json ${targetName}`,
-    //   );
-    //   console.log(response);
-    // }
+    const alreadyInBucket = await inquirer.prompt({
+      name: 'confirm',
+      type: 'confirm',
+      message: 'Is this data already in the jade-testdata bucket?',
+      default: false,
+    });
+
+    if (!alreadyInBucket.confirm) {
+      const allTables = JSON.parse(
+        await call(`bq ls --format=json ${srcEnv}:datarepo_${datasetName}`),
+      );
+      const rawTables = _.filter(allTables, (table) =>
+        table.tableReference.tableId.includes('datarepo_raw'),
+      ).map((table) => table.tableReference.tableId);
+
+      const rawTablesToNames = {};
+      rawTables.forEach((rawTable) => {
+        tableNames.forEach((table) => {
+          if (rawTable.includes(table)) {
+            rawTablesToNames[table] = rawTable;
+          }
+        });
+      });
+
+      let i = 0;
+      for (i = 0; i < tableNames.length; i++) {
+        const table = tableNames[i];
+        const rawTableName = _.isEmpty(rawTablesToNames) ? table : rawTablesToNames[table];
+        // eslint-disable-next-line no-await-in-loop
+        const response = await call(
+          `bq extract --destination_format NEWLINE_DELIMITED_JSON '${srcEnv}:datarepo_${datasetName}.${rawTableName}' gs://jade-testdata/${bucketName}/${table}.json`,
+        );
+        console.log(response);
+      }
+    }
+
+    let i = 0;
+    for (i = 0; i < tableNames.length; i++) {
+      const table = tableNames[i];
+      // eslint-disable-next-line no-await-in-loop
+      const response = await call(
+        `${jc} dataset table load --table ${table} --input-gspath gs://jade-testdata/${bucketName}/${table}.json --input-format json ${targetName}`,
+      );
+      console.log(response);
+    }
   } catch (e) {
     console.error(e);
   }
