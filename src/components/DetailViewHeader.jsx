@@ -107,7 +107,7 @@ export class DetailViewHeader extends React.PureComponent {
             <Button className={classes.exportButton} variant="contained" color="primary">
               <a
                 target="_blank"
-                href={`http://${terraUrl}/#import-data?url=${URL_ENCODED_TDR_ROOT_URL}&snapshotId=${of.id}&snapshotName=${of.name}&format=snapshot`}
+                href={`${terraUrl}/#import-data?url=${URL_ENCODED_TDR_ROOT_URL}&snapshotId=${of.id}&snapshotName=${of.name}&format=snapshot`}
               >
                 Export to Workspace
               </a>
