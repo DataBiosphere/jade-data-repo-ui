@@ -85,14 +85,13 @@ function bootstrap() {
         resolve();
       })
       .catch((error) => {
-        // The React proxy returns a 504 if the '/status' endpoint can't be reached.
-        if (error.response.status === 504) {
+        // The API returns a 503 UNAVAILABLE from the  '/status' endpoint if dependencies are down.
+        if (error.response === undefined || error.response.status !== 503) {
           store.dispatch({
             type: ActionTypes.GET_SERVER_STATUS_DOWN,
             status: {
               tdrOperational: false,
               apiIsUp: false,
-              serverStatus: error.response.data,
             },
           });
         } else {

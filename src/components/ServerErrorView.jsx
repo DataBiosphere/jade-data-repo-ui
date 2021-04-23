@@ -53,7 +53,7 @@ export class ServerErrorView extends React.PureComponent {
     const { classes, status } = this.props;
     let systemsCount = 0;
     let systemRows = [];
-    if (status.serverStatus.apiIsUp) {
+    if (status.apiIsUp) {
       const systems = status.serverStatus.systems;
       systemsCount = Object.keys(systems).length;
       systemRows = Object.keys(status.serverStatus.systems).map((member) => {
