@@ -7,8 +7,8 @@ import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import Typography from '@material-ui/core/Typography';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import UserList from './UserList';
 import Button from '@material-ui/core/Button';
+import UserList from './UserList';
 
 const styles = (theme) => ({
   title: {
