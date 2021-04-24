@@ -59,7 +59,7 @@
     "react-scripts": "3.4.4",
     "react-select": "^4.3.0",
     "react-window": "^1.8.6",
-    "redux": "^4.0.5",
+    "redux": "^4.1.0",
     "redux-actions": "^2.6.5",
     "redux-immutable-state-invariant": "^2.1.0",
     "redux-logger": "^3.0.6",
