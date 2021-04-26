@@ -7,6 +7,7 @@ import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import Typography from '@material-ui/core/Typography';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Button from '@material-ui/core/Button';
 import UserList from './UserList';
 
 const styles = (theme) => ({
@@ -25,6 +26,9 @@ const styles = (theme) => ({
     lineHeight: '22px',
     fontWeight: '600',
   },
+  exportButton: {
+    marginTop: '0.5rem',
+  },
 });
 
 export class DetailViewHeader extends React.PureComponent {
@@ -36,6 +40,7 @@ export class DetailViewHeader extends React.PureComponent {
     of: PropTypes.object,
     readers: PropTypes.arrayOf(PropTypes.string),
     removeReader: PropTypes.func,
+    terraUrl: PropTypes.string,
     removeSteward: PropTypes.func,
     stewards: PropTypes.arrayOf(PropTypes.string).isRequired,
   };
@@ -50,9 +55,11 @@ export class DetailViewHeader extends React.PureComponent {
       readers,
       removeSteward,
       removeReader,
+      terraUrl,
       canReadPolicies,
     } = this.props;
     const loading = _.isNil(of) || _.isEmpty(of);
+
     return (
       <Grid container wrap="nowrap" spacing={2}>
         <Grid item zeroMinWidth xs={8}>
@@ -73,7 +80,7 @@ export class DetailViewHeader extends React.PureComponent {
               <CircularProgress />
             ) : (
               <div>
-                <div className={classes.header}> Date Created: </div>
+                <div className={classes.header}> Date Created:</div>
                 <div className={classes.values}> {moment(of.createdDate).fromNow()} </div>
               </div>
             )}
@@ -95,6 +102,15 @@ export class DetailViewHeader extends React.PureComponent {
                 canManageUsers={true}
               />
             )}
+            <Button className={classes.exportButton} variant="contained" color="primary">
+              <a
+                target="_blank"
+                rel="noopener noreferrer"
+                href={`${terraUrl}/#import-data?url=${window.location.origin}&snapshotId=${of.id}&snapshotName=${of.name}&format=snapshot`}
+              >
+                Export to Workspace
+              </a>
+            </Button>
           </Card>
         </Grid>
       </Grid>
