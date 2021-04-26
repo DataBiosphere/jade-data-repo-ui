@@ -31,8 +31,6 @@ const styles = (theme) => ({
   },
 });
 
-const URL_ENCODED_TDR_ROOT_URL = window.location.origin;
-
 export class DetailViewHeader extends React.PureComponent {
   static propTypes = {
     addReader: PropTypes.func,
@@ -108,7 +106,7 @@ export class DetailViewHeader extends React.PureComponent {
               <a
                 target="_blank"
                 rel="noopener noreferrer"
-                href={`${terraUrl}/#import-data?url=${URL_ENCODED_TDR_ROOT_URL}&snapshotId=${of.id}&snapshotName=${of.name}&format=snapshot`}
+                href={`${terraUrl}/#import-data?url=${window.location.origin}&snapshotId=${of.id}&snapshotName=${of.name}&format=snapshot`}
               >
                 Export to Workspace
               </a>

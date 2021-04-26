@@ -86,7 +86,7 @@ export default createMuiTheme({
       selection: '#99CCFF',
     },
     primary: {
-      main: '#81ab52',
+      main: '#81AB52',
       contrastText: '#FFFFFF',
       light: '#F1F4F7',
       lightContrast: '#D9DCDE',
