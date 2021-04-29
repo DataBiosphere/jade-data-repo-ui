@@ -53,7 +53,7 @@
     "react-dom": "^16.14.0",
     "react-helmet": "^6.1.0",
     "react-notifications-component": "^3.0.5",
-    "react-redux": "^7.2.3",
+    "react-redux": "^7.2.4",
     "react-redux-form": "^1.16.14",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.4",
