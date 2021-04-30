@@ -1,5 +1,6 @@
 FROM node:14
 RUN set -x \
+  && rm -r jade-data-repo-ui \
   && git clone https://github.com/DataBiosphere/jade-data-repo-ui \
   && cd jade-data-repo-ui \
   && git checkout $(git describe --tags --abbrev=0) \
