@@ -9,7 +9,6 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/Search';
-import { fade } from '@material-ui/core/styles/colorManipulator';
 
 import LightTableHead from './LightTableHead';
 
@@ -37,7 +36,7 @@ const styles = (theme) => ({
     border: '1px solid #AEB3BA',
     backgroundColor: '#F1F4F8',
     '&:hover': {
-      backgroundColor: fade(theme.palette.common.selection, 0.2),
+      backgroundColor: theme.palette.common.selection,
     },
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
