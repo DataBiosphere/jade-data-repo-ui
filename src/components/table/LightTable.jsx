@@ -37,7 +37,7 @@ const styles = (theme) => ({
     border: '1px solid #AEB3BA',
     backgroundColor: '#F1F4F8',
     '&:hover': {
-      backgroundColor: fade(theme.palette.common.selection, 0.2),
+      backgroundColor: fade('#99CCFF', 0.2),
     },
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
