@@ -69,6 +69,16 @@ export class InfoView extends React.PureComponent {
                 {dataset.schema.tables.length} tables:
                 <ul className={classes.tableList}>{tables}</ul>
               </div>
+              <div className={clsx(classes.headerText)}>
+                 Storage:
+                   <Typography>
+                   <ul>
+                     {dataset.storage.map((storageResource) => (
+                       <li>{storageResource.cloudResource}: {storageResource.region}</li>
+                     ))}
+                   </ul>
+                   </Typography>
+              </div>
             </Grid>
             <Grid item xs={3}>
               <div className={clsx(classes.headerText)}>Date Created:</div>
