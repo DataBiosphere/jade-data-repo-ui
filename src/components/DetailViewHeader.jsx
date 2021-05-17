@@ -85,7 +85,9 @@ export class DetailViewHeader extends React.PureComponent {
                 <p className={classes.header}> Storage:</p>
                 <ul>
                   {of.source[0].dataset.storage.map((storageResource) => (
-                    <li>{storageResource.cloudResource}: {storageResource.region}</li>
+                    <li>
+                      {storageResource.cloudResource}: {storageResource.region}
+                    </li>
                   ))}
                 </ul>
               </div>
