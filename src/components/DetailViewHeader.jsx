@@ -80,8 +80,16 @@ export class DetailViewHeader extends React.PureComponent {
               <CircularProgress />
             ) : (
               <div>
-                <div className={classes.header}> Date Created:</div>
-                <div className={classes.values}> {moment(of.createdDate).fromNow()} </div>
+                <span className={classes.header}> Date Created:</span>
+                <span className={classes.values}> {moment(of.createdDate).fromNow()}</span>
+                <p className={classes.header}> Storage:</p>
+                <ul>
+                  {of.source[0].dataset.storage.map((storageResource) => (
+                    <li>
+                      {storageResource.cloudResource}: {storageResource.region}
+                    </li>
+                  ))}
+                </ul>
               </div>
             )}
             {stewards && canReadPolicies && (

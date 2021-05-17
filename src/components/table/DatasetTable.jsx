@@ -64,6 +64,11 @@ class DatasetTable extends React.PureComponent {
         property: 'created_date',
         render: (row) => moment(row.createdDate).fromNow(),
       },
+      {
+        label: 'Storage Regions',
+        property: 'storage.array',
+        render: (row) => Array.from(new Set(row.storage.map((s) => s.region))).join(', '),
+      },
     ];
     return (
       <LightTable
