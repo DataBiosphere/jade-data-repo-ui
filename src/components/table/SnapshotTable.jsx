@@ -48,10 +48,10 @@ class SnapshotTable extends React.PureComponent {
         render: (row) => moment(row.createdDate).fromNow(),
       },
       {
-        label: 'Storage',
+        label: 'Storage Regions',
         property: 'storage',
         render: (row) => Array.from(new Set(row.storage.map((s) => s.region))).join(', '),
-    },
+      },
     ];
     return (
       <div>
