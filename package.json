@@ -71,7 +71,7 @@
   "devDependencies": {
     "@svgr/webpack": "^5.5.0",
     "customize-cra": "^1.0.0",
-    "cypress": "^7.2.0",
+    "cypress": "^7.5.0",
     "eslint-config-airbnb": "^18.2.0",
     "eslint-config-cypress": "^0.28.0",
     "eslint-config-prettier": "^6.15.0",
