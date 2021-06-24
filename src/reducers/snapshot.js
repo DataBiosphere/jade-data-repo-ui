@@ -44,6 +44,7 @@ export default {
         immutable(state, {
           snapshots: { $set: action.snapshots.data.data.items },
           snapshotCount: { $set: action.snapshots.data.data.total },
+          filteredSnapshotCount: { $set: action.snapshots.data.data.filteredTotal },
         }),
       [ActionTypes.CREATE_SNAPSHOT_JOB]: (state) =>
         immutable(state, {

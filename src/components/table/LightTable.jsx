@@ -86,6 +86,7 @@ export class LightTable extends React.PureComponent {
     rows: PropTypes.arrayOf(PropTypes.object),
     summary: PropTypes.bool,
     totalCount: PropTypes.number,
+    filteredCount: PropTypes.number,
   };
 
   handleRequestSort = (event, sort) => {
@@ -127,13 +128,22 @@ export class LightTable extends React.PureComponent {
   };
 
   render() {
-    const { classes, columns, itemType, rows, summary, totalCount, rowKey } = this.props;
+    const {
+      classes,
+      columns,
+      itemType,
+      rows,
+      summary,
+      totalCount,
+      filteredCount,
+      rowKey,
+    } = this.props;
     const { orderBy, orderDirection, page, rowsPerPage } = this.state;
     const ROW_HEIGHT = 50;
     const ROWS_PER_PAGE = [5, 10, 25];
     const emptyRows =
-      rowsPerPage < totalCount
-        ? rowsPerPage - Math.min(rowsPerPage, totalCount - page * rowsPerPage)
+      rowsPerPage < filteredCount
+        ? rowsPerPage - Math.min(rowsPerPage, filteredCount - page * rowsPerPage)
         : 0;
     return (
       <div>
@@ -186,11 +196,11 @@ export class LightTable extends React.PureComponent {
               )}
             </TableBody>
           </Table>
-          {!summary && rows && totalCount > rowsPerPage && (
+          {!summary && rows && filteredCount > rowsPerPage && (
             <TablePagination
               rowsPerPageOptions={ROWS_PER_PAGE}
               component="div"
-              count={totalCount}
+              count={filteredCount}
               rowsPerPage={rowsPerPage}
               page={page}
               backIconButtonProps={{
@@ -201,6 +211,12 @@ export class LightTable extends React.PureComponent {
               }}
               onChangePage={this.handleChangePage}
               onChangeRowsPerPage={this.handleChangeRowsPerPage}
+              labelDisplayedRows={({ from, to, count }) => {
+                if (count === totalCount) {
+                  return `${from}-${to} of ${count}`;
+                }
+                return `${from}-${to} of ${count} filtered, ${totalCount} total`;
+              }}
             />
           )}
         </Paper>
