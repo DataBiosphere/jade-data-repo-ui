@@ -30,6 +30,7 @@ class SnapshotView extends React.PureComponent {
     classes: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired,
     snapshotCount: PropTypes.number,
+    filteredSnapshotCount: PropTypes.number,
     snapshots: PropTypes.array.isRequired,
   };
 
@@ -46,7 +47,7 @@ class SnapshotView extends React.PureComponent {
   };
 
   render() {
-    const { classes, snapshotCount, snapshots } = this.props;
+    const { classes, snapshotCount, filteredSnapshotCount, snapshots } = this.props;
     return (
       <div id="snapshots" className={classes.wrapper}>
         <div className={classes.width}>
@@ -54,6 +55,7 @@ class SnapshotView extends React.PureComponent {
           <div>
             <SnapshotTable
               snapshotCount={snapshotCount}
+              filteredSnapshotCount={filteredSnapshotCount}
               snapshots={snapshots}
               handleFilterSnapshots={this.handleFilterSnapshots}
             />
@@ -69,6 +71,7 @@ function mapStateToProps(state) {
   return {
     snapshots: state.snapshots.snapshots,
     snapshotCount: state.snapshots.snapshotCount,
+    filteredSnapshotCount: state.snapshots.filteredSnapshotCount,
   };
 }
 

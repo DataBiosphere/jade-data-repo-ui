@@ -21,6 +21,7 @@ class DatasetTable extends React.PureComponent {
     classes: PropTypes.object.isRequired,
     datasets: PropTypes.array.isRequired,
     datasetsCount: PropTypes.number,
+    filteredDatasetsCount: PropTypes.number,
     features: PropTypes.object,
     handleFilterDatasets: PropTypes.func,
     summary: PropTypes.bool,
@@ -31,6 +32,7 @@ class DatasetTable extends React.PureComponent {
       classes,
       datasets,
       datasetsCount,
+      filteredDatasetsCount,
       features,
       handleFilterDatasets,
       summary,
@@ -78,6 +80,7 @@ class DatasetTable extends React.PureComponent {
         rows={datasets}
         summary={summary}
         totalCount={datasetsCount}
+        filteredCount={filteredDatasetsCount}
       />
     );
   }

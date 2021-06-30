@@ -29,6 +29,7 @@ class DatasetView extends React.PureComponent {
     classes: PropTypes.object.isRequired,
     datasets: PropTypes.array.isRequired,
     datasetsCount: PropTypes.number,
+    filteredDatasetsCount: PropTypes.number,
     dispatch: PropTypes.func.isRequired,
     features: PropTypes.object,
   };
@@ -44,7 +45,7 @@ class DatasetView extends React.PureComponent {
   };
 
   render() {
-    const { classes, datasets, datasetsCount, features } = this.props;
+    const { classes, datasets, datasetsCount, filteredDatasetsCount, features } = this.props;
     return (
       <div className={classes.wrapper}>
         <div className={classes.width}>
@@ -56,6 +57,7 @@ class DatasetView extends React.PureComponent {
                 datasetsCount={datasetsCount}
                 features={features}
                 handleFilterDatasets={this.handleFilterDatasets}
+                filteredDatasetsCount={filteredDatasetsCount}
               />
             )}
           </div>
@@ -69,6 +71,7 @@ function mapStateToProps(state) {
   return {
     datasets: state.datasets.datasets,
     datasetsCount: state.datasets.datasetsCount,
+    filteredDatasetsCount: state.datasets.filteredDatasetsCount,
     features: state.user.features,
   };
 }
