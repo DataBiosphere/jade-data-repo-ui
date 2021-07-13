@@ -6,5 +6,5 @@ RUN set -x \
   && npm ci \
   && npm run build --production
 
-FROM nginxinc/nginx-unprivileged:stable-alpine
+FROM us.gcr.io/broad-dsp-gcr-public/base/nginx:stable-alpine
 COPY --from=0 /jade-data-repo-ui/build /usr/share/nginx/html
