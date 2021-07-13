@@ -2,7 +2,7 @@
   "name": "jade-data-repo-ui",
   "title": "jade-data-repo-ui",
   "description": "Data Repository UI",
-  "version": "0.59.0",
+  "version": "0.60.0",
   "author": "Jade Team <jadeteam@broadinstitute.org>",
   "engines": {
     "node": ">12.14"
