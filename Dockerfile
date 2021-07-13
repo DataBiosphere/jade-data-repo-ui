@@ -6,5 +6,5 @@ RUN set -x \
   && npm ci \
   && npm run build --production
 
-FROM nginxinc/nginx-unprivileged:stable-alpine
+FROM nginxinc/nginx-unprivileged:alpine
 COPY --from=0 /jade-data-repo-ui/build /usr/share/nginx/html
