@@ -43,7 +43,7 @@
     "history": "^4.10.1",
     "http-proxy-middleware": "^1.3.1",
     "immutability-helper": "^3.1.1",
-    "js-combinatorics": "^1.4.5",
+    "js-combinatorics": "^1.5.3",
     "lodash": "^4.17.21",
     "mobile-detect": "^1.4.5",
     "modernizr": "^3.11.7",
