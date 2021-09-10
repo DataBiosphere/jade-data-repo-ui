@@ -60,6 +60,11 @@ class SnapshotTable extends React.PureComponent {
         property: 'storage',
         render: (row) => Array.from(new Set(row.storage.map((s) => s.region))).join(', '),
       },
+      {
+        label: 'Cloud Platform',
+        property: 'storage.array',
+        render: (row) => Array.from(new Set(row.storage.map((s) => s.cloudPlatform))).join(', '),
+      },
     ];
     return (
       <div>

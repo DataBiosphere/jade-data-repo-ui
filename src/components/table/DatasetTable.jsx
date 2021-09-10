@@ -71,6 +71,11 @@ class DatasetTable extends React.PureComponent {
         property: 'storage.array',
         render: (row) => Array.from(new Set(row.storage.map((s) => s.region))).join(', '),
       },
+      {
+        label: 'Cloud Platform',
+        property: 'storage.array',
+        render: (row) => Array.from(new Set(row.storage.map((s) => s.cloudPlatform))).join(', '),
+      },
     ];
     return (
       <LightTable
