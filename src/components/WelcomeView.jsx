@@ -89,6 +89,12 @@ const styles = (theme) => ({
     marginLeft: 2,
     fontSize: 10,
   },
+  footerSeparator: {
+    flexGrow: 1,
+  },
+  copyright: {
+    fontSize: 10,
+  },
 });
 
 export class WelcomeView extends React.PureComponent {
@@ -195,6 +201,8 @@ export class WelcomeView extends React.PureComponent {
             Code
             <LaunchOutlined className={classes.footerLaunch} />
           </a>
+          <div className={classes.footerSeparator} />
+          <span className={classes.copyright}>Copyright ©2021</span>
         </div>
       </div>
     );
