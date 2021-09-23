@@ -11,6 +11,9 @@ WebFont.load({
   },
 });
 
+const LINK = '#4D72AA';
+const LINK_HOVER = '#718EBB';
+
 export default createMuiTheme({
   typography: {
     color: '#333F52',
@@ -82,7 +85,8 @@ export default createMuiTheme({
   palette: {
     common: {
       white: '#FFFFFF',
-      link: '#4D72AA',
+      link: LINK,
+      linkHover: LINK_HOVER,
       selection: '#99CCFF',
     },
     primary: {
@@ -128,10 +132,16 @@ export default createMuiTheme({
         },
       },
     },
-    // MuiListItemIcon: {
-    //   root: {
-    //     minWidth: '0px',
-    //   },
-    // },
+  },
+  mixins: {
+    jadeLink: {
+      color: LINK,
+      '&:hover': {
+        color: LINK_HOVER,
+      },
+    },
+    containerWidth: {
+      width: '85%',
+    },
   },
 });

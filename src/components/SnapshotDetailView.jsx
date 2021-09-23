@@ -22,7 +22,7 @@ const styles = (theme) => ({
     margin: theme.spacing(4),
   },
   width: {
-    width: '70%',
+    ...theme.mixins.containerWidth,
   },
   title: {
     color: theme.palette.primary.main,
@@ -43,9 +43,6 @@ const styles = (theme) => ({
     fontSize: '14px',
     lineHeight: '22px',
     fontWeight: '600',
-  },
-  info: {
-    width: '70%',
   },
   values: {
     paddingBottom: theme.spacing(3),

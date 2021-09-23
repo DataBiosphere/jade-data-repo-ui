@@ -22,7 +22,7 @@ const styles = (theme) => ({
     paddingBottom: theme.spacing(12),
   },
   jadeLink: {
-    color: theme.palette.common.link,
+    ...theme.mixins.jadeLink,
     float: 'right',
     fontSize: 16,
     fontWeight: 500,
@@ -30,10 +30,6 @@ const styles = (theme) => ({
     letterSpacing: 0.3,
     paddingLeft: theme.spacing(4),
     paddingTop: theme.spacing(4),
-    textDecoration: 'none',
-    '&:hover': {
-      textDecoration: 'underline',
-    },
   },
   title: {
     color: theme.palette.primary.main,
@@ -49,7 +45,7 @@ const styles = (theme) => ({
     margin: theme.spacing(4),
   },
   width: {
-    width: '70%',
+    ...theme.mixins.containerWidth,
   },
 });
 

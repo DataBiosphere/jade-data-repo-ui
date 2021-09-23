@@ -26,6 +26,8 @@ import RoutePublic from 'components/RoutePublic';
 import RoutePrivate from 'components/RoutePrivate';
 import { ReactComponent as CarrotSVG } from 'media/icons/angle-line.svg';
 import { ReactComponent as SignOutSVG } from 'media/icons/logout-line.svg';
+import HeaderLeft from 'media/images/header-left-hexes.svg';
+import HeaderRight from 'media/images/header-right-hexes.svg';
 import { logOut } from 'actions';
 
 import 'react-notifications-component/dist/theme.css';
@@ -54,6 +56,8 @@ const useStyles = makeStyles((theme) => ({
   },
   toolbar: {
     paddingRight: 24, // keep right padding when drawer closed
+    backgroundColor: 'rgb(51, 136, 0)',
+    background: `0px url(${HeaderLeft}) no-repeat,right url(${HeaderRight}) no-repeat`,
   },
   toolbarIcon: {
     display: 'flex',
@@ -125,7 +129,6 @@ const useStyles = makeStyles((theme) => ({
   },
   content: {
     height: '100%',
-    paddingTop: 64,
   },
   userName: {
     height: 15,
@@ -219,7 +222,7 @@ export function App(props) {
       </AppBar>
       <div className={classes.content}>
         {!status.tdrOperational && <ServerErrorView />}
-        {status.tdrOperational && (
+        {status.tdrOperational && configuration.clientId && (
           <Switch>
             <RoutePublic
               isAuthenticated={user.isAuthenticated}
