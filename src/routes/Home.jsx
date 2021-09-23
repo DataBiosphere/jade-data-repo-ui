@@ -6,11 +6,15 @@ import { withStyles } from '@material-ui/core/styles';
 import WelcomeView from '../components/WelcomeView';
 
 const styles = (theme) => ({
-  alignItems: 'center',
-  display: 'flex',
-  flexDirection: 'column',
-  fontFamily: theme.typography.fontFamily,
-  minHeight: '100vh',
+  root: {
+    alignItems: 'center',
+    display: 'flex',
+    flexDirection: 'column',
+    fontFamily: theme.typography.fontFamily,
+    minHeight: '100vh',
+    maxHeight: '100vh',
+    overflowY: 'auto',
+  },
 });
 
 export class Home extends React.PureComponent {
@@ -23,7 +27,7 @@ export class Home extends React.PureComponent {
     const { classes, dispatch } = this.props;
 
     return (
-      <div key="home" data-testid="home" className={classes.styles}>
+      <div key="home" data-testid="home" className={classes.root}>
         <WelcomeView dispatch={dispatch} />
       </div>
     );
