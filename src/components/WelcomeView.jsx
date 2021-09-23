@@ -101,6 +101,7 @@ export class WelcomeView extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired,
+    terraUrl: PropTypes.string,
   };
 
   componentDidMount() {
@@ -119,7 +120,7 @@ export class WelcomeView extends React.PureComponent {
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, terraUrl } = this.props;
 
     return (
       <div className={classes.containerWrapper}>
@@ -149,7 +150,7 @@ export class WelcomeView extends React.PureComponent {
               have signed in and completed the user profile registration step, you can start using
               Terra and Terra Data Repository.
             </p>
-            <a href="https://app.terra.bio/" className={classes.terraLink}>
+            <a href={terraUrl} className={classes.terraLink}>
               Need to create a Terra account?
             </a>
             <hr />
@@ -185,24 +186,15 @@ export class WelcomeView extends React.PureComponent {
           </div>
         </div>
         <div className={classes.footer}>
-          <a
-            href="https://app.terra.bio/"
-            className={classes.logoGrey}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          <a href={terraUrl} className={classes.logoGrey} target="_blank" rel="noopener noreferrer">
             <img alt="Terra" className={classes.logoGrey} src={LogoGrey} />
           </a>
-          <a href="https://app.terra.bio/#privacy" target="_blank" rel="noopener noreferrer">
+          <a href={`${terraUrl}/#privacy`} target="_blank" rel="noopener noreferrer">
             Privacy Policy
             <LaunchOutlined className={classes.footerLaunch} />
           </a>
           <span className={classes.separator}>|</span>
-          <a
-            href="https://app.terra.bio/#terms-of-service"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          <a href={`${terraUrl}/#terms-of-service`} target="_blank" rel="noopener noreferrer">
             Terms of Service
             <LaunchOutlined className={classes.footerLaunch} />
           </a>
@@ -223,4 +215,10 @@ export class WelcomeView extends React.PureComponent {
   }
 }
 
-export default connect()(withStyles(styles)(WelcomeView));
+function mapStateToProps(state) {
+  return {
+    terraUrl: state.configuration.terraUrl,
+  };
+}
+
+export default connect(mapStateToProps)(withStyles(styles)(WelcomeView));
