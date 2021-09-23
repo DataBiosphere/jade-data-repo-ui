@@ -135,6 +135,7 @@ export class WelcomeView extends React.PureComponent {
                 className={classes.jadeLink}
                 href="https://support.terra.bio/hc/en-us"
                 target="_blank"
+                rel="noopener noreferrer"
               >
                 Find how-to's, documentation, video tutorials, and discussion forums
                 <LaunchOutlined fontSize="small" />
@@ -184,20 +185,33 @@ export class WelcomeView extends React.PureComponent {
           </div>
         </div>
         <div className={classes.footer}>
-          <a href="https://app.terra.bio/" className={classes.logoGrey} target="_blank">
+          <a
+            href="https://app.terra.bio/"
+            className={classes.logoGrey}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <img alt="Terra" className={classes.logoGrey} src={LogoGrey} />
           </a>
-          <a href="https://app.terra.bio/#privacy" target="_blank">
+          <a href="https://app.terra.bio/#privacy" target="_blank" rel="noopener noreferrer">
             Privacy Policy
             <LaunchOutlined className={classes.footerLaunch} />
           </a>
           <span className={classes.separator}>|</span>
-          <a href="https://app.terra.bio/#terms-of-service" target="_blank">
+          <a
+            href="https://app.terra.bio/#terms-of-service"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             Terms of Service
             <LaunchOutlined className={classes.footerLaunch} />
           </a>
           <span className={classes.separator}>|</span>
-          <a href="https://github.com/DataBiosphere/jade-data-repo" target="_blank">
+          <a
+            href="https://github.com/DataBiosphere/jade-data-repo"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             Code
             <LaunchOutlined className={classes.footerLaunch} />
           </a>
