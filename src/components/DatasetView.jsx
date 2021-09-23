@@ -14,7 +14,7 @@ const styles = (theme) => ({
     margin: theme.spacing(4),
   },
   width: {
-    width: '70%',
+    ...theme.mixins.containerWidth,
   },
   title: {
     color: theme.palette.primary.main,

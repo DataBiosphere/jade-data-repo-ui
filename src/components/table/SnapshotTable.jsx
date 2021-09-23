@@ -8,11 +8,7 @@ import LightTable from './LightTable';
 
 const styles = (theme) => ({
   jadeLink: {
-    color: theme.palette.common.link,
-    textDecoration: 'none',
-    '&:hover': {
-      textDecoration: 'underline',
-    },
+    ...theme.mixins.jadeLink,
   },
 });
 
@@ -62,7 +58,7 @@ class SnapshotTable extends React.PureComponent {
       },
       {
         label: 'Cloud Platform',
-        property: 'storage.array',
+        property: 'platorm',
         render: (row) => Array.from(new Set(row.storage.map((s) => s.cloudPlatform))).join(', '),
       },
     ];
