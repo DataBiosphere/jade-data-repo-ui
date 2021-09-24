@@ -19,7 +19,6 @@ const styles = (theme) => ({
     borderRadius: `${theme.shape.borderRadius}px ${theme.shape.borderRadius}px 0 0`,
     boxShadow: 'none',
     marginTop: theme.spacing(3),
-    maxWidth: 1400,
     overflowX: 'auto',
     width: '100%',
     overflowWrap: 'break-word',
