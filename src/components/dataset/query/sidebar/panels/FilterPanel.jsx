@@ -31,7 +31,6 @@ const styles = (theme) => ({
   },
   snapshotBtnCntnr: {
     textAlign: 'end',
-    paddingTop: theme.spacing(1),
   },
   panelContent: {
     padding: `0px ${theme.spacing(2)}px`,
@@ -66,6 +65,13 @@ const styles = (theme) => ({
   tooltip: {
     pointerEvents: 'auto !important',
     color: 'red',
+  },
+  button: {
+    backgroundColor: theme.palette.common.link,
+    color: theme.palette.common.white,
+    '&:hover': {
+      backgroundColor: theme.palette.common.link,
+    },
   },
 });
 
@@ -233,7 +239,7 @@ export class FilterPanel extends React.PureComponent {
             className={clsx({
               [classes.hide]: !open,
               [classes.tooltip]: _.isEmpty(dataset.schema.assets),
-            })}
+            }, classes.button)}
             onClick={() => handleCreateSnapshot(true)}
             data-cy="createSnapshot"
           >
