@@ -10,7 +10,6 @@ import { ExpandMore, ExpandLess, Search } from '@material-ui/icons';
 import QueryViewSidebarItem from '../QueryViewSidebarItem';
 import QuerySidebarPanel from '../QuerySidebarPanel';
 import { applyFilters } from '../../../../../actions';
-import { getBillingProfileById } from 'actions/index';
 
 
 const styles = (theme) => ({
@@ -77,7 +76,6 @@ export class FilterPanel extends React.PureComponent {
       filterMap: {},
       searchString: '',
       openFilter: {},
-      canLink: true
     };
   }
 
@@ -93,18 +91,8 @@ export class FilterPanel extends React.PureComponent {
     selected: PropTypes.string,
     table: PropTypes.object,
     token: PropTypes.string,
-    profile: PropTypes.object
+    canLink: PropTypes.bool,
   };
-
-  componentDidMount() {
-    const { dispatch, dataset, profile } = this.props;
-    dispatch(getBillingProfileById(dataset.defaultBillingProfile));
-    if (!profile) {
-      this.setState({ canLink: false });
-    } else {
-      handleCreateSnapshot(true)
-    }
-  }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
     const { filterMap } = this.state;
@@ -174,8 +162,9 @@ export class FilterPanel extends React.PureComponent {
       joinStatement,
       selected,
       handleCreateSnapshot,
+      canLink
     } = this.props;
-    const { searchString, openFilter, canLink } = this.state;
+    const { searchString, openFilter } = this.state;
     const filteredColumns = table.columns.filter((column) => column.name.includes(searchString));
     const billingErrorMessage = "You cannot create a snapshot because you do not have access to the dataset billing profile.";
 

@@ -15,5 +15,5 @@ export default {
   ...configuration,
   ...query,
   ...status,
-  ...profile
+  ...profile,
 };

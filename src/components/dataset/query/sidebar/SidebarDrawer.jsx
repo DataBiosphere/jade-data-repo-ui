@@ -54,12 +54,13 @@ export class SidebarDrawer extends React.PureComponent {
   }
 
   static propTypes = {
+    canLink: PropTypes.bool,
     classes: PropTypes.object,
     handleDrawerWidth: PropTypes.func,
     panels: PropTypes.array,
     selected: PropTypes.string,
-    width: PropTypes.number,
     table: PropTypes.object,
+    width: PropTypes.number,
   };
 
   handleOpenPanel = (InputPanelComponent) => {
@@ -77,7 +78,7 @@ export class SidebarDrawer extends React.PureComponent {
   };
 
   render() {
-    const { panels, classes, table, selected } = this.props;
+    const { panels, classes, table, selected, canLink } = this.props;
     const { PanelComponent } = this.state;
     const open = PanelComponent !== null;
     return (
@@ -99,6 +100,7 @@ export class SidebarDrawer extends React.PureComponent {
         >
           {PanelComponent != null && (
             <PanelComponent
+              canLink={canLink}
               open={open}
               table={table}
               selected={selected}

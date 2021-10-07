@@ -10,6 +10,7 @@ import {
   getDatasetById,
   getDatasetPolicy,
   countResults,
+  getBillingProfileById,
 } from 'actions/index';
 import { Typography } from '@material-ui/core';
 import { FilterList, Info, People } from '@material-ui/icons';
@@ -48,6 +49,7 @@ export class QueryView extends React.PureComponent {
       selected: '',
       table: null,
       sidebarWidth: 0,
+      canLink: false,
     };
   }
 
@@ -62,18 +64,27 @@ export class QueryView extends React.PureComponent {
     match: PropTypes.object,
     orderBy: PropTypes.string,
     queryResults: PropTypes.object,
+    profile: PropTypes.object,
   };
 
   componentDidMount() {
-    const { dispatch, match, dataset, datasetPolicies } = this.props;
+    const { dispatch, match, dataset, datasetPolicies, profile } = this.props;
     const datasetId = match.params.uuid;
+
     if (dataset == null || dataset.id !== datasetId) {
       dispatch(getDatasetById(datasetId));
     }
 
+    if (dataset != null && dataset.defaultProfileId) {
+      dispatch(getBillingProfileById(dataset.defaultProfileId));
+      if (profile) {
+        this.setState({ canLink: true });
+      }
+    }
     if (datasetPolicies == null || dataset.id !== datasetId) {
       dispatch(getDatasetPolicy(datasetId));
     }
+
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -130,11 +141,41 @@ export class QueryView extends React.PureComponent {
     dispatch(applyFilters(filterData, value, dataset));
   };
 
+  getPanels = () => {
+  const { table, dataset, profile } = this.props;
+  const { canLink } = this.state;
+  const panels = [
+    {
+      icon: Info,
+      width: 800,
+      component: InfoView,
+      table,
+      dataset,
+    },
+    {
+      icon: FilterList,
+      width: 400,
+      component: QueryViewSidebar,
+      table,
+      dataset,
+    }]
+    if (canLink) {
+      panels.push(
+       {
+         icon: People,
+         width: 600,
+         component: ShareSnapshot,
+         table,
+         dataset,
+        });
+    };
+    return panels;
+  };
+
   realRender() {
     const { classes, dataset, queryResults } = this.props;
-    const { table, selected, sidebarWidth } = this.state;
+    const { table, selected, sidebarWidth, canLink } = this.state;
     const names = dataset.schema.tables.map((t) => t.name);
-
     return (
       <Fragment>
         <Grid container spacing={0} className={classes.wrapper}>
@@ -155,29 +196,8 @@ export class QueryView extends React.PureComponent {
           </Grid>
         </Grid>
         <SidebarDrawer
-          panels={[
-            {
-              icon: Info,
-              width: 800,
-              component: InfoView,
-              table,
-              dataset,
-            },
-            {
-              icon: FilterList,
-              width: 400,
-              component: QueryViewSidebar,
-              table,
-              dataset,
-            },
-            {
-              icon: People,
-              width: 600,
-              component: ShareSnapshot,
-              table,
-              dataset,
-            },
-          ]}
+          canLink={canLink}
+          panels={this.getPanels(table, dataset)}
           handleDrawerWidth={this.handleDrawerWidth}
           width={sidebarWidth}
           table={table}
@@ -206,6 +226,8 @@ function mapStateToProps(state) {
     joinStatement: state.query.joinStatement,
     queryResults: state.query.queryResults,
     orderBy: state.query.orderBy,
+    profile: state.profiles.profile,
+    canLink: state.canLink
   };
 }
 
