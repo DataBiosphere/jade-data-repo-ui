@@ -4,11 +4,14 @@ import clsx from 'clsx';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
+import Tooltip from '@material-ui/core/Tooltip';
 import { Box, Typography, Button, Grid, InputBase, ListItem, Collapse } from '@material-ui/core';
 import { ExpandMore, ExpandLess, Search } from '@material-ui/icons';
 import QueryViewSidebarItem from '../QueryViewSidebarItem';
 import QuerySidebarPanel from '../QuerySidebarPanel';
 import { applyFilters } from '../../../../../actions';
+import { getBillingProfileById } from 'actions/index';
+
 
 const styles = (theme) => ({
   root: {
@@ -74,6 +77,7 @@ export class FilterPanel extends React.PureComponent {
       filterMap: {},
       searchString: '',
       openFilter: {},
+      canLink: true
     };
   }
 
@@ -89,7 +93,18 @@ export class FilterPanel extends React.PureComponent {
     selected: PropTypes.string,
     table: PropTypes.object,
     token: PropTypes.string,
+    profile: PropTypes.object
   };
+
+  componentDidMount() {
+    const { dispatch, dataset, profile } = this.props;
+    dispatch(getBillingProfileById(dataset.defaultBillingProfile));
+    if (!profile) {
+      this.setState({ canLink: false });
+    } else {
+      handleCreateSnapshot(true)
+    }
+  }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
     const { filterMap } = this.state;
@@ -160,8 +175,9 @@ export class FilterPanel extends React.PureComponent {
       selected,
       handleCreateSnapshot,
     } = this.props;
-    const { searchString, openFilter } = this.state;
+    const { searchString, openFilter, canLink } = this.state;
     const filteredColumns = table.columns.filter((column) => column.name.includes(searchString));
+    const billingErrorMessage = "You cannot create a snapshot because you do not have access to the dataset billing profile.";
 
     return (
       <div className={classes.root}>
@@ -219,9 +235,12 @@ export class FilterPanel extends React.PureComponent {
             ))}
         </div>
         <div className={clsx(classes.rowTwo, classes.snapshotBtnCntnr)}>
+          <Tooltip
+            title={canLink? "": billingErrorMessage}>
+          <span>
           <Button
             variant="contained"
-            disabled={_.isEmpty(dataset.schema.assets)}
+            disabled={_.isEmpty(dataset.schema.assets) || !canLink}
             className={clsx({
               [classes.hide]: !open,
               [classes.tooltip]: _.isEmpty(dataset.schema.assets),
@@ -231,6 +250,8 @@ export class FilterPanel extends React.PureComponent {
           >
             Create Snapshot
           </Button>
+          </span>
+        </Tooltip>
         </div>
       </div>
     );

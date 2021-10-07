@@ -45,6 +45,8 @@ export const ActionTypes = keyMirror({
   ADD_CUSTODIAN_TO_DATASET_SUCCESS: undefined,
   REMOVE_CUSTODIAN_FROM_DATASET: undefined,
   REMOVE_CUSTODIAN_FROM_DATASET_SUCCESS: undefined,
+  GET_BILLING_PROFILE_BY_ID: undefined,
+  GET_BILLING_PROFILE_BY_ID_SUCCESS: undefined,
   GET_JOB_RESULT: undefined,
   GET_JOB_RESULT_SUCCESS: undefined,
   GET_JOB_RESULT_FAILURE: undefined,

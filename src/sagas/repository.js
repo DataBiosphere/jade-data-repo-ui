@@ -346,6 +346,24 @@ export function* getDatasetTablePreview({ payload }) {
 }
 
 /**
+ * billing profile
+ */
+export function* getBillingProfileById({ payload }) {
+  const profileId = payload;
+  try {
+    const response = yield call(authGet, `/api/repository/v1/profiles/${profileId}`);
+    yield put({
+      type: ActionTypes.GET_BILLING_PROFILE_BY_ID_SUCCESS,
+      profile: { data: response },
+    });
+  } catch (err) {
+    yield put({
+      type: ActionTypes.EXCEPTION
+    });
+  }
+}
+
+/**
  * bigquery
  */
 
@@ -475,5 +493,6 @@ export default function* root() {
     takeLatest(ActionTypes.PAGE_QUERY, pageQuery),
     takeLatest(ActionTypes.COUNT_RESULTS, countResults),
     takeLatest(ActionTypes.GET_FEATURES, getFeatures),
+    takeLatest(ActionTypes.GET_BILLING_PROFILE_BY_ID, getBillingProfileById)
   ]);
 }
