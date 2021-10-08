@@ -84,7 +84,6 @@ export class QueryView extends React.PureComponent {
     if (datasetPolicies == null || dataset.id !== datasetId) {
       dispatch(getDatasetPolicy(datasetId));
     }
-
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -142,33 +141,33 @@ export class QueryView extends React.PureComponent {
   };
 
   getPanels = () => {
-  const { table, dataset, profile } = this.props;
-  const { canLink } = this.state;
-  const panels = [
-    {
-      icon: Info,
-      width: 800,
-      component: InfoView,
-      table,
-      dataset,
-    },
-    {
-      icon: FilterList,
-      width: 400,
-      component: QueryViewSidebar,
-      table,
-      dataset,
-    }]
+    const { table, dataset, profile } = this.props;
+    const { canLink } = this.state;
+    const panels = [
+      {
+        icon: Info,
+        width: 800,
+        component: InfoView,
+        table,
+        dataset,
+      },
+      {
+        icon: FilterList,
+        width: 400,
+        component: QueryViewSidebar,
+        table,
+        dataset,
+      },
+    ];
     if (canLink) {
-      panels.push(
-       {
-         icon: People,
-         width: 600,
-         component: ShareSnapshot,
-         table,
-         dataset,
-        });
-    };
+      panels.push({
+        icon: People,
+        width: 600,
+        component: ShareSnapshot,
+        table,
+        dataset,
+      });
+    }
     return panels;
   };
 
@@ -227,7 +226,7 @@ function mapStateToProps(state) {
     queryResults: state.query.queryResults,
     orderBy: state.query.orderBy,
     profile: state.profiles.profile,
-    canLink: state.canLink
+    canLink: state.canLink,
   };
 }
 

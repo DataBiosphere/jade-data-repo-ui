@@ -11,7 +11,6 @@ import QueryViewSidebarItem from '../QueryViewSidebarItem';
 import QuerySidebarPanel from '../QuerySidebarPanel';
 import { applyFilters } from '../../../../../actions';
 
-
 const styles = (theme) => ({
   root: {
     margin: theme.spacing(1),
@@ -168,11 +167,12 @@ export class FilterPanel extends React.PureComponent {
       joinStatement,
       selected,
       handleCreateSnapshot,
-      canLink
+      canLink,
     } = this.props;
     const { searchString, openFilter } = this.state;
     const filteredColumns = table.columns.filter((column) => column.name.includes(searchString));
-    const billingErrorMessage = "You cannot create a snapshot because you do not have access to the dataset billing profile.";
+    const billingErrorMessage =
+      'You cannot create a snapshot because you do not have access to the dataset billing profile.';
 
     return (
       <div className={classes.root}>
@@ -231,22 +231,25 @@ export class FilterPanel extends React.PureComponent {
         </div>
         <div className={clsx(classes.rowTwo, classes.snapshotBtnCntnr)}>
           <Tooltip
-            title={canLink? "": billingErrorMessage}>
-          <span>
-          <Button
-            variant="contained"
-            disabled={_.isEmpty(dataset.schema.assets) || !canLink}
-            className={clsx({
-              [classes.hide]: !open,
-              [classes.tooltip]: _.isEmpty(dataset.schema.assets),
-            }, classes.button)}
-            onClick={() => handleCreateSnapshot(true)}
-            data-cy="createSnapshot"
-          >
-            Create Snapshot
-          </Button>
-          </span>
-        </Tooltip>
+title={canLink ? '' : billingErrorMessage}>
+            <span>
+              <Button
+                variant="contained"
+                disabled={_.isEmpty(dataset.schema.assets) || !canLink}
+                className={clsx(
+                  {
+                    [classes.hide]: !open,
+                    [classes.tooltip]: _.isEmpty(dataset.schema.assets),
+                  },
+                  classes.button,
+                )}
+                onClick={() => handleCreateSnapshot(true)}
+                data-cy="createSnapshot"
+              >
+                Create Snapshot
+              </Button>
+            </span>
+          </Tooltip>
         </div>
       </div>
     );
