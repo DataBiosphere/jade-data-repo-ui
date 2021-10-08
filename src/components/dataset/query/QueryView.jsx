@@ -65,6 +65,7 @@ export class QueryView extends React.PureComponent {
     orderBy: PropTypes.string,
     queryResults: PropTypes.object,
     profile: PropTypes.object,
+    table: PropTypes.object,
   };
 
   componentDidMount() {
@@ -141,7 +142,7 @@ export class QueryView extends React.PureComponent {
   };
 
   getPanels = () => {
-    const { table, dataset, profile } = this.props;
+    const { table, dataset } = this.props;
     const { canLink } = this.state;
     const panels = [
       {

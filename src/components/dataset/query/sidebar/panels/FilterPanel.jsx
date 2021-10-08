@@ -85,6 +85,7 @@ export class FilterPanel extends React.PureComponent {
   }
 
   static propTypes = {
+    canLink: PropTypes.bool,
     classes: PropTypes.object,
     dataset: PropTypes.object,
     dispatch: PropTypes.func.isRequired,
@@ -96,7 +97,6 @@ export class FilterPanel extends React.PureComponent {
     selected: PropTypes.string,
     table: PropTypes.object,
     token: PropTypes.string,
-    canLink: PropTypes.bool,
   };
 
   UNSAFE_componentWillReceiveProps(nextProps) {
@@ -230,8 +230,7 @@ export class FilterPanel extends React.PureComponent {
             ))}
         </div>
         <div className={clsx(classes.rowTwo, classes.snapshotBtnCntnr)}>
-          <Tooltip
-title={canLink ? '' : billingErrorMessage}>
+          <Tooltip title={canLink ? '' : billingErrorMessage}>
             <span>
               <Button
                 variant="contained"
