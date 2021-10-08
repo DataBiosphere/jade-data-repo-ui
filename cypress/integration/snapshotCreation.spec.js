@@ -98,14 +98,14 @@ describe('test snapshot creation is disabled', () => {
     cy.route('GET', 'api/repository/v1/datasets/**').as('getDataset');
     cy.route('GET', 'api/repository/v1/datasets/**/policies').as('getDatasetPolicies');
     cy.route({
-          method: 'GET',
-          url: '/api/resources/v1/profiles/**',
-          status: 401,
-          response: {
-            message: 'unauthorized',
-            errorDetail: []
-          },
-        });
+      method: 'GET',
+      url: '/api/resources/v1/profiles/**',
+      status: 401,
+      response: {
+        message: 'unauthorized',
+        errorDetail: [],
+      },
+    });
 
     cy.visit('/login/e2e');
     cy.get('#tokenInput').type(Cypress.env('GOOGLE_TOKEN'), {
