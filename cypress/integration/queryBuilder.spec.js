@@ -4,6 +4,7 @@ describe('test query builder', () => {
 
     cy.route('GET', 'api/repository/v1/datasets/**').as('getDataset');
     cy.route('GET', 'api/repository/v1/datasets/**/policies').as('getDatasetPolicies');
+    cy.route('GET', 'api/resources/v1/profiles/**').as('getBillingProfileById');
 
     cy.visit('/login/e2e');
     cy.get('#tokenInput').type(Cypress.env('GOOGLE_TOKEN'), {
@@ -17,7 +18,7 @@ describe('test query builder', () => {
     cy.contains('Date created').click();
     cy.contains(/V2F_GWAS_Summary_Stats|V2F_GWAS_Summary_Statistics/g).should('be.visible');
     cy.contains(/V2F_GWAS_Summary_Stats|V2F_GWAS_Summary_Statistics/g).click();
-    cy.wait(['@getDataset', '@getDatasetPolicies']);
+    cy.wait(['@getDataset', '@getDatasetPolicies', '@getBillingProfileById']);
   });
 
   it('does render', () => {});
@@ -30,7 +31,7 @@ describe('test query builder', () => {
 
     it('does show array values', () => {
       // Click the header to make sure we don't sort or trigger an error
-      cy.get(`[data-cy=columnheader-consequence_terms]`).click();
+      cy.get('[data-cy=columnheader-consequence_terms]').click();
 
       for (let i = 0; i < 100; i++) {
         cy.get(`[data-cy=cellvalue-consequence_terms-${i}]`).should(

@@ -4,6 +4,7 @@ describe('test snapshot creation', () => {
 
     cy.route('GET', 'api/repository/v1/datasets/**').as('getDataset');
     cy.route('GET', 'api/repository/v1/datasets/**/policies').as('getDatasetPolicies');
+    cy.route('GET', 'api/resources/v1/profiles/**').as('getBillingProfileById');
     cy.route({
       method: 'POST',
       url: '/api/repository/v1/snapshots',
@@ -72,7 +73,7 @@ describe('test snapshot creation', () => {
     cy.contains('Date created').click();
     cy.contains(/V2F_GWAS_Summary_Stats|V2F_GWAS_Summary_Statistics/g).should('be.visible');
     cy.contains(/V2F_GWAS_Summary_Stats|V2F_GWAS_Summary_Statistics/g).click();
-    cy.wait(['@getDataset', '@getDatasetPolicies']);
+    cy.wait(['@getDataset', '@getDatasetPolicies', '@getBillingProfileById']);
   });
 
   it('opens modal', () => {
@@ -87,5 +88,41 @@ describe('test snapshot creation', () => {
     cy.get('[data-cy=snapshotName]').should('contain', 'mock_snapshot');
     cy.get('[data-cy=snapshotReaders]').should('contain', 'email@gmail.com');
     cy.url().should('include', '/snapshots');
+  });
+});
+
+describe('test snapshot creation is disabled', () => {
+  beforeEach(() => {
+    cy.server();
+
+    cy.route('GET', 'api/repository/v1/datasets/**').as('getDataset');
+    cy.route('GET', 'api/repository/v1/datasets/**/policies').as('getDatasetPolicies');
+    cy.route({
+          method: 'GET',
+          url: '/api/resources/v1/profiles/**',
+          status: 401,
+          response: {
+            message: 'unauthorized',
+            errorDetail: []
+          },
+        });
+
+    cy.visit('/login/e2e');
+    cy.get('#tokenInput').type(Cypress.env('GOOGLE_TOKEN'), {
+      log: false,
+      delay: 0,
+    });
+    cy.get('#e2eLoginButton').click();
+
+    cy.contains('See all Datasets').click();
+    cy.contains('Date created').click();
+    cy.contains(/V2F_GWAS_Summary_Stats|V2F_GWAS_Summary_Statistics/g).should('be.visible');
+    cy.contains(/V2F_GWAS_Summary_Stats|V2F_GWAS_Summary_Statistics/g).click();
+    cy.wait(['@getDataset', '@getDatasetPolicies']);
+  });
+
+  it('opens modal', () => {
+    cy.get('div.MuiButtonBase-root:nth-child(2) > svg:nth-child(1)').click();
+    cy.get('[data-cy=createSnapshot]').should('be.disabled');
   });
 });
