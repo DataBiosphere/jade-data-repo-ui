@@ -69,27 +69,34 @@ export class QueryView extends React.PureComponent {
   };
 
   componentDidMount() {
-    const { dispatch, match, dataset, datasetPolicies, profile } = this.props;
+    const { dispatch, match, dataset, datasetPolicies } = this.props;
     const datasetId = match.params.uuid;
 
     if (dataset == null || dataset.id !== datasetId) {
       dispatch(getDatasetById(datasetId));
     }
 
-    if (dataset != null && dataset.defaultProfileId) {
-      dispatch(getBillingProfileById(dataset.defaultProfileId));
-      if (profile) {
-        this.setState({ canLink: true });
-      }
-    }
     if (datasetPolicies == null || dataset.id !== datasetId) {
       dispatch(getDatasetPolicy(datasetId));
     }
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { dataset, dispatch, filterStatement, joinStatement, orderBy } = this.props;
-    const { selected } = this.state;
+    const { dataset, dispatch, filterStatement, joinStatement, orderBy, profile } = this.props;
+    const { selected, canLink } = this.state;
+
+    if (
+      this.hasDataset() &&
+      dataset.defaultProfileId &&
+      canLink === false &&
+      Object.keys(prevProps.profile).length === 0
+    ) {
+      dispatch(getBillingProfileById(dataset.defaultProfileId));
+    }
+
+    if (profile.id && canLink === false) {
+      this.setState({ canLink: true });
+    }
 
     if (
       this.hasDataset() &&

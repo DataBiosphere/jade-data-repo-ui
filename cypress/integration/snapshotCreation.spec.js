@@ -4,7 +4,7 @@ describe('test snapshot creation', () => {
 
     cy.route('GET', 'api/repository/v1/datasets/**').as('getDataset');
     cy.route('GET', 'api/repository/v1/datasets/**/policies').as('getDatasetPolicies');
-    cy.route('GET', 'api/resources/v1/profiles/**').as('getBillingProfileById');
+    cy.route({ method: 'GET', url: 'api/resources/v1/profiles/**' }).as('getBillingProfileById');
     cy.route({
       method: 'POST',
       url: '/api/repository/v1/snapshots',
@@ -101,10 +101,6 @@ describe('test snapshot creation is disabled', () => {
       method: 'GET',
       url: '/api/resources/v1/profiles/**',
       status: 401,
-      response: {
-        message: 'unauthorized',
-        errorDetail: [],
-      },
     });
 
     cy.visit('/login/e2e');

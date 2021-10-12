@@ -359,6 +359,7 @@ export function* getBillingProfileById({ payload }) {
   } catch (err) {
     yield put({
       type: ActionTypes.EXCEPTION,
+      profile: null,
     });
   }
 }
