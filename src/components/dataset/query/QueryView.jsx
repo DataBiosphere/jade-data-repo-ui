@@ -10,7 +10,6 @@ import {
   getDatasetById,
   getDatasetPolicy,
   countResults,
-  getBillingProfileById,
 } from 'actions/index';
 import { Typography } from '@material-ui/core';
 import { FilterList, Info, People } from '@material-ui/icons';
@@ -83,7 +82,7 @@ export class QueryView extends React.PureComponent {
 
   componentDidUpdate(prevProps, prevState) {
     const { dataset, dispatch, filterStatement, joinStatement, orderBy, profile } = this.props;
-    const { selected, canLink } = this.state;
+    const { selected } = this.state;
 
     if (profile.id) {
       this.setState({ canLink: true });

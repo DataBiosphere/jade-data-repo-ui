@@ -102,8 +102,8 @@ describe('test snapshot creation is disabled', () => {
       url: '/api/resources/v1/profiles/**',
       status: 401,
       response: {
-        message: "unauthorized"
-      }
+        message: 'unauthorized',
+      },
     });
 
     cy.visit('/login/e2e');

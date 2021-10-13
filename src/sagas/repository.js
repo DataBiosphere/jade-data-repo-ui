@@ -348,14 +348,6 @@ export function* getDatasetTablePreview({ payload }) {
 /**
  * billing profile
  */
-export function* watchRequests() {
-  const requestChan = yield actionChannel(ActionTypes.GET_DATASET_BY_ID_SUCCESS);
-  while (true) {
-    const {dataset} = yield take(requestChan);
-    yield call(getBillingProfileById, dataset.data.data.defaultProfileId);
-  }
-}
-
 export function* getBillingProfileById(profileId) {
   try {
     const response = yield call(authGet, `/api/resources/v1/profiles/${profileId}`);
@@ -368,6 +360,14 @@ export function* getBillingProfileById(profileId) {
       type: ActionTypes.EXCEPTION,
       profile: null,
     });
+  }
+}
+
+export function* watchRequests() {
+  const requestChan = yield actionChannel(ActionTypes.GET_DATASET_BY_ID_SUCCESS);
+  while (true) {
+    const { dataset } = yield take(requestChan);
+    yield call(getBillingProfileById, dataset.data.data.defaultProfileId);
   }
 }
 
