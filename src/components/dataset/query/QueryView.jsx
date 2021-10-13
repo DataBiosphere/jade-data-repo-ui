@@ -85,16 +85,7 @@ export class QueryView extends React.PureComponent {
     const { dataset, dispatch, filterStatement, joinStatement, orderBy, profile } = this.props;
     const { selected, canLink } = this.state;
 
-    if (
-      this.hasDataset() &&
-      dataset.defaultProfileId &&
-      canLink === false &&
-      Object.keys(prevProps.profile).length === 0
-    ) {
-      dispatch(getBillingProfileById(dataset.defaultProfileId));
-    }
-
-    if (profile.id && canLink === false) {
+    if (profile.id) {
       this.setState({ canLink: true });
     }
 

@@ -172,7 +172,7 @@ export class FilterPanel extends React.PureComponent {
     const { searchString, openFilter } = this.state;
     const filteredColumns = table.columns.filter((column) => column.name.includes(searchString));
     const billingErrorMessage =
-      'You cannot create a snapshot because you do not have access to the dataset billing profile.';
+      'You cannot create a snapshot because you do not have access to the dataset\'s billing profile.';
 
     return (
       <div className={classes.root}>

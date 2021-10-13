@@ -2,7 +2,7 @@
  * @module Sagas/App
  * @desc App
  */
-import { all, put, call, select, takeLatest } from 'redux-saga/effects';
+import { actionChannel, all, fork, put, call, select, take, takeLatest } from 'redux-saga/effects';
 import { delay } from 'redux-saga';
 import axios from 'axios';
 import moment from 'moment';
@@ -348,8 +348,15 @@ export function* getDatasetTablePreview({ payload }) {
 /**
  * billing profile
  */
-export function* getBillingProfileById({ payload }) {
-  const profileId = payload;
+export function* watchRequests() {
+  const requestChan = yield actionChannel(ActionTypes.GET_DATASET_BY_ID_SUCCESS);
+  while (true) {
+    const {dataset} = yield take(requestChan);
+    yield call(getBillingProfileById, dataset.data.data.defaultProfileId);
+  }
+}
+
+export function* getBillingProfileById(profileId) {
   try {
     const response = yield call(authGet, `/api/resources/v1/profiles/${profileId}`);
     yield put({
@@ -495,5 +502,6 @@ export default function* root() {
     takeLatest(ActionTypes.COUNT_RESULTS, countResults),
     takeLatest(ActionTypes.GET_FEATURES, getFeatures),
     takeLatest(ActionTypes.GET_BILLING_PROFILE_BY_ID, getBillingProfileById),
+    fork(watchRequests),
   ]);
 }
