@@ -86,6 +86,13 @@ describe('test snapshot creation', () => {
 
     cy.get('[data-cy=snapshotName]').should('contain', 'mock_snapshot');
     cy.get('[data-cy=snapshotReaders]').should('contain', 'email@gmail.com');
+    cy.get('[data-cy=exportSnapshot]').within(() => {
+      cy.get('a').should(
+        'have.attr',
+        'href',
+        'https://bvdp-saturn-dev.appspot.com/#import-data?url=http://local.broadinstitute.org:3000&snapshotId=snapshotId&snapshotName=mock_snapshot&format=snapshot',
+      );
+    });
     cy.url().should('include', '/snapshots');
   });
 });
