@@ -170,7 +170,7 @@ export class FilterPanel extends React.PureComponent {
             <Grid container={true} spacing={1}>
               <Grid item xs={10} className={classes.sidebarTitle}>
                 <Typography variant="h6" display="block">
-                  Data Snapshot
+                  Select Data
                 </Typography>
               </Grid>
             </Grid>

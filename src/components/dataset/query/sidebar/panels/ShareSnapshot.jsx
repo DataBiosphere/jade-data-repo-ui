@@ -341,7 +341,7 @@ export class ShareSnapshot extends React.PureComponent {
               onClick={this.saveSnapshot}
               data-cy="releaseDataset"
             >
-              Release Dataset
+              Create Snapshot
             </Button>
           </div>
         )}
