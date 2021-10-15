@@ -25,6 +25,13 @@ const styles = (theme) => ({
     gridRowStart: 2,
     gridRowEnd: 3,
   },
+  button: {
+    backgroundColor: theme.palette.common.link,
+    color: theme.palette.common.white,
+    '&:hover': {
+      backgroundColor: theme.palette.common.link,
+    },
+  },
   buttonContainer: {
     display: 'flex',
     justifyContent: 'flex-end',
@@ -115,6 +122,7 @@ export class CreateSnapshotPanel extends React.PureComponent {
           <div className={classes.buttonContainer}>
             <Button onClick={() => handleCreateSnapshot(false)}>Cancel</Button>
             <Button
+              className={classes.button}
               variant="contained"
               onClick={this.saveNameAndDescription}
               disabled={assetName === '' || name === ''}
