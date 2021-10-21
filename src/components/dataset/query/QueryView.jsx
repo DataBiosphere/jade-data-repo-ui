@@ -224,7 +224,6 @@ function mapStateToProps(state) {
     queryResults: state.query.queryResults,
     orderBy: state.query.orderBy,
     profile: state.profiles.profile,
-    canLink: state.canLink,
   };
 }
 

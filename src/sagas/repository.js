@@ -363,7 +363,7 @@ export function* getBillingProfileById(profileId) {
   }
 }
 
-export function* watchRequests() {
+export function* watchGetDatasetByIdSuccess() {
   const requestChan = yield actionChannel(ActionTypes.GET_DATASET_BY_ID_SUCCESS);
   while (true) {
     const { dataset } = yield take(requestChan);
@@ -502,6 +502,6 @@ export default function* root() {
     takeLatest(ActionTypes.COUNT_RESULTS, countResults),
     takeLatest(ActionTypes.GET_FEATURES, getFeatures),
     takeLatest(ActionTypes.GET_BILLING_PROFILE_BY_ID, getBillingProfileById),
-    fork(watchRequests),
+    fork(watchGetDatasetByIdSuccess),
   ]);
 }
