@@ -2,7 +2,7 @@
  * @module Sagas/App
  * @desc App
  */
-import { all, put, call, select, takeLatest } from 'redux-saga/effects';
+import { actionChannel, all, fork, put, call, select, take, takeLatest } from 'redux-saga/effects';
 import { delay } from 'redux-saga';
 import axios from 'axios';
 import moment from 'moment';
@@ -346,6 +346,32 @@ export function* getDatasetTablePreview({ payload }) {
 }
 
 /**
+ * billing profile
+ */
+export function* getBillingProfileById(profileId) {
+  try {
+    const response = yield call(authGet, `/api/resources/v1/profiles/${profileId}`);
+    yield put({
+      type: ActionTypes.GET_BILLING_PROFILE_BY_ID_SUCCESS,
+      profile: { data: response },
+    });
+  } catch (err) {
+    yield put({
+      type: ActionTypes.EXCEPTION,
+      profile: null,
+    });
+  }
+}
+
+export function* watchGetDatasetByIdSuccess() {
+  const requestChan = yield actionChannel(ActionTypes.GET_DATASET_BY_ID_SUCCESS);
+  while (true) {
+    const { dataset } = yield take(requestChan);
+    yield call(getBillingProfileById, dataset.data.data.defaultProfileId);
+  }
+}
+
+/**
  * bigquery
  */
 
@@ -475,5 +501,7 @@ export default function* root() {
     takeLatest(ActionTypes.PAGE_QUERY, pageQuery),
     takeLatest(ActionTypes.COUNT_RESULTS, countResults),
     takeLatest(ActionTypes.GET_FEATURES, getFeatures),
+    takeLatest(ActionTypes.GET_BILLING_PROFILE_BY_ID, getBillingProfileById),
+    fork(watchGetDatasetByIdSuccess),
   ]);
 }

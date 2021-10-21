@@ -16,6 +16,7 @@ export class QueryViewSidebar extends React.PureComponent {
     selected: PropTypes.string,
     switchPanels: PropTypes.func,
     table: PropTypes.object,
+    canLink: PropTypes.bool,
   };
 
   handleCreateSnapshot = (isSavingSnapshot) => {
@@ -23,13 +24,14 @@ export class QueryViewSidebar extends React.PureComponent {
   };
 
   render() {
-    const { open, table, selected, switchPanels } = this.props;
+    const { open, table, selected, switchPanels, canLink } = this.props;
     const { isSavingSnapshot } = this.state;
 
     return (
       <div>
         {!isSavingSnapshot ? (
           <FilterPanel
+            canLink={canLink}
             open={open}
             table={table}
             selected={selected}

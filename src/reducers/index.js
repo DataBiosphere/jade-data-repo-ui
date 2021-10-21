@@ -5,6 +5,7 @@ import job from './job';
 import configuration from './configuration';
 import query from './query';
 import status from './status';
+import profile from './profile';
 
 export default {
   ...user,
@@ -14,4 +15,5 @@ export default {
   ...configuration,
   ...query,
   ...status,
+  ...profile,
 };

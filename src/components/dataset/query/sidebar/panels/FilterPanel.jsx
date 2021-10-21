@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
+import Tooltip from '@material-ui/core/Tooltip';
 import { Box, Typography, Button, Grid, InputBase, ListItem, Collapse } from '@material-ui/core';
 import { ExpandMore, ExpandLess, Search } from '@material-ui/icons';
 import QueryViewSidebarItem from '../QueryViewSidebarItem';
@@ -29,7 +30,6 @@ const styles = (theme) => ({
   },
   snapshotBtnCntnr: {
     textAlign: 'end',
-    paddingTop: theme.spacing(1),
   },
   panelContent: {
     padding: `0px ${theme.spacing(2)}px`,
@@ -65,6 +65,13 @@ const styles = (theme) => ({
     pointerEvents: 'auto !important',
     color: 'red',
   },
+  button: {
+    backgroundColor: theme.palette.common.link,
+    color: theme.palette.common.white,
+    '&:hover': {
+      backgroundColor: theme.palette.common.link,
+    },
+  },
 });
 
 export class FilterPanel extends React.PureComponent {
@@ -78,6 +85,7 @@ export class FilterPanel extends React.PureComponent {
   }
 
   static propTypes = {
+    canLink: PropTypes.bool,
     classes: PropTypes.object,
     dataset: PropTypes.object,
     dispatch: PropTypes.func.isRequired,
@@ -159,9 +167,12 @@ export class FilterPanel extends React.PureComponent {
       joinStatement,
       selected,
       handleCreateSnapshot,
+      canLink,
     } = this.props;
     const { searchString, openFilter } = this.state;
     const filteredColumns = table.columns.filter((column) => column.name.includes(searchString));
+    const billingErrorMessage =
+      "You cannot create a snapshot because you do not have access to the dataset's billing profile.";
 
     return (
       <div className={classes.root}>
@@ -219,18 +230,25 @@ export class FilterPanel extends React.PureComponent {
             ))}
         </div>
         <div className={clsx(classes.rowTwo, classes.snapshotBtnCntnr)}>
-          <Button
-            variant="contained"
-            disabled={_.isEmpty(dataset.schema.assets)}
-            className={clsx({
-              [classes.hide]: !open,
-              [classes.tooltip]: _.isEmpty(dataset.schema.assets),
-            })}
-            onClick={() => handleCreateSnapshot(true)}
-            data-cy="createSnapshot"
-          >
-            Create Snapshot
-          </Button>
+          <Tooltip title={canLink ? '' : billingErrorMessage}>
+            <span>
+              <Button
+                variant="contained"
+                disabled={_.isEmpty(dataset.schema.assets) || !canLink}
+                className={clsx(
+                  {
+                    [classes.hide]: !open,
+                    [classes.tooltip]: _.isEmpty(dataset.schema.assets),
+                  },
+                  classes.button,
+                )}
+                onClick={() => handleCreateSnapshot(true)}
+                data-cy="createSnapshot"
+              >
+                Create Snapshot
+              </Button>
+            </span>
+          </Tooltip>
         </div>
       </div>
     );
