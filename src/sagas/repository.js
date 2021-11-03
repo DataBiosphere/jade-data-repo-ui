@@ -96,7 +96,7 @@ function* pollJobWorker(jobId, jobTypeSuccess, jobTypeFailure) {
       yield call(pollJobWorker, jobId, jobTypeSuccess, jobTypeFailure);
     }
   } catch (err) {
-    showNotification(err);
+    showNotification(err.response);
   }
 }
 
@@ -152,7 +152,7 @@ export function* createSnapshot() {
       ActionTypes.CREATE_SNAPSHOT_FAILURE,
     );
   } catch (err) {
-    showNotification(err);
+    showNotification(err.response);
     yield put({
       type: ActionTypes.EXCEPTION,
     });
@@ -177,7 +177,7 @@ export function* getSnapshots({ payload }) {
       snapshots: { data: response },
     });
   } catch (err) {
-    showNotification(err);
+    showNotification(err.response);
   }
 }
 
@@ -190,7 +190,7 @@ export function* getSnapshotById({ payload }) {
       snapshot: { data: response },
     });
   } catch (err) {
-    showNotification(err);
+    showNotification(err.response);
   }
 }
 
@@ -224,7 +224,7 @@ export function* addSnapshotPolicyMember({ payload }) {
       policy,
     });
   } catch (err) {
-    showNotification(err);
+    showNotification(err.response);
   }
 }
 
@@ -239,7 +239,7 @@ export function* removeSnapshotPolicyMember({ payload }) {
       policy,
     });
   } catch (err) {
-    showNotification(err);
+    showNotification(err.response);
   }
 }
 
@@ -263,7 +263,7 @@ export function* getDatasets({ payload }) {
       datasets: { data: response },
     });
   } catch (err) {
-    showNotification(err);
+    showNotification(err.response);
   }
 }
 
@@ -276,7 +276,7 @@ export function* getDatasetById({ payload }) {
       dataset: { data: response },
     });
   } catch (err) {
-    showNotification(err);
+    showNotification(err.response);
   }
 }
 
@@ -289,7 +289,7 @@ export function* getDatasetPolicy({ payload }) {
       policy: response,
     });
   } catch (err) {
-    showNotification(err);
+    showNotification(err.response);
   }
 }
 
@@ -308,7 +308,7 @@ export function* addCustodianToDataset({ payload }) {
       policy: response,
     });
   } catch (err) {
-    showNotification(err);
+    showNotification(err.response);
   }
 }
 
@@ -323,7 +323,7 @@ export function* removeCustodianFromDataset({ payload }) {
       policy: response,
     });
   } catch (err) {
-    showNotification(err);
+    showNotification(err.response);
   }
 }
 
@@ -341,7 +341,7 @@ export function* getDatasetTablePreview({ payload }) {
       tableName,
     });
   } catch (err) {
-    showNotification(err);
+    showNotification(err.response);
   }
 }
 
@@ -390,7 +390,7 @@ function* pollQuery(projectId, jobId) {
       yield call(pollQuery, projectId, jobId);
     }
   } catch (err) {
-    showNotification(err);
+    showNotification(err.response);
   }
 }
 
@@ -417,7 +417,7 @@ export function* runQuery({ payload }) {
       yield call(pollQuery, payload.projectId, jobId);
     }
   } catch (err) {
-    showNotification(err);
+    showNotification(err.response);
   }
 }
 
@@ -435,7 +435,7 @@ export function* pageQuery({ payload }) {
       results: response,
     });
   } catch (err) {
-    showNotification(err);
+    showNotification(err.response);
   }
 }
 
@@ -458,7 +458,7 @@ export function* countResults({ payload }) {
       yield call(pollQuery, payload.projectId, jobId);
     }
   } catch (err) {
-    showNotification(err);
+    showNotification(err.response);
   }
 }
 
