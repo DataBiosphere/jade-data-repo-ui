@@ -6,10 +6,10 @@ import _ from 'lodash';
 export function showNotification(err) {
   let message;
   const errDetail = _.get(err, 'data.errorDetail');
-  if (errDetail) {
-    message = errDetail;
-  } else {
+  if (_.isUndefined(errDetail) || _.isEmpty(errDetail)) {
     message = _.get(err, 'data.message');
+  } else {
+    message = errDetail;
   }
 
   store.addNotification({
