@@ -37,18 +37,25 @@ export class Toast extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object.isRequired,
     errorMsg: PropTypes.string,
+    status: PropTypes.string,
   };
 
   render() {
-    const { classes, errorMsg } = this.props;
+    const { classes, errorMsg, status } = this.props;
+
+    let errString;
+    if (status && errorMsg) {
+      errString = `Error ${status}: ${errorMsg}`;
+    } else {
+      errString = 'An error occurred, please try again or submit a bug report';
+    }
+
     return (
       <Card className={classes.card}>
         <CardContent className={classes.content}>
           <div className={classes.cardBody}>
             <ErrorIcon className={classes.icon} alt="logo" />
-            <div className={classes.text}>
-              {errorMsg || 'An error occurred, please try again or submit a bug report'}
-            </div>
+            <div className={classes.text}>{errString}</div>
           </div>
         </CardContent>
       </Card>

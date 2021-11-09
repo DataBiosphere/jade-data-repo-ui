@@ -18,15 +18,45 @@ describe('test error handling', () => {
     cy.contains(/V2F_GWAS_Summary_Stats|V2F_GWAS_Summary_Statistics/g).click();
   });
 
-  it('displays error toasts', () => {
+  it('displays error toasts with error detail', () => {
     cy.route({
       method: 'POST',
       url: 'https://bigquery.googleapis.com/bigquery/v2/projects/**/queries',
       status: 401,
-      response: {},
+      response: {
+        message: 'Was not able to query',
+        errorDetail: ['This is the reason for the error'],
+      },
     }).as('getQueryResults');
     cy.wait(['@getDataset', '@getDatasetPolicies', '@getQueryResults']);
-    cy.contains('Error: Request failed with status code 401').should('be.visible');
+    cy.contains('Error 401: This is the reason for the error').should('be.visible');
+  });
+
+  it('displays error toasts with empty error detail', () => {
+    cy.route({
+      method: 'POST',
+      url: 'https://bigquery.googleapis.com/bigquery/v2/projects/**/queries',
+      status: 401,
+      response: {
+        message: 'Was not able to query',
+        errorDetail: [],
+      },
+    }).as('getQueryResults');
+    cy.wait(['@getDataset', '@getDatasetPolicies', '@getQueryResults']);
+    cy.contains('Error 401: Was not able to query').should('be.visible');
+  });
+
+  it('displays error toasts with no error detail', () => {
+    cy.route({
+      method: 'POST',
+      url: 'https://bigquery.googleapis.com/bigquery/v2/projects/**/queries',
+      status: 401,
+      response: {
+        message: 'Was not able to query',
+      },
+    }).as('getQueryResults');
+    cy.wait(['@getDataset', '@getDatasetPolicies', '@getQueryResults']);
+    cy.contains('Error 401: Was not able to query').should('be.visible');
   });
 
   it('displays loading message', () => {
