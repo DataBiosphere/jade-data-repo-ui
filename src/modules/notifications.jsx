@@ -5,15 +5,19 @@ import _ from 'lodash';
 
 export function showNotification(err) {
   let message;
-  const errDetail = _.get(err, 'data.errorDetail');
-  if (_.isUndefined(errDetail) || _.isEmpty(errDetail)) {
-    message = _.get(err, 'data.message');
-  } else {
-    message = errDetail;
+  let status;
+  if (err.response) {
+    const errDetail = _.get(err.response, 'data.errorDetail');
+    status = String(err.response.status);
+    if (_.isEmpty(errDetail)) {
+      message = _.get(err.response, 'data.message');
+    } else {
+      message = String(errDetail);
+    }
   }
 
   store.addNotification({
-    content: <Toast errorMsg={message} status={err.status} />,
+    content: <Toast errorMsg={message} status={status} />,
     insert: 'top',
     container: 'top-right',
     animationIn: ['animate__animated', 'animate__slideInRight'],
