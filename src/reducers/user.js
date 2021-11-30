@@ -14,6 +14,7 @@ export const userState = {
   token: '',
   tokenExpiration: '',
   features: {},
+  isTimeoutEnabled: false,
 };
 
 export default {
@@ -49,8 +50,12 @@ export default {
           .forEach((feature) => {
             features[feature] = true;
           });
+
+        const isTimeoutEnabled = _.some(action.groups, { groupName: 'session_timeout' });
+
         return immutable(state, {
           features: { $set: features },
+          isTimeoutEnabled: { $set: true },
         });
       },
     },

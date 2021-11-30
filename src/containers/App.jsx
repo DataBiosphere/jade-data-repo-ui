@@ -167,7 +167,7 @@ export function App(props) {
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <IdleStatusMonitor />
+      <IdleStatusMonitor user={user} />
       <ReactNotification />
       <AppBar className={classes.appBar}>
         <Toolbar className={classes.toolbar}>
