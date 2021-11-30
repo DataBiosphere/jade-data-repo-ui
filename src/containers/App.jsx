@@ -32,6 +32,7 @@ import { logOut } from 'actions';
 
 import 'react-notifications-component/dist/theme.css';
 import ServerErrorView from 'components/ServerErrorView';
+import IdleStatusMonitor from 'components/IdleStatusMonitor';
 
 const drawerWidth = 240;
 
@@ -166,6 +167,7 @@ export function App(props) {
   return (
     <div className={classes.root}>
       <CssBaseline />
+      <IdleStatusMonitor />
       <ReactNotification />
       <AppBar className={classes.appBar}>
         <Toolbar className={classes.toolbar}>
