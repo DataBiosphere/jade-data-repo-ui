@@ -164,10 +164,17 @@ export function App(props) {
     setAnchorEl(null);
   };
 
+  const signOut = () => {
+    logout({ clientId: configuration.clientId }).then(() => {
+      dispatch(logOut());
+      handleClose();
+    });
+  };
+
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <IdleStatusMonitor user={user} />
+      <IdleStatusMonitor user={user} signOut={signOut} />
       <ReactNotification />
       <AppBar className={classes.appBar}>
         <Toolbar className={classes.toolbar}>
@@ -204,15 +211,7 @@ export function App(props) {
                   open={open}
                   onClose={handleClose}
                 >
-                  <MenuItem
-                    className={classes.signOutText}
-                    onClick={() => {
-                      logout({ clientId: configuration.clientId }).then(() => {
-                        dispatch(logOut());
-                        handleClose();
-                      });
-                    }}
-                  >
+                  <MenuItem className={classes.signOutText} onClick={signOut}>
                     <SignOutSVG className={classes.signOut} />
                     Sign Out
                   </MenuItem>
