@@ -1,3 +1,6 @@
+import { store } from 'store/index';
+import { logIn, logOut } from 'actions/index';
+
 // If the auth2 module hasn't loaded in 10 seconds, something bad has happened and we should alert the user.
 const AUTH2_LOAD_TIMEOUT_MS = 10000;
 
@@ -26,9 +29,27 @@ function describeUser(user) {
     imageUrl: profile.getImageUrl(),
     email: profile.getEmail(),
     isSignedIn: user.isSignedIn(),
-    accessToken: authResponse.access_token,
-    accessTokenExpiration: authResponse.expires_at,
+    id: profile.getId(),
+    accessToken: authResponse?.access_token,
+    accessTokenExpiration: authResponse?.expires_at,
   };
+}
+
+function dispatchCurrentUser(user) {
+  const {
+    name,
+    imageUrl,
+    email,
+    accessToken,
+    isSignedIn,
+    accessTokenExpiration,
+    id,
+  } = describeUser(user);
+  if (isSignedIn) {
+    store.dispatch(logIn(name, imageUrl, email, accessToken, accessTokenExpiration, id));
+  } else {
+    store.dispatch(logOut());
+  }
 }
 
 // return a user object that is not tied to the Google API
@@ -37,6 +58,7 @@ export function getUser(options) {
     init(options)
       .then((GoogleAuth) => {
         const user = GoogleAuth.currentUser.get();
+        GoogleAuth.currentUser.listen(dispatchCurrentUser);
         resolve(user.isSignedIn() ? describeUser(user) : null);
       })
       .catch(reject);

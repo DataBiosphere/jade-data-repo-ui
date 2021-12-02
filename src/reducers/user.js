@@ -29,6 +29,7 @@ export default {
           email: { $set: action.payload.email },
           token: { $set: action.payload.token },
           tokenExpiration: { $set: action.payload.tokenExpiration },
+          id: { $set: action.payload.id },
         }),
       [ActionTypes.USER_LOGOUT]: (state) =>
         immutable(state, {

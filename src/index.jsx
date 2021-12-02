@@ -73,6 +73,7 @@ function bootstrap() {
                       user.email,
                       user.accessToken,
                       user.accessTokenExpiration,
+                      user.id,
                     ),
                   );
                   store.dispatch(getFeatures());
