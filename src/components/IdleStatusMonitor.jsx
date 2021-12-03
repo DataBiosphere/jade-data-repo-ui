@@ -57,18 +57,21 @@ const getIdleData = ({ currentTime, lastRecordedActivity, timeout, countdownStar
   };
 };
 
-const useHistory = () => {
-  const [historyState, setHistoryState] = useState({});
+const useSearchQuery = () => {
+  const [query, setQuery] = useState(
+    qs.parse(navHistory?.location?.search, { ignoreQueryPrefix: true, plainObjects: true }),
+  );
   useEffect(
     () =>
       // The history listener returns a function that will stop listening
       // React will invoke the returned listener when cleaning up an effect - in this case on unmount
-      navHistory.listen(({ action, location }) => {
-        setHistoryState({ action, location });
+      navHistory.listen(({ search }) => {
+        qs.parse(search, { ignoreQueryPrefix: true, plainObjects: true });
+        setQuery(qs.parse(search, { ignoreQueryPrefix: true, plainObjects: true }));
       }),
     [],
   );
-  return historyState;
+  return query;
 };
 
 // Components
@@ -116,7 +119,7 @@ CountdownModal.propTypes = {
   onSignOut: PropTypes.func,
 };
 
-const InactivityTimer = ({ id, timeout, countdownStart, doSignOut }) => {
+const InactivityTimer = ({ id, timeout, countdownStart, onSignOut, onTimeout }) => {
   const { [id]: lastRecordedActivity } = Utils.useStore(lastActiveTimeStore) || {};
   const [currentTime, setDelay] = Utils.useCurrentTime();
   const { timedOut, showCountdown, countdown } = getIdleData({
@@ -149,43 +152,45 @@ const InactivityTimer = ({ id, timeout, countdownStart, doSignOut }) => {
 
   useEffect(() => {
     if (timedOut) {
-      doSignOut();
+      onTimeout();
+      onSignOut();
     }
-  }, [doSignOut, timedOut]);
+  }, [onSignOut, timedOut]);
 
-  return showCountdown && <CountdownModal onSignOut={doSignOut} countdown={countdown} />;
+  return showCountdown && <CountdownModal onSignOut={onSignOut} countdown={countdown} />;
 };
 
 InactivityTimer.propTypes = {
   countdownStart: PropTypes.number,
-  doSignOut: PropTypes.func,
+  onSignOut: PropTypes.func,
+  onTimeout: PropTypes.func,
   id: PropTypes.string,
   timeout: PropTypes.number,
 };
 
 const IdleStatusMonitor = ({
   timeout = Utils.durationToMillis({ minutes: 0, seconds: 10 }),
-  countdownStart = Utils.durationToMillis({ minutes: 15, seconds: 6 }),
+  countdownStart = Utils.durationToMillis({ minutes: 0, seconds: 8 }),
   user = {},
   signOut,
 }) => {
   // State
   const [signOutRequired, setSignOutRequired] = useState(false);
-  const { location } = useHistory();
+  const [timedOut, setTimedOut] = useState(false);
+  const query = useSearchQuery();
 
-  const {
-    isAuthenticated,
-    // isTimeoutEnabled = true, // user.isTimeoutEnabled,
-    id,
-  } = user;
+  const { isAuthenticated, isTimeoutEnabled, id } = user;
 
-  const query = location?.search;
-  const isTimeoutEnabled = true;
   // Helpers
   const reloadSoon = () =>
     setTimeout(() => {
+      if (timedOut) {
+        navHistory.replace({
+          search: qs.stringify(_.set(['sessionExpired'], true, qs.parse(query))),
+        });
+      }
       window.location.reload();
-    }, 1000);
+    }, 500);
 
   // Render
   return Utils.cond(
@@ -196,12 +201,11 @@ const IdleStatusMonitor = ({
           id={id}
           timeout={timeout}
           countdownStart={countdownStart}
-          doSignOut={() => {
+          query={query}
+          onTimeout={() => setTimedOut(true)}
+          onSignOut={() => {
             setLastActive(id);
             signOut();
-            navHistory.replace({
-              search: qs.stringify(_.set(['sessionExpired'], true, qs.parse(query))),
-            });
             setSignOutRequired(true);
           }}
         />
@@ -212,7 +216,7 @@ const IdleStatusMonitor = ({
       () => (
         <iframe
           title="logout"
-          // onLoad={reloadSoon}
+          onLoad={reloadSoon}
           style={{ display: 'none' }}
           src="https://www.google.com/accounts/Logout"
         />
