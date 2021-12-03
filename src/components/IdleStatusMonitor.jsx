@@ -2,8 +2,7 @@ import _ from 'lodash/fp';
 import * as qs from 'qs';
 import { createBrowserHistory } from 'history';
 import React, { useEffect, useState } from 'react';
-// import * as Nav from 'src/libs/nav';
-import { authStore, lastActiveTimeStore } from 'libs/state'; // stub
+import { lastActiveTimeStore } from 'libs/state'; // stub
 import * as Utils from 'libs/utils';
 import PropTypes from 'prop-types';
 import {
@@ -44,8 +43,7 @@ const displayRemainingTime = (remainingSeconds) =>
       .padStart(2, '0')}`,
   ]);
 
-const getUser = () => ({});
-const setLastActive = (lastActive) => lastActiveTimeStore.update(_.set(getUser().id, lastActive));
+const setLastActive = (userId, lastActive) => lastActiveTimeStore.update(_.set(userId, lastActive));
 const getIdleData = ({ currentTime, lastRecordedActivity, timeout, countdownStart }) => {
   const lastActiveTime = Utils.cond([!lastRecordedActivity, () => currentTime], () =>
     parseInt(lastRecordedActivity, 10),
@@ -107,7 +105,7 @@ const CountdownModal = withStyles(styles)(({ classes, onSignOut, countdown }) =>
       <DialogContentText>You can extend your session to continue working</DialogContentText>
       <div className={classes.buttonBar}>
         <Button>Extend Session</Button>
-        <Button onClick={onSignOut}>Log Out</Button>
+        <Button onMouseDown={onSignOut}>Log Out</Button>
       </div>
     </DialogContent>
   </Dialog>
@@ -132,16 +130,20 @@ const InactivityTimer = ({ id, timeout, countdownStart, doSignOut }) => {
 
   Utils.useOnMount(() => {
     const targetEvents = ['click', 'keydown'];
-    const updateLastActive = () => setLastActive(Date.now());
+    const updateLastActive = () => setLastActive(id, Date.now());
 
     if (!lastRecordedActivity) {
-      setLastActive(Date.now());
+      setLastActive(id, Date.now());
     }
 
-    _.forEach((event) => document.addEventListener(event, updateLastActive), targetEvents);
+    // Listen on the capture phase of the event, otherwise the order of events in a deliberate log out will be incorrect
+    _.forEach((event) => document.addEventListener(event, updateLastActive, true), targetEvents);
 
     return () => {
-      _.forEach((event) => document.removeEventListener(event, updateLastActive), targetEvents);
+      _.forEach(
+        (event) => document.removeEventListener(event, updateLastActive, true),
+        targetEvents,
+      );
     };
   });
 
@@ -162,8 +164,8 @@ InactivityTimer.propTypes = {
 };
 
 const IdleStatusMonitor = ({
-  timeout = Utils.durationToMillis({ minutes: 1, seconds: 8 }),
-  countdownStart = Utils.durationToMillis({ minutes: 1, seconds: 8 }),
+  timeout = Utils.durationToMillis({ minutes: 0, seconds: 10 }),
+  countdownStart = Utils.durationToMillis({ minutes: 15, seconds: 6 }),
   user = {},
   signOut,
 }) => {
@@ -172,13 +174,13 @@ const IdleStatusMonitor = ({
   const { location } = useHistory();
 
   const {
-    isAuthenticated = user.isAuthenticated,
-    isTimeoutEnabled = true, // user.isTimeoutEnabled,
-    user: { id },
-  } = Utils.useStore(authStore);
+    isAuthenticated,
+    // isTimeoutEnabled = true, // user.isTimeoutEnabled,
+    id,
+  } = user;
 
   const query = location?.search;
-
+  const isTimeoutEnabled = true;
   // Helpers
   const reloadSoon = () =>
     setTimeout(() => {
@@ -188,18 +190,18 @@ const IdleStatusMonitor = ({
   // Render
   return Utils.cond(
     [
-      isAuthenticated && isTimeoutEnabled,
+      id && isAuthenticated && isTimeoutEnabled,
       () => (
         <InactivityTimer
           id={id}
           timeout={timeout}
           countdownStart={countdownStart}
           doSignOut={() => {
-            setLastActive();
+            setLastActive(id);
+            signOut();
             navHistory.replace({
               search: qs.stringify(_.set(['sessionExpired'], true, qs.parse(query))),
             });
-            signOut();
             setSignOutRequired(true);
           }}
         />
@@ -210,7 +212,7 @@ const IdleStatusMonitor = ({
       () => (
         <iframe
           title="logout"
-          onLoad={reloadSoon}
+          // onLoad={reloadSoon}
           style={{ display: 'none' }}
           src="https://www.google.com/accounts/Logout"
         />
