@@ -167,8 +167,8 @@ InactivityTimer.propTypes = {
 };
 
 const IdleStatusMonitor = ({
-  timeout = Utils.durationToMillis({ minutes: 0, seconds: 10 }),
-  countdownStart = Utils.durationToMillis({ minutes: 0, seconds: 8 }),
+  timeout = Utils.durationToMillis({ minutes: 15 }),
+  countdownStart = Utils.durationToMillis({ minutes: 3 }),
   user = {},
   signOut,
 }) => {
