@@ -19,7 +19,7 @@ const forceSetItem = (storage, key, value) => {
         return;
       }
       const [chosenKey] = _.head(
-        _.sortBy(([k, v]) => {
+        _.sortBy(([, v]) => {
           const data = maybeParseJSON(v);
           return data && _.isInteger(data.timestamp) ? data.timestamp : -Infinity;
         }, candidates),

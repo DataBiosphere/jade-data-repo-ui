@@ -180,8 +180,8 @@ const IdleStatusMonitor = ({
   const [signOutRequired, setSignOutRequired] = useState(false);
   const query = useSearchQuery();
 
-  const { isAuthenticated, id } = user;
-  const isTimeoutEnabled = true;
+  const { isAuthenticated, isTimeoutEnabled, id } = user;
+
   // Helpers
   const reloadSoon = () =>
     // We reload the page on a signout primarily to ensure all timeout state is cleaned up
