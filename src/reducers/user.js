@@ -1,5 +1,6 @@
 import { handleActions } from 'redux-actions';
 import immutable from 'immutability-helper';
+import _ from 'lodash';
 
 import { IMAGE, STATUS, ActionTypes } from 'constants/index';
 
@@ -53,10 +54,9 @@ export default {
           });
 
         const isTimeoutEnabled = _.some(action.groups, { groupName: 'session_timeout' });
-
         return immutable(state, {
           features: { $set: features },
-          isTimeoutEnabled: { $set: true },
+          isTimeoutEnabled: { $set: isTimeoutEnabled },
         });
       },
     },

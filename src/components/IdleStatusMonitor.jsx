@@ -80,7 +80,7 @@ const SessionExpiredModal = withStyles(styles)(({ query, classes }) => (
     <DialogTitle>Session Expired</DialogTitle>
     <DialogContent>
       <DialogContentText>
-        Your session has expired to maintain security and protect clinical data
+        Your session has ended to maintain security and protect clinical data
       </DialogContentText>
       <div className={classes.buttonBar}>
         <Button
@@ -119,7 +119,7 @@ CountdownModal.propTypes = {
   onSignOut: PropTypes.func,
 };
 
-const InactivityTimer = ({ id, timeout, countdownStart, onSignOut, onTimeout }) => {
+const InactivityTimer = ({ id, timeout, countdownStart, onSignOut }) => {
   const { [id]: lastRecordedActivity } = Utils.useStore(lastActiveTimeStore) || {};
   const [currentTime, setDelay] = Utils.useCurrentTime();
   const { timedOut, showCountdown, countdown } = getIdleData({
@@ -152,7 +152,6 @@ const InactivityTimer = ({ id, timeout, countdownStart, onSignOut, onTimeout }) 
 
   useEffect(() => {
     if (timedOut) {
-      onTimeout();
       onSignOut();
     }
   }, [onSignOut, timedOut]);
@@ -162,9 +161,8 @@ const InactivityTimer = ({ id, timeout, countdownStart, onSignOut, onTimeout }) 
 
 InactivityTimer.propTypes = {
   countdownStart: PropTypes.number,
-  onSignOut: PropTypes.func,
-  onTimeout: PropTypes.func,
   id: PropTypes.string,
+  onSignOut: PropTypes.func,
   timeout: PropTypes.number,
 };
 
@@ -176,19 +174,18 @@ const IdleStatusMonitor = ({
 }) => {
   // State
   const [signOutRequired, setSignOutRequired] = useState(false);
-  const [timedOut, setTimedOut] = useState(false);
   const query = useSearchQuery();
 
-  const { isAuthenticated, isTimeoutEnabled, id } = user;
-
+  const { isAuthenticated, id } = user;
+  const isTimeoutEnabled = true;
   // Helpers
   const reloadSoon = () =>
+    // We reload the page on a signout primarily to ensure all timeout state is cleaned up
     setTimeout(() => {
-      if (timedOut) {
-        navHistory.replace({
-          search: qs.stringify(_.set(['sessionExpired'], true, qs.parse(query))),
-        });
-      }
+      navHistory.replace({
+        search: qs.stringify(_.set(['sessionExpired'], true, qs.parse(query))),
+      });
+
       window.location.reload();
     }, 500);
 
@@ -202,7 +199,6 @@ const IdleStatusMonitor = ({
           timeout={timeout}
           countdownStart={countdownStart}
           query={query}
-          onTimeout={() => setTimedOut(true)}
           onSignOut={() => {
             setLastActive(id);
             signOut();
