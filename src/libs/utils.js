@@ -15,7 +15,10 @@ export const validateSnapshotName = (name) =>
 
 const maybeCall = (maybeFn) => (_.isFunction(maybeFn) ? maybeFn() : maybeFn);
 
+export const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
 export const cond = (...args) => {
+  // eslint-disable-next-line no-console
   console.assert(
     _.every(
       (arg) => _.isFunction(arg) || (_.isArray(arg) && arg.length === 2 && _.isFunction(arg[1])),
@@ -31,6 +34,8 @@ export const cond = (...args) => {
       return maybeCall(arg);
     }
   }
+  // Makin eslint happy - this line is unreachable with the assert
+  return undefined;
 };
 
 export const append = _.curry((value, arr) => _.concat(arr, [value]));
@@ -91,6 +96,7 @@ export const useCurrentTime = (initialDelay = 250) => {
   useOnMount(() => {
     const poll = async () => {
       while (!signal.aborted) {
+        // eslint-disable-next-line no-await-in-loop
         await delay(delayRef.current);
         if (!signal.aborted) {
           setCurrentTime(Date.now());
@@ -101,10 +107,8 @@ export const useCurrentTime = (initialDelay = 250) => {
   });
   return [
     currentTime,
-    (delay) => {
-      delayRef.current = delay;
+    (delayTime) => {
+      delayRef.current = delayTime;
     },
   ];
 };
-
-export const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
