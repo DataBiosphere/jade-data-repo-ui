@@ -43,7 +43,10 @@ const displayRemainingTime = (remainingSeconds) =>
       .padStart(2, '0')}`,
   ]);
 
+// The lastActiveTimeStore syncs with localstorage and stores the time of the last known activity
 const setLastActive = (userId, lastActive) => lastActiveTimeStore.update(_.set(userId, lastActive));
+
+// Computes the countdown, expiry and whether the countdown needs to be shown
 const getIdleData = ({ currentTime, lastRecordedActivity, timeout, countdownStart }) => {
   const lastActiveTime = Utils.cond([!lastRecordedActivity, () => currentTime], () =>
     parseInt(lastRecordedActivity, 10),
@@ -57,6 +60,7 @@ const getIdleData = ({ currentTime, lastRecordedActivity, timeout, countdownStar
   };
 };
 
+// As navigation changes, this hook will trigger a re-render, providing the component with query params
 const useSearchQuery = () => {
   const [query, setQuery] = useState(
     qs.parse(navHistory?.location?.search, { ignoreQueryPrefix: true, plainObjects: true }),
