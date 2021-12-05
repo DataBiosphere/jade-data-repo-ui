@@ -145,8 +145,8 @@ LogoutIframe.propTypes = {
 };
 
 export const IdleStatusMonitor = ({
-  timeout = Utils.durationToMillis({ seconds: 25 }),
-  countdownStart = Utils.durationToMillis({ seconds: 23 }),
+  timeout = Utils.durationToMillis({ minutes: 15 }),
+  countdownStart = Utils.durationToMillis({ minutes: 3 }),
   user = {},
   signOut,
 }) => {
