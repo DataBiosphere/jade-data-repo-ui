@@ -1,6 +1,4 @@
 import _ from 'lodash/fp';
-import * as qs from 'qs';
-import { createBrowserHistory } from 'history';
 import React, { useEffect, useState } from 'react';
 import { lastActiveTimeStore } from 'libs/state'; // stub
 import * as Utils from 'libs/utils';
@@ -31,8 +29,6 @@ const styles = (theme) => ({
 });
 
 // Helpers
-const navHistory = createBrowserHistory();
-
 const displayRemainingTime = (remainingSeconds) =>
   _.join(':', [
     `${Math.floor(remainingSeconds / 60)
@@ -60,47 +56,7 @@ const getIdleData = ({ currentTime, lastRecordedActivity, timeout, countdownStar
   };
 };
 
-// As navigation changes, this hook will trigger a re-render, providing the component with query params
-const useSearchQuery = () => {
-  const [query, setQuery] = useState(
-    qs.parse(navHistory?.location?.search, { ignoreQueryPrefix: true, plainObjects: true }),
-  );
-  useEffect(
-    () =>
-      // The history listener returns a function that will stop listening
-      // React will invoke the returned listener when cleaning up an effect - in this case on unmount
-      navHistory.listen(({ search }) => {
-        qs.parse(search, { ignoreQueryPrefix: true, plainObjects: true });
-        setQuery(qs.parse(search, { ignoreQueryPrefix: true, plainObjects: true }));
-      }),
-    [],
-  );
-  return query;
-};
-
 // Components
-const SessionExpiredModal = withStyles(styles)(({ query, classes }) => (
-  <Dialog title="Session Expired" open={true}>
-    <DialogTitle>Session Expired</DialogTitle>
-    <DialogContent>
-      <DialogContentText>
-        Your session has ended to maintain security and protect clinical data
-      </DialogContentText>
-      <div className={classes.buttonBar}>
-        <Button
-          onClick={() => {
-            navHistory.replace({
-              search: qs.stringify(_.unset(['sessionExpired'], true, qs.parse(query))),
-            });
-          }}
-        >
-          Ok
-        </Button>
-      </div>
-    </DialogContent>
-  </Dialog>
-));
-
 const CountdownModal = withStyles(styles)(({ classes, onSignOut, countdown }) => (
   <Dialog open={true}>
     <DialogTitle>Your session is about to expire!</DialogTitle>
@@ -170,28 +126,35 @@ InactivityTimer.propTypes = {
   timeout: PropTypes.number,
 };
 
-const IdleStatusMonitor = ({
-  timeout = Utils.durationToMillis({ minutes: 15 }),
-  countdownStart = Utils.durationToMillis({ minutes: 3 }),
+export const LogoutIframe = ({ id, dismissLogout }) => (
+  <iframe
+    title="logout"
+    style={{ display: 'none' }}
+    src="https://www.google.com/accounts/Logout"
+    onLoad={() => {
+      setLastActive(id);
+      setTimeout(() => window.location.reload(), 500);
+      dismissLogout();
+    }}
+  />
+);
+
+LogoutIframe.propTypes = {
+  dismissLogout: PropTypes.func.isRequired,
+  id: PropTypes.string.isRequired,
+};
+
+export const IdleStatusMonitor = ({
+  timeout = Utils.durationToMillis({ seconds: 25 }),
+  countdownStart = Utils.durationToMillis({ seconds: 23 }),
   user = {},
   signOut,
 }) => {
   // State
   const [signOutRequired, setSignOutRequired] = useState(false);
-  const query = useSearchQuery();
 
-  const { isAuthenticated, isTimeoutEnabled, id } = user;
-
-  // Helpers
-  const reloadSoon = () =>
-    // We reload the page on a signout primarily to ensure all timeout state is cleaned up
-    setTimeout(() => {
-      navHistory.replace({
-        search: qs.stringify(_.set(['sessionExpired'], true, qs.parse(query))),
-      });
-
-      window.location.reload();
-    }, 500);
+  const { isAuthenticated, id } = user;
+  const isTimeoutEnabled = true;
 
   // Render
   return Utils.cond(
@@ -202,7 +165,6 @@ const IdleStatusMonitor = ({
           id={id}
           timeout={timeout}
           countdownStart={countdownStart}
-          query={query}
           onSignOut={() => {
             setLastActive(id);
             signOut();
@@ -213,18 +175,8 @@ const IdleStatusMonitor = ({
     ],
     [
       signOutRequired,
-      () => (
-        <iframe
-          title="logout"
-          onLoad={reloadSoon}
-          style={{ display: 'none' }}
-          src="https://www.google.com/accounts/Logout"
-        />
-      ),
+      () => <LogoutIframe id={id} dismissLogout={() => setSignOutRequired(false)} />,
     ],
-    [query?.sessionExpired && !isAuthenticated, () => <SessionExpiredModal query={query} />],
     () => null,
   );
 };
-
-export default IdleStatusMonitor;

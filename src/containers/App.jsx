@@ -32,7 +32,7 @@ import { logOut } from 'actions';
 
 import 'react-notifications-component/dist/theme.css';
 import ServerErrorView from 'components/ServerErrorView';
-import IdleStatusMonitor from 'components/IdleStatusMonitor';
+import { LogoutIframe, IdleStatusMonitor } from 'components/IdleStatusMonitor';
 
 const drawerWidth = 240;
 
@@ -154,6 +154,7 @@ export function App(props) {
   const { user, dispatch, configuration, status } = props;
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
+  const [renderLogout, setRenderLogout] = useState(false);
   const open = Boolean(anchorEl);
 
   const handleMenu = (event) => {
@@ -164,10 +165,15 @@ export function App(props) {
     setAnchorEl(null);
   };
 
+  // This needs to render the iframe AND reset the timeout
   const signOut = () => {
+    const { isTimeoutEnabled } = user;
     logout({ clientId: configuration.clientId }).then(() => {
       dispatch(logOut());
       handleClose();
+      if (isTimeoutEnabled) {
+        setRenderLogout(true);
+      }
     });
   };
 
@@ -175,6 +181,7 @@ export function App(props) {
     <div className={classes.root}>
       <CssBaseline />
       <IdleStatusMonitor user={user} signOut={signOut} />
+      {renderLogout && <LogoutIframe id={user.id} dismissLogout={() => setRenderLogout(false)} />}
       <ReactNotification />
       <AppBar className={classes.appBar}>
         <Toolbar className={classes.toolbar}>
