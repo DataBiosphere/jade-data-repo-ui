@@ -153,8 +153,7 @@ export const IdleStatusMonitor = ({
   // State
   const [signOutRequired, setSignOutRequired] = useState(false);
 
-  const { isAuthenticated, id } = user;
-  const isTimeoutEnabled = true;
+  const { isAuthenticated, isTimeoutEnabled, id } = user;
 
   // Render
   return Utils.cond(
