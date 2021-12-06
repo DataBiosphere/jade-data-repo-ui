@@ -44,6 +44,7 @@ export default {
           features: { $set: {} },
         }),
       [ActionTypes.GET_FEATURES_SUCCESS]: (state, action) => {
+        const isTimeoutEnabled = _.some(action.groups, { groupName: 'session_timeout' });
         const features = {};
         action.groups
           .map((group) => group.groupName)
@@ -53,7 +54,6 @@ export default {
             features[feature] = true;
           });
 
-        const isTimeoutEnabled = _.some(action.groups, { groupName: 'session_timeout' });
         return immutable(state, {
           features: { $set: features },
           isTimeoutEnabled: { $set: isTimeoutEnabled },
