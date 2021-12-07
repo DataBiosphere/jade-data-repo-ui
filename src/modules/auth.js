@@ -1,5 +1,5 @@
 import { store } from 'store/index';
-import { logIn, logOut } from 'actions/index';
+import { logIn, logOut, getFeatures } from 'actions/index';
 
 // If the auth2 module hasn't loaded in 10 seconds, something bad has happened and we should alert the user.
 const AUTH2_LOAD_TIMEOUT_MS = 10000;
@@ -47,6 +47,7 @@ function dispatchCurrentUser(user) {
   } = describeUser(user);
   if (isSignedIn) {
     store.dispatch(logIn(name, imageUrl, email, accessToken, accessTokenExpiration, id));
+    store.dispatch(getFeatures());
   } else {
     store.dispatch(logOut());
   }
