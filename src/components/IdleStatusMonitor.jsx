@@ -11,6 +11,7 @@ import {
   Button,
   withStyles,
 } from '@material-ui/core';
+import moment from 'moment';
 
 // Styles
 const styles = (theme) => ({
@@ -29,15 +30,13 @@ const styles = (theme) => ({
 });
 
 // Helpers
-const displayRemainingTime = (remainingSeconds) =>
-  _.join(':', [
-    `${Math.floor(remainingSeconds / 60)
-      .toString()
-      .padStart(2, '0')}`,
-    `${Math.floor(remainingSeconds % 60)
-      .toString()
-      .padStart(2, '0')}`,
-  ]);
+const displayRemainingTime = (remainingSeconds) => {
+  const duration = moment.duration(remainingSeconds, 'seconds');
+  return `${duration
+    .minutes()
+    .toString()
+    .padStart(2, '0')}:${duration.seconds().toString().padStart(2, '0')}`;
+};
 
 // The lastActiveTimeStore syncs with localstorage and stores the time of the last known activity
 const setLastActive = (userId, lastActive) => lastActiveTimeStore.update(_.set(userId, lastActive));
@@ -147,8 +146,8 @@ LogoutIframe.propTypes = {
 };
 
 export const IdleStatusMonitor = ({
-  timeout = Utils.durationToMillis({ minutes: 15 }),
-  countdownStart = Utils.durationToMillis({ minutes: 3 }),
+  timeout = moment.duration(15, 'minutes').asMilliseconds(),
+  countdownStart = moment.duration(13, 'minutes').asMilliseconds(),
   user = {},
   signOut,
 }) => {

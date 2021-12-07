@@ -74,9 +74,6 @@ export const maybeParseJSON = (maybeJSONString) => {
   }
 };
 
-export const durationToMillis = ({ hours = 0, minutes = 0, seconds = 0 }) =>
-  (hours * 60 * 60 + minutes * 60 + seconds) * 1000;
-
 export const useCancellation = () => {
   const controller = useRef();
   useOnMount(() => {
