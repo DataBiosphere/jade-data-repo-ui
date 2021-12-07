@@ -68,6 +68,7 @@ const CountdownModal = withStyles(styles)(({ classes, onSignOut, countdown }) =>
       <DialogContentText>You can extend your session to continue working</DialogContentText>
       <div className={classes.buttonBar}>
         <Button>Extend Session</Button>
+        {/* For this specific dialog, we need to use a mousedown to handle the log out before the timeout is reset */}
         <Button onMouseDown={onSignOut}>Log Out</Button>
       </div>
     </DialogContent>
@@ -99,7 +100,9 @@ const InactivityTimer = ({ id, timeout, countdownStart, onSignOut }) => {
       setLastActive(id, Date.now());
     }
 
-    // Listen on the capture phase of the event, otherwise the order of events in a deliberate log out will be incorrect
+    // Listen on the capture phase of the event, otherwise the order of events in a deliberate log out will be incorrect.
+    // Without capture, if the user manually logs out, the last updated time will be recorded after the click to logout
+    // resulting in a last active time getting set in local storage.
     _.forEach((event) => document.addEventListener(event, updateLastActive, true), targetEvents);
 
     return () => {
@@ -133,7 +136,6 @@ export const LogoutIframe = ({ id, dismissLogout }) => (
     src="https://www.google.com/accounts/Logout"
     onLoad={() => {
       setLastActive(id);
-      setTimeout(() => window.location.reload(), 500);
       dismissLogout();
     }}
   />
