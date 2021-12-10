@@ -121,11 +121,12 @@ export const { runQuery } = createActions({
 });
 
 export const { pageQuery } = createActions({
-  [ActionTypes.PAGE_QUERY]: (pageToken, projectId, jobId, pageSize) => ({
+  [ActionTypes.PAGE_QUERY]: (pageToken, projectId, jobId, pageSize, location) => ({
     pageToken,
     projectId,
     jobId,
     pageSize,
+    location,
   }),
 });
 
