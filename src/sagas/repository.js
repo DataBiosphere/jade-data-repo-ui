@@ -427,7 +427,7 @@ export function* pageQuery({ payload }) {
     const params = {
       maxResults: payload.pageSize,
       pageToken: payload.pageToken,
-      location: payload.location
+      location: payload.location,
     };
     const response = yield call(authGet, url, params);
 

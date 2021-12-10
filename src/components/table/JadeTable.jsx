@@ -66,7 +66,9 @@ export class JadeTable extends React.PureComponent {
   handleChangePage = (event, newPage) => {
     const { dispatch, queryResults, dataset } = this.props;
     const { page, rowsPerPage, pageToTokenMap } = this.state;
-    const bqStorage = dataset.storage.find((s) => s.cloudResource === GOOGLE_CLOUD_RESOURCE.BIGQUERY);
+    const bqStorage = dataset.storage.find(
+      (s) => s.cloudResource === GOOGLE_CLOUD_RESOURCE.BIGQUERY,
+    );
     const location = bqStorage?.region;
     if (page === 0) {
       pageToTokenMap[0] = undefined;

@@ -112,4 +112,4 @@ export const GOOGLE_CLOUD_RESOURCE = {
   BIGQUERY: 'bigquery',
   FIRESTORE: 'firestore',
   BUCKET: 'bucket',
-}
+};
