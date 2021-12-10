@@ -13,7 +13,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { pageQuery, applySort } from 'actions/index';
 import { JadeTableHead } from './JadeTableHead';
 import { ellipsis } from '../../libs/styles';
-import { COLUMN_MODES } from '../../constants';
+import { COLUMN_MODES, GOOGLE_CLOUD_RESOURCE } from '../../constants';
 
 // eslint-disable-next-line no-unused-vars
 const styles = (theme) => ({
@@ -53,6 +53,7 @@ export class JadeTable extends React.PureComponent {
   }
 
   static propTypes = {
+    dataset: PropTypes.object,
     classes: PropTypes.object,
     columns: PropTypes.array,
     delay: PropTypes.bool,
@@ -63,9 +64,10 @@ export class JadeTable extends React.PureComponent {
   };
 
   handleChangePage = (event, newPage) => {
-    const { dispatch, queryResults } = this.props;
+    const { dispatch, queryResults, dataset } = this.props;
     const { page, rowsPerPage, pageToTokenMap } = this.state;
-
+    const bqStorage = dataset.storage.find((s) => s.cloudResource === GOOGLE_CLOUD_RESOURCE.BIGQUERY);
+    const location = bqStorage?.region;
     if (page === 0) {
       pageToTokenMap[0] = undefined;
     }
@@ -80,6 +82,7 @@ export class JadeTable extends React.PureComponent {
         queryResults.jobReference.projectId,
         queryResults.jobReference.jobId,
         rowsPerPage,
+        location,
       ),
     );
     this.setState({
