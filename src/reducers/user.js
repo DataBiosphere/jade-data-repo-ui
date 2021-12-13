@@ -7,6 +7,7 @@ import { IMAGE, STATUS, ActionTypes } from 'constants/index';
 const JADE_FEATURE_PREFIX = 'jade-feature-';
 
 export const userState = {
+  isInitiallyLoaded: false,
   isAuthenticated: false,
   status: STATUS.IDLE,
   name: '', // TODO is there a placeholder that this should get? go google accounts ever not have names?
@@ -23,6 +24,7 @@ export default {
     {
       [ActionTypes.USER_LOGIN]: (state, action) =>
         immutable(state, {
+          isInitiallyLoaded: { $set: true },
           isAuthenticated: { $set: true },
           status: { $set: STATUS.READY },
           name: { $set: action.payload.name },
@@ -34,6 +36,7 @@ export default {
         }),
       [ActionTypes.USER_LOGOUT]: (state) =>
         immutable(state, {
+          isInitiallyLoaded: { $set: true },
           isAuthenticated: { $set: false },
           status: { $set: STATUS.IDLE },
           image: { $set: IMAGE.DEFAULT },
