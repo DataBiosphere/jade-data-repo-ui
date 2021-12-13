@@ -67,14 +67,12 @@ export function getUser(options) {
 }
 
 export function renderLoginButton(options) {
-  return new Promise((resolve, reject) => {
-    window.gapi.signin2.render(options.id, {
-      scope: options.scopes.join(' '),
-      theme: 'dark',
-      longtitle: true,
-      onsuccess: (user) => resolve(describeUser(user)),
-      onfailure: reject,
-    });
+  window.gapi.signin2.render(options.id, {
+    scope: options.scopes.join(' '),
+    theme: 'dark',
+    longtitle: true,
+    onsuccess: (user) => options.onsuccess(describeUser(user)),
+    onfailure: options.onfailure,
   });
 }
 

@@ -109,14 +109,13 @@ export class WelcomeView extends React.PureComponent {
     const loginOptions = {
       id: 'signin-button-container',
       scopes: ['openid', 'profile', 'email', 'https://www.googleapis.com/auth/bigquery.readonly'],
-    };
-    renderLoginButton(loginOptions)
-      .then((user) =>
+      onsuccess: (user) =>
         dispatch(
           logIn(user.name, user.imageUrl, user.email, user.accessToken, user.accessTokenExpiration),
         ),
-      )
-      .catch(() => dispatch(logOut()));
+      onfailure: () => dispatch(logOut()),
+    };
+    renderLoginButton(loginOptions);
   }
 
   render() {
