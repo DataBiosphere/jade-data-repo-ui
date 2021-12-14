@@ -230,7 +230,7 @@ export function App(props) {
       </AppBar>
       <div className={classes.content}>
         {!status.tdrOperational && <ServerErrorView />}
-        {status.tdrOperational && configuration.clientId && (
+        {status.tdrOperational && user.isInitiallyLoaded && configuration.clientId && (
           <Switch>
             <RoutePublic
               isAuthenticated={user.isAuthenticated}

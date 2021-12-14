@@ -9,7 +9,7 @@ import history from 'modules/hist';
 import globalTheme from 'modules/theme';
 import { ThemeProvider } from '@material-ui/styles';
 import axios from 'axios';
-import { logIn, getFeatures } from 'actions/index';
+import { logIn, getFeatures, logOut } from 'actions/index';
 import { ActionTypes } from 'constants/index';
 
 import { store } from 'store/index';
@@ -77,6 +77,8 @@ function bootstrap() {
                     ),
                   );
                   store.dispatch(getFeatures());
+                } else {
+                  store.dispatch(logOut());
                 }
                 resolve();
               })
