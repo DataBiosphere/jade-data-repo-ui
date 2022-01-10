@@ -49,7 +49,6 @@ class DatasetView extends React.PureComponent {
     return (
       <div className={classes.wrapper}>
         <div className={classes.width}>
-          <div className={classes.title}>Datasets</div>
           <div>
             {datasets && (
               <DatasetTable

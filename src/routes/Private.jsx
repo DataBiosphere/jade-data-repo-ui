@@ -74,39 +74,10 @@ class Private extends React.Component {
                     classes={{ root: classes.tabsRoot, indicator: classes.tabsIndicator }}
                   >
                     <Tab
-                      label="Home"
-                      component={Link}
-                      value="/"
-                      to="/"
-                      classes={{ selected: classes.tabSelected }}
-                      disableFocusRipple
-                      disableRipple
-                    />
-                    {features.searchui && (
-                      <Tab
-                        label="Data Explorer"
-                        component={Link}
-                        value="/explorer"
-                        to="/explorer"
-                        classes={{ selected: classes.tabSelected }}
-                        disableFocusRipple
-                        disableRipple
-                      />
-                    )}
-                    <Tab
-                      label="Datasets"
+                      label="Dashboard"
                       component={Link}
                       value="/datasets"
-                      to="/datasets"
-                      classes={{ selected: classes.tabSelected }}
-                      disableFocusRipple
-                      disableRipple
-                    />
-                    <Tab
-                      label="Snapshots"
-                      component={Link}
-                      value="/snapshots"
-                      to="/snapshots"
+                      to="/"
                       classes={{ selected: classes.tabSelected }}
                       disableFocusRipple
                       disableRipple
@@ -115,13 +86,10 @@ class Private extends React.Component {
                   <div className={classes.component}>
                     <Switch>
                       <Route exact path="/" component={HomeView} />
-                      {features.searchui && (
-                        <Route exact path="/explorer" component={DataExplorerView} />
-                      )}
-                      <Route exact path="/datasets" component={DatasetsView} />
+                      <Route exact path="/datasets" component={HomeView} />
+                      <Route exact path="/snapshots" component={HomeView} />
                       <Route exact path="/datasets/:uuid/query" component={QueryView} />
                       <Route exact path="/datasets/:uuid/details" component={DatasetDetailView} />
-                      <Route exact path="/snapshots" component={SnapshotView} />
                       <Route exact path="/snapshots/details/:uuid" component={SnapshotDetailView} />
                     </Switch>
                   </div>

@@ -5,8 +5,10 @@ import { withStyles } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom';
 
 import { getDatasets, getSnapshots } from 'actions/index';
-import SnapshotTable from './table/SnapshotTable';
-import DatasetTable from './table/DatasetTable';
+import Tab from '@material-ui/core/Tab';
+import { Tabs } from '@material-ui/core';
+import DatasetView from './DatasetView';
+import SnapshotView from './SnapshotView';
 
 const styles = (theme) => ({
   header: {
@@ -32,10 +34,10 @@ const styles = (theme) => ({
     paddingTop: theme.spacing(4),
   },
   title: {
-    color: theme.palette.primary.main,
-    fontSize: '54px',
-    lineHeight: '66px',
-    paddingBottom: theme.spacing(8),
+    color: theme.palette.secondary.dark,
+    fontSize: '1.5rem',
+    fontWeight: 700,
+    paddingBottom: '1rem',
   },
   wrapper: {
     display: 'flex',
@@ -47,9 +49,35 @@ const styles = (theme) => ({
   width: {
     ...theme.mixins.containerWidth,
   },
+  tabsRoot: {
+    color: '#333F52',
+    fontFamily: theme.typography.fontFamily,
+    height: 18,
+    fontSize: '1rem',
+    fontWeight: 600,
+    lineHeight: 18,
+    textAlign: 'center',
+  },
+  tabSelected: {
+    fontWeight: 700,
+    color: theme.palette.secondary.dark,
+    bottomBar: '6px',
+  },
+  tabsIndicator: {
+    borderBottom: `6px solid ${theme.palette.secondary.main}`,
+    transition: 'none',
+  },
 });
 
 class HomeView extends React.PureComponent {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      tabValue: '/datasets',
+    };
+  }
+
   static propTypes = {
     classes: PropTypes.object.isRequired,
     datasets: PropTypes.array.isRequired,
@@ -64,27 +92,53 @@ class HomeView extends React.PureComponent {
     dispatch(getSnapshots(5));
   }
 
+  handleTabChange = (event, value) => {
+    console.log(value);
+    this.setState({ tabValue: value });
+  };
+
   render() {
     const { classes, datasets, features, snapshots } = this.props;
+    const { tabValue } = this.state;
+    let tableValue;
+
+    if (tabValue === '/datasets') {
+      tableValue = <DatasetView />;
+    } else if (tabValue === '/snapshots') {
+      tableValue = <SnapshotView />;
+    } else {
+      throw 'Invalid tab value';
+    }
+
     return (
       <div className={classes.wrapper}>
         <div className={classes.width}>
-          <div className={classes.title}>Terra Data Repository at a glance</div>
-          <div className={classes.header}> RECENT DATASETS </div>
-          <DatasetTable summary datasets={datasets} features={features} />
-          <div>
-            <Link to="/datasets" className={classes.jadeLink}>
-              See all Datasets
-            </Link>
-          </div>
-          <div className={classes.jadeTableSpacer} />
-          <div className={classes.header}>RECENT SNAPSHOTS</div>
-          <SnapshotTable summary snapshots={snapshots} />
-          <div>
-            <Link to="/snapshots" className={classes.jadeLink}>
-              See all Snapshots
-            </Link>
-          </div>
+          <div className={classes.title}>Terra Data Repository</div>
+          <Tabs
+            classes={{ root: classes.tabsRoot, indicator: classes.tabsIndicator }}
+            value={tabValue}
+            onChange={this.handleTabChange}
+          >
+            <Tab
+              label="Datasets"
+              component={Link}
+              value="/datasets"
+              to="/datasets"
+              classes={{ selected: classes.tabSelected }}
+              disableFocusRipple
+              disableRipple
+            />
+            <Tab
+              label="Snapshots"
+              component={Link}
+              value="/snapshots"
+              to="/snapshots"
+              classes={{ selected: classes.tabSelected }}
+              disableFocusRipple
+              disableRipple
+            />
+          </Tabs>
+          {tableValue}
         </div>
       </div>
     );

@@ -51,7 +51,6 @@ class SnapshotView extends React.PureComponent {
     return (
       <div id="snapshots" className={classes.wrapper}>
         <div className={classes.width}>
-          <div className={classes.title}>Snapshots</div>
           <div>
             <SnapshotTable
               snapshotCount={snapshotCount}
