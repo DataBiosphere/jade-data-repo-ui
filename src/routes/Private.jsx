@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { Router, Link, Switch, Route } from 'react-router-dom';
+import { Link, Route, Router, Switch } from 'react-router-dom';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import { withStyles } from '@material-ui/core/styles';
@@ -8,12 +8,9 @@ import PropTypes from 'prop-types';
 import history from 'modules/hist';
 
 import HomeView from '../components/HomeView';
-import DatasetsView from '../components/DatasetView';
-import SnapshotView from '../components/SnapshotView';
 import SnapshotDetailView from '../components/SnapshotDetailView';
 import DatasetDetailView from '../components/dataset/details/DatasetDetailView';
 import QueryView from '../components/dataset/query/QueryView';
-import DataExplorerView from '../components/search/DataExplorerView';
 
 const styles = (theme) => ({
   wrapper: {
@@ -32,7 +29,6 @@ const styles = (theme) => ({
     boxShadow: '0 2px 5px 0 rgba(0,0,0,0.26), 0 2px 10px 0 rgba(0,0,0,0.16)',
     color: '#333F52',
     fontFamily: theme.typography.fontFamily,
-    paddingLeft: theme.spacing(11.5),
     height: 18,
     fontSize: 14,
     fontWeight: 600,

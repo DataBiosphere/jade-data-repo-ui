@@ -11,6 +11,12 @@ import DatasetView from './DatasetView';
 import SnapshotView from './SnapshotView';
 
 const styles = (theme) => ({
+  pageRoot: {
+    padding: '16px 24px',
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%',
+  },
   header: {
     alignItems: 'center',
     color: theme.typography.color,
@@ -38,16 +44,6 @@ const styles = (theme) => ({
     fontSize: '1.5rem',
     fontWeight: 700,
     paddingBottom: '1rem',
-  },
-  wrapper: {
-    display: 'flex',
-    fontFamily: theme.typography.fontFamily,
-    justifyContent: 'center',
-    padding: theme.spacing(4),
-    margin: theme.spacing(4),
-  },
-  width: {
-    ...theme.mixins.containerWidth,
   },
   tabsRoot: {
     color: '#333F52',
@@ -111,7 +107,7 @@ class HomeView extends React.PureComponent {
     }
 
     return (
-      <div className={classes.wrapper}>
+      <div className={classes.pageRoot}>
         <div className={classes.width}>
           <div className={classes.title}>Terra Data Repository</div>
           <Tabs

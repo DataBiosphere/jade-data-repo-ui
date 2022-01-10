@@ -141,7 +141,7 @@ export default createMuiTheme({
       },
     },
     containerWidth: {
-      width: '85%',
+      width: '100%',
     },
   },
 });

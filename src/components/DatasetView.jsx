@@ -10,8 +10,8 @@ const styles = (theme) => ({
   wrapper: {
     display: 'flex',
     justifyContent: 'center',
-    padding: theme.spacing(4),
-    margin: theme.spacing(4),
+    padding: '1rem',
+    margin: '1rem',
   },
   width: {
     ...theme.mixins.containerWidth,
