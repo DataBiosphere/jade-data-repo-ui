@@ -4,9 +4,10 @@ Based off of [React Redux Saga Boilerplate](https://github.com/gilbarbara/react-
 
 ### Prerequisites
 - install npm: `brew install npm`
-- install nvm from [nvm.sh](nvm.sh) -- do NOT install through homebrew as that is no longer maintaine
+- install nvm from [nvm.sh](https://github.com/nvm-sh/nvm#install--update-script): `curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash`
+Note: Do NOT install nvm through homebrew as that is no longer maintained
 
-Run the following to get automatic node version switching set up:
+- Run the following to get automatic node version switching set up:
 ```
 npm install -g avn avn-nvm avn-n
 avn setup
