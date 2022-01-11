@@ -16,6 +16,11 @@ npm install -g avn avn-nvm avn-n
 avn setup
  ```
 
+- Run `npm install` to download dependencies defined in the package.json file and generate the node_modules folder with the installed modules.
+```
+npm install
+```
+
 ### Provides
 
 - react ^16.x
