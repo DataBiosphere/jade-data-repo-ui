@@ -34,6 +34,7 @@ const styles = (theme) => ({
     fontWeight: 600,
     lineHeight: 18,
     textAlign: 'center',
+    width: 'calc(100% - 20px)'
   },
   tabSelected: {
     backgroundColor: '#ddebd0',
@@ -44,6 +45,15 @@ const styles = (theme) => ({
     height: '100%',
     display: 'flex',
     flexDirection: 'column',
+  },
+  tabWrapper: {
+    display: 'flex',
+  },
+  helpIconDiv: {
+    borderBottom: `2px solid ${theme.palette.secondary.main}`,
+    boxShadow: '0 2px 5px 0 rgba(0,0,0,0.26), 0 2px 10px 0 rgba(0,0,0,0.16)',
+    float: 'right',
+    width: '20px',
   },
 });
 
@@ -66,6 +76,7 @@ class Private extends React.Component {
               path="/"
               render={() => (
                 <Fragment>
+                  <div className={classes.tabWrapper}>
                   <Tabs
                     value={dashboardTabValues}
                     classes={{ root: classes.tabsRoot, indicator: classes.tabsIndicator }}
@@ -80,6 +91,8 @@ class Private extends React.Component {
                       disableRipple
                     />
                   </Tabs>
+                  <div className={classes.helpIconDiv}>hi</div>
+                  </div>
                   <div className={classes.component}>
                     <Switch>
                       <Route exact path="/" component={HomeView}>
