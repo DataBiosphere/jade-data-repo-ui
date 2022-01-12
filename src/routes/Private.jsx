@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { Link, Route, Router, Switch } from 'react-router-dom';
+import { Link, Redirect, Route, Router, Switch } from 'react-router-dom';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import { withStyles } from '@material-ui/core/styles';
@@ -74,7 +74,7 @@ class Private extends React.Component {
                       label="Dashboard"
                       component={Link}
                       value="/datasets"
-                      to="/"
+                      to="/datasets"
                       classes={{ selected: classes.tabSelected }}
                       disableFocusRipple
                       disableRipple
@@ -82,7 +82,9 @@ class Private extends React.Component {
                   </Tabs>
                   <div className={classes.component}>
                     <Switch>
-                      <Route exact path="/" component={HomeView} />
+                      <Route exact path="/" component={HomeView}>
+                        <Redirect to="/datasets" />
+                      </Route>
                       <Route exact path="/datasets" component={HomeView} />
                       <Route exact path="/snapshots" component={HomeView} />
                       <Route exact path="/datasets/:uuid/query" component={QueryView} />

@@ -9,7 +9,7 @@ describe('test error handling', () => {
     cy.get('#tokenInput').type(Cypress.env('GOOGLE_TOKEN'), {
       log: false,
       delay: 0,
-    });
+    }).debug();
     cy.get('#e2eLoginButton').click();
 
     cy.contains('See all Datasets').click();
