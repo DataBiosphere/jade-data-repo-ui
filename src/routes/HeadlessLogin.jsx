@@ -4,10 +4,10 @@ import { connect } from 'react-redux';
 
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import { logIn } from '../actions/index';
 import { withStyles } from '@material-ui/core/styles';
+import { logIn } from '../actions/index';
 
-const styles = (theme) => ({
+const styles = () => ({
   wrapper: {
     marginTop: 500,
   },
