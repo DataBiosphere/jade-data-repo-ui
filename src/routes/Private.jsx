@@ -7,6 +7,7 @@ import { ConnectedRouter } from 'connected-react-router';
 import PropTypes from 'prop-types';
 import history from 'modules/hist';
 
+import HelpContainer from 'components/help/HelpContainer';
 import HomeView from '../components/HomeView';
 import SnapshotDetailView from '../components/SnapshotDetailView';
 import DatasetDetailView from '../components/dataset/details/DatasetDetailView';
@@ -34,7 +35,7 @@ const styles = (theme) => ({
     fontWeight: 600,
     lineHeight: 18,
     textAlign: 'center',
-    width: 'calc(100% - 20px)'
+    width: 'calc(100% - 20px)',
   },
   tabSelected: {
     backgroundColor: '#ddebd0',
@@ -77,21 +78,21 @@ class Private extends React.Component {
               render={() => (
                 <Fragment>
                   <div className={classes.tabWrapper}>
-                  <Tabs
-                    value={dashboardTabValues}
-                    classes={{ root: classes.tabsRoot, indicator: classes.tabsIndicator }}
-                  >
-                    <Tab
-                      label="Dashboard"
-                      component={Link}
-                      value="/datasets"
-                      to="/datasets"
-                      classes={{ selected: classes.tabSelected }}
-                      disableFocusRipple
-                      disableRipple
-                    />
-                  </Tabs>
-                  <div className={classes.helpIconDiv}>hi</div>
+                    <Tabs
+                      value={dashboardTabValues}
+                      lasses={{ root: classes.tabsRoot, indicator: classes.tabsIndicator }}
+                      />
+                      <Tab
+                        label="Dashboard"
+                        component={Link}
+                        value="/datasets"
+                        to="/datasets"
+                        classes={{ selected: classes.tabSelected }}
+                        disableFocusRipple
+                        disableRipple
+                      />
+                    </Tabs>
+                    <HelpContainer className={classes.helpIconDiv} />
                   </div>
                   <div className={classes.component}>
                     <Switch>

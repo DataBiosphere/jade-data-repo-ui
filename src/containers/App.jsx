@@ -253,7 +253,6 @@ export function App(props) {
             <Route component={NotFound} />
           </Switch>
         )}
-        
       </div>
     </div>
   );
