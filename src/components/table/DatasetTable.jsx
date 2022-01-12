@@ -12,6 +12,8 @@ const styles = (theme) => ({
   },
 });
 
+const cloudPlatforms = {'gcp': 'Google Cloud Platform', 'azure': 'Microsoft Azure'}
+
 class DatasetTable extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object.isRequired,
@@ -70,7 +72,10 @@ class DatasetTable extends React.PureComponent {
       {
         label: 'Cloud Platform',
         property: 'platorm',
-        render: (row) => Array.from(new Set(row.storage.map((s) => s.cloudPlatform))).join(', '),
+        render: (row) =>
+          <div>
+            {Array.from(new Set(row.storage.map((s) => cloudPlatforms[s.cloudPlatform]))).map(c => <div>{c}</div>)}
+          </div>,
       },
     ];
     return (

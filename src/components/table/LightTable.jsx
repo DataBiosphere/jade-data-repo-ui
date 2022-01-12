@@ -15,7 +15,7 @@ import LightTableHead from './LightTableHead';
 
 const styles = (theme) => ({
   root: {
-    border: `1px solid ${theme.palette.primary.dark}`,
+    border: `1px solid #e8eaeb`,
     borderRadius: `${theme.shape.borderRadius}px ${theme.shape.borderRadius}px 0 0`,
     boxShadow: 'none',
     marginTop: theme.spacing(3),
@@ -29,6 +29,20 @@ const styles = (theme) => ({
   },
   row: {
     borderRadius: `${theme.shape.borderRadius}px ${theme.shape.borderRadius}px 0 0`,
+  },
+  evenRow: {
+    backgroundColor: 'white',
+  },
+  oddRow: {
+    backgroundColor : 'rgba(233,236,239,0.4)'
+  },
+  paginationButton:{
+    borderRadius: `${theme.shape.borderRadius}px`,
+    margin: '0px 2px',
+    transition: null,
+    padding: '0.25rem',
+    border: '1px solid #4d72aa',
+    color: '#4d72aa',
   },
   search: {
     height: 45,
@@ -172,8 +186,9 @@ export class LightTable extends React.PureComponent {
             />
             <TableBody>
               {rows && rows.length > 0 ? (
-                rows.map((row) => (
-                  <TableRow key={rowKey ? rowKey(row) : row.id} className={classes.row}>
+                rows.map((row, index) => (
+                  <TableRow key={rowKey ? rowKey(row) : row.id}
+                            className={`${classes.row} ${index % 2 ? classes.oddRow : classes.evenRow}`}>
                     {columns.map((col) => (
                       <TableCell key={col.property} style={{ wordBreak: 'break-word' }}>
                         {col.render ? col.render(row) : row[col.property]}
@@ -204,9 +219,17 @@ export class LightTable extends React.PureComponent {
               page={page}
               backIconButtonProps={{
                 'aria-label': 'Previous Page',
+                disableTouchRipple: true,
+                disableFocusRipple: true,
+                disableRipple: true,
+                className: classes.paginationButton,
               }}
               nextIconButtonProps={{
                 'aria-label': 'Next Page',
+                disableTouchRipple: true,
+                disableFocusRipple: true,
+                disableRipple: true,
+                className: classes.paginationButton,
               }}
               onChangePage={this.handleChangePage}
               onChangeRowsPerPage={this.handleChangeRowsPerPage}
