@@ -21,6 +21,16 @@ avn setup
 npm install
 ```
 
+- Make sure you have the following environment variables set:
+  - `export PROXY_URL=https://jade.datarepo-dev.broadinstitute.org`
+  - `export CYPRESS_BASE_URL=http://localhost:3000`
+
+- Before running e2e tests, make sure you grab your access token by running `gcloud auth print-access-token`, and then
+export it: 
+```
+export CYPRESS_GOOGLE_TOKEN=<YOUR-TOKEN-HERE>
+```
+
 ### Provides
 
 - react ^16.x
@@ -60,9 +70,9 @@ npm install
 
 ### End 2 End Testing
 
-- cypress 3.0.x
+- cypress 9.2.1
 
-`npm run test:e2e`
+`npx cypress open` or `npx cypress run`
 
 ## skaffold
 To render your own local skffold.yaml run the following with your initials
