@@ -13,7 +13,6 @@ describe('test query builder', () => {
     });
     cy.get('#e2eLoginButton').click();
 
-    cy.contains('See all Datasets').click();
     cy.get('[placeholder=Search]').type('V2F_GWAS');
     cy.contains('Date created').click();
     cy.contains(/V2F_GWAS_Summary_Stats|V2F_GWAS_Summary_Statistics/g).should('be.visible');
