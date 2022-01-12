@@ -15,7 +15,7 @@ import LightTableHead from './LightTableHead';
 
 const styles = (theme) => ({
   root: {
-    border: `1px solid #e8eaeb`,
+    border: '1px solid #e8eaeb',
     borderRadius: `${theme.shape.borderRadius}px ${theme.shape.borderRadius}px 0 0`,
     boxShadow: 'none',
     marginTop: theme.spacing(3),
@@ -34,9 +34,9 @@ const styles = (theme) => ({
     backgroundColor: 'white',
   },
   oddRow: {
-    backgroundColor : 'rgba(233,236,239,0.4)'
+    backgroundColor: 'rgba(233,236,239,0.4)',
   },
-  paginationButton:{
+  paginationButton: {
     borderRadius: `${theme.shape.borderRadius}px`,
     margin: '0px 2px',
     transition: null,
@@ -187,8 +187,10 @@ export class LightTable extends React.PureComponent {
             <TableBody>
               {rows && rows.length > 0 ? (
                 rows.map((row, index) => (
-                  <TableRow key={rowKey ? rowKey(row) : row.id}
-                            className={`${classes.row} ${index % 2 ? classes.oddRow : classes.evenRow}`}>
+                  <TableRow
+                    key={rowKey ? rowKey(row) : row.id}
+                    className={`${classes.row} ${index % 2 ? classes.oddRow : classes.evenRow}`}
+                  >
                     {columns.map((col) => (
                       <TableCell key={col.property} style={{ wordBreak: 'break-word' }}>
                         {col.render ? col.render(row) : row[col.property]}

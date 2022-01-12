@@ -6,7 +6,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Tooltip from '@material-ui/core/Tooltip';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
-import {Sort} from "@material-ui/icons";
+import Sort from '@material-ui/icons';
 
 const styles = (theme) => ({
   head: {
@@ -21,7 +21,7 @@ const styles = (theme) => ({
     fontWeight: 600,
     letterSpacing: 0,
     lineHeight: '16px',
-    border: `1px solid #e8eaeb`
+    border: `1px solid #e8eaeb`,
   },
 });
 
@@ -70,9 +70,8 @@ export class LightTableHead extends React.PureComponent {
                         direction={orderDirection}
                         onClick={this.createSortHandler(col.property)}
                         IconComponent={Sort}
-                        style={{float: 'right'}}
-                      >
-                      </TableSortLabel>
+                        style={{ float: 'right' }}
+                      />
                     </Tooltip>
                   </div>
                 )}
