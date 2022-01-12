@@ -18,8 +18,8 @@ class HelpContainer extends React.Component {
 
   render() {
     const { helpExpanded } = this.state;
-    if (helpExpanded) return <div> HELP IS EXPANDED!</div>;
-    return <div>help</div>;
+    if (helpExpanded) return <div onClick={this.handleHelpExitClick}> HELP IS EXPANDED!</div>;
+    return <div onClick={this.handleHelpButtonClick}>help</div>;
   }
 }
 
