@@ -4,13 +4,32 @@ Based off of [React Redux Saga Boilerplate](https://github.com/gilbarbara/react-
 
 ### Prerequisites
 - install npm: `brew install npm`
-- install nvm from [nvm.sh](nvm.sh) -- do NOT install through homebrew as that is no longer maintaine
+- install nvm from [nvm.sh](https://github.com/nvm-sh/nvm#install--update-script): 
+```
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+```
+Note: Do NOT install nvm through homebrew as that is no longer maintained
 
-Run the following to get automatic node version switching set up:
+- Run the following to get automatic node version switching set up:
 ```
 npm install -g avn avn-nvm avn-n
 avn setup
  ```
+
+- Run `npm install` to download dependencies defined in the package.json file and generate the node_modules folder with the installed modules.
+```
+npm install
+```
+
+- Make sure you have the following environment variables set:
+  - `export PROXY_URL=https://jade.datarepo-dev.broadinstitute.org`
+  - `export CYPRESS_BASE_URL=http://localhost:3000`
+
+- Before running e2e tests, make sure you grab your access token by running `gcloud auth print-access-token`, and then
+export it: 
+```
+export CYPRESS_GOOGLE_TOKEN=<YOUR-TOKEN-HERE>
+```
 
 ### Provides
 
@@ -51,9 +70,9 @@ avn setup
 
 ### End 2 End Testing
 
-- cypress 3.0.x
+- cypress 9.2.1
 
-`npm run test:e2e`
+`npx cypress open` or `npx cypress run`
 
 ## skaffold
 To render your own local skffold.yaml run the following with your initials
