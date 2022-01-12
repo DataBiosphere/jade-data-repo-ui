@@ -56,7 +56,8 @@ class Private extends React.Component {
   static prefixMatcher = new RegExp('/[^/]*');
 
   render() {
-    const { classes, features } = this.props;
+    const { classes } = this.props;
+    const dashboardTabValues = '/datasets' || '/snapshots';
     return (
       <ConnectedRouter history={history}>
         <Router history={history}>
@@ -66,7 +67,7 @@ class Private extends React.Component {
               render={({ location }) => (
                 <Fragment>
                   <Tabs
-                    value={Private.prefixMatcher.exec(location.pathname)[0]}
+                    value={dashboardTabValues}
                     classes={{ root: classes.tabsRoot, indicator: classes.tabsIndicator }}
                   >
                     <Tab

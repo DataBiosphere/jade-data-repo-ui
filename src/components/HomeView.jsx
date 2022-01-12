@@ -66,14 +66,6 @@ const styles = (theme) => ({
 });
 
 class HomeView extends React.PureComponent {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      tabValue: '/datasets',
-    };
-  }
-
   static propTypes = {
     classes: PropTypes.object.isRequired,
     datasets: PropTypes.array.isRequired,
@@ -82,20 +74,16 @@ class HomeView extends React.PureComponent {
     snapshots: PropTypes.array.isRequired,
   };
 
-  componentDidMount() {
-    const { dispatch } = this.props;
-    dispatch(getDatasets(5));
-    dispatch(getSnapshots(5));
-  }
-
   handleTabChange = (event, value) => {
     console.log(value);
     this.setState({ tabValue: value });
   };
 
+  static prefixMatcher = new RegExp('/[^/]*');
+
   render() {
-    const { classes, datasets, features, snapshots } = this.props;
-    const { tabValue } = this.state;
+    const { classes } = this.props;
+    const tabValue = HomeView.prefixMatcher.exec(location.pathname)[0];
     let tableValue;
 
     if (tabValue === '/datasets') {
