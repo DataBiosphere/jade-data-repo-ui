@@ -6,7 +6,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Tooltip from '@material-ui/core/Tooltip';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
-import Sort from '@material-ui/icons';
+import { Sort } from '@material-ui/icons';
 
 const styles = (theme) => ({
   head: {
