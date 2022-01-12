@@ -64,7 +64,7 @@ class Private extends React.Component {
           <div className={classes.wrapper}>
             <Route
               path="/"
-              render={({ location }) => (
+              render={() => (
                 <Fragment>
                   <Tabs
                     value={dashboardTabValues}

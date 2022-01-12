@@ -5,6 +5,13 @@ import { connect } from 'react-redux';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { logIn } from '../actions/index';
+import { withStyles } from '@material-ui/core/styles';
+
+const styles = (theme) => ({
+  wrapper: {
+    marginTop: 500,
+  },
+});
 
 export class HeadlessLogin extends React.PureComponent {
   constructor(props) {
@@ -36,8 +43,10 @@ export class HeadlessLogin extends React.PureComponent {
   };
 
   render() {
+    const { classes } = this.props;
+
     return (
-      <div>
+      <div className={classes.wrapper}>
         <h1>michael's secret login page</h1>
         <TextField id="tokenInput" label="Password" type="password" onChange={this.handleChange} />
         <Button id="e2eLoginButton" onClick={this.handleLoginButton}>
@@ -53,4 +62,4 @@ function mapStateToProps(state) {
   return {};
 }
 
-export default connect(mapStateToProps)(HeadlessLogin);
+export default connect(mapStateToProps)(withStyles(styles)(HeadlessLogin));

@@ -74,7 +74,6 @@ class HomeView extends React.PureComponent {
 
   render() {
     const { classes, location } = this.props;
-    const invalidTabError = 'Invalid tab value';
     const tabValue = HomeView.prefixMatcher.exec(location.pathname)[0];
     let tableValue;
 
@@ -83,7 +82,7 @@ class HomeView extends React.PureComponent {
     } else if (tabValue === '/snapshots') {
       tableValue = <SnapshotView />;
     } else {
-      throw invalidTabError;
+      tableValue = <div />;
     }
 
     return (
