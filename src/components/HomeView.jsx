@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom';
 
-import { getDatasets, getSnapshots } from 'actions/index';
 import Tab from '@material-ui/core/Tab';
 import { Tabs } from '@material-ui/core';
 import DatasetView from './DatasetView';
@@ -68,21 +67,14 @@ const styles = (theme) => ({
 class HomeView extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    datasets: PropTypes.array.isRequired,
-    dispatch: PropTypes.func.isRequired,
-    features: PropTypes.object,
-    snapshots: PropTypes.array.isRequired,
-  };
-
-  handleTabChange = (event, value) => {
-    console.log(value);
-    this.setState({ tabValue: value });
+    location: PropTypes.object,
   };
 
   static prefixMatcher = new RegExp('/[^/]*');
 
   render() {
-    const { classes } = this.props;
+    const { classes, location } = this.props;
+    const invalidTabError = 'Invalid tab value';
     const tabValue = HomeView.prefixMatcher.exec(location.pathname)[0];
     let tableValue;
 
@@ -91,7 +83,7 @@ class HomeView extends React.PureComponent {
     } else if (tabValue === '/snapshots') {
       tableValue = <SnapshotView />;
     } else {
-      throw 'Invalid tab value';
+      throw invalidTabError;
     }
 
     return (
@@ -101,7 +93,6 @@ class HomeView extends React.PureComponent {
           <Tabs
             classes={{ root: classes.tabsRoot, indicator: classes.tabsIndicator }}
             value={tabValue}
-            onChange={this.handleTabChange}
           >
             <Tab
               label="Datasets"
@@ -131,9 +122,7 @@ class HomeView extends React.PureComponent {
 
 function mapStateToProps(state) {
   return {
-    datasets: state.datasets.datasets,
-    features: state.user.features,
-    snapshots: state.snapshots.snapshots,
+    location: state.router.location,
   };
 }
 
