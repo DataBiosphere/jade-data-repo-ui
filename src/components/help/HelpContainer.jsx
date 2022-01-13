@@ -5,8 +5,10 @@ import HelpPanel from './HelpPanel';
 
 const styles = (theme) => ({
   panelContainer: {
+    color: '#333F52',
     fontFamily: theme.typography.fontFamily,
-    left: '40%',
+    right: '0',
+    'max-width': '815px',
     height: 'calc(100% - 64px)', // 64px = height of top nav bar
     position: 'fixed',
     'background-color': '#E9ECEF',

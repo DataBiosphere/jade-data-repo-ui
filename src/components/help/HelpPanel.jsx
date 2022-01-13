@@ -17,6 +17,15 @@ const styles = () => ({
     'padding-left': '1em',
     'padding-right': '1em',
   },
+  titleContainer: {
+    'padding-left': '1em',
+  },
+  title: {
+    'margin-bottom': '10px',
+  },
+  noTopMargin: {
+    'margin-top': 0,
+  },
 });
 
 class HelpPanel extends React.Component {
@@ -28,11 +37,11 @@ class HelpPanel extends React.Component {
     const { classes } = this.props;
     return (
       <div className={classes.panelContainer}>
-        <div>
-          <h1>What is the Terra Data Repository?</h1>
+        <div className={classes.titleContainer}>
+          <h1 className={classes.title}>What is the Terra Data Repository?</h1>
         </div>
         <div className={classes.body}>
-          <h3>Support complex schemas</h3>
+          <h3 className={classes.noTopMargin}>Support complex schemas</h3>
           <p>
             Our goal is to allow overlapping sets of data to have different access. A single
             collection of data should be capable of being sliced and diced in different ways,
