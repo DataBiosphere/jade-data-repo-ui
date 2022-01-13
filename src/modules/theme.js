@@ -138,6 +138,11 @@ export default createMuiTheme({
         },
       },
     },
+    MuiTablePagination: {
+      actions: {
+        marginRight: '20px',
+      },
+    },
   },
   mixins: {
     jadeLink: {
