@@ -31,18 +31,18 @@ const styles = (theme) => ({
     borderRadius: `${theme.shape.borderRadius}px ${theme.shape.borderRadius}px 0 0`,
   },
   evenRow: {
-    backgroundColor: 'white',
+    backgroundColor: theme.palette.lightTable.callBackgroundLight,
   },
   oddRow: {
-    backgroundColor: 'rgba(233,236,239,0.4)',
+    backgroundColor: theme.palette.lightTable.cellBackgroundDark,
   },
   paginationButton: {
     borderRadius: `${theme.shape.borderRadius}px`,
     margin: '0px 2px',
     transition: null,
     padding: '0.25rem',
-    border: '1px solid #4d72aa',
-    color: '#4d72aa',
+    border: `1px solid ${theme.palette.lightTable.paginationBlue}`,
+    color: theme.palette.lightTable.paginationBlue,
   },
   search: {
     height: 45,

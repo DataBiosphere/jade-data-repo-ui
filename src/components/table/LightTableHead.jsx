@@ -11,7 +11,7 @@ import { Sort } from '@material-ui/icons';
 const styles = (theme) => ({
   head: {
     color: theme.palette.primary.dark,
-    backgroundColor: 'rgba(233,236,239,0.4)',
+    backgroundColor: theme.palette.lightTable.cellBackgroundDark,
     fontFamily: theme.typography.fontFamily,
   },
   cell: {
@@ -21,7 +21,7 @@ const styles = (theme) => ({
     fontWeight: 600,
     letterSpacing: 0,
     lineHeight: '16px',
-    border: `1px solid #e8eaeb`,
+    border: `1px solid ${theme.palette.lightTable.cellBorderColor}`,
   },
 });
 
