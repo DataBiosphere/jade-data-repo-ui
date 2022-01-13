@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { ReactComponent as ExitSVG } from 'media/icons/times-light.svg';
+import { ReactComponent as QuestionCircleSVG } from 'media/icons/question-circle-solid.svg';
 import HelpPanel from './HelpPanel';
 
 const styles = (theme) => ({
@@ -51,6 +52,13 @@ const styles = (theme) => ({
   jadeLink: {
     ...theme.mixins.jadeLink,
   },
+  helpOpen: {
+    height: '48px',
+    width: '48px',
+  },
+  helpIcon: {
+    padding: '8px',
+  },
 });
 
 class HelpContainer extends React.Component {
@@ -98,7 +106,11 @@ class HelpContainer extends React.Component {
         </div>
       );
     }
-    return <div onClick={this.handleHelpButtonClick}>help</div>;
+    return (
+      <div onClick={this.handleHelpButtonClick} className={classes.helpOpen}>
+        <QuestionCircleSVG className={classes.helpIcon} />
+      </div>
+    );
   }
 }
 
