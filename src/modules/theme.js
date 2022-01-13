@@ -93,7 +93,7 @@ export default createMuiTheme({
       cellBackgroundDark: 'rgba(233,236,239,0.4)',
       callBackgroundLight: 'white',
       cellBorderColor: '#E8EAEB',
-      paginationBlue: '#4D72AA'
+      paginationBlue: '#4D72AA',
     },
     primary: {
       main: '#81AB52',
