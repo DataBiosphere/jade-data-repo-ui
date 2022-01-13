@@ -4,7 +4,11 @@ import PropTypes from 'prop-types';
 
 const styles = () => ({
   panelContainer: {
-    padding: '1em',
+    'padding-left': '1em',
+    'padding-right': '1em',
+    display: 'flex',
+    'flex-direction': 'column',
+    height: 'calc(100% - 100px)',
   },
   body: {
     'flex-grow': 1,
@@ -12,10 +16,6 @@ const styles = () => ({
     'min-height': '2em',
     'padding-left': '1em',
     'padding-right': '1em',
-  },
-  footer: {
-    position: 'absolute',
-    bottom: '0',
   },
 });
 
@@ -67,9 +67,6 @@ class HelpPanel extends React.Component {
             of consent might require removal of data. However, that is based on the dataset owner’s
             policy. The operation is enabled by TDR, but is not required.
           </p>
-        </div>
-        <div className={classes.footer}>
-          <h1>Not finding what you are looking for?</h1>
         </div>
       </div>
     );

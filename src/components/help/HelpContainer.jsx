@@ -7,21 +7,22 @@ const styles = (theme) => ({
   panelContainer: {
     fontFamily: theme.typography.fontFamily,
     left: '40%',
-    height: '100%',
+    height: 'calc(100% - 64px)', // 64px = height of top nav bar
     position: 'fixed',
-    'background-color': '#fafbfc',
+    'background-color': '#E9ECEF',
     display: 'flex',
     'flex-direction': 'column',
     'flex-wrap': 'nowrap',
   },
   anotherContainer: {
     position: 'relative',
+    height: '100%',
   },
   background: {
-    background: 'grey',
+    background: '#000000',
     left: 0,
     right: 0,
-    opacity: 0.6,
+    opacity: 0.4,
     height: '100%',
     position: 'fixed',
   },
@@ -32,6 +33,16 @@ const styles = (theme) => ({
     padding: '1em',
     width: '3em',
     height: '3em',
+  },
+  footer: {
+    position: 'absolute',
+    bottom: '0',
+    background: '#d7dbdf',
+    width: '100%',
+    height: '100px',
+    'padding-left': '30px',
+    'padding-top': '15px',
+    'padding-bottom': '15px',
   },
 });
 
@@ -68,6 +79,17 @@ class HelpContainer extends React.Component {
                 X
               </div>
               <HelpPanel />
+              <div className={classes.footer}>
+                <p>
+                  <b>Not finding what you are looking for?</b>
+                  <br />
+                  Visit the 
+                  <a href="https://support.terra.bio/hc/en-us/sections/4407099323675-Terra-Data-Repository">
+                    Terra Support Hub
+                  </a>
+                   or contact us.
+                </p>
+              </div>
             </div>
           </div>
         </div>
