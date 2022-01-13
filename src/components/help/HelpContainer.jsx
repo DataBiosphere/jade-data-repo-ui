@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
+import { ReactComponent as ExitSVG } from 'media/icons/times-light.svg';
 import HelpPanel from './HelpPanel';
 
 const styles = (theme) => ({
@@ -35,6 +36,7 @@ const styles = (theme) => ({
     padding: '1em',
     width: '3em',
     height: '3em',
+    cursor: 'pointer',
   },
   footer: {
     position: 'absolute',
@@ -81,7 +83,7 @@ class HelpContainer extends React.Component {
           <div className={classes.panelContainer}>
             <div className={classes.anotherContainer}>
               <div className={classes.close} onClick={this.handleHelpExitClick}>
-                X
+                <ExitSVG />
               </div>
               <HelpPanel />
               <div className={classes.footer}>
