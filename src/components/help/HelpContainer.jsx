@@ -40,6 +40,7 @@ const styles = (theme) => ({
     width: '3em',
     height: '3em',
     cursor: 'pointer',
+    ...theme.mixins.jadeLink,
   },
   footer: {
     position: 'absolute',
@@ -59,6 +60,7 @@ const styles = (theme) => ({
     width: '48px',
     position: 'absolute',
     right: 0,
+    ...theme.mixins.jadeLink,
   },
   helpIcon: {
     padding: '8px',
