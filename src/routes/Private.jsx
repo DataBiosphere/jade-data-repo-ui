@@ -81,7 +81,7 @@ class Private extends React.Component {
                     <Tabs
                       value={dashboardTabValues}
                       lasses={{ root: classes.tabsRoot, indicator: classes.tabsIndicator }}
-                      />
+                    >
                       <Tab
                         label="Dashboard"
                         component={Link}
