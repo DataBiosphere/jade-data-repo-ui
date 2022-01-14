@@ -17,6 +17,7 @@ const styles = (theme) => ({
     display: 'flex',
     'flex-direction': 'column',
     'flex-wrap': 'nowrap',
+    'z-index': 1,
   },
   anotherContainer: {
     position: 'relative',
@@ -29,6 +30,7 @@ const styles = (theme) => ({
     opacity: 0.4,
     height: '100%',
     position: 'fixed',
+    'z-index': 1,
   },
   close: {
     position: 'absolute',
@@ -55,6 +57,8 @@ const styles = (theme) => ({
   helpOpen: {
     height: '48px',
     width: '48px',
+    position: 'absolute',
+    right: 0,
   },
   helpIcon: {
     padding: '8px',

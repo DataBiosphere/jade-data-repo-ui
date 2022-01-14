@@ -35,7 +35,7 @@ const styles = (theme) => ({
     fontWeight: 600,
     lineHeight: 18,
     textAlign: 'center',
-    width: 'calc(100% - 20px)',
+    width: '100%',
   },
   tabSelected: {
     backgroundColor: '#ddebd0',
@@ -80,7 +80,7 @@ class Private extends React.Component {
                   <div className={classes.tabWrapper}>
                     <Tabs
                       value={dashboardTabValues}
-                      lasses={{ root: classes.tabsRoot, indicator: classes.tabsIndicator }}
+                      classes={{ root: classes.tabsRoot, indicator: classes.tabsIndicator }}
                     >
                       <Tab
                         label="Dashboard"
