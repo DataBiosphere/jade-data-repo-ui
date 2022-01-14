@@ -10,8 +10,8 @@ const styles = (theme) => ({
   wrapper: {
     display: 'flex',
     justifyContent: 'center',
-    padding: theme.spacing(4),
-    margin: theme.spacing(4),
+    padding: '1rem',
+    margin: '1rem',
   },
   width: {
     ...theme.mixins.containerWidth,
@@ -29,9 +29,9 @@ class DatasetView extends React.PureComponent {
     classes: PropTypes.object.isRequired,
     datasets: PropTypes.array.isRequired,
     datasetsCount: PropTypes.number,
-    filteredDatasetsCount: PropTypes.number,
     dispatch: PropTypes.func.isRequired,
     features: PropTypes.object,
+    filteredDatasetsCount: PropTypes.number,
   };
 
   componentDidMount() {
@@ -49,7 +49,6 @@ class DatasetView extends React.PureComponent {
     return (
       <div className={classes.wrapper}>
         <div className={classes.width}>
-          <div className={classes.title}>Datasets</div>
           <div>
             {datasets && (
               <DatasetTable

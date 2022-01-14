@@ -4,11 +4,18 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom';
 
-import { getDatasets, getSnapshots } from 'actions/index';
-import SnapshotTable from './table/SnapshotTable';
-import DatasetTable from './table/DatasetTable';
+import Tab from '@material-ui/core/Tab';
+import { Tabs } from '@material-ui/core';
+import DatasetView from './DatasetView';
+import SnapshotView from './SnapshotView';
 
 const styles = (theme) => ({
+  pageRoot: {
+    padding: '16px 24px',
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%',
+  },
   header: {
     alignItems: 'center',
     color: theme.typography.color,
@@ -32,59 +39,80 @@ const styles = (theme) => ({
     paddingTop: theme.spacing(4),
   },
   title: {
-    color: theme.palette.primary.main,
-    fontSize: '54px',
-    lineHeight: '66px',
-    paddingBottom: theme.spacing(8),
+    color: theme.palette.secondary.dark,
+    fontSize: '1.5rem',
+    fontWeight: 700,
+    paddingBottom: '1rem',
   },
-  wrapper: {
-    display: 'flex',
+  tabsRoot: {
+    color: '#333F52',
     fontFamily: theme.typography.fontFamily,
-    justifyContent: 'center',
-    padding: theme.spacing(4),
-    margin: theme.spacing(4),
+    height: 18,
+    fontSize: '1rem',
+    fontWeight: 600,
+    lineHeight: 18,
+    textAlign: 'center',
   },
-  width: {
-    ...theme.mixins.containerWidth,
+  tabSelected: {
+    fontWeight: 700,
+    color: theme.palette.secondary.dark,
+    bottomBar: '6px',
+  },
+  tabsIndicator: {
+    borderBottom: `6px solid ${theme.palette.secondary.main}`,
+    transition: 'none',
   },
 });
 
 class HomeView extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    datasets: PropTypes.array.isRequired,
-    dispatch: PropTypes.func.isRequired,
-    features: PropTypes.object,
-    snapshots: PropTypes.array.isRequired,
+    location: PropTypes.object,
   };
 
-  componentDidMount() {
-    const { dispatch } = this.props;
-    dispatch(getDatasets(5));
-    dispatch(getSnapshots(5));
-  }
+  static prefixMatcher = new RegExp('/[^/]*');
 
   render() {
-    const { classes, datasets, features, snapshots } = this.props;
+    const { classes, location } = this.props;
+    const tabValue = HomeView.prefixMatcher.exec(location.pathname)[0];
+    let tableValue;
+
+    if (tabValue === '/datasets') {
+      tableValue = <DatasetView />;
+    } else if (tabValue === '/snapshots') {
+      tableValue = <SnapshotView />;
+    } else {
+      tableValue = <div />;
+    }
+
     return (
-      <div className={classes.wrapper}>
+      <div className={classes.pageRoot}>
         <div className={classes.width}>
-          <div className={classes.title}>Terra Data Repository at a glance</div>
-          <div className={classes.header}> RECENT DATASETS </div>
-          <DatasetTable summary datasets={datasets} features={features} />
-          <div>
-            <Link to="/datasets" className={classes.jadeLink}>
-              See all Datasets
-            </Link>
-          </div>
-          <div className={classes.jadeTableSpacer} />
-          <div className={classes.header}>RECENT SNAPSHOTS</div>
-          <SnapshotTable summary snapshots={snapshots} />
-          <div>
-            <Link to="/snapshots" className={classes.jadeLink}>
-              See all Snapshots
-            </Link>
-          </div>
+          <div className={classes.title}>Terra Data Repository</div>
+          <Tabs
+            classes={{ root: classes.tabsRoot, indicator: classes.tabsIndicator }}
+            value={tabValue}
+          >
+            <Tab
+              label="Datasets"
+              component={Link}
+              value="/datasets"
+              to="/datasets"
+              classes={{ selected: classes.tabSelected }}
+              disableFocusRipple
+              disableRipple
+            />
+            <Tab
+              label="Snapshots"
+              component={Link}
+              value="/snapshots"
+              to="/snapshots"
+              classes={{ selected: classes.tabSelected }}
+              disableFocusRipple
+              disableRipple
+            />
+          </Tabs>
+          {tableValue}
         </div>
       </div>
     );
@@ -93,9 +121,7 @@ class HomeView extends React.PureComponent {
 
 function mapStateToProps(state) {
   return {
-    datasets: state.datasets.datasets,
-    features: state.user.features,
-    snapshots: state.snapshots.snapshots,
+    location: state.router.location,
   };
 }
 

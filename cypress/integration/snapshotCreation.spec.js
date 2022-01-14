@@ -69,8 +69,7 @@ describe('test snapshot creation', () => {
     });
     cy.get('#e2eLoginButton').click();
 
-    cy.contains('See all Datasets').click();
-    cy.contains('Date created').click();
+    cy.get('[placeholder=Search]').type('V2F_GWAS');
     cy.contains(/V2F_GWAS_Summary_Stats|V2F_GWAS_Summary_Statistics/g).should('be.visible');
     cy.contains(/V2F_GWAS_Summary_Stats|V2F_GWAS_Summary_Statistics/g).click();
     cy.wait(['@getDataset', '@getDatasetPolicies', '@getBillingProfileById']);
@@ -121,8 +120,7 @@ describe('test snapshot creation is disabled', () => {
     });
     cy.get('#e2eLoginButton').click();
 
-    cy.contains('See all Datasets').click();
-    cy.contains('Date created').click();
+    cy.get('[placeholder=Search]').type('V2F_GWAS');
     cy.contains(/V2F_GWAS_Summary_Stats|V2F_GWAS_Summary_Statistics/g).should('be.visible');
     cy.contains(/V2F_GWAS_Summary_Stats|V2F_GWAS_Summary_Statistics/g).click();
     cy.wait(['@getDataset', '@getDatasetPolicies']);

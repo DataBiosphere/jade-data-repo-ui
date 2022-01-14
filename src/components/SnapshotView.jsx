@@ -11,8 +11,8 @@ const styles = (theme) => ({
   wrapper: {
     display: 'flex',
     justifyContent: 'center',
-    padding: theme.spacing(4),
-    margin: theme.spacing(4),
+    padding: '1rem',
+    margin: '1rem',
   },
   width: {
     ...theme.mixins.containerWidth,
@@ -51,7 +51,6 @@ class SnapshotView extends React.PureComponent {
     return (
       <div id="snapshots" className={classes.wrapper}>
         <div className={classes.width}>
-          <div className={classes.title}>Snapshots</div>
           <div>
             <SnapshotTable
               snapshotCount={snapshotCount}
