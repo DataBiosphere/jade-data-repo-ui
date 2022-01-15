@@ -7,13 +7,13 @@ import HelpPanel from './HelpPanel';
 
 const styles = (theme) => ({
   panelContainer: {
-    color: '#333F52',
+    color: theme.typography.color,
     fontFamily: theme.typography.fontFamily,
     right: '0',
     'max-width': '815px',
-    height: 'calc(100% - 64px)', // 64px = height of top nav bar
+    height: 'calc(100% - ' + theme.constants.navBarHeight + ')',
     position: 'fixed',
-    'background-color': '#E9ECEF',
+    'background-color': theme.palette.panel.background,
     display: 'flex',
     'flex-direction': 'column',
     'flex-wrap': 'nowrap',
@@ -24,10 +24,10 @@ const styles = (theme) => ({
     height: '100%',
   },
   background: {
-    background: '#000000',
+    background: theme.palette.panel.outsidePanel,
     left: 0,
     right: 0,
-    opacity: 0.4,
+    opacity: theme.palette.panel.outsidePanelOpacity,
     height: '100%',
     position: 'fixed',
     'z-index': 1,
@@ -45,7 +45,7 @@ const styles = (theme) => ({
   footer: {
     position: 'absolute',
     bottom: '0',
-    background: '#d7dbdf',
+    background: theme.palette.panel.footer,
     width: '100%',
     height: '100px',
     'padding-left': '30px',
@@ -60,10 +60,13 @@ const styles = (theme) => ({
     width: '48px',
     position: 'absolute',
     right: 0,
+    cursor: 'pointer',
     ...theme.mixins.jadeLink,
   },
   helpIcon: {
     padding: '8px',
+    width: '100%',
+    height: '100%',
   },
 });
 
