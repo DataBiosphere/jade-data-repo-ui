@@ -21,7 +21,7 @@ const styles = (theme) => ({
     fontWeight: 600,
     letterSpacing: 0,
     lineHeight: '16px',
-    border: `1px solid ${theme.palette.lightTable.cellBorderColor}`,
+    border: `1px solid ${theme.palette.lightTable.borderColor}`,
   },
 });
 

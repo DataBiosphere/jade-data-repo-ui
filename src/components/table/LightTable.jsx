@@ -11,11 +11,12 @@ import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/Search';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 
+import clsx from 'clsx';
 import LightTableHead from './LightTableHead';
 
 const styles = (theme) => ({
   root: {
-    border: '1px solid #e8eaeb',
+    border: `1px solid ${theme.palette.lightTable.borderColor}`,
     borderRadius: `${theme.shape.borderRadius}px ${theme.shape.borderRadius}px 0 0`,
     boxShadow: 'none',
     marginTop: theme.spacing(3),
@@ -30,10 +31,10 @@ const styles = (theme) => ({
   row: {
     borderRadius: `${theme.shape.borderRadius}px ${theme.shape.borderRadius}px 0 0`,
   },
-  evenRow: {
+  lightRow: {
     backgroundColor: theme.palette.lightTable.callBackgroundLight,
   },
-  oddRow: {
+  darkRow: {
     backgroundColor: theme.palette.lightTable.cellBackgroundDark,
   },
   paginationButton: {
@@ -186,18 +187,25 @@ export class LightTable extends React.PureComponent {
             />
             <TableBody>
               {rows && rows.length > 0 ? (
-                rows.map((row, index) => (
-                  <TableRow
-                    key={rowKey ? rowKey(row) : row.id}
-                    className={`${classes.row} ${index % 2 ? classes.oddRow : classes.evenRow}`}
-                  >
-                    {columns.map((col) => (
-                      <TableCell key={col.property} style={{ wordBreak: 'break-word' }}>
-                        {col.render ? col.render(row) : row[col.property]}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
+                rows.map((row, index) => {
+                  const darkRow = index % 2 !== 0;
+                  return (
+                    <TableRow
+                      key={rowKey ? rowKey(row) : row.id}
+                      className={clsx({
+                        [classes.row]: true,
+                        [classes.darkRow]: darkRow,
+                        [classes.lightRow]: !darkRow,
+                      })}
+                    >
+                      {columns.map((col) => (
+                        <TableCell key={col.property} style={{ wordBreak: 'break-word' }}>
+                          {col.render ? col.render(row) : row[col.property]}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  );
+                })
               ) : (
                 <TableRow className={classes.row}>
                   <TableCell colSpan={columns.length}>

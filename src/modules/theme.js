@@ -92,7 +92,7 @@ export default createMuiTheme({
     lightTable: {
       cellBackgroundDark: 'rgba(233,236,239,0.4)',
       callBackgroundLight: 'white',
-      cellBorderColor: '#E8EAEB',
+      borderColor: '#E8EAEB',
       paginationBlue: '#4D72AA',
     },
     primary: {
