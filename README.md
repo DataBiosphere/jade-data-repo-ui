@@ -75,7 +75,7 @@ export CYPRESS_GOOGLE_TOKEN=<YOUR-TOKEN-HERE>
 `npx cypress open` or `npx cypress run`
 
 ## skaffold
-To render your own local skffold.yaml run the following with your initials
+To render your own local skaffold.yaml run the following with your initials
 ```
 sed -e 's/TEMP/<initials>/g' skaffold.yaml.template > skaffold.yaml
 ```
