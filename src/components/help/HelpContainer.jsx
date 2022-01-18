@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { ReactComponent as ExitSVG } from 'media/icons/times-light.svg';
 import { ReactComponent as QuestionCircleSVG } from 'media/icons/question-circle-solid.svg';
-import HelpPanel from './HelpPanel';
+import HelpFooter from './HelpFooter';
+import HelpContent from './HelpContent';
 
 const styles = (theme) => ({
   panelContainer: {
@@ -19,7 +20,7 @@ const styles = (theme) => ({
     'flex-wrap': 'nowrap',
     'z-index': 1,
   },
-  anotherContainer: {
+  contentAndCloseArrowFormat: {
     position: 'relative',
     height: '100%',
   },
@@ -32,7 +33,7 @@ const styles = (theme) => ({
     position: 'fixed',
     'z-index': 1,
   },
-  close: {
+  exitButton: {
     position: 'absolute',
     top: 0,
     right: 0,
@@ -42,20 +43,7 @@ const styles = (theme) => ({
     cursor: 'pointer',
     ...theme.mixins.jadeLink,
   },
-  footer: {
-    position: 'absolute',
-    bottom: '0',
-    background: theme.palette.panel.footer,
-    width: '100%',
-    height: '100px',
-    'padding-left': '30px',
-    'padding-top': '15px',
-    'padding-bottom': '15px',
-  },
-  jadeLink: {
-    ...theme.mixins.jadeLink,
-  },
-  helpOpen: {
+  helpOpenButton: {
     height: '48px',
     width: '48px',
     position: 'absolute',
@@ -63,7 +51,7 @@ const styles = (theme) => ({
     cursor: 'pointer',
     ...theme.mixins.jadeLink,
   },
-  helpIcon: {
+  helpOpen: {
     padding: '8px',
     width: '100%',
     height: '100%',
@@ -98,36 +86,12 @@ class HelpContainer extends React.Component {
         <div>
           <div className={classes.background} onClick={this.handleHelpExitClick} />
           <div className={classes.panelContainer}>
-            <div className={classes.anotherContainer}>
-              <div className={classes.close} onClick={this.handleHelpExitClick}>
+            <div className={classes.contentAndCloseArrowFormat}>
+              <div className={classes.exitButton} onClick={this.handleHelpExitClick}>
                 <ExitSVG />
               </div>
-              <HelpPanel />
-              <div className={classes.footer}>
-                <p>
-                  <b>Not finding what you are looking for?</b>
-                  <br />
-                  Visit the&nbsp;
-                  <a
-                    className={classes.jadeLink}
-                    href="https://support.terra.bio/hc/en-us/sections/4407099323675-Terra-Data-Repository"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Terra Support Hub
-                  </a>
-                  &nbsp;or&nbsp;
-                  <a
-                    className={classes.jadeLink}
-                    href="https://support.terra.bio/hc/en-us/requests/new"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    contact us
-                  </a>
-                  .
-                </p>
-              </div>
+              <HelpContent />
+              <HelpFooter />
             </div>
           </div>
         </div>
@@ -135,7 +99,7 @@ class HelpContainer extends React.Component {
     }
     return (
       <div onClick={this.handleHelpButtonClick} className={classes.helpOpen}>
-        <QuestionCircleSVG className={classes.helpIcon} />
+        <QuestionCircleSVG className={classes.helpOpenButton} />
       </div>
     );
   }

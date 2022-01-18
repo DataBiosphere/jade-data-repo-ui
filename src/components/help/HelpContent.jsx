@@ -33,7 +33,7 @@ const styles = () => ({
   },
 });
 
-class HelpPanel extends React.Component {
+class HelpContent extends React.Component {
   static propTypes = {
     classes: PropTypes.object.isRequired,
   };
@@ -89,4 +89,4 @@ class HelpPanel extends React.Component {
   }
 }
 
-export default withStyles(styles)(HelpPanel);
+export default withStyles(styles)(HelpContent);
