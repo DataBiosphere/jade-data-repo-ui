@@ -43,7 +43,7 @@ const styles = (theme) => ({
     cursor: 'pointer',
     ...theme.mixins.jadeLink,
   },
-  helpOpenButton: {
+  helpOpen: {
     height: '48px',
     width: '48px',
     position: 'absolute',
@@ -51,7 +51,7 @@ const styles = (theme) => ({
     cursor: 'pointer',
     ...theme.mixins.jadeLink,
   },
-  helpOpen: {
+  helpOpenButton: {
     padding: '8px',
     width: '100%',
     height: '100%',
