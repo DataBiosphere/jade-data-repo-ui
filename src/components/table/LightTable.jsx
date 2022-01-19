@@ -7,9 +7,6 @@ import TableCell from '@material-ui/core/TableCell';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import InputBase from '@material-ui/core/InputBase';
-import SearchIcon from '@material-ui/icons/Search';
-import { fade } from '@material-ui/core/styles/colorManipulator';
 
 import clsx from 'clsx';
 import LightTableHead from './LightTableHead';
@@ -19,7 +16,6 @@ const styles = (theme) => ({
     border: `1px solid ${theme.palette.lightTable.borderColor}`,
     borderRadius: `${theme.shape.borderRadius}px ${theme.shape.borderRadius}px 0 0`,
     boxShadow: 'none',
-    marginTop: theme.spacing(3),
     overflowX: 'auto',
     width: '100%',
     overflowWrap: 'break-word',
@@ -30,20 +26,6 @@ const styles = (theme) => ({
   },
   row: {
     borderRadius: `${theme.shape.borderRadius}px ${theme.shape.borderRadius}px 0 0`,
-  },
-  lightRow: {
-    backgroundColor: theme.palette.lightTable.callBackgroundLight,
-  },
-  darkRow: {
-    backgroundColor: theme.palette.lightTable.cellBackgroundDark,
-  },
-  paginationButton: {
-    borderRadius: `${theme.shape.borderRadius}px`,
-    margin: '0px 2px',
-    transition: null,
-    padding: '0.25rem',
-    border: `1px solid ${theme.palette.lightTable.paginationBlue}`,
-    color: theme.palette.lightTable.paginationBlue,
   },
   search: {
     height: 45,
@@ -87,7 +69,6 @@ export class LightTable extends React.PureComponent {
       orderBy: 'created_date',
       page: 0,
       rowsPerPage: DEFAULT_PAGE_SIZE,
-      searchString: '',
     };
   }
 
@@ -101,6 +82,7 @@ export class LightTable extends React.PureComponent {
     summary: PropTypes.bool,
     totalCount: PropTypes.number,
     filteredCount: PropTypes.number,
+    searchString: PropTypes.string,
   };
 
   handleRequestSort = (event, sort) => {
@@ -132,14 +114,14 @@ export class LightTable extends React.PureComponent {
     handleEnumeration(rowsPerPage, offset, orderBy, orderDirection, searchString);
   };
 
-  handleSearchString = (event) => {
-    const { handleEnumeration } = this.props;
-    const { page, orderDirection, orderBy, rowsPerPage } = this.state; // limit
-    const offset = page * rowsPerPage;
-    const searchString = event.target.value;
-    this.setState({ searchString }); // filter
-    handleEnumeration(rowsPerPage, offset, orderBy, orderDirection, searchString);
-  };
+  componentDidUpdate(prevProps) {
+    const { handleEnumeration, searchString } = this.props;
+    if (prevProps.searchString !== searchString) {
+      const { page, orderDirection, orderBy, rowsPerPage } = this.state; // limit
+      const offset = page * rowsPerPage;
+      handleEnumeration(rowsPerPage, offset, orderBy, orderDirection, searchString);
+    }
+  }
 
   render() {
     const {
@@ -161,21 +143,6 @@ export class LightTable extends React.PureComponent {
         : 0;
     return (
       <div>
-        {!summary && (
-          <div className={classes.search}>
-            <div className={classes.searchIcon}>
-              <SearchIcon />
-            </div>
-            <InputBase
-              placeholder="Search"
-              classes={{
-                root: classes.inputRoot,
-                input: classes.searchInput,
-              }}
-              onChange={this.handleSearchString}
-            />
-          </div>
-        )}
         <Paper className={classes.root}>
           <Table className={classes.table}>
             <LightTableHead

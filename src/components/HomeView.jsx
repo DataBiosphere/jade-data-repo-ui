@@ -8,6 +8,7 @@ import Tab from '@material-ui/core/Tab';
 import { Tabs } from '@material-ui/core';
 import DatasetView from './DatasetView';
 import SnapshotView from './SnapshotView';
+import SearchTable from './table/SearchTable';
 
 const styles = (theme) => ({
   pageRoot: {
@@ -42,7 +43,8 @@ const styles = (theme) => ({
     color: theme.palette.secondary.dark,
     fontSize: '1.5rem',
     fontWeight: 700,
-    paddingBottom: '1rem',
+    flex: '1 1 0',
+    'padding-right': '2em',
   },
   tabsRoot: {
     color: '#333F52',
@@ -52,6 +54,7 @@ const styles = (theme) => ({
     fontWeight: 600,
     lineHeight: 18,
     textAlign: 'center',
+    width: '100%',
   },
   tabSelected: {
     fontWeight: 700,
@@ -62,9 +65,20 @@ const styles = (theme) => ({
     borderBottom: `6px solid ${theme.palette.secondary.main}`,
     transition: 'none',
   },
+  titleAndSearch: {
+    display: 'flex',
+    'margin-top': '2em',
+    'margin-bottom': '2em',
+  },
 });
 
 class HomeView extends React.PureComponent {
+  constructor(props) {
+    super(props);
+
+    this.state = { searchString: '' };
+  }
+
   static propTypes = {
     classes: PropTypes.object.isRequired,
     location: PropTypes.object,
@@ -72,15 +86,21 @@ class HomeView extends React.PureComponent {
 
   static prefixMatcher = new RegExp('/[^/]*');
 
+  handleSearchString = (event) => {
+    const searchString = event.target.value;
+    this.setState({ searchString }); // filter
+  };
+
   render() {
     const { classes, location } = this.props;
+    const { searchString } = this.state;
     const tabValue = HomeView.prefixMatcher.exec(location.pathname)[0];
     let tableValue;
 
     if (tabValue === '/datasets') {
-      tableValue = <DatasetView />;
+      tableValue = <DatasetView searchString={searchString} />;
     } else if (tabValue === '/snapshots') {
-      tableValue = <SnapshotView />;
+      tableValue = <SnapshotView searchString={searchString} />;
     } else {
       tableValue = <div />;
     }
@@ -88,7 +108,10 @@ class HomeView extends React.PureComponent {
     return (
       <div className={classes.pageRoot}>
         <div className={classes.width}>
-          <div className={classes.title}>Terra Data Repository</div>
+          <div className={classes.titleAndSearch}>
+            <div className={classes.title}>Terra Data Repository</div>
+            <SearchTable onSearchStringChange={this.handleSearchString} />
+          </div>
           <Tabs
             classes={{ root: classes.tabsRoot, indicator: classes.tabsIndicator }}
             value={tabValue}
