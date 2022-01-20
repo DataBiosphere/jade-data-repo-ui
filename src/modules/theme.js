@@ -103,6 +103,12 @@ export default createMuiTheme({
       contrastText: '#8F96A1',
       dark: '#333F52',
     },
+    panel: {
+      background: '#E9ECEF',
+      footer: '#d7dbdf',
+      outsidePanel: '#000000',
+      outsidePanelOpacity: 0.4,
+    },
     error: {
       main: '#DB3214',
       contrastText: '#8F96A1',
@@ -143,5 +149,8 @@ export default createMuiTheme({
     containerWidth: {
       width: '100%',
     },
+  },
+  constants: {
+    navBarHeight: '64px',
   },
 });

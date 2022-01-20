@@ -7,6 +7,7 @@ import { ConnectedRouter } from 'connected-react-router';
 import PropTypes from 'prop-types';
 import history from 'modules/hist';
 
+import HelpContainer from 'components/help/HelpContainer';
 import HomeView from '../components/HomeView';
 import SnapshotDetailView from '../components/SnapshotDetailView';
 import DatasetDetailView from '../components/dataset/details/DatasetDetailView';
@@ -34,6 +35,7 @@ const styles = (theme) => ({
     fontWeight: 600,
     lineHeight: 18,
     textAlign: 'center',
+    width: '100%',
   },
   tabSelected: {
     backgroundColor: '#ddebd0',
@@ -44,6 +46,15 @@ const styles = (theme) => ({
     height: '100%',
     display: 'flex',
     flexDirection: 'column',
+  },
+  tabWrapper: {
+    display: 'flex',
+  },
+  helpIconDiv: {
+    borderBottom: `2px solid ${theme.palette.secondary.main}`,
+    boxShadow: '0 2px 5px 0 rgba(0,0,0,0.26), 0 2px 10px 0 rgba(0,0,0,0.16)',
+    float: 'right',
+    width: '20px',
   },
 });
 
@@ -66,20 +77,23 @@ class Private extends React.Component {
               path="/"
               render={() => (
                 <Fragment>
-                  <Tabs
-                    value={dashboardTabValues}
-                    classes={{ root: classes.tabsRoot, indicator: classes.tabsIndicator }}
-                  >
-                    <Tab
-                      label="Dashboard"
-                      component={Link}
-                      value="/datasets"
-                      to="/datasets"
-                      classes={{ selected: classes.tabSelected }}
-                      disableFocusRipple
-                      disableRipple
-                    />
-                  </Tabs>
+                  <div className={classes.tabWrapper}>
+                    <Tabs
+                      value={dashboardTabValues}
+                      classes={{ root: classes.tabsRoot, indicator: classes.tabsIndicator }}
+                    >
+                      <Tab
+                        label="Dashboard"
+                        component={Link}
+                        value="/datasets"
+                        to="/datasets"
+                        classes={{ selected: classes.tabSelected }}
+                        disableFocusRipple
+                        disableRipple
+                      />
+                    </Tabs>
+                    <HelpContainer className={classes.helpIconDiv} />
+                  </div>
                   <div className={classes.component}>
                     <Switch>
                       <Route exact path="/" component={HomeView}>
