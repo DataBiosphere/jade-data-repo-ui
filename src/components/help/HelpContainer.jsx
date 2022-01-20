@@ -61,8 +61,6 @@ const styles = (theme) => ({
 class HelpContainer extends React.Component {
   constructor(props) {
     super(props);
-    this.handleHelpButtonClick = this.handleHelpButtonClick.bind(this);
-    this.handleHelpExitClick = this.handleHelpExitClick.bind(this);
     this.state = { helpExpanded: false };
   }
 
@@ -70,11 +68,11 @@ class HelpContainer extends React.Component {
     classes: PropTypes.object.isRequired,
   };
 
-  handleHelpButtonClick() {
+  handleHelpButtonClick = () => {
     this.setState({ helpExpanded: true });
   }
 
-  handleHelpExitClick() {
+  handleHelpExitClick = () => {
     this.setState({ helpExpanded: false });
   }
 
