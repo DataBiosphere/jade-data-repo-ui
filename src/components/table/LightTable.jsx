@@ -11,11 +11,12 @@ import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/Search';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 
+import clsx from 'clsx';
 import LightTableHead from './LightTableHead';
 
 const styles = (theme) => ({
   root: {
-    border: `1px solid ${theme.palette.primary.dark}`,
+    border: `1px solid ${theme.palette.lightTable.borderColor}`,
     borderRadius: `${theme.shape.borderRadius}px ${theme.shape.borderRadius}px 0 0`,
     boxShadow: 'none',
     marginTop: theme.spacing(3),
@@ -29,6 +30,20 @@ const styles = (theme) => ({
   },
   row: {
     borderRadius: `${theme.shape.borderRadius}px ${theme.shape.borderRadius}px 0 0`,
+  },
+  lightRow: {
+    backgroundColor: theme.palette.lightTable.callBackgroundLight,
+  },
+  darkRow: {
+    backgroundColor: theme.palette.lightTable.cellBackgroundDark,
+  },
+  paginationButton: {
+    borderRadius: `${theme.shape.borderRadius}px`,
+    margin: '0px 2px',
+    transition: null,
+    padding: '0.25rem',
+    border: `1px solid ${theme.palette.lightTable.paginationBlue}`,
+    color: theme.palette.lightTable.paginationBlue,
   },
   search: {
     height: 45,
@@ -172,15 +187,25 @@ export class LightTable extends React.PureComponent {
             />
             <TableBody>
               {rows && rows.length > 0 ? (
-                rows.map((row) => (
-                  <TableRow key={rowKey ? rowKey(row) : row.id} className={classes.row}>
-                    {columns.map((col) => (
-                      <TableCell key={col.property} style={{ wordBreak: 'break-word' }}>
-                        {col.render ? col.render(row) : row[col.property]}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
+                rows.map((row, index) => {
+                  const darkRow = index % 2 !== 0;
+                  return (
+                    <TableRow
+                      key={rowKey ? rowKey(row) : row.id}
+                      className={clsx({
+                        [classes.row]: true,
+                        [classes.darkRow]: darkRow,
+                        [classes.lightRow]: !darkRow,
+                      })}
+                    >
+                      {columns.map((col) => (
+                        <TableCell key={col.property} style={{ wordBreak: 'break-word' }}>
+                          {col.render ? col.render(row) : row[col.property]}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  );
+                })
               ) : (
                 <TableRow className={classes.row}>
                   <TableCell colSpan={columns.length}>
@@ -204,9 +229,17 @@ export class LightTable extends React.PureComponent {
               page={page}
               backIconButtonProps={{
                 'aria-label': 'Previous Page',
+                disableTouchRipple: true,
+                disableFocusRipple: true,
+                disableRipple: true,
+                className: classes.paginationButton,
               }}
               nextIconButtonProps={{
                 'aria-label': 'Next Page',
+                disableTouchRipple: true,
+                disableFocusRipple: true,
+                disableRipple: true,
+                className: classes.paginationButton,
               }}
               onChangePage={this.handleChangePage}
               onChangeRowsPerPage={this.handleChangeRowsPerPage}

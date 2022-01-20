@@ -89,6 +89,12 @@ export default createMuiTheme({
       linkHover: LINK_HOVER,
       selection: '#99CCFF',
     },
+    lightTable: {
+      cellBackgroundDark: 'rgba(233,236,239,0.4)',
+      callBackgroundLight: 'white',
+      borderColor: '#E8EAEB',
+      paginationBlue: '#4D72AA',
+    },
     primary: {
       main: '#81AB52',
       contrastText: '#FFFFFF',
@@ -136,6 +142,11 @@ export default createMuiTheme({
         '&$expanded': {
           margin: 0,
         },
+      },
+    },
+    MuiTablePagination: {
+      actions: {
+        marginRight: '20px',
       },
     },
   },

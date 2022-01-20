@@ -6,17 +6,22 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Tooltip from '@material-ui/core/Tooltip';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
+import { Sort } from '@material-ui/icons';
 
 const styles = (theme) => ({
   head: {
     color: theme.palette.primary.dark,
-    backgroundColor: theme.palette.primary.light,
+    backgroundColor: theme.palette.lightTable.cellBackgroundDark,
     fontFamily: theme.typography.fontFamily,
   },
   cell: {
     color: theme.palette.secondary.dark,
     minWidth: 200,
-    fontWeight: 500,
+    fontSize: '14px',
+    fontWeight: 600,
+    letterSpacing: 0,
+    lineHeight: '16px',
+    border: `1px solid ${theme.palette.lightTable.borderColor}`,
   },
 });
 
@@ -53,19 +58,22 @@ export class LightTableHead extends React.PureComponent {
                 {summary ? (
                   col.label
                 ) : (
-                  <Tooltip
-                    title="Sort"
-                    placement={col.numeric ? 'bottom-end' : 'bottom-start'}
-                    enterDelay={300}
-                  >
-                    <TableSortLabel
-                      active={orderBy === col.property}
-                      direction={orderDirection}
-                      onClick={this.createSortHandler(col.property)}
+                  <div>
+                    {col.label}
+                    <Tooltip
+                      title="Sort"
+                      placement={col.numeric ? 'bottom-end' : 'bottom-start'}
+                      enterDelay={300}
                     >
-                      {col.label}
-                    </TableSortLabel>
-                  </Tooltip>
+                      <TableSortLabel
+                        active={orderBy === col.property}
+                        direction={orderDirection}
+                        onClick={this.createSortHandler(col.property)}
+                        IconComponent={Sort}
+                        style={{ float: 'right' }}
+                      />
+                    </Tooltip>
+                  </div>
                 )}
               </TableCell>
             ),
