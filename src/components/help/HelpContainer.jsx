@@ -70,11 +70,11 @@ class HelpContainer extends React.Component {
 
   handleHelpButtonClick = () => {
     this.setState({ helpExpanded: true });
-  }
+  };
 
   handleHelpExitClick = () => {
     this.setState({ helpExpanded: false });
-  }
+  };
 
   render() {
     const { classes } = this.props;
