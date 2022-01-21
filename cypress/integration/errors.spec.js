@@ -12,7 +12,7 @@ describe('test error handling', () => {
     });
     cy.get('#e2eLoginButton').click();
 
-    cy.get('[placeholder=Search]').type('V2F_GWAS');
+    cy.get('[placeholder="Search keyword or description"]').type('V2F_GWAS');
     cy.contains(/V2F_GWAS_Summary_Stats|V2F_GWAS_Summary_Statistics/g).should('be.visible');
     cy.contains(/V2F_GWAS_Summary_Stats|V2F_GWAS_Summary_Statistics/g).click();
   });
