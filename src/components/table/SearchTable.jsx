@@ -31,7 +31,7 @@ const styles = (theme) => ({
   },
   inputRoot: {
     width: '100%',
-  }
+  },
 });
 
 export class SearchTable extends React.PureComponent {
