@@ -118,7 +118,7 @@ export class AppliedFilterList extends React.PureComponent {
             key={i}
             onDelete={() => this.clearFilter(table, filter, datum)}
             className={classes.inline}
-            label={datum}
+            label={"Marked as Exclude" + datum}
           />
         ));
         numFilters += dataString.length;
