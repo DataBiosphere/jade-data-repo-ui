@@ -9,10 +9,10 @@ const styles = (theme) => ({
   search: {
     height: 45,
     width: '100%',
-    border: '1px solid #AEB3BA',
-    backgroundColor: '#F1F4F8',
+    border: `1px solid ${theme.palette.common.border}`,
+    backgroundColor: theme.palette.common.selectedTextBackground,
     '&:hover': {
-      backgroundColor: fade('#99CCFF', 0.2),
+      backgroundColor: fade(theme.palette.common.selection, 0.2),
     },
     position: 'relative',
     borderRadius: theme.shape.searchBorderRadius,
@@ -34,30 +34,27 @@ const styles = (theme) => ({
   },
 });
 
-export class SearchTable extends React.PureComponent {
-  static propTypes = {
-    classes: PropTypes.object.isRequired,
-    onSearchStringChange: PropTypes.func.isRequired,
-  };
-
-  render() {
-    const { classes, onSearchStringChange } = this.props;
-    return (
-      <div className={classes.search}>
-        <div className={classes.searchIcon}>
-          <SearchSVG />
-        </div>
-        <InputBase
-          placeholder="Search keyword or description"
-          classes={{
-            root: classes.inputRoot,
-            input: classes.searchInput,
-          }}
-          onChange={onSearchStringChange}
-        />
+function SearchTable({ classes, onSearchStringChange }) {
+  return (
+    <div className={classes.search}>
+      <div className={classes.searchIcon}>
+        <SearchSVG />
       </div>
-    );
-  }
+      <InputBase
+        placeholder="Search keyword or description"
+        classes={{
+          root: classes.inputRoot,
+          input: classes.searchInput,
+        }}
+        onChange={onSearchStringChange}
+      />
+    </div>
+  );
 }
+
+SearchTable.propTypes = {
+  classes: PropTypes.object.isRequired,
+  onSearchStringChange: PropTypes.func.isRequired,
+};
 
 export default withStyles(styles)(SearchTable);
