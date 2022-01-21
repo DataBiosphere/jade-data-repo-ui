@@ -78,7 +78,7 @@ class DatasetTable extends React.PureComponent {
           <div>
             {Array.from(new Set(row.storage.map((s) => cloudPlatforms[s.cloudPlatform]))).map(
               (c) => (
-                <div>{c}</div>
+                <div key={c}>{c}</div>
               ),
             )}
           </div>

@@ -95,7 +95,7 @@ function LightTable({
         : 0,
     );
     handleEnumeration(rowsPerPage, offset, orderBy, orderDirection, searchString);
-  }, [searchString, page, rowsPerPage, orderDirection]);
+  }, [searchString, page, rowsPerPage, orderDirection, filteredCount, handleEnumeration, orderBy]);
 
   return (
     <div>
