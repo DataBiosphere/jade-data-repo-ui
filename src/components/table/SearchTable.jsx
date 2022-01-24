@@ -15,7 +15,7 @@ const styles = (theme) => ({
       backgroundColor: fade(theme.palette.common.selection, 0.2),
     },
     position: 'relative',
-    borderRadius: theme.shape.searchBorderRadius,
+    borderRadius: '35px',
     marginLeft: 0,
     flex: '2 1 0',
     display: 'flex',

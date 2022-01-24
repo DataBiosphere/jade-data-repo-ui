@@ -125,7 +125,6 @@ export default createMuiTheme({
   },
   shape: {
     borderRadius: 5,
-    searchBorderRadius: 35,
   },
   overrides: {
     MuiExpansionPanel: {
