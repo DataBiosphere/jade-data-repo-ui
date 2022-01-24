@@ -35,6 +35,7 @@ const styles = (theme) => ({
   },
   smallText: {
     'font-size': '.75rem',
+    paddingLeft: '10px',
   },
 });
 
@@ -133,7 +134,7 @@ export class AppliedFilterList extends React.PureComponent {
           key={filter}
           subheader={
             <ListSubheader className={classes.filterHeader} component="div">
-              {filter} {isExcluded ? <i className={classes.smallText}>   Marked as Excluded</i> : ''}
+              {filter} {isExcluded ? <i className={classes.smallText}>Marked as Excluded</i> : ''}
             </ListSubheader>
           }
         >
