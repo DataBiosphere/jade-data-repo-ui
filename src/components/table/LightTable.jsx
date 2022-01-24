@@ -131,7 +131,13 @@ function LightTable({
               })
             ) : (
               <TableRow className={classes.row}>
-                <TableCell colSpan={columns.length}>No {itemType} have been created yet</TableCell>
+                {filteredCount < totalCount ? (
+                  <TableCell colSpan={columns.length}>No {itemType} match your filter</TableCell>
+                ) : (
+                  <TableCell colSpan={columns.length}>
+                    No {itemType} have been created yet
+                  </TableCell>
+                )}
               </TableRow>
             )}
             {rows && emptyRows > 0 && rows.length < rowsPerPage && (
