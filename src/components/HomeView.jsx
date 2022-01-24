@@ -91,6 +91,10 @@ class HomeView extends React.PureComponent {
     this.setState({ searchString }); // filter
   };
 
+  clearSearchString = () => {
+    this.setState({ searchString: '' });
+  };
+
   render() {
     const { classes, location } = this.props;
     const { searchString } = this.state;
@@ -110,7 +114,11 @@ class HomeView extends React.PureComponent {
         <div className={classes.width}>
           <div className={classes.titleAndSearch}>
             <div className={classes.title}>Terra Data Repository</div>
-            <SearchTable onSearchStringChange={this.handleSearchString} />
+            <SearchTable
+              searchString={searchString}
+              onSearchStringChange={this.handleSearchString}
+              clearSearchString={this.clearSearchString}
+            />
           </div>
           <Tabs
             classes={{ root: classes.tabsRoot, indicator: classes.tabsIndicator }}
