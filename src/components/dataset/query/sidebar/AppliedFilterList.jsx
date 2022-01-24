@@ -33,6 +33,9 @@ const styles = (theme) => ({
       2,
     )}px`,
   },
+  smallText: {
+    'font-size': '.75rem',
+  },
 });
 
 const StyledBadge = withStyles((theme) => ({
@@ -97,7 +100,6 @@ export class AppliedFilterList extends React.PureComponent {
     let numFilters = 0;
     const listFilters = _.keys(filterData[table]).map((filter) => {
       const data = _.get(filterData[table], filter);
-      console.log(data);
       let dataString = data.value;
       let isExcluded = data.exclude;
 
@@ -120,7 +122,7 @@ export class AppliedFilterList extends React.PureComponent {
             key={i}
             onDelete={() => this.clearFilter(table, filter, datum)}
             className={classes.inline}
-            label={(isExcluded ? "Marked as Excluded: " : '') + datum}
+            label={datum}
           />
         ));
         numFilters += dataString.length;
@@ -131,7 +133,7 @@ export class AppliedFilterList extends React.PureComponent {
           key={filter}
           subheader={
             <ListSubheader className={classes.filterHeader} component="div">
-              {filter}
+              {filter} {isExcluded ? <i className={classes.smallText}>   Marked as Excluded</i> : ''}
             </ListSubheader>
           }
         >
