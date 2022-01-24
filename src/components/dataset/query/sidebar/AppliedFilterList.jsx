@@ -97,7 +97,9 @@ export class AppliedFilterList extends React.PureComponent {
     let numFilters = 0;
     const listFilters = _.keys(filterData[table]).map((filter) => {
       const data = _.get(filterData[table], filter);
+      console.log(data);
       let dataString = data.value;
+      let isExcluded = data.exclude;
 
       if (data.type === 'range') {
         const enDash = ' \u2013 '; // it's a longer hyphen used to represent numerical ranges
@@ -118,7 +120,7 @@ export class AppliedFilterList extends React.PureComponent {
             key={i}
             onDelete={() => this.clearFilter(table, filter, datum)}
             className={classes.inline}
-            label={"Marked as Exclude" + datum}
+            label={(isExcluded ? "Marked as Excluded: " : '') + datum}
           />
         ));
         numFilters += dataString.length;
