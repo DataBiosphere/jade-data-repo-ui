@@ -33,6 +33,10 @@ const styles = (theme) => ({
       2,
     )}px`,
   },
+  smallText: {
+    'font-size': '.75rem',
+    paddingLeft: '10px',
+  },
 });
 
 const StyledBadge = withStyles((theme) => ({
@@ -98,6 +102,7 @@ export class AppliedFilterList extends React.PureComponent {
     const listFilters = _.keys(filterData[table]).map((filter) => {
       const data = _.get(filterData[table], filter);
       let dataString = data.value;
+      let isExcluded = data.exclude;
 
       if (data.type === 'range') {
         const enDash = ' \u2013 '; // it's a longer hyphen used to represent numerical ranges
@@ -129,7 +134,7 @@ export class AppliedFilterList extends React.PureComponent {
           key={filter}
           subheader={
             <ListSubheader className={classes.filterHeader} component="div">
-              {filter}
+              {filter} {isExcluded ? <i className={classes.smallText}>Marked as Excluded</i> : ''}
             </ListSubheader>
           }
         >
