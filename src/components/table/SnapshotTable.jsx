@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
+import { renderCloudPlatforms } from '../../libs/render-utils';
 
 import LightTable from './LightTable';
 
@@ -58,8 +59,8 @@ class SnapshotTable extends React.PureComponent {
       },
       {
         label: 'Cloud Platform',
-        property: 'platorm',
-        render: (row) => Array.from(new Set(row.storage.map((s) => s.cloudPlatform))).join(', '),
+        property: 'platform',
+        render: renderCloudPlatforms,
       },
     ];
     return (
