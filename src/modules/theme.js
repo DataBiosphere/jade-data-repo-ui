@@ -88,6 +88,8 @@ export default createMuiTheme({
       link: LINK,
       linkHover: LINK_HOVER,
       selection: '#99CCFF',
+      border: '#AEB3BA',
+      selectedTextBackground: '#F1F4F8',
     },
     lightTable: {
       cellBackgroundDark: 'rgba(233,236,239,0.4)',

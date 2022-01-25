@@ -20,6 +20,7 @@ class SnapshotTable extends React.PureComponent {
     filteredSnapshotCount: PropTypes.number,
     snapshots: PropTypes.array.isRequired,
     summary: PropTypes.bool,
+    searchString: PropTypes.string,
   };
 
   render() {
@@ -30,6 +31,7 @@ class SnapshotTable extends React.PureComponent {
       filteredSnapshotCount,
       snapshots,
       summary,
+      searchString,
     } = this.props;
     // TODO add back modified_date column
     const columns = [
@@ -72,6 +74,7 @@ class SnapshotTable extends React.PureComponent {
           summary={summary}
           totalCount={snapshotCount}
           filteredCount={filteredSnapshotCount}
+          searchString={searchString}
         />
       </div>
     );
