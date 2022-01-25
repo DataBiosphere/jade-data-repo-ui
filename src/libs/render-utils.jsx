@@ -8,8 +8,10 @@ const cloudPlatforms = { gcp: 'Google Cloud Platform', azure: 'Microsoft Azure' 
  */
 export const renderCloudPlatforms = (row) => (
   <div>
-    {Array.from(new Set(row.storage.map((s) => cloudPlatforms[s.cloudPlatform]))).map((c) => (
-      <div>{c}</div>
-    ))}
+    {Array.from(new Set(row.storage.map((s) => cloudPlatforms[s.cloudPlatform]))).map(
+      (c, index) => (
+        <div key={index.toString()}>{c}</div>
+      ),
+    )}
   </div>
 );
