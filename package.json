@@ -2,7 +2,7 @@
   "name": "jade-data-repo-ui",
   "title": "jade-data-repo-ui",
   "description": "Data Repository UI",
-  "version": "0.97.0",
+  "version": "0.99.0",
   "author": "Jade Team <jadeteam@broadinstitute.org>",
   "engines": {
     "node": ">12.14"
@@ -57,7 +57,7 @@
     "react-redux-form": "^1.16.14",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.4",
-    "react-select": "^4.3.1",
+    "react-select": "^5.2.2",
     "react-window": "^1.8.6",
     "redux": "^4.1.1",
     "redux-actions": "^2.6.5",

@@ -11,8 +11,7 @@ const styles = (theme) => ({
   wrapper: {
     display: 'flex',
     justifyContent: 'center',
-    padding: '1rem',
-    margin: '1rem',
+    marginTop: '1em',
   },
   width: {
     ...theme.mixins.containerWidth,
@@ -32,6 +31,7 @@ class SnapshotView extends React.PureComponent {
     snapshotCount: PropTypes.number,
     filteredSnapshotCount: PropTypes.number,
     snapshots: PropTypes.array.isRequired,
+    searchString: PropTypes.string,
   };
 
   componentDidMount() {
@@ -47,7 +47,7 @@ class SnapshotView extends React.PureComponent {
   };
 
   render() {
-    const { classes, snapshotCount, filteredSnapshotCount, snapshots } = this.props;
+    const { classes, snapshotCount, filteredSnapshotCount, snapshots, searchString } = this.props;
     return (
       <div id="snapshots" className={classes.wrapper}>
         <div className={classes.width}>
@@ -57,6 +57,7 @@ class SnapshotView extends React.PureComponent {
               filteredSnapshotCount={filteredSnapshotCount}
               snapshots={snapshots}
               handleFilterSnapshots={this.handleFilterSnapshots}
+              searchString={searchString}
             />
           </div>
         </div>

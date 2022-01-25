@@ -10,8 +10,7 @@ const styles = (theme) => ({
   wrapper: {
     display: 'flex',
     justifyContent: 'center',
-    padding: '1rem',
-    margin: '1rem',
+    marginTop: '1em',
   },
   width: {
     ...theme.mixins.containerWidth,
@@ -32,6 +31,7 @@ class DatasetView extends React.PureComponent {
     dispatch: PropTypes.func.isRequired,
     features: PropTypes.object,
     filteredDatasetsCount: PropTypes.number,
+    searchString: PropTypes.string,
   };
 
   componentDidMount() {
@@ -45,7 +45,14 @@ class DatasetView extends React.PureComponent {
   };
 
   render() {
-    const { classes, datasets, datasetsCount, filteredDatasetsCount, features } = this.props;
+    const {
+      classes,
+      datasets,
+      datasetsCount,
+      filteredDatasetsCount,
+      features,
+      searchString,
+    } = this.props;
     return (
       <div className={classes.wrapper}>
         <div className={classes.width}>
@@ -57,6 +64,7 @@ class DatasetView extends React.PureComponent {
                 features={features}
                 handleFilterDatasets={this.handleFilterDatasets}
                 filteredDatasetsCount={filteredDatasetsCount}
+                searchString={searchString}
               />
             )}
           </div>
