@@ -144,7 +144,7 @@ export class QueryView extends React.PureComponent {
     const panels = [
       {
         icon: Info,
-        width: 800,
+        width: 600,
         component: InfoView,
         table,
         dataset,

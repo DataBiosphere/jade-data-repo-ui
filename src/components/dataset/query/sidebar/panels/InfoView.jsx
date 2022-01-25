@@ -3,36 +3,23 @@ import moment from 'moment';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Paper, Typography } from '@material-ui/core';
+import { Accordion, AccordionDetails, AccordionSummary, Typography } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import UserList from '../../../../UserList';
+import { ExpandMore } from '@material-ui/icons';
+import DatasetAccess from './DatasetAccess';
 
 const styles = (theme) => ({
   root: {
     display: 'block',
     margin: theme.spacing(1),
-  },
-  paperBody: {
     padding: theme.spacing(2),
   },
-  headerText: {
+  blueHeader: {
     fontSize: '14px',
     lineHeight: '22px',
     fontWeight: '600',
-    marginTop: theme.spacing(3),
-  },
-  tableList: {
-    listStyle: 'none',
-    padding: '0px',
-    width: '50%',
-    margin: '0px',
-  },
-  listItem: {
-    backgroundColor: theme.palette.primary.lightContrast,
-    margin: '6px 0px 6px 0px',
-    borderRadius: '3px',
-    padding: '3px 3px 3px 5px',
+    color: theme.palette.common.link,
   },
 });
 
@@ -45,52 +32,50 @@ export class InfoView extends React.PureComponent {
 
   render() {
     const { classes, dataset, datasetPolicies } = this.props;
-    const datasetCustodiansObj = datasetPolicies.find((policy) => policy.name === 'custodian');
-    const datasetCustodians = (datasetCustodiansObj && datasetCustodiansObj.members) || [];
-    const tables = dataset.schema.tables.map((table) => (
-      <li className={classes.listItem}>
-        <Typography noWrap>{table.name}</Typography>
-      </li>
-    ));
 
     return (
       <div className={classes.root}>
-        <Paper className={classes.paperBody}>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <Typography variant="h6">{dataset.name}</Typography>
-            </Grid>
-            <Grid item xs={9}>
-              <div className={clsx(classes.headerText)}>
-                About this dataset:
-                <Typography>{dataset.description}</Typography>
-              </div>
-              <div className={clsx(classes.headerText)}>
-                {dataset.schema.tables.length} tables:
-                <ul className={classes.tableList}>{tables}</ul>
-              </div>
-              <div className={clsx(classes.headerText)}>
-                Storage:
-                <Typography>
-                  <ul>
-                    {dataset.storage.map((storageResource) => (
-                      <li>
-                        {storageResource.cloudResource}: {storageResource.region}
-                      </li>
-                    ))}
-                  </ul>
-                </Typography>
-              </div>
-            </Grid>
-            <Grid item xs={3}>
-              <div className={clsx(classes.headerText)}>Date Created:</div>
-              <Typography className={classes.cardBody}>
-                {moment(dataset.createdDate).fromNow()}
-              </Typography>
-              <UserList users={datasetCustodians} typeOfUsers="Custodians" canManageUsers={false} />
-            </Grid>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <Typography variant="h5">Dataset Overview</Typography>
           </Grid>
-        </Paper>
+          <Grid item xs={12}>
+            <Typography variant="h5">{dataset.name}</Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography variant="h6">About this dataset:</Typography>
+            <Typography>{dataset.description}</Typography>
+          </Grid>
+          <Grid item xs={6}>
+            <Typography variant="h6">Storage</Typography>
+            <Typography>
+              {dataset.storage.map((storageResource) => (
+                <div>
+                  {storageResource.cloudResource}: {storageResource.region}
+                </div>
+              ))}
+            </Typography>
+          </Grid>
+          <Grid item xs={6}>
+            <Typography variant="h6">Date Created:</Typography>
+            <Typography>{moment(dataset.createdDate).fromNow()}</Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Accordion>
+              <AccordionSummary
+                className={clsx(classes.blueHeader)}
+                expandIcon={<ExpandMore />}
+                aria-controls="memberships-content"
+                id="memberships-header"
+              >
+                Summary of roles and memberships
+              </AccordionSummary>
+              <AccordionDetails>
+                <DatasetAccess policies={datasetPolicies} />
+              </AccordionDetails>
+            </Accordion>
+          </Grid>
+        </Grid>
       </div>
     );
   }
