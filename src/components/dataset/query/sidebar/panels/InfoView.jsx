@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import moment from 'moment';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';

@@ -2,7 +2,6 @@ import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { Link, Typography } from '@material-ui/core';
-import Grid from '@material-ui/core/Grid';
 import UserList from '../../../../UserList';
 
 const styles = (theme) => ({
