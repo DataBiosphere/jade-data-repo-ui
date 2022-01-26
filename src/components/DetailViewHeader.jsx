@@ -140,7 +140,10 @@ export class DetailViewHeader extends React.PureComponent {
                 </div>
               </DialogContent>
             </Dialog>
-            <Tooltip title="Exporting a snapshot to a workspace means that all members of your workspace will be able to have read only access to the tables and files in the snapshot">
+            <Tooltip
+              title="Exporting a snapshot to a workspace means that all members of your workspace will be able to have read only access to the tables and files in the snapshot"
+              arrow
+            >
               <Button
                 onClick={this.exportToWorkspaceCopy}
                 className={classes.exportButton}
