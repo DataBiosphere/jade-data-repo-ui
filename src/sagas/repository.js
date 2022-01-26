@@ -120,7 +120,10 @@ export function* exportSnapshot({ payload }) {
     );
     const snapshots = yield select(getSnapshotState);
     const manifestJsonPath = snapshots.exportResponse.format.parquet.manifest;
-    location.href = `${terraUrl}#import-data?url=${window.location.origin}&snapshotId=${snapshotId}&format=tdrexport&snapshotName=${snapshotName}&tdrmanifest=${manifestJsonPath}`;
+    window.open(
+      `${terraUrl}#import-data?url=${window.location.origin}&snapshotId=${snapshotId}&format=tdrexport&snapshotName=${snapshotName}&tdrmanifest=${manifestJsonPath}`,
+      '_blank',
+    );
   } catch (err) {
     showNotification(err);
     yield put({

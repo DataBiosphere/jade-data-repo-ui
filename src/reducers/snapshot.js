@@ -69,6 +69,7 @@ export default {
       [ActionTypes.EXPORT_SNAPSHOT_SUCCESS]: (state, action) =>
         immutable(state, {
           exportResponse: { $set: action.payload.jobResult },
+          dialogIsOpen: { $set: false },
         }),
       [ActionTypes.EXPORT_SNAPSHOT_FAILURE]: (state) =>
         immutable(state, {

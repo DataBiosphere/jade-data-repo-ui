@@ -3,13 +3,19 @@ import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import { withStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import Card from '@material-ui/core/Card';
-import Typography from '@material-ui/core/Typography';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Button from '@material-ui/core/Button';
 import { exportSnapshot } from 'actions/index';
+import { connect } from 'react-redux';
 import Tooltip from '@material-ui/core/Tooltip';
+import {
+  Card,
+  Dialog,
+  DialogContent,
+  Grid,
+  Typography,
+  Button,
+  CircularProgress,
+} from '@material-ui/core';
+import clsx from 'clsx';
 import UserList from './UserList';
 
 const styles = (theme) => ({
@@ -31,6 +37,12 @@ const styles = (theme) => ({
   exportButton: {
     marginTop: '0.5rem',
   },
+  centered: {
+    textAlign: 'center',
+  },
+  content: {
+    padding: theme.spacing(2),
+  },
 });
 
 export class DetailViewHeader extends React.PureComponent {
@@ -40,6 +52,7 @@ export class DetailViewHeader extends React.PureComponent {
     canReadPolicies: PropTypes.bool,
     classes: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired,
+    isOpen: PropTypes.bool,
     of: PropTypes.object,
     readers: PropTypes.arrayOf(PropTypes.string),
     removeReader: PropTypes.func,
@@ -57,13 +70,14 @@ export class DetailViewHeader extends React.PureComponent {
     const {
       addSteward,
       addReader,
+      canReadPolicies,
       classes,
-      stewards,
+      isOpen,
       of,
       readers,
       removeSteward,
       removeReader,
-      canReadPolicies,
+      stewards,
     } = this.props;
     const loading = _.isNil(of) || _.isEmpty(of);
 
@@ -117,6 +131,15 @@ export class DetailViewHeader extends React.PureComponent {
                 canManageUsers={true}
               />
             )}
+            <Dialog open={isOpen}>
+              <DialogContent>
+                <Typography variant="h5">Your data snapshot is being exported</Typography>
+                {/* TODO: Make this loading state more descriptive */}
+                <div className={clsx(classes.centered, classes.content)}>
+                  <CircularProgress />
+                </div>
+              </DialogContent>
+            </Dialog>
             <Tooltip title="Exporting a snapshot to a workspace means that all members of your workspace will be able to have read only access to the tables and files in the snapshot">
               <Button
                 onClick={this.exportToWorkspaceCopy}
@@ -134,4 +157,10 @@ export class DetailViewHeader extends React.PureComponent {
   }
 }
 
-export default withStyles(styles)(DetailViewHeader);
+function mapStateToProps(state) {
+  return {
+    isOpen: state.snapshots.dialogIsOpen,
+  };
+}
+
+export default connect(mapStateToProps)(withStyles(styles)(DetailViewHeader));
