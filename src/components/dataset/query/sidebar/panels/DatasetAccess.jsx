@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { Link, Typography } from '@material-ui/core';
+import Grid from '@material-ui/core/Grid';
 import UserList from '../../../../UserList';
 
 const styles = (theme) => ({
@@ -36,7 +37,7 @@ export class DatasetAccess extends React.PureComponent {
   );
 
   static helpContent = (
-    <div>
+    <Fragment>
       <Typography variant="h6">Stewards</Typography>
       <Typography>
         Creating a dataset makes a user the Steward (or owner) of it. The steward of a dataset can:
@@ -71,7 +72,7 @@ export class DatasetAccess extends React.PureComponent {
           <li>List all the stewards, custodians and snapshot creators of a dataset</li>
         </ul>
       </Typography>
-    </div>
+    </Fragment>
   );
 
   render() {

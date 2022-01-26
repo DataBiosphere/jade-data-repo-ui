@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import moment from 'moment';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
@@ -70,7 +70,7 @@ export class InfoView extends React.PureComponent {
     return (
       <div className={classes.root}>
         {isHelpVisible && (
-          <Grid container spacing={2}>
+          <Grid container spacing={1}>
             <Grid item xs={11}>
               {helpTitle}
             </Grid>
