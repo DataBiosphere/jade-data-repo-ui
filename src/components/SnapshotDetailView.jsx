@@ -100,7 +100,7 @@ export class SnapshotDetailView extends React.PureComponent {
     const { snapshot } = this.props;
     const datasets = snapshot.source.map((s) => s.dataset);
     const filtered = datasets.filter((d) =>
-      d.name.toLowerCase().includes((searchString || '').toLowerCase(),
+      d.name.toLowerCase().includes((searchString || '').toLowerCase()),
     );
     const sorted = _.orderBy(filtered, sort, sortDirection);
     const paged = _.take(_.drop(sorted, offset), limit);
