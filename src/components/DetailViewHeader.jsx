@@ -9,6 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Button from '@material-ui/core/Button';
 import { exportSnapshot } from 'actions/index';
+import Tooltip from '@material-ui/core/Tooltip';
 import UserList from './UserList';
 
 const styles = (theme) => ({
@@ -116,14 +117,16 @@ export class DetailViewHeader extends React.PureComponent {
                 canManageUsers={true}
               />
             )}
-            <Button
-              onClick={this.exportToWorkspaceCopy}
-              className={classes.exportButton}
-              variant="contained"
-              color="primary"
-            >
-              Export to Workspace
-            </Button>
+            <Tooltip title="Exporting a snapshot to a workspace means that all members of your workspace will be able to have read only access to the tables and files in the snapshot">
+              <Button
+                onClick={this.exportToWorkspaceCopy}
+                className={classes.exportButton}
+                variant="contained"
+                color="primary"
+              >
+                Export to Workspace
+              </Button>
+            </Tooltip>
           </Card>
         </Grid>
       </Grid>
