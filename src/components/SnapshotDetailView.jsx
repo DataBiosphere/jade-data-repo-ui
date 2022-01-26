@@ -135,6 +135,7 @@ export class SnapshotDetailView extends React.PureComponent {
               datasetsCount={snapshot.source.length}
               features={features}
               handleFilterDatasets={this.handleFilterDatasets}
+              searchString=""
             />
           )}
         </div>
