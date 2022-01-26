@@ -20,6 +20,17 @@ export const { createSnapshot } = createActions({
   [ActionTypes.CREATE_SNAPSHOT_FAILURE]: (snapshot) => snapshot,
 });
 
+export const { exportSnapshot } = createActions({
+  [ActionTypes.EXPORT_SNAPSHOT]: (snapshotId, snapshotName, terraUrl) => ({
+    snapshotId,
+    snapshotName,
+    terraUrl,
+  }),
+  [ActionTypes.EXPORT_SNAPSHOT_JOB]: (exportResponse) => exportResponse,
+  [ActionTypes.EXPORT_SNAPSHOT_SUCCESS]: (exportResponse) => exportResponse,
+  [ActionTypes.EXPORT_SNAPSHOT_FAILURE]: (exportResponse) => exportResponse,
+});
+
 export const { getSnapshots } = createActions({
   [ActionTypes.GET_SNAPSHOTS_SUCCESS]: (snapshots) => snapshots,
   [ActionTypes.GET_SNAPSHOTS]: (limit, offset, sort, direction, searchString, datasetIds) => ({

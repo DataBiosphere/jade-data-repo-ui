@@ -25,6 +25,8 @@ export const snapshotState = {
   dialogIsOpen: false,
   // for snapshot creation
   snapshotRequest: defaultSnapshotRequest,
+  // for snapshot export to workspace
+  exportResponse: {},
 };
 
 // We need this method to apply the response from add/remove snapshot members since the API only returns the affected group
@@ -56,6 +58,19 @@ export default {
           snapshot: { $set: action.payload.jobResult },
         }),
       [ActionTypes.CREATE_SNAPSHOT_FAILURE]: (state) =>
+        immutable(state, {
+          dialogIsOpen: { $set: false },
+        }),
+      [ActionTypes.EXPORT_SNAPSHOT_JOB]: (state) =>
+        immutable(state, {
+          exportResponse: { $set: {} },
+          dialogIsOpen: { $set: true },
+        }),
+      [ActionTypes.EXPORT_SNAPSHOT_SUCCESS]: (state, action) =>
+        immutable(state, {
+          exportResponse: { $set: action.payload.jobResult },
+        }),
+      [ActionTypes.EXPORT_SNAPSHOT_FAILURE]: (state) =>
         immutable(state, {
           dialogIsOpen: { $set: false },
         }),

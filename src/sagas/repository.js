@@ -100,6 +100,36 @@ function* pollJobWorker(jobId, jobTypeSuccess, jobTypeFailure) {
   }
 }
 
+export function* exportSnapshot({ payload }) {
+  try {
+    const { snapshotId, snapshotName, terraUrl } = payload;
+    const response = yield call(
+      authGet,
+      `/api/repository/v1/snapshots/${payload.snapshotId}/export`,
+    );
+    const jobId = response.data.id;
+    yield put({
+      type: ActionTypes.EXPORT_SNAPSHOT_JOB,
+      payload: { data: response, jobId },
+    });
+    yield call(
+      pollJobWorker,
+      jobId,
+      ActionTypes.EXPORT_SNAPSHOT_SUCCESS,
+      ActionTypes.EXPORT_SNAPSHOT_FAILURE,
+    );
+    const snapshots = yield select(getSnapshotState);
+    const manifestJsonPath = snapshots.exportResponse.format.parquet.manifest;
+    console.log(manifestJsonPath);
+    location.href = `${terraUrl}#import-data?url=${window.location.origin}&snapshotId=${snapshotId}&format=tdrexport&snapshotName=${snapshotName}&tdrmanifest=${manifestJsonPath}`;
+  } catch (err) {
+    showNotification(err);
+    yield put({
+      type: ActionTypes.EXCEPTION,
+    });
+  }
+}
+
 /**
  * Snapshots.
  */
@@ -487,6 +517,7 @@ export function* getFeatures() {
 export default function* root() {
   yield all([
     takeLatest(ActionTypes.CREATE_SNAPSHOT, createSnapshot),
+    takeLatest(ActionTypes.EXPORT_SNAPSHOT, exportSnapshot),
     takeLatest(ActionTypes.GET_SNAPSHOTS, getSnapshots),
     takeLatest(ActionTypes.GET_SNAPSHOT_BY_ID, getSnapshotById),
     takeLatest(ActionTypes.GET_SNAPSHOT_POLICY, getSnapshotPolicy),

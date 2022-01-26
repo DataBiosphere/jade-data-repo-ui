@@ -8,6 +8,7 @@ import Card from '@material-ui/core/Card';
 import Typography from '@material-ui/core/Typography';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Button from '@material-ui/core/Button';
+import { exportSnapshot } from 'actions/index';
 import UserList from './UserList';
 
 const styles = (theme) => ({
@@ -37,12 +38,18 @@ export class DetailViewHeader extends React.PureComponent {
     addSteward: PropTypes.func,
     canReadPolicies: PropTypes.bool,
     classes: PropTypes.object.isRequired,
+    dispatch: PropTypes.func.isRequired,
     of: PropTypes.object,
     readers: PropTypes.arrayOf(PropTypes.string),
     removeReader: PropTypes.func,
     terraUrl: PropTypes.string,
     removeSteward: PropTypes.func,
     stewards: PropTypes.arrayOf(PropTypes.string).isRequired,
+  };
+
+  exportToWorkspaceCopy = () => {
+    const { dispatch, of, terraUrl } = this.props;
+    dispatch(exportSnapshot(of.id, of.name, terraUrl));
   };
 
   render() {
@@ -55,7 +62,6 @@ export class DetailViewHeader extends React.PureComponent {
       readers,
       removeSteward,
       removeReader,
-      terraUrl,
       canReadPolicies,
     } = this.props;
     const loading = _.isNil(of) || _.isEmpty(of);
@@ -85,7 +91,7 @@ export class DetailViewHeader extends React.PureComponent {
                 <p className={classes.header}> Storage:</p>
                 <ul>
                   {of.source[0].dataset.storage.map((storageResource) => (
-                    <li>
+                    <li key={storageResource.cloudResource}>
                       {storageResource.cloudResource}: {storageResource.region}
                     </li>
                   ))}
@@ -110,14 +116,13 @@ export class DetailViewHeader extends React.PureComponent {
                 canManageUsers={true}
               />
             )}
-            <Button className={classes.exportButton} variant="contained" color="primary">
-              <a
-                target="_blank"
-                rel="noopener noreferrer"
-                href={`${terraUrl}/#import-data?url=${window.location.origin}&snapshotId=${of.id}&snapshotName=${of.name}&format=snapshot`}
-              >
-                Export to Workspace
-              </a>
+            <Button
+              onClick={this.exportToWorkspaceCopy}
+              className={classes.exportButton}
+              variant="contained"
+              color="primary"
+            >
+              Export to Workspace
             </Button>
           </Card>
         </Grid>
