@@ -16,6 +16,11 @@ const styles = (theme) => ({
   root: {
     marginTop: theme.spacing(3),
   },
+  noUsers: {
+    fontStyle: 'italic',
+    colorPrimary: theme.palette.error.contrastText,
+    color: theme.palette.error.contrastText,
+  },
 });
 
 class UserList extends React.PureComponent {
@@ -34,6 +39,7 @@ class UserList extends React.PureComponent {
       <div className={classes.root}>
         <div className={classes.header}>{typeOfUsers}:</div>
         <div className={classes.values}>
+          {users.length === 0 && <Typography className={classes.noUsers}>(None)</Typography>}
           {users.map((user) => (
             <Typography noWrap key={user}>
               {user}

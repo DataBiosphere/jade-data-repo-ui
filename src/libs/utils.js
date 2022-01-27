@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import _ from 'lodash/fp';
 
 /**
@@ -108,4 +108,9 @@ export const useCurrentTime = (initialDelay = 250) => {
       delayRef.current = delayTime;
     },
   ];
+};
+
+export const getRoleMembersFromPolicies = (policies, role) => {
+  const obj = policies.find((policy) => policy.name === role);
+  return (obj && obj.members) || [];
 };
