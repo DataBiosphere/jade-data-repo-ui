@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
+import { renderCloudPlatforms } from '../../libs/render-utils';
 
 import LightTable from './LightTable';
 
@@ -11,8 +12,6 @@ const styles = (theme) => ({
     ...theme.mixins.jadeLink,
   },
 });
-
-const cloudPlatforms = { gcp: 'Google Cloud Platform', azure: 'Microsoft Azure' };
 
 class DatasetTable extends React.PureComponent {
   static propTypes = {
@@ -73,16 +72,8 @@ class DatasetTable extends React.PureComponent {
       },
       {
         label: 'Cloud Platform',
-        property: 'platorm',
-        render: (row) => (
-          <div>
-            {Array.from(new Set(row.storage.map((s) => cloudPlatforms[s.cloudPlatform]))).map(
-              (c) => (
-                <div key={c}>{c}</div>
-              ),
-            )}
-          </div>
-        ),
+        property: 'platform',
+        render: renderCloudPlatforms,
       },
     ];
     return (
