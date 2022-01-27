@@ -107,14 +107,14 @@ export class DatasetAccess extends React.PureComponent {
           &nbsp; about roles and memberships
         </div>
         <UserList
-          users={custodians}
+          users={stewards}
           typeOfUsers="Stewards"
           canManageUsers={canManageUsers}
           addUser={this.addUser(DATASET_ROLES.STEWARD)}
           removeUser={this.removeUser(DATASET_ROLES.STEWARD)}
         />
         <UserList
-          users={stewards}
+          users={custodians}
           typeOfUsers="Custodians"
           canManageUsers={canManageUsers}
           addUser={this.addUser(DATASET_ROLES.CUSTODIAN)}
