@@ -37,7 +37,6 @@ export class InfoView extends React.PureComponent {
     this.state = {
       isHelpVisible: false,
     };
-    this.toggleHelpOverlay = this.toggleHelpOverlay.bind(this);
   }
 
   static propTypes = {
@@ -46,14 +45,14 @@ export class InfoView extends React.PureComponent {
     datasetPolicies: PropTypes.array,
   };
 
-  toggleHelpOverlay(helpTitle, helpContent) {
+  toggleHelpOverlay = (helpTitle, helpContent) => {
     const { isHelpVisible } = this.state;
     this.setState({
       isHelpVisible: !isHelpVisible,
       helpTitle,
       helpContent,
     });
-  }
+  };
 
   render() {
     const { classes, dataset, datasetPolicies } = this.props;

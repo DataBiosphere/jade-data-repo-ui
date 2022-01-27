@@ -11,15 +11,6 @@ const styles = (theme) => ({
     display: 'block',
     margin: theme.spacing(1),
   },
-  paperBody: {
-    padding: theme.spacing(2),
-  },
-  headerText: {
-    fontSize: '14px',
-    lineHeight: '22px',
-    fontWeight: '600',
-    marginTop: theme.spacing(3),
-  },
   blueLink: {
     color: theme.palette.common.link,
     colorPrimary: theme.palette.common.link,
