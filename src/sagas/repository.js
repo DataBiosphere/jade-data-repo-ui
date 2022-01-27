@@ -293,6 +293,40 @@ export function* getDatasetPolicy({ payload }) {
   }
 }
 
+export function* addDatasetPolicyMember({ payload }) {
+  const { datasetId, user, policy } = payload;
+  const userObject = { email: user };
+  try {
+    const response = yield call(
+      authPost,
+      `/api/repository/v1/datasets/${datasetId}/policies/${policy}/members`,
+      userObject,
+    );
+    yield put({
+      type: ActionTypes.ADD_DATASET_POLICY_MEMBER_SUCCESS,
+      dataset: { data: response },
+      policy,
+    });
+  } catch (err) {
+    showNotification(err);
+  }
+}
+
+export function* removeDatasetPolicyMember({ payload }) {
+  const { datasetId, user, policy } = payload;
+  const url = `/api/repository/v1/datasets/${datasetId}/policies/${policy}/members/${user}`;
+  try {
+    const response = yield call(authDelete, url);
+    yield put({
+      type: ActionTypes.REMOVE_DATASET_POLICY_MEMBER_SUCCESS,
+      dataset: { data: response },
+      policy,
+    });
+  } catch (err) {
+    showNotification(err);
+  }
+}
+
 export function* addCustodianToDataset({ payload }) {
   const { datasetId } = payload;
   const custodian = payload.users[0];
@@ -497,6 +531,8 @@ export default function* root() {
     takeLatest(ActionTypes.GET_DATASET_POLICY, getDatasetPolicy),
     takeLatest(ActionTypes.ADD_CUSTODIAN_TO_DATASET, addCustodianToDataset),
     takeLatest(ActionTypes.REMOVE_CUSTODIAN_FROM_DATASET, removeCustodianFromDataset),
+    takeLatest(ActionTypes.ADD_DATASET_POLICY_MEMBER, addDatasetPolicyMember),
+    takeLatest(ActionTypes.REMOVE_DATASET_POLICY_MEMBER, removeDatasetPolicyMember),
     takeLatest(ActionTypes.GET_DATASET_TABLE_PREVIEW, getDatasetTablePreview),
     takeLatest(ActionTypes.RUN_QUERY, runQuery),
     takeLatest(ActionTypes.PAGE_QUERY, pageQuery),

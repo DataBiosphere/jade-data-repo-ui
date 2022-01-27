@@ -42,7 +42,6 @@ export class InfoView extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object,
     dataset: PropTypes.object,
-    datasetPolicies: PropTypes.array,
   };
 
   toggleHelpOverlay = (helpTitle, helpContent) => {
@@ -55,7 +54,7 @@ export class InfoView extends React.PureComponent {
   };
 
   render() {
-    const { classes, dataset, datasetPolicies } = this.props;
+    const { classes, dataset } = this.props;
     const { isHelpVisible, helpTitle, helpContent } = this.state;
     return (
       <div className={classes.root}>
@@ -112,10 +111,7 @@ export class InfoView extends React.PureComponent {
                   Summary of roles and memberships
                 </AccordionSummary>
                 <AccordionDetails>
-                  <DatasetAccess
-                    policies={datasetPolicies}
-                    helpOverlayToggle={this.toggleHelpOverlay}
-                  />
+                  <DatasetAccess helpOverlayToggle={this.toggleHelpOverlay} />
                 </AccordionDetails>
               </Accordion>
             </Grid>
@@ -129,7 +125,6 @@ export class InfoView extends React.PureComponent {
 function mapStateToProps(state) {
   return {
     dataset: state.datasets.dataset,
-    datasetPolicies: state.datasets.datasetPolicies,
   };
 }
 

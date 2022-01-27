@@ -98,6 +98,22 @@ export const { removeCustodianFromDataset } = createActions({
   }),
 });
 
+export const { addDatasetPolicyMember } = createActions({
+  [ActionTypes.ADD_DATASET_POLICY_MEMBER]: (datasetId, user, policy) => ({
+    datasetId,
+    user,
+    policy,
+  }),
+});
+
+export const { removeDatasetPolicyMember } = createActions({
+  [ActionTypes.REMOVE_DATASET_POLICY_MEMBER]: (datasetId, user, policy) => ({
+    datasetId,
+    user,
+    policy,
+  }),
+});
+
 export const { getJobById } = createActions({
   [ActionTypes.GET_JOB_BY_ID]: (job) => job,
   [ActionTypes.GET_JOB_BY_ID_SUCCESS]: (job) => job,
