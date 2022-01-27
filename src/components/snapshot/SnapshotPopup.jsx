@@ -197,15 +197,6 @@ export class SnapshotPopup extends React.PureComponent {
               <PeopleAlt className={classes.inline} />
               Share
             </Button>
-            <Button color="primary" data-cy="exportSnapshot">
-              <a
-                target="_blank"
-                rel="noopener noreferrer"
-                href={`${terraUrl}/#import-data?url=${window.location.origin}&snapshotId=${snapshot.id}&snapshotName=${snapshot.name}&format=snapshot`}
-              >
-                Export
-              </a>
-            </Button>
           </div>
         </DialogContent>
       </Dialog>
