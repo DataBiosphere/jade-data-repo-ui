@@ -113,3 +113,9 @@ export const GOOGLE_CLOUD_RESOURCE = {
   FIRESTORE: 'firestore',
   BUCKET: 'bucket',
 };
+
+export const DATASET_ROLES = {
+  STEWARD: 'steward',
+  CUSTODIAN: 'custodian',
+  SNAPSHOT_CREATOR: 'snapshot_creator',
+};

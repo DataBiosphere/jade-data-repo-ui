@@ -49,6 +49,7 @@ const styles = (theme) => ({
   },
   tabWrapper: {
     display: 'flex',
+    zIndex: 11,
   },
   helpIconDiv: {
     borderBottom: `2px solid ${theme.palette.secondary.main}`,

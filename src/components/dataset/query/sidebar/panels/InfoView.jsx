@@ -26,16 +26,7 @@ const styles = (theme) => ({
     fontWeight: '600',
     color: theme.palette.common.link,
   },
-  helpOverlay: {
-    position: 'absolute',
-    backgroundColor: theme.palette.primary.light,
-    width: '100%',
-    height: '100%',
-    zIndex: '1',
-  },
   helpOverlayCloseButton: {
-    float: 'right',
-    marginRight: theme.spacing(4),
     color: theme.palette.common.link,
   },
 });
