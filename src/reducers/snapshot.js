@@ -26,6 +26,7 @@ export const snapshotState = {
   // for snapshot creation
   snapshotRequest: defaultSnapshotRequest,
   // for snapshot export to workspace
+  exportDialogIsOpen: false,
   exportResponse: {},
 };
 
@@ -64,16 +65,20 @@ export default {
       [ActionTypes.EXPORT_SNAPSHOT_JOB]: (state) =>
         immutable(state, {
           exportResponse: { $set: {} },
-          dialogIsOpen: { $set: true },
+          exportDialogIsOpen: { $set: true },
         }),
       [ActionTypes.EXPORT_SNAPSHOT_SUCCESS]: (state, action) =>
         immutable(state, {
           exportResponse: { $set: action.payload.jobResult },
-          dialogIsOpen: { $set: false },
+          exportDialogIsOpen: { $set: false },
         }),
       [ActionTypes.EXPORT_SNAPSHOT_FAILURE]: (state) =>
         immutable(state, {
-          dialogIsOpen: { $set: false },
+          exportDialogIsOpen: { $set: false },
+        }),
+      [ActionTypes.EXPORT_SNAPSHOT_EXCEPTION]: (state) =>
+        immutable(state, {
+          exportDialogIsOpen: { $set: false },
         }),
       [ActionTypes.GET_SNAPSHOT_BY_ID_SUCCESS]: (state, action) =>
         immutable(state, {

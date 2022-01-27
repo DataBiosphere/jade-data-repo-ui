@@ -159,7 +159,7 @@ export class DetailViewHeader extends React.PureComponent {
 
 function mapStateToProps(state) {
   return {
-    isOpen: state.snapshots.dialogIsOpen,
+    isOpen: state.snapshots.exportDialogIsOpen,
   };
 }
 

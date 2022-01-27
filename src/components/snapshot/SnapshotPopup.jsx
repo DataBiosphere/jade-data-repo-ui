@@ -66,7 +66,6 @@ export class SnapshotPopup extends React.PureComponent {
     isOpen: PropTypes.bool,
     policies: PropTypes.arrayOf(PropTypes.object),
     snapshot: PropTypes.object,
-    terraUrl: PropTypes.string,
   };
 
   /**
@@ -90,7 +89,7 @@ export class SnapshotPopup extends React.PureComponent {
   };
 
   render() {
-    const { classes, filterData, isOpen, snapshot, policies, terraUrl } = this.props;
+    const { classes, filterData, isOpen, snapshot, policies } = this.props;
 
     const notReady = _.some([snapshot, policies, snapshot.source, snapshot.tables], _.isEmpty);
     if (notReady) {
@@ -210,7 +209,6 @@ function mapStateToProps(state) {
     filterData: state.query.filterData,
     snapshot: state.snapshots.snapshot,
     policies: state.snapshots.snapshotPolicies,
-    terraUrl: state.configuration.terraUrl,
   };
 }
 

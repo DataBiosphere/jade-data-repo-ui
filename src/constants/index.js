@@ -24,6 +24,7 @@ export const ActionTypes = keyMirror({
   CREATE_SNAPSHOT_JOB: undefined,
   CREATE_SNAPSHOT_SUCCESS: undefined,
   CREATE_SNAPSHOT_FAILURE: undefined,
+  EXPORT_SNAPSHOT_EXCEPTION: undefined,
   EXPORT_SNAPSHOT: undefined,
   EXPORT_SNAPSHOT_JOB: undefined,
   EXPORT_SNAPSHOT_SUCCESS: undefined,

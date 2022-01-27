@@ -127,7 +127,7 @@ export function* exportSnapshot({ payload }) {
   } catch (err) {
     showNotification(err);
     yield put({
-      type: ActionTypes.EXCEPTION,
+      type: ActionTypes.EXPORT_SNAPSHOT_EXCEPTION,
     });
   }
 }
