@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
-import Tooltip from '@material-ui/core/Tooltip';
 import { Typography } from '@material-ui/core';
+import TerraTooltip from '../../common/TerraTooltip';
 
 const styles = () => ({
   root: {
@@ -20,11 +20,11 @@ const styles = () => ({
 
 const SnapshotInfoCard = ({ classes, snapshot }) => (
   <Paper className={classes.root} elevation={4}>
-    <Tooltip title={snapshot.name}>
+    <TerraTooltip title={snapshot.name}>
       <Typography variant="h4" className={classes.name}>
         {snapshot.name}
       </Typography>
-    </Tooltip>
+    </TerraTooltip>
     <Typography>Created on {snapshot.createdDate}</Typography>
     <Typography className={classes.description}>{snapshot.description}</Typography>
   </Paper>
