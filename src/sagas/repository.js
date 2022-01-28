@@ -102,11 +102,9 @@ function* pollJobWorker(jobId, jobTypeSuccess, jobTypeFailure) {
 
 export function* exportSnapshot({ payload }) {
   try {
-    const { snapshotId, snapshotName, terraUrl } = payload;
-    const response = yield call(
-      authGet,
-      `/api/repository/v1/snapshots/${payload.snapshotId}/export`,
-    );
+    const snapshotId = payload.snapshotId;
+    console.log(snapshotId);
+    const response = yield call(authGet, `/api/repository/v1/snapshots/${snapshotId}/export`);
     const jobId = response.data.id;
     yield put({
       type: ActionTypes.EXPORT_SNAPSHOT_JOB,
@@ -117,12 +115,6 @@ export function* exportSnapshot({ payload }) {
       jobId,
       ActionTypes.EXPORT_SNAPSHOT_SUCCESS,
       ActionTypes.EXPORT_SNAPSHOT_FAILURE,
-    );
-    const snapshots = yield select(getSnapshotState);
-    const manifestJsonPath = snapshots.exportResponse.format.parquet.manifest;
-    window.open(
-      `${terraUrl}#import-data?url=${window.location.origin}&snapshotId=${snapshotId}&format=tdrexport&snapshotName=${snapshotName}&tdrmanifest=${manifestJsonPath}`,
-      '_blank',
     );
   } catch (err) {
     showNotification(err);

@@ -5,16 +5,7 @@ import moment from 'moment';
 import { withStyles } from '@material-ui/core/styles';
 import { exportSnapshot } from 'actions/index';
 import { connect } from 'react-redux';
-import {
-  Card,
-  Dialog,
-  DialogContent,
-  Grid,
-  Typography,
-  Button,
-  CircularProgress,
-} from '@material-ui/core';
-import clsx from 'clsx';
+import { Card, Grid, Typography, Button, CircularProgress } from '@material-ui/core';
 import UserList from './UserList';
 import TerraTooltip from './common/TerraTooltip';
 
@@ -43,6 +34,9 @@ const styles = (theme) => ({
   content: {
     padding: theme.spacing(2),
   },
+  circularProgress: {
+    paddingRight: '5px',
+  },
 });
 
 export class DetailViewHeader extends React.PureComponent {
@@ -52,8 +46,10 @@ export class DetailViewHeader extends React.PureComponent {
     canReadPolicies: PropTypes.bool,
     classes: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired,
-    isOpen: PropTypes.bool,
+    isProcessing: PropTypes.bool,
+    isDone: PropTypes.bool,
     of: PropTypes.object,
+    exportResponse: PropTypes.object,
     readers: PropTypes.arrayOf(PropTypes.string),
     removeReader: PropTypes.func,
     terraUrl: PropTypes.string,
@@ -62,8 +58,8 @@ export class DetailViewHeader extends React.PureComponent {
   };
 
   exportToWorkspaceCopy = () => {
-    const { dispatch, of, terraUrl } = this.props;
-    dispatch(exportSnapshot(of.id, of.name, terraUrl));
+    const { dispatch, of } = this.props;
+    dispatch(exportSnapshot(of.id));
   };
 
   render() {
@@ -72,12 +68,15 @@ export class DetailViewHeader extends React.PureComponent {
       addReader,
       canReadPolicies,
       classes,
-      isOpen,
+      isProcessing,
+      isDone,
+      exportResponse,
       of,
       readers,
       removeSteward,
       removeReader,
       stewards,
+      terraUrl,
     } = this.props;
     const loading = _.isNil(of) || _.isEmpty(of);
 
@@ -131,25 +130,35 @@ export class DetailViewHeader extends React.PureComponent {
                 canManageUsers={true}
               />
             )}
-            <Dialog open={isOpen}>
-              <DialogContent>
-                <Typography variant="h5">Your data snapshot is being exported</Typography>
-                {/* TODO: Make this loading state more descriptive */}
-                <div className={clsx(classes.centered, classes.content)}>
-                  <CircularProgress />
-                </div>
-              </DialogContent>
-            </Dialog>
-            <TerraTooltip title="Exporting a snapshot to a workspace means that all members of your workspace will be able to have read only access to the tables and files in the snapshot">
-              <Button
-                onClick={this.exportToWorkspaceCopy}
-                className={classes.exportButton}
-                variant="contained"
-                color="primary"
-              >
-                Export to Workspace
+            {!isProcessing && !isDone && (
+              <TerraTooltip title="Exporting a snapshot to a workspace means that all members of your workspace will be able to have read only access to the tables and files in the snapshot">
+                <Button
+                  onClick={this.exportToWorkspaceCopy}
+                  className={classes.exportButton}
+                  variant="contained"
+                  color="primary"
+                >
+                  Export snapshot
+                </Button>
+              </TerraTooltip>
+            )}
+            {isProcessing && !isDone && (
+              <Button className={classes.exportButton} variant="contained" color="primary">
+                <CircularProgress className={classes.circularProgress} />
+                Preparing snapshot
               </Button>
-            </TerraTooltip>
+            )}
+            {!isProcessing && isDone && (
+              <Button className={classes.exportButton} variant="contained" color="primary">
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href={`${terraUrl}#import-data?url=${window.location.origin}&snapshotId=${of.id}&format=tdrexport&snapshotName=${of.name}&tdrmanifest=${exportResponse.format.parquet.manifest}`}
+                >
+                  Snapshot ready - continue
+                </a>
+              </Button>
+            )}
           </Card>
         </Grid>
       </Grid>
@@ -159,7 +168,9 @@ export class DetailViewHeader extends React.PureComponent {
 
 function mapStateToProps(state) {
   return {
-    isOpen: state.snapshots.exportDialogIsOpen,
+    isProcessing: state.snapshots.exportIsProcessing,
+    isDone: state.snapshots.exportIsDone,
+    exportResponse: state.snapshots.exportResponse,
   };
 }
 
