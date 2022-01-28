@@ -34,8 +34,12 @@ const styles = (theme) => ({
   content: {
     padding: theme.spacing(2),
   },
-  circularProgress: {
-    paddingRight: '5px',
+  labelRight: {
+    paddingLeft: '10px',
+  },
+  separator: {
+    marginTop: '20px',
+    marginBottom: '10px',
   },
 });
 
@@ -130,12 +134,16 @@ export class DetailViewHeader extends React.PureComponent {
                 canManageUsers={true}
               />
             )}
+            <hr className={classes.separator} />
+            <Typography variant="h6" className={classes.section}>
+              Export a copy of the snapshot metadata to an exisiting or new Terra workspace
+            </Typography>
             {!isProcessing && !isDone && (
               <TerraTooltip title="Exporting a snapshot to a workspace means that all members of your workspace will be able to have read only access to the tables and files in the snapshot">
                 <Button
                   onClick={this.exportToWorkspaceCopy}
                   className={classes.exportButton}
-                  variant="contained"
+                  variant="outlined"
                   color="primary"
                 >
                   Export snapshot
@@ -143,9 +151,9 @@ export class DetailViewHeader extends React.PureComponent {
               </TerraTooltip>
             )}
             {isProcessing && !isDone && (
-              <Button className={classes.exportButton} variant="contained" color="primary">
-                <CircularProgress className={classes.circularProgress} />
-                Preparing snapshot
+              <Button className={classes.exportButton} variant="outlined" color="primary">
+                <CircularProgress />
+                <div className={classes.labelRight}>Preparing snapshot</div>
               </Button>
             )}
             {!isProcessing && isDone && (
