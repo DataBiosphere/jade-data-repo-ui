@@ -13,10 +13,10 @@ const styles = (theme) => ({
     display: 'block',
     margin: theme.spacing(1),
   },
-  blueLink: {
-    color: theme.palette.common.link,
-    colorPrimary: theme.palette.common.link,
+  learnMore: {
+    ...theme.mixins.jadeLink,
     cursor: 'pointer',
+    textDecorationLine: 'underline',
   },
 });
 
@@ -88,7 +88,7 @@ function DatasetAccess(props) {
   return (
     <div className={classes.root}>
       <div>
-        <Link className={classes.blueLink} onClick={helpOverlayToggleWithContent}>
+        <Link className={classes.learnMore} onClick={helpOverlayToggleWithContent}>
           Learn more
         </Link>
         &nbsp; about roles and memberships
