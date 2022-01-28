@@ -13,7 +13,8 @@ import {
   Chip,
   CircularProgress,
 } from '@material-ui/core';
-import { CameraAlt, Edit, PeopleAlt, Today } from '@material-ui/icons';
+import { CameraAlt, Today } from '@material-ui/icons';
+import { Link } from 'react-router-dom';
 import clsx from 'clsx';
 import { openSnapshotDialog, getSnapshotById, getSnapshotPolicy } from 'actions/index';
 import { push } from 'modules/hist';
@@ -189,12 +190,7 @@ export class SnapshotPopup extends React.PureComponent {
           </Paper>
           <div className={classes.actions}>
             <Button className={classes.inline} color="primary">
-              <Edit className={classes.inline} />
-              Edit
-            </Button>
-            <Button className={classes.inline} color="primary">
-              <PeopleAlt className={classes.inline} />
-              Share
+              <Link to={`/snapshots/details/${snapshot.id}`}>Go to Snapshot Details Page</Link>
             </Button>
           </div>
         </DialogContent>

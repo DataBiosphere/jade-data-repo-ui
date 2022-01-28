@@ -326,11 +326,13 @@ export default class BigQuery {
     }
     tables.forEach((target) => {
       const path = this.bfs(graph, table, target);
-      for (let i = 1; i < path.length; i++) {
-        const currTable = path[i];
-        const prevTable = path[i - 1];
-        const relationship = this.findRelationshipData(schema, currTable, prevTable);
-        relationships.push(relationship);
+      if (path != null) {
+        for (let i = 1; i < path.length; i++) {
+          const currTable = path[i];
+          const prevTable = path[i - 1];
+          const relationship = this.findRelationshipData(schema, currTable, prevTable);
+          relationships.push(relationship);
+        }
       }
     });
     return relationships;
