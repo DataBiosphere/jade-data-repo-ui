@@ -20,117 +20,112 @@ const styles = (theme) => ({
   },
 });
 
-export class DatasetAccess extends React.PureComponent {
-  static propTypes = {
-    classes: PropTypes.object,
-    dataset: PropTypes.object.isRequired,
-    dispatch: PropTypes.func.isRequired,
-    helpOverlayToggle: PropTypes.func,
-    policies: PropTypes.arrayOf(PropTypes.object).isRequired,
-    userEmail: PropTypes.string.isRequired,
-  };
+const helpTitle = (
+  <Typography variant="h4">Roles and memberships in Terra Data Repository</Typography>
+);
 
-  addUser = (role) => {
-    const { dataset, dispatch } = this.props;
+const helpContent = (
+  <Fragment>
+    <Typography variant="h6">Stewards</Typography>
+    <Typography>
+      Creating a dataset makes a user the Steward (or owner) of it. The steward of a dataset can:
+    </Typography>
+    <ul>
+      <li>Define the schema for a dataset</li>
+      <li>Delete a dataset (need to delete any resources leveraging the dataset first)</li>
+      <li>Assign new stewards, custodians and snapshot creators of a dataset</li>
+      <li>Add file/metadata to a dataset</li>
+      <li>Soft delete data (a function that hides data rather than permanently deletes it)</li>
+      <li>Read all the data in a dataset</li>
+      <li>Create a snapshot from a dataset</li>
+      <li>List all the stewards, custodians and snapshot creators of a dataset</li>
+    </ul>
+    <Typography variant="h6">Custodians</Typography>
+    <Typography>
+      A Steward can assign a Custodian to a dataset. The custodian of a dataset can:
+    </Typography>
+    <ul>
+      <li>Add file/metadata to a dataset</li>
+      <li>Soft delete data (a function that hides data rather than permanently deletes it)</li>
+      <li>Read all the data in a dataset</li>
+      <li>Create a snapshot from a dataset</li>
+      <li>List all the stewards, custodians and snapshot creators of a dataset</li>
+    </ul>
+    <Typography variant="h6">Snapshot Creator</Typography>
+    <Typography>
+      A Steward can assign a Snapshot Creator to a dataset. The Snapshot Creator of a dataset can:
+    </Typography>
+    <ul>
+      <li>Read all the data in a dataset</li>
+      <li>Create a snapshot from a dataset</li>
+      <li>List all the stewards, custodians and snapshot creators of a dataset</li>
+    </ul>
+  </Fragment>
+);
+
+function DatasetAccess(props) {
+  const addUser = (role) => {
+    const { dataset, dispatch } = props;
     return (newEmail) => {
       dispatch(addDatasetPolicyMember(dataset.id, newEmail, role));
     };
   };
-
-  removeUser = (role) => {
-    const { dataset, dispatch } = this.props;
+  const removeUser = (role) => {
+    const { dataset, dispatch } = props;
     return (removableEmail) => {
       dispatch(removeDatasetPolicyMember(dataset.id, removableEmail, role));
     };
   };
+  const { classes, helpOverlayToggle, policies, userEmail } = props;
+  const helpOverlayToggleWithContent = () => helpOverlayToggle(helpTitle, helpContent);
 
-  static helpTitle = (
-    <Typography variant="h4">Roles and memberships in Terra Data Repository</Typography>
-  );
+  const stewards = getRoleMembersFromPolicies(policies, DATASET_ROLES.STEWARD);
+  const custodians = getRoleMembersFromPolicies(policies, DATASET_ROLES.CUSTODIAN);
+  const snapshotCreators = getRoleMembersFromPolicies(policies, DATASET_ROLES.SNAPSHOT_CREATOR);
 
-  static helpContent = (
-    <Fragment>
-      <Typography variant="h6">Stewards</Typography>
-      <Typography>
-        Creating a dataset makes a user the Steward (or owner) of it. The steward of a dataset can:
-      </Typography>
-      <ul>
-        <li>Define the schema for a dataset</li>
-        <li>Delete a dataset (need to delete any resources leveraging the dataset first)</li>
-        <li>Assign new stewards, custodians and snapshot creators of a dataset</li>
-        <li>Add file/metadata to a dataset</li>
-        <li>Soft delete data (a function that hides data rather than permanently deletes it)</li>
-        <li>Read all the data in a dataset</li>
-        <li>Create a snapshot from a dataset</li>
-        <li>List all the stewards, custodians and snapshot creators of a dataset</li>
-      </ul>
-      <Typography variant="h6">Custodians</Typography>
-      <Typography>
-        A Steward can assign a Custodian to a dataset. The custodian of a dataset can:
-      </Typography>
-      <ul>
-        <li>Add file/metadata to a dataset</li>
-        <li>Soft delete data (a function that hides data rather than permanently deletes it)</li>
-        <li>Read all the data in a dataset</li>
-        <li>Create a snapshot from a dataset</li>
-        <li>List all the stewards, custodians and snapshot creators of a dataset</li>
-      </ul>
-      <Typography variant="h6">Snapshot Creator</Typography>
-      <Typography>
-        A Steward can assign a Snapshot Creator to a dataset. The Snapshot Creator of a dataset can:
-      </Typography>
-      <ul>
-        <li>Read all the data in a dataset</li>
-        <li>Create a snapshot from a dataset</li>
-        <li>List all the stewards, custodians and snapshot creators of a dataset</li>
-      </ul>
-    </Fragment>
-  );
+  const canManageUsers = stewards.some((email) => email === userEmail);
 
-  render() {
-    const { classes, helpOverlayToggle, policies, userEmail } = this.props;
-    const helpOverlayToggleWithContent = () =>
-      helpOverlayToggle(DatasetAccess.helpTitle, DatasetAccess.helpContent);
-
-    const stewards = getRoleMembersFromPolicies(policies, DATASET_ROLES.STEWARD);
-    const custodians = getRoleMembersFromPolicies(policies, DATASET_ROLES.CUSTODIAN);
-    const snapshotCreators = getRoleMembersFromPolicies(policies, DATASET_ROLES.SNAPSHOT_CREATOR);
-
-    const canManageUsers = stewards.some((email) => email === userEmail);
-
-    return (
-      <div className={classes.root}>
-        <div>
-          <Link className={classes.blueLink} onClick={helpOverlayToggleWithContent}>
-            Learn more
-          </Link>
-          &nbsp; about roles and memberships
-        </div>
-        <UserList
-          users={stewards}
-          typeOfUsers="Stewards"
-          canManageUsers={canManageUsers}
-          addUser={this.addUser(DATASET_ROLES.STEWARD)}
-          removeUser={this.removeUser(DATASET_ROLES.STEWARD)}
-        />
-        <UserList
-          users={custodians}
-          typeOfUsers="Custodians"
-          canManageUsers={canManageUsers}
-          addUser={this.addUser(DATASET_ROLES.CUSTODIAN)}
-          removeUser={this.removeUser(DATASET_ROLES.CUSTODIAN)}
-        />
-        <UserList
-          users={snapshotCreators}
-          typeOfUsers="Snapshot Creators"
-          canManageUsers={canManageUsers}
-          addUser={this.addUser(DATASET_ROLES.SNAPSHOT_CREATOR)}
-          removeUser={this.removeUser(DATASET_ROLES.SNAPSHOT_CREATOR)}
-        />
+  return (
+    <div className={classes.root}>
+      <div>
+        <Link className={classes.blueLink} onClick={helpOverlayToggleWithContent}>
+          Learn more
+        </Link>
+        &nbsp; about roles and memberships
       </div>
-    );
-  }
+      <UserList
+        users={stewards}
+        typeOfUsers="Stewards"
+        canManageUsers={canManageUsers}
+        addUser={addUser(DATASET_ROLES.STEWARD)}
+        removeUser={removeUser(DATASET_ROLES.STEWARD)}
+      />
+      <UserList
+        users={custodians}
+        typeOfUsers="Custodians"
+        canManageUsers={canManageUsers}
+        addUser={addUser(DATASET_ROLES.CUSTODIAN)}
+        removeUser={removeUser(DATASET_ROLES.CUSTODIAN)}
+      />
+      <UserList
+        users={snapshotCreators}
+        typeOfUsers="Snapshot Creators"
+        canManageUsers={canManageUsers}
+        addUser={addUser(DATASET_ROLES.SNAPSHOT_CREATOR)}
+        removeUser={removeUser(DATASET_ROLES.SNAPSHOT_CREATOR)}
+      />
+    </div>
+  );
 }
+
+DatasetAccess.propTypes = {
+  classes: PropTypes.object,
+  dataset: PropTypes.object.isRequired,
+  dispatch: PropTypes.func.isRequired,
+  helpOverlayToggle: PropTypes.func,
+  policies: PropTypes.arrayOf(PropTypes.object).isRequired,
+  userEmail: PropTypes.string.isRequired,
+};
 
 function mapStateToProps(state) {
   return {
