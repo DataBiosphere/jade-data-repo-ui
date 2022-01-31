@@ -9,6 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Button from '@material-ui/core/Button';
 import UserList from './UserList';
+import { SNAPSHOT_ROLES } from '../constants';
 
 const styles = (theme) => ({
   title: {
@@ -40,9 +41,10 @@ export class DetailViewHeader extends React.PureComponent {
     of: PropTypes.object,
     readers: PropTypes.arrayOf(PropTypes.string),
     removeReader: PropTypes.func,
-    terraUrl: PropTypes.string,
     removeSteward: PropTypes.func,
     stewards: PropTypes.arrayOf(PropTypes.string).isRequired,
+    terraUrl: PropTypes.string,
+    userRoles: PropTypes.arrayOf(PropTypes.string),
   };
 
   render() {
@@ -57,8 +59,10 @@ export class DetailViewHeader extends React.PureComponent {
       removeReader,
       terraUrl,
       canReadPolicies,
+      userRoles,
     } = this.props;
     const loading = _.isNil(of) || _.isEmpty(of);
+    const canManageUsers = userRoles.includes(SNAPSHOT_ROLES.STEWARD);
 
     return (
       <Grid container wrap="nowrap" spacing={2}>
@@ -84,8 +88,8 @@ export class DetailViewHeader extends React.PureComponent {
                 <span className={classes.values}> {moment(of.createdDate).fromNow()}</span>
                 <p className={classes.header}> Storage:</p>
                 <ul>
-                  {of.source[0].dataset.storage.map((storageResource) => (
-                    <li>
+                  {of.source[0].dataset.storage.map((storageResource, index) => (
+                    <li key={index}>
                       {storageResource.cloudResource}: {storageResource.region}
                     </li>
                   ))}
@@ -98,7 +102,7 @@ export class DetailViewHeader extends React.PureComponent {
                 users={stewards}
                 addUser={addSteward}
                 removeUser={removeSteward}
-                canManageUsers={true}
+                canManageUsers={canManageUsers}
               />
             )}
             {readers && canReadPolicies && (
@@ -107,7 +111,7 @@ export class DetailViewHeader extends React.PureComponent {
                 users={readers}
                 addUser={addReader}
                 removeUser={removeReader}
-                canManageUsers={true}
+                canManageUsers={canManageUsers}
               />
             )}
             <Button className={classes.exportButton} variant="contained" color="primary">

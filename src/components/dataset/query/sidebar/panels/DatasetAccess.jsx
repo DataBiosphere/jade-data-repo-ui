@@ -76,14 +76,14 @@ function DatasetAccess(props) {
       dispatch(removeDatasetPolicyMember(dataset.id, removableEmail, role));
     };
   };
-  const { classes, helpOverlayToggle, policies, userEmail } = props;
+  const { classes, helpOverlayToggle, policies, userRoles } = props;
   const helpOverlayToggleWithContent = () => helpOverlayToggle(helpTitle, helpContent);
 
   const stewards = getRoleMembersFromPolicies(policies, DATASET_ROLES.STEWARD);
   const custodians = getRoleMembersFromPolicies(policies, DATASET_ROLES.CUSTODIAN);
   const snapshotCreators = getRoleMembersFromPolicies(policies, DATASET_ROLES.SNAPSHOT_CREATOR);
 
-  const canManageUsers = stewards.some((email) => email === userEmail);
+  const canManageUsers = userRoles.includes(DATASET_ROLES.STEWARD);
 
   return (
     <div className={classes.root}>
@@ -124,14 +124,14 @@ DatasetAccess.propTypes = {
   dispatch: PropTypes.func.isRequired,
   helpOverlayToggle: PropTypes.func,
   policies: PropTypes.arrayOf(PropTypes.object).isRequired,
-  userEmail: PropTypes.string.isRequired,
+  userRoles: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
 function mapStateToProps(state) {
   return {
     dataset: state.datasets.dataset,
     policies: state.datasets.datasetPolicies,
-    userEmail: state.user.email,
+    userRoles: state.datasets.userRoles,
   };
 }
 

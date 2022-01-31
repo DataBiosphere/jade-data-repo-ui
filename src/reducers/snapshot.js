@@ -25,6 +25,7 @@ export const snapshotState = {
   dialogIsOpen: false,
   // for snapshot creation
   snapshotRequest: defaultSnapshotRequest,
+  userRoles: [],
 };
 
 // We need this method to apply the response from add/remove snapshot members since the API only returns the affected group
@@ -80,6 +81,14 @@ export default {
       [ActionTypes.REMOVE_SNAPSHOT_POLICY_MEMBER_SUCCESS]: (state, action) =>
         immutable(state, {
           snapshotPolicies: { $apply: snapshotMembershipResultApply(action) },
+        }),
+      [ActionTypes.GET_USER_SNAPSHOT_ROLES]: (state) =>
+        immutable(state, {
+          userRoles: { $set: [] },
+        }),
+      [ActionTypes.GET_USER_SNAPSHOT_ROLES_SUCCESS]: (state, action) =>
+        immutable(state, {
+          userRoles: { $set: action.roles.data },
         }),
       [ActionTypes.EXCEPTION]: (state) =>
         immutable(state, {

@@ -58,6 +58,11 @@ export const { removeSnapshotPolicyMember } = createActions({
   }),
 });
 
+export const { getUserSnapshotRoles } = createActions({
+  [ActionTypes.GET_USER_SNAPSHOT_ROLES]: (snapshotId) => snapshotId,
+  [ActionTypes.GET_USER_SNAPSHOT_ROLES_SUCCESS]: (roles) => roles,
+});
+
 export const { getDatasets } = createActions({
   [ActionTypes.GET_DATASETS_SUCCESS]: (datasets) => datasets,
   [ActionTypes.GET_DATASETS]: (limit, offset, sort, direction, searchString) => ({
@@ -112,6 +117,11 @@ export const { removeDatasetPolicyMember } = createActions({
     user,
     policy,
   }),
+});
+
+export const { getUserDatasetRoles } = createActions({
+  [ActionTypes.GET_USER_DATASET_ROLES]: (datasetId) => datasetId,
+  [ActionTypes.GET_USER_DATASET_ROLES_SUCCESS]: (roles) => roles,
 });
 
 export const { getJobById } = createActions({

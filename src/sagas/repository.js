@@ -8,8 +8,8 @@ import axios from 'axios';
 import moment from 'moment';
 import _ from 'lodash';
 
-import { ActionTypes, STATUS } from 'constants/index';
 import { showNotification } from 'modules/notifications';
+import { ActionTypes, STATUS } from '../constants';
 
 /**
  * Switch Menu
@@ -293,6 +293,35 @@ export function* getDatasetPolicy({ payload }) {
   }
 }
 
+export function* getSamRolesForResource(resourceId, resourceTypeName, actionType) {
+  try {
+    const response = yield call(
+      authGet,
+      `/api/repository/v1/${resourceTypeName}/${resourceId}/roles`,
+    );
+    yield put({
+      type: actionType,
+      roles: response,
+    });
+  } catch (err) {
+    showNotification(err);
+  }
+}
+
+export function* getUserDatasetRoles({ payload }) {
+  const datasetId = payload;
+  yield getSamRolesForResource(datasetId, 'datasets', ActionTypes.GET_USER_DATASET_ROLES_SUCCESS);
+}
+
+export function* getUserSnapshotRoles({ payload }) {
+  const snapshotId = payload;
+  yield getSamRolesForResource(
+    snapshotId,
+    'snapshots',
+    ActionTypes.GET_USER_SNAPSHOT_ROLES_SUCCESS,
+  );
+}
+
 export function* addDatasetPolicyMember({ payload }) {
   const { datasetId, user, policy } = payload;
   const userObject = { email: user };
@@ -539,6 +568,8 @@ export default function* root() {
     takeLatest(ActionTypes.COUNT_RESULTS, countResults),
     takeLatest(ActionTypes.GET_FEATURES, getFeatures),
     takeLatest(ActionTypes.GET_BILLING_PROFILE_BY_ID, getBillingProfileById),
+    takeLatest(ActionTypes.GET_USER_DATASET_ROLES, getUserDatasetRoles),
+    takeLatest(ActionTypes.GET_USER_SNAPSHOT_ROLES, getUserSnapshotRoles),
     fork(watchGetDatasetByIdSuccess),
   ]);
 }

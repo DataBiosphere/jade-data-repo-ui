@@ -8,11 +8,13 @@ import {
   getSnapshotPolicy,
   addSnapshotPolicyMember,
   removeSnapshotPolicyMember,
+  getUserSnapshotRoles,
 } from 'actions/index';
 import DetailViewHeader from './DetailViewHeader';
 
 import DatasetTable from './table/DatasetTable';
 import { SNAPSHOT_ROLES } from '../constants';
+import { getRoleMembersFromPolicies } from '../libs/utils';
 
 const styles = (theme) => ({
   wrapper: {
@@ -66,6 +68,7 @@ export class SnapshotDetailView extends React.PureComponent {
     snapshot: PropTypes.object,
     snapshotPolicies: PropTypes.arrayOf(PropTypes.object).isRequired,
     terraUrl: PropTypes.string,
+    userRoles: PropTypes.arrayOf(PropTypes.string),
   };
 
   // TODO: this will be overhauled once we tweak the snapshot view
@@ -74,6 +77,7 @@ export class SnapshotDetailView extends React.PureComponent {
     const snapshotId = match.params.uuid;
     dispatch(getSnapshotById(snapshotId));
     dispatch(getSnapshotPolicy(snapshotId));
+    dispatch(getUserSnapshotRoles(snapshotId));
   }
 
   addReader = (newEmail) => {
@@ -108,13 +112,21 @@ export class SnapshotDetailView extends React.PureComponent {
   };
 
   render() {
-    const { classes, features, snapshot, snapshotPolicies, terraUrl, canReadPolicies } = this.props;
+    const {
+      classes,
+      features,
+      snapshot,
+      snapshotPolicies,
+      terraUrl,
+      canReadPolicies,
+      userRoles,
+    } = this.props;
     const { filteredDatasets } = this.state;
-    const snapshotReadersObj = snapshotPolicies.find((policy) => policy.name === 'reader');
-    const snapshotReaders = (snapshotReadersObj && snapshotReadersObj.members) || [];
-    const snapshotStewardsObj = snapshotPolicies.find((policy) => policy.name === 'steward');
-    const snapshotStewards = (snapshotStewardsObj && snapshotStewardsObj.members) || [];
+
+    const snapshotReaders = getRoleMembersFromPolicies(snapshotPolicies, SNAPSHOT_ROLES.STEWARD);
+    const snapshotStewards = getRoleMembersFromPolicies(snapshotPolicies, SNAPSHOT_ROLES.STEWARD);
     const datasets = snapshot && snapshot.source && snapshot.source.map((s) => s.dataset);
+
     return (
       <div id="snapshot-detail-view" className={classes.wrapper}>
         <div className={classes.width}>
@@ -128,6 +140,7 @@ export class SnapshotDetailView extends React.PureComponent {
             removeReader={this.removeReader}
             terraUrl={terraUrl}
             canReadPolicies={canReadPolicies}
+            userRoles={userRoles}
           />
           {snapshot && snapshot.source && (
             <DatasetTable
@@ -151,6 +164,7 @@ function mapStateToProps(state) {
     snapshotPolicies: state.snapshots.snapshotPolicies,
     terraUrl: state.configuration.terraUrl,
     canReadPolicies: state.snapshots.canReadPolicies,
+    userRoles: state.snapshots.userRoles,
   };
 }
 

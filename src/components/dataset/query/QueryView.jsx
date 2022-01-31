@@ -10,6 +10,7 @@ import {
   getDatasetById,
   getDatasetPolicy,
   countResults,
+  getUserDatasetRoles,
 } from 'actions/index';
 import { Typography } from '@material-ui/core';
 import { FilterList, Info, People } from '@material-ui/icons';
@@ -65,10 +66,11 @@ export class QueryView extends React.PureComponent {
     queryResults: PropTypes.object,
     profile: PropTypes.object,
     table: PropTypes.object,
+    userRole: PropTypes.array,
   };
 
   componentDidMount() {
-    const { dispatch, match, dataset, datasetPolicies } = this.props;
+    const { dispatch, match, dataset, datasetPolicies, userRole } = this.props;
     const datasetId = match.params.uuid;
 
     if (dataset == null || dataset.id !== datasetId) {
@@ -77,6 +79,10 @@ export class QueryView extends React.PureComponent {
 
     if (datasetPolicies == null || dataset.id !== datasetId) {
       dispatch(getDatasetPolicy(datasetId));
+    }
+
+    if (userRole == null || dataset.id !== datasetId) {
+      dispatch(getUserDatasetRoles(datasetId));
     }
   }
 

@@ -39,6 +39,8 @@ export const ActionTypes = keyMirror({
   ADD_SNAPSHOT_POLICY_MEMBER_SUCCESS: undefined,
   REMOVE_SNAPSHOT_POLICY_MEMBER: undefined,
   REMOVE_SNAPSHOT_POLICY_MEMBER_SUCCESS: undefined,
+  GET_USER_SNAPSHOT_ROLES: undefined,
+  GET_USER_SNAPSHOT_ROLES_SUCCESS: undefined,
   GET_DATASET_POLICY: undefined,
   GET_DATASET_POLICY_SUCCESS: undefined,
   ADD_CUSTODIAN_TO_DATASET: undefined,
@@ -49,6 +51,8 @@ export const ActionTypes = keyMirror({
   ADD_DATASET_POLICY_MEMBER_SUCCESS: undefined,
   REMOVE_DATASET_POLICY_MEMBER: undefined,
   REMOVE_DATASET_POLICY_MEMBER_SUCCESS: undefined,
+  GET_USER_DATASET_ROLES: undefined,
+  GET_USER_DATASET_ROLES_SUCCESS: undefined,
   GET_BILLING_PROFILE_BY_ID: undefined,
   GET_BILLING_PROFILE_BY_ID_SUCCESS: undefined,
   GET_JOB_RESULT: undefined,
@@ -122,4 +126,9 @@ export const DATASET_ROLES = {
   STEWARD: 'steward',
   CUSTODIAN: 'custodian',
   SNAPSHOT_CREATOR: 'snapshot_creator',
+};
+
+export const IAM_RESOURCE_TYPES = {
+  DATASET: 'dataset',
+  SNAPSHOT: 'datasnapshot',
 };
