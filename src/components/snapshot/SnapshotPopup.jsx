@@ -1,6 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
+import { ReactComponent as ExitSVG } from 'media/icons/times-light.svg';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import {
@@ -56,6 +57,20 @@ const styles = (theme) => ({
   },
   centered: {
     textAlign: 'center',
+  },
+  exitButton: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    padding: '1em',
+    width: '3em',
+    height: '3em',
+    cursor: 'pointer',
+    ...theme.mixins.jadeLink,
+  },
+  title: {
+    marginTop: '40px',
+    paddingBottom: '10px',
   },
 });
 
@@ -147,10 +162,13 @@ export class SnapshotPopup extends React.PureComponent {
 
     return (
       <Dialog open={isOpen} onClose={this.handleClose}>
-        <DialogTitle>
-          <Typography variant="h5">Your data snapshot has been created</Typography>
-        </DialogTitle>
+        <div className={classes.exitButton} onClick={this.handleClose}>
+          <ExitSVG />
+        </div>
         <DialogContent>
+          <Typography variant="h5" className={classes.title}>
+            Your data snapshot has been created
+          </Typography>
           <Paper variant="outlined">
             <div className={clsx(classes.snapshotName, classes.content, classes.withIcon)}>
               <CameraAlt className={classes.inline} />
