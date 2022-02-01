@@ -27,6 +27,8 @@ const styles = (theme) => ({
   },
   exportButton: {
     marginTop: '0.5rem',
+    height: '36px',
+    width: '100%',
   },
   centered: {
     textAlign: 'center',
@@ -157,7 +159,7 @@ export class DetailViewHeader extends React.PureComponent {
             )}
             {isProcessing && !isDone && (
               <Button className={classes.exportButton} variant="outlined" color="primary">
-                <CircularProgress />
+                <CircularProgress size={25} />
                 <div className={classes.labelRight}>Preparing snapshot</div>
               </Button>
             )}
