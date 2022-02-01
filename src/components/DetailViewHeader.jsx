@@ -3,7 +3,7 @@ import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import { withStyles } from '@material-ui/core/styles';
-import { exportSnapshot } from 'actions/index';
+import { exportSnapshot, resetSnapshotExport } from 'actions/index';
 import { connect } from 'react-redux';
 import { Card, Grid, Typography, Button, CircularProgress } from '@material-ui/core';
 import UserList from './UserList';
@@ -49,21 +49,27 @@ export class DetailViewHeader extends React.PureComponent {
     addSteward: PropTypes.func,
     canReadPolicies: PropTypes.bool,
     classes: PropTypes.object.isRequired,
+    disableExport: PropTypes.bool,
     dispatch: PropTypes.func.isRequired,
+    exportResponse: PropTypes.object,
     isProcessing: PropTypes.bool,
     isDone: PropTypes.bool,
     of: PropTypes.object,
-    exportResponse: PropTypes.object,
     readers: PropTypes.arrayOf(PropTypes.string),
     removeReader: PropTypes.func,
-    terraUrl: PropTypes.string,
     removeSteward: PropTypes.func,
     stewards: PropTypes.arrayOf(PropTypes.string).isRequired,
+    terraUrl: PropTypes.string,
   };
 
   exportToWorkspaceCopy = () => {
     const { dispatch, of } = this.props;
     dispatch(exportSnapshot(of.id));
+  };
+
+  resetExport = () => {
+    const { dispatch } = this.props;
+    dispatch(resetSnapshotExport());
   };
 
   render() {
@@ -72,6 +78,7 @@ export class DetailViewHeader extends React.PureComponent {
       addReader,
       canReadPolicies,
       classes,
+      disableExport,
       isProcessing,
       isDone,
       exportResponse,
@@ -143,6 +150,7 @@ export class DetailViewHeader extends React.PureComponent {
                 <Button
                   onClick={this.exportToWorkspaceCopy}
                   className={classes.exportButton}
+                  disabled={disableExport}
                   variant="outlined"
                   color="primary"
                 >
@@ -157,7 +165,12 @@ export class DetailViewHeader extends React.PureComponent {
               </Button>
             )}
             {!isProcessing && isDone && (
-              <Button className={classes.exportButton} variant="contained" color="primary">
+              <Button
+                onClick={this.resetExport}
+                className={classes.exportButton}
+                variant="contained"
+                color="primary"
+              >
                 <a
                   target="_blank"
                   rel="noopener noreferrer"
@@ -179,6 +192,7 @@ function mapStateToProps(state) {
     isProcessing: state.snapshots.exportIsProcessing,
     isDone: state.snapshots.exportIsDone,
     exportResponse: state.snapshots.exportResponse,
+    disableExport: state.snapshots.disableExport,
   };
 }
 

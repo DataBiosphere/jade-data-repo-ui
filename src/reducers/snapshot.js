@@ -29,6 +29,7 @@ export const snapshotState = {
   exportIsProcessing: false,
   exportIsDone: false,
   exportResponse: {},
+  disableExport: false,
 };
 
 // We need this method to apply the response from add/remove snapshot members since the API only returns the affected group
@@ -63,25 +64,44 @@ export default {
         immutable(state, {
           dialogIsOpen: { $set: false },
         }),
+      [ActionTypes.CREATE_SNAPSHOT_EXCEPTION]: (state) =>
+        immutable(state, {
+          dialogIsOpen: { $set: false },
+        }),
       [ActionTypes.EXPORT_SNAPSHOT_JOB]: (state) =>
         immutable(state, {
           exportResponse: { $set: {} },
           exportIsProcessing: { $set: true },
           exportIsDone: { $set: false },
+          disableExport: { $set: true },
         }),
       [ActionTypes.EXPORT_SNAPSHOT_SUCCESS]: (state, action) =>
         immutable(state, {
           exportResponse: { $set: action.payload.jobResult },
           exportIsProcessing: { $set: false },
           exportIsDone: { $set: true },
+          disableExport: { $set: true },
         }),
       [ActionTypes.EXPORT_SNAPSHOT_FAILURE]: (state) =>
         immutable(state, {
+          exportResponse: { $set: {} },
           exportIsProcessing: { $set: false },
+          exportIsDone: { $set: false },
+          disableExport: { $set: false },
         }),
       [ActionTypes.EXPORT_SNAPSHOT_EXCEPTION]: (state) =>
         immutable(state, {
+          exportResponse: { $set: {} },
           exportIsProcessing: { $set: false },
+          exportIsDone: { $set: false },
+          disableExport: { $set: false },
+        }),
+      [ActionTypes.RESET_SNAPSHOT_EXPORT]: (state) =>
+        immutable(state, {
+          exportResponse: { $set: {} },
+          exportIsProcessing: { $set: false },
+          exportIsDone: { $set: false },
+          disableExport: { $set: false },
         }),
       [ActionTypes.GET_SNAPSHOT_BY_ID_SUCCESS]: (state, action) =>
         immutable(state, {
@@ -104,10 +124,6 @@ export default {
       [ActionTypes.REMOVE_SNAPSHOT_POLICY_MEMBER_SUCCESS]: (state, action) =>
         immutable(state, {
           snapshotPolicies: { $apply: snapshotMembershipResultApply(action) },
-        }),
-      [ActionTypes.EXCEPTION]: (state) =>
-        immutable(state, {
-          dialogIsOpen: { $set: false },
         }),
       [ActionTypes.OPEN_SNAPSHOT_DIALOG]: (state, action) =>
         immutable(state, {
