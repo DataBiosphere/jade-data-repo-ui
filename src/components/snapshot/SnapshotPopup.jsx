@@ -72,6 +72,9 @@ const styles = (theme) => ({
     marginTop: '40px',
     paddingBottom: '10px',
   },
+  jadeLink: {
+    ...theme.mixins.jadeLink,
+  },
 });
 
 export class SnapshotPopup extends React.PureComponent {
@@ -207,7 +210,7 @@ export class SnapshotPopup extends React.PureComponent {
             </div>
           </Paper>
           <div className={classes.actions}>
-            <Button className={classes.inline} color="primary">
+            <Button className={classes.jadeLink} color="primary">
               <Link to={`/snapshots/details/${snapshot.id}`}>Go to Snapshot Details Page</Link>
             </Button>
           </div>
