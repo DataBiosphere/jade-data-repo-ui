@@ -32,7 +32,8 @@ export const { exportSnapshot } = createActions({
 });
 
 export const { resetSnapshotExport } = createActions({
-  [ActionTypes.RESET_SNAPSHOT_EXPORT]: (snapshot) => snapshot,
+  [ActionTypes.RESET_SNAPSHOT_EXPORT]: () => ({}),
+  [ActionTypes.RESET_SNAPSHOT_EXPORT_DATA]: () => ({}),
 });
 
 export const { getSnapshots } = createActions({

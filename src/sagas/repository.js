@@ -134,7 +134,7 @@ export function* exportSnapshot({ payload }) {
 export function* resetSnapshotExport() {
   try {
     yield put({
-      type: ActionTypes.RESET_SNAPSHOT_EXPORT,
+      type: ActionTypes.RESET_SNAPSHOT_EXPORT_DATA,
     });
   } catch (err) {
     showNotification(err);
