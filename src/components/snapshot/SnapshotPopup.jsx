@@ -69,8 +69,9 @@ const styles = (theme) => ({
     ...theme.mixins.jadeLink,
   },
   title: {
-    marginTop: '40px',
-    paddingBottom: '10px',
+    marginTop: '10px',
+    marginRight: '16px',
+    paddingBottom: '15px',
   },
   jadeLink: {
     ...theme.mixins.jadeLink,
@@ -169,8 +170,8 @@ export class SnapshotPopup extends React.PureComponent {
           <ExitSVG />
         </div>
         <DialogContent>
-          <Typography variant="h5" className={classes.title}>
-            Your data snapshot has been created
+          <Typography variant="h4" className={classes.title}>
+            Snapshot Successfully Created
           </Typography>
           <Paper variant="outlined">
             <div className={clsx(classes.snapshotName, classes.content, classes.withIcon)}>
