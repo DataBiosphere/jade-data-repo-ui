@@ -49,7 +49,6 @@ export class DetailViewHeader extends React.PureComponent {
     addSteward: PropTypes.func,
     canReadPolicies: PropTypes.bool,
     classes: PropTypes.object.isRequired,
-    disableExport: PropTypes.bool,
     dispatch: PropTypes.func.isRequired,
     exportResponse: PropTypes.object,
     isProcessing: PropTypes.bool,
@@ -78,7 +77,6 @@ export class DetailViewHeader extends React.PureComponent {
       addReader,
       canReadPolicies,
       classes,
-      disableExport,
       isProcessing,
       isDone,
       exportResponse,
@@ -150,7 +148,6 @@ export class DetailViewHeader extends React.PureComponent {
                 <Button
                   onClick={this.exportToWorkspaceCopy}
                   className={classes.exportButton}
-                  disabled={disableExport}
                   variant="outlined"
                   color="primary"
                 >
@@ -192,7 +189,6 @@ function mapStateToProps(state) {
     isProcessing: state.snapshots.exportIsProcessing,
     isDone: state.snapshots.exportIsDone,
     exportResponse: state.snapshots.exportResponse,
-    disableExport: state.snapshots.disableExport,
   };
 }
 
