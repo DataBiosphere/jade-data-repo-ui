@@ -4,9 +4,9 @@ import { withStyles } from '@material-ui/core/styles';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Tooltip from '@material-ui/core/Tooltip';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import { Sort } from '@material-ui/icons';
+import TerraTooltip from '../common/TerraTooltip';
 
 const styles = (theme) => ({
   head: {
@@ -60,7 +60,7 @@ export class LightTableHead extends React.PureComponent {
                 ) : (
                   <div>
                     {col.label}
-                    <Tooltip
+                    <TerraTooltip
                       title="Sort"
                       placement={col.numeric ? 'bottom-end' : 'bottom-start'}
                       enterDelay={300}
@@ -72,7 +72,7 @@ export class LightTableHead extends React.PureComponent {
                         IconComponent={Sort}
                         style={{ float: 'right' }}
                       />
-                    </Tooltip>
+                    </TerraTooltip>
                   </div>
                 )}
               </TableCell>

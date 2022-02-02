@@ -1,6 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
+import { ReactComponent as ExitSVG } from 'media/icons/times-light.svg';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import {
@@ -13,7 +14,8 @@ import {
   Chip,
   CircularProgress,
 } from '@material-ui/core';
-import { CameraAlt, Edit, PeopleAlt, Today } from '@material-ui/icons';
+import { CameraAlt, Today } from '@material-ui/icons';
+import { Link } from 'react-router-dom';
 import clsx from 'clsx';
 import { openSnapshotDialog, getSnapshotById, getSnapshotPolicy } from 'actions/index';
 import { push } from 'modules/hist';
@@ -56,6 +58,24 @@ const styles = (theme) => ({
   centered: {
     textAlign: 'center',
   },
+  exitButton: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    padding: '1em',
+    width: '3em',
+    height: '3em',
+    cursor: 'pointer',
+    ...theme.mixins.jadeLink,
+  },
+  title: {
+    marginTop: '10px',
+    marginRight: '16px',
+    paddingBottom: '15px',
+  },
+  jadeLink: {
+    ...theme.mixins.jadeLink,
+  },
 });
 
 export class SnapshotPopup extends React.PureComponent {
@@ -66,7 +86,6 @@ export class SnapshotPopup extends React.PureComponent {
     isOpen: PropTypes.bool,
     policies: PropTypes.arrayOf(PropTypes.object),
     snapshot: PropTypes.object,
-    terraUrl: PropTypes.string,
   };
 
   /**
@@ -90,7 +109,7 @@ export class SnapshotPopup extends React.PureComponent {
   };
 
   render() {
-    const { classes, filterData, isOpen, snapshot, policies, terraUrl } = this.props;
+    const { classes, filterData, isOpen, snapshot, policies } = this.props;
 
     const notReady = _.some([snapshot, policies, snapshot.source, snapshot.tables], _.isEmpty);
     if (notReady) {
@@ -147,10 +166,13 @@ export class SnapshotPopup extends React.PureComponent {
 
     return (
       <Dialog open={isOpen} onClose={this.handleClose}>
-        <DialogTitle>
-          <Typography variant="h5">Your data snapshot has been created</Typography>
-        </DialogTitle>
+        <div className={classes.exitButton} onClick={this.handleClose}>
+          <ExitSVG />
+        </div>
         <DialogContent>
+          <Typography variant="h4" className={classes.title}>
+            Snapshot Successfully Created
+          </Typography>
           <Paper variant="outlined">
             <div className={clsx(classes.snapshotName, classes.content, classes.withIcon)}>
               <CameraAlt className={classes.inline} />
@@ -189,22 +211,8 @@ export class SnapshotPopup extends React.PureComponent {
             </div>
           </Paper>
           <div className={classes.actions}>
-            <Button className={classes.inline} color="primary">
-              <Edit className={classes.inline} />
-              Edit
-            </Button>
-            <Button className={classes.inline} color="primary">
-              <PeopleAlt className={classes.inline} />
-              Share
-            </Button>
-            <Button color="primary" data-cy="exportSnapshot">
-              <a
-                target="_blank"
-                rel="noopener noreferrer"
-                href={`${terraUrl}/#import-data?url=${window.location.origin}&snapshotId=${snapshot.id}&snapshotName=${snapshot.name}&format=snapshot`}
-              >
-                Export
-              </a>
+            <Button className={classes.jadeLink} color="primary">
+              <Link to={`/snapshots/details/${snapshot.id}`}>Go to Snapshot Details Page</Link>
             </Button>
           </div>
         </DialogContent>
@@ -219,7 +227,6 @@ function mapStateToProps(state) {
     filterData: state.query.filterData,
     snapshot: state.snapshots.snapshot,
     policies: state.snapshots.snapshotPolicies,
-    terraUrl: state.configuration.terraUrl,
   };
 }
 

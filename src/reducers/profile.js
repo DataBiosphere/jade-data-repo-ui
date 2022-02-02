@@ -19,6 +19,10 @@ export default {
         immutable(state, {
           profile: { $set: action.profile.data.data },
         }),
+      [ActionTypes.GET_BILLING_PROFILE_BY_ID_EXCEPTION]: (state) =>
+        immutable(state, {
+          profile: {},
+        }),
       [ActionTypes.USER_LOGOUT]: () => profileState,
     },
     profileState,

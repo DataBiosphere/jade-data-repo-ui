@@ -26,6 +26,10 @@ export const snapshotState = {
   // for snapshot creation
   snapshotRequest: defaultSnapshotRequest,
   userRoles: [],
+  // for snapshot export to workspace
+  exportIsProcessing: false,
+  exportIsDone: false,
+  exportResponse: {},
 };
 
 // We need this method to apply the response from add/remove snapshot members since the API only returns the affected group
@@ -59,6 +63,43 @@ export default {
       [ActionTypes.CREATE_SNAPSHOT_FAILURE]: (state) =>
         immutable(state, {
           dialogIsOpen: { $set: false },
+        }),
+      [ActionTypes.CREATE_SNAPSHOT_EXCEPTION]: (state) =>
+        immutable(state, {
+          dialogIsOpen: { $set: false },
+        }),
+      [ActionTypes.EXPORT_SNAPSHOT_START]: (state) =>
+        immutable(state, {
+          exportIsProcessing: { $set: true },
+          exportIsDone: { $set: false },
+        }),
+      [ActionTypes.EXPORT_SNAPSHOT_JOB]: (state) =>
+        immutable(state, {
+          exportResponse: { $set: {} },
+        }),
+      [ActionTypes.EXPORT_SNAPSHOT_SUCCESS]: (state, action) =>
+        immutable(state, {
+          exportResponse: { $set: action.payload.jobResult },
+          exportIsProcessing: { $set: false },
+          exportIsDone: { $set: true },
+        }),
+      [ActionTypes.EXPORT_SNAPSHOT_FAILURE]: (state) =>
+        immutable(state, {
+          exportResponse: { $set: {} },
+          exportIsProcessing: { $set: false },
+          exportIsDone: { $set: false },
+        }),
+      [ActionTypes.EXPORT_SNAPSHOT_EXCEPTION]: (state) =>
+        immutable(state, {
+          exportResponse: { $set: {} },
+          exportIsProcessing: { $set: false },
+          exportIsDone: { $set: false },
+        }),
+      [ActionTypes.RESET_SNAPSHOT_EXPORT]: (state) =>
+        immutable(state, {
+          exportResponse: { $set: {} },
+          exportIsProcessing: { $set: false },
+          exportIsDone: { $set: false },
         }),
       [ActionTypes.GET_SNAPSHOT_BY_ID_SUCCESS]: (state, action) =>
         immutable(state, {

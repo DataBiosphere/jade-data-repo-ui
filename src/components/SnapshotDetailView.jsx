@@ -119,6 +119,7 @@ export class SnapshotDetailView extends React.PureComponent {
       snapshotPolicies,
       terraUrl,
       canReadPolicies,
+      dispatch,
       userRoles,
     } = this.props;
     const { filteredDatasets } = this.state;
@@ -140,6 +141,7 @@ export class SnapshotDetailView extends React.PureComponent {
             removeReader={this.removeReader}
             terraUrl={terraUrl}
             canReadPolicies={canReadPolicies}
+            dispatch={dispatch}
             userRoles={userRoles}
           />
           {snapshot && snapshot.source && (

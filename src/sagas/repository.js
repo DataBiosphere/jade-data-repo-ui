@@ -70,7 +70,7 @@ export function* authDelete(url) {
 /**
  * Saga poller
  */
-function* pollJobWorker(jobId, jobTypeSuccess, jobTypeFailure) {
+function* pollJobWorker(jobId, jobTypeSuccess, jobTypeFailure, jobTypeException) {
   try {
     const response = yield call(authGet, `/api/repository/v1/jobs/${jobId}`);
     const jobStatus = response.data.job_status;
@@ -93,13 +93,55 @@ function* pollJobWorker(jobId, jobTypeSuccess, jobTypeFailure) {
         payload: { status: response.data.job_status },
       });
       yield call(delay, 1000);
-      yield call(pollJobWorker, jobId, jobTypeSuccess, jobTypeFailure);
+      yield call(pollJobWorker, jobId, jobTypeSuccess, jobTypeFailure, jobTypeException);
     }
   } catch (err) {
     showNotification(err);
+    yield put({
+      type: jobTypeException,
+    });
   }
 }
 
+export function* exportSnapshot({ payload }) {
+  try {
+    yield put({
+      type: ActionTypes.EXPORT_SNAPSHOT_START,
+    });
+    const snapshotId = payload.snapshotId;
+    const response = yield call(authGet, `/api/repository/v1/snapshots/${snapshotId}/export`);
+    const jobId = response.data.id;
+    yield put({
+      type: ActionTypes.EXPORT_SNAPSHOT_JOB,
+      payload: { data: response, jobId },
+    });
+    yield call(
+      pollJobWorker,
+      jobId,
+      ActionTypes.EXPORT_SNAPSHOT_SUCCESS,
+      ActionTypes.EXPORT_SNAPSHOT_FAILURE,
+      ActionTypes.EXPORT_SNAPSHOT_EXCEPTION,
+    );
+  } catch (err) {
+    showNotification(err);
+    yield put({
+      type: ActionTypes.EXPORT_SNAPSHOT_EXCEPTION,
+    });
+  }
+}
+
+export function* resetSnapshotExport() {
+  try {
+    yield put({
+      type: ActionTypes.RESET_SNAPSHOT_EXPORT_DATA,
+    });
+  } catch (err) {
+    showNotification(err);
+    yield put({
+      type: ActionTypes.EXPORT_SNAPSHOT_EXCEPTION,
+    });
+  }
+}
 /**
  * Snapshots.
  */
@@ -150,11 +192,12 @@ export function* createSnapshot() {
       jobId,
       ActionTypes.CREATE_SNAPSHOT_SUCCESS,
       ActionTypes.CREATE_SNAPSHOT_FAILURE,
+      ActionTypes.CREATE_SNAPSHOT_EXCEPTION,
     );
   } catch (err) {
     showNotification(err);
     yield put({
-      type: ActionTypes.EXCEPTION,
+      type: ActionTypes.CREATE_SNAPSHOT_EXCEPTION,
     });
   }
 }
@@ -419,9 +462,9 @@ export function* getBillingProfileById(profileId) {
       profile: { data: response },
     });
   } catch (err) {
+    showNotification(err);
     yield put({
-      type: ActionTypes.EXCEPTION,
-      profile: null,
+      type: ActionTypes.GET_BILLING_PROFILE_BY_ID_EXCEPTION,
     });
   }
 }
@@ -550,6 +593,8 @@ export function* getFeatures() {
 export default function* root() {
   yield all([
     takeLatest(ActionTypes.CREATE_SNAPSHOT, createSnapshot),
+    takeLatest(ActionTypes.EXPORT_SNAPSHOT, exportSnapshot),
+    takeLatest(ActionTypes.RESET_SNAPSHOT_EXPORT, resetSnapshotExport),
     takeLatest(ActionTypes.GET_SNAPSHOTS, getSnapshots),
     takeLatest(ActionTypes.GET_SNAPSHOT_BY_ID, getSnapshotById),
     takeLatest(ActionTypes.GET_SNAPSHOT_POLICY, getSnapshotPolicy),
