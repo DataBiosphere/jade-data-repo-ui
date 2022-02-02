@@ -29,6 +29,22 @@ export default {
         immutable(state, {
           jobStatus: { $set: STATUS.SUCCESS },
         }),
+      [ActionTypes.CREATE_SNAPSHOT_FAILURE]: (state) =>
+        immutable(state, {
+          jobStatus: { $set: STATUS.ERROR },
+        }),
+      [ActionTypes.EXPORT_SNAPSHOT_JOB]: (state, action) =>
+        immutable(state, {
+          jobId: { $set: action.payload.jobId },
+        }),
+      [ActionTypes.EXPORT_SNAPSHOT_SUCCESS]: (state) =>
+        immutable(state, {
+          jobStatus: { $set: STATUS.SUCCESS },
+        }),
+      [ActionTypes.EXPORT_SNAPSHOT_FAILURE]: (state) =>
+        immutable(state, {
+          jobStatus: { $set: STATUS.ERROR },
+        }),
       [ActionTypes.CLEAR_JOB_ID]: (state) =>
         immutable(state, {
           jobId: { $set: '' },

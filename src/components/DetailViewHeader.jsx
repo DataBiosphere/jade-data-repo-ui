@@ -3,12 +3,11 @@ import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import { withStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import Card from '@material-ui/core/Card';
-import Typography from '@material-ui/core/Typography';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Button from '@material-ui/core/Button';
+import { exportSnapshot, resetSnapshotExport } from 'actions/index';
+import { connect } from 'react-redux';
+import { Card, Grid, Typography, Button, CircularProgress } from '@material-ui/core';
 import UserList from './UserList';
+import TerraTooltip from './common/TerraTooltip';
 
 const styles = (theme) => ({
   title: {
@@ -28,6 +27,21 @@ const styles = (theme) => ({
   },
   exportButton: {
     marginTop: '0.5rem',
+    height: '36px',
+    width: '100%',
+  },
+  centered: {
+    textAlign: 'center',
+  },
+  content: {
+    padding: theme.spacing(2),
+  },
+  labelRight: {
+    paddingLeft: '10px',
+  },
+  separator: {
+    marginTop: '20px',
+    marginBottom: '10px',
   },
 });
 
@@ -37,26 +51,43 @@ export class DetailViewHeader extends React.PureComponent {
     addSteward: PropTypes.func,
     canReadPolicies: PropTypes.bool,
     classes: PropTypes.object.isRequired,
+    dispatch: PropTypes.func.isRequired,
+    exportResponse: PropTypes.object,
+    isProcessing: PropTypes.bool,
+    isDone: PropTypes.bool,
     of: PropTypes.object,
     readers: PropTypes.arrayOf(PropTypes.string),
     removeReader: PropTypes.func,
-    terraUrl: PropTypes.string,
     removeSteward: PropTypes.func,
     stewards: PropTypes.arrayOf(PropTypes.string).isRequired,
+    terraUrl: PropTypes.string,
+  };
+
+  exportToWorkspaceCopy = () => {
+    const { dispatch, of } = this.props;
+    dispatch(exportSnapshot(of.id));
+  };
+
+  resetExport = () => {
+    const { dispatch } = this.props;
+    dispatch(resetSnapshotExport());
   };
 
   render() {
     const {
       addSteward,
       addReader,
+      canReadPolicies,
       classes,
-      stewards,
+      isProcessing,
+      isDone,
+      exportResponse,
       of,
       readers,
       removeSteward,
       removeReader,
+      stewards,
       terraUrl,
-      canReadPolicies,
     } = this.props;
     const loading = _.isNil(of) || _.isEmpty(of);
 
@@ -85,7 +116,7 @@ export class DetailViewHeader extends React.PureComponent {
                 <p className={classes.header}> Storage:</p>
                 <ul>
                   {of.source[0].dataset.storage.map((storageResource) => (
-                    <li>
+                    <li key={storageResource.cloudResource}>
                       {storageResource.cloudResource}: {storageResource.region}
                     </li>
                   ))}
@@ -110,15 +141,44 @@ export class DetailViewHeader extends React.PureComponent {
                 canManageUsers={true}
               />
             )}
-            <Button className={classes.exportButton} variant="contained" color="primary">
-              <a
-                target="_blank"
-                rel="noopener noreferrer"
-                href={`${terraUrl}/#import-data?url=${window.location.origin}&snapshotId=${of.id}&snapshotName=${of.name}&format=snapshot`}
+            <hr className={classes.separator} />
+            <Typography variant="h6" className={classes.section}>
+              Export a copy of the snapshot metadata to an exisiting or new Terra workspace
+            </Typography>
+            {!isProcessing && !isDone && (
+              <TerraTooltip title="Exporting a snapshot to a workspace means that all members of your workspace will be able to have read only access to the tables and files in the snapshot">
+                <Button
+                  onClick={this.exportToWorkspaceCopy}
+                  className={classes.exportButton}
+                  variant="outlined"
+                  color="primary"
+                >
+                  Export snapshot
+                </Button>
+              </TerraTooltip>
+            )}
+            {isProcessing && !isDone && (
+              <Button className={classes.exportButton} variant="outlined" color="primary">
+                <CircularProgress size={25} />
+                <div className={classes.labelRight}>Preparing snapshot</div>
+              </Button>
+            )}
+            {!isProcessing && isDone && (
+              <Button
+                onClick={this.resetExport}
+                className={classes.exportButton}
+                variant="contained"
+                color="primary"
               >
-                Export to Workspace
-              </a>
-            </Button>
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href={`${terraUrl}#import-data?url=${window.location.origin}&snapshotId=${of.id}&format=tdrexport&snapshotName=${of.name}&tdrmanifest=${exportResponse.format.parquet.manifest}`}
+                >
+                  Snapshot ready - continue
+                </a>
+              </Button>
+            )}
           </Card>
         </Grid>
       </Grid>
@@ -126,4 +186,12 @@ export class DetailViewHeader extends React.PureComponent {
   }
 }
 
-export default withStyles(styles)(DetailViewHeader);
+function mapStateToProps(state) {
+  return {
+    isProcessing: state.snapshots.exportIsProcessing,
+    isDone: state.snapshots.exportIsDone,
+    exportResponse: state.snapshots.exportResponse,
+  };
+}
+
+export default connect(mapStateToProps)(withStyles(styles)(DetailViewHeader));

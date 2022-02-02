@@ -86,15 +86,6 @@ describe('test snapshot creation', () => {
 
     cy.get('[data-cy=snapshotName]').should('contain', 'mock_snapshot');
     cy.get('[data-cy=snapshotReaders]').should('contain', 'email@gmail.com');
-
-    const terraUrl = 'https://bvdp-saturn-dev.appspot.com';
-    cy.window().then((w) => {
-      const exportUrl = `${terraUrl}/#import-data?url=${w.location.origin}&snapshotId=snapshotId&snapshotName=mock_snapshot&format=snapshot`;
-      cy.get('[data-cy=exportSnapshot]').within(() => {
-        cy.get('a').should('have.attr', 'href', exportUrl);
-      });
-      cy.url().should('include', '/snapshots');
-    });
   });
 });
 

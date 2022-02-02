@@ -4,12 +4,12 @@ import clsx from 'clsx';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import Tooltip from '@material-ui/core/Tooltip';
 import { Box, Typography, Button, Grid, InputBase, ListItem, Collapse } from '@material-ui/core';
 import { ExpandMore, ExpandLess, Search } from '@material-ui/icons';
 import QueryViewSidebarItem from '../QueryViewSidebarItem';
 import QuerySidebarPanel from '../QuerySidebarPanel';
 import { applyFilters } from '../../../../../actions';
+import TerraTooltip from '../../../../common/TerraTooltip';
 
 const styles = (theme) => ({
   root: {
@@ -230,7 +230,7 @@ export class FilterPanel extends React.PureComponent {
             ))}
         </div>
         <div className={clsx(classes.rowTwo, classes.snapshotBtnCntnr)}>
-          <Tooltip title={canLink ? '' : billingErrorMessage}>
+          <TerraTooltip title={canLink ? '' : billingErrorMessage}>
             <span>
               <Button
                 variant="contained"
@@ -248,7 +248,7 @@ export class FilterPanel extends React.PureComponent {
                 Create Snapshot
               </Button>
             </span>
-          </Tooltip>
+          </TerraTooltip>
         </div>
       </div>
     );

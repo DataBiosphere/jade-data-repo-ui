@@ -11,6 +11,7 @@ import { ActionTypes } from 'constants/index';
 export const { getBillingProfileById } = createActions({
   [ActionTypes.GET_BILLING_PROFILE_BY_ID]: (profile) => profile,
   [ActionTypes.GET_BILLING_PROFILE_BY_ID_SUCCESS]: (profile) => profile,
+  [ActionTypes.GET_BILLING_PROFILE_BY_ID_EXCEPTION]: () => ({}),
 });
 
 export const { createSnapshot } = createActions({
@@ -18,6 +19,21 @@ export const { createSnapshot } = createActions({
   [ActionTypes.CREATE_SNAPSHOT_JOB]: (snapshot) => snapshot,
   [ActionTypes.CREATE_SNAPSHOT_SUCCESS]: (snapshot) => snapshot,
   [ActionTypes.CREATE_SNAPSHOT_FAILURE]: (snapshot) => snapshot,
+  [ActionTypes.CREATE_SNAPSHOT_EXCEPTION]: () => ({}),
+});
+
+export const { exportSnapshot } = createActions({
+  [ActionTypes.EXPORT_SNAPSHOT]: (snapshotId) => ({ snapshotId }),
+  [ActionTypes.EXPORT_SNAPSHOT_START]: () => ({}),
+  [ActionTypes.EXPORT_SNAPSHOT_JOB]: (exportResponse) => exportResponse,
+  [ActionTypes.EXPORT_SNAPSHOT_SUCCESS]: (exportResponse) => exportResponse,
+  [ActionTypes.EXPORT_SNAPSHOT_FAILURE]: (exportResponse) => exportResponse,
+  [ActionTypes.EXPORT_SNAPSHOT_EXCEPTION]: () => ({}),
+});
+
+export const { resetSnapshotExport } = createActions({
+  [ActionTypes.RESET_SNAPSHOT_EXPORT]: () => ({}),
+  [ActionTypes.RESET_SNAPSHOT_EXPORT_DATA]: () => ({}),
 });
 
 export const { getSnapshots } = createActions({
