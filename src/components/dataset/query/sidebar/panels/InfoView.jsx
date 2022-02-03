@@ -36,6 +36,7 @@ export class InfoView extends React.PureComponent {
     super(props);
     this.state = {
       isHelpVisible: false,
+      isAccordionExpanded: false,
     };
   }
 
@@ -53,9 +54,17 @@ export class InfoView extends React.PureComponent {
     });
   };
 
+  toggleAccordion = () => {
+    const { isAccordionExpanded } = this.state;
+    this.setState({
+      isAccordionExpanded: !isAccordionExpanded,
+    });
+  };
+
   render() {
     const { classes, dataset } = this.props;
-    const { isHelpVisible, helpTitle, helpContent } = this.state;
+    const { isAccordionExpanded, isHelpVisible, helpTitle, helpContent } = this.state;
+
     return (
       <div className={classes.root}>
         {isHelpVisible && (
@@ -101,7 +110,7 @@ export class InfoView extends React.PureComponent {
               <Typography>{moment(dataset.createdDate).fromNow()}</Typography>
             </Grid>
             <Grid item xs={12} className={classes.membershipAccordionContainer}>
-              <Accordion>
+              <Accordion expanded={isAccordionExpanded} onChange={this.toggleAccordion}>
                 <AccordionSummary
                   className={clsx(classes.membershipAccordion)}
                   expandIcon={<ExpandMore />}
