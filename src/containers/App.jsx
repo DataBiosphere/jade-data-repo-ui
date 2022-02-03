@@ -261,8 +261,8 @@ export function App(props) {
 App.propTypes = {
   configuration: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
-  user: PropTypes.object.isRequired,
   status: PropTypes.object.isRequired,
+  user: PropTypes.object.isRequired,
 };
 
 function mapStateToProps(state) {

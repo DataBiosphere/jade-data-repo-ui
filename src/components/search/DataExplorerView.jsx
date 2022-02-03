@@ -20,7 +20,6 @@ const styles = (theme) => ({
 class DataExplorerView extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    dispatch: PropTypes.func.isRequired,
   };
 
   render() {

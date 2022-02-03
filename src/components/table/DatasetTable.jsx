@@ -18,11 +18,11 @@ class DatasetTable extends React.PureComponent {
     classes: PropTypes.object.isRequired,
     datasets: PropTypes.array.isRequired,
     datasetsCount: PropTypes.number,
-    filteredDatasetsCount: PropTypes.number,
     features: PropTypes.object,
+    filteredDatasetsCount: PropTypes.number,
     handleFilterDatasets: PropTypes.func,
-    summary: PropTypes.bool,
     searchString: PropTypes.string,
+    summary: PropTypes.bool,
   };
 
   render() {

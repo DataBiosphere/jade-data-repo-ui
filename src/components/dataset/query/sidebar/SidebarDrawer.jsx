@@ -62,7 +62,6 @@ export class SidebarDrawer extends React.PureComponent {
     panels: PropTypes.array,
     selected: PropTypes.string,
     table: PropTypes.object,
-    width: PropTypes.number,
   };
 
   handleOpenPanel = (InputPanelComponent) => {

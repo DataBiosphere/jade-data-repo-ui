@@ -63,11 +63,11 @@ export class SnapshotDetailView extends React.PureComponent {
     canReadPolicies: PropTypes.bool,
     classes: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired,
-    user: PropTypes.object,
     match: PropTypes.object.isRequired,
     snapshot: PropTypes.object,
     snapshotPolicies: PropTypes.arrayOf(PropTypes.object).isRequired,
     terraUrl: PropTypes.string,
+    user: PropTypes.object,
     userRoles: PropTypes.arrayOf(PropTypes.string),
   };
 

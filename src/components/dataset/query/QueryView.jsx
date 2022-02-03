@@ -64,8 +64,8 @@ export class QueryView extends React.PureComponent {
     joinStatement: PropTypes.string,
     match: PropTypes.object,
     orderBy: PropTypes.string,
-    queryResults: PropTypes.object,
     profile: PropTypes.object,
+    queryResults: PropTypes.object,
     table: PropTypes.object,
     userRole: PropTypes.array,
   };

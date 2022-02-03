@@ -56,15 +56,15 @@ export class DetailViewHeader extends React.PureComponent {
     classes: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired,
     exportResponse: PropTypes.object,
-    isProcessing: PropTypes.bool,
     isDone: PropTypes.bool,
+    isProcessing: PropTypes.bool,
     of: PropTypes.object,
-    user: PropTypes.object,
     readers: PropTypes.arrayOf(PropTypes.string),
     removeReader: PropTypes.func,
     removeSteward: PropTypes.func,
     stewards: PropTypes.arrayOf(PropTypes.string).isRequired,
     terraUrl: PropTypes.string,
+    user: PropTypes.object,
     userRoles: PropTypes.arrayOf(PropTypes.string),
   };
 

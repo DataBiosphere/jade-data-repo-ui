@@ -12,7 +12,7 @@ const styles = (theme) => ({
     fontFamily: theme.typography.fontFamily,
     right: '0',
     'max-width': '815px',
-    height: 'calc(100% - ' + theme.constants.navBarHeight + ')',
+    height: `calc(100% - ${theme.constants.navBarHeight})`,
     position: 'fixed',
     'background-color': theme.palette.panel.background,
     display: 'flex',

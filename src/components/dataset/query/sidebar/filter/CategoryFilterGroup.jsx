@@ -16,8 +16,8 @@ export class CategoryFilterGroup extends React.PureComponent {
     filterMap: PropTypes.object,
     handleChange: PropTypes.func,
     originalValues: PropTypes.object,
-    values: PropTypes.object,
     table: PropTypes.string,
+    values: PropTypes.object,
   };
 
   componentDidUpdate(prevProps) {

@@ -7,7 +7,6 @@ export class RangeInput extends React.PureComponent {
   static propTypes = {
     handleChange: PropTypes.func,
     handleFilters: PropTypes.func,
-    labelName: PropTypes.string,
     value: PropTypes.string,
   };
 

@@ -12,11 +12,11 @@ export class QueryViewSidebar extends React.PureComponent {
   }
 
   static propTypes = {
+    canLink: PropTypes.bool,
     open: PropTypes.bool,
     selected: PropTypes.string,
     switchPanels: PropTypes.func,
     table: PropTypes.object,
-    canLink: PropTypes.bool,
   };
 
   handleCreateSnapshot = (isSavingSnapshot) => {
