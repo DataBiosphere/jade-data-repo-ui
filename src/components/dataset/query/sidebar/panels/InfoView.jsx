@@ -36,13 +36,13 @@ export class InfoView extends React.PureComponent {
     super(props);
     this.state = {
       isHelpVisible: false,
+      isAccordionExpanded: false,
     };
   }
 
   static propTypes = {
     classes: PropTypes.object,
     dataset: PropTypes.object,
-    datasetPolicies: PropTypes.array,
   };
 
   toggleHelpOverlay = (helpTitle, helpContent) => {
@@ -54,9 +54,17 @@ export class InfoView extends React.PureComponent {
     });
   };
 
+  toggleAccordion = () => {
+    const { isAccordionExpanded } = this.state;
+    this.setState({
+      isAccordionExpanded: !isAccordionExpanded,
+    });
+  };
+
   render() {
-    const { classes, dataset, datasetPolicies } = this.props;
-    const { isHelpVisible, helpTitle, helpContent } = this.state;
+    const { classes, dataset } = this.props;
+    const { isAccordionExpanded, isHelpVisible, helpTitle, helpContent } = this.state;
+
     return (
       <div className={classes.root}>
         {isHelpVisible && (
@@ -102,7 +110,7 @@ export class InfoView extends React.PureComponent {
               <Typography>{moment(dataset.createdDate).fromNow()}</Typography>
             </Grid>
             <Grid item xs={12} className={classes.membershipAccordionContainer}>
-              <Accordion>
+              <Accordion expanded={isAccordionExpanded} onChange={this.toggleAccordion}>
                 <AccordionSummary
                   className={clsx(classes.membershipAccordion)}
                   expandIcon={<ExpandMore />}
@@ -112,10 +120,7 @@ export class InfoView extends React.PureComponent {
                   Summary of roles and memberships
                 </AccordionSummary>
                 <AccordionDetails>
-                  <DatasetAccess
-                    policies={datasetPolicies}
-                    helpOverlayToggle={this.toggleHelpOverlay}
-                  />
+                  <DatasetAccess helpOverlayToggle={this.toggleHelpOverlay} />
                 </AccordionDetails>
               </Accordion>
             </Grid>
@@ -129,7 +134,6 @@ export class InfoView extends React.PureComponent {
 function mapStateToProps(state) {
   return {
     dataset: state.datasets.dataset,
-    datasetPolicies: state.datasets.datasetPolicies,
   };
 }
 

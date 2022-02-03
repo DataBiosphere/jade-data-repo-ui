@@ -8,8 +8,8 @@ import axios from 'axios';
 import moment from 'moment';
 import _ from 'lodash';
 
-import { ActionTypes, STATUS } from 'constants/index';
 import { showNotification } from 'modules/notifications';
+import { ActionTypes, STATUS } from '../constants';
 
 /**
  * Switch Menu
@@ -336,6 +336,69 @@ export function* getDatasetPolicy({ payload }) {
   }
 }
 
+export function* getSamRolesForResource(resourceId, resourceTypeName, actionType) {
+  try {
+    const response = yield call(
+      authGet,
+      `/api/repository/v1/${resourceTypeName}/${resourceId}/roles`,
+    );
+    yield put({
+      type: actionType,
+      roles: response,
+    });
+  } catch (err) {
+    showNotification(err);
+  }
+}
+
+export function* getUserDatasetRoles({ payload }) {
+  const datasetId = payload;
+  yield getSamRolesForResource(datasetId, 'datasets', ActionTypes.GET_USER_DATASET_ROLES_SUCCESS);
+}
+
+export function* getUserSnapshotRoles({ payload }) {
+  const snapshotId = payload;
+  yield getSamRolesForResource(
+    snapshotId,
+    'snapshots',
+    ActionTypes.GET_USER_SNAPSHOT_ROLES_SUCCESS,
+  );
+}
+
+export function* addDatasetPolicyMember({ payload }) {
+  const { datasetId, user, policy } = payload;
+  const userObject = { email: user };
+  try {
+    const response = yield call(
+      authPost,
+      `/api/repository/v1/datasets/${datasetId}/policies/${policy}/members`,
+      userObject,
+    );
+    yield put({
+      type: ActionTypes.ADD_DATASET_POLICY_MEMBER_SUCCESS,
+      dataset: { data: response },
+      policy,
+    });
+  } catch (err) {
+    showNotification(err);
+  }
+}
+
+export function* removeDatasetPolicyMember({ payload }) {
+  const { datasetId, user, policy } = payload;
+  const url = `/api/repository/v1/datasets/${datasetId}/policies/${policy}/members/${user}`;
+  try {
+    const response = yield call(authDelete, url);
+    yield put({
+      type: ActionTypes.REMOVE_DATASET_POLICY_MEMBER_SUCCESS,
+      dataset: { data: response },
+      policy,
+    });
+  } catch (err) {
+    showNotification(err);
+  }
+}
+
 export function* addCustodianToDataset({ payload }) {
   const { datasetId } = payload;
   const custodian = payload.users[0];
@@ -542,12 +605,16 @@ export default function* root() {
     takeLatest(ActionTypes.GET_DATASET_POLICY, getDatasetPolicy),
     takeLatest(ActionTypes.ADD_CUSTODIAN_TO_DATASET, addCustodianToDataset),
     takeLatest(ActionTypes.REMOVE_CUSTODIAN_FROM_DATASET, removeCustodianFromDataset),
+    takeLatest(ActionTypes.ADD_DATASET_POLICY_MEMBER, addDatasetPolicyMember),
+    takeLatest(ActionTypes.REMOVE_DATASET_POLICY_MEMBER, removeDatasetPolicyMember),
     takeLatest(ActionTypes.GET_DATASET_TABLE_PREVIEW, getDatasetTablePreview),
     takeLatest(ActionTypes.RUN_QUERY, runQuery),
     takeLatest(ActionTypes.PAGE_QUERY, pageQuery),
     takeLatest(ActionTypes.COUNT_RESULTS, countResults),
     takeLatest(ActionTypes.GET_FEATURES, getFeatures),
     takeLatest(ActionTypes.GET_BILLING_PROFILE_BY_ID, getBillingProfileById),
+    takeLatest(ActionTypes.GET_USER_DATASET_ROLES, getUserDatasetRoles),
+    takeLatest(ActionTypes.GET_USER_SNAPSHOT_ROLES, getUserSnapshotRoles),
     fork(watchGetDatasetByIdSuccess),
   ]);
 }

@@ -25,6 +25,7 @@ export const snapshotState = {
   dialogIsOpen: false,
   // for snapshot creation
   snapshotRequest: defaultSnapshotRequest,
+  userRoles: [],
   // for snapshot export to workspace
   exportIsProcessing: false,
   exportIsDone: false,
@@ -121,6 +122,18 @@ export default {
       [ActionTypes.REMOVE_SNAPSHOT_POLICY_MEMBER_SUCCESS]: (state, action) =>
         immutable(state, {
           snapshotPolicies: { $apply: snapshotMembershipResultApply(action) },
+        }),
+      [ActionTypes.GET_USER_SNAPSHOT_ROLES]: (state) =>
+        immutable(state, {
+          userRoles: { $set: [] },
+        }),
+      [ActionTypes.GET_USER_SNAPSHOT_ROLES_SUCCESS]: (state, action) =>
+        immutable(state, {
+          userRoles: { $set: action.roles.data },
+        }),
+      [ActionTypes.EXCEPTION]: (state) =>
+        immutable(state, {
+          dialogIsOpen: { $set: false },
         }),
       [ActionTypes.OPEN_SNAPSHOT_DIALOG]: (state, action) =>
         immutable(state, {
