@@ -37,8 +37,6 @@ describe('test dataset sharing', () => {
       '.MuiTypography-root > .MuiButtonBase-root > .MuiIconButton-label > .MuiSvgIcon-root',
     ).click();
 
-    cy.get('#customized-dialog-title').should('not.be.visible');
-
     cy.get(':nth-child(3) > :nth-child(3) > button')
       .should('be.visible')
       .should('contain.text', 'Manage Custodians');
