@@ -13,7 +13,7 @@ import {
 import DetailViewHeader from './DetailViewHeader';
 
 import DatasetTable from './table/DatasetTable';
-import { SNAPSHOT_ROLES } from '../constants';
+import { SNAPSHOT_INCLUDE_OPTIONS, SNAPSHOT_ROLES } from '../constants';
 import { getRoleMembersFromPolicies } from '../libs/utils';
 
 const styles = (theme) => ({
@@ -63,7 +63,7 @@ export class SnapshotDetailView extends React.PureComponent {
     canReadPolicies: PropTypes.bool,
     classes: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired,
-    features: PropTypes.object,
+    user: PropTypes.object,
     match: PropTypes.object.isRequired,
     snapshot: PropTypes.object,
     snapshotPolicies: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -75,7 +75,19 @@ export class SnapshotDetailView extends React.PureComponent {
   UNSAFE_componentWillMount() {
     const { dispatch, match } = this.props;
     const snapshotId = match.params.uuid;
-    dispatch(getSnapshotById(snapshotId));
+    dispatch(
+      getSnapshotById({
+        snapshotId,
+        include: [
+          SNAPSHOT_INCLUDE_OPTIONS.SOURCES,
+          SNAPSHOT_INCLUDE_OPTIONS.TABLES,
+          SNAPSHOT_INCLUDE_OPTIONS.RELATIONSHIPS,
+          SNAPSHOT_INCLUDE_OPTIONS.ACCESS_INFORMATION,
+          SNAPSHOT_INCLUDE_OPTIONS.PROFILE,
+          SNAPSHOT_INCLUDE_OPTIONS.DATA_PROJECT,
+        ],
+      }),
+    );
     dispatch(getSnapshotPolicy(snapshotId));
     dispatch(getUserSnapshotRoles(snapshotId));
   }
@@ -114,7 +126,7 @@ export class SnapshotDetailView extends React.PureComponent {
   render() {
     const {
       classes,
-      features,
+      user,
       snapshot,
       snapshotPolicies,
       terraUrl,
@@ -143,12 +155,13 @@ export class SnapshotDetailView extends React.PureComponent {
             canReadPolicies={canReadPolicies}
             dispatch={dispatch}
             userRoles={userRoles}
+            user={user}
           />
           {snapshot && snapshot.source && (
             <DatasetTable
               datasets={filteredDatasets || datasets}
               datasetsCount={snapshot.source.length}
-              features={features}
+              features={user.features}
               handleFilterDatasets={this.handleFilterDatasets}
               searchString=""
             />
@@ -161,7 +174,7 @@ export class SnapshotDetailView extends React.PureComponent {
 
 function mapStateToProps(state) {
   return {
-    features: state.user.features,
+    user: state.user,
     snapshot: state.snapshots.snapshot,
     snapshotPolicies: state.snapshots.snapshotPolicies,
     terraUrl: state.configuration.terraUrl,

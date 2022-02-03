@@ -6,6 +6,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { exportSnapshot, resetSnapshotExport } from 'actions/index';
 import { connect } from 'react-redux';
 import { Card, Grid, Typography, Button, CircularProgress } from '@material-ui/core';
+import { Launch } from '@material-ui/icons';
 import UserList from './UserList';
 import TerraTooltip from './common/TerraTooltip';
 import { SNAPSHOT_ROLES } from '../constants';
@@ -43,6 +44,14 @@ const styles = (theme) => ({
   separator: {
     marginTop: '20px',
     marginBottom: '10px',
+    borderBottom: 0,
+  },
+  button: {
+    backgroundColor: theme.palette.common.link,
+    color: theme.palette.common.white,
+    '&:hover': {
+      backgroundColor: theme.palette.common.link,
+    },
   },
 });
 
@@ -57,6 +66,7 @@ export class DetailViewHeader extends React.PureComponent {
     isProcessing: PropTypes.bool,
     isDone: PropTypes.bool,
     of: PropTypes.object,
+    user: PropTypes.object,
     readers: PropTypes.arrayOf(PropTypes.string),
     removeReader: PropTypes.func,
     removeSteward: PropTypes.func,
@@ -91,13 +101,19 @@ export class DetailViewHeader extends React.PureComponent {
       stewards,
       terraUrl,
       userRoles,
+      user,
     } = this.props;
     const loading = _.isNil(of) || _.isEmpty(of);
     const canManageUsers = userRoles.includes(SNAPSHOT_ROLES.STEWARD);
 
+    const linkToBq = of.accessInformation?.bigQuery !== undefined;
+    const consoleLink = linkToBq
+      ? `${of.accessInformation.bigQuery.link}&authuser=${user?.email}`
+      : '';
+
     return (
       <Grid container wrap="nowrap" spacing={2}>
-        <Grid item zeroMinWidth xs={8}>
+        <Grid item zeroMinWidth xs={6}>
           {loading ? (
             <CircularProgress />
           ) : (
@@ -109,23 +125,41 @@ export class DetailViewHeader extends React.PureComponent {
             </Fragment>
           )}
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={6}>
           <Card className={classes.card}>
             {loading ? (
               <CircularProgress />
             ) : (
-              <div>
-                <span className={classes.header}> Date Created:</span>
-                <span className={classes.values}> {moment(of.createdDate).fromNow()}</span>
-                <p className={classes.header}> Storage:</p>
-                <ul>
-                  {of.source[0].dataset.storage.map((storageResource) => (
-                    <li key={storageResource.cloudResource}>
-                      {storageResource.cloudResource}: {storageResource.region}
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              <Grid container>
+                <Grid item xs={6}>
+                  <span className={classes.header}> Date Created:</span>
+                  <span className={classes.values}> {moment(of.createdDate).fromNow()}</span>
+                  <p className={classes.header}> Storage:</p>
+                  <ul>
+                    {of.source[0].dataset.storage.map((storageResource) => (
+                      <li key={storageResource.cloudResource}>
+                        {storageResource.cloudResource}: {storageResource.region}
+                      </li>
+                    ))}
+                  </ul>
+                </Grid>
+                <Grid item xs={6}>
+                  {linkToBq && (
+                    <TerraTooltip title="Click to navigate to the Google BigQuery console where you can perform more advanced queries against your snapshot tables">
+                      <Button
+                        color="primary"
+                        variant="contained"
+                        className={classes.button}
+                        endIcon={<Launch />}
+                      >
+                        <a target="_blank" rel="noopener noreferrer" href={consoleLink}>
+                          View in Google Console
+                        </a>
+                      </Button>
+                    </TerraTooltip>
+                  )}
+                </Grid>
+              </Grid>
             )}
             {stewards && canReadPolicies && (
               <UserList
