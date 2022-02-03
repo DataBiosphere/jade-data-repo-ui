@@ -62,7 +62,7 @@ const styles = (theme) => ({
     bottomBar: '6px',
   },
   tabsIndicator: {
-    borderBottom: `6px solid ${theme.palette.secondary.main}`,
+    borderBottom: `6px solid ${theme.palette.terra.green}`,
     transition: 'none',
   },
   titleAndSearch: {

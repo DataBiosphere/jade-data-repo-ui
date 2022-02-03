@@ -11,12 +11,30 @@ WebFont.load({
   },
 });
 
-const LINK = '#4D72AA';
-const LINK_HOVER = '#718EBB';
+// Copied from Terra UI
+const baseColors = {
+  primary: '#4d72aa',
+  secondary: '#6d6e70',
+  accent: '#4d72aa',
+  success: '#74ae43',
+  warning: '#f7981c',
+  danger: '#db3214',
+  light: '#e9ecef',
+  dark: '#333f52',
+
+  // Added by TDR
+  primaryDark: '#718EBB',
+  successDark: '#338800',
+  dangerDark: '#BA250A',
+};
+
+const WHITE = '#FFFFFF';
+const LINK = baseColors.primary;
+const LINK_HOVER = baseColors.primaryDark;
 
 export default createMuiTheme({
   typography: {
-    color: '#333F52',
+    color: baseColors.dark,
     useNextVariants: true,
     fontWeight: '400',
     fontFamily: [
@@ -84,7 +102,7 @@ export default createMuiTheme({
   },
   palette: {
     common: {
-      white: '#FFFFFF',
+      white: WHITE,
       link: LINK,
       linkHover: LINK_HOVER,
       selection: '#99CCFF',
@@ -95,19 +113,19 @@ export default createMuiTheme({
       cellBackgroundDark: 'rgba(233,236,239,0.4)',
       callBackgroundLight: 'white',
       borderColor: '#E8EAEB',
-      paginationBlue: '#4D72AA',
+      paginationBlue: baseColors.primary,
     },
     primary: {
-      main: '#81AB52',
+      main: baseColors.primary,
       contrastText: '#FFFFFF',
       light: '#F1F4F7',
       lightContrast: '#D9DCDE',
       dark: '#727272',
-      hover: '#8BB858',
+      hover: baseColors.primaryDark,
       focus: 'rgba(0,0,0,0.04)',
     },
     secondary: {
-      main: '#74AE43',
+      main: baseColors.primary,
       contrastText: '#8F96A1',
       dark: '#333F52',
     },
@@ -118,9 +136,13 @@ export default createMuiTheme({
       outsidePanelOpacity: 0.4,
     },
     error: {
-      main: '#DB3214',
+      main: baseColors.danger,
       contrastText: '#8F96A1',
-      dark: '#BA250A',
+      dark: baseColors.dangerDark,
+    },
+    terra: {
+      green: baseColors.success,
+      darkGreen: baseColors.successDark,
     },
   },
   shape: {
