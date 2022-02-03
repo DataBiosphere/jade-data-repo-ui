@@ -13,7 +13,7 @@ import {
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import { Close, ExpandMore, Launch } from '@material-ui/icons';
+import { Close, ExpandMore, HelpOutline, Launch } from '@material-ui/icons';
 import IconButton from '@material-ui/core/IconButton';
 import DatasetAccess from './DatasetAccess';
 import TerraTooltip from '../../../../common/TerraTooltip';
@@ -40,7 +40,8 @@ const styles = (theme) => ({
     margin: '0px',
   },
   listItem: {
-    backgroundColor: theme.palette.primary.lightContrast,
+    backgroundColor: theme.palette.common.white,
+    border: `1px solid ${theme.palette.lightTable.borderColor}`,
     margin: '6px 0px 6px 0px',
     borderRadius: '3px',
     display: 'flex',
@@ -102,23 +103,17 @@ export class InfoView extends React.PureComponent {
     const tables = dataset.schema.tables.map((table, i) => (
       <li key={`${i}`} className={classes.listItem}>
         {linkToBq && (
-          <TerraTooltip
-            title={`Click to navigate to the Google BigQuery console where you can perform more advanced queries against the ${table.name} dataset table`}
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            href={`${
+              _.find(dataset.accessInformation.bigQuery.tables, (t) => t.name === table.name)?.link
+            }&authuser=${user.email}`}
           >
-            <a
-              target="_blank"
-              rel="noopener noreferrer"
-              href={`${
-                _.find(dataset.accessInformation.bigQuery.tables, (t) => t.name === table.name)
-                  ?.link
-              }&authuser=${user.email}`}
-            >
-              <Typography title={table.name} noWrap>
-                {table.name}
-              </Typography>
-              <Launch />
-            </a>
-          </TerraTooltip>
+            <Typography title={table.name} noWrap>
+              {table.name}
+            </Typography>
+          </a>
         )}
         {!linkToBq && (
           <Typography title={table.name} noWrap>
@@ -200,7 +195,12 @@ export class InfoView extends React.PureComponent {
               </Accordion>
             </Grid>
             <Grid item xs={12}>
-              <Typography variant="h6">Tables</Typography>
+              <Typography variant="h6">
+                Tables&nbsp;
+                <TerraTooltip title="Click to navigate to the Google BigQuery console where you can perform more advanced queries against dataset tables">
+                  <HelpOutline fontSize="small" />
+                </TerraTooltip>
+              </Typography>
               <ul className={classes.tableList}>{tables}</ul>
             </Grid>
           </Grid>

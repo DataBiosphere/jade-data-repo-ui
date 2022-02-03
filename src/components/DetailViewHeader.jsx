@@ -46,13 +46,6 @@ const styles = (theme) => ({
     marginBottom: '10px',
     borderBottom: 0,
   },
-  button: {
-    backgroundColor: theme.palette.common.link,
-    color: theme.palette.common.white,
-    '&:hover': {
-      backgroundColor: theme.palette.common.link,
-    },
-  },
 });
 
 export class DetailViewHeader extends React.PureComponent {
