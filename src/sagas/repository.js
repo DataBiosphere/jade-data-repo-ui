@@ -225,9 +225,10 @@ export function* getSnapshots({ payload }) {
 }
 
 export function* getSnapshotById({ payload }) {
-  const snapshotId = payload;
+  const { snapshotId, include } = payload;
+  const includeUrl = include ? `?${_.map(include, (inc) => `include=${inc}`).join('&')}` : '';
   try {
-    const response = yield call(authGet, `/api/repository/v1/snapshots/${snapshotId}`);
+    const response = yield call(authGet, `/api/repository/v1/snapshots/${snapshotId}${includeUrl}`);
     yield put({
       type: ActionTypes.GET_SNAPSHOT_BY_ID_SUCCESS,
       snapshot: { data: response },
@@ -311,9 +312,10 @@ export function* getDatasets({ payload }) {
 }
 
 export function* getDatasetById({ payload }) {
-  const datasetId = payload;
+  const { datasetId, include } = payload;
+  const includeUrl = include ? `?${_.map(include, (inc) => `include=${inc}`).join('&')}` : '';
   try {
-    const response = yield call(authGet, `/api/repository/v1/datasets/${datasetId}`);
+    const response = yield call(authGet, `/api/repository/v1/datasets/${datasetId}${includeUrl}`);
     yield put({
       type: ActionTypes.GET_DATASET_BY_ID_SUCCESS,
       dataset: { data: response },

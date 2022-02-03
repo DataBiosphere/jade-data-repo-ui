@@ -13,6 +13,7 @@ import TextField from '@material-ui/core/TextField';
 
 import { createSnapshot, getDatasets, getDatasetById } from 'actions/index';
 import ManageUsers from './ManageUsersView';
+import { DATASET_INCLUDE_OPTIONS } from '../constants';
 
 function* colNameIter() {
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -129,7 +130,18 @@ export class SnapshotCreateView extends React.PureComponent {
   selectDataset(datasetName, datasetId) {
     const { dispatch } = this.props;
     dispatch(actions.change('snapshot.dataset', datasetName));
-    dispatch(getDatasetById(datasetId));
+    dispatch(
+      getDatasetById({
+        datasetId,
+        include: [
+          DATASET_INCLUDE_OPTIONS.SCHEMA,
+          DATASET_INCLUDE_OPTIONS.ACCESS_INFORMATION,
+          DATASET_INCLUDE_OPTIONS.PROFILE,
+          DATASET_INCLUDE_OPTIONS.DATA_PROJECT,
+          DATASET_INCLUDE_OPTIONS.STORAGE,
+        ],
+      }),
+    );
   }
 
   selectAsset(asset) {
