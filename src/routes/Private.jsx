@@ -26,7 +26,7 @@ const styles = (theme) => ({
     transition: 'none',
   },
   tabsRoot: {
-    borderBottom: `2px solid ${theme.palette.secondary.main}`,
+    borderBottom: `2px solid ${theme.palette.terra.green}`,
     boxShadow: '0 2px 5px 0 rgba(0,0,0,0.26), 0 2px 10px 0 rgba(0,0,0,0.16)',
     color: '#333F52',
     fontFamily: theme.typography.fontFamily,
@@ -52,7 +52,7 @@ const styles = (theme) => ({
     zIndex: 11,
   },
   helpIconDiv: {
-    borderBottom: `2px solid ${theme.palette.secondary.main}`,
+    borderBottom: `2px solid ${theme.palette.terra.green}`,
     boxShadow: '0 2px 5px 0 rgba(0,0,0,0.26), 0 2px 10px 0 rgba(0,0,0,0.16)',
     float: 'right',
     width: '20px',

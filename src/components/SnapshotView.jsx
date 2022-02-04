@@ -28,10 +28,10 @@ class SnapshotView extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired,
-    snapshotCount: PropTypes.number,
     filteredSnapshotCount: PropTypes.number,
-    snapshots: PropTypes.array.isRequired,
     searchString: PropTypes.string,
+    snapshotCount: PropTypes.number,
+    snapshots: PropTypes.array.isRequired,
   };
 
   componentDidMount() {

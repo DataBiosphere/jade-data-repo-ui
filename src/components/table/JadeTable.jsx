@@ -53,9 +53,9 @@ export class JadeTable extends React.PureComponent {
   }
 
   static propTypes = {
-    dataset: PropTypes.object,
     classes: PropTypes.object,
     columns: PropTypes.array,
+    dataset: PropTypes.object,
     delay: PropTypes.bool,
     dispatch: PropTypes.func.isRequired,
     polling: PropTypes.bool,

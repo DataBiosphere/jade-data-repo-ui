@@ -7,7 +7,6 @@ export class RangeInput extends React.PureComponent {
   static propTypes = {
     handleChange: PropTypes.func,
     handleFilters: PropTypes.func,
-    labelName: PropTypes.string,
     value: PropTypes.string,
   };
 
@@ -26,7 +25,7 @@ export class RangeInput extends React.PureComponent {
         onChange={handleChange}
         variant="outlined"
         margin="dense"
-        value={value}
+        value={value || ''}
         onKeyPress={this.handleReturn}
       >
         <Input readOnly={false} />

@@ -16,7 +16,6 @@ const styles = (theme) => ({
 export class VisualizeRelationshipsPanel extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object,
-    dataset: PropTypes.object,
   };
 
   render() {

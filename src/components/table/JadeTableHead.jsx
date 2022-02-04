@@ -16,7 +16,6 @@ const styles = () => ({
 
 export class JadeTableHead extends React.PureComponent {
   static propTypes = {
-    classes: PropTypes.object,
     columns: PropTypes.array,
     createSortHandler: PropTypes.func,
     order: PropTypes.string,

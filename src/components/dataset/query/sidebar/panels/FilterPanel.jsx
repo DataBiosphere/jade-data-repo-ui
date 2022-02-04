@@ -4,7 +4,16 @@ import clsx from 'clsx';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import { Box, Typography, Button, Grid, InputBase, ListItem, Collapse } from '@material-ui/core';
+import {
+  Box,
+  Typography,
+  Button,
+  Grid,
+  InputBase,
+  ListItem,
+  Collapse,
+  Divider,
+} from '@material-ui/core';
 import { ExpandMore, ExpandLess, Search } from '@material-ui/icons';
 import QueryViewSidebarItem from '../QueryViewSidebarItem';
 import QuerySidebarPanel from '../QuerySidebarPanel';
@@ -14,8 +23,13 @@ import TerraTooltip from '../../../../common/TerraTooltip';
 const styles = (theme) => ({
   root: {
     margin: theme.spacing(1),
-    display: 'grid',
-    gridTemplateRows: 'calc(100vh - 125px) 100px',
+    display: 'flex',
+    flexDirection: 'column',
+    position: 'absolute',
+    top: '0px',
+    right: '0px',
+    bottom: '0px',
+    left: '0px',
   },
   hide: {
     display: 'none',
@@ -35,15 +49,11 @@ const styles = (theme) => ({
     padding: `0px ${theme.spacing(2)}px`,
   },
   rowOne: {
-    gridRowStart: 1,
-    gridRowEnd: 2,
+    flex: 1,
     overflowY: 'auto',
     overflowX: 'hidden',
   },
-  rowTwo: {
-    gridRowStart: 2,
-    gridRowEnd: 3,
-  },
+  rowTwo: {},
   searchBar: {
     display: 'flex',
     alignItems: 'center',
@@ -66,11 +76,7 @@ const styles = (theme) => ({
     color: 'red',
   },
   button: {
-    backgroundColor: theme.palette.common.link,
-    color: theme.palette.common.white,
-    '&:hover': {
-      backgroundColor: theme.palette.common.link,
-    },
+    marginTop: theme.spacing(1),
   },
 });
 
@@ -230,10 +236,13 @@ export class FilterPanel extends React.PureComponent {
             ))}
         </div>
         <div className={clsx(classes.rowTwo, classes.snapshotBtnCntnr)}>
+          <Divider />
           <TerraTooltip title={canLink ? '' : billingErrorMessage}>
             <span>
               <Button
                 variant="contained"
+                color="primary"
+                disableElevation
                 disabled={_.isEmpty(dataset.schema.assets) || !canLink}
                 className={clsx(
                   {

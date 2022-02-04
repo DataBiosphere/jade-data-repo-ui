@@ -68,7 +68,7 @@ const styles = (theme) => ({
   bottom: {
     position: 'fixed',
     bottom: '0',
-    right: `${sidebarWidth + theme.spacing(2)}px`,
+    right: `${sidebarWidth + theme.spacing(1)}px`,
     width: `${drawerWidth - theme.spacing(4)}px`,
     textAlign: 'end',
   },
@@ -287,8 +287,9 @@ export class ShareSnapshot extends React.PureComponent {
           <div className={classes.buttonContainer}>
             <Button
               variant="contained"
+              color="primary"
+              disableElevation
               disabled={!isEmail(currentInput) && !_.some(usersToAdd, (user) => isEmail(user))}
-              disableElevation={true}
               className={clsx(classes.button, classes.section, classes.inviteButton)}
               onClick={this.invite}
               data-cy="inviteButton"
@@ -336,7 +337,8 @@ export class ShareSnapshot extends React.PureComponent {
             <Divider />
             <Button
               variant="contained"
-              disableElevation={true}
+              color="primary"
+              disableElevation
               className={clsx(classes.button, classes.section)}
               onClick={this.saveSnapshot}
               data-cy="releaseDataset"
@@ -352,9 +354,7 @@ export class ShareSnapshot extends React.PureComponent {
             <Button className={classes.prevButton} variant="outlined" onClick={setIsSharing}>
               Previous
             </Button>
-            <Button className={classes.button} variant="contained">
-              Release Dataset
-            </Button>
+            <Button className={classes.button}>Release Dataset</Button>
           </div>
         )}
       </div>

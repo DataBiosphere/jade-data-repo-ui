@@ -36,7 +36,7 @@ describe('test snapshot creation', () => {
     });
     cy.route({
       method: 'GET',
-      url: '/api/repository/v1/snapshots/snapshotId',
+      url: '/api/repository/v1/snapshots/snapshotId**',
       status: 200,
       response: {
         name: 'mock_snapshot',

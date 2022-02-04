@@ -8,6 +8,7 @@ const useStyles = makeStyles((theme) => ({
   },
   tooltip: {
     backgroundColor: theme.palette.common.black,
+    fontSize: theme.typography.body1.fontSize,
   },
 }));
 

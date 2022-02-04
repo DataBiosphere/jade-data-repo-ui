@@ -10,6 +10,7 @@ import CreateFullSnapshotView from './CreateFullSnapshotView';
 import { useOnMount } from '../../../libs/utils';
 import SnapshotInfoCard from './SnapshotInfoCard';
 import NewSnapshotButton from './NewSnapshotButton';
+import { DATASET_INCLUDE_OPTIONS } from '../../../constants';
 
 const styles = () => ({
   pageRoot: {
@@ -71,7 +72,18 @@ const DatasetDetailView = ({
   const [creatingSnapshot, setCreatingSnapshot] = useState(false);
 
   useOnMount(() => {
-    dispatch(getDatasetById(uuid));
+    dispatch(
+      getDatasetById({
+        uuid,
+        include: [
+          DATASET_INCLUDE_OPTIONS.SCHEMA,
+          DATASET_INCLUDE_OPTIONS.ACCESS_INFORMATION,
+          DATASET_INCLUDE_OPTIONS.PROFILE,
+          DATASET_INCLUDE_OPTIONS.DATA_PROJECT,
+          DATASET_INCLUDE_OPTIONS.STORAGE,
+        ],
+      }),
+    );
     dispatch(getDatasetPolicy(uuid));
     dispatch(getSnapshots(10, 0, 'created_date', 'desc', '', [uuid]));
     // TODO un-hardcode and add limit, offset, sort, sortDirection, searchString as changeable

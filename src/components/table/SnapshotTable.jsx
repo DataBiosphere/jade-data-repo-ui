@@ -16,12 +16,12 @@ const styles = (theme) => ({
 class SnapshotTable extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    handleFilterSnapshots: PropTypes.func,
-    snapshotCount: PropTypes.number,
     filteredSnapshotCount: PropTypes.number,
+    handleFilterSnapshots: PropTypes.func,
+    searchString: PropTypes.string,
+    snapshotCount: PropTypes.number,
     snapshots: PropTypes.array.isRequired,
     summary: PropTypes.bool,
-    searchString: PropTypes.string,
   };
 
   render() {

@@ -45,7 +45,6 @@ const styles = (theme) => ({
 export class ServerErrorView extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    dispatch: PropTypes.func.isRequired,
     status: PropTypes.object.isRequired,
   };
 
@@ -54,14 +53,12 @@ export class ServerErrorView extends React.PureComponent {
     let systemsCount = 0;
     let systemRows = [];
     if (status.apiIsUp) {
-      const systems = status.serverStatus.systems;
+      const { systems } = status.serverStatus;
       systemsCount = Object.keys(systems).length;
-      systemRows = Object.keys(status.serverStatus.systems).map((member) => {
-        return {
-          system: member,
-          system_is_up: status.serverStatus.systems[member].ok,
-        };
-      });
+      systemRows = Object.keys(status.serverStatus.systems).map((member) => ({
+        system: member,
+        system_is_up: status.serverStatus.systems[member].ok,
+      }));
     }
     const columns = [
       {

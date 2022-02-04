@@ -22,6 +22,7 @@ import JadeTable from '../../table/JadeTable';
 import InfoView from './sidebar/panels/InfoView';
 import ShareSnapshot from './sidebar/panels/ShareSnapshot';
 import SnapshotPopup from '../../snapshot/SnapshotPopup';
+import { DATASET_INCLUDE_OPTIONS } from '../../../constants';
 
 const styles = (theme) => ({
   wrapper: {
@@ -63,8 +64,8 @@ export class QueryView extends React.PureComponent {
     joinStatement: PropTypes.string,
     match: PropTypes.object,
     orderBy: PropTypes.string,
-    queryResults: PropTypes.object,
     profile: PropTypes.object,
+    queryResults: PropTypes.object,
     table: PropTypes.object,
     userRole: PropTypes.array,
   };
@@ -74,7 +75,18 @@ export class QueryView extends React.PureComponent {
     const datasetId = match.params.uuid;
 
     if (dataset == null || dataset.id !== datasetId) {
-      dispatch(getDatasetById(datasetId));
+      dispatch(
+        getDatasetById({
+          datasetId,
+          include: [
+            DATASET_INCLUDE_OPTIONS.SCHEMA,
+            DATASET_INCLUDE_OPTIONS.ACCESS_INFORMATION,
+            DATASET_INCLUDE_OPTIONS.PROFILE,
+            DATASET_INCLUDE_OPTIONS.DATA_PROJECT,
+            DATASET_INCLUDE_OPTIONS.STORAGE,
+          ],
+        }),
+      );
     }
 
     if (datasetPolicies == null || dataset.id !== datasetId) {
@@ -157,7 +169,7 @@ export class QueryView extends React.PureComponent {
       },
       {
         icon: FilterList,
-        width: 400,
+        width: 600,
         component: QueryViewSidebar,
         table,
         dataset,

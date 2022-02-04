@@ -28,18 +28,16 @@ const styles = (theme) => ({
   },
 });
 
-const NewSnapshotButton = ({ classes, datasetId }) => {
-  return (
-    <Link to={`/datasets/${datasetId}/query`} className={classes.root}>
-      <Button>
-        <div className={classes.buttonInterior}>
-          <AddCircleOutline className={classes.plusIcon} />
-          <Typography variant="h6">New Snapshot</Typography>
-        </div>
-      </Button>
-    </Link>
-  );
-};
+const NewSnapshotButton = ({ classes, datasetId }) => (
+  <Link to={`/datasets/${datasetId}/query`} className={classes.root}>
+    <Button>
+      <div className={classes.buttonInterior}>
+        <AddCircleOutline className={classes.plusIcon} />
+        <Typography variant="h6">New Snapshot</Typography>
+      </div>
+    </Button>
+  </Link>
+);
 
 NewSnapshotButton.propTypes = {
   classes: PropTypes.object,

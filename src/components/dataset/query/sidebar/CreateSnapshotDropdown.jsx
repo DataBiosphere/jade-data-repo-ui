@@ -4,8 +4,8 @@ import JadeDropdown from '../JadeDropdown';
 
 export class CreateSnapshotDropdown extends React.PureComponent {
   static propTypes = {
-    options: PropTypes.array,
     onSelectedItem: PropTypes.func,
+    options: PropTypes.array,
     value: PropTypes.string,
   };
 

@@ -41,12 +41,12 @@ export class CategoryWrapper extends React.PureComponent {
     dataset: PropTypes.object,
     filterMap: PropTypes.object,
     filterStatement: PropTypes.string,
-    joinStatement: PropTypes.string,
     handleChange: PropTypes.func,
     handleFilters: PropTypes.func,
+    joinStatement: PropTypes.string,
     tableName: PropTypes.string,
-    token: PropTypes.string,
     toggleExclude: PropTypes.func,
+    token: PropTypes.string,
   };
 
   componentDidUpdate(prevProps) {

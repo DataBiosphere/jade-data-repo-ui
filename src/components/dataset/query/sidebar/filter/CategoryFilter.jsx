@@ -7,12 +7,10 @@ import Checkbox from '@material-ui/core/Checkbox';
 
 export class CategoryFilter extends React.PureComponent {
   static propTypes = {
-    column: PropTypes.object,
     count: PropTypes.number,
     filterMap: PropTypes.object,
     handleChange: PropTypes.func,
     name: PropTypes.string,
-    table: PropTypes.string,
   };
 
   handleChange = (event) => {

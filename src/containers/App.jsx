@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme) => ({
   },
   toolbar: {
     paddingRight: 24, // keep right padding when drawer closed
-    backgroundColor: 'rgb(51, 136, 0)',
+    backgroundColor: theme.palette.terra.darkGreen,
     background: `0px url(${HeaderLeft}) no-repeat,right url(${HeaderRight}) no-repeat`,
   },
   toolbarIcon: {
@@ -69,7 +69,7 @@ const useStyles = makeStyles((theme) => ({
   },
   appBar: {
     borderBottom: '1px solid #FFFF00',
-    borderBottomColor: 'rgba(116,174,67,0.75)',
+    borderBottomColor: theme.palette.terra.green,
     boxShadow: 'none',
     zIndex: theme.zIndex.drawer + 1,
     transition: theme.transitions.create(['width', 'margin'], {
@@ -261,8 +261,8 @@ export function App(props) {
 App.propTypes = {
   configuration: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
-  user: PropTypes.object.isRequired,
   status: PropTypes.object.isRequired,
+  user: PropTypes.object.isRequired,
 };
 
 function mapStateToProps(state) {

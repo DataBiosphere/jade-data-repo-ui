@@ -57,9 +57,9 @@ export class AppliedFilterList extends React.PureComponent {
 
   static propTypes = {
     classes: PropTypes.object,
-    filterData: PropTypes.object,
     dataset: PropTypes.object,
     dispatch: PropTypes.func.isRequired,
+    filterData: PropTypes.object,
     selected: PropTypes.string,
     table: PropTypes.string,
   };
@@ -102,7 +102,7 @@ export class AppliedFilterList extends React.PureComponent {
     const listFilters = _.keys(filterData[table]).map((filter) => {
       const data = _.get(filterData[table], filter);
       let dataString = data.value;
-      let isExcluded = data.exclude;
+      const isExcluded = data.exclude;
 
       if (data.type === 'range') {
         const enDash = ' \u2013 '; // it's a longer hyphen used to represent numerical ranges

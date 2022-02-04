@@ -19,6 +19,7 @@ import { Link } from 'react-router-dom';
 import clsx from 'clsx';
 import { openSnapshotDialog, getSnapshotById, getSnapshotPolicy } from 'actions/index';
 import { push } from 'modules/hist';
+import { SNAPSHOT_INCLUDE_OPTIONS } from '../../constants';
 
 const styles = (theme) => ({
   snapshotName: {
@@ -95,7 +96,19 @@ export class SnapshotPopup extends React.PureComponent {
   componentDidUpdate(prevProps) {
     const { dispatch, snapshot, policies } = this.props;
     if (_.isEmpty(prevProps.snapshot) && !_.isEmpty(snapshot)) {
-      dispatch(getSnapshotById(snapshot.id));
+      dispatch(
+        getSnapshotById({
+          snapshotId: snapshot.id,
+          include: [
+            SNAPSHOT_INCLUDE_OPTIONS.SOURCES,
+            SNAPSHOT_INCLUDE_OPTIONS.TABLES,
+            SNAPSHOT_INCLUDE_OPTIONS.RELATIONSHIPS,
+            SNAPSHOT_INCLUDE_OPTIONS.ACCESS_INFORMATION,
+            SNAPSHOT_INCLUDE_OPTIONS.PROFILE,
+            SNAPSHOT_INCLUDE_OPTIONS.DATA_PROJECT,
+          ],
+        }),
+      );
       dispatch(getSnapshotPolicy(snapshot.id));
     }
     if (_.isEmpty(prevProps.policies) && !_.isEmpty(policies)) {

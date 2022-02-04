@@ -187,13 +187,13 @@ LightTable.propTypes = {
   classes: PropTypes.object.isRequired,
   columns: PropTypes.arrayOf(PropTypes.object),
   handleEnumeration: PropTypes.func,
+  filteredCount: PropTypes.number,
   itemType: PropTypes.string.isRequired,
   rowKey: PropTypes.func,
   rows: PropTypes.arrayOf(PropTypes.object),
+  searchString: PropTypes.string,
   summary: PropTypes.bool,
   totalCount: PropTypes.number,
-  filteredCount: PropTypes.number,
-  searchString: PropTypes.string,
 };
 
 export default withStyles(styles)(LightTable);

@@ -1,14 +1,22 @@
 import React from 'react';
+import _ from 'lodash';
 import moment from 'moment';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Accordion, AccordionDetails, AccordionSummary, Typography } from '@material-ui/core';
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Button,
+  Typography,
+} from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import { Close, ExpandMore } from '@material-ui/icons';
+import { Close, ExpandMore, HelpOutline, Launch } from '@material-ui/icons';
 import IconButton from '@material-ui/core/IconButton';
 import DatasetAccess from './DatasetAccess';
+import TerraTooltip from '../../../../common/TerraTooltip';
 
 const styles = (theme) => ({
   root: {
@@ -25,6 +33,31 @@ const styles = (theme) => ({
     lineHeight: '22px',
     fontWeight: '600',
     color: theme.palette.common.link,
+  },
+  tableList: {
+    listStyle: 'none',
+    padding: '0px',
+    margin: '0px',
+  },
+  listItem: {
+    backgroundColor: theme.palette.common.white,
+    border: `1px solid ${theme.palette.lightTable.borderColor}`,
+    margin: '6px 0px 6px 0px',
+    borderRadius: '3px',
+    display: 'flex',
+    alignItems: 'center',
+    '& a': {
+      display: 'flex',
+      flex: 1,
+    },
+    '& a p': {
+      flex: 1,
+      padding: '3px 3px 3px 5px',
+    },
+    '& a svg': {
+      marginRight: '3px',
+      marginTop: '3px',
+    },
   },
   helpOverlayCloseButton: {
     color: theme.palette.common.link,
@@ -43,6 +76,7 @@ export class InfoView extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object,
     dataset: PropTypes.object,
+    user: PropTypes.object,
   };
 
   toggleHelpOverlay = (helpTitle, helpContent) => {
@@ -62,8 +96,36 @@ export class InfoView extends React.PureComponent {
   };
 
   render() {
-    const { classes, dataset } = this.props;
+    const { classes, dataset, user } = this.props;
     const { isAccordionExpanded, isHelpVisible, helpTitle, helpContent } = this.state;
+
+    const linkToBq = dataset.accessInformation?.bigQuery !== undefined;
+    const tables = dataset.schema.tables.map((table, i) => (
+      <li key={`${i}`} className={classes.listItem}>
+        {linkToBq && (
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            href={`${
+              _.find(dataset.accessInformation.bigQuery.tables, (t) => t.name === table.name)?.link
+            }&authuser=${user.email}`}
+          >
+            <Typography title={table.name} noWrap>
+              {table.name}
+            </Typography>
+          </a>
+        )}
+        {!linkToBq && (
+          <Typography title={table.name} noWrap>
+            {table.name}
+          </Typography>
+        )}
+      </li>
+    ));
+
+    const consoleLink = linkToBq
+      ? `${dataset.accessInformation.bigQuery.link}&authuser=${user.email}`
+      : '';
 
     return (
       <div className={classes.root}>
@@ -88,13 +150,21 @@ export class InfoView extends React.PureComponent {
         {!isHelpVisible && (
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <Typography variant="h4">Dataset Overview</Typography>
-            </Grid>
-            <Grid item xs={12}>
               <Typography variant="h5">{dataset.name}</Typography>
             </Grid>
+            {linkToBq && (
+              <Grid item xs={12}>
+                <TerraTooltip title="Click to navigate to the Google BigQuery console where you can perform more advanced queries against your dataset tables">
+                  <Button color="primary" variant="contained" disableElevation endIcon={<Launch />}>
+                    <a target="_blank" rel="noopener noreferrer" href={consoleLink}>
+                      View in Google Console
+                    </a>
+                  </Button>
+                </TerraTooltip>
+              </Grid>
+            )}
             <Grid item xs={12}>
-              <Typography variant="h6">About this dataset:</Typography>
+              <Typography variant="h6">About this dataset</Typography>
               <Typography>{dataset.description}</Typography>
             </Grid>
             <Grid item xs={6}>
@@ -124,6 +194,15 @@ export class InfoView extends React.PureComponent {
                 </AccordionDetails>
               </Accordion>
             </Grid>
+            <Grid item xs={12}>
+              <Typography variant="h6">
+                Tables&nbsp;
+                <TerraTooltip title="Click to navigate to the Google BigQuery console where you can perform more advanced queries against dataset tables">
+                  <HelpOutline fontSize="small" />
+                </TerraTooltip>
+              </Typography>
+              <ul className={classes.tableList}>{tables}</ul>
+            </Grid>
           </Grid>
         )}
       </div>
@@ -133,6 +212,7 @@ export class InfoView extends React.PureComponent {
 
 function mapStateToProps(state) {
   return {
+    user: state.user,
     dataset: state.datasets.dataset,
   };
 }

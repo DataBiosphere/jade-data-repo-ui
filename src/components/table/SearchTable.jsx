@@ -66,9 +66,9 @@ function SearchTable({ classes, searchString, onSearchStringChange, clearSearchS
 
 SearchTable.propTypes = {
   classes: PropTypes.object.isRequired,
-  searchString: PropTypes.string.isRequired,
-  onSearchStringChange: PropTypes.func.isRequired,
   clearSearchString: PropTypes.func.isRequired,
+  onSearchStringChange: PropTypes.func.isRequired,
+  searchString: PropTypes.string.isRequired,
 };
 
 export default withStyles(styles)(SearchTable);
