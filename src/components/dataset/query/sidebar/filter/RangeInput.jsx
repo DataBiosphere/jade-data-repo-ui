@@ -25,7 +25,7 @@ export class RangeInput extends React.PureComponent {
         onChange={handleChange}
         variant="outlined"
         margin="dense"
-        value={value}
+        value={value || ''}
         onKeyPress={this.handleReturn}
       >
         <Input readOnly={false} />

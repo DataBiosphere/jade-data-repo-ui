@@ -5,7 +5,7 @@ import moment from 'moment';
 import { withStyles } from '@material-ui/core/styles';
 import { exportSnapshot, resetSnapshotExport } from 'actions/index';
 import { connect } from 'react-redux';
-import { Card, Grid, Typography, Button, CircularProgress } from '@material-ui/core';
+import { Card, Grid, Typography, Button, CircularProgress, Divider } from '@material-ui/core';
 import { Launch } from '@material-ui/icons';
 import UserList from './UserList';
 import TerraTooltip from './common/TerraTooltip';
@@ -44,7 +44,6 @@ const styles = (theme) => ({
   separator: {
     marginTop: '20px',
     marginBottom: '10px',
-    borderBottom: 0,
   },
 });
 
@@ -140,8 +139,9 @@ export class DetailViewHeader extends React.PureComponent {
                   {linkToBq && (
                     <TerraTooltip title="Click to navigate to the Google BigQuery console where you can perform more advanced queries against your snapshot tables">
                       <Button
-                        color="primary"
                         variant="contained"
+                        color="primary"
+                        disableElevation
                         className={classes.button}
                         endIcon={<Launch />}
                       >
@@ -172,7 +172,7 @@ export class DetailViewHeader extends React.PureComponent {
                 canManageUsers={canManageUsers}
               />
             )}
-            <hr className={classes.separator} />
+            <Divider className={classes.separator} />
             <Typography variant="h6" className={classes.section}>
               Export a copy of the snapshot metadata to an exisiting or new Terra workspace
             </Typography>

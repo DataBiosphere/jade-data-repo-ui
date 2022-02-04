@@ -155,7 +155,7 @@ export class InfoView extends React.PureComponent {
             {linkToBq && (
               <Grid item xs={12}>
                 <TerraTooltip title="Click to navigate to the Google BigQuery console where you can perform more advanced queries against your dataset tables">
-                  <Button color="primary" variant="contained" endIcon={<Launch />}>
+                  <Button color="primary" variant="contained" disableElevation endIcon={<Launch />}>
                     <a target="_blank" rel="noopener noreferrer" href={consoleLink}>
                       View in Google Console
                     </a>

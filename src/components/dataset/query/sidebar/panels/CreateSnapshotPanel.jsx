@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 
-import { Button, TextField, Typography } from '@material-ui/core';
+import { Button, Divider, TextField, Typography } from '@material-ui/core';
 import { snapshotCreateDetails } from 'actions/index';
 import CreateSnapshotDropdown from '../CreateSnapshotDropdown';
 import ShareSnapshot from './ShareSnapshot';
@@ -11,26 +11,23 @@ import ShareSnapshot from './ShareSnapshot';
 const styles = (theme) => ({
   root: {
     margin: theme.spacing(1),
-    display: 'grid',
-    gridTemplateRows: 'calc(100vh - 125px) 100px',
+    display: 'flex',
+    flexDirection: 'column',
+    position: 'absolute',
+    top: '0px',
+    right: '0px',
+    bottom: '0px',
+    left: '0px',
   },
   rowOne: {
-    gridRowStart: 1,
-    gridRowEnd: 2,
+    flex: 1,
     overflowY: 'auto',
     overflowX: 'hidden',
     padding: theme.spacing(1),
   },
-  rowTwo: {
-    gridRowStart: 2,
-    gridRowEnd: 3,
-  },
+  rowTwo: {},
   button: {
-    backgroundColor: theme.palette.common.link,
-    color: theme.palette.common.white,
-    '&:hover': {
-      backgroundColor: theme.palette.common.link,
-    },
+    marginLeft: theme.spacing(1),
   },
   buttonContainer: {
     display: 'flex',
@@ -119,11 +116,14 @@ export class CreateSnapshotPanel extends React.PureComponent {
           />
         </div>
         <div className={classes.rowTwo}>
+          <Divider />
           <div className={classes.buttonContainer}>
             <Button onClick={() => handleCreateSnapshot(false)}>Cancel</Button>
             <Button
               className={classes.button}
               variant="contained"
+              color="primary"
+              disableElevation
               onClick={this.saveNameAndDescription}
               disabled={assetName === '' || name === ''}
               data-cy="next"

@@ -169,7 +169,7 @@ export class QueryView extends React.PureComponent {
       },
       {
         icon: FilterList,
-        width: 400,
+        width: 600,
         component: QueryViewSidebar,
         table,
         dataset,

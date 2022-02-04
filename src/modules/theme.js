@@ -173,6 +173,15 @@ export default createMuiTheme({
         marginRight: '20px',
       },
     },
+    MuiButton: {
+      containedPrimary: {
+        backgroundColor: LINK,
+        color: WHITE,
+        '&:hover': {
+          backgroundColor: LINK_HOVER,
+        },
+      },
+    },
   },
   mixins: {
     jadeLink: {

@@ -10,15 +10,16 @@ const styles = (theme) => ({
     position: 'absolute',
     top: '112px',
     right: '0px',
-    height: '100%',
+    bottom: '0px',
     zIndex: 10,
   },
   drawer: {
     top: '112px',
     right: '56px',
-    paddingBottom: '112px',
+    bottom: '0px',
     flexShrink: 0,
     backgroundColor: theme.palette.primary.light,
+    height: 'initial',
     zIndex: 10,
   },
   drawerPosition: {
