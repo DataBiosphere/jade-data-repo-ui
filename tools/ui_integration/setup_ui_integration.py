@@ -42,54 +42,42 @@ class Clients:
         config.access_token = token_output.stdout.decode("UTF-8").strip()
         self.api_client = ApiClient(configuration=config)
 
-    # Instantiate TDR snapshots API
-    def snapshots_api(self):
-        return SnapshotsApi(api_client=self.api_client)
-
-    def datasets_api(self):
-        return DatasetsApi(api_client=self.api_client)
-
-    def profiles_api(self):
-        return ProfilesApi(api_client=self.api_client)
-
-    def jobs_api(self):
-        return JobsApi(api_client=self.api_client)
+        self.profiles_api = ProfilesApi(api_client=self.api_client)
+        self.datasets_api = DatasetsApi(api_client=self.api_client)
+        self.snapshots_api = SnapshotsApi(api_client=self.api_client)
+        self.jobs_api = JobsApi(api_client=self.api_client)
 
 
 def wait_for_job(clients, job_model):
-    jobs_api = clients.jobs_api()
     result = job_model
     while True:
         if result is None or result.job_status == "running":
             time.sleep(10)
             print(f"Waiting for job {job_model.id} to finish")
-            result = jobs_api.retrieve_job(job_model.id)
+            result = clients.jobs_api.retrieve_job(job_model.id)
         elif result.job_status == 'failed':
-            result = jobs_api.retrieve_job_result(job_model.id)
+            result = clients.jobs_api.retrieve_job_result(job_model.id)
             raise f"Could not complete job with id {job_model.id}, got result {result}"
         elif result.job_status == "succeeded":
             print(f"Job {job_model.id} succeeded")
-            result = jobs_api.retrieve_job_result(job_model.id)
+            result = clients.jobs_api.retrieve_job_result(job_model.id)
             return result
         else:
             raise "Unrecognized job state %s" % result.job_status
 
 
 def create_billing_profile(clients):
-    profile_api = clients.profiles_api()
     with open(os.path.join("files", "billing_profile.json")) as billing_profile_json:
         billing_profile_request = json.load(billing_profile_json)
         profile_id = str(uuid.uuid4())
         billing_profile_request['id'] = profile_id
         billing_profile_request['profileName'] = billing_profile_request['profileName'] + f'_{profile_id}'
         print(f"Creating billing profile with id: {profile_id}")
-        profile = wait_for_job(clients, profile_api.create_profile(billing_profile_request=billing_profile_request))
+        profile = wait_for_job(clients, clients.profiles_api.create_profile(billing_profile_request=billing_profile_request))
         return profile
 
 
 def dataset_ingest_json(clients, dataset_id, dataset_to_upload):
-    jobs_api = clients.jobs_api()
-    datasets_api = clients.datasets_api()
     for table in dataset_to_upload['tables']:
         with open(os.path.join("files", dataset_to_upload["name"],
                                f"{table}.{dataset_to_upload['format']}")) as table_csv:
@@ -99,24 +87,22 @@ def dataset_ingest_json(clients, dataset_id, dataset_to_upload):
                 "table": table
             }
             print(f"Ingesting data into {dataset_to_upload['name']}/{table}")
-            wait_for_job(clients, datasets_api.ingest_dataset(dataset_id, ingest=ingest_request))
+            wait_for_job(clients, clients.datasets_api.ingest_dataset(dataset_id, ingest=ingest_request))
 
 
 def add_dataset_policy_members(clients, dataset_id, dataset_to_upload):
-    datasets_api = clients.datasets_api()
     for steward in dataset_to_upload['stewards']:
         print(f"Adding {steward} as a steward")
-        datasets_api.add_dataset_policy_member(dataset_id, "steward", policy_member={"email": steward})
+        clients.datasets_api.add_dataset_policy_member(dataset_id, "steward", policy_member={"email": steward})
     for custodian in dataset_to_upload['custodians']:
         print(f"Adding {custodian} as a custodian")
-        datasets_api.add_dataset_policy_member(dataset_id, "custodian", policy_member={"email": custodian})
+        clients.datasets_api.add_dataset_policy_member(dataset_id, "custodian", policy_member={"email": custodian})
     for snapshot_creator in dataset_to_upload['snapshot_creators']:
         print(f"Adding {snapshot_creator} as a snapshot_creator")
-        datasets_api.add_dataset_policy_member(dataset_id, "snapshot_creator", policy_member={"email": snapshot_creator})
+        clients.datasets_api.add_dataset_policy_member(dataset_id, "snapshot_creator", policy_member={"email": snapshot_creator})
 
 
 def create_dataset(clients, dataset_to_upload, profile_id):
-    dataset_api = clients.datasets_api()
     dataset_name = dataset_to_upload['name']
 
     dataset = None
@@ -124,7 +110,7 @@ def create_dataset(clients, dataset_to_upload, profile_id):
         dataset_request = json.load(dataset_schema_json)
         dataset_request['defaultProfileId'] = profile_id
         print(f"Creating dataset {dataset_name}")
-        dataset = wait_for_job(clients, dataset_api.create_dataset(dataset=dataset_request))
+        dataset = wait_for_job(clients, clients.datasets_api.create_dataset(dataset=dataset_request))
         print(f"Created dataset {dataset_name} with id: {dataset['id']}")
 
     if dataset_to_upload['format'] == "json":
