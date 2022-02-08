@@ -51,7 +51,7 @@ jobs:
           # Note: Integration-4 is also set up for UI testing, except that the datasets
           # have been removed. We'd need to run the "ingest.js" script to ingest the datasets
           # in order to use int-4 again.
-          k8_namespaces: 'integration-5'
+          k8_namespaces: 'integration-4,integration-5'
       - name: Build new ui container
         env:
           DEV_PROJECT: broad-jade-dev
