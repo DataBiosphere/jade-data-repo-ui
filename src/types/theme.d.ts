@@ -29,6 +29,9 @@ declare module '@mui/material/styles' {
     outsidePanelOpacity?: number;
     green?: string;
     darkGreen?: string;
+    lightContrast?: string;
+    hover?: string;
+    focus?: string;
   }
 
   interface CustomPaletteOptions extends PaletteOptions {
@@ -36,6 +39,7 @@ declare module '@mui/material/styles' {
     lightTable?: Partial<CustomPaletteColors>;
     panel?: Partial<CustomPaletteColors>;
     terra?: Partial<CustomPaletteColors>;
+    primary?: Partial<CustomPaletteColors>
   }
 
   interface CustomPalette extends Palette {
@@ -43,6 +47,7 @@ declare module '@mui/material/styles' {
     lightTable: CustomPaletteColors;
     panel: CustomPaletteColors;
     terra: CustomPaletteColors;
+    primary: CustomPaletteColors;
   }
 
   interface CustomTypographyOptions extends TypographyOptions {

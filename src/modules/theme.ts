@@ -1,15 +1,15 @@
 import { createTheme } from '@mui/material/styles';
 import '../media/fonts/Montserrat.css';
 import '../style.css';
-// import WebFont from 'webfontloader';
+import WebFont from 'webfontloader';
 
 export const easing = 'cubic-bezier(0.35, 0.01, 0.77, 0.34);';
 
-// WebFont.load({
-//   google: {
-//     families: ['Montserrat', 'sans-serif', 'Lato'],
-//   },
-// });
+WebFont.load({
+  google: {
+    families: ['Montserrat', 'sans-serif', 'Lato'],
+  },
+});
 
 // Copied from Terra UI
 const baseColors = {
@@ -119,10 +119,10 @@ const theme = createTheme({
       main: baseColors.primary,
       contrastText: '#FFFFFF',
       light: '#F1F4F7',
-      // lightContrast: '#D9DCDE',
+      lightContrast: '#D9DCDE',
       dark: '#727272',
-      // hover: baseColors.primaryDark,
-      // focus: 'rgba(0,0,0,0.04)',
+      hover: baseColors.primaryDark,
+      focus: 'rgba(0,0,0,0.04)',
     },
     secondary: {
       main: baseColors.primary,
