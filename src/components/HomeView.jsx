@@ -1,11 +1,11 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import Tab from '@material-ui/core/Tab';
 import { Tabs } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
 import DatasetView from './DatasetView';
 import SnapshotView from './SnapshotView';
 import SearchTable from './table/SearchTable';
@@ -72,83 +72,59 @@ const styles = (theme) => ({
   },
 });
 
-class HomeView extends React.PureComponent {
-  constructor(props) {
-    super(props);
+const HomeView = ({ classes, location }) => {
+  const prefixMatcher = new RegExp('/[^/]*');
+  const [searchString, setSearchString] = useState('');
+  const tabValue = prefixMatcher.exec(location.pathname)[0];
+  let tableValue;
 
-    this.state = { searchString: '' };
+  if (tabValue === '/datasets') {
+    tableValue = <DatasetView searchString={searchString} />;
+  } else if (tabValue === '/snapshots') {
+    tableValue = <SnapshotView searchString={searchString} />;
+  } else {
+    tableValue = <div />;
   }
 
-  static propTypes = {
-    classes: PropTypes.object.isRequired,
-    location: PropTypes.object,
-  };
-
-  static prefixMatcher = new RegExp('/[^/]*');
-
-  handleSearchString = (event) => {
-    const searchString = event.target.value;
-    this.setState({ searchString }); // filter
-  };
-
-  clearSearchString = () => {
-    this.setState({ searchString: '' });
-  };
-
-  render() {
-    const { classes, location } = this.props;
-    const { searchString } = this.state;
-    const tabValue = HomeView.prefixMatcher.exec(location.pathname)[0];
-    let tableValue;
-
-    if (tabValue === '/datasets') {
-      tableValue = <DatasetView searchString={searchString} />;
-    } else if (tabValue === '/snapshots') {
-      tableValue = <SnapshotView searchString={searchString} />;
-    } else {
-      tableValue = <div />;
-    }
-
-    return (
-      <div className={classes.pageRoot}>
-        <div className={classes.width}>
-          <div className={classes.titleAndSearch}>
-            <div className={classes.title}>Terra Data Repository</div>
-            <SearchTable
-              searchString={searchString}
-              onSearchStringChange={this.handleSearchString}
-              clearSearchString={this.clearSearchString}
-            />
-          </div>
-          <Tabs
-            classes={{ root: classes.tabsRoot, indicator: classes.tabsIndicator }}
-            value={tabValue}
-          >
-            <Tab
-              label="Datasets"
-              component={Link}
-              value="/datasets"
-              to="/datasets"
-              classes={{ selected: classes.tabSelected }}
-              disableFocusRipple
-              disableRipple
-            />
-            <Tab
-              label="Snapshots"
-              component={Link}
-              value="/snapshots"
-              to="/snapshots"
-              classes={{ selected: classes.tabSelected }}
-              disableFocusRipple
-              disableRipple
-            />
-          </Tabs>
-          {tableValue}
-        </div>
+  return (
+    <div className={classes.pageRoot}>
+      <div className={classes.titleAndSearch}>
+        <div className={classes.title}>Terra Data Repository</div>
+        <SearchTable
+          searchString={searchString}
+          onSearchStringChange={(event) => setSearchString(event.target.value)}
+          clearSearchString={() => setSearchString('')}
+        />
       </div>
-    );
-  }
-}
+      <Tabs classes={{ root: classes.tabsRoot, indicator: classes.tabsIndicator }} value={tabValue}>
+        <Tab
+          label="Datasets"
+          component={Link}
+          value="/datasets"
+          to="/datasets"
+          classes={{ selected: classes.tabSelected }}
+          disableFocusRipple
+          disableRipple
+        />
+        <Tab
+          label="Snapshots"
+          component={Link}
+          value="/snapshots"
+          to="/snapshots"
+          classes={{ selected: classes.tabSelected }}
+          disableFocusRipple
+          disableRipple
+        />
+      </Tabs>
+      {tableValue}
+    </div>
+  );
+};
+
+HomeView.propTypes = {
+  classes: PropTypes.object,
+  location: PropTypes.object,
+};
 
 function mapStateToProps(state) {
   return {

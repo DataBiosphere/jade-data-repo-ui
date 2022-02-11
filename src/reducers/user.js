@@ -2,7 +2,7 @@ import { handleActions } from 'redux-actions';
 import immutable from 'immutability-helper';
 import _ from 'lodash';
 
-import { IMAGE, STATUS, ActionTypes } from 'constants/index';
+import { IMAGE, STATUS, ActionTypes } from '../constants/index';
 
 const JADE_FEATURE_PREFIX = 'jade-feature-';
 
