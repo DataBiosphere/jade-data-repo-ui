@@ -13,7 +13,7 @@ declare module '@mui/material/styles' {
   interface CustomCommonColors extends CommonColors {
     link?: string;
     linkHover?: string;
-    selection?: string;
+    selection: string;
     border?: string;
     selectedTextBackground?: string;
   }

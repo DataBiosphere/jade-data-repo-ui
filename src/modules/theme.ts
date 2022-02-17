@@ -106,7 +106,7 @@ const theme = createTheme({
       link: LINK,
       linkHover: LINK_HOVER,
       selection: '#99CCFF',
-      border: '#AEB3BA',
+      border: '#FF0000',
       selectedTextBackground: '#F1F4F8',
     },
     lightTable: {

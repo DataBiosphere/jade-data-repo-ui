@@ -8,7 +8,6 @@ import { fade } from '@material-ui/core/styles/colorManipulator';
 import { createStyles, CustomTheme } from '@mui/material/styles';
 import { WithStyles } from '@mui/styles';
 
-// @ts-ignore
 const styles = (theme: CustomTheme) =>
   createStyles({
     search: {
@@ -16,9 +15,9 @@ const styles = (theme: CustomTheme) =>
       width: '100%',
       border: `1px solid ${theme.palette.common.border}`,
       backgroundColor: theme.palette.common.selectedTextBackground,
-      // '&:hover': {
-      //   backgroundColor: fade(theme.palette.common.selection, 0.2),
-      // },
+      '&:hover': {
+        backgroundColor: fade(theme.palette.common.selection, 0.2),
+      },
       position: 'relative',
       borderRadius: '35px',
       marginLeft: 0,
@@ -75,12 +74,5 @@ const SearchTable = withStyles(styles)(
     );
   },
 );
-
-SearchTable.propTypes = {
-  classes: PropTypes.object.isRequired,
-  clearSearchString: PropTypes.func.isRequired,
-  onSearchStringChange: PropTypes.func.isRequired,
-  searchString: PropTypes.string.isRequired,
-};
 
 export default SearchTable;

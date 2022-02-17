@@ -51,7 +51,7 @@ jobs:
           # Note: Integration-4 is also set up for UI testing, except that the datasets
           # have been removed. We'd need to run the "ingest.js" script to ingest the datasets
           # in order to use int-4 again.
-          k8_namespaces: 'integration-5'
+          k8_namespaces: 'integration-4,integration-5'
       - name: Build new ui container
         env:
           DEV_PROJECT: broad-jade-dev
@@ -85,10 +85,10 @@ jobs:
         with:
           actions_subcommand: 'helmdeploy'
           helm_create_secret_manager_secret_version: '0.0.6'
-          helm_datarepo_api_chart_version: 0.0.287
-          helm_datarepo_ui_chart_version: 0.0.126
+          helm_datarepo_api_chart_version: 0.0.300
+          helm_datarepo_ui_chart_version: 0.0.127
           helm_gcloud_sqlproxy_chart_version: 0.19.7
-          helm_oidc_proxy_chart_version: 0.0.28
+          helm_oidc_proxy_chart_version: 0.0.29
           helm_imagetag_update: 'ui'
       - name: "Wait for deployment to come back online"
         uses: broadinstitute/datarepo-actions/actions/wait-for-deployment@0.59.0
