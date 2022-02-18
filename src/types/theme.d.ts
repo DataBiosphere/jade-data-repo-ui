@@ -32,6 +32,7 @@ declare module '@mui/material/styles' {
     lightContrast?: string;
     hover?: string;
     focus?: string;
+    bottomColor?: string;
   }
 
   interface CustomPaletteOptions extends PaletteOptions {

@@ -27,6 +27,9 @@ const styles = (theme) => ({
   row: {
     borderRadius: `${theme.shape.borderRadius}px ${theme.shape.borderRadius}px 0 0`,
   },
+  cell: {
+    borderBottom: `1px solid ${theme.palette.lightTable.bottomColor}`,
+  },
   lightRow: {
     backgroundColor: theme.palette.lightTable.callBackgroundLight,
   },
@@ -122,7 +125,7 @@ function LightTable({
                     })}
                   >
                     {columns.map((col) => (
-                      <TableCell key={col.property} style={{ wordBreak: 'break-word' }}>
+                      <TableCell className={classes.cell} key={col.property} style={{ wordBreak: 'break-word' }}>
                         {col.render ? col.render(row) : row[col.property]}
                       </TableCell>
                     ))}

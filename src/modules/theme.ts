@@ -106,7 +106,7 @@ const theme = createTheme({
       link: LINK,
       linkHover: LINK_HOVER,
       selection: '#99CCFF',
-      border: '#FF0000',
+      border: '#AEB3BA',
       selectedTextBackground: '#F1F4F8',
     },
     lightTable: {
@@ -114,6 +114,7 @@ const theme = createTheme({
       callBackgroundLight: 'white',
       borderColor: '#E8EAEB',
       paginationBlue: baseColors.primary,
+      bottomColor: '#E0E0E0',
     },
     primary: {
       main: baseColors.primary,
