@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import InputBase from '@material-ui/core/InputBase';
 import { ReactComponent as ExitSVG } from 'media/icons/times-light.svg';
@@ -52,27 +51,25 @@ interface IProps extends WithStyles<typeof styles> {
 }
 
 const SearchTable = withStyles(styles)(
-  ({ classes, searchString, onSearchStringChange, clearSearchString }: IProps) => {
-    return (
-      <div className={classes.search}>
-        <div className={classes.searchIcon}>
-          <SearchSVG />
-        </div>
-        <InputBase
-          placeholder="Search keyword or description"
-          classes={{
-            root: classes.inputRoot,
-            input: classes.searchInput,
-          }}
-          onChange={onSearchStringChange}
-          value={searchString}
-        />
-        {searchString.length > 0 && (
-          <ExitSVG className={classes.clearSearch} onClick={clearSearchString} />
-        )}
+  ({ classes, searchString, onSearchStringChange, clearSearchString }: IProps) => (
+    <div className={classes.search}>
+      <div className={classes.searchIcon}>
+        <SearchSVG />
       </div>
-    );
-  },
+      <InputBase
+        placeholder="Search keyword or description"
+        classes={{
+          root: classes.inputRoot,
+          input: classes.searchInput,
+        }}
+        onChange={onSearchStringChange}
+        value={searchString}
+      />
+      {searchString.length > 0 && (
+        <ExitSVG className={classes.clearSearch} onClick={clearSearchString} />
+      )}
+    </div>
+  ),
 );
 
 export default SearchTable;

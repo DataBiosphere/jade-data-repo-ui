@@ -16,7 +16,6 @@ import { ActionTypes } from './constants';
 
 import { store } from './store';
 
-
 function checkStatus() {
   return new Promise((resolve, reject) => {
     axios

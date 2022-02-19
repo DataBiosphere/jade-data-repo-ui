@@ -108,7 +108,7 @@ export function* exportSnapshot({ payload }) {
     yield put({
       type: ActionTypes.EXPORT_SNAPSHOT_START,
     });
-    const snapshotId = payload.snapshotId;
+    const { snapshotId } = payload;
     const response = yield call(authGet, `/api/repository/v1/snapshots/${snapshotId}/export`);
     const jobId = response.data.id;
     yield put({

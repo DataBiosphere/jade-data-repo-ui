@@ -125,7 +125,11 @@ function LightTable({
                     })}
                   >
                     {columns.map((col) => (
-                      <TableCell className={classes.cell} key={col.property} style={{ wordBreak: 'break-word' }}>
+                      <TableCell
+                        className={classes.cell}
+                        key={col.property}
+                        style={{ wordBreak: 'break-word' }}
+                      >
                         {col.render ? col.render(row) : row[col.property]}
                       </TableCell>
                     ))}
