@@ -211,7 +211,7 @@ export class DetailViewHeader extends React.PureComponent {
             <FormGroup>
               <FormControlLabel
                 control={gsPathsCheckbox}
-                label="Convert DRS URLs to Google gs-paths"
+                label="Convert DRS URLs to Google Cloud Storage Paths (gs://...)"
               />
               <FormHelperText>
                 <i>
