@@ -129,6 +129,11 @@ export class DetailViewHeader extends React.PureComponent {
     const consoleLink = linkToBq
       ? `${of.accessInformation.bigQuery.link}&authuser=${user?.email}`
       : '';
+    const gsPathsCheckbox = !isProcessing ? (
+      <Checkbox checked={exportGsPaths} onChange={this.handleExportGsPathsChanged} />
+    ) : (
+      <Checkbox checked={exportGsPaths} disabled />
+    );
 
     return (
       <Grid container wrap="nowrap" spacing={2}>
@@ -205,9 +210,7 @@ export class DetailViewHeader extends React.PureComponent {
             </Typography>
             <FormGroup>
               <FormControlLabel
-                control={
-                  <Checkbox checked={exportGsPaths} onChange={this.handleExportGsPathsChanged} />
-                }
+                control={gsPathsCheckbox}
                 label="Convert DRS URLs to Google gs-paths"
               />
               <FormHelperText>
