@@ -1,16 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
-import { getDatasetById, getDatasetPolicy, getSnapshots } from 'actions/index';
+import { getDatasetById, getDatasetPolicy, getUserDatasetRoles } from 'actions/index';
 import { Typography } from '@material-ui/core';
-import DatasetInfoCard from './DatasetInfoCard';
 import DatasetRelationshipsPanel from './VisualizeRelationshipsPanel';
-import CreateFullSnapshotView from './CreateFullSnapshotView';
 import { useOnMount } from '../../../libs/utils';
-import SnapshotInfoCard from './SnapshotInfoCard';
-import NewSnapshotButton from './NewSnapshotButton';
 import { DATASET_INCLUDE_OPTIONS } from '../../../constants';
+import DatasetDetailPanel from './DatasetDetailPanel';
 
 const styles = () => ({
   pageRoot: {
@@ -23,7 +20,7 @@ const styles = () => ({
     // TODO: expect this to change as more components are added
     height: '100%',
     display: 'grid',
-    gridTemplateColumns: '1fr 2fr',
+    gridTemplateColumns: '1fr 3fr',
     flex: 1,
   },
   headerText: {
@@ -59,22 +56,13 @@ const styles = () => ({
   },
 });
 
-const DatasetDetailView = ({
-  classes,
-  dataset,
-  datasetPolicies,
-  dispatch,
-  match: {
-    params: { uuid },
-  },
-  snapshots,
-}) => {
-  const [creatingSnapshot, setCreatingSnapshot] = useState(false);
-
+function DatasetDetailView(props) {
+  const { classes, dataset, datasetPolicies, dispatch, match } = props;
+  const datasetId = match.params.uuid;
   useOnMount(() => {
     dispatch(
       getDatasetById({
-        uuid,
+        datasetId,
         include: [
           DATASET_INCLUDE_OPTIONS.SCHEMA,
           DATASET_INCLUDE_OPTIONS.ACCESS_INFORMATION,
@@ -84,54 +72,30 @@ const DatasetDetailView = ({
         ],
       }),
     );
-    dispatch(getDatasetPolicy(uuid));
-    dispatch(getSnapshots(10, 0, 'created_date', 'desc', '', [uuid]));
-    // TODO un-hardcode and add limit, offset, sort, sortDirection, searchString as changeable
+    dispatch(getDatasetPolicy(datasetId));
+    dispatch(getUserDatasetRoles(datasetId));
   });
 
-  let snapshotCards = [];
-  snapshotCards.push(<NewSnapshotButton datasetId={dataset.id} key={dataset.id} />);
-
-  snapshotCards = snapshotCards.concat(
-    snapshots.map((snapshot) => <SnapshotInfoCard snapshot={snapshot} key={snapshot.id} />),
-  );
-
-  return datasetPolicies && dataset && dataset.id === uuid ? (
+  return datasetPolicies && dataset && dataset.id === datasetId ? (
     <div className={classes.pageRoot}>
       <Typography variant="h3" className={classes.pageTitle}>
         {dataset.name}
       </Typography>
       <div className={classes.root}>
         <div className={classes.infoColumn}>
-          <Typography variant="h6" className={classes.headerText}>
-            Dataset Schema
-          </Typography>
           <div className={classes.infoColumnPanel}>
             <DatasetRelationshipsPanel dataset={dataset} />
           </div>
         </div>
         <div className={classes.mainColumn}>
-          <Typography variant="h6" className={classes.headerText}>
-            Dataset Information
-          </Typography>
-          <DatasetInfoCard openSnapshotCreation={() => setCreatingSnapshot(true)} />
-          <CreateFullSnapshotView
-            open={creatingSnapshot}
-            onDismiss={() => setCreatingSnapshot(false)}
-          />
-          <div className={classes.snapshotsArea}>
-            <Typography variant="h6" className={classes.headerText}>
-              Snapshots
-            </Typography>
-            <div className={classes.snapshotCardsContainer}>{snapshotCards}</div>
-          </div>
+          <DatasetDetailPanel dataset={dataset} />
         </div>
       </div>
     </div>
   ) : (
     <div />
   );
-};
+}
 
 DatasetDetailView.propTypes = {
   classes: PropTypes.object,
@@ -139,18 +103,12 @@ DatasetDetailView.propTypes = {
   datasetPolicies: PropTypes.array,
   dispatch: PropTypes.func.isRequired,
   match: PropTypes.object,
-  snapshots: PropTypes.array,
 };
 
-const mapStateToProps = ({
-  datasets: { dataset, datasetPolicies },
-  dispatch,
-  snapshots: { snapshots },
-}) => ({
+const mapStateToProps = ({ datasets: { dataset, datasetPolicies }, dispatch }) => ({
   dataset,
   datasetPolicies,
   dispatch,
-  snapshots,
 });
 
 export default connect(mapStateToProps)(withStyles(styles)(DatasetDetailView));

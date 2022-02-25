@@ -9,6 +9,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 
+import { Edit } from '@material-ui/icons';
 import ManageUsersView from './ManageUsersView';
 
 const styles = (theme) => ({
@@ -42,6 +43,19 @@ const styles = (theme) => ({
   openButton: {
     width: '100%',
   },
+  iconButton: {
+    border: `1px solid ${theme.palette.primary.main}`,
+    borderRadius: '3px',
+    padding: '1px',
+    backgroundColor: theme.palette.primary.main,
+    '&:hover': {
+      backgroundColor: theme.palette.primary.hover,
+    },
+  },
+  horizontalModalButton: {
+    fontSize: theme.typography.h6.fontSize,
+    color: theme.palette.primary.light,
+  },
 });
 
 export class ManageUsersModal extends React.PureComponent {
@@ -55,6 +69,7 @@ export class ManageUsersModal extends React.PureComponent {
   static propTypes = {
     addUser: PropTypes.func.isRequired,
     classes: PropTypes.object.isRequired,
+    horizontal: PropTypes.bool,
     modalText: PropTypes.string.isRequired,
     removeUser: PropTypes.func.isRequired,
     users: PropTypes.arrayOf(PropTypes.string),
@@ -71,18 +86,32 @@ export class ManageUsersModal extends React.PureComponent {
   };
 
   render() {
-    const { addUser, classes, modalText, users, removeUser } = this.props;
+    const { addUser, classes, horizontal, modalText, users, removeUser } = this.props;
     const { open } = this.state;
+    const button = horizontal ? (
+      <IconButton
+        className={classes.iconButton}
+        aria-label={modalText}
+        onClick={this.handleClickOpen}
+        disableFocusRipple={true}
+        disableRipple={true}
+      >
+        <Edit fontStyle="small" className={classes.horizontalModalButton} />
+      </IconButton>
+    ) : (
+      <Button
+        className={classes.openButton}
+        color="primary"
+        variant="outlined"
+        onClick={this.handleClickOpen}
+      >
+        {modalText}
+      </Button>
+    );
+
     return (
-      <div>
-        <Button
-          className={classes.openButton}
-          variant="outlined"
-          color="secondary"
-          onClick={this.handleClickOpen}
-        >
-          {modalText}
-        </Button>
+      <span>
+        {button}
         <Dialog onClose={this.handleClose} aria-labelledby="customized-dialog-title" open={open}>
           <DialogTitle className={classes.dialogTitle} id="customized-dialog-title">
             {modalText}
@@ -108,7 +137,7 @@ export class ManageUsersModal extends React.PureComponent {
             </Button>
           </DialogActions>
         </Dialog>
-      </div>
+      </span>
     );
   }
 }
