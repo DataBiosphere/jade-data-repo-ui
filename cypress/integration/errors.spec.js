@@ -15,7 +15,6 @@ describe('test error handling', () => {
     cy.get('[placeholder="Search keyword or description"]').type('V2F_GWAS');
     cy.contains(/V2F_GWAS_Summary_Stats|V2F_GWAS_Summary_Statistics/g).should('be.visible');
     cy.contains(/V2F_GWAS_Summary_Stats|V2F_GWAS_Summary_Statistics/g).click();
-    cy.get('a > .MuiButtonBase-root').click();
   });
 
   it('displays error toasts with error detail', () => {
@@ -28,6 +27,9 @@ describe('test error handling', () => {
         errorDetail: ['This is the reason for the error'],
       },
     }).as('getQueryResults');
+
+    cy.get('a > .MuiButtonBase-root').click();
+
     cy.wait(['@getDataset', '@getDatasetPolicies', '@getQueryResults']);
     cy.contains('Error 401: This is the reason for the error').should('be.visible');
   });
@@ -42,6 +44,9 @@ describe('test error handling', () => {
         errorDetail: [],
       },
     }).as('getQueryResults');
+
+    cy.get('a > .MuiButtonBase-root').click();
+
     cy.wait(['@getDataset', '@getDatasetPolicies', '@getQueryResults']);
     cy.contains('Error 401: Was not able to query').should('be.visible');
   });
@@ -55,6 +60,9 @@ describe('test error handling', () => {
         message: 'Was not able to query',
       },
     }).as('getQueryResults');
+
+    cy.get('a > .MuiButtonBase-root').click();
+
     cy.wait(['@getDataset', '@getDatasetPolicies', '@getQueryResults']);
     cy.contains('Error 401: Was not able to query').should('be.visible');
   });
@@ -72,6 +80,9 @@ describe('test error handling', () => {
       status: 200,
       response: { jobComplete: false, jobReference: { jobId: 'jobId' } },
     }).as('getQueryJobResults');
+
+    cy.get('a > .MuiButtonBase-root').click();
+
     cy.wait(['@getDataset', '@getDatasetPolicies', '@getQueryResults', '@getQueryJobResults']);
     cy.contains(
       'For large datasets, it can take a few minutes to fetch results from BigQuery. Thank you for your patience.',
