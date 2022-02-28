@@ -115,6 +115,7 @@ describe('test snapshot creation is disabled', () => {
     cy.get('[placeholder="Search keyword or description"]').type('V2F_GWAS');
     cy.contains(/V2F_GWAS_Summary_Stats|V2F_GWAS_Summary_Statistics/g).should('be.visible');
     cy.contains(/V2F_GWAS_Summary_Stats|V2F_GWAS_Summary_Statistics/g).click();
+    cy.get('a > .MuiButtonBase-root').click();
     cy.wait(['@getDataset', '@getDatasetPolicies']);
   });
 

@@ -28,7 +28,6 @@ describe('test error handling', () => {
       },
     }).as('getQueryResults');
 
-
     cy.get('a > .MuiButtonBase-root').click();
 
     cy.wait(['@getDataset', '@getDatasetPolicies', '@getQueryResults']);
