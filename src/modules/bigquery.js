@@ -136,7 +136,7 @@ export default class BigQuery {
   buildOrderBy = (property, direction) => (property ? `ORDER BY ${property} ${direction}` : '');
 
   getColumnMinMax = (columnName, dataset, tableName, token) => {
-    const url = `https://bigquery.googleapis.com/bigquery/v2/projects/${dataset.dataProject}/queries`;
+    const url = `/bigquery/v2/projects/${dataset.dataProject}/queries`;
     const query = `SELECT MIN(${columnName}) AS min, MAX(${columnName}) AS max FROM \`${dataset.dataProject}.datarepo_${dataset.name}.${tableName}\``;
 
     return axios
@@ -157,7 +157,7 @@ export default class BigQuery {
   };
 
   getColumnDistinct = (columnName, dataset, tableName, token, filterStatement, joinStatement) => {
-    const url = `https://bigquery.googleapis.com/bigquery/v2/projects/${dataset.dataProject}/queries`;
+    const url = `/bigquery/v2/projects/${dataset.dataProject}/queries`;
     const query = `SELECT ${tableName}.${columnName}, COUNT(*) FROM \`${dataset.dataProject}.datarepo_${dataset.name}.${tableName}\` AS ${tableName} ${joinStatement} ${filterStatement} GROUP BY ${tableName}.${columnName}`;
     return axios
       .post(
@@ -185,7 +185,7 @@ export default class BigQuery {
     filterStatement,
     joinStatement,
   ) => {
-    const url = `https://bigquery.googleapis.com/bigquery/v2/projects/${dataset.dataProject}/queries`;
+    const url = `/bigquery/v2/projects/${dataset.dataProject}/queries`;
     const filterOrEmpty = _.isEmpty(filterStatement)
       ? `WHERE ${columnName} LIKE '%${currText}%'`
       : `${filterStatement} AND ${columnName} LIKE '%${currText}%'`;
