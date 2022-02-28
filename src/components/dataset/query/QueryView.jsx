@@ -121,7 +121,7 @@ export class QueryView extends React.PureComponent {
         runQuery(
           dataset.dataProject,
           `#standardSQL
-          SELECT ${selected}.* ${fromClause}
+          SELECT ${this.getSelectColumns()} ${fromClause}
           ${orderBy}
           LIMIT ${QUERY_LIMIT}`,
           PAGE_SIZE,
@@ -135,6 +135,14 @@ export class QueryView extends React.PureComponent {
         ),
       );
     }
+  }
+
+  getSelectColumns() {
+    const { dataset } = this.props;
+    const { selected } = this.state;
+    const { tables } = dataset.schema;
+    const selectedTable = tables.find((table) => table.name === selected);
+    return `datarepo_row_id, ${selectedTable.columns.map((column) => column.name).join(', ')}`;
   }
 
   hasDataset() {

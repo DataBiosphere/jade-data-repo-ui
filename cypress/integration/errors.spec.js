@@ -20,13 +20,14 @@ describe('test error handling', () => {
   it('displays error toasts with error detail', () => {
     cy.route({
       method: 'POST',
-      url: 'https://bigquery.googleapis.com/bigquery/v2/projects/**/queries',
+      url: 'bigquery/v2/projects/**/queries',
       status: 401,
       response: {
         message: 'Was not able to query',
         errorDetail: ['This is the reason for the error'],
       },
     }).as('getQueryResults');
+
 
     cy.get('a > .MuiButtonBase-root').click();
 
@@ -37,7 +38,7 @@ describe('test error handling', () => {
   it('displays error toasts with empty error detail', () => {
     cy.route({
       method: 'POST',
-      url: 'https://bigquery.googleapis.com/bigquery/v2/projects/**/queries',
+      url: 'bigquery/v2/projects/**/queries',
       status: 401,
       response: {
         message: 'Was not able to query',
@@ -54,7 +55,7 @@ describe('test error handling', () => {
   it('displays error toasts with no error detail', () => {
     cy.route({
       method: 'POST',
-      url: 'https://bigquery.googleapis.com/bigquery/v2/projects/**/queries',
+      url: 'bigquery/v2/projects/**/queries',
       status: 401,
       response: {
         message: 'Was not able to query',
@@ -70,13 +71,13 @@ describe('test error handling', () => {
   it('displays loading message', () => {
     cy.route({
       method: 'POST',
-      url: 'https://bigquery.googleapis.com/bigquery/v2/projects/*/queries',
+      url: 'bigquery/v2/projects/*/queries',
       status: 200,
       response: { jobComplete: false, jobReference: { jobId: 'jobId' } },
     }).as('getQueryResults');
     cy.route({
       method: 'GET',
-      url: 'https://bigquery.googleapis.com/bigquery/v2/projects/*/queries/jobId',
+      url: 'bigquery/v2/projects/*/queries/jobId',
       status: 200,
       response: { jobComplete: false, jobReference: { jobId: 'jobId' } },
     }).as('getQueryJobResults');
