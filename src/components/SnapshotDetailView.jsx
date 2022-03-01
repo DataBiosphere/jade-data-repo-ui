@@ -136,7 +136,7 @@ export class SnapshotDetailView extends React.PureComponent {
     } = this.props;
     const { filteredDatasets } = this.state;
 
-    const snapshotReaders = getRoleMembersFromPolicies(snapshotPolicies, SNAPSHOT_ROLES.STEWARD);
+    const snapshotReaders = getRoleMembersFromPolicies(snapshotPolicies, SNAPSHOT_ROLES.READER);
     const snapshotStewards = getRoleMembersFromPolicies(snapshotPolicies, SNAPSHOT_ROLES.STEWARD);
     const datasets = snapshot && snapshot.source && snapshot.source.map((s) => s.dataset);
 
