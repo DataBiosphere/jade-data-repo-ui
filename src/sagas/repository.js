@@ -439,8 +439,7 @@ export function* getDatasetTablePreview({ payload }) {
   const { dataset, tableName } = payload;
   const datasetProject = dataset.dataProject;
   const datasetBqSnapshotName = `datarepo_${dataset.name}`;
-  const bqApi = 'https://www.googleapis.com/bigquery/v2';
-  const url = `${bqApi}/projects/${datasetProject}/datasets/${datasetBqSnapshotName}/tables/${tableName}/data`;
+  const url = `/bigquery/v2/projects/${datasetProject}/datasets/${datasetBqSnapshotName}/tables/${tableName}/data`;
   try {
     const response = yield call(authGet, `${url}?maxResults=100`);
     yield put({
@@ -485,7 +484,7 @@ export function* watchGetDatasetByIdSuccess() {
 
 function* pollQuery(projectId, jobId) {
   try {
-    const url = `https://bigquery.googleapis.com/bigquery/v2/projects/${projectId}/queries/${jobId}`;
+    const url = `/bigquery/v2/projects/${projectId}/queries/${jobId}`;
     const response = yield call(authGet, url);
     const { jobComplete } = response.data;
     if (jobComplete) {
@@ -504,7 +503,7 @@ function* pollQuery(projectId, jobId) {
 
 export function* runQuery({ payload }) {
   try {
-    const url = `https://bigquery.googleapis.com/bigquery/v2/projects/${payload.projectId}/queries`;
+    const url = `/bigquery/v2/projects/${payload.projectId}/queries`;
     const body = {
       query: payload.query,
       maxResults: payload.maxResults,
@@ -531,7 +530,7 @@ export function* runQuery({ payload }) {
 
 export function* pageQuery({ payload }) {
   try {
-    const url = `https://bigquery.googleapis.com/bigquery/v2/projects/${payload.projectId}/queries/${payload.jobId}`;
+    const url = `/bigquery/v2/projects/${payload.projectId}/queries/${payload.jobId}`;
     const params = {
       maxResults: payload.pageSize,
       pageToken: payload.pageToken,
@@ -550,7 +549,7 @@ export function* pageQuery({ payload }) {
 
 export function* countResults({ payload }) {
   try {
-    const url = `https://bigquery.googleapis.com/bigquery/v2/projects/${payload.projectId}/queries`;
+    const url = `/bigquery/v2/projects/${payload.projectId}/queries`;
     const body = {
       query: payload.query,
     };
