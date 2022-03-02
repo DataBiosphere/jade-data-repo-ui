@@ -108,8 +108,11 @@ export function* exportSnapshot({ payload }) {
     yield put({
       type: ActionTypes.EXPORT_SNAPSHOT_START,
     });
-    const snapshotId = payload.snapshotId;
-    const response = yield call(authGet, `/api/repository/v1/snapshots/${snapshotId}/export`);
+    const { snapshotId, exportGsPaths } = payload;
+    const response = yield call(
+      authGet,
+      `/api/repository/v1/snapshots/${snapshotId}/export?exportGsPaths=${exportGsPaths}`,
+    );
     const jobId = response.data.id;
     yield put({
       type: ActionTypes.EXPORT_SNAPSHOT_JOB,
