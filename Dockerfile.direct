@@ -1,8 +1,11 @@
 FROM node:14
+
+RUN npm install cypress@9.2.1
+
 COPY . /
 
-RUN npm ci
-RUN npm run build --production
+RUN npm ci && \
+  npm run build --production
 
 FROM nginxinc/nginx-unprivileged:stable-alpine
 COPY --from=0 /build /usr/share/nginx/html

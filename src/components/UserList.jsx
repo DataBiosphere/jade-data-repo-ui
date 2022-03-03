@@ -10,6 +10,7 @@ const styles = (theme) => ({
     lineHeight: '22px',
     fontWeight: '600',
   },
+  manageUsersHorizontalModal: {},
   values: {
     paddingBottom: theme.spacing(1),
   },
@@ -28,16 +29,37 @@ class UserList extends React.PureComponent {
     addUser: PropTypes.func,
     canManageUsers: PropTypes.bool,
     classes: PropTypes.object.isRequired,
+    horizontal: PropTypes.bool,
     removeUser: PropTypes.func,
     typeOfUsers: PropTypes.string,
     users: PropTypes.arrayOf(PropTypes.string).isRequired,
   };
 
   render() {
-    const { addUser, canManageUsers, classes, removeUser, typeOfUsers, users } = this.props;
+    const {
+      addUser,
+      canManageUsers,
+      classes,
+      horizontal,
+      removeUser,
+      typeOfUsers,
+      users,
+    } = this.props;
+
     return (
       <div className={classes.root}>
-        <div className={classes.header}>{typeOfUsers}:</div>
+        <div className={classes.header}>
+          {typeOfUsers}:{' '}
+          {horizontal && canManageUsers && (
+            <ManageUsersModal
+              addUser={addUser}
+              removeUser={removeUser}
+              modalText={`Manage ${typeOfUsers}`}
+              users={users}
+              horizontal={horizontal}
+            />
+          )}
+        </div>
         <div className={classes.values}>
           {users.length === 0 && <Typography className={classes.noUsers}>(None)</Typography>}
           {users.map((user) => (
@@ -46,7 +68,7 @@ class UserList extends React.PureComponent {
             </Typography>
           ))}
         </div>
-        {canManageUsers && (
+        {!horizontal && canManageUsers && (
           <ManageUsersModal
             addUser={addUser}
             removeUser={removeUser}

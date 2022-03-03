@@ -19,12 +19,13 @@ describe('test dataset sharing', () => {
     cy.get('[placeholder="Search keyword or description"]').type('V2F_GWAS');
     cy.contains(/V2F_GWAS_Summary_Stats|V2F_GWAS_Summary_Statistics/g).should('be.visible');
     cy.contains(/V2F_GWAS_Summary_Stats|V2F_GWAS_Summary_Statistics/g).click();
+    cy.get('a > .MuiButtonBase-root').click();
 
     cy.wait(['@getDataset', '@getDatasetPolicies', '@getBillingProfileById']);
     cy.get('.MuiList-root > :nth-child(1)').click();
     cy.get('#memberships-header').click();
     cy.get('.MuiAccordionDetails-root :nth-child(2) div:nth-child(1)').should('be.visible');
-    cy.get(':nth-child(2) > :nth-child(3) > button')
+    cy.get('.MuiAccordionDetails-root :nth-child(1) > > :nth-child(3) > button')
       .should('be.visible')
       .should('contain.text', 'Manage Stewards')
       .click();
@@ -37,10 +38,10 @@ describe('test dataset sharing', () => {
       '.MuiTypography-root > .MuiButtonBase-root > .MuiIconButton-label > .MuiSvgIcon-root',
     ).click();
 
-    cy.get(':nth-child(3) > :nth-child(3) > button')
+    cy.get('.MuiAccordionDetails-root :nth-child(2) > > :nth-child(3) > button')
       .should('be.visible')
       .should('contain.text', 'Manage Custodians');
-    cy.get(':nth-child(4) > :nth-child(3) > button')
+    cy.get('.MuiAccordionDetails-root :nth-child(3) > > :nth-child(3) > button')
       .should('be.visible')
       .should('contain.text', 'Manage Snapshot Creators');
   });
@@ -49,11 +50,14 @@ describe('test dataset sharing', () => {
     cy.get('[placeholder="Search keyword or description"]').type('NonStewardDataset');
     cy.contains(/NonStewardDataset/g).should('be.visible');
     cy.contains(/NonStewardDataset/g).click();
+    cy.get('a > .MuiButtonBase-root').click();
 
     cy.wait(['@getDataset', '@getDatasetPolicies', '@getBillingProfileById']);
 
     cy.get('.MuiList-root > :nth-child(1)').click();
     cy.get('#memberships-header').click();
-    cy.get(':nth-child(2) > :nth-child(3) > .MuiButtonBase-root').should('not.exist');
+    cy.get('.MuiAccordionDetails-root :nth-child(2) > > :nth-child(3) > button').should(
+      'not.exist',
+    );
   });
 });

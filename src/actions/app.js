@@ -45,6 +45,19 @@ export const { getSnapshots } = createActions({
     direction,
     searchString,
     datasetIds,
+    successType: ActionTypes.GET_SNAPSHOTS_SUCCESS,
+  }),
+});
+
+export const { getDatasetSnapshots } = createActions({
+  [ActionTypes.GET_DATASET_SNAPSHOTS_SUCCESS]: (snapshots) => snapshots,
+  [ActionTypes.GET_DATASET_SNAPSHOTS]: (limit, offset, sort, direction, datasetIds) => ({
+    limit,
+    offset,
+    sort,
+    direction,
+    datasetIds,
+    successType: ActionTypes.GET_DATASET_SNAPSHOTS_SUCCESS,
   }),
 });
 

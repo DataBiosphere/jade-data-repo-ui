@@ -1,4 +1,5 @@
 import React from 'react';
+import { Typography } from '@material-ui/core';
 
 const cloudPlatforms = { gcp: 'Google Cloud Platform', azure: 'Microsoft Azure' };
 /**
@@ -15,3 +16,10 @@ export const renderCloudPlatforms = (row) => (
     )}
   </div>
 );
+
+export const renderStorageResources = (dataset) =>
+  dataset.storage.map((storageResource, i) => (
+    <Typography key={i}>
+      {storageResource.cloudResource}: {storageResource.region}
+    </Typography>
+  ));
