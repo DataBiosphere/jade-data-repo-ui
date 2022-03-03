@@ -28,7 +28,6 @@ const helpContent = (
       Creating a dataset makes a user the Steward (or owner) of it. The steward of a dataset can:
     </Typography>
     <ul>
-      <li>Define the schema for a dataset</li>
       <li>Delete a dataset (need to delete any resources leveraging the dataset first)</li>
       <li>Assign new stewards, custodians and snapshot creators of a dataset</li>
       <li>Add file/metadata to a dataset</li>

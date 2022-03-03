@@ -36,7 +36,6 @@ class DatasetSnapshotsTable extends React.PureComponent {
 
   render() {
     const { classes, snapshotCount, snapshots, summary } = this.props;
-    // TODO add back modified_date column
     const columns = [
       {
         label: 'Snapshot Name',
