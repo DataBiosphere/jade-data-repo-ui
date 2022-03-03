@@ -13,7 +13,6 @@ const styles = (theme) => ({
     flexGrow: 1,
   },
   tabsRoot: {
-    color: '#333F52',
     fontFamily: theme.typography.fontFamily,
     height: 18,
     fontSize: '1rem',
