@@ -23,7 +23,7 @@ export const { createSnapshot } = createActions({
 });
 
 export const { exportSnapshot } = createActions({
-  [ActionTypes.EXPORT_SNAPSHOT]: (snapshotId) => ({ snapshotId }),
+  [ActionTypes.EXPORT_SNAPSHOT]: (snapshotId, exportGsPaths) => ({ snapshotId, exportGsPaths }),
   [ActionTypes.EXPORT_SNAPSHOT_START]: () => ({}),
   [ActionTypes.EXPORT_SNAPSHOT_JOB]: (exportResponse) => exportResponse,
   [ActionTypes.EXPORT_SNAPSHOT_SUCCESS]: (exportResponse) => exportResponse,

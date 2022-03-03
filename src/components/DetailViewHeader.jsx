@@ -5,7 +5,18 @@ import moment from 'moment';
 import { withStyles } from '@material-ui/core/styles';
 import { exportSnapshot, resetSnapshotExport } from 'actions/index';
 import { connect } from 'react-redux';
-import { Card, Grid, Typography, Button, CircularProgress, Divider } from '@material-ui/core';
+import {
+  Card,
+  Grid,
+  Typography,
+  Button,
+  CircularProgress,
+  Divider,
+  Checkbox,
+  FormGroup,
+  FormControlLabel,
+  FormHelperText,
+} from '@material-ui/core';
 import { Launch } from '@material-ui/icons';
 import UserList from './UserList';
 import TerraTooltip from './common/TerraTooltip';
@@ -48,6 +59,13 @@ const styles = (theme) => ({
 });
 
 export class DetailViewHeader extends React.PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      exportGsPaths: false,
+    };
+  }
+
   static propTypes = {
     addReader: PropTypes.func,
     addSteward: PropTypes.func,
@@ -69,12 +87,20 @@ export class DetailViewHeader extends React.PureComponent {
 
   exportToWorkspaceCopy = () => {
     const { dispatch, of } = this.props;
-    dispatch(exportSnapshot(of.id));
+    const { exportGsPaths } = this.state;
+    dispatch(exportSnapshot(of.id, exportGsPaths));
   };
 
   resetExport = () => {
     const { dispatch } = this.props;
     dispatch(resetSnapshotExport());
+  };
+
+  handleExportGsPathsChanged = () => {
+    const { exportGsPaths } = this.state;
+    this.setState({
+      exportGsPaths: !exportGsPaths,
+    });
   };
 
   render() {
@@ -95,6 +121,7 @@ export class DetailViewHeader extends React.PureComponent {
       userRoles,
       user,
     } = this.props;
+    const { exportGsPaths } = this.state;
     const loading = _.isNil(of) || _.isEmpty(of);
     const canManageUsers = userRoles.includes(SNAPSHOT_ROLES.STEWARD);
 
@@ -102,6 +129,11 @@ export class DetailViewHeader extends React.PureComponent {
     const consoleLink = linkToBq
       ? `${of.accessInformation.bigQuery.link}&authuser=${user?.email}`
       : '';
+    const gsPathsCheckbox = !isProcessing ? (
+      <Checkbox checked={exportGsPaths} onChange={this.handleExportGsPathsChanged} />
+    ) : (
+      <Checkbox checked={exportGsPaths} disabled />
+    );
 
     return (
       <Grid container wrap="nowrap" spacing={2}>
@@ -174,8 +206,19 @@ export class DetailViewHeader extends React.PureComponent {
             )}
             <Divider className={classes.separator} />
             <Typography variant="h6" className={classes.section}>
-              Export a copy of the snapshot metadata to an exisiting or new Terra workspace
+              Export a copy of the snapshot metadata to an existing or new Terra workspace
             </Typography>
+            <FormGroup>
+              <FormControlLabel
+                control={gsPathsCheckbox}
+                label="Convert DRS URLs to Google Cloud Storage Paths (gs://...)"
+              />
+              <FormHelperText>
+                <i>
+                  <b>Note: </b> gs-paths can change over time
+                </i>
+              </FormHelperText>
+            </FormGroup>
             {!isProcessing && !isDone && (
               <TerraTooltip title="Exporting a snapshot to a workspace means that all members of your workspace will be able to have read only access to the tables and files in the snapshot">
                 <Button
