@@ -318,6 +318,9 @@ export function* getDatasets({ payload }) {
 export function* getDatasetById({ payload }) {
   const { datasetId, include } = payload;
   const includeUrl = include ? `?${_.map(include, (inc) => `include=${inc}`).join('&')}` : '';
+  yield put({
+    type: ActionTypes.GET_DATASET_BY_ID_START,
+  });
   try {
     const response = yield call(authGet, `/api/repository/v1/datasets/${datasetId}${includeUrl}`);
     yield put({

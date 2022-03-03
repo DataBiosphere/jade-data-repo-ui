@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
@@ -43,36 +43,32 @@ const styles = (theme) => ({
 const PAGE_SIZE = 100;
 const QUERY_LIMIT = 1000;
 
-export class DatasetQueryView extends React.PureComponent {
-  constructor(props) {
-    super(props);
+function DatasetQueryView({
+  classes,
+  dataset,
+  datasetLoading,
+  datasetPolicies,
+  dispatch,
+  filterData,
+  filterStatement,
+  joinStatement,
+  match,
+  orderBy,
+  profile,
+  queryResults,
+  table,
+  userRole,
+}) {
+  const [selected, setSelected] = useState('');
+  const [selectedTable, setSelectedTable] = useState(null);
+  const [sidebarWidth, setSidebarWidth] = useState(0);
+  const [canLink, setCanLink] = useState(false);
 
-    this.state = {
-      selected: '',
-      table: null,
-      sidebarWidth: 0,
-      canLink: false,
-    };
-  }
-
-  static propTypes = {
-    classes: PropTypes.object,
-    dataset: PropTypes.object,
-    datasetPolicies: PropTypes.array,
-    dispatch: PropTypes.func.isRequired,
-    filterData: PropTypes.object,
-    filterStatement: PropTypes.string,
-    joinStatement: PropTypes.string,
-    match: PropTypes.object,
-    orderBy: PropTypes.string,
-    profile: PropTypes.object,
-    queryResults: PropTypes.object,
-    table: PropTypes.object,
-    userRole: PropTypes.array,
+  const getSelectColumns = () => {
+    return `datarepo_row_id, ${selectedTable.columns.map((column) => column.name).join(', ')}`;
   };
 
-  componentDidMount() {
-    const { dispatch, match, dataset, datasetPolicies, userRole } = this.props;
+  useEffect(() => {
     const datasetId = match.params.uuid;
 
     if (dataset == null || dataset.id !== datasetId) {
@@ -97,31 +93,22 @@ export class DatasetQueryView extends React.PureComponent {
     if (userRole == null || dataset.id !== datasetId) {
       dispatch(getUserDatasetRoles(datasetId));
     }
-  }
+  }, [dispatch, match, dataset, datasetPolicies, userRole]);
 
-  componentDidUpdate(prevProps, prevState) {
-    const { dataset, dispatch, filterStatement, joinStatement, orderBy, profile } = this.props;
-    const { selected } = this.state;
-
-    if (profile.id) {
-      this.setState({ canLink: true });
-    }
-
-    if (
-      this.hasDataset() &&
-      (prevProps.filterStatement !== filterStatement ||
-        prevState.selected !== selected ||
-        prevProps.orderBy !== orderBy)
-    ) {
+  useEffect(() => {
+    if (!datasetLoading) {
       const fromClause = `FROM \`${dataset.dataProject}.datarepo_${dataset.name}.${selected}\` AS ${selected}
           ${joinStatement}
           ${filterStatement}`;
+
+      const { tables } = dataset.schema;
+      setSelectedTable(tables.find((t) => t.name === selected));
 
       dispatch(
         runQuery(
           dataset.dataProject,
           `#standardSQL
-          SELECT ${this.getSelectColumns()} ${fromClause}
+          SELECT ${getSelectColumns()} ${fromClause}
           ${orderBy}
           LIMIT ${QUERY_LIMIT}`,
           PAGE_SIZE,
@@ -135,39 +122,26 @@ export class DatasetQueryView extends React.PureComponent {
         ),
       );
     }
-  }
+  }, [dataset, datasetLoading, dispatch, filterStatement, joinStatement, orderBy, selected]);
 
-  getSelectColumns() {
-    const { dataset } = this.props;
-    const { selected } = this.state;
-    const { tables } = dataset.schema;
-    const selectedTable = tables.find((table) => table.name === selected);
-    return `datarepo_row_id, ${selectedTable.columns.map((column) => column.name).join(', ')}`;
-  }
+  useEffect(() => {
+    // don't want want to check that the user has access to this profile id?
+    if (profile.id) {
+      setCanLink(true);
+    }
+  }, [profile]);
 
-  hasDataset() {
-    const { dataset, match } = this.props;
-    const datasetId = match.params.uuid;
-    return dataset && dataset.schema && dataset.id === datasetId;
-  }
-
-  handleDrawerWidth = (width) => {
-    this.setState({ sidebarWidth: width });
+  const handleDrawerWidth = (width) => {
+    setSidebarWidth(width);
   };
 
-  handleChange = (value) => {
-    const { dataset, dispatch, filterData } = this.props;
-    const table = dataset.schema.tables.find((t) => t.name === value);
-    this.setState({
-      selected: value,
-      table,
-    });
+  const handleChange = (value) => {
+    setSelected(value);
+    setSelectedTable(dataset.schema.tables.find((t) => t.name === value));
     dispatch(applyFilters(filterData, value, dataset));
   };
 
-  getPanels = () => {
-    const { table, dataset } = this.props;
-    const { canLink } = this.state;
+  const getPanels = () => {
     const panels = [
       {
         icon: Info,
@@ -196,68 +170,78 @@ export class DatasetQueryView extends React.PureComponent {
     return panels;
   };
 
-  realRender() {
-    const { classes, dataset, queryResults } = this.props;
-    const { table, selected, sidebarWidth, canLink } = this.state;
-    const names = dataset.schema.tables.map((t) => t.name);
-    return (
-      <Fragment>
-        <Grid container spacing={0} className={classes.wrapper}>
-          <Grid container spacing={1}>
-            <Grid item xs={12}>
-              <Typography variant="h3" className={classes.headerArea}>
-                {dataset.name}
-              </Typography>
+  return (
+    <div>
+      {datasetLoading && <div>Loading</div>}
+      {!datasetLoading && (
+        <Fragment>
+          <Grid container spacing={0} className={classes.wrapper}>
+            <Grid container spacing={1}>
+              <Grid item xs={12}>
+                <Typography variant="h3" className={classes.headerArea}>
+                  {dataset.name}
+                </Typography>
+              </Grid>
+              <Grid item xs={3}>
+                <QueryViewDropdown options={dataset.schema.tables.map((t) => t.name)} onSelectedItem={handleChange} />
+              </Grid>
+              <Grid item xs={3}>
+                <Link to="details">
+                  <Button
+                    className={classes.viewDatasetButton}
+                    color="primary"
+                    variant="outlined"
+                    disableElevation
+                    size="large"
+                  >
+                    Back to Dataset Details
+                  </Button>
+                </Link>
+              </Grid>
             </Grid>
-            <Grid item xs={3}>
-              <QueryViewDropdown options={names} onSelectedItem={this.handleChange} />
-            </Grid>
-            <Grid item xs={3}>
-              <Link to="details">
-                <Button
-                  className={classes.viewDatasetButton}
-                  color="primary"
-                  variant="outlined"
-                  disableElevation
-                  size="large"
-                >
-                  Back to Dataset Details
-                </Button>
-              </Link>
+            <Grid container spacing={0}>
+              <Grid item xs={11}>
+                <div className={classes.scrollTable}>
+                  <JadeTable queryResults={queryResults} title={selected} table={table} />
+                </div>
+              </Grid>
             </Grid>
           </Grid>
-          <Grid container spacing={0}>
-            <Grid item xs={11}>
-              <div className={classes.scrollTable}>
-                <JadeTable queryResults={queryResults} title={selected} table={table} />
-              </div>
-            </Grid>
-          </Grid>
-        </Grid>
-        <SidebarDrawer
-          canLink={canLink}
-          panels={this.getPanels(table, dataset)}
-          handleDrawerWidth={this.handleDrawerWidth}
-          width={sidebarWidth}
-          table={table}
-          selected={selected}
-        />
-        <SnapshotPopup />
-      </Fragment>
-    );
-  }
-
-  render() {
-    if (this.hasDataset()) {
-      return this.realRender();
-    }
-    // TODO change to actual loading spinner
-    return <div>Loading</div>;
-  }
+          <SidebarDrawer
+            canLink={canLink}
+            panels={getPanels(table, dataset)}
+            handleDrawerWidth={handleDrawerWidth}
+            width={sidebarWidth}
+            table={table}
+            selected={selected}
+          />
+          <SnapshotPopup />
+        </Fragment>
+      )}
+    </div>
+  );
 }
+
+DatasetQueryView.propTypes = {
+  classes: PropTypes.object,
+  datasetLoading: PropTypes.bool,
+  dataset: PropTypes.object,
+  datasetPolicies: PropTypes.array,
+  dispatch: PropTypes.func.isRequired,
+  filterData: PropTypes.object,
+  filterStatement: PropTypes.string,
+  joinStatement: PropTypes.string,
+  match: PropTypes.object,
+  orderBy: PropTypes.string,
+  profile: PropTypes.object,
+  queryResults: PropTypes.object,
+  table: PropTypes.object,
+  userRole: PropTypes.array,
+};
 
 function mapStateToProps(state) {
   return {
+    datasetLoading: state.datasets.datasetLoading,
     dataset: state.datasets.dataset,
     datasetPolicies: state.datasets.datasetPolicies,
     filterStatement: state.query.filterStatement,

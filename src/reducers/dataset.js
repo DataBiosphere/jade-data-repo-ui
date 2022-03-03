@@ -5,6 +5,7 @@ import { ActionTypes } from 'constants/index';
 
 export const datasetState = {
   datasets: [],
+  datasetLoading: true,
   dataset: {},
   datasetsCount: 0,
   datasetPolicies: [],
@@ -36,9 +37,14 @@ export default {
         immutable(state, {
           dataset: {},
         }),
+      [ActionTypes.GET_DATASET_BY_ID_START]: (state) =>
+        immutable(state, {
+          datasetLoading: { $set: true },
+        }),
       [ActionTypes.GET_DATASET_BY_ID_SUCCESS]: (state, action) =>
         immutable(state, {
           dataset: { $set: action.dataset.data.data },
+          datasetLoading: { $set: false },
         }),
       [ActionTypes.GET_DATASET_POLICY_SUCCESS]: (state, action) =>
         immutable(state, {

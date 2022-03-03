@@ -105,6 +105,7 @@ export const { getDatasets } = createActions({
 
 export const { getDatasetById } = createActions({
   [ActionTypes.GET_DATASET_BY_ID]: (dataset) => dataset,
+  [ActionTypes.GET_DATASET_BY_ID_START]: () => ({}),
   [ActionTypes.GET_DATASET_BY_ID_SUCCESS]: (dataset) => dataset,
 });
 

@@ -35,6 +35,7 @@ export const ActionTypes = keyMirror({
   GET_DATASETS: undefined,
   GET_DATASETS_SUCCESS: undefined,
   GET_DATASET_BY_ID: undefined,
+  GET_DATASET_BY_ID_START: undefined,
   GET_DATASET_BY_ID_SUCCESS: undefined,
   GET_DATASET_SNAPSHOTS_SUCCESS: undefined,
   GET_DATASET_SNAPSHOTS: undefined,
