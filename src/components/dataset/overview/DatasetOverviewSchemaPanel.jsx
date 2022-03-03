@@ -43,7 +43,7 @@ const StyledTreeItem = withStyles((theme) => ({
   },
 }))((props) => <TreeItem {...props} />);
 
-export class VisualizeRelationshipsPanel extends React.PureComponent {
+export class DatasetOverviewSchemaPanel extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object,
     dataset: PropTypes.object,
@@ -108,4 +108,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(withStyles(styles)(VisualizeRelationshipsPanel));
+export default connect(mapStateToProps)(withStyles(styles)(DatasetOverviewSchemaPanel));

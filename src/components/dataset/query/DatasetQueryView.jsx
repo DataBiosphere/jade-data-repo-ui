@@ -43,7 +43,7 @@ const styles = (theme) => ({
 const PAGE_SIZE = 100;
 const QUERY_LIMIT = 1000;
 
-export class QueryView extends React.PureComponent {
+export class DatasetQueryView extends React.PureComponent {
   constructor(props) {
     super(props);
 
@@ -269,4 +269,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(withStyles(styles)(QueryView));
+export default connect(mapStateToProps)(withStyles(styles)(DatasetQueryView));

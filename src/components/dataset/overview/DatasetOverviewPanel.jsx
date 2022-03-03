@@ -67,7 +67,7 @@ function a11yProps(index) {
   };
 }
 
-function DatasetDetailPanel(props) {
+function DatasetOverviewPanel(props) {
   const [value, setValue] = React.useState(0);
   const { classes, dataset } = props;
 
@@ -129,7 +129,7 @@ function DatasetDetailPanel(props) {
   );
 }
 
-DatasetDetailPanel.propTypes = {
+DatasetOverviewPanel.propTypes = {
   classes: PropTypes.object,
   dataset: PropTypes.object,
 };
@@ -140,4 +140,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(withStyles(styles)(DatasetDetailPanel));
+export default connect(mapStateToProps)(withStyles(styles)(DatasetOverviewPanel));

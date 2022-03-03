@@ -74,7 +74,14 @@ def create_billing_profile(clients):
         billing_profile_request['profileName'] = billing_profile_request['profileName'] + f'_{profile_id}'
         print(f"Creating billing profile with id: {profile_id}")
         profile = wait_for_job(clients, clients.profiles_api.create_profile(billing_profile_request=billing_profile_request))
+        add_billing_profile_members(clients, profile_id)
         return profile
+
+
+def add_billing_profile_members(clients, profile_id):
+    clients.profiles_api.add_profile_policy_member(profile_id,
+                                                   "owner",
+                                                   {'email': 'JadeStewards-dev@dev.test.firecloud.org'})
 
 
 def dataset_ingest_json(clients, dataset_id, dataset_to_upload):

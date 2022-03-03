@@ -2,12 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
-import { getDatasetById, getDatasetPolicy, getUserDatasetRoles } from 'actions/index';
+import { getDatasetById, getDatasetPolicy, getUserDatasetRoles } from 'actions';
 import { Typography } from '@material-ui/core';
-import DatasetRelationshipsPanel from './VisualizeRelationshipsPanel';
+import DatasetRelationshipsPanel from './DatasetOverviewSchemaPanel';
 import { useOnMount } from '../../../libs/utils';
 import { DATASET_INCLUDE_OPTIONS } from '../../../constants';
-import DatasetDetailPanel from './DatasetDetailPanel';
+import DatasetOverviewPanel from './DatasetOverviewPanel';
 
 const styles = () => ({
   pageRoot: {
@@ -56,7 +56,7 @@ const styles = () => ({
   },
 });
 
-function DatasetDetailView(props) {
+function DatasetOverview(props) {
   const { classes, dataset, datasetPolicies, dispatch, match } = props;
   const datasetId = match.params.uuid;
   useOnMount(() => {
@@ -88,7 +88,7 @@ function DatasetDetailView(props) {
           </div>
         </div>
         <div className={classes.mainColumn}>
-          <DatasetDetailPanel dataset={dataset} />
+          <DatasetOverviewPanel dataset={dataset} />
         </div>
       </div>
     </div>
@@ -97,7 +97,7 @@ function DatasetDetailView(props) {
   );
 }
 
-DatasetDetailView.propTypes = {
+DatasetOverview.propTypes = {
   classes: PropTypes.object,
   dataset: PropTypes.object,
   datasetPolicies: PropTypes.array,
@@ -111,4 +111,4 @@ const mapStateToProps = ({ datasets: { dataset, datasetPolicies }, dispatch }) =
   dispatch,
 });
 
-export default connect(mapStateToProps)(withStyles(styles)(DatasetDetailView));
+export default connect(mapStateToProps)(withStyles(styles)(DatasetOverview));
