@@ -10,8 +10,8 @@ import history from 'modules/hist';
 import HelpContainer from 'components/help/HelpContainer';
 import HomeView from '../components/HomeView';
 import SnapshotDetailView from '../components/SnapshotDetailView';
-import DatasetDetailView from '../components/dataset/details/DatasetDetailView';
-import QueryView from '../components/dataset/query/QueryView';
+import DatasetOverview from '../components/dataset/overview/DatasetOverview';
+import DatasetQueryView from '../components/dataset/query/DatasetQueryView';
 
 const styles = (theme) => ({
   wrapper: {
@@ -102,8 +102,8 @@ class Private extends React.Component {
                       </Route>
                       <Route exact path="/datasets" component={HomeView} />
                       <Route exact path="/snapshots" component={HomeView} />
-                      <Route exact path="/datasets/:uuid/query" component={QueryView} />
-                      <Route exact path="/datasets/:uuid/details" component={DatasetDetailView} />
+                      <Route exact path="/datasets/:uuid/overview" component={DatasetOverview} />
+                      <Route exact path="/datasets/:uuid/query" component={DatasetQueryView} />
                       <Route exact path="/snapshots/details/:uuid" component={SnapshotDetailView} />
                     </Switch>
                   </div>

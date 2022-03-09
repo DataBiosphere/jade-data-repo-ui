@@ -18,7 +18,6 @@ class DatasetTable extends React.PureComponent {
     classes: PropTypes.object.isRequired,
     datasets: PropTypes.array.isRequired,
     datasetsCount: PropTypes.number,
-    features: PropTypes.object,
     filteredDatasetsCount: PropTypes.number,
     handleFilterDatasets: PropTypes.func,
     searchString: PropTypes.string,
@@ -31,7 +30,6 @@ class DatasetTable extends React.PureComponent {
       datasets,
       datasetsCount,
       filteredDatasetsCount,
-      features,
       handleFilterDatasets,
       summary,
       searchString,
@@ -43,14 +41,7 @@ class DatasetTable extends React.PureComponent {
         property: 'name',
         render: (row) => (
           <div>
-            <Link
-              to={
-                features.granular_sharing
-                  ? `/datasets/${row.id}/details`
-                  : `/datasets/${row.id}/query`
-              }
-              className={classes.jadeLink}
-            >
+            <Link to={`/datasets/${row.id}/overview`} className={classes.jadeLink}>
               {row.name}
             </Link>
           </div>

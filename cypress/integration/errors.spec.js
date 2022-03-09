@@ -28,6 +28,8 @@ describe('test error handling', () => {
       },
     }).as('getQueryResults');
 
+    cy.get('a > .MuiButtonBase-root').click();
+
     cy.wait(['@getDataset', '@getDatasetPolicies', '@getQueryResults']);
     cy.contains('Error 401: This is the reason for the error').should('be.visible');
   });
@@ -43,6 +45,8 @@ describe('test error handling', () => {
       },
     }).as('getQueryResults');
 
+    cy.get('a > .MuiButtonBase-root').click();
+
     cy.wait(['@getDataset', '@getDatasetPolicies', '@getQueryResults']);
     cy.contains('Error 401: Was not able to query').should('be.visible');
   });
@@ -56,6 +60,8 @@ describe('test error handling', () => {
         message: 'Was not able to query',
       },
     }).as('getQueryResults');
+
+    cy.get('a > .MuiButtonBase-root').click();
 
     cy.wait(['@getDataset', '@getDatasetPolicies', '@getQueryResults']);
     cy.contains('Error 401: Was not able to query').should('be.visible');
@@ -74,6 +80,8 @@ describe('test error handling', () => {
       status: 200,
       response: { jobComplete: false, jobReference: { jobId: 'jobId' } },
     }).as('getQueryJobResults');
+
+    cy.get('a > .MuiButtonBase-root').click();
 
     cy.wait(['@getDataset', '@getDatasetPolicies', '@getQueryResults', '@getQueryJobResults']);
     cy.contains(

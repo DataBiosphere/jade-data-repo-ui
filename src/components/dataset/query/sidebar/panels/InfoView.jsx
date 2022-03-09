@@ -15,8 +15,9 @@ import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import { Close, ExpandMore, HelpOutline, Launch } from '@material-ui/icons';
 import IconButton from '@material-ui/core/IconButton';
-import DatasetAccess from './DatasetAccess';
 import TerraTooltip from '../../../../common/TerraTooltip';
+import { renderStorageResources } from '../../../../../libs/render-utils';
+import InfoViewDatasetAccess from './InfoViewDatasetAccess';
 
 const styles = (theme) => ({
   root: {
@@ -169,11 +170,7 @@ export class InfoView extends React.PureComponent {
             </Grid>
             <Grid item xs={6}>
               <Typography variant="h6">Storage</Typography>
-              {dataset.storage.map((storageResource, i) => (
-                <Typography key={i}>
-                  {storageResource.cloudResource}: {storageResource.region}
-                </Typography>
-              ))}
+              {renderStorageResources(dataset)}
             </Grid>
             <Grid item xs={6}>
               <Typography variant="h6">Date Created:</Typography>
@@ -190,7 +187,7 @@ export class InfoView extends React.PureComponent {
                   Summary of roles and memberships
                 </AccordionSummary>
                 <AccordionDetails>
-                  <DatasetAccess helpOverlayToggle={this.toggleHelpOverlay} />
+                  <InfoViewDatasetAccess helpOverlayToggle={this.toggleHelpOverlay} />
                 </AccordionDetails>
               </Accordion>
             </Grid>

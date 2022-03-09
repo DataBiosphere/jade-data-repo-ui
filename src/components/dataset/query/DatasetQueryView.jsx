@@ -12,9 +12,10 @@ import {
   countResults,
   getUserDatasetRoles,
 } from 'actions/index';
-import { Typography } from '@material-ui/core';
+import { Button, Typography } from '@material-ui/core';
 import { FilterList, Info, People } from '@material-ui/icons';
 
+import { Link } from 'react-router-dom';
 import QueryViewSidebar from './sidebar/QueryViewSidebar';
 import SidebarDrawer from './sidebar/SidebarDrawer';
 import QueryViewDropdown from './QueryViewDropdown';
@@ -42,7 +43,7 @@ const styles = (theme) => ({
 const PAGE_SIZE = 100;
 const QUERY_LIMIT = 1000;
 
-export class QueryView extends React.PureComponent {
+export class DatasetQueryView extends React.PureComponent {
   constructor(props) {
     super(props);
 
@@ -202,12 +203,27 @@ export class QueryView extends React.PureComponent {
     return (
       <Fragment>
         <Grid container spacing={0} className={classes.wrapper}>
-          <Grid container spacing={0}>
-            <Grid item xs={3}>
-              <Typography variant="h5" className={classes.headerArea}>
+          <Grid container spacing={1}>
+            <Grid item xs={12}>
+              <Typography variant="h3" className={classes.headerArea}>
                 {dataset.name}
               </Typography>
+            </Grid>
+            <Grid item xs={3}>
               <QueryViewDropdown options={names} onSelectedItem={this.handleChange} />
+            </Grid>
+            <Grid item xs={3}>
+              <Link to="details">
+                <Button
+                  className={classes.viewDatasetButton}
+                  color="primary"
+                  variant="outlined"
+                  disableElevation
+                  size="large"
+                >
+                  Back to Dataset Details
+                </Button>
+              </Link>
             </Grid>
           </Grid>
           <Grid container spacing={0}>
@@ -253,4 +269,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(withStyles(styles)(QueryView));
+export default connect(mapStateToProps)(withStyles(styles)(DatasetQueryView));

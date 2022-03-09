@@ -23,7 +23,7 @@ export const { createSnapshot } = createActions({
 });
 
 export const { exportSnapshot } = createActions({
-  [ActionTypes.EXPORT_SNAPSHOT]: (snapshotId) => ({ snapshotId }),
+  [ActionTypes.EXPORT_SNAPSHOT]: (snapshotId, exportGsPaths) => ({ snapshotId, exportGsPaths }),
   [ActionTypes.EXPORT_SNAPSHOT_START]: () => ({}),
   [ActionTypes.EXPORT_SNAPSHOT_JOB]: (exportResponse) => exportResponse,
   [ActionTypes.EXPORT_SNAPSHOT_SUCCESS]: (exportResponse) => exportResponse,
@@ -45,6 +45,19 @@ export const { getSnapshots } = createActions({
     direction,
     searchString,
     datasetIds,
+    successType: ActionTypes.GET_SNAPSHOTS_SUCCESS,
+  }),
+});
+
+export const { getDatasetSnapshots } = createActions({
+  [ActionTypes.GET_DATASET_SNAPSHOTS_SUCCESS]: (snapshots) => snapshots,
+  [ActionTypes.GET_DATASET_SNAPSHOTS]: (limit, offset, sort, direction, datasetIds) => ({
+    limit,
+    offset,
+    sort,
+    direction,
+    datasetIds,
+    successType: ActionTypes.GET_DATASET_SNAPSHOTS_SUCCESS,
   }),
 });
 

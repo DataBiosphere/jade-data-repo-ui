@@ -108,8 +108,11 @@ export function* exportSnapshot({ payload }) {
     yield put({
       type: ActionTypes.EXPORT_SNAPSHOT_START,
     });
-    const { snapshotId } = payload;
-    const response = yield call(authGet, `/api/repository/v1/snapshots/${snapshotId}/export`);
+    const { snapshotId, exportGsPaths } = payload;
+    const response = yield call(
+      authGet,
+      `/api/repository/v1/snapshots/${snapshotId}/export?exportGsPaths=${exportGsPaths}`,
+    );
     const jobId = response.data.id;
     yield put({
       type: ActionTypes.EXPORT_SNAPSHOT_JOB,
@@ -209,6 +212,7 @@ export function* getSnapshots({ payload }) {
   const sort = payload.sort || 'created_date';
   const direction = payload.direction || 'desc';
   const datasetIds = payload.datasetIds || [];
+  const { successType } = payload;
   // TODO what's the best way to stringify this? I bet there's a good library:
   let datasetIdsQuery = '';
   datasetIds.map((id) => (datasetIdsQuery += `&datasetIds=${id}`));
@@ -216,7 +220,7 @@ export function* getSnapshots({ payload }) {
   try {
     const response = yield call(authGet, query + datasetIdsQuery);
     yield put({
-      type: ActionTypes.GET_SNAPSHOTS_SUCCESS,
+      type: successType,
       snapshots: { data: response },
     });
   } catch (err) {
@@ -602,6 +606,7 @@ export default function* root() {
     takeLatest(ActionTypes.ADD_SNAPSHOT_POLICY_MEMBER, addSnapshotPolicyMember),
     takeLatest(ActionTypes.REMOVE_SNAPSHOT_POLICY_MEMBER, removeSnapshotPolicyMember),
     takeLatest(ActionTypes.GET_DATASETS, getDatasets),
+    takeLatest(ActionTypes.GET_DATASET_SNAPSHOTS, getSnapshots),
     takeLatest(ActionTypes.GET_DATASET_BY_ID, getDatasetById),
     takeLatest(ActionTypes.GET_DATASET_POLICY, getDatasetPolicy),
     takeLatest(ActionTypes.ADD_CUSTODIAN_TO_DATASET, addCustodianToDataset),
