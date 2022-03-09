@@ -9,12 +9,13 @@ import history from 'modules/hist';
 import globalTheme from 'modules/theme';
 import { ThemeProvider } from '@material-ui/styles';
 import axios from 'axios';
-import App from './containers/App';
-import config from './config';
-import { logIn, getFeatures, logOut } from './actions';
-import { ActionTypes } from './constants';
+import { logIn, getFeatures, logOut } from 'actions/index';
+import { ActionTypes } from 'constants/index';
 
-import { store } from './store';
+import { store } from 'store/index';
+
+import config from 'config';
+import App from 'containers/App';
 
 function checkStatus() {
   return new Promise((resolve, reject) => {

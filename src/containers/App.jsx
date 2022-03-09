@@ -15,24 +15,24 @@ import Menu from '@material-ui/core/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import Avatar from '@material-ui/core/Avatar';
 
-import { logout } from '../modules/auth';
-import Home from '../routes/Home';
-import HeadlessLogin from '../routes/HeadlessLogin';
-import Private from '../routes/Private';
-import NotFound from '../routes/NotFound';
-import Logo from '../components/Logo';
+import { logout } from 'modules/auth';
+import Home from 'routes/Home';
+import HeadlessLogin from 'routes/HeadlessLogin';
+import Private from 'routes/Private';
+import NotFound from 'routes/NotFound';
+import Logo from 'components/Logo';
 
-import RoutePublic from '../components/RoutePublic';
-import RoutePrivate from '../components/RoutePrivate';
-import { ReactComponent as CarrotSVG } from '../media/icons/angle-line.svg';
-import { ReactComponent as SignOutSVG } from '../media/icons/logout-line.svg';
-import HeaderLeft from '../media/images/header-left-hexes.svg';
-import HeaderRight from '../media/images/header-right-hexes.svg';
-import { logOut } from '../actions';
+import RoutePublic from 'components/RoutePublic';
+import RoutePrivate from 'components/RoutePrivate';
+import { ReactComponent as CarrotSVG } from 'media/icons/angle-line.svg';
+import { ReactComponent as SignOutSVG } from 'media/icons/logout-line.svg';
+import HeaderLeft from 'media/images/header-left-hexes.svg';
+import HeaderRight from 'media/images/header-right-hexes.svg';
+import { logOut } from 'actions';
 
 import 'react-notifications-component/dist/theme.css';
-import ServerErrorView from '../components/ServerErrorView';
-import { LogoutIframe, IdleStatusMonitor } from '../components/IdleStatusMonitor';
+import ServerErrorView from 'components/ServerErrorView';
+import { LogoutIframe, IdleStatusMonitor } from 'components/IdleStatusMonitor';
 
 const drawerWidth = 240;
 
