@@ -9,6 +9,7 @@ export const queryState = {
   delay: false,
   filterData: {},
   filterStatement: '',
+  joinStatement: '',
   pageSize: 0,
   projectId: '',
   queryResults: {},
