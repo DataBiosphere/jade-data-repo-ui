@@ -1,8 +1,6 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
 
 import {
   applyFilters,
@@ -12,39 +10,18 @@ import {
   countResults,
   getUserDatasetRoles,
 } from 'actions/index';
-import { Button, Typography } from '@material-ui/core';
 import { FilterList, Info, People } from '@material-ui/icons';
 
-import { Link } from 'react-router-dom';
+import QueryView from 'components/common/query/QueryView';
 import QueryViewSidebar from '../../common/query/sidebar/QueryViewSidebar';
-import SidebarDrawer from '../../common/query/sidebar/SidebarDrawer';
-import QueryViewDropdown from '../../common/query/QueryViewDropdown';
-import JadeTable from '../../table/JadeTable';
 import InfoView from '../../common/query/sidebar/panels/InfoView';
 import ShareSnapshot from '../../common/query/sidebar/panels/ShareSnapshot';
-import SnapshotPopup from '../SnapshotPopup';
 import { DATASET_INCLUDE_OPTIONS } from '../../../constants';
-
-const styles = (theme) => ({
-  wrapper: {
-    paddingTop: theme.spacing(0),
-    padding: theme.spacing(4),
-  },
-  scrollTable: {
-    overflowY: 'auto',
-    height: '100%',
-  },
-  headerArea: {
-    paddingTop: theme.spacing(1),
-    paddingBottom: theme.spacing(1),
-  },
-});
 
 const PAGE_SIZE = 100;
 const QUERY_LIMIT = 1000;
 
-function DatasetQueryView({
-  classes,
+function SnapshotQueryView({
   dataset,
   datasetPolicies,
   dispatch,
@@ -184,67 +161,28 @@ function DatasetQueryView({
     dispatch(applyFilters(filterData, value, dataset));
   };
 
-  const realRender = () => {
-    return (
-      <Fragment>
-        {hasDataset && (
-          <Fragment>
-            <Grid container spacing={0} className={classes.wrapper}>
-              <Grid container spacing={1}>
-                <Grid item xs={12}>
-                  <Typography variant="h3" className={classes.headerArea}>
-                    {dataset.name}
-                  </Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <QueryViewDropdown options={tableNames} onSelectedItem={handleChange} />
-                </Grid>
-                <Grid item xs={3}>
-                  <Link to="overview">
-                    <Button
-                      className={classes.viewDatasetButton}
-                      color="primary"
-                      variant="outlined"
-                      disableElevation
-                      size="large"
-                    >
-                      Back to Overview
-                    </Button>
-                  </Link>
-                </Grid>
-              </Grid>
-              <Grid container spacing={0}>
-                <Grid item xs={11}>
-                  <div className={classes.scrollTable}>
-                    <JadeTable queryResults={queryResults} title={selected} table={selectedTable} />
-                  </div>
-                </Grid>
-              </Grid>
-            </Grid>
-            <SidebarDrawer
-              canLink={canLink}
-              panels={panels}
-              handleDrawerWidth={handleDrawerWidth}
-              width={sidebarWidth}
-              table={selectedTable}
-              selected={selected}
-            />
-            <SnapshotPopup />
-          </Fragment>
-        )}
-      </Fragment>
-    );
-  };
-
   if (!hasDataset) {
     return <div>Loading</div>;
   }
 
-  return realRender();
+  return (
+    <QueryView
+      resourceLoaded={hasDataset}
+      resourceName={dataset.name}
+      tableNames={tableNames}
+      handleChange={handleChange}
+      queryResults={queryResults}
+      selected={selected}
+      selectedTable={selectedTable}
+      canLink={canLink}
+      panels={panels}
+      handleDrawerWidth={handleDrawerWidth}
+      sidebarWidth={sidebarWidth}
+    />
+  );
 }
 
-DatasetQueryView.propTypes = {
-  classes: PropTypes.object,
+SnapshotQueryView.propTypes = {
   dataset: PropTypes.object,
   datasetPolicies: PropTypes.array,
   dispatch: PropTypes.func.isRequired,
@@ -271,4 +209,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(withStyles(styles)(DatasetQueryView));
+export default connect(mapStateToProps)(SnapshotQueryView);
