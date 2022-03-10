@@ -101,7 +101,7 @@ QueryView.propTypes = {
   selected: PropTypes.string,
   selectedTable: PropTypes.object,
   canLink: PropTypes.bool,
-  panels: PropTypes.object,
+  panels: PropTypes.array,
   handleDrawerWidth: PropTypes.func,
   sidebarWidth: PropTypes.number,
 };

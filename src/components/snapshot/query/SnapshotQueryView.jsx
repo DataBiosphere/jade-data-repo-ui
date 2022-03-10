@@ -5,25 +5,23 @@ import { connect } from 'react-redux';
 import {
   applyFilters,
   runQuery,
-  getDatasetById,
-  getDatasetPolicy,
+  getSnapshotById,
+  getSnapshotPolicy,
   countResults,
-  getUserDatasetRoles,
+  getUserSnapshotRoles,
 } from 'actions/index';
-import { FilterList, Info, People } from '@material-ui/icons';
+import { Info } from '@material-ui/icons';
 
 import QueryView from 'components/common/query/QueryView';
-import QueryViewSidebar from '../../common/query/sidebar/QueryViewSidebar';
 import InfoView from '../../common/query/sidebar/panels/InfoView';
-import ShareSnapshot from '../../common/query/sidebar/panels/ShareSnapshot';
-import { DATASET_INCLUDE_OPTIONS } from '../../../constants';
+import { SNAPSHOT_INCLUDE_OPTIONS } from '../../../constants';
 
 const PAGE_SIZE = 100;
 const QUERY_LIMIT = 1000;
 
 function SnapshotQueryView({
-  dataset,
-  datasetPolicies,
+  snapshot,
+  snapshotPolicies,
   dispatch,
   filterData,
   filterStatement,
@@ -38,36 +36,37 @@ function SnapshotQueryView({
   const [selectedTable, setSelectedTable] = useState(null);
   const [sidebarWidth, setSidebarWidth] = useState(0);
   const [canLink, setCanLink] = useState(false);
-  const [hasDataset, setHasDataset] = useState(false);
+  const [snapshotLoaded, setSnapshotLoaded] = useState(false);
   const [tableNames, setTableNames] = useState([]);
   const [panels, setPanels] = useState([]);
 
   useEffect(() => {
-    const datasetId = match.params.uuid;
+    const snapshotId = match.params.uuid;
 
-    if (dataset == null || dataset.id !== datasetId) {
+    if (snapshot == null || snapshot.id !== snapshotId) {
       dispatch(
-        getDatasetById({
-          datasetId,
+        getSnapshotById({
+          snapshotId,
           include: [
-            DATASET_INCLUDE_OPTIONS.SCHEMA,
-            DATASET_INCLUDE_OPTIONS.ACCESS_INFORMATION,
-            DATASET_INCLUDE_OPTIONS.PROFILE,
-            DATASET_INCLUDE_OPTIONS.DATA_PROJECT,
-            DATASET_INCLUDE_OPTIONS.STORAGE,
+            SNAPSHOT_INCLUDE_OPTIONS.SOURCES,
+            SNAPSHOT_INCLUDE_OPTIONS.TABLES,
+            SNAPSHOT_INCLUDE_OPTIONS.RELATIONSHIPS,
+            SNAPSHOT_INCLUDE_OPTIONS.ACCESS_INFORMATION,
+            SNAPSHOT_INCLUDE_OPTIONS.PROFILE,
+            SNAPSHOT_INCLUDE_OPTIONS.DATA_PROJECT,
           ],
         }),
       );
     }
 
-    if (datasetPolicies == null || dataset.id !== datasetId) {
-      dispatch(getDatasetPolicy(datasetId));
+    if (snapshotPolicies == null || snapshot.id !== snapshotId) {
+      dispatch(getSnapshotPolicy(snapshotId));
     }
 
-    if (userRole == null || dataset.id !== datasetId) {
-      dispatch(getUserDatasetRoles(datasetId));
+    if (userRole == null || snapshot.id !== snapshotId) {
+      dispatch(getUserSnapshotRoles(snapshotId));
     }
-  }, [dispatch, match, dataset, datasetPolicies, userRole]);
+  }, [dispatch, match, snapshot, snapshotPolicies, userRole]);
 
   useEffect(() => {
     if (profile.id) {
@@ -76,34 +75,34 @@ function SnapshotQueryView({
   }, [profile]);
 
   useEffect(() => {
-    if (hasDataset) {
-      const fromClause = `FROM \`${dataset.dataProject}.datarepo_${dataset.name}.${selected}\` AS ${selected}
-          ${joinStatement}
-          ${filterStatement}`;
+    if (snapshotLoaded) {
+      const fromClause = `FROM \`${snapshot.dataProject}.datarepo_${snapshot.name}.${selected}\` AS ${selected}
+            ${joinStatement}
+            ${filterStatement}`;
 
       dispatch(
         runQuery(
-          dataset.dataProject,
+          snapshot.dataProject,
           `#standardSQL
-          SELECT datarepo_row_id, ${selectedTable.columns
-            .map((column) => column.name)
-            .join(', ')} ${fromClause}
-          ${orderBy}
-          LIMIT ${QUERY_LIMIT}`,
+            SELECT datarepo_row_id, ${selectedTable.columns
+              .map((column) => column.name)
+              .join(', ')} ${fromClause}
+            ${orderBy}
+            LIMIT ${QUERY_LIMIT}`,
           PAGE_SIZE,
         ),
       );
       dispatch(
         countResults(
-          dataset.dataProject,
+          snapshot.dataProject,
           `#standardSQL
-          SELECT COUNT(1) ${fromClause}`,
+            SELECT COUNT(1) ${fromClause}`,
         ),
       );
     }
   }, [
-    hasDataset,
-    dataset,
+    snapshotLoaded,
+    snapshot,
     dispatch,
     filterStatement,
     joinStatement,
@@ -113,14 +112,14 @@ function SnapshotQueryView({
   ]);
 
   useEffect(() => {
-    const datasetId = match.params.uuid;
-    const datasetLoaded = dataset && dataset.schema && dataset.id === datasetId;
-    if (datasetLoaded) {
-      const names = dataset.schema.tables.map((t) => t.name);
+    const snapshotId = match.params.uuid;
+    const loaded = snapshot && snapshot.tables && snapshot.id === snapshotId;
+    if (loaded) {
+      const names = snapshot.tables.map((t) => t.name);
       setTableNames(names);
       setSelected(names[0]);
-      setSelectedTable(dataset.schema.tables.find((t) => t.name === names[0]));
-      setHasDataset(true);
+      setSelectedTable(snapshot.tables.find((t) => t.name === names[0]));
+      setSnapshotLoaded(true);
 
       const currentPanels = [
         {
@@ -128,28 +127,12 @@ function SnapshotQueryView({
           width: 600,
           component: InfoView,
           selectedTable,
-          dataset,
-        },
-        {
-          icon: FilterList,
-          width: 600,
-          component: QueryViewSidebar,
-          selectedTable,
-          dataset,
+          snapshot,
         },
       ];
-      if (canLink) {
-        currentPanels.push({
-          icon: People,
-          width: 600,
-          component: ShareSnapshot,
-          selectedTable,
-          dataset,
-        });
-      }
       setPanels(currentPanels);
     }
-  }, [dataset, match]);
+  }, [snapshot, match]);
 
   const handleDrawerWidth = (width) => {
     setSidebarWidth(width);
@@ -157,18 +140,18 @@ function SnapshotQueryView({
 
   const handleChange = (value) => {
     setSelected(value);
-    setSelectedTable(dataset.schema.tables.find((t) => t.name === value));
-    dispatch(applyFilters(filterData, value, dataset));
+    setSelectedTable(snapshot.tables.find((t) => t.name === value));
+    dispatch(applyFilters(filterData, value, snapshot, snapshot.relationships));
   };
 
-  if (!hasDataset) {
+  if (!snapshotLoaded) {
     return <div>Loading</div>;
   }
 
   return (
     <QueryView
-      resourceLoaded={hasDataset}
-      resourceName={dataset.name}
+      resourceLoaded={snapshotLoaded}
+      resourceName={snapshot.name}
       tableNames={tableNames}
       handleChange={handleChange}
       queryResults={queryResults}
@@ -183,8 +166,8 @@ function SnapshotQueryView({
 }
 
 SnapshotQueryView.propTypes = {
-  dataset: PropTypes.object,
-  datasetPolicies: PropTypes.array,
+  snapshot: PropTypes.object,
+  snapshotPolicies: PropTypes.array,
   dispatch: PropTypes.func.isRequired,
   filterData: PropTypes.object,
   filterStatement: PropTypes.string.isRequired,
@@ -198,8 +181,8 @@ SnapshotQueryView.propTypes = {
 
 function mapStateToProps(state) {
   return {
-    dataset: state.datasets.dataset,
-    datasetPolicies: state.datasets.datasetPolicies,
+    snapshot: state.snapshots.snapshot,
+    snapshotPolicies: state.snapshots.snapshotPolicies,
     filterStatement: state.query.filterStatement,
     filterData: state.query.filterData,
     joinStatement: state.query.joinStatement,
