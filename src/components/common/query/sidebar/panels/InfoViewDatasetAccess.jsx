@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { Grid, Link, Typography } from '@material-ui/core';
 import { connect } from 'react-redux';
-import DatasetAccess from '../../../DatasetAccess';
+import DatasetAccess from '../../../../dataset/DatasetAccess';
 
 const styles = (theme) => ({
   root: {
