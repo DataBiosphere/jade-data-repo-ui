@@ -76,7 +76,7 @@ function SnapshotQueryView({
 
   useEffect(() => {
     if (snapshotLoaded) {
-      const fromClause = `FROM \`${snapshot.dataProject}.datarepo_${snapshot.name}.${selected}\` AS ${selected}
+      const fromClause = `FROM \`${snapshot.dataProject}.${snapshot.name}.${selected}\` AS ${selected}
             ${joinStatement}
             ${filterStatement}`;
 
