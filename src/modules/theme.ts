@@ -1,4 +1,4 @@
-import { createMuiTheme } from '@material-ui/core/styles';
+import { createTheme } from '@mui/material/styles';
 import '../media/fonts/Montserrat.css';
 import '../style.css';
 import WebFont from 'webfontloader';
@@ -32,7 +32,7 @@ const WHITE = '#FFFFFF';
 const LINK = baseColors.primary;
 const LINK_HOVER = baseColors.primaryDark;
 
-export default createMuiTheme({
+const theme = createTheme({
   typography: {
     color: baseColors.dark,
     useNextVariants: true,
@@ -114,6 +114,7 @@ export default createMuiTheme({
       callBackgroundLight: 'white',
       borderColor: '#E8EAEB',
       paginationBlue: baseColors.primary,
+      bottomColor: '#E0E0E0',
     },
     primary: {
       main: baseColors.primary,
@@ -198,3 +199,5 @@ export default createMuiTheme({
     navBarHeight: '64px',
   },
 });
+
+export default theme;

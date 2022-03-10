@@ -1,5 +1,9 @@
 {
-  "extends": ["airbnb", "plugin:prettier/recommended", "prettier/react"],
+  "extends": [
+    "airbnb",
+    "plugin:prettier/recommended",
+    "prettier/react"
+  ],
   "parser": "babel-eslint",
   "env": {
     "browser": true,
@@ -17,10 +21,17 @@
     "APP__GITHASH": false,
     "APP__VERSION": false
   },
-  "plugins": ["babel", "cypress", "redux-saga"],
+  "plugins": [
+    "babel",
+    "cypress",
+    "redux-saga"
+  ],
   "rules": {
     "array-callback-return": "off",
-    "arrow-body-style": ["warn", "as-needed"],
+    "arrow-body-style": [
+      "warn",
+      "as-needed"
+    ],
     "arrow-parens": "off",
     "block-spacing": "warn",
     "camelcase": "off",
@@ -38,12 +49,26 @@
     "function-paren-newline": "off",
     "generator-star-spacing": "off",
     "global-require": "off",
-    "indent": ["warn", 2, { "SwitchCase": 1 }],
+    "indent": [
+      "warn",
+      2,
+      {
+        "SwitchCase": 1
+      }
+    ],
     "max-len": "off",
-    "newline-per-chained-call": ["warn", { "ignoreChainWithDepth": 5 }],
+    "newline-per-chained-call": [
+      "warn",
+      {
+        "ignoreChainWithDepth": 5
+      }
+    ],
     "no-case-declarations": "warn",
     "no-continue": "off",
-    "no-mixed-spaces-and-tabs": ["warn", "smart-tabs"],
+    "no-mixed-spaces-and-tabs": [
+      "warn",
+      "smart-tabs"
+    ],
     "no-multi-spaces": [
       "warn",
       {
@@ -54,28 +79,61 @@
       }
     ],
     "no-nested-ternary": "warn",
-    "no-param-reassign": ["warn", { "props": false }],
+    "no-param-reassign": [
+      "warn",
+      {
+        "props": false
+      }
+    ],
     "no-plusplus": "off",
-    "no-restricted-globals": ["error", "fdescribe", "fit"],
-    "no-restricted-syntax": ["error", "DebuggerStatement", "LabeledStatement", "WithStatement"],
-    "no-return-assign": ["error", "except-parens"],
+    "no-restricted-globals": [
+      "error",
+      "fdescribe",
+      "fit"
+    ],
+    "no-restricted-syntax": [
+      "error",
+      "DebuggerStatement",
+      "LabeledStatement",
+      "WithStatement"
+    ],
+    "no-return-assign": [
+      "error",
+      "except-parens"
+    ],
     "no-template-curly-in-string": "warn",
     "no-trailing-spaces": "warn",
     "no-underscore-dangle": "off",
     "no-unused-vars": [
       "error",
-      { "vars": "all", "args": "after-used", "ignoreRestSiblings": false }
+      {
+        "vars": "all",
+        "args": "after-used",
+        "ignoreRestSiblings": false
+      }
     ],
     "object-curly-newline": "off",
-    "object-shorthand": ["warn", "always"],
+    "object-shorthand": [
+      "warn",
+      "always"
+    ],
     "one-var": "warn",
     "padded-blocks": "warn",
-    "prefer-arrow-callback": ["error", { "allowNamedFunctions": true }],
+    "prefer-arrow-callback": [
+      "error",
+      {
+        "allowNamedFunctions": true
+      }
+    ],
     "prefer-const": "warn",
     "prefer-destructuring": "warn",
     "prefer-template": "warn",
     "prefer-promise-reject-errors": "off",
-    "quotes": ["warn", "single", "avoid-escape"],
+    "quotes": [
+      "warn",
+      "single",
+      "avoid-escape"
+    ],
     "require-jsdoc": [
       "off",
       {
@@ -99,7 +157,9 @@
       "warn",
       "always",
       {
-        "exceptions": ["-+"],
+        "exceptions": [
+          "-+"
+        ],
         "markers": [
           "eslint-disable",
           "eslint-disable-line",
@@ -109,7 +169,12 @@
       }
     ],
     "import/no-dynamic-require": "off",
-    "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "devDependencies": true
+      }
+    ],
     "import/no-unresolved": "off",
     "import/no-webpack-loader-syntax": "off",
     "import/no-named-as-default": "off",
@@ -122,16 +187,32 @@
     "jsx-a11y/label-has-associated-control": [
       2,
       {
-        "controlComponents": ["Control.select", "Control.text", "Control.textarea"],
+        "controlComponents": [
+          "Control.select",
+          "Control.text",
+          "Control.textarea"
+        ],
         "depth": 3
       }
     ],
     "jsx-quotes": "warn",
     "react/forbid-prop-types": "off",
-    "react/jsx-closing-bracket-location": ["warn", "line-aligned"],
-    "react/jsx-first-prop-new-line": ["warn", "multiline"],
-    "react/jsx-indent": ["warn", 2],
-    "react/jsx-indent-props": ["warn", 2],
+    "react/jsx-closing-bracket-location": [
+      "warn",
+      "line-aligned"
+    ],
+    "react/jsx-first-prop-new-line": [
+      "warn",
+      "multiline"
+    ],
+    "react/jsx-indent": [
+      "warn",
+      2
+    ],
+    "react/jsx-indent-props": [
+      "warn",
+      2
+    ],
     "react/jsx-key": "warn",
     "react/jsx-no-target-blank": "off",
     "react/jsx-props-no-spreading": "off",
@@ -155,7 +236,12 @@
     "react/sort-comp": [
       "warn",
       {
-        "order": ["constructor", "lifecycle", "everything-else", "render"],
+        "order": [
+          "constructor",
+          "lifecycle",
+          "everything-else",
+          "render"
+        ],
         "groups": {
           "lifecycle": [
             "state",
@@ -178,6 +264,35 @@
     ],
     "react/static-property-placement": "off",
     "redux-saga/no-yield-in-race": "error",
-    "redux-saga/yield-effects": "error"
+    "redux-saga/yield-effects": "error",
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "js": "never",
+        "jsx": "never",
+        "ts": "never",
+        "tsx": "never"
+      }
+    ]
+  },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [
+          ".js",
+          ".jsx",
+          ".ts",
+          ".tsx"
+        ]
+      }
+    },
+    "import/extensions": [
+      ".js",
+      ".mjs",
+      ".jsx",
+      ".ts",
+      ".tsx"
+    ]
   }
 }
