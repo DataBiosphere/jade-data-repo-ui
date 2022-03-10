@@ -18,6 +18,7 @@ import {
   FormHelperText,
 } from '@material-ui/core';
 import { Launch } from '@material-ui/icons';
+import { Link } from 'react-router-dom';
 import UserList from './UserList';
 import TerraTooltip from './common/TerraTooltip';
 import { SNAPSHOT_ROLES } from '../constants';
@@ -56,6 +57,10 @@ const styles = (theme) => ({
   separator: {
     marginTop: '20px',
     marginBottom: '10px',
+  },
+  viewSnapshotButton: {
+    width: '100%',
+    marginBottom: '12px',
   },
 });
 
@@ -185,6 +190,16 @@ export class DetailViewHeader extends React.PureComponent {
                     </TerraTooltip>
                   )}
                 </Grid>
+                <Link to="query">
+                  <Button
+                    className={classes.viewSnapshotButton}
+                    color="primary"
+                    variant="outlined"
+                    disableElevation
+                  >
+                    View Snapshot
+                  </Button>
+                </Link>
               </Grid>
             )}
             {stewards && canReadPolicies && (

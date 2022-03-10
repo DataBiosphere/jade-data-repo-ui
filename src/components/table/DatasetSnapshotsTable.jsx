@@ -41,7 +41,7 @@ class DatasetSnapshotsTable extends React.PureComponent {
         label: 'Snapshot Name',
         property: 'name',
         render: (row) => (
-          <Link to={`/snapshots/details/${row.id}`} className={classes.jadeLink}>
+          <Link to={`/snapshots/${row.id}/overview`} className={classes.jadeLink}>
             {row.name}
           </Link>
         ),

@@ -15,7 +15,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import { Close, ExpandMore, HelpOutline, Launch } from '@material-ui/icons';
 import IconButton from '@material-ui/core/IconButton';
-import TerraTooltip from '../../../../common/TerraTooltip';
+import TerraTooltip from '../../../TerraTooltip';
 import { renderStorageResources } from '../../../../../libs/render-utils';
 import InfoViewDatasetAccess from './InfoViewDatasetAccess';
 

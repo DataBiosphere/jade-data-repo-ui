@@ -22,7 +22,7 @@ import QueryViewDropdown from '../../common/query/QueryViewDropdown';
 import JadeTable from '../../table/JadeTable';
 import InfoView from '../../common/query/sidebar/panels/InfoView';
 import ShareSnapshot from '../../common/query/sidebar/panels/ShareSnapshot';
-import SnapshotPopup from '../../snapshot/SnapshotPopup';
+import SnapshotPopup from '../SnapshotPopup';
 import { DATASET_INCLUDE_OPTIONS } from '../../../constants';
 
 const styles = (theme) => ({
@@ -187,35 +187,39 @@ function DatasetQueryView({
   const realRender = () => {
     return (
       <Fragment>
-        <Grid container spacing={0} className={classes.wrapper}>
-          <Grid container spacing={1}>
-            <Grid item xs={12}>
-              <Typography variant="h3" className={classes.headerArea}>
-                {dataset.name}
-              </Typography>
-            </Grid>
-            <Grid item xs={3}>
-              <QueryViewDropdown options={names} onSelectedItem={this.handleChange} />
-            </Grid>
-            <Grid item xs={3}>
-              <Link to="overview">
-                <Button
-                  className={classes.viewDatasetButton}
-                  color="primary"
-                  variant="outlined"
-                  disableElevation
-                  size="large"
-                >
-                  Back to Dataset Details
-                </Button>
-              </Link>
-            </Grid>
-          </Grid>
-          <Grid container spacing={0}>
-            <Grid item xs={11}>
-              <div className={classes.scrollTable}>
-                <JadeTable queryResults={queryResults} title={selected} table={table} />
-              </div>
+        {hasDataset && (
+          <Fragment>
+            <Grid container spacing={0} className={classes.wrapper}>
+              <Grid container spacing={1}>
+                <Grid item xs={12}>
+                  <Typography variant="h3" className={classes.headerArea}>
+                    {dataset.name}
+                  </Typography>
+                </Grid>
+                <Grid item xs={3}>
+                  <QueryViewDropdown options={tableNames} onSelectedItem={handleChange} />
+                </Grid>
+                <Grid item xs={3}>
+                  <Link to="overview">
+                    <Button
+                      className={classes.viewDatasetButton}
+                      color="primary"
+                      variant="outlined"
+                      disableElevation
+                      size="large"
+                    >
+                      Back to Overview
+                    </Button>
+                  </Link>
+                </Grid>
+              </Grid>
+              <Grid container spacing={0}>
+                <Grid item xs={11}>
+                  <div className={classes.scrollTable}>
+                    <JadeTable queryResults={queryResults} title={selected} table={selectedTable} />
+                  </div>
+                </Grid>
+              </Grid>
             </Grid>
             <SidebarDrawer
               canLink={canLink}
@@ -226,8 +230,8 @@ function DatasetQueryView({
               selected={selected}
             />
             <SnapshotPopup />
-          </Grid>
-        </Grid>
+          </Fragment>
+        )}
       </Fragment>
     );
   };

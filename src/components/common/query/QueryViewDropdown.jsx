@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import JadeDropdown from './JadeDropdown';
+import JadeDropdown from '../../dataset/query/JadeDropdown';
 
 export class QueryViewDropdown extends React.PureComponent {
   constructor(props) {
