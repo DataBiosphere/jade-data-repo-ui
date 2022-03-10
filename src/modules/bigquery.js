@@ -285,13 +285,12 @@ export default class BigQuery {
   };
 
   // wrapper for query:
-  buildJoinStatement = (filterMap, table, dataset) => {
+  buildJoinStatement = (filterMap, table, resource, relationships) => {
     // Add query back in the name later
-    const schema = dataset.schema.relationships;
-    const relationships = this.buildAllJoins(filterMap, schema, table);
-    let joins = relationships.map((relationship) => {
+    const allJoins = this.buildAllJoins(filterMap, relationships, table);
+    let joins = allJoins.map((relationship) => {
       const { to, from } = relationship;
-      return `JOIN \`${dataset.dataProject}.datarepo_${dataset.name}.${from.table}\` AS ${from.table} ON ${from.table}.${from.column} = ${to.table}.${to.column}`;
+      return `JOIN \`${resource.dataProject}.datarepo_${resource.name}.${from.table}\` AS ${from.table} ON ${from.table}.${from.column} = ${to.table}.${to.column}`;
     });
     joins = _.uniq(joins);
     return joins.join(' ');

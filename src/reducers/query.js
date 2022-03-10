@@ -138,7 +138,8 @@ export default {
         const joinStatement = bigquery.buildJoinStatement(
           action.payload.filters,
           action.payload.table,
-          action.payload.dataset,
+          action.payload.resource,
+          action.payload.relationships,
         );
         return immutable(state, {
           filterData: { $set: action.payload.filters },
