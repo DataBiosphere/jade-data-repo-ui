@@ -14,3 +14,4 @@ cypress/videos
 cypress/screenshots
 temp.json
 .DS_Store
+src/react-app-env.d.ts
