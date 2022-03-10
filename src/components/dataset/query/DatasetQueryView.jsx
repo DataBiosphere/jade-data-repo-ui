@@ -213,7 +213,7 @@ export class DatasetQueryView extends React.PureComponent {
               <QueryViewDropdown options={names} onSelectedItem={this.handleChange} />
             </Grid>
             <Grid item xs={3}>
-              <Link to="details">
+              <Link to="overview">
                 <Button
                   className={classes.viewDatasetButton}
                   color="primary"
