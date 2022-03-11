@@ -3,6 +3,7 @@ import immutable from 'immutability-helper';
 import { LOCATION_CHANGE } from 'connected-react-router';
 import { ActionTypes } from 'constants/index';
 import BigQuery from 'modules/bigquery';
+import { reduce, rest } from 'lodash';
 
 export const queryState = {
   baseQuery: '',
@@ -56,6 +57,16 @@ export default {
             mode: column.array_of ? 'REPEATED' : 'NULLABLE',
           };
         });
+        // TODO - this is pretty gross. Rework for both BQ & here.
+        let rows = queryResults.map(row => {
+          const res = {};
+          columns.forEach(col => {
+            res[col.id] = row[col.id];
+          })
+          res.datarepo_id = row['datarepo_row_id'];
+          return res;
+        })
+        console.log(rows);
         const queryParams = {
           //pageToken: queryResults.pageToken,
           //projectId: queryResults.jobReference.projectId,
@@ -66,7 +77,7 @@ export default {
         return immutable(state, {
           queryParams: { $set: queryParams },
           columns: { $set: columns },
-          rows: { $set: queryResults },
+          rows: { $set: rows },
           polling: { $set: false },
           delay: { $set: false },
         });
