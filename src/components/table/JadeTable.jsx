@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -45,33 +45,14 @@ const styles = (theme) => ({
   },
 });
 
-export class JadeTable extends React.PureComponent {
-  constructor(props) {
-    super(props);
+function JadeTable({ classes, columns, dataset, delay, dispatch, polling, queryResults, rows }) {
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(100);
+  const [pageToTokenMap, setPageToTokenMap] = useState({});
+  const [orderBy, setOrderBy] = useState('');
+  const [order, setOrder] = useState('');
 
-    this.state = {
-      page: 0,
-      rowsPerPage: 100,
-      pageToTokenMap: {},
-      orderBy: '',
-      order: '',
-    };
-  }
-
-  static propTypes = {
-    classes: PropTypes.object,
-    columns: PropTypes.array,
-    dataset: PropTypes.object,
-    delay: PropTypes.bool,
-    dispatch: PropTypes.func.isRequired,
-    polling: PropTypes.bool,
-    queryResults: PropTypes.object,
-    rows: PropTypes.array,
-  };
-
-  handleChangePage = (event, newPage) => {
-    const { dispatch, queryResults, dataset } = this.props;
-    const { page, rowsPerPage, pageToTokenMap } = this.state;
+  const handleChangePage = (event, newPage) => {
     const bqStorage = dataset.storage.find(
       (s) => s.cloudResource === GOOGLE_CLOUD_RESOURCE.BIGQUERY,
     );
@@ -93,22 +74,16 @@ export class JadeTable extends React.PureComponent {
         location,
       ),
     );
-    this.setState({
-      page: newPage,
-      pageToTokenMap,
-    });
+    setPage(newPage);
+    setPageToTokenMap(pageToTokenMap);
   };
 
-  handleChangeRowsPerPage = (event) => {
-    this.setState({
-      rowsPerPage: parseInt(event.target.value, 10),
-      page: 0,
-    });
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
   };
 
-  createSortHandler = (property) => {
-    const { dispatch } = this.props;
-    const { order } = this.state;
+  const createSortHandler = (property) => {
     let newOrder = '';
     let newOrderBy = property;
 
@@ -125,36 +100,11 @@ export class JadeTable extends React.PureComponent {
 
     dispatch(applySort(newOrderBy, order));
 
-    this.setState({
-      order: newOrder,
-      orderBy: newOrderBy,
-    });
+    setOrder(newOrder);
+    setOrderBy(newOrderBy);
   };
 
-  handleArrayValues = (value, column) => {
-    const returnValue = [];
-    if (column.mode === COLUMN_MODES.REPEATED) {
-      returnValue.push(<span key="start">[</span>);
-    }
-    returnValue.push(
-      ...value.flatMap((v, i) => [
-        _.isNull(v) ? this.handleNullValue(v) : v,
-        i < value.length - 1 ? (
-          <span key={`sep-${i}`}>
-            _.isNull(v) ? this.handleNullValue(v) : ,<br />
-          </span>
-        ) : undefined,
-      ]),
-    );
-    if (column.mode === COLUMN_MODES.REPEATED) {
-      returnValue.push(<span key="end">]</span>);
-    }
-    return returnValue;
-  };
-
-  handleNullValue = (classes) => <span className={classes.nullValue}>null</span>;
-
-  handleValues = (value, column, classes) => {
+  const handleArrayValues = (value, column) => {
     if (_.isArray(value)) {
       return this.handleArrayValues(value, column);
     }
@@ -164,70 +114,76 @@ export class JadeTable extends React.PureComponent {
     return value;
   };
 
-  render() {
-    const { classes, queryResults, columns, rows, polling, delay } = this.props;
-    const { page, rowsPerPage, orderBy, order } = this.state;
+  return (
+    <Paper className={classes.root}>
+      <div className={classes.tableWrapper}>
+        {rows && columns && (
+          <Table stickyHeader aria-label="sticky table">
+            <JadeTableHead
+              columns={columns}
+              orderBy={orderBy}
+              order={order}
+              createSortHandler={createSortHandler}
+            />
+            {!polling && (
+              <TableBody data-cy="tableBody">
+                {rows.map((row, i) => {
+                  const drId = row.datarepo_id;
 
-    return (
-      <Paper className={classes.root}>
-        <div className={classes.tableWrapper}>
-          {rows && columns && (
-            <Table stickyHeader aria-label="sticky table">
-              <JadeTableHead
-                columns={columns}
-                orderBy={orderBy}
-                order={order}
-                createSortHandler={this.createSortHandler}
-              />
-              {!polling && (
-                <TableBody data-cy="tableBody">
-                  {rows.map((row, i) => {
-                    const drId = row.datarepo_id;
-
-                    return (
-                      <TableRow hover tabIndex={-1} key={drId}>
-                        {columns.map((column) => {
-                          const value = this.handleValues(row[column.id], column, classes);
-                          return (
-                            !_.isUndefined(value) && (
-                              <TableCell
-                                key={`${column.id}-${drId}`}
-                                className={classes.cell}
-                                data-cy={`cellvalue-${column.id}-${i}`}
-                              >
-                                {value}
-                              </TableCell>
-                            )
-                          );
-                        })}
-                      </TableRow>
-                    );
-                  })}
-                </TableBody>
-              )}
-            </Table>
-          )}
-          {polling && (
-            <div className={classes.spinWrapper}>
-              <CircularProgress className={classes.spinner} />
-              {delay &&
-                'For large datasets, it can take a few minutes to fetch results from BigQuery. Thank you for your patience.'}
-            </div>
-          )}
-        </div>
-        <TablePagination
-          rowsPerPageOptions={[100]}
-          component="div"
-          count={parseInt(queryResults.totalRows, 10) || 0}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onChangePage={this.handleChangePage}
-          onChangeRowsPerPage={this.handleChangeRowsPerPage}
-        />
-      </Paper>
-    );
-  }
+                  return (
+                    <TableRow hover tabIndex={-1} key={drId}>
+                      {columns.map((column) => {
+                        const value = handleArrayValues(row[column.id], column);
+                        return (
+                          !_.isUndefined(value) && (
+                            <TableCell
+                              key={`${column.id}-${drId}`}
+                              className={classes.cell}
+                              data-cy={`cellvalue-${column.id}-${i}`}
+                            >
+                              {value}
+                            </TableCell>
+                          )
+                        );
+                      })}
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            )}
+          </Table>
+        )}
+        {polling && (
+          <div className={classes.spinWrapper}>
+            <CircularProgress className={classes.spinner} />
+            {delay &&
+              'For large datasets, it can take a few minutes to fetch results from BigQuery. Thank you for your patience.'}
+          </div>
+        )}
+      </div>
+      <TablePagination
+        rowsPerPageOptions={[100]}
+        component="div"
+        count={parseInt(queryResults.totalRows, 10) || 0}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onChangePage={handleChangePage}
+        onChangeRowsPerPage={handleChangeRowsPerPage}
+      />
+    </Paper>
+  );
 }
+
+JadeTable.propTypes = {
+  classes: PropTypes.object,
+  columns: PropTypes.array,
+  dataset: PropTypes.object,
+  delay: PropTypes.bool,
+  dispatch: PropTypes.func.isRequired,
+  polling: PropTypes.bool,
+  queryResults: PropTypes.object,
+  rows: PropTypes.array,
+};
 
 function mapStateToProps(state) {
   return {
