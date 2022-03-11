@@ -3,6 +3,7 @@ import immutable from 'immutability-helper';
 import { LOCATION_CHANGE } from 'connected-react-router';
 import { ActionTypes, TABLE_DEFAULT_ROWS_PER_PAGE } from 'constants/index';
 import BigQuery from 'modules/bigquery';
+import { reduce, rest } from 'lodash';
 
 export const queryState = {
   baseQuery: '',
@@ -69,6 +70,16 @@ export default {
           res.datarepo_id = row.datarepo_row_id;
           return res;
         });
+        // TODO - this is pretty gross. Rework for both BQ & here.
+        let rows = queryResults.map(row => {
+          const res = {};
+          columns.forEach(col => {
+            res[col.id] = row[col.id];
+          })
+          res.datarepo_id = row['datarepo_row_id'];
+          return res;
+        })
+        console.log(rows);
         const queryParams = {
           totalRows: action.payload.totalRowCount,
         };
