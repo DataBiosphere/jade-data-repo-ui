@@ -187,6 +187,20 @@ export const { previewData } = createActions({
   }),
 });
 
+export const { previewData } = createActions({
+  [ActionTypes.PREVIEW_DATA_SUCCESS]: (queryResults, columns) => ({
+    queryResults,
+    columns,
+  }),
+  [ActionTypes.PREVIEW_DATA]: (snapshotId, offset, limit, table, columns) => ({
+    snapshotId,
+    offset,
+    limit,
+    table,
+    columns,
+  }),
+});
+
 export const { pageQuery } = createActions({
   [ActionTypes.PAGE_QUERY]: (pageToken, projectId, jobId, location) => ({
     pageToken,
