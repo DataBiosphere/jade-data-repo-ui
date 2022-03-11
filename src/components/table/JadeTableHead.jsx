@@ -8,14 +8,19 @@ import TableCell from '@material-ui/core/TableCell';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import { COLUMN_MODES } from '../../constants';
 
-const styles = () => ({
+const styles = (theme) => ({
   root: {
     width: '100%',
+  },
+  header: {
+    backgroundColor: '#fafafa',
+    borderBottomColor: theme.palette.lightTable.bottomColor,
   },
 });
 
 export class JadeTableHead extends React.PureComponent {
   static propTypes = {
+    classes: PropTypes.object,
     columns: PropTypes.array,
     createSortHandler: PropTypes.func,
     order: PropTypes.string,
@@ -23,7 +28,7 @@ export class JadeTableHead extends React.PureComponent {
   };
 
   render() {
-    const { columns, order, orderBy, createSortHandler } = this.props;
+    const { classes, columns, order, orderBy, createSortHandler } = this.props;
 
     return (
       <TableHead>
@@ -32,6 +37,7 @@ export class JadeTableHead extends React.PureComponent {
             (column) =>
               column.id !== 'datarepo_row_id' && (
                 <TableCell
+                  className={classes.header}
                   key={column.id}
                   align={column.numeric ? 'right' : 'left'}
                   padding={column.disablePadding ? 'none' : 'default'}

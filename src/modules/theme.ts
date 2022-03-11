@@ -183,6 +183,20 @@ const theme = createTheme({
         },
       },
     },
+    MuiOutlinedInput: {
+      root: {
+        '& $notchedOutline': {
+          borderColor: '#c0c0c0',
+        },
+      },
+    },
+    MuiTableCell: {
+      root: {
+        '& $stickyHeader': {
+          backgroundColor: '#fafafa',
+        },
+      },
+    },
   },
   mixins: {
     jadeLink: {
