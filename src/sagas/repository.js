@@ -483,6 +483,25 @@ export function* watchGetDatasetByIdSuccess() {
 }
 
 /**
+ * Preview Data
+ */
+
+export function* previewData({ payload }) {
+  console.log(payload.snapshotId);
+  //TODO - make this query generic between dataset & snapshot
+  const query = `/api/repository/v1/snapshots/${payload.snapshotId}/data/${payload.table}?offset=${payload.offset}&limit=${payload.limit}`;
+  try {
+    const response = yield call(authGet, query);
+    yield put({
+      type: ActionTypes.PREVIEW_DATA_SUCCESS,
+      payload: { queryResults: response, columns: payload.columns },
+    });
+  } catch (err) {
+    showNotification(err);
+  }
+}
+
+/**
  * bigquery
  */
 
@@ -615,6 +634,7 @@ export default function* root() {
     takeLatest(ActionTypes.REMOVE_DATASET_POLICY_MEMBER, removeDatasetPolicyMember),
     takeLatest(ActionTypes.GET_DATASET_TABLE_PREVIEW, getDatasetTablePreview),
     takeLatest(ActionTypes.RUN_QUERY, runQuery),
+    takeLatest(ActionTypes.PREVIEW_DATA, previewData),
     takeLatest(ActionTypes.PAGE_QUERY, pageQuery),
     takeLatest(ActionTypes.COUNT_RESULTS, countResults),
     takeLatest(ActionTypes.GET_FEATURES, getFeatures),

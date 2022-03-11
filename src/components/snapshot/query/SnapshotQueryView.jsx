@@ -4,10 +4,9 @@ import { connect } from 'react-redux';
 
 import {
   applyFilters,
-  runQuery,
+  previewData,
   getSnapshotById,
   getSnapshotPolicy,
-  countResults,
   getUserSnapshotRoles,
 } from 'actions/index';
 import { Info } from '@material-ui/icons';
@@ -17,7 +16,7 @@ import InfoView from '../../common/query/sidebar/panels/InfoView';
 import { SNAPSHOT_INCLUDE_OPTIONS } from '../../../constants';
 
 const PAGE_SIZE = 100;
-const QUERY_LIMIT = 1000;
+const PAGE_OFFSET = 0;
 
 function SnapshotQueryView({
   snapshot,
@@ -39,6 +38,7 @@ function SnapshotQueryView({
   const [snapshotLoaded, setSnapshotLoaded] = useState(false);
   const [tableNames, setTableNames] = useState([]);
   const [panels, setPanels] = useState([]);
+  //const [pageOffset, setPageOffset] = useState(0);
 
   useEffect(() => {
     const snapshotId = match.params.uuid;
@@ -76,29 +76,15 @@ function SnapshotQueryView({
 
   useEffect(() => {
     if (snapshotLoaded) {
-      const fromClause = `FROM \`${snapshot.dataProject}.${snapshot.name}.${selected}\` AS ${selected}
-            ${joinStatement}
-            ${filterStatement}`;
-
-      dispatch(
-        runQuery(
-          snapshot.dataProject,
-          `#standardSQL
-            SELECT datarepo_row_id, ${selectedTable.columns
-              .map((column) => column.name)
-              .join(', ')} ${fromClause}
-            ${orderBy}
-            LIMIT ${QUERY_LIMIT}`,
-          PAGE_SIZE,
-        ),
-      );
-      dispatch(
-        countResults(
-          snapshot.dataProject,
-          `#standardSQL
-            SELECT COUNT(1) ${fromClause}`,
-        ),
-      );
+      console.log(snapshot);
+      dispatch(previewData(snapshot.id, PAGE_OFFSET, PAGE_SIZE, selected, selectedTable.columns));
+      // dispatch(
+      //   countResults(
+      //     snapshot.dataProject,
+      //     `#standardSQL
+      //       SELECT COUNT(1) ${fromClause}`,
+      //   ),
+      // );
     }
   }, [
     snapshotLoaded,

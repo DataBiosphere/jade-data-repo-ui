@@ -6,6 +6,7 @@ import BigQuery from 'modules/bigquery';
 
 export const queryState = {
   baseQuery: '',
+  columns: null,
   delay: false,
   filterData: {},
   filterStatement: '',
@@ -13,6 +14,7 @@ export const queryState = {
   pageSize: 0,
   projectId: '',
   queryParams: {},
+  rows: null,
   orderBy: '',
   polling: false,
   resultsCount: 0,
@@ -33,11 +35,38 @@ export default {
           jobId: queryResults.jobReference.jobId,
           totalRows: queryResults.totalRows,
         };
-
         return immutable(state, {
           queryParams: { $set: queryParams },
           columns: { $set: columns },
           rows: { $set: rows },
+          polling: { $set: false },
+          delay: { $set: false },
+        });
+      },
+      [ActionTypes.PREVIEW_DATA_SUCCESS]: (state, action) => {
+        const queryResults = action.payload.queryResults.data.result;
+
+        //TODO - I think we actually want the BQ to conform to this format
+        let columns = action.payload.columns.map((column) => {
+          return {
+            id: column.name,
+            label: column.name,
+            minWidth: 100,
+            type: column.datatype,
+            mode: column.array_of ? 'REPEATED' : 'NULLABLE',
+          };
+        });
+        const queryParams = {
+          //pageToken: queryResults.pageToken,
+          //projectId: queryResults.jobReference.projectId,
+          //jobId: queryResults.jobReference.jobId,
+          totalRows: queryResults.length,
+        };
+
+        return immutable(state, {
+          queryParams: { $set: queryParams },
+          columns: { $set: columns },
+          rows: { $set: queryResults },
           polling: { $set: false },
           delay: { $set: false },
         });
@@ -69,6 +98,11 @@ export default {
       [ActionTypes.POLL_QUERY]: (state) =>
         immutable(state, {
           delay: { $set: true },
+        }),
+      [ActionTypes.PREVIEW_DATA]: (state) =>
+        immutable(state, {
+          queryParams: { $set: {} },
+          polling: { $set: true },
         }),
       [ActionTypes.APPLY_FILTERS]: (state, action) => {
         const bigquery = new BigQuery();
