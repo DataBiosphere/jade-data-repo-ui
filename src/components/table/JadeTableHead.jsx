@@ -18,49 +18,46 @@ const styles = (theme) => ({
   },
 });
 
-export class JadeTableHead extends React.PureComponent {
-  static propTypes = {
-    classes: PropTypes.object,
-    columns: PropTypes.array,
-    createSortHandler: PropTypes.func,
-    order: PropTypes.string,
-    orderBy: PropTypes.string,
-  };
-
-  render() {
-    const { classes, columns, order, orderBy, createSortHandler } = this.props;
-
-    return (
-      <TableHead>
-        <TableRow>
-          {columns.map(
-            (column) =>
-              column.id !== 'datarepo_row_id' && (
-                <TableCell
-                  className={classes.header}
-                  key={column.id}
-                  align={column.numeric ? 'right' : 'left'}
-                  padding={column.disablePadding ? 'none' : 'default'}
-                  sortDirection={orderBy === column.id ? order : false}
-                  data-cy={`columnheader-${column.id}`}
-                >
-                  {column.mode !== COLUMN_MODES.REPEATED && (
-                    <TableSortLabel
-                      active={orderBy === column.id}
-                      direction={order !== '' ? order : 'desc'}
-                      onClick={() => createSortHandler(column.id)}
-                    >
-                      {column.label}
-                    </TableSortLabel>
-                  )}
-                  {column.mode === COLUMN_MODES.REPEATED && <span>{column.label}</span>}
-                </TableCell>
-              ),
-          )}
-        </TableRow>
-      </TableHead>
-    );
-  }
+function JadeTableHead({ allowSort, columns, createSortHandler, order, orderBy }) {
+  return (
+    <TableHead>
+      <TableRow>
+        {columns.map(
+          (column) =>
+            column.id !== 'datarepo_row_id' && (
+              <TableCell
+                key={column.id}
+                align={column.numeric ? 'right' : 'left'}
+                padding={column.disablePadding ? 'none' : 'default'}
+                sortDirection={orderBy === column.id ? order : false}
+                data-cy={`columnheader-${column.id}`}
+              >
+                {allowSort && column.mode !== COLUMN_MODES.REPEATED && (
+                  <TableSortLabel
+                    active={orderBy === column.id}
+                    direction={order !== '' ? order : 'desc'}
+                    onClick={() => createSortHandler(column.id)}
+                  >
+                    {column.label}
+                  </TableSortLabel>
+                )}
+                {(!allowSort || column.mode === COLUMN_MODES.REPEATED) && (
+                  <span>{column.label}</span>
+                )}
+              </TableCell>
+            ),
+        )}
+      </TableRow>
+    </TableHead>
+  );
 }
+
+JadeTableHead.propTypes = {
+  allowSort: PropTypes.bool,
+  columns: PropTypes.array,
+  createSortHandler: PropTypes.func,
+  order: PropTypes.string,
+  orderBy: PropTypes.string,
+};
 
 export default withStyles(styles)(JadeTableHead);

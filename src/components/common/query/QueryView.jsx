@@ -27,12 +27,13 @@ const styles = (theme) => ({
 });
 
 function QueryView({
+  allowSort,
   classes,
   resourceLoaded,
   resourceName,
   tableNames,
   handleChange,
-  queryResults,
+  queryParams,
   selected,
   selectedTable,
   canLink,
@@ -71,7 +72,12 @@ function QueryView({
             <Grid container spacing={0}>
               <Grid item xs={11}>
                 <div className={classes.scrollTable}>
-                  <JadeTable queryResults={queryResults} title={selected} table={selectedTable} />
+                  <JadeTable
+                    allowSort={allowSort}
+                    queryParams={queryParams}
+                    title={selected}
+                    table={selectedTable}
+                  />
                 </div>
               </Grid>
             </Grid>
@@ -92,12 +98,13 @@ function QueryView({
 }
 
 QueryView.propTypes = {
+  allowSort: PropTypes.bool,
   classes: PropTypes.object,
   resourceLoaded: PropTypes.bool,
   resourceName: PropTypes.string,
   tableNames: PropTypes.array,
   handleChange: PropTypes.func,
-  queryResults: PropTypes.object,
+  queryParams: PropTypes.object,
   selected: PropTypes.string,
   selectedTable: PropTypes.object,
   canLink: PropTypes.bool,

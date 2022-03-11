@@ -45,7 +45,17 @@ const styles = (theme) => ({
   },
 });
 
-function JadeTable({ classes, columns, dataset, delay, dispatch, polling, queryResults, rows }) {
+function JadeTable({
+  allowSort,
+  classes,
+  columns,
+  dataset,
+  delay,
+  dispatch,
+  polling,
+  queryParams,
+  rows,
+}) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(100);
   const [pageToTokenMap, setPageToTokenMap] = useState({});
@@ -62,14 +72,14 @@ function JadeTable({ classes, columns, dataset, delay, dispatch, polling, queryR
     }
 
     if (newPage > page) {
-      pageToTokenMap[newPage] = queryResults.pageToken;
+      pageToTokenMap[newPage] = queryParams.pageToken;
     }
 
     dispatch(
       pageQuery(
         pageToTokenMap[newPage],
-        queryResults.jobReference.projectId,
-        queryResults.jobReference.jobId,
+        queryParams.projectId,
+        queryParams.jobId,
         rowsPerPage,
         location,
       ),
@@ -120,6 +130,7 @@ function JadeTable({ classes, columns, dataset, delay, dispatch, polling, queryR
         {rows && columns && (
           <Table stickyHeader aria-label="sticky table">
             <JadeTableHead
+              allowSort={allowSort}
               columns={columns}
               orderBy={orderBy}
               order={order}
@@ -164,7 +175,7 @@ function JadeTable({ classes, columns, dataset, delay, dispatch, polling, queryR
       <TablePagination
         rowsPerPageOptions={[100]}
         component="div"
-        count={parseInt(queryResults.totalRows, 10) || 0}
+        count={parseInt(queryParams.totalRows, 10) || 0}
         rowsPerPage={rowsPerPage}
         page={page}
         onChangePage={handleChangePage}
@@ -175,13 +186,14 @@ function JadeTable({ classes, columns, dataset, delay, dispatch, polling, queryR
 }
 
 JadeTable.propTypes = {
+  allowSort: PropTypes.bool,
   classes: PropTypes.object,
   columns: PropTypes.array,
   dataset: PropTypes.object,
   delay: PropTypes.bool,
   dispatch: PropTypes.func.isRequired,
   polling: PropTypes.bool,
-  queryResults: PropTypes.object,
+  queryParams: PropTypes.object,
   rows: PropTypes.array,
 };
 
@@ -192,7 +204,7 @@ function mapStateToProps(state) {
     filterData: state.query.filterData,
     filterStatement: state.query.filterStatement,
     token: state.user.token,
-    queryResults: state.query.queryResults,
+    queryParams: state.query.queryParams,
     columns: state.query.columns,
     rows: state.query.rows,
     polling: state.query.polling,

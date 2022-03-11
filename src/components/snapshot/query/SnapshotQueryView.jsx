@@ -29,7 +29,7 @@ function SnapshotQueryView({
   match,
   orderBy,
   profile,
-  queryResults,
+  queryParams,
   userRole,
 }) {
   const [selected, setSelected] = useState('');
@@ -150,11 +150,12 @@ function SnapshotQueryView({
 
   return (
     <QueryView
+      allowSort={false}
       resourceLoaded={snapshotLoaded}
       resourceName={snapshot.name}
       tableNames={tableNames}
       handleChange={handleChange}
-      queryResults={queryResults}
+      queryParams={queryParams}
       selected={selected}
       selectedTable={selectedTable}
       canLink={canLink}
@@ -175,7 +176,7 @@ SnapshotQueryView.propTypes = {
   match: PropTypes.object,
   orderBy: PropTypes.string,
   profile: PropTypes.object,
-  queryResults: PropTypes.object,
+  queryParams: PropTypes.object,
   userRole: PropTypes.array,
 };
 
@@ -186,7 +187,7 @@ function mapStateToProps(state) {
     filterStatement: state.query.filterStatement,
     filterData: state.query.filterData,
     joinStatement: state.query.joinStatement,
-    queryResults: state.query.queryResults,
+    queryParams: state.query.queryParams,
     orderBy: state.query.orderBy,
     profile: state.profiles.profile,
   };

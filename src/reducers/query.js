@@ -12,7 +12,7 @@ export const queryState = {
   joinStatement: '',
   pageSize: 0,
   projectId: '',
-  queryResults: {},
+  queryParams: {},
   orderBy: '',
   polling: false,
   resultsCount: 0,
@@ -27,9 +27,15 @@ export default {
 
         const columns = bigquery.transformColumns(queryResults);
         const rows = bigquery.transformRows(queryResults, columns);
+        const queryParams = {
+          pageToken: queryResults.pageToken,
+          projectId: queryResults.jobReference.projectId,
+          jobId: queryResults.jobReference.jobId,
+          totalRows: queryResults.totalRows,
+        };
 
         return immutable(state, {
-          queryResults: { $set: queryResults },
+          queryParams: { $set: queryParams },
           columns: { $set: columns },
           rows: { $set: rows },
           polling: { $set: false },
@@ -42,16 +48,22 @@ export default {
 
         const columns = bigquery.transformColumns(queryResults);
         const rows = bigquery.transformRows(queryResults, columns);
+        const queryParams = {
+          pageToken: queryResults.pageToken,
+          projectId: queryResults.jobReference.projectId,
+          jobId: queryResults.jobReference.jobId,
+          totalRows: queryResults.totalRows,
+        };
 
         return immutable(state, {
-          queryResults: { $set: queryResults },
+          queryParams: { $set: queryParams },
           columns: { $set: columns },
           rows: { $set: rows },
         });
       },
       [ActionTypes.RUN_QUERY]: (state) =>
         immutable(state, {
-          queryResults: { $set: {} },
+          queryParams: { $set: {} },
           polling: { $set: true },
         }),
       [ActionTypes.POLL_QUERY]: (state) =>
@@ -88,7 +100,7 @@ export default {
             filterData: { $set: {} },
             filterStatement: { $set: '' },
             joinStatement: { $set: '' },
-            queryResults: { $set: {} },
+            queryParams: { $set: {} },
             polling: { $set: false },
           });
         }
