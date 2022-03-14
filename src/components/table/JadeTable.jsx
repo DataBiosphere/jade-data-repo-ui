@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -60,6 +60,14 @@ function JadeTable({
   const [rowsPerPage, setRowsPerPage] = useState(TABLE_DEFAULT_ROWS_PER_PAGE);
   const [orderBy, setOrderBy] = useState('');
   const [order, setOrder] = useState('');
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    const c = parseInt(queryParams.totalRows, 10);
+    if (c) {
+      setCount(c);
+    }
+  }, [queryParams]);
 
   const changePage = (event, newPage) => {
     handleChangePage(page, newPage, rowsPerPage);
@@ -153,7 +161,7 @@ function JadeTable({
       <TablePagination
         rowsPerPageOptions={[100]}
         component="div"
-        count={parseInt(queryParams.totalRows, 10) || 0}
+        count={count}
         rowsPerPage={rowsPerPage}
         page={page}
         onChangePage={changePage}

@@ -135,7 +135,7 @@ function SnapshotQueryView({
       previewData(
         snapshot.id,
         newPage * rowsPerPage,
-        PAGE_SIZE,
+        TABLE_DEFAULT_ROWS_PER_PAGE, 
         selected,
         selectedTable.columns,
         selectedTable.rowCount,
