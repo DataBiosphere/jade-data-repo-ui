@@ -1,7 +1,7 @@
 import { handleActions } from 'redux-actions';
 import immutable from 'immutability-helper';
 import { LOCATION_CHANGE } from 'connected-react-router';
-import { ActionTypes } from 'constants/index';
+import { ActionTypes, TABLE_DEFAULT_ROWS_PER_PAGE } from 'constants/index';
 import BigQuery from 'modules/bigquery';
 
 export const queryState = {
@@ -18,6 +18,8 @@ export const queryState = {
   orderBy: '',
   polling: false,
   resultsCount: 0,
+  page: 0,
+  rowsPerPage: TABLE_DEFAULT_ROWS_PER_PAGE,
 };
 
 export default {
@@ -77,6 +79,7 @@ export default {
           polling: { $set: false },
           delay: { $set: false },
           resultsCount: { $set: queryResults.length },
+          page: { $set: action.payload.newPage },
         });
       },
       [ActionTypes.PAGE_QUERY_SUCCESS]: (state, action) => {
@@ -96,6 +99,7 @@ export default {
           queryParams: { $set: queryParams },
           columns: { $set: columns },
           rows: { $set: rows },
+          page: { $set: action.payload.rowsPerPage },
         });
       },
       [ActionTypes.RUN_QUERY]: (state) =>
@@ -111,6 +115,11 @@ export default {
         immutable(state, {
           queryParams: { $set: {} },
           polling: { $set: true },
+        }),
+      [ActionTypes.CHANGE_ROWS_PER_PAGE]: (state, action) =>
+        immutable(state, {
+          page: { $set: 0 },
+          rowsPerPage: { $set: action.rowsPerPage },
         }),
       [ActionTypes.APPLY_FILTERS]: (state, action) => {
         const bigquery = new BigQuery();

@@ -10,10 +10,10 @@ import TableCell from '@material-ui/core/TableCell';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { applySort } from 'actions/index';
+import { applySort, updateRowsPerPage } from 'actions/index';
 import JadeTableHead from './JadeTableHead';
 import { ellipsis } from '../../libs/styles';
-import { COLUMN_MODES, TABLE_DEFAULT_ROWS_PER_PAGE } from '../../constants';
+import { COLUMN_MODES, TABLE_DEFAULT_ROWS_PER_PAGE_OPTIONS } from '../../constants';
 
 // eslint-disable-next-line no-unused-vars
 const styles = (theme) => ({
@@ -52,12 +52,12 @@ function JadeTable({
   delay,
   handleChangePage,
   dispatch,
+  page,
   polling,
   queryParams,
   rows,
+  rowsPerPage,
 }) {
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(TABLE_DEFAULT_ROWS_PER_PAGE);
   const [orderBy, setOrderBy] = useState('');
   const [order, setOrder] = useState('');
   const [count, setCount] = useState(0);
@@ -70,13 +70,12 @@ function JadeTable({
   }, [queryParams]);
 
   const changePage = (event, newPage) => {
-    handleChangePage(page, newPage, rowsPerPage);
-    setPage(newPage);
+    handleChangePage(newPage);
   };
 
   const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
+    const newRowsPerPage = parseInt(event.target.value, 10);
+    dispatch(updateRowsPerPage(newRowsPerPage));
   };
 
   const createSortHandler = (property) => {
@@ -159,7 +158,7 @@ function JadeTable({
         )}
       </div>
       <TablePagination
-        rowsPerPageOptions={[100]}
+        rowsPerPageOptions={TABLE_DEFAULT_ROWS_PER_PAGE_OPTIONS}
         component="div"
         count={count}
         rowsPerPage={rowsPerPage}
@@ -178,9 +177,11 @@ JadeTable.propTypes = {
   delay: PropTypes.bool,
   dispatch: PropTypes.func.isRequired,
   handleChangePage: PropTypes.func.isRequired,
+  page: PropTypes.number,
   polling: PropTypes.bool,
   queryParams: PropTypes.object,
   rows: PropTypes.array,
+  rowsPerPage: PropTypes.number,
 };
 
 function mapStateToProps(state) {
@@ -190,8 +191,10 @@ function mapStateToProps(state) {
     filterStatement: state.query.filterStatement,
     queryParams: state.query.queryParams,
     columns: state.query.columns,
-    rows: state.query.rows,
+    page: state.query.page,
     polling: state.query.polling,
+    rows: state.query.rows,
+    rowsPerPage: state.query.rowsPerPage,
   };
 }
 

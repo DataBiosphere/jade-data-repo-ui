@@ -13,9 +13,7 @@ import { Info } from '@material-ui/icons';
 
 import QueryView from 'components/common/query/QueryView';
 import InfoView from '../../common/query/sidebar/panels/InfoView';
-import { SNAPSHOT_INCLUDE_OPTIONS, TABLE_DEFAULT_ROWS_PER_PAGE } from '../../../constants';
-
-const PAGE_OFFSET = 0;
+import { SNAPSHOT_INCLUDE_OPTIONS } from '../../../constants';
 
 function SnapshotQueryView({
   snapshot,
@@ -26,9 +24,11 @@ function SnapshotQueryView({
   joinStatement,
   match,
   orderBy,
+  page,
   profile,
   queryParams,
   userRole,
+  rowsPerPage,
 }) {
   const [selected, setSelected] = useState('');
   const [selectedTable, setSelectedTable] = useState(null);
@@ -37,7 +37,6 @@ function SnapshotQueryView({
   const [snapshotLoaded, setSnapshotLoaded] = useState(false);
   const [tableNames, setTableNames] = useState([]);
   const [panels, setPanels] = useState([]);
-  //const [pageOffset, setPageOffset] = useState(0);
 
   useEffect(() => {
     const snapshotId = match.params.uuid;
@@ -75,14 +74,17 @@ function SnapshotQueryView({
 
   useEffect(() => {
     if (snapshotLoaded) {
+      console.log(page);
+      console.log(rowsPerPage);
       dispatch(
         previewData(
           snapshot.id,
-          PAGE_OFFSET,
-          TABLE_DEFAULT_ROWS_PER_PAGE,
+          page * rowsPerPage,
+          rowsPerPage,
           selected,
           selectedTable.columns,
           selectedTable.rowCount,
+          page,
         ),
       );
     }
@@ -130,15 +132,16 @@ function SnapshotQueryView({
     dispatch(applyFilters(filterData, value, snapshot, snapshot.relationships));
   };
 
-  const handleChangePage = (page, newPage, rowsPerPage) => {
+  const handleChangePage = (newPage) => {
     dispatch(
       previewData(
         snapshot.id,
         newPage * rowsPerPage,
-        TABLE_DEFAULT_ROWS_PER_PAGE, 
+        rowsPerPage,
         selected,
         selectedTable.columns,
         selectedTable.rowCount,
+        newPage,
       ),
     );
   };
@@ -176,8 +179,10 @@ SnapshotQueryView.propTypes = {
   match: PropTypes.object,
   orderBy: PropTypes.string,
   profile: PropTypes.object,
+  page: PropTypes.number.isRequired,
   queryParams: PropTypes.object,
   userRole: PropTypes.array,
+  rowsPerPage: PropTypes.number.isRequired,
 };
 
 function mapStateToProps(state) {
@@ -189,7 +194,9 @@ function mapStateToProps(state) {
     joinStatement: state.query.joinStatement,
     queryParams: state.query.queryParams,
     orderBy: state.query.orderBy,
+    page: state.query.page,
     profile: state.profiles.profile,
+    rowsPerPage: state.query.rowsPerPage,
   };
 }
 

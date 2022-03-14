@@ -85,6 +85,7 @@ export const ActionTypes = keyMirror({
   POLL_QUERY: undefined,
   PAGE_QUERY: undefined,
   PAGE_QUERY_SUCCESS: undefined,
+  CHANGE_ROWS_PER_PAGE: undefined,
   APPLY_SORT: undefined,
   OPEN_SNAPSHOT_DIALOG: undefined,
   COUNT_RESULTS: undefined,
@@ -172,3 +173,4 @@ export const BREADCRUMB_TYPE = {
 };
 
 export const TABLE_DEFAULT_ROWS_PER_PAGE = 100;
+export const TABLE_DEFAULT_ROWS_PER_PAGE_OPTIONS = [25, 100, 250];

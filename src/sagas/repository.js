@@ -497,6 +497,7 @@ export function* previewData({ payload }) {
         queryResults: response,
         columns: payload.columns,
         totalRowCount: payload.totalRowCount,
+        newPage: payload.newPage,
       },
     });
   } catch (err) {
@@ -554,6 +555,17 @@ export function* runQuery({ payload }) {
   }
 }
 
+export function* updateRowsPerPage({ payload }) {
+  try {
+    yield put({
+      type: ActionTypes.UPDATE_ROWS_PER_PAGE,
+      rowsPerPage: payload.rowsPerPage,
+    });
+  } catch (err) {
+    showNotification(err);
+  }
+}
+
 export function* pageQuery({ payload }) {
   try {
     const url = `/bigquery/v2/projects/${payload.projectId}/queries/${payload.jobId}`;
@@ -566,7 +578,10 @@ export function* pageQuery({ payload }) {
 
     yield put({
       type: ActionTypes.PAGE_QUERY_SUCCESS,
-      results: response,
+      payload: {
+        results: response,
+        newPage: payload.newPage,
+      },
     });
   } catch (err) {
     showNotification(err);
@@ -639,6 +654,7 @@ export default function* root() {
     takeLatest(ActionTypes.RUN_QUERY, runQuery),
     takeLatest(ActionTypes.PREVIEW_DATA, previewData),
     takeLatest(ActionTypes.PAGE_QUERY, pageQuery),
+    takeLatest(ActionTypes.CHANGE_ROWS_PER_PAGE, updateRowsPerPage),
     takeLatest(ActionTypes.COUNT_RESULTS, countResults),
     takeLatest(ActionTypes.GET_FEATURES, getFeatures),
     takeLatest(ActionTypes.GET_BILLING_PROFILE_BY_ID, getBillingProfileById),

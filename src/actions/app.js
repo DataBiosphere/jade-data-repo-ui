@@ -180,23 +180,29 @@ export const { previewData } = createActions({
     queryResults,
     columns,
   }),
-  [ActionTypes.PREVIEW_DATA]: (snapshotId, offset, limit, table, columns, totalRowCount) => ({
+  [ActionTypes.PREVIEW_DATA]: (snapshotId, offset, limit, table, columns, totalRowCount, newPage) => ({
     snapshotId,
     offset,
     limit,
     table,
     columns,
     totalRowCount,
+    newPage,
   }),
 });
 
+export const { updateRowsPerPage } = createActions({
+  [ActionTypes.CHANGE_ROWS_PER_PAGE]: (rowsPerPage) => rowsPerPage,
+});
+
 export const { pageQuery } = createActions({
-  [ActionTypes.PAGE_QUERY]: (pageToken, projectId, jobId, pageSize, location) => ({
+  [ActionTypes.PAGE_QUERY]: (pageToken, projectId, jobId, pageSize, location, newPage) => ({
     pageToken,
     projectId,
     jobId,
     pageSize,
     location,
+    newPage,
   }),
 });
 
