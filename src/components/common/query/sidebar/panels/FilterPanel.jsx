@@ -18,7 +18,7 @@ import { ExpandMore, ExpandLess, Search } from '@material-ui/icons';
 import QueryViewSidebarItem from '../QueryViewSidebarItem';
 import QuerySidebarPanel from '../QuerySidebarPanel';
 import { applyFilters } from '../../../../../actions';
-import TerraTooltip from '../../../../common/TerraTooltip';
+import TerraTooltip from '../../../TerraTooltip';
 
 const styles = (theme) => ({
   root: {

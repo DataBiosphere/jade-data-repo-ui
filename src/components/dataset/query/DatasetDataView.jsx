@@ -9,6 +9,7 @@ import {
   getDatasetPolicy,
   countResults,
   getUserDatasetRoles,
+  pageQuery,
 } from 'actions/index';
 import { FilterList, Info, People } from '@material-ui/icons';
 
@@ -16,9 +17,8 @@ import QueryView from 'components/common/query/QueryView';
 import QueryViewSidebar from '../../common/query/sidebar/QueryViewSidebar';
 import InfoView from '../../common/query/sidebar/panels/InfoView';
 import ShareSnapshot from '../../common/query/sidebar/panels/ShareSnapshot';
-import { DATASET_INCLUDE_OPTIONS } from '../../../constants';
+import { DATASET_INCLUDE_OPTIONS, GOOGLE_CLOUD_RESOURCE, TABLE_DEFAULT_ROWS_PER_PAGE } from '../../../constants';
 
-const PAGE_SIZE = 100;
 const QUERY_LIMIT = 1000;
 
 function DatasetQueryView({
@@ -41,6 +41,7 @@ function DatasetQueryView({
   const [hasDataset, setHasDataset] = useState(false);
   const [tableNames, setTableNames] = useState([]);
   const [panels, setPanels] = useState([]);
+  const [pageToTokenMap, setPageToTokenMap] = useState({});
 
   useEffect(() => {
     const datasetId = match.params.uuid;
@@ -85,12 +86,11 @@ function DatasetQueryView({
         runQuery(
           dataset.dataProject,
           `#standardSQL
-          SELECT datarepo_row_id, ${selectedTable.columns
-            .map((column) => column.name)
-            .join(', ')} ${fromClause}
+          SELECT datarepo_row_id,
+            ${selectedTable.columns.map((column) => column.name).join(', ')} ${fromClause}
           ${orderBy}
           LIMIT ${QUERY_LIMIT}`,
-          PAGE_SIZE,
+          TABLE_DEFAULT_ROWS_PER_PAGE,
         ),
       );
       dispatch(
@@ -161,6 +161,31 @@ function DatasetQueryView({
     dispatch(applyFilters(filterData, value, dataset, dataset.schema.relationships));
   };
 
+  const handleChangePage = (page, newPage, rowsPerPage) => {
+    const bqStorage = dataset.storage.find(
+      (s) => s.cloudResource === GOOGLE_CLOUD_RESOURCE.BIGQUERY,
+    );
+    const location = bqStorage?.region;
+    if (page === 0) {
+      pageToTokenMap[0] = undefined;
+    }
+
+    if (newPage > page) {
+      pageToTokenMap[newPage] = queryParams.pageToken;
+    }
+
+    dispatch(
+      pageQuery(
+        pageToTokenMap[newPage],
+        queryParams.projectId,
+        queryParams.jobId,
+        rowsPerPage,
+        location,
+      ),
+    );
+    setPageToTokenMap(pageToTokenMap);
+  };
+
   if (!hasDataset) {
     return <div>Loading</div>;
   }
@@ -172,6 +197,7 @@ function DatasetQueryView({
       resourceName={dataset.name}
       tableNames={tableNames}
       handleChange={handleChange}
+      handleChangePage={handleChangePage}
       queryParams={queryParams}
       selected={selected}
       selectedTable={selectedTable}

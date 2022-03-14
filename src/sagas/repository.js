@@ -487,14 +487,17 @@ export function* watchGetDatasetByIdSuccess() {
  */
 
 export function* previewData({ payload }) {
-  console.log(payload.snapshotId);
-  //TODO - make this query generic between dataset & snapshot
+  // TODO - make this query generic between dataset & snapshot
   const query = `/api/repository/v1/snapshots/${payload.snapshotId}/data/${payload.table}?offset=${payload.offset}&limit=${payload.limit}`;
   try {
     const response = yield call(authGet, query);
     yield put({
       type: ActionTypes.PREVIEW_DATA_SUCCESS,
-      payload: { queryResults: response, columns: payload.columns },
+      payload: {
+        queryResults: response,
+        columns: payload.columns,
+        totalRowCount: payload.totalRowCount,
+      },
     });
   } catch (err) {
     showNotification(err);

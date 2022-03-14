@@ -13,9 +13,8 @@ import { Info } from '@material-ui/icons';
 
 import QueryView from 'components/common/query/QueryView';
 import InfoView from '../../common/query/sidebar/panels/InfoView';
-import { SNAPSHOT_INCLUDE_OPTIONS } from '../../../constants';
+import { SNAPSHOT_INCLUDE_OPTIONS, TABLE_DEFAULT_ROWS_PER_PAGE } from '../../../constants';
 
-const PAGE_SIZE = 100;
 const PAGE_OFFSET = 0;
 
 function SnapshotQueryView({
@@ -76,15 +75,16 @@ function SnapshotQueryView({
 
   useEffect(() => {
     if (snapshotLoaded) {
-      console.log(snapshot);
-      dispatch(previewData(snapshot.id, PAGE_OFFSET, PAGE_SIZE, selected, selectedTable.columns));
-      // dispatch(
-      //   countResults(
-      //     snapshot.dataProject,
-      //     `#standardSQL
-      //       SELECT COUNT(1) ${fromClause}`,
-      //   ),
-      // );
+      dispatch(
+        previewData(
+          snapshot.id,
+          PAGE_OFFSET,
+          TABLE_DEFAULT_ROWS_PER_PAGE,
+          selected,
+          selectedTable.columns,
+          selectedTable.rowCount,
+        ),
+      );
     }
   }, [
     snapshotLoaded,
@@ -130,6 +130,19 @@ function SnapshotQueryView({
     dispatch(applyFilters(filterData, value, snapshot, snapshot.relationships));
   };
 
+  const handleChangePage = (page, newPage, rowsPerPage) => {
+    dispatch(
+      previewData(
+        snapshot.id,
+        newPage * rowsPerPage,
+        PAGE_SIZE,
+        selected,
+        selectedTable.columns,
+        selectedTable.rowCount,
+      ),
+    );
+  };
+
   if (!snapshotLoaded) {
     return <div>Loading</div>;
   }
@@ -141,6 +154,7 @@ function SnapshotQueryView({
       resourceName={snapshot.name}
       tableNames={tableNames}
       handleChange={handleChange}
+      handleChangePage={handleChangePage}
       queryParams={queryParams}
       selected={selected}
       selectedTable={selectedTable}

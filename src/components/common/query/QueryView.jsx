@@ -28,18 +28,19 @@ const styles = (theme) => ({
 
 function QueryView({
   allowSort,
+  canLink,
   classes,
+  handleChange,
+  handleChangePage,
+  handleDrawerWidth,
+  panels,
+  queryParams,
   resourceLoaded,
   resourceName,
-  tableNames,
-  handleChange,
-  queryParams,
   selected,
   selectedTable,
-  canLink,
-  panels,
-  handleDrawerWidth,
   sidebarWidth,
+  tableNames,
 }) {
   return (
     <Fragment>
@@ -74,6 +75,7 @@ function QueryView({
                 <div className={classes.scrollTable}>
                   <JadeTable
                     allowSort={allowSort}
+                    handleChangePage={handleChangePage}
                     queryParams={queryParams}
                     title={selected}
                     table={selectedTable}
@@ -99,18 +101,19 @@ function QueryView({
 
 QueryView.propTypes = {
   allowSort: PropTypes.bool,
+  canLink: PropTypes.bool,
   classes: PropTypes.object,
+  handleChange: PropTypes.func,
+  handleChangePage: PropTypes.func.isRequired,
+  handleDrawerWidth: PropTypes.func,
+  panels: PropTypes.array,
+  queryParams: PropTypes.object,
   resourceLoaded: PropTypes.bool,
   resourceName: PropTypes.string,
-  tableNames: PropTypes.array,
-  handleChange: PropTypes.func,
-  queryParams: PropTypes.object,
   selected: PropTypes.string,
   selectedTable: PropTypes.object,
-  canLink: PropTypes.bool,
-  panels: PropTypes.array,
-  handleDrawerWidth: PropTypes.func,
   sidebarWidth: PropTypes.number,
+  tableNames: PropTypes.array,
 };
 
 export default withStyles(styles)(QueryView);

@@ -165,7 +165,10 @@ export const SNAPSHOT_INCLUDE_OPTIONS = {
   DATA_PROJECT: 'DATA_PROJECT',
 };
 
+//** Shared Defaults */
 export const BREADCRUMB_TYPE = {
   DATASET: 'dataset',
   SNAPSHOT: 'snapshot',
 };
+
+export const TABLE_DEFAULT_ROWS_PER_PAGE = 100;

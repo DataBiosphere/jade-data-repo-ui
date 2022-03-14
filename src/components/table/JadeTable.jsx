@@ -10,10 +10,10 @@ import TableCell from '@material-ui/core/TableCell';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { pageQuery, applySort } from 'actions/index';
+import { applySort } from 'actions/index';
 import JadeTableHead from './JadeTableHead';
 import { ellipsis } from '../../libs/styles';
-import { COLUMN_MODES, GOOGLE_CLOUD_RESOURCE } from '../../constants';
+import { COLUMN_MODES, TABLE_DEFAULT_ROWS_PER_PAGE } from '../../constants';
 
 // eslint-disable-next-line no-unused-vars
 const styles = (theme) => ({
@@ -49,43 +49,21 @@ function JadeTable({
   allowSort,
   classes,
   columns,
-  dataset,
   delay,
+  handleChangePage,
   dispatch,
   polling,
   queryParams,
   rows,
 }) {
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(100);
-  const [pageToTokenMap, setPageToTokenMap] = useState({});
+  const [rowsPerPage, setRowsPerPage] = useState(TABLE_DEFAULT_ROWS_PER_PAGE);
   const [orderBy, setOrderBy] = useState('');
   const [order, setOrder] = useState('');
 
-  const handleChangePage = (event, newPage) => {
-    const bqStorage = dataset.storage.find(
-      (s) => s.cloudResource === GOOGLE_CLOUD_RESOURCE.BIGQUERY,
-    );
-    const location = bqStorage?.region;
-    if (page === 0) {
-      pageToTokenMap[0] = undefined;
-    }
-
-    if (newPage > page) {
-      pageToTokenMap[newPage] = queryParams.pageToken;
-    }
-
-    dispatch(
-      pageQuery(
-        pageToTokenMap[newPage],
-        queryParams.projectId,
-        queryParams.jobId,
-        rowsPerPage,
-        location,
-      ),
-    );
+  const changePage = (event, newPage) => {
+    handleChangePage(page, newPage, rowsPerPage);
     setPage(newPage);
-    setPageToTokenMap(pageToTokenMap);
   };
 
   const handleChangeRowsPerPage = (event) => {
@@ -178,7 +156,7 @@ function JadeTable({
         count={parseInt(queryParams.totalRows, 10) || 0}
         rowsPerPage={rowsPerPage}
         page={page}
-        onChangePage={handleChangePage}
+        onChangePage={changePage}
         onChangeRowsPerPage={handleChangeRowsPerPage}
       />
     </Paper>
@@ -189,9 +167,9 @@ JadeTable.propTypes = {
   allowSort: PropTypes.bool,
   classes: PropTypes.object,
   columns: PropTypes.array,
-  dataset: PropTypes.object,
   delay: PropTypes.bool,
   dispatch: PropTypes.func.isRequired,
+  handleChangePage: PropTypes.func.isRequired,
   polling: PropTypes.bool,
   queryParams: PropTypes.object,
   rows: PropTypes.array,
@@ -199,11 +177,9 @@ JadeTable.propTypes = {
 
 function mapStateToProps(state) {
   return {
-    dataset: state.datasets.dataset,
     delay: state.query.delay,
     filterData: state.query.filterData,
     filterStatement: state.query.filterStatement,
-    token: state.user.token,
     queryParams: state.query.queryParams,
     columns: state.query.columns,
     rows: state.query.rows,
