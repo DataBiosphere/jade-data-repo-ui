@@ -17,7 +17,11 @@ import QueryView from 'components/common/query/QueryView';
 import QueryViewSidebar from '../../common/query/sidebar/QueryViewSidebar';
 import InfoView from '../../common/query/sidebar/panels/InfoView';
 import ShareSnapshot from '../../common/query/sidebar/panels/ShareSnapshot';
-import { DATASET_INCLUDE_OPTIONS, GOOGLE_CLOUD_RESOURCE, TABLE_DEFAULT_ROWS_PER_PAGE } from '../../../constants';
+import {
+  DATASET_INCLUDE_OPTIONS,
+  GOOGLE_CLOUD_RESOURCE,
+  TABLE_DEFAULT_ROWS_PER_PAGE,
+} from '../../../constants';
 
 const QUERY_LIMIT = 1000;
 
