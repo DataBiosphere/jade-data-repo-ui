@@ -17,11 +17,7 @@ import QueryView from 'components/common/query/QueryView';
 import QueryViewSidebar from '../../common/query/sidebar/QueryViewSidebar';
 import InfoView from '../../common/query/sidebar/panels/InfoView';
 import ShareSnapshot from '../../common/query/sidebar/panels/ShareSnapshot';
-import {
-  DATASET_INCLUDE_OPTIONS,
-  GOOGLE_CLOUD_RESOURCE,
-  TABLE_DEFAULT_ROWS_PER_PAGE,
-} from '../../../constants';
+import { DATASET_INCLUDE_OPTIONS, GOOGLE_CLOUD_RESOURCE } from '../../../constants';
 
 const QUERY_LIMIT = 1000;
 
@@ -34,6 +30,8 @@ function DatasetQueryView({
   joinStatement,
   match,
   orderBy,
+  rowsPerPage,
+  page,
   profile,
   queryParams,
   userRole,
@@ -94,7 +92,7 @@ function DatasetQueryView({
             ${selectedTable.columns.map((column) => column.name).join(', ')} ${fromClause}
           ${orderBy}
           LIMIT ${QUERY_LIMIT}`,
-          TABLE_DEFAULT_ROWS_PER_PAGE,
+          rowsPerPage,
         ),
       );
       dispatch(
@@ -165,7 +163,7 @@ function DatasetQueryView({
     dispatch(applyFilters(filterData, value, dataset, dataset.schema.relationships));
   };
 
-  const handleChangePage = (page, newPage, rowsPerPage) => {
+  const handleChangePage = (newPage) => {
     const bqStorage = dataset.storage.find(
       (s) => s.cloudResource === GOOGLE_CLOUD_RESOURCE.BIGQUERY,
     );
@@ -185,6 +183,7 @@ function DatasetQueryView({
         queryParams.jobId,
         rowsPerPage,
         location,
+        newPage,
       ),
     );
     setPageToTokenMap(pageToTokenMap);
@@ -222,7 +221,9 @@ DatasetQueryView.propTypes = {
   joinStatement: PropTypes.string.isRequired,
   match: PropTypes.object,
   orderBy: PropTypes.string,
+  page: PropTypes.number,
   profile: PropTypes.object,
+  rowsPerPage: PropTypes.number,
   queryParams: PropTypes.object,
   userRole: PropTypes.array,
 };
@@ -236,7 +237,9 @@ function mapStateToProps(state) {
     joinStatement: state.query.joinStatement,
     queryParams: state.query.queryParams,
     orderBy: state.query.orderBy,
+    page: state.query.page,
     profile: state.profiles.profile,
+    rowsPerPage: state.query.rowsPerPage,
   };
 }
 
