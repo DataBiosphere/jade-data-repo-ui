@@ -18,6 +18,7 @@ import QueryViewSidebar from '../../common/query/sidebar/QueryViewSidebar';
 import InfoView from '../../common/query/sidebar/panels/InfoView';
 import ShareSnapshot from '../../common/query/sidebar/panels/ShareSnapshot';
 import { DATASET_INCLUDE_OPTIONS, GOOGLE_CLOUD_RESOURCE } from '../../../constants';
+import LoadingSpinner from 'components/common/LoadingSpinner';
 
 const QUERY_LIMIT = 1000;
 
@@ -182,7 +183,7 @@ function DatasetQueryView({
   };
 
   if (!datasetLoaded) {
-    return <div>Loading</div>;
+    return <LoadingSpinner />;
   }
 
   return (
