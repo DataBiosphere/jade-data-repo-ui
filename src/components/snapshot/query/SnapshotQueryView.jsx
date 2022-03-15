@@ -35,6 +35,20 @@ function SnapshotQueryView({
   const [tableNames, setTableNames] = useState([]);
   const [panels, setPanels] = useState([]);
 
+  const updateDataOnChange = (newPage, newRowsPerPage) => {
+    dispatch(
+      previewData(
+        snapshot.id,
+        newPage * newRowsPerPage,
+        newRowsPerPage,
+        selected,
+        selectedTable.columns,
+        selectedTable.rowCount,
+        newPage,
+      ),
+    );
+  };
+
   useEffect(() => {
     const snapshotId = match.params.uuid;
 
@@ -71,17 +85,7 @@ function SnapshotQueryView({
 
   useEffect(() => {
     if (snapshotLoaded) {
-      dispatch(
-        previewData(
-          snapshot.id,
-          0,
-          rowsPerPage,
-          selected,
-          selectedTable.columns,
-          selectedTable.rowCount,
-          0,
-        ),
-      );
+      updateDataOnChange(0, rowsPerPage);
     }
   }, [
     snapshotLoaded,
@@ -125,31 +129,7 @@ function SnapshotQueryView({
   const handleChange = (value) => {
     setSelected(value);
     setSelectedTable(snapshot.tables.find((t) => t.name === value));
-    dispatch(
-      previewData(
-        snapshot.id,
-        0,
-        rowsPerPage,
-        selected,
-        selectedTable.columns,
-        selectedTable.rowCount,
-        0,
-      ),
-    );
-  };
-
-  const updateDataOnPageChange = (newPage) => {
-    dispatch(
-      previewData(
-        snapshot.id,
-        newPage * rowsPerPage,
-        rowsPerPage,
-        selected,
-        selectedTable.columns,
-        selectedTable.rowCount,
-        newPage,
-      ),
-    );
+    updateDataOnChange(0, rowsPerPage);
   };
 
   if (!snapshotLoaded) {
@@ -163,7 +143,7 @@ function SnapshotQueryView({
       resourceName={snapshot.name}
       tableNames={tableNames}
       handleChange={handleChange}
-      updateDataOnPageChange={updateDataOnPageChange}
+      updateDataOnChange={updateDataOnChange}
       queryParams={queryParams}
       selected={selected}
       selectedTable={selectedTable}

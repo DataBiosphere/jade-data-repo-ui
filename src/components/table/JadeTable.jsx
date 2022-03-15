@@ -56,7 +56,7 @@ function JadeTable({
   queryParams,
   rows,
   rowsPerPage,
-  updateDataOnPageChange,
+  updateDataOnChange,
 }) {
   const [orderBy, setOrderBy] = useState('');
   const [order, setOrder] = useState('');
@@ -70,11 +70,13 @@ function JadeTable({
   }, [queryParams]);
 
   const handleChangePage = (event, newPage) => {
-    updateDataOnPageChange(newPage);
+    updateDataOnChange(newPage, rowsPerPage);
   };
 
   const handleChangeRowsPerPage = (event) => {
-    dispatch(changeRowsPerPage(parseInt(event.target.value, 10)));
+    const newRowsPerPage = parseInt(event.target.value, 10);
+    dispatch(changeRowsPerPage(newRowsPerPage));
+    updateDataOnChange(page, newRowsPerPage);
   };
 
   const createSortHandler = (property) => {
@@ -180,7 +182,7 @@ JadeTable.propTypes = {
   queryParams: PropTypes.object,
   rows: PropTypes.array,
   rowsPerPage: PropTypes.number.isRequired,
-  updateDataOnPageChange: PropTypes.func.isRequired,
+  updateDataOnChange: PropTypes.func.isRequired,
 };
 
 function mapStateToProps(state) {
