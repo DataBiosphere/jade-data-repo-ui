@@ -9,7 +9,7 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import LoadingSpinner from 'components/common/LoadingSpinner';
 import { changeRowsPerPage, applySort } from 'actions/index';
 import JadeTableHead from './JadeTableHead';
 import { ellipsis } from '../../libs/styles';
@@ -23,16 +23,6 @@ const styles = (theme) => ({
   tableWrapper: {
     height: 'calc(100vh - 300px)',
     overflow: 'auto',
-  },
-  spinWrapper: {
-    height: 'calc(100% - 60px)',
-    display: 'grid',
-    width: 500,
-    textAlign: 'center',
-    margin: 'auto',
-  },
-  spinner: {
-    margin: 'auto',
   },
   cell: {
     borderBottomColor: theme.palette.lightTable.bottomColor,
@@ -151,11 +141,10 @@ function JadeTable({
           </Table>
         )}
         {polling && (
-          <div className={classes.spinWrapper}>
-            <CircularProgress className={classes.spinner} />
-            {delay &&
-              'For large datasets, it can take a few minutes to fetch results from BigQuery. Thank you for your patience.'}
-          </div>
+          <LoadingSpinner
+            delay={delay}
+            delayMessage="For large datasets, it can take a few minutes to fetch results from BigQuery. Thank you for your patience."
+          />
         )}
       </div>
       <TablePagination

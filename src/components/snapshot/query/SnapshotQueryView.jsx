@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-
+import LoadingSpinner from 'components/common/LoadingSpinner';
 import {
   previewData,
   getSnapshotById,
@@ -106,7 +106,7 @@ function SnapshotQueryView({ dispatch, match, profile, queryParams, rowsPerPage,
   };
 
   if (!snapshotLoaded) {
-    return <div>Loading</div>;
+    return <LoadingSpinner />;
   }
 
   return (
