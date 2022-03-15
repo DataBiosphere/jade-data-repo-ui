@@ -31,7 +31,7 @@ function QueryView({
   canLink,
   classes,
   handleChange,
-  handleChangePage,
+  updateDataOnPageChange,
   handleDrawerWidth,
   panels,
   queryParams,
@@ -75,7 +75,7 @@ function QueryView({
                 <div className={classes.scrollTable}>
                   <JadeTable
                     allowSort={allowSort}
-                    handleChangePage={handleChangePage}
+                    updateDataOnPageChange={updateDataOnPageChange}
                     queryParams={queryParams}
                     title={selected}
                     table={selectedTable}
@@ -104,7 +104,7 @@ QueryView.propTypes = {
   canLink: PropTypes.bool,
   classes: PropTypes.object,
   handleChange: PropTypes.func,
-  handleChangePage: PropTypes.func.isRequired,
+  
   handleDrawerWidth: PropTypes.func,
   panels: PropTypes.array,
   queryParams: PropTypes.object,
@@ -114,6 +114,7 @@ QueryView.propTypes = {
   selectedTable: PropTypes.object,
   sidebarWidth: PropTypes.number,
   tableNames: PropTypes.array,
+  updateDataOnPageChange: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(QueryView);

@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import {
-  applyFilters,
   previewData,
   getSnapshotById,
   getSnapshotPolicy,
@@ -19,12 +18,10 @@ function SnapshotQueryView({
   snapshot,
   snapshotPolicies,
   dispatch,
-  filterData,
   filterStatement,
   joinStatement,
   match,
   orderBy,
-  page,
   profile,
   queryParams,
   userRole,
@@ -74,17 +71,15 @@ function SnapshotQueryView({
 
   useEffect(() => {
     if (snapshotLoaded) {
-      console.log(page);
-      console.log(rowsPerPage);
       dispatch(
         previewData(
           snapshot.id,
-          page * rowsPerPage,
+          0,
           rowsPerPage,
           selected,
           selectedTable.columns,
           selectedTable.rowCount,
-          page,
+          0,
         ),
       );
     }
@@ -102,6 +97,7 @@ function SnapshotQueryView({
   useEffect(() => {
     const snapshotId = match.params.uuid;
     const loaded = snapshot && snapshot.tables && snapshot.id === snapshotId;
+    setSnapshotLoaded(loaded);
     if (loaded) {
       const names = snapshot.tables.map((t) => t.name);
       setTableNames(names);
@@ -129,10 +125,20 @@ function SnapshotQueryView({
   const handleChange = (value) => {
     setSelected(value);
     setSelectedTable(snapshot.tables.find((t) => t.name === value));
-    dispatch(applyFilters(filterData, value, snapshot, snapshot.relationships));
+    dispatch(
+      previewData(
+        snapshot.id,
+        0,
+        rowsPerPage,
+        selected,
+        selectedTable.columns,
+        selectedTable.rowCount,
+        0,
+      ),
+    );
   };
 
-  const handleChangePage = (newPage) => {
+  const updateDataOnPageChange = (newPage) => {
     dispatch(
       previewData(
         snapshot.id,
@@ -141,7 +147,7 @@ function SnapshotQueryView({
         selected,
         selectedTable.columns,
         selectedTable.rowCount,
-        newPage,
+        newPage
       ),
     );
   };
@@ -157,7 +163,7 @@ function SnapshotQueryView({
       resourceName={snapshot.name}
       tableNames={tableNames}
       handleChange={handleChange}
-      handleChangePage={handleChangePage}
+      updateDataOnPageChange={updateDataOnPageChange}
       queryParams={queryParams}
       selected={selected}
       selectedTable={selectedTable}
@@ -179,7 +185,6 @@ SnapshotQueryView.propTypes = {
   match: PropTypes.object,
   orderBy: PropTypes.string,
   profile: PropTypes.object,
-  page: PropTypes.number.isRequired,
   queryParams: PropTypes.object,
   userRole: PropTypes.array,
   rowsPerPage: PropTypes.number.isRequired,
@@ -194,7 +199,6 @@ function mapStateToProps(state) {
     joinStatement: state.query.joinStatement,
     queryParams: state.query.queryParams,
     orderBy: state.query.orderBy,
-    page: state.query.page,
     profile: state.profiles.profile,
     rowsPerPage: state.query.rowsPerPage,
   };

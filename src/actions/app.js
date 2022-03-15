@@ -189,10 +189,7 @@ export const { previewData } = createActions({
     totalRowCount,
     newPage,
   }),
-});
-
-export const { updateRowsPerPage } = createActions({
-  [ActionTypes.CHANGE_ROWS_PER_PAGE]: (rowsPerPage) => rowsPerPage,
+  [ActionTypes.CHANGE_PAGE]: (newPage) => newPage,
 });
 
 export const { pageQuery } = createActions({
@@ -220,6 +217,10 @@ export const { applySort } = createActions({
     property,
     direction,
   }),
+});
+
+export const { changeRowsPerPage } = createActions({
+  [ActionTypes.UPDATE_ROWS_PER_PAGE]: (rowsPerPage) => rowsPerPage,
 });
 
 export const { openSnapshotDialog } = createActions({

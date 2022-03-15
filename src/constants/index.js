@@ -86,6 +86,7 @@ export const ActionTypes = keyMirror({
   PAGE_QUERY: undefined,
   PAGE_QUERY_SUCCESS: undefined,
   CHANGE_ROWS_PER_PAGE: undefined,
+  CHANGE_PAGE: undefined,
   APPLY_SORT: undefined,
   OPEN_SNAPSHOT_DIALOG: undefined,
   COUNT_RESULTS: undefined,

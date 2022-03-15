@@ -43,6 +43,7 @@ export default {
           rows: { $set: rows },
           polling: { $set: false },
           delay: { $set: false },
+          page: { $set: 0 },
         });
       },
       [ActionTypes.PREVIEW_DATA_SUCCESS]: (state, action) => {
@@ -79,7 +80,6 @@ export default {
           polling: { $set: false },
           delay: { $set: false },
           resultsCount: { $set: queryResults.length },
-          page: { $set: action.payload.newPage },
         });
       },
       [ActionTypes.PAGE_QUERY_SUCCESS]: (state, action) => {
@@ -119,7 +119,11 @@ export default {
       [ActionTypes.CHANGE_ROWS_PER_PAGE]: (state, action) =>
         immutable(state, {
           page: { $set: 0 },
-          rowsPerPage: { $set: action.rowsPerPage },
+          rowsPerPage: { $set: action.payload },
+        }),
+      [ActionTypes.CHANGE_PAGE]: (state, action) => 
+        immutable(state, {
+          page: { $set: action.newPage },
         }),
       [ActionTypes.APPLY_FILTERS]: (state, action) => {
         const bigquery = new BigQuery();
@@ -134,6 +138,7 @@ export default {
           filterData: { $set: action.payload.filters },
           filterStatement: { $set: filterStatement },
           joinStatement: { $set: joinStatement },
+          page: { $set: 0 },
         });
       },
       [ActionTypes.APPLY_SORT]: (state, action) => {

@@ -10,7 +10,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { applySort, updateRowsPerPage } from 'actions/index';
+import { changeRowsPerPage, changePage, applySort }  from 'actions/index';
 import JadeTableHead from './JadeTableHead';
 import { ellipsis } from '../../libs/styles';
 import { COLUMN_MODES, TABLE_DEFAULT_ROWS_PER_PAGE_OPTIONS } from '../../constants';
@@ -50,13 +50,13 @@ function JadeTable({
   classes,
   columns,
   delay,
-  handleChangePage,
   dispatch,
   page,
   polling,
   queryParams,
   rows,
   rowsPerPage,
+  updateDataOnPageChange,
 }) {
   const [orderBy, setOrderBy] = useState('');
   const [order, setOrder] = useState('');
@@ -69,13 +69,14 @@ function JadeTable({
     }
   }, [queryParams]);
 
-  const changePage = (event, newPage) => {
-    handleChangePage(newPage);
+  const handleChangePage = (event, newPage) => {
+    updateDataOnPageChange(newPage);
   };
 
   const handleChangeRowsPerPage = (event) => {
     const newRowsPerPage = parseInt(event.target.value, 10);
-    dispatch(updateRowsPerPage(newRowsPerPage));
+    console.log(newRowsPerPage);
+    dispatch(changeRowsPerPage(newRowsPerPage));
   };
 
   const createSortHandler = (property) => {
@@ -163,7 +164,7 @@ function JadeTable({
         count={count}
         rowsPerPage={rowsPerPage}
         page={page}
-        onChangePage={changePage}
+        onChangePage={handleChangePage}
         onChangeRowsPerPage={handleChangeRowsPerPage}
       />
     </Paper>
@@ -176,7 +177,7 @@ JadeTable.propTypes = {
   columns: PropTypes.array,
   delay: PropTypes.bool,
   dispatch: PropTypes.func.isRequired,
-  handleChangePage: PropTypes.func.isRequired,
+  updateDataOnPageChange: PropTypes.func.isRequired,
   page: PropTypes.number,
   polling: PropTypes.bool,
   queryParams: PropTypes.object,

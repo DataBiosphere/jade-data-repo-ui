@@ -229,6 +229,10 @@ export function* getSnapshots({ payload }) {
 }
 
 export function* getSnapshotById({ payload }) {
+  yield put({
+    type: ActionTypes.CHANGE_PAGE,
+    newPage: 0,
+  });
   const { snapshotId, include } = payload;
   const includeUrl = include ? `?${_.map(include, (inc) => `include=${inc}`).join('&')}` : '';
   try {
@@ -487,6 +491,10 @@ export function* watchGetDatasetByIdSuccess() {
  */
 
 export function* previewData({ payload }) {
+  yield put({
+    type: ActionTypes.CHANGE_PAGE,
+    newPage: payload.newPage,
+  });
   // TODO - make this query generic between dataset & snapshot
   const query = `/api/repository/v1/snapshots/${payload.snapshotId}/data/${payload.table}?offset=${payload.offset}&limit=${payload.limit}`;
   try {
@@ -497,7 +505,6 @@ export function* previewData({ payload }) {
         queryResults: response,
         columns: payload.columns,
         totalRowCount: payload.totalRowCount,
-        newPage: payload.newPage,
       },
     });
   } catch (err) {
@@ -555,11 +562,11 @@ export function* runQuery({ payload }) {
   }
 }
 
-export function* updateRowsPerPage({ payload }) {
+export function* changeRowsPerPage(rowsPerPage) {
   try {
     yield put({
-      type: ActionTypes.UPDATE_ROWS_PER_PAGE,
-      rowsPerPage: payload.rowsPerPage,
+      type: ActionTypes.CHANGE_ROWS_PER_PAGE,
+      rowsPerPage: rowsPerPage,
     });
   } catch (err) {
     showNotification(err);
@@ -654,7 +661,6 @@ export default function* root() {
     takeLatest(ActionTypes.RUN_QUERY, runQuery),
     takeLatest(ActionTypes.PREVIEW_DATA, previewData),
     takeLatest(ActionTypes.PAGE_QUERY, pageQuery),
-    takeLatest(ActionTypes.CHANGE_ROWS_PER_PAGE, updateRowsPerPage),
     takeLatest(ActionTypes.COUNT_RESULTS, countResults),
     takeLatest(ActionTypes.GET_FEATURES, getFeatures),
     takeLatest(ActionTypes.GET_BILLING_PROFILE_BY_ID, getBillingProfileById),
