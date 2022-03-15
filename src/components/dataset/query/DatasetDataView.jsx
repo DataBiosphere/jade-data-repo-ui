@@ -163,7 +163,7 @@ function DatasetQueryView({
     dispatch(applyFilters(filterData, value, dataset, dataset.schema.relationships));
   };
 
-  const updateDataOnPageChange = (newPage) => {
+  const updateDataOnChange = (newPage, newRowsPerPage) => {
     const bqStorage = dataset.storage.find(
       (s) => s.cloudResource === GOOGLE_CLOUD_RESOURCE.BIGQUERY,
     );
@@ -181,7 +181,7 @@ function DatasetQueryView({
         pageToTokenMap[newPage],
         queryParams.projectId,
         queryParams.jobId,
-        rowsPerPage,
+        newRowsPerPage,
         location,
         newPage,
       ),
@@ -200,7 +200,7 @@ function DatasetQueryView({
       resourceName={dataset.name}
       tableNames={tableNames}
       handleChange={handleChange}
-      updateDataOnPageChange={updateDataOnPageChange}
+      updateDataOnChange={updateDataOnChange}
       queryParams={queryParams}
       selected={selected}
       selectedTable={selectedTable}
