@@ -104,7 +104,7 @@ QueryView.propTypes = {
   canLink: PropTypes.bool,
   classes: PropTypes.object,
   handleChange: PropTypes.func,
-  
+
   handleDrawerWidth: PropTypes.func,
   panels: PropTypes.array,
   queryParams: PropTypes.object,

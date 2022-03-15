@@ -15,8 +15,6 @@ import InfoView from '../../common/query/sidebar/panels/InfoView';
 import { SNAPSHOT_INCLUDE_OPTIONS } from '../../../constants';
 
 function SnapshotQueryView({
-  snapshot,
-  snapshotPolicies,
   dispatch,
   filterStatement,
   joinStatement,
@@ -24,8 +22,10 @@ function SnapshotQueryView({
   orderBy,
   profile,
   queryParams,
-  userRole,
   rowsPerPage,
+  snapshot,
+  snapshotPolicies,
+  userRole,
 }) {
   const [selected, setSelected] = useState('');
   const [selectedTable, setSelectedTable] = useState(null);
@@ -147,7 +147,7 @@ function SnapshotQueryView({
         selected,
         selectedTable.columns,
         selectedTable.rowCount,
-        newPage
+        newPage,
       ),
     );
   };
@@ -176,31 +176,29 @@ function SnapshotQueryView({
 }
 
 SnapshotQueryView.propTypes = {
-  snapshot: PropTypes.object,
-  snapshotPolicies: PropTypes.array,
   dispatch: PropTypes.func.isRequired,
-  filterData: PropTypes.object,
   filterStatement: PropTypes.string.isRequired,
   joinStatement: PropTypes.string.isRequired,
   match: PropTypes.object,
   orderBy: PropTypes.string,
   profile: PropTypes.object,
   queryParams: PropTypes.object,
-  userRole: PropTypes.array,
   rowsPerPage: PropTypes.number.isRequired,
+  snapshot: PropTypes.object,
+  snapshotPolicies: PropTypes.array,
+  userRole: PropTypes.array,
 };
 
 function mapStateToProps(state) {
   return {
-    snapshot: state.snapshots.snapshot,
-    snapshotPolicies: state.snapshots.snapshotPolicies,
     filterStatement: state.query.filterStatement,
-    filterData: state.query.filterData,
     joinStatement: state.query.joinStatement,
-    queryParams: state.query.queryParams,
     orderBy: state.query.orderBy,
     profile: state.profiles.profile,
+    queryParams: state.query.queryParams,
     rowsPerPage: state.query.rowsPerPage,
+    snapshot: state.snapshots.snapshot,
+    snapshotPolicies: state.snapshots.snapshotPolicies,
   };
 }
 

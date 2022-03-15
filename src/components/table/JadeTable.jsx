@@ -10,7 +10,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { changeRowsPerPage, changePage, applySort }  from 'actions/index';
+import { changeRowsPerPage, applySort } from 'actions/index';
 import JadeTableHead from './JadeTableHead';
 import { ellipsis } from '../../libs/styles';
 import { COLUMN_MODES, TABLE_DEFAULT_ROWS_PER_PAGE_OPTIONS } from '../../constants';
@@ -177,23 +177,23 @@ JadeTable.propTypes = {
   columns: PropTypes.array,
   delay: PropTypes.bool,
   dispatch: PropTypes.func.isRequired,
-  updateDataOnPageChange: PropTypes.func.isRequired,
-  page: PropTypes.number,
+  page: PropTypes.number.isRequired,
   polling: PropTypes.bool,
   queryParams: PropTypes.object,
   rows: PropTypes.array,
-  rowsPerPage: PropTypes.number,
+  rowsPerPage: PropTypes.number.isRequired,
+  updateDataOnPageChange: PropTypes.func.isRequired,
 };
 
 function mapStateToProps(state) {
   return {
+    columns: state.query.columns,
     delay: state.query.delay,
     filterData: state.query.filterData,
     filterStatement: state.query.filterStatement,
-    queryParams: state.query.queryParams,
-    columns: state.query.columns,
     page: state.query.page,
     polling: state.query.polling,
+    queryParams: state.query.queryParams,
     rows: state.query.rows,
     rowsPerPage: state.query.rowsPerPage,
   };

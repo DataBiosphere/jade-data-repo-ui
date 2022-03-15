@@ -121,7 +121,7 @@ export default {
           page: { $set: 0 },
           rowsPerPage: { $set: action.payload },
         }),
-      [ActionTypes.CHANGE_PAGE]: (state, action) => 
+      [ActionTypes.CHANGE_PAGE]: (state, action) =>
         immutable(state, {
           page: { $set: action.newPage },
         }),

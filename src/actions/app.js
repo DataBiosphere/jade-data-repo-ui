@@ -180,7 +180,15 @@ export const { previewData } = createActions({
     queryResults,
     columns,
   }),
-  [ActionTypes.PREVIEW_DATA]: (snapshotId, offset, limit, table, columns, totalRowCount, newPage) => ({
+  [ActionTypes.PREVIEW_DATA]: (
+    snapshotId,
+    offset,
+    limit,
+    table,
+    columns,
+    totalRowCount,
+    newPage,
+  ) => ({
     snapshotId,
     offset,
     limit,
