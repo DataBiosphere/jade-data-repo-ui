@@ -228,7 +228,7 @@ export const { applySort } = createActions({
 });
 
 export const { changeRowsPerPage } = createActions({
-  [ActionTypes.UPDATE_ROWS_PER_PAGE]: (rowsPerPage) => rowsPerPage,
+  [ActionTypes.CHANGE_ROWS_PER_PAGE]: (rowsPerPage) => rowsPerPage,
 });
 
 export const { openSnapshotDialog } = createActions({

@@ -64,7 +64,7 @@ function JadeTable({
 
   useEffect(() => {
     const c = parseInt(queryParams.totalRows, 10);
-    if (c) {
+    if (c >= 0) {
       setCount(c);
     }
   }, [queryParams]);
@@ -74,9 +74,7 @@ function JadeTable({
   };
 
   const handleChangeRowsPerPage = (event) => {
-    const newRowsPerPage = parseInt(event.target.value, 10);
-    console.log(newRowsPerPage);
-    dispatch(changeRowsPerPage(newRowsPerPage));
+    dispatch(changeRowsPerPage(parseInt(event.target.value, 10)));
   };
 
   const createSortHandler = (property) => {
