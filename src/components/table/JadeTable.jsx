@@ -76,7 +76,7 @@ function JadeTable({
   const handleChangeRowsPerPage = (event) => {
     const newRowsPerPage = parseInt(event.target.value, 10);
     dispatch(changeRowsPerPage(newRowsPerPage));
-    updateDataOnChange(page, newRowsPerPage);
+    updateDataOnChange(0, newRowsPerPage);
   };
 
   const createSortHandler = (property) => {

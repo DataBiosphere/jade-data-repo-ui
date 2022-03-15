@@ -84,14 +84,16 @@ function QueryView({
               </Grid>
             </Grid>
           </Grid>
-          <SidebarDrawer
-            canLink={canLink}
-            panels={panels}
-            handleDrawerWidth={handleDrawerWidth}
-            width={sidebarWidth}
-            table={selectedTable}
-            selected={selected}
-          />
+          {panels.length > 0 && (
+            <SidebarDrawer
+              canLink={canLink}
+              panels={panels}
+              handleDrawerWidth={handleDrawerWidth}
+              width={sidebarWidth}
+              table={selectedTable}
+              selected={selected}
+            />
+          )}
           <SnapshotPopup />
         </Fragment>
       )}

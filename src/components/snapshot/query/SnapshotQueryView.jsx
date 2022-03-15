@@ -8,10 +8,8 @@ import {
   getSnapshotPolicy,
   getUserSnapshotRoles,
 } from 'actions/index';
-import { Info } from '@material-ui/icons';
 
 import QueryView from 'components/common/query/QueryView';
-import InfoView from '../../common/query/sidebar/panels/InfoView';
 import { SNAPSHOT_INCLUDE_OPTIONS } from '../../../constants';
 
 function SnapshotQueryView({
@@ -24,8 +22,6 @@ function SnapshotQueryView({
   queryParams,
   rowsPerPage,
   snapshot,
-  snapshotPolicies,
-  userRole,
 }) {
   const [selected, setSelected] = useState('');
   const [selectedTable, setSelectedTable] = useState(null);
@@ -52,7 +48,7 @@ function SnapshotQueryView({
   useEffect(() => {
     const snapshotId = match.params.uuid;
 
-    if (snapshot == null || snapshot.id !== snapshotId) {
+    if (snapshot.id !== snapshotId) {
       dispatch(
         getSnapshotById({
           snapshotId,
@@ -67,15 +63,7 @@ function SnapshotQueryView({
         }),
       );
     }
-
-    if (snapshotPolicies == null || snapshot.id !== snapshotId) {
-      dispatch(getSnapshotPolicy(snapshotId));
-    }
-
-    if (userRole == null || snapshot.id !== snapshotId) {
-      dispatch(getUserSnapshotRoles(snapshotId));
-    }
-  }, [dispatch, match, snapshot, snapshotPolicies, userRole]);
+  }, [match, dispatch]);
 
   useEffect(() => {
     if (profile.id) {
@@ -107,16 +95,20 @@ function SnapshotQueryView({
       setTableNames(names);
       setSelected(names[0]);
       setSelectedTable(snapshot.tables.find((t) => t.name === names[0]));
+      // populate policy and roles for panels
+      dispatch(getSnapshotPolicy(snapshot.id));
+      dispatch(getUserSnapshotRoles(snapshot.id));
       setSnapshotLoaded(true);
 
       const currentPanels = [
-        {
-          icon: Info,
-          width: 600,
-          component: InfoView,
-          selectedTable,
-          snapshot,
-        },
+        // TODO - add in next PR
+        // {
+        //   icon: Info,
+        //   width: 600,
+        //   component: InfoView,
+        //   selectedTable,
+        //   snapshot,
+        // },
       ];
       setPanels(currentPanels);
     }
@@ -165,8 +157,6 @@ SnapshotQueryView.propTypes = {
   queryParams: PropTypes.object,
   rowsPerPage: PropTypes.number.isRequired,
   snapshot: PropTypes.object,
-  snapshotPolicies: PropTypes.array,
-  userRole: PropTypes.array,
 };
 
 function mapStateToProps(state) {
@@ -178,7 +168,6 @@ function mapStateToProps(state) {
     queryParams: state.query.queryParams,
     rowsPerPage: state.query.rowsPerPage,
     snapshot: state.snapshots.snapshot,
-    snapshotPolicies: state.snapshots.snapshotPolicies,
   };
 }
 
