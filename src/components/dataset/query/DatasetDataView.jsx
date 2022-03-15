@@ -23,7 +23,6 @@ const QUERY_LIMIT = 1000;
 
 function DatasetQueryView({
   dataset,
-  datasetPolicies,
   dispatch,
   filterData,
   filterStatement,
@@ -34,13 +33,12 @@ function DatasetQueryView({
   page,
   profile,
   queryParams,
-  userRole,
 }) {
   const [selected, setSelected] = useState('');
   const [selectedTable, setSelectedTable] = useState(null);
   const [sidebarWidth, setSidebarWidth] = useState(0);
   const [canLink, setCanLink] = useState(false);
-  const [hasDataset, setHasDataset] = useState(false);
+  const [datasetLoaded, setDatasetLoaded] = useState(false);
   const [tableNames, setTableNames] = useState([]);
   const [panels, setPanels] = useState([]);
   const [pageToTokenMap, setPageToTokenMap] = useState({});
@@ -48,7 +46,7 @@ function DatasetQueryView({
   useEffect(() => {
     const datasetId = match.params.uuid;
 
-    if (dataset == null || dataset.id !== datasetId) {
+    if (dataset.id !== datasetId) {
       dispatch(
         getDatasetById({
           datasetId,
@@ -61,16 +59,10 @@ function DatasetQueryView({
           ],
         }),
       );
-    }
-
-    if (datasetPolicies == null || dataset.id !== datasetId) {
       dispatch(getDatasetPolicy(datasetId));
-    }
-
-    if (userRole == null || dataset.id !== datasetId) {
       dispatch(getUserDatasetRoles(datasetId));
     }
-  }, [dispatch, match, dataset, datasetPolicies, userRole]);
+  }, [dispatch, match]);
 
   useEffect(() => {
     if (profile.id) {
@@ -79,7 +71,7 @@ function DatasetQueryView({
   }, [profile]);
 
   useEffect(() => {
-    if (hasDataset) {
+    if (datasetLoaded) {
       const fromClause = `FROM \`${dataset.dataProject}.datarepo_${dataset.name}.${selected}\` AS ${selected}
           ${joinStatement}
           ${filterStatement}`;
@@ -104,7 +96,7 @@ function DatasetQueryView({
       );
     }
   }, [
-    hasDataset,
+    datasetLoaded,
     dataset,
     dispatch,
     filterStatement,
@@ -116,13 +108,13 @@ function DatasetQueryView({
 
   useEffect(() => {
     const datasetId = match.params.uuid;
-    const datasetLoaded = dataset && dataset.schema && dataset.id === datasetId;
-    if (datasetLoaded) {
+    const loaded = dataset && dataset.schema && dataset.id === datasetId;
+    if (loaded) {
       const names = dataset.schema.tables.map((t) => t.name);
       setTableNames(names);
       setSelected(names[0]);
       setSelectedTable(dataset.schema.tables.find((t) => t.name === names[0]));
-      setHasDataset(true);
+      setDatasetLoaded(true);
 
       const currentPanels = [
         {
@@ -189,14 +181,14 @@ function DatasetQueryView({
     setPageToTokenMap(pageToTokenMap);
   };
 
-  if (!hasDataset) {
+  if (!datasetLoaded) {
     return <div>Loading</div>;
   }
 
   return (
     <QueryView
       allowSort={true}
-      resourceLoaded={hasDataset}
+      resourceLoaded={datasetLoaded}
       resourceName={dataset.name}
       tableNames={tableNames}
       handleChange={handleChange}

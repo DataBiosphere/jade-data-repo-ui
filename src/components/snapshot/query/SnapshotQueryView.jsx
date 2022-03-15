@@ -12,21 +12,11 @@ import {
 import QueryView from 'components/common/query/QueryView';
 import { SNAPSHOT_INCLUDE_OPTIONS } from '../../../constants';
 
-function SnapshotQueryView({
-  dispatch,
-  filterStatement,
-  joinStatement,
-  match,
-  orderBy,
-  profile,
-  queryParams,
-  rowsPerPage,
-  snapshot,
-}) {
+function SnapshotQueryView({ dispatch, match, profile, queryParams, rowsPerPage, snapshot }) {
   const [selected, setSelected] = useState('');
   const [selectedTable, setSelectedTable] = useState(null);
-  const [sidebarWidth, setSidebarWidth] = useState(0);
   const [canLink, setCanLink] = useState(false);
+  const [sidebarWidth, setSidebarWidth] = useState(0);
   const [snapshotLoaded, setSnapshotLoaded] = useState(false);
   const [tableNames, setTableNames] = useState([]);
   const [panels, setPanels] = useState([]);
@@ -62,6 +52,9 @@ function SnapshotQueryView({
           ],
         }),
       );
+      // used to determine canLink + used in panels
+      dispatch(getSnapshotPolicy(snapshotId));
+      dispatch(getUserSnapshotRoles(snapshotId));
     }
   }, [match, dispatch]);
 
@@ -72,36 +65,24 @@ function SnapshotQueryView({
   }, [profile]);
 
   useEffect(() => {
-    if (snapshotLoaded) {
+    const snapshotId = match.params.uuid;
+    if (snapshotLoaded && snapshotId === snapshot.id) {
       updateDataOnChange(0, rowsPerPage);
     }
-  }, [
-    snapshotLoaded,
-    snapshot,
-    dispatch,
-    filterStatement,
-    joinStatement,
-    orderBy,
-    selected,
-    selectedTable,
-  ]);
+  }, [snapshotLoaded, snapshot, dispatch, match, selected, selectedTable]);
 
   useEffect(() => {
     const snapshotId = match.params.uuid;
     const loaded = snapshot && snapshot.tables && snapshot.id === snapshotId;
-    setSnapshotLoaded(loaded);
     if (loaded) {
       const names = snapshot.tables.map((t) => t.name);
       setTableNames(names);
       setSelected(names[0]);
       setSelectedTable(snapshot.tables.find((t) => t.name === names[0]));
-      // populate policy and roles for panels
-      dispatch(getSnapshotPolicy(snapshot.id));
-      dispatch(getUserSnapshotRoles(snapshot.id));
       setSnapshotLoaded(true);
 
       const currentPanels = [
-        // TODO - add in next PR
+        // TODO - add in w/ panel PR
         // {
         //   icon: Info,
         //   width: 600,
@@ -114,6 +95,7 @@ function SnapshotQueryView({
     }
   }, [snapshot, match]);
 
+  // TODO - this doesn't do anything until we add panels
   const handleDrawerWidth = (width) => {
     setSidebarWidth(width);
   };
@@ -121,7 +103,6 @@ function SnapshotQueryView({
   const handleChange = (value) => {
     setSelected(value);
     setSelectedTable(snapshot.tables.find((t) => t.name === value));
-    updateDataOnChange(0, rowsPerPage);
   };
 
   if (!snapshotLoaded) {
@@ -149,10 +130,7 @@ function SnapshotQueryView({
 
 SnapshotQueryView.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  filterStatement: PropTypes.string.isRequired,
-  joinStatement: PropTypes.string.isRequired,
   match: PropTypes.object,
-  orderBy: PropTypes.string,
   profile: PropTypes.object,
   queryParams: PropTypes.object,
   rowsPerPage: PropTypes.number.isRequired,
@@ -161,9 +139,6 @@ SnapshotQueryView.propTypes = {
 
 function mapStateToProps(state) {
   return {
-    filterStatement: state.query.filterStatement,
-    joinStatement: state.query.joinStatement,
-    orderBy: state.query.orderBy,
     profile: state.profiles.profile,
     queryParams: state.query.queryParams,
     rowsPerPage: state.query.rowsPerPage,
