@@ -20,7 +20,7 @@ export const queryState = {
 export default {
   query: handleActions(
     {
-      [ActionTypes.RUN_QUERY_SUCCESS]: (state, action) => {
+      [ActionTypes.RUN_QUERY_SUCCESS]: (state: any, action: any) => {
         const bigquery = new BigQuery();
         const queryResults = action.results.data;
 
@@ -35,7 +35,7 @@ export default {
           delay: { $set: false },
         });
       },
-      [ActionTypes.PAGE_QUERY_SUCCESS]: (state, action) => {
+      [ActionTypes.PAGE_QUERY_SUCCESS]: (state: any, action: any) => {
         const bigquery = new BigQuery();
         const queryResults = action.results.data;
 
@@ -48,16 +48,16 @@ export default {
           rows: { $set: rows },
         });
       },
-      [ActionTypes.RUN_QUERY]: (state) =>
+      [ActionTypes.RUN_QUERY]: (state: any) =>
         immutable(state, {
           queryResults: { $set: {} },
           polling: { $set: true },
         }),
-      [ActionTypes.POLL_QUERY]: (state) =>
+      [ActionTypes.POLL_QUERY]: (state: any) =>
         immutable(state, {
           delay: { $set: true },
         }),
-      [ActionTypes.APPLY_FILTERS]: (state, action) => {
+      [ActionTypes.APPLY_FILTERS]: (state: any, action: any) => {
         const bigquery = new BigQuery();
         const filterStatement = bigquery.buildFilterStatement(action.payload.filters);
         const joinStatement = bigquery.buildJoinStatement(
@@ -71,7 +71,7 @@ export default {
           joinStatement: { $set: joinStatement },
         });
       },
-      [ActionTypes.APPLY_SORT]: (state, action) => {
+      [ActionTypes.APPLY_SORT]: (state: any, action: any) => {
         const bigquery = new BigQuery();
         const orderBy = bigquery.buildOrderBy(action.payload.property, action.payload.direction);
 
@@ -79,7 +79,7 @@ export default {
           orderBy: { $set: orderBy },
         });
       },
-      [LOCATION_CHANGE]: (state, action) => {
+      [LOCATION_CHANGE]: (state: any, action: any) => {
         if (action.payload.location.pathname.includes('/datasets/details/')) {
           // michael can you help us with this
           return immutable(state, {
@@ -92,7 +92,7 @@ export default {
         }
         return state;
       },
-      [ActionTypes.COUNT_RESULTS_SUCCESS]: (state, action) =>
+      [ActionTypes.COUNT_RESULTS_SUCCESS]: (state: any, action: any) =>
         immutable(state, {
           resultsCount: { $set: action.resultsCount },
         }),

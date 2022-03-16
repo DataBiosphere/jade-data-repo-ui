@@ -2,7 +2,7 @@ import { handleActions } from 'redux-actions';
 import immutable from 'immutability-helper';
 import _ from 'lodash';
 
-import { IMAGE, STATUS, ActionTypes } from 'constants/index';
+import { ActionTypes, IMAGE, STATUS } from 'constants/index';
 
 const JADE_FEATURE_PREFIX = 'jade-feature-';
 
@@ -22,7 +22,7 @@ export const userState = {
 export default {
   user: handleActions(
     {
-      [ActionTypes.USER_LOGIN]: (state, action) =>
+      [ActionTypes.USER_LOGIN]: (state: any, action: any) =>
         immutable(state, {
           isInitiallyLoaded: { $set: true },
           isAuthenticated: { $set: true },
@@ -34,7 +34,7 @@ export default {
           tokenExpiration: { $set: action.payload.tokenExpiration },
           id: { $set: action.payload.id },
         }),
-      [ActionTypes.USER_LOGOUT]: (state) =>
+      [ActionTypes.USER_LOGOUT]: (state: any) =>
         immutable(state, {
           isInitiallyLoaded: { $set: true },
           isAuthenticated: { $set: false },
@@ -46,14 +46,15 @@ export default {
           tokenExpiration: { $set: '' },
           features: { $set: {} },
         }),
-      [ActionTypes.GET_FEATURES_SUCCESS]: (state, action) => {
+      [ActionTypes.GET_FEATURES_SUCCESS]: (state: any, action: any) => {
         const isTimeoutEnabled = _.some(action.groups, { groupName: 'session_timeout' });
         const features = {};
         action.groups
-          .map((group) => group.groupName)
-          .filter((groupName) => groupName.startsWith(JADE_FEATURE_PREFIX))
-          .map((feature) => feature.substring(JADE_FEATURE_PREFIX.length))
-          .forEach((feature) => {
+          .map((group: any) => group.groupName)
+          .filter((groupName: string) => groupName.startsWith(JADE_FEATURE_PREFIX))
+          .map((feature: string) => feature.substring(JADE_FEATURE_PREFIX.length))
+          .forEach((feature: string) => {
+            // @ts-ignore
             features[feature] = true;
           });
 

@@ -8,7 +8,7 @@ export const configurationState = {};
 export default {
   configuration: handleActions(
     {
-      [ActionTypes.GET_CONFIGURATION_SUCCESS]: (state, action) =>
+      [ActionTypes.GET_CONFIGURATION_SUCCESS]: (state: any, action: any) =>
         immutable(state, { $set: action.configuration }),
     },
     configurationState,
