@@ -84,7 +84,7 @@ export default {
       },
       [ActionTypes.PAGE_QUERY_SUCCESS]: (state, action) => {
         const bigquery = new BigQuery();
-        const queryResults = action.payload.results.data;
+        const queryResults = action.results.data;
 
         const columns = bigquery.transformColumns(queryResults);
         const rows = bigquery.transformRows(queryResults, columns);
@@ -99,7 +99,6 @@ export default {
           queryParams: { $set: queryParams },
           columns: { $set: columns },
           rows: { $set: rows },
-          page: { $set: action.payload.newPage },
         });
       },
       [ActionTypes.RUN_QUERY]: (state) =>

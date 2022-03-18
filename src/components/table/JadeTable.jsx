@@ -10,7 +10,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import LoadingSpinner from 'components/common/LoadingSpinner';
-import { changeRowsPerPage, applySort } from 'actions/index';
+import { changeRowsPerPage, changePage, applySort } from 'actions/index';
 import JadeTableHead from './JadeTableHead';
 import { ellipsis } from '../../libs/styles';
 import { COLUMN_MODES, TABLE_DEFAULT_ROWS_PER_PAGE_OPTIONS } from '../../constants';
@@ -59,15 +59,16 @@ function JadeTable({
     }
   }, [queryParams]);
 
-  const handleChangePage = (event, newPage) => {
-    updateDataOnChange(newPage, rowsPerPage);
-  };
+  async function handleChangePage(event, newPage) {
+    await dispatch(changePage(newPage));
+    updateDataOnChange();
+  }
 
-  const handleChangeRowsPerPage = (event) => {
+  async function handleChangeRowsPerPage(event) {
     const newRowsPerPage = parseInt(event.target.value, 10);
-    dispatch(changeRowsPerPage(newRowsPerPage));
-    updateDataOnChange(0, newRowsPerPage);
-  };
+    await dispatch(changeRowsPerPage(newRowsPerPage));
+    updateDataOnChange();
+  }
 
   const createSortHandler = (property) => {
     let newOrder = '';

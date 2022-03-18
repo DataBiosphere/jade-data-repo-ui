@@ -179,34 +179,20 @@ export const { previewData } = createActions({
     queryResults,
     columns,
   }),
-  [ActionTypes.PREVIEW_DATA]: (
+  [ActionTypes.PREVIEW_DATA]: (snapshotId, table, columns, totalRowCount) => ({
     snapshotId,
-    offset,
-    limit,
     table,
     columns,
     totalRowCount,
-    newPage,
-  ) => ({
-    snapshotId,
-    offset,
-    limit,
-    table,
-    columns,
-    totalRowCount,
-    newPage,
   }),
-  [ActionTypes.CHANGE_PAGE]: (newPage) => newPage,
 });
 
 export const { pageQuery } = createActions({
-  [ActionTypes.PAGE_QUERY]: (pageToken, projectId, jobId, pageSize, location, newPage) => ({
+  [ActionTypes.PAGE_QUERY]: (pageToken, projectId, jobId, location) => ({
     pageToken,
     projectId,
     jobId,
-    pageSize,
     location,
-    newPage,
   }),
 });
 
@@ -228,6 +214,10 @@ export const { applySort } = createActions({
 
 export const { changeRowsPerPage } = createActions({
   [ActionTypes.CHANGE_ROWS_PER_PAGE]: (rowsPerPage) => rowsPerPage,
+});
+
+export const { changePage } = createActions({
+  [ActionTypes.CHANGE_PAGE]: (page) => page,
 });
 
 export const { openSnapshotDialog } = createActions({

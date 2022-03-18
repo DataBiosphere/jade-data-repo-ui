@@ -1,75 +1,48 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import LoadingSpinner from 'components/common/LoadingSpinner';
-import {
-  previewData,
-  getSnapshotById,
-  getSnapshotPolicy,
-  getUserSnapshotRoles,
-} from 'actions/index';
+import { previewData, getSnapshotById } from 'actions/index';
 
 import QueryView from 'components/common/query/QueryView';
 import { SNAPSHOT_INCLUDE_OPTIONS } from '../../../constants';
 
-function SnapshotQueryView({ dispatch, match, profile, queryParams, rowsPerPage, snapshot }) {
+function SnapshotQueryView({ dispatch, match, queryParams, snapshot }) {
   const [selected, setSelected] = useState('');
   const [selectedTable, setSelectedTable] = useState(null);
-  const [canLink, setCanLink] = useState(false);
   const [sidebarWidth, setSidebarWidth] = useState(0);
   const [snapshotLoaded, setSnapshotLoaded] = useState(false);
   const [tableNames, setTableNames] = useState([]);
   const [panels, setPanels] = useState([]);
 
-  const updateDataOnChange = (newPage, newRowsPerPage) => {
-    dispatch(
-      previewData(
-        snapshot.id,
-        newPage * newRowsPerPage,
-        newRowsPerPage,
-        selected,
-        selectedTable.columns,
-        selectedTable.rowCount,
-        newPage,
-      ),
-    );
-  };
+  const updateDataOnChange = useCallback(() => {
+    dispatch(previewData(snapshot.id, selected, selectedTable.columns, selectedTable.rowCount));
+  }, [dispatch, snapshot.id, selected, selectedTable]);
 
   useEffect(() => {
     const snapshotId = match.params.uuid;
 
-    if (snapshot.id !== snapshotId) {
-      dispatch(
-        getSnapshotById({
-          snapshotId,
-          include: [
-            SNAPSHOT_INCLUDE_OPTIONS.SOURCES,
-            SNAPSHOT_INCLUDE_OPTIONS.TABLES,
-            SNAPSHOT_INCLUDE_OPTIONS.RELATIONSHIPS,
-            SNAPSHOT_INCLUDE_OPTIONS.ACCESS_INFORMATION,
-            SNAPSHOT_INCLUDE_OPTIONS.PROFILE,
-            SNAPSHOT_INCLUDE_OPTIONS.DATA_PROJECT,
-          ],
-        }),
-      );
-      // used to determine canLink + used in panels
-      dispatch(getSnapshotPolicy(snapshotId));
-      dispatch(getUserSnapshotRoles(snapshotId));
-    }
-  }, [match, dispatch]);
-
-  useEffect(() => {
-    if (profile.id) {
-      setCanLink(true);
-    }
-  }, [profile]);
+    dispatch(
+      getSnapshotById({
+        snapshotId,
+        include: [
+          SNAPSHOT_INCLUDE_OPTIONS.SOURCES,
+          SNAPSHOT_INCLUDE_OPTIONS.TABLES,
+          SNAPSHOT_INCLUDE_OPTIONS.RELATIONSHIPS,
+          SNAPSHOT_INCLUDE_OPTIONS.ACCESS_INFORMATION,
+          SNAPSHOT_INCLUDE_OPTIONS.PROFILE,
+          SNAPSHOT_INCLUDE_OPTIONS.DATA_PROJECT,
+        ],
+      }),
+    );
+  }, [dispatch, match.params.uuid]);
 
   useEffect(() => {
     const snapshotId = match.params.uuid;
     if (snapshotLoaded && snapshotId === snapshot.id) {
-      updateDataOnChange(0, rowsPerPage);
+      updateDataOnChange();
     }
-  }, [snapshotLoaded, snapshot, dispatch, match, selected, selectedTable]);
+  }, [snapshotLoaded, snapshot, dispatch, match, selected, selectedTable, updateDataOnChange]);
 
   useEffect(() => {
     const snapshotId = match.params.uuid;
@@ -120,7 +93,7 @@ function SnapshotQueryView({ dispatch, match, profile, queryParams, rowsPerPage,
       queryParams={queryParams}
       selected={selected}
       selectedTable={selectedTable}
-      canLink={canLink}
+      canLink={false}
       panels={panels}
       handleDrawerWidth={handleDrawerWidth}
       sidebarWidth={sidebarWidth}
@@ -131,9 +104,7 @@ function SnapshotQueryView({ dispatch, match, profile, queryParams, rowsPerPage,
 SnapshotQueryView.propTypes = {
   dispatch: PropTypes.func.isRequired,
   match: PropTypes.object,
-  profile: PropTypes.object,
   queryParams: PropTypes.object,
-  rowsPerPage: PropTypes.number.isRequired,
   snapshot: PropTypes.object,
 };
 
@@ -141,7 +112,6 @@ function mapStateToProps(state) {
   return {
     profile: state.profiles.profile,
     queryParams: state.query.queryParams,
-    rowsPerPage: state.query.rowsPerPage,
     snapshot: state.snapshots.snapshot,
   };
 }

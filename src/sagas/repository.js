@@ -491,12 +491,11 @@ export function* watchGetDatasetByIdSuccess() {
  */
 
 export function* previewData({ payload }) {
-  yield put({
-    type: ActionTypes.CHANGE_PAGE,
-    newPage: payload.newPage,
-  });
   // TODO - make this query generic between dataset & snapshot
-  const query = `/api/repository/v1/snapshots/${payload.snapshotId}/data/${payload.table}?offset=${payload.offset}&limit=${payload.limit}`;
+  const queryState = yield select(getQuery);
+  const offset = queryState.page * queryState.rowsPerPage;
+  const limit = queryState.rowsPerPage;
+  const query = `/api/repository/v1/snapshots/${payload.snapshotId}/data/${payload.table}?offset=${offset}&limit=${limit}`;
   try {
     const response = yield call(authGet, query);
     yield put({
@@ -567,7 +566,18 @@ export function* changeRowsPerPage(rowsPerPage) {
   try {
     yield put({
       type: ActionTypes.CHANGE_ROWS_PER_PAGE,
-      rowsPerPage: rowsPerPage,
+      rowsPerPage,
+    });
+  } catch (err) {
+    showNotification(err);
+  }
+}
+
+export function* changePage(page) {
+  try {
+    yield put({
+      type: ActionTypes.CHANGE_PAGE,
+      page,
     });
   } catch (err) {
     showNotification(err);
@@ -577,8 +587,9 @@ export function* changeRowsPerPage(rowsPerPage) {
 export function* pageQuery({ payload }) {
   try {
     const url = `/bigquery/v2/projects/${payload.projectId}/queries/${payload.jobId}`;
+    const queryState = yield select(getQuery);
     const params = {
-      maxResults: payload.pageSize,
+      maxResults: queryState.rowsPerPage,
       pageToken: payload.pageToken,
       location: payload.location,
     };
@@ -586,10 +597,7 @@ export function* pageQuery({ payload }) {
 
     yield put({
       type: ActionTypes.PAGE_QUERY_SUCCESS,
-      payload: {
-        results: response,
-        newPage: payload.newPage,
-      },
+      results: response,
     });
   } catch (err) {
     showNotification(err);
