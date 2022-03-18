@@ -30,7 +30,6 @@ function DatasetQueryView({
   joinStatement,
   match,
   orderBy,
-  page,
   profile,
   queryParams,
 }) {
@@ -41,7 +40,6 @@ function DatasetQueryView({
   const [datasetLoaded, setDatasetLoaded] = useState(false);
   const [tableNames, setTableNames] = useState([]);
   const [panels, setPanels] = useState([]);
-  const [pageToTokenMap, setPageToTokenMap] = useState({});
 
   useEffect(() => {
     const datasetId = match.params.uuid;
@@ -156,30 +154,13 @@ function DatasetQueryView({
     dispatch(applyFilters(filterData, value, dataset, dataset.schema.relationships));
   };
 
-  const updateDataOnChange = (newPage, newRowsPerPage) => {
+  const updateDataOnChange = () => {
     const bqStorage = dataset.storage.find(
       (s) => s.cloudResource === GOOGLE_CLOUD_RESOURCE.BIGQUERY,
     );
     const location = bqStorage?.region;
-    if (page === 0) {
-      pageToTokenMap[0] = undefined;
-    }
 
-    if (newPage > page) {
-      pageToTokenMap[newPage] = queryParams.pageToken;
-    }
-
-    dispatch(
-      pageQuery(
-        pageToTokenMap[newPage],
-        queryParams.projectId,
-        queryParams.jobId,
-        newRowsPerPage,
-        location,
-        newPage,
-      ),
-    );
-    setPageToTokenMap(pageToTokenMap);
+    dispatch(pageQuery(queryParams.pageToken, queryParams.projectId, queryParams.jobId, location));
   };
 
   if (!datasetLoaded) {
@@ -213,7 +194,6 @@ DatasetQueryView.propTypes = {
   joinStatement: PropTypes.string.isRequired,
   match: PropTypes.object,
   orderBy: PropTypes.string,
-  page: PropTypes.number,
   profile: PropTypes.object,
   queryParams: PropTypes.object,
 };
@@ -226,7 +206,6 @@ function mapStateToProps(state) {
     joinStatement: state.query.joinStatement,
     queryParams: state.query.queryParams,
     orderBy: state.query.orderBy,
-    page: state.query.page,
     profile: state.profiles.profile,
   };
 }
