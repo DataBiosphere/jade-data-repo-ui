@@ -14,11 +14,11 @@ import {
 import { FilterList, Info, People } from '@material-ui/icons';
 
 import QueryView from 'components/common/query/QueryView';
+import LoadingSpinner from 'components/common/LoadingSpinner';
 import QueryViewSidebar from '../../common/query/sidebar/QueryViewSidebar';
 import InfoView from '../../common/query/sidebar/panels/InfoView';
 import ShareSnapshot from '../../common/query/sidebar/panels/ShareSnapshot';
 import { DATASET_INCLUDE_OPTIONS, GOOGLE_CLOUD_RESOURCE } from '../../../constants';
-import LoadingSpinner from 'components/common/LoadingSpinner';
 
 const QUERY_LIMIT = 1000;
 
@@ -30,7 +30,6 @@ function DatasetQueryView({
   joinStatement,
   match,
   orderBy,
-  rowsPerPage,
   page,
   profile,
   queryParams,
@@ -47,23 +46,21 @@ function DatasetQueryView({
   useEffect(() => {
     const datasetId = match.params.uuid;
 
-    if (dataset.id !== datasetId) {
-      dispatch(
-        getDatasetById({
-          datasetId,
-          include: [
-            DATASET_INCLUDE_OPTIONS.SCHEMA,
-            DATASET_INCLUDE_OPTIONS.ACCESS_INFORMATION,
-            DATASET_INCLUDE_OPTIONS.PROFILE,
-            DATASET_INCLUDE_OPTIONS.DATA_PROJECT,
-            DATASET_INCLUDE_OPTIONS.STORAGE,
-          ],
-        }),
-      );
-      dispatch(getDatasetPolicy(datasetId));
-      dispatch(getUserDatasetRoles(datasetId));
-    }
-  }, [dispatch, match]);
+    dispatch(
+      getDatasetById({
+        datasetId,
+        include: [
+          DATASET_INCLUDE_OPTIONS.SCHEMA,
+          DATASET_INCLUDE_OPTIONS.ACCESS_INFORMATION,
+          DATASET_INCLUDE_OPTIONS.PROFILE,
+          DATASET_INCLUDE_OPTIONS.DATA_PROJECT,
+          DATASET_INCLUDE_OPTIONS.STORAGE,
+        ],
+      }),
+    );
+    dispatch(getDatasetPolicy(datasetId));
+    dispatch(getUserDatasetRoles(datasetId));
+  }, [dispatch, match.params.uuid]);
 
   useEffect(() => {
     if (profile.id) {
@@ -85,7 +82,6 @@ function DatasetQueryView({
             ${selectedTable.columns.map((column) => column.name).join(', ')} ${fromClause}
           ${orderBy}
           LIMIT ${QUERY_LIMIT}`,
-          rowsPerPage,
         ),
       );
       dispatch(
@@ -116,7 +112,11 @@ function DatasetQueryView({
       setSelected(names[0]);
       setSelectedTable(dataset.schema.tables.find((t) => t.name === names[0]));
       setDatasetLoaded(true);
+    }
+  }, [dataset, match]);
 
+  useEffect(() => {
+    if (datasetLoaded) {
       const currentPanels = [
         {
           icon: Info,
@@ -144,7 +144,7 @@ function DatasetQueryView({
       }
       setPanels(currentPanels);
     }
-  }, [dataset, match]);
+  }, [datasetLoaded, dataset, selectedTable, canLink]);
 
   const handleDrawerWidth = (width) => {
     setSidebarWidth(width);
@@ -216,7 +216,6 @@ DatasetQueryView.propTypes = {
   orderBy: PropTypes.string,
   page: PropTypes.number,
   profile: PropTypes.object,
-  rowsPerPage: PropTypes.number,
   queryParams: PropTypes.object,
   userRole: PropTypes.array,
 };
@@ -232,7 +231,6 @@ function mapStateToProps(state) {
     orderBy: state.query.orderBy,
     page: state.query.page,
     profile: state.profiles.profile,
-    rowsPerPage: state.query.rowsPerPage,
   };
 }
 
