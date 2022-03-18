@@ -9,7 +9,7 @@ import moment from 'moment';
 import _ from 'lodash';
 
 import { showNotification } from 'modules/notifications';
-import { ActionTypes, STATUS } from '../constants';
+import { ActionTypes, STATUS, TABLE_DEFAULT_ROWS_PER_PAGE } from '../constants';
 
 /**
  * Switch Menu
@@ -231,7 +231,11 @@ export function* getSnapshots({ payload }) {
 export function* getSnapshotById({ payload }) {
   yield put({
     type: ActionTypes.CHANGE_PAGE,
-    newPage: 0,
+    payload: 0,
+  });
+  yield put({
+    type: ActionTypes.CHANGE_ROWS_PER_PAGE,
+    payload: TABLE_DEFAULT_ROWS_PER_PAGE,
   });
   const { snapshotId, include } = payload;
   const includeUrl = include ? `?${_.map(include, (inc) => `include=${inc}`).join('&')}` : '';
@@ -320,6 +324,14 @@ export function* getDatasets({ payload }) {
 }
 
 export function* getDatasetById({ payload }) {
+  yield put({
+    type: ActionTypes.CHANGE_PAGE,
+    payload: 0,
+  });
+  yield put({
+    type: ActionTypes.CHANGE_ROWS_PER_PAGE,
+    payload: TABLE_DEFAULT_ROWS_PER_PAGE,
+  });
   const { datasetId, include } = payload;
   const includeUrl = include ? `?${_.map(include, (inc) => `include=${inc}`).join('&')}` : '';
   try {

@@ -122,7 +122,7 @@ export default {
         }),
       [ActionTypes.CHANGE_PAGE]: (state, action) =>
         immutable(state, {
-          page: { $set: action.newPage },
+          page: { $set: action.payload },
         }),
       [ActionTypes.APPLY_FILTERS]: (state, action) => {
         const bigquery = new BigQuery();

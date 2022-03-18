@@ -59,16 +59,16 @@ function JadeTable({
     }
   }, [queryParams]);
 
-  async function handleChangePage(event, newPage) {
+  const handleChangePage = async (event, newPage) => {
     await dispatch(changePage(newPage));
     updateDataOnChange();
-  }
+  };
 
-  async function handleChangeRowsPerPage(event) {
+  const handleChangeRowsPerPage = async (event) => {
     const newRowsPerPage = parseInt(event.target.value, 10);
     await dispatch(changeRowsPerPage(newRowsPerPage));
     updateDataOnChange();
-  }
+  };
 
   const createSortHandler = (property) => {
     let newOrder = '';
