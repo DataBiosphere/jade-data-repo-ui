@@ -23,6 +23,7 @@ import TerraTooltip from './common/TerraTooltip';
 import { SNAPSHOT_ROLES } from '../constants';
 
 const styles = (theme) => ({
+  pageTitle: { ...theme.mixins.pageTitle },
   title: {
     color: theme.palette.primary.main,
     fontSize: '44px',
@@ -142,7 +143,7 @@ export class DetailViewHeader extends React.PureComponent {
             <CircularProgress />
           ) : (
             <Fragment>
-              <Typography noWrap className={classes.title}>
+              <Typography noWrap variant="h3" className={classes.pageTitle}>
                 {of.name}
               </Typography>
               <Typography>{of.description}</Typography>

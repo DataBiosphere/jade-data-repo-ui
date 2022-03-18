@@ -41,7 +41,7 @@ class DatasetTable extends React.PureComponent {
         property: 'name',
         render: (row) => (
           <div>
-            <Link to={`/datasets/${row.id}/overview`} className={classes.jadeLink}>
+            <Link to={`/datasets/${row.id}`} className={classes.jadeLink}>
               {row.name}
             </Link>
           </div>

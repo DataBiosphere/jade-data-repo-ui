@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
@@ -24,8 +24,11 @@ import InfoView from './sidebar/panels/InfoView';
 import ShareSnapshot from './sidebar/panels/ShareSnapshot';
 import SnapshotPopup from '../../snapshot/SnapshotPopup';
 import { DATASET_INCLUDE_OPTIONS } from '../../../constants';
+import AppBreadcrumbs, { contextChildLink } from '../../AppBreadcrumbs';
 
 const styles = (theme) => ({
+  pageRoot: { ...theme.mixins.pageRoot },
+  pageTitle: { ...theme.mixins.pageTitle },
   wrapper: {
     paddingTop: theme.spacing(0),
     padding: theme.spacing(4),
@@ -34,16 +37,12 @@ const styles = (theme) => ({
     overflowY: 'auto',
     height: '100%',
   },
-  headerArea: {
-    paddingTop: theme.spacing(1),
-    paddingBottom: theme.spacing(1),
-  },
 });
 
 const PAGE_SIZE = 100;
 const QUERY_LIMIT = 1000;
 
-export class DatasetQueryView extends React.PureComponent {
+export class DatasetDataView extends React.PureComponent {
   constructor(props) {
     super(props);
 
@@ -201,37 +200,37 @@ export class DatasetQueryView extends React.PureComponent {
     const { table, selected, sidebarWidth, canLink } = this.state;
     const names = dataset.schema.tables.map((t) => t.name);
     return (
-      <Fragment>
-        <Grid container spacing={0} className={classes.wrapper}>
-          <Grid container spacing={1}>
-            <Grid item xs={12}>
-              <Typography variant="h3" className={classes.headerArea}>
-                {dataset.name}
-              </Typography>
-            </Grid>
-            <Grid item xs={3}>
-              <QueryViewDropdown options={names} onSelectedItem={this.handleChange} />
-            </Grid>
-            <Grid item xs={3}>
-              <Link to="overview">
-                <Button
-                  className={classes.viewDatasetButton}
-                  color="primary"
-                  variant="outlined"
-                  disableElevation
-                  size="large"
-                >
-                  Back to Dataset Details
-                </Button>
-              </Link>
-            </Grid>
+      <div className={classes.pageRoot}>
+        <AppBreadcrumbs
+          context={{ type: 'datasets', id: dataset.id, name: dataset.name }}
+          links={[contextChildLink('data', 'Data')]}
+        />
+        <Typography variant="h3" className={classes.pageTitle}>
+          {dataset.name}
+        </Typography>
+        <Grid container spacing={1}>
+          <Grid item xs={3}>
+            <QueryViewDropdown options={names} onSelectedItem={this.handleChange} />
           </Grid>
-          <Grid container spacing={0}>
-            <Grid item xs={11}>
-              <div className={classes.scrollTable}>
-                <JadeTable queryResults={queryResults} title={selected} table={table} />
-              </div>
-            </Grid>
+          <Grid item xs={3}>
+            <Link to={`/datasets/${dataset.id}`}>
+              <Button
+                className={classes.viewDatasetButton}
+                color="primary"
+                variant="outlined"
+                disableElevation
+                size="large"
+              >
+                Back to Dataset Overview
+              </Button>
+            </Link>
+          </Grid>
+        </Grid>
+        <Grid container spacing={0}>
+          <Grid item xs={11}>
+            <div className={classes.scrollTable}>
+              <JadeTable queryResults={queryResults} title={selected} table={table} />
+            </div>
           </Grid>
         </Grid>
         <SidebarDrawer
@@ -243,7 +242,7 @@ export class DatasetQueryView extends React.PureComponent {
           selected={selected}
         />
         <SnapshotPopup />
-      </Fragment>
+      </div>
     );
   }
 
@@ -269,4 +268,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(withStyles(styles)(DatasetQueryView));
+export default connect(mapStateToProps)(withStyles(styles)(DatasetDataView));

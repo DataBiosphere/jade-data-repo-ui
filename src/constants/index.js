@@ -94,6 +94,7 @@ export const ActionTypes = keyMirror({
   GET_SERVER_STATUS_SUCCESS: undefined,
   GET_SERVER_STATUS_FAILURE: undefined,
   GET_SERVER_STATUS_DOWN: undefined,
+  SET_BREADCRUMBS: undefined,
 });
 
 /**
