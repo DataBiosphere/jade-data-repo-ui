@@ -207,7 +207,6 @@ function DatasetQueryView({
 
 DatasetQueryView.propTypes = {
   dataset: PropTypes.object,
-  datasetPolicies: PropTypes.array,
   dispatch: PropTypes.func.isRequired,
   filterData: PropTypes.object,
   filterStatement: PropTypes.string.isRequired,
@@ -217,13 +216,11 @@ DatasetQueryView.propTypes = {
   page: PropTypes.number,
   profile: PropTypes.object,
   queryParams: PropTypes.object,
-  userRole: PropTypes.array,
 };
 
 function mapStateToProps(state) {
   return {
     dataset: state.datasets.dataset,
-    datasetPolicies: state.datasets.datasetPolicies,
     filterStatement: state.query.filterStatement,
     filterData: state.query.filterData,
     joinStatement: state.query.joinStatement,
