@@ -54,7 +54,7 @@ export class QueryViewSidebarItem extends React.PureComponent {
   handleChange = (value) => {
     const { column } = this.props;
     const { filterMap } = this.state;
-    const type = column.datatype === 'string' ? 'value' : 'range';
+    const type = ['string', 'text'].includes(column.datatype) ? 'value' : 'range';
     const exclude = _.get(filterMap, 'exclude', false);
     this.setState({ filterMap: { value, type, exclude } });
   };
@@ -94,6 +94,7 @@ export class QueryViewSidebarItem extends React.PureComponent {
     const item = ((datatype) => {
       switch (_.toLower(datatype)) {
         case 'string':
+        case 'text':
           return (
             <CategoryWrapper
               column={column}
