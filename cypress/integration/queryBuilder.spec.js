@@ -76,7 +76,7 @@ describe('test query builder', () => {
           .its('snapshots')
           .its('snapshotRequest')
           .its('filterStatement')
-          .should('contain', '.ancestry_specific_meta_analysis.ancestry IN ("EU")');
+          .should('contain', 'ancestry_specific_meta_analysis.ancestry IN ("EU")');
       });
     });
 
