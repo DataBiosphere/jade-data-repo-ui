@@ -168,10 +168,9 @@ export const { hideAlert } = createActions({
 
 export const { runQuery } = createActions({
   [ActionTypes.RUN_QUERY_SUCCESS]: (result) => result,
-  [ActionTypes.RUN_QUERY]: (projectId, query, maxResults) => ({
+  [ActionTypes.RUN_QUERY]: (projectId, query) => ({
     projectId,
     query,
-    maxResults,
   }),
 });
 

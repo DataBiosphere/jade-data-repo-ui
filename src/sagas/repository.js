@@ -538,9 +538,10 @@ function* pollQuery(projectId, jobId) {
 export function* runQuery({ payload }) {
   try {
     const url = `/bigquery/v2/projects/${payload.projectId}/queries`;
+    const queryState = yield select(getQuery);
     const body = {
       query: payload.query,
-      maxResults: payload.maxResults,
+      maxResults: queryState.rowsPerPage,
     };
     const response = yield call(authPost, url, body);
     const { jobComplete } = response.data;
