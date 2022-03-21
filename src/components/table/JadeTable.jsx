@@ -141,7 +141,7 @@ export class JadeTable extends React.PureComponent {
         v,
         i < value.length - 1 ? (
           <span key={`sep-${i}`}>
-            ,<br />
+            _.isNull(v) ? this.handleNullValue(v) : ,<br />
           </span>
         ) : undefined,
       ]),
