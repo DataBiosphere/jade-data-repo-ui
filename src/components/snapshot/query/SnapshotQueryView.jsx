@@ -15,10 +15,6 @@ function SnapshotQueryView({ dispatch, match, queryParams, snapshot }) {
   const [tableNames, setTableNames] = useState([]);
   const [panels, setPanels] = useState([]);
 
-  const updateDataOnChange = useCallback(() => {
-    dispatch(previewData(snapshot.id, selected, selectedTable.columns, selectedTable.rowCount));
-  }, [dispatch, snapshot.id, selected, selectedTable]);
-
   useEffect(() => {
     const snapshotId = match.params.uuid;
 
@@ -36,13 +32,6 @@ function SnapshotQueryView({ dispatch, match, queryParams, snapshot }) {
       }),
     );
   }, [dispatch, match.params.uuid]);
-
-  useEffect(() => {
-    const snapshotId = match.params.uuid;
-    if (snapshotLoaded && snapshotId === snapshot.id) {
-      updateDataOnChange();
-    }
-  }, [snapshotLoaded, snapshot, dispatch, match, selected, selectedTable, updateDataOnChange]);
 
   useEffect(() => {
     const snapshotId = match.params.uuid;
@@ -67,6 +56,17 @@ function SnapshotQueryView({ dispatch, match, queryParams, snapshot }) {
       setPanels(currentPanels);
     }
   }, [snapshot, match]);
+
+  const updateDataOnChange = useCallback(() => {
+    dispatch(previewData(snapshot.id, selected, selectedTable.columns, selectedTable.rowCount));
+  }, [dispatch, snapshot.id, selected, selectedTable]);
+
+  useEffect(() => {
+    const snapshotId = match.params.uuid;
+    if (snapshotLoaded && snapshotId === snapshot.id) {
+      updateDataOnChange();
+    }
+  }, [snapshotLoaded, snapshot, dispatch, match, selected, selectedTable, updateDataOnChange]);
 
   // TODO - this doesn't do anything until we add panels
   const handleDrawerWidth = (width) => {
