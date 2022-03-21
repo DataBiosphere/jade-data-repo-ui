@@ -32,8 +32,9 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Cypress run
+      - name: Cypress Run Component Tests
+        uses: cypress-io/github-action@v2
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-        run: |
-          npx cypress run-ct --record
+        with:
+          command: npx cypress run-ct --record
