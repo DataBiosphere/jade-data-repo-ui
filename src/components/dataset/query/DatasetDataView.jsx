@@ -203,7 +203,7 @@ export class DatasetDataView extends React.PureComponent {
       <div className={classes.pageRoot}>
         <AppBreadcrumbs
           context={{ type: COLLECTION_TYPE.DATASET, id: dataset.id, name: dataset.name }}
-          links={[{ text: 'Data', to: 'data' }]}
+          childBreadcrumbs={[{ text: 'Data', to: 'data' }]}
         />
         <Typography variant="h3" className={classes.pageTitle}>
           {dataset.name}

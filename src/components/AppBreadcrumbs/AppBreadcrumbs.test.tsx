@@ -11,7 +11,7 @@ describe('AppBreadcrumbs', () => {
       <Router history={history}>
         <AppBreadcrumbs
           context={{ type: COLLECTION_TYPE.DATASET, id: 'foo-bar', name: 'testDataset' }}
-          links={[]}
+          childBreadcrumbs={[]}
         />
       </Router>,
     );
@@ -31,7 +31,7 @@ describe('AppBreadcrumbs', () => {
       <Router history={history}>
         <AppBreadcrumbs
           context={{ type: COLLECTION_TYPE.DATASET, id: 'foo-bar', name: 'testDataset' }}
-          links={[{ text: 'Data', to: 'data' }]}
+          childBreadcrumbs={[{ text: 'Data', to: 'data' }]}
         />
       </Router>,
     );
@@ -50,7 +50,7 @@ describe('AppBreadcrumbs', () => {
       <Router history={history}>
         <AppBreadcrumbs
           context={{ type: COLLECTION_TYPE.SNAPSHOT, id: 'foo-bar-snapshot', name: 'testSnapshot' }}
-          links={[]}
+          childBreadcrumbs={[]}
         />
       </Router>,
     );
@@ -71,7 +71,7 @@ describe('AppBreadcrumbs', () => {
       <Router history={history}>
         <AppBreadcrumbs
           context={{ type: COLLECTION_TYPE.DATASET, id: 'foo-bar', name: 'testDataset' }}
-          links={[]}
+          childBreadcrumbs={[]}
         />
       </Router>,
     );
@@ -82,7 +82,7 @@ describe('AppBreadcrumbs', () => {
       <Router history={history}>
         <AppBreadcrumbs
           context={{ type: COLLECTION_TYPE.DATASET, id: 'foo-bar', name: 'testDataset' }}
-          links={[{ text: 'Data', to: 'data' }]}
+          childBreadcrumbs={[{ text: 'Data', to: 'data' }]}
         />
       </Router>,
     );

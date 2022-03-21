@@ -8,11 +8,7 @@ function capitalize(str: string): string {
 }
 
 const styles = (theme: any) => ({
-  breadcrumb: {
-    fontStyle: 'italic',
-  },
   terminalBreadcrumb: {
-    fontStyle: 'italic',
     color: theme.palette.primary.dark,
     cursor: 'default',
     '&:hover': {
@@ -25,61 +21,50 @@ export type Context = { type: string; id: string; name: string };
 export type BreadcrumbElement = { text: string; to: string };
 
 type AppBreadcrumbsProps = {
-  links: Array<BreadcrumbElement>;
+  childBreadcrumbs: Array<BreadcrumbElement>;
   context: Context;
 };
 
-const BreadcrumbsLink = withStyles(styles)((props: any) => {
-  const { classes, ...other } = props;
-  return <Link component={RouterLink} color="primary" className={classes.breadcrumb} {...other} />;
-});
-
-const TerminalBreadcrumb = withStyles(styles)((props: any) => {
-  const { classes, ...other } = props;
-  return (
-    <Link
-      component={RouterLink}
-      color="primary"
-      className={classes.terminalBreadcrumb}
-      {...other}
-      onClick={(e) => e.preventDefault()}
-    />
-  );
-});
-
 const Breadcrumb = withStyles(styles)((props: any) => {
+  const { classes, ...other } = props;
   if (props.disabled) {
-    return <TerminalBreadcrumb {...props} />;
+    return (
+      <Link
+        component={RouterLink}
+        color="primary"
+        className={classes.terminalBreadcrumb}
+        onClick={(e) => e.preventDefault()}
+        {...other}
+      />
+    );
   }
-  return <BreadcrumbsLink {...props} />;
+  return <Link component={RouterLink} color="primary" {...other} />;
 });
-
-function breadcrumbLink(text: string, to: string, disabled: boolean) {
-  return (
-    <Breadcrumb key={text.toLowerCase()} to={to} disabled={disabled}>
-      {text}
-    </Breadcrumb>
-  );
-}
 
 const AppBreadcrumbs: React.FC<AppBreadcrumbsProps> = (props) => {
-  const { context, links } = props;
+  const { context, childBreadcrumbs } = props;
 
   const breadcrumbs: Array<BreadcrumbElement> = [
     { text: 'Dashboard', to: '' },
     { text: `${capitalize(context.type)}s`, to: `${context.type}s` },
     { text: context.name, to: context.id },
-    ...(links || []),
+    ...(childBreadcrumbs || []),
   ];
 
   const hierarchy: Array<string> = [];
 
   return (
     <Breadcrumbs aria-label="breadcrumb">
-      {breadcrumbs.map((obj, i) => {
-        hierarchy.push(obj.to);
+      {breadcrumbs.map((breadcrumb, i) => {
+        const { text, to } = breadcrumb;
+        const disabled = i === breadcrumbs.length - 1;
+        hierarchy.push(to);
         const link = `${hierarchy.join('/')}`;
-        return breadcrumbLink(obj.text, link, i === breadcrumbs.length - 1);
+        return (
+          <Breadcrumb key={text.toLowerCase()} to={link} disabled={disabled}>
+            {text}
+          </Breadcrumb>
+        );
       })}
     </Breadcrumbs>
   );
