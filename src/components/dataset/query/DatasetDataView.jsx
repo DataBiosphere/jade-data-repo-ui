@@ -15,9 +15,9 @@ import { FilterList, Info, People } from '@material-ui/icons';
 
 import QueryView from 'components/common/query/QueryView';
 import LoadingSpinner from 'components/common/LoadingSpinner';
-import QueryViewSidebar from '../../common/query/sidebar/QueryViewSidebar';
-import InfoView from '../../common/query/sidebar/panels/InfoView';
-import ShareSnapshot from '../../common/query/sidebar/panels/ShareSnapshot';
+import QueryViewSidebar from './sidebar/QueryViewSidebar';
+import InfoView from './sidebar/panels/InfoView';
+import ShareSnapshot from './sidebar/panels/ShareSnapshot';
 import { DATASET_INCLUDE_OPTIONS, GOOGLE_CLOUD_RESOURCE } from '../../../constants';
 
 const QUERY_LIMIT = 1000;
@@ -61,47 +61,6 @@ function DatasetQueryView({
   }, [dispatch, match.params.uuid]);
 
   useEffect(() => {
-    if (profile.id) {
-      setCanLink(true);
-    }
-  }, [profile]);
-
-  useEffect(() => {
-    if (datasetLoaded) {
-      const fromClause = `FROM \`${dataset.dataProject}.datarepo_${dataset.name}.${selected}\` AS ${selected}
-          ${joinStatement}
-          ${filterStatement}`;
-
-      dispatch(
-        runQuery(
-          dataset.dataProject,
-          `#standardSQL
-          SELECT datarepo_row_id,
-            ${selectedTable.columns.map((column) => column.name).join(', ')} ${fromClause}
-          ${orderBy}
-          LIMIT ${QUERY_LIMIT}`,
-        ),
-      );
-      dispatch(
-        countResults(
-          dataset.dataProject,
-          `#standardSQL
-          SELECT COUNT(1) ${fromClause}`,
-        ),
-      );
-    }
-  }, [
-    datasetLoaded,
-    dataset,
-    dispatch,
-    filterStatement,
-    joinStatement,
-    orderBy,
-    selected,
-    selectedTable,
-  ]);
-
-  useEffect(() => {
     const datasetId = match.params.uuid;
     const loaded = dataset && dataset.schema && dataset.id === datasetId;
     if (loaded) {
@@ -143,6 +102,47 @@ function DatasetQueryView({
       setPanels(currentPanels);
     }
   }, [datasetLoaded, dataset, selectedTable, canLink]);
+
+  useEffect(() => {
+    if (profile.id) {
+      setCanLink(true);
+    }
+  }, [profile]);
+
+  useEffect(() => {
+    if (datasetLoaded) {
+      const fromClause = `FROM \`${dataset.dataProject}.datarepo_${dataset.name}.${selected}\` AS ${selected}
+          ${joinStatement}
+          ${filterStatement}`;
+
+      dispatch(
+        runQuery(
+          dataset.dataProject,
+          `#standardSQL
+          SELECT datarepo_row_id,
+            ${selectedTable.columns.map((column) => column.name).join(', ')} ${fromClause}
+          ${orderBy}
+          LIMIT ${QUERY_LIMIT}`,
+        ),
+      );
+      dispatch(
+        countResults(
+          dataset.dataProject,
+          `#standardSQL
+          SELECT COUNT(1) ${fromClause}`,
+        ),
+      );
+    }
+  }, [
+    datasetLoaded,
+    dataset,
+    dispatch,
+    filterStatement,
+    joinStatement,
+    orderBy,
+    selected,
+    selectedTable,
+  ]);
 
   const handleDrawerWidth = (width) => {
     setSidebarWidth(width);

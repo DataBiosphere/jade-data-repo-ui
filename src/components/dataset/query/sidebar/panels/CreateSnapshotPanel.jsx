@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 
 import { Button, Divider, TextField, Typography } from '@material-ui/core';
 import { snapshotCreateDetails } from 'actions/index';
-import CreateSnapshotDropdown from '../../../../dataset/query/sidebar/CreateSnapshotDropdown';
+import CreateSnapshotDropdown from '../CreateSnapshotDropdown';
 import ShareSnapshot from './ShareSnapshot';
 
 const styles = (theme) => ({
