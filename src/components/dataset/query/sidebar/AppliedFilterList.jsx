@@ -92,7 +92,7 @@ export class AppliedFilterList extends React.PureComponent {
       delete clonedData[table];
     }
 
-    dispatch(applyFilters(clonedData, selected, dataset, dataset.schema.relationships));
+    dispatch(applyFilters(clonedData, selected, dataset));
   };
 
   render() {

@@ -151,7 +151,7 @@ function DatasetQueryView({
   const handleChange = (value) => {
     setSelected(value);
     setSelectedTable(dataset.schema.tables.find((t) => t.name === value));
-    dispatch(applyFilters(filterData, value, dataset, dataset.schema.relationships));
+    dispatch(applyFilters(filterData, value, dataset));
   };
 
   const updateDataOnChange = () => {

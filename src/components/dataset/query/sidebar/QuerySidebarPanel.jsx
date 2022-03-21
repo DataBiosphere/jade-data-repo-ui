@@ -33,7 +33,7 @@ export class QuerySidebarPanel extends React.PureComponent {
 
   clearAllFilters = () => {
     const { dispatch, dataset, selected } = this.props;
-    dispatch(applyFilters({}, selected, dataset, dataset.schema.relationships));
+    dispatch(applyFilters({}, selected, dataset));
   };
 
   render() {
