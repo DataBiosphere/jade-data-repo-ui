@@ -145,7 +145,7 @@ export class FilterPanel extends React.PureComponent {
     const { dispatch, table, dataset } = this.props;
     const { filterMap } = this.state;
     const tableName = table.name;
-    dispatch(applyFilters(filterMap, tableName, dataset, dataset.schema.relationships));
+    dispatch(applyFilters(filterMap, tableName, dataset));
   };
 
   handleSearchString = (event) => {
