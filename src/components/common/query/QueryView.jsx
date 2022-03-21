@@ -30,7 +30,7 @@ function QueryView({
   allowSort,
   canLink,
   classes,
-  handleChange,
+  handleChangeTable,
   updateDataOnChange,
   handleDrawerWidth,
   panels,
@@ -54,7 +54,7 @@ function QueryView({
                 </Typography>
               </Grid>
               <Grid item xs={3}>
-                <QueryViewDropdown options={tableNames} onSelectedItem={handleChange} />
+                <QueryViewDropdown options={tableNames} onSelectedItem={handleChangeTable} />
               </Grid>
               <Grid item xs={3}>
                 <Link to="overview">
@@ -105,8 +105,7 @@ QueryView.propTypes = {
   allowSort: PropTypes.bool,
   canLink: PropTypes.bool,
   classes: PropTypes.object,
-  handleChange: PropTypes.func,
-
+  handleChangeTable: PropTypes.func,
   handleDrawerWidth: PropTypes.func,
   panels: PropTypes.array,
   queryParams: PropTypes.object,

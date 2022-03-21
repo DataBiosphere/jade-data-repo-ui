@@ -41,6 +41,7 @@ function JadeTable({
   columns,
   delay,
   dispatch,
+  orderDirection,
   page,
   polling,
   queryParams,
@@ -48,8 +49,6 @@ function JadeTable({
   rowsPerPage,
   updateDataOnChange,
 }) {
-  const [orderBy, setOrderBy] = useState('');
-  const [order, setOrder] = useState('');
   const [count, setCount] = useState(0);
 
   useEffect(() => {
@@ -71,24 +70,21 @@ function JadeTable({
   };
 
   const createSortHandler = (property) => {
-    let newOrder = '';
-    let newOrderBy = property;
+    let newOrderDirection = '';
+    let newOrderProperty = property;
 
-    if (order === '') {
-      newOrder = 'desc';
+    if (orderDirection === '') {
+      newOrderDirection = 'desc';
     }
-    if (order === 'asc') {
-      newOrder = '';
-      newOrderBy = '';
+    if (orderDirection === 'asc') {
+      newOrderDirection = '';
+      newOrderProperty = '';
     }
-    if (order === 'desc') {
-      newOrder = 'asc';
+    if (orderDirection === 'desc') {
+      newOrderDirection = 'asc';
     }
 
-    dispatch(applySort(newOrderBy, order));
-
-    setOrder(newOrder);
-    setOrderBy(newOrderBy);
+    dispatch(applySort(newOrderProperty, newOrderDirection));
   };
 
   const handleArrayValues = (value, column) => {
@@ -109,8 +105,6 @@ function JadeTable({
             <JadeTableHead
               allowSort={allowSort}
               columns={columns}
-              orderBy={orderBy}
-              order={order}
               createSortHandler={createSortHandler}
             />
             {!polling && (
@@ -167,6 +161,7 @@ JadeTable.propTypes = {
   columns: PropTypes.array,
   delay: PropTypes.bool,
   dispatch: PropTypes.func.isRequired,
+  orderDirection: PropTypes.string,
   page: PropTypes.number.isRequired,
   polling: PropTypes.bool,
   queryParams: PropTypes.object,
@@ -181,6 +176,7 @@ function mapStateToProps(state) {
     delay: state.query.delay,
     filterData: state.query.filterData,
     filterStatement: state.query.filterStatement,
+    orderDirection: state.query.orderDirection,
     page: state.query.page,
     polling: state.query.polling,
     queryParams: state.query.queryParams,

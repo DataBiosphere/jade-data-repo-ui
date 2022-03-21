@@ -73,7 +73,7 @@ function SnapshotQueryView({ dispatch, match, queryParams, snapshot }) {
     setSidebarWidth(width);
   };
 
-  const handleChange = (value) => {
+  const handleChangeTable = (value) => {
     setSelected(value);
     setSelectedTable(snapshot.tables.find((t) => t.name === value));
   };
@@ -88,7 +88,7 @@ function SnapshotQueryView({ dispatch, match, queryParams, snapshot }) {
       resourceLoaded={snapshotLoaded}
       resourceName={snapshot.name}
       tableNames={tableNames}
-      handleChange={handleChange}
+      handleChangeTable={handleChangeTable}
       updateDataOnChange={updateDataOnChange}
       queryParams={queryParams}
       selected={selected}

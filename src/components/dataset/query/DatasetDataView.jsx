@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import {
-  applyFilters,
   runQuery,
   getDatasetById,
   getDatasetPolicy,
@@ -25,11 +24,11 @@ const QUERY_LIMIT = 1000;
 function DatasetQueryView({
   dataset,
   dispatch,
-  filterData,
   filterStatement,
   joinStatement,
   match,
-  orderBy,
+  orderDirection,
+  orderProperty,
   profile,
   queryParams,
 }) {
@@ -121,7 +120,7 @@ function DatasetQueryView({
           `#standardSQL
           SELECT datarepo_row_id,
             ${selectedTable.columns.map((column) => column.name).join(', ')} ${fromClause}
-          ${orderBy}
+            ${orderProperty ? `ORDER BY ${orderProperty} ${orderDirection}` : ''}
           LIMIT ${QUERY_LIMIT}`,
         ),
       );
@@ -139,7 +138,8 @@ function DatasetQueryView({
     dispatch,
     filterStatement,
     joinStatement,
-    orderBy,
+    orderDirection,
+    orderProperty,
     selected,
     selectedTable,
   ]);
@@ -148,10 +148,9 @@ function DatasetQueryView({
     setSidebarWidth(width);
   };
 
-  const handleChange = (value) => {
+  const handleChangeTable = (value) => {
     setSelected(value);
     setSelectedTable(dataset.schema.tables.find((t) => t.name === value));
-    dispatch(applyFilters(filterData, value, dataset));
   };
 
   const updateDataOnChange = () => {
@@ -173,7 +172,7 @@ function DatasetQueryView({
       resourceLoaded={datasetLoaded}
       resourceName={dataset.name}
       tableNames={tableNames}
-      handleChange={handleChange}
+      handleChangeTable={handleChangeTable}
       updateDataOnChange={updateDataOnChange}
       queryParams={queryParams}
       selected={selected}
@@ -189,11 +188,11 @@ function DatasetQueryView({
 DatasetQueryView.propTypes = {
   dataset: PropTypes.object,
   dispatch: PropTypes.func.isRequired,
-  filterData: PropTypes.object,
   filterStatement: PropTypes.string.isRequired,
   joinStatement: PropTypes.string.isRequired,
   match: PropTypes.object,
-  orderBy: PropTypes.string,
+  orderDirection: PropTypes.string,
+  orderProperty: PropTypes.string,
   profile: PropTypes.object,
   queryParams: PropTypes.object,
 };
@@ -202,10 +201,10 @@ function mapStateToProps(state) {
   return {
     dataset: state.datasets.dataset,
     filterStatement: state.query.filterStatement,
-    filterData: state.query.filterData,
     joinStatement: state.query.joinStatement,
     queryParams: state.query.queryParams,
-    orderBy: state.query.orderBy,
+    orderDirection: state.query.orderDirection,
+    orderProperty: state.query.orderProperty,
     profile: state.profiles.profile,
   };
 }

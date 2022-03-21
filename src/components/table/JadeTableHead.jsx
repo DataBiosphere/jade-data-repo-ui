@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
+import { connect } from 'react-redux';
 
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
@@ -18,7 +19,7 @@ const styles = (theme) => ({
   },
 });
 
-function JadeTableHead({ allowSort, columns, createSortHandler, order, orderBy }) {
+function JadeTableHead({ allowSort, columns, createSortHandler, orderProperty, orderDirection }) {
   return (
     <TableHead>
       <TableRow>
@@ -29,13 +30,13 @@ function JadeTableHead({ allowSort, columns, createSortHandler, order, orderBy }
                 key={column.id}
                 align={column.numeric ? 'right' : 'left'}
                 padding={column.disablePadding ? 'none' : 'default'}
-                sortDirection={orderBy === column.id ? order : false}
+                sortDirection={orderProperty === column.id ? orderDirection : false}
                 data-cy={`columnheader-${column.id}`}
               >
                 {allowSort && column.mode !== COLUMN_MODES.REPEATED && (
                   <TableSortLabel
-                    active={orderBy === column.id}
-                    direction={order !== '' ? order : 'desc'}
+                    active={orderProperty === column.id}
+                    direction={orderDirection !== '' ? orderDirection : 'desc'}
                     onClick={() => createSortHandler(column.id)}
                   >
                     {column.label}
@@ -56,8 +57,15 @@ JadeTableHead.propTypes = {
   allowSort: PropTypes.bool,
   columns: PropTypes.array,
   createSortHandler: PropTypes.func,
-  order: PropTypes.string,
-  orderBy: PropTypes.string,
+  orderDirection: PropTypes.string,
+  orderProperty: PropTypes.string,
 };
 
-export default withStyles(styles)(JadeTableHead);
+function mapStateToProps(state) {
+  return {
+    orderDirection: state.query.orderDirection,
+    orderProperty: state.query.orderProperty,
+  };
+}
+
+export default connect(mapStateToProps)(withStyles(styles)(JadeTableHead));

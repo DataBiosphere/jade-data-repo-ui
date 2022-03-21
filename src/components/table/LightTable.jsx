@@ -7,6 +7,8 @@ import TableCell from '@material-ui/core/TableCell';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import { applySort } from 'actions/index';
+import { connect } from 'react-redux';
 
 import clsx from 'clsx';
 import LightTableHead from './LightTableHead';
@@ -53,17 +55,18 @@ const ROWS_PER_PAGE = [5, 10, 25];
 function LightTable({
   classes,
   columns,
+  dispatch,
   filteredCount,
   handleEnumeration,
   itemType,
+  orderDirection,
+  orderProperty,
   rowKey,
   rows,
   searchString,
   summary,
   totalCount,
 }) {
-  const [orderDirection, setOrderDirection] = useState('desc');
-  const [orderBy, setOrderBy] = useState('created_date');
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(DEFAULT_PAGE_SIZE);
   const [emptyRows, setEmptyRows] = useState(
@@ -74,11 +77,10 @@ function LightTable({
 
   const handleRequestSort = (event, sort) => {
     let newOrder = 'desc';
-    if (orderBy === sort && orderDirection === 'desc') {
+    if (orderProperty === sort && orderDirection === 'desc') {
       newOrder = 'asc';
     }
-    setOrderBy(sort);
-    setOrderDirection(newOrder);
+    dispatch(applySort(sort, newOrder));
   };
 
   const handleChangeRowsPerPage = (event) => {
@@ -97,20 +99,22 @@ function LightTable({
         ? rowsPerPage - Math.min(rowsPerPage, filteredCount - page * rowsPerPage)
         : 0,
     );
-    handleEnumeration(rowsPerPage, offset, orderBy, orderDirection, searchString);
-  }, [searchString, page, rowsPerPage, orderDirection, filteredCount, handleEnumeration, orderBy]);
+    handleEnumeration(rowsPerPage, offset, orderProperty, orderDirection, searchString);
+  }, [
+    searchString,
+    page,
+    rowsPerPage,
+    filteredCount,
+    handleEnumeration,
+    orderProperty,
+    orderDirection,
+  ]);
 
   return (
     <div>
       <Paper className={classes.root}>
         <Table className={classes.table}>
-          <LightTableHead
-            columns={columns}
-            onRequestSort={handleRequestSort}
-            orderDirection={orderDirection}
-            orderBy={orderBy}
-            summary={summary}
-          />
+          <LightTableHead columns={columns} onRequestSort={handleRequestSort} summary={summary} />
           <TableBody>
             {rows && rows.length > 0 ? (
               rows.map((row, index) => {
@@ -193,9 +197,12 @@ function LightTable({
 LightTable.propTypes = {
   classes: PropTypes.object.isRequired,
   columns: PropTypes.arrayOf(PropTypes.object),
+  dispatch: PropTypes.func.isRequired,
   filteredCount: PropTypes.number,
   handleEnumeration: PropTypes.func,
   itemType: PropTypes.string.isRequired,
+  orderDirection: PropTypes.string,
+  orderProperty: PropTypes.string,
   rowKey: PropTypes.func,
   rows: PropTypes.arrayOf(PropTypes.object),
   searchString: PropTypes.string,
@@ -203,4 +210,11 @@ LightTable.propTypes = {
   totalCount: PropTypes.number,
 };
 
-export default withStyles(styles)(LightTable);
+function mapStateToProps(state) {
+  return {
+    orderDirection: state.query.orderDirection,
+    orderProperty: state.query.orderProperty,
+  };
+}
+
+export default connect(mapStateToProps)(withStyles(styles)(LightTable));

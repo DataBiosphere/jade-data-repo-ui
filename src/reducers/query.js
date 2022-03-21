@@ -15,7 +15,8 @@ export const queryState = {
   projectId: '',
   queryParams: {},
   rows: null,
-  orderBy: '',
+  orderProperty: '',
+  orderDirection: '',
   polling: false,
   resultsCount: 0,
   page: 0,
@@ -140,11 +141,9 @@ export default {
         });
       },
       [ActionTypes.APPLY_SORT]: (state, action) => {
-        const bigquery = new BigQuery();
-        const orderBy = bigquery.buildOrderBy(action.payload.property, action.payload.direction);
-
         return immutable(state, {
-          orderBy: { $set: orderBy },
+          orderProperty: { $set: action.payload.property },
+          orderDirection:  { $set: action.payload.direction },
         });
       },
       [LOCATION_CHANGE]: (state, action) => {

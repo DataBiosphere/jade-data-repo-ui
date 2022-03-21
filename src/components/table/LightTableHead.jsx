@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
+import { connect } from 'react-redux';
+
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
@@ -30,8 +32,8 @@ export class LightTableHead extends React.PureComponent {
     classes: PropTypes.object.isRequired,
     columns: PropTypes.arrayOf(PropTypes.object),
     onRequestSort: PropTypes.func.isRequired,
-    orderBy: PropTypes.string.isRequired,
     orderDirection: PropTypes.string.isRequired,
+    orderProperty: PropTypes.string.isRequired,
     summary: PropTypes.bool,
   };
 
@@ -41,7 +43,7 @@ export class LightTableHead extends React.PureComponent {
   };
 
   render() {
-    const { classes, columns, orderDirection, orderBy, summary } = this.props;
+    const { classes, columns, orderDirection, orderProperty, summary } = this.props;
 
     return (
       <TableHead className={classes.head}>
@@ -53,7 +55,7 @@ export class LightTableHead extends React.PureComponent {
                 key={col.property}
                 align={col.numeric ? 'right' : 'left'}
                 padding={col.disablePadding ? 'none' : 'default'}
-                sortDirection={orderBy === col.id ? orderDirection : false}
+                sortDirection={orderProperty === col.id ? orderDirection : false}
               >
                 {summary ? (
                   col.label
@@ -66,7 +68,7 @@ export class LightTableHead extends React.PureComponent {
                       enterDelay={300}
                     >
                       <TableSortLabel
-                        active={orderBy === col.property}
+                        active={orderProperty === col.property}
                         direction={orderDirection}
                         onClick={this.createSortHandler(col.property)}
                         IconComponent={Sort}
@@ -85,4 +87,11 @@ export class LightTableHead extends React.PureComponent {
   }
 }
 
-export default withStyles(styles)(LightTableHead);
+function mapStateToProps(state) {
+  return {
+    orderDirection: state.query.orderDirection,
+    orderProperty: state.query.orderProperty,
+  };
+}
+
+export default connect(mapStateToProps)(withStyles(styles)(LightTableHead));
