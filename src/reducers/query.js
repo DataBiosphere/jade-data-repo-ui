@@ -140,12 +140,11 @@ export default {
           page: { $set: 0 },
         });
       },
-      [ActionTypes.APPLY_SORT]: (state, action) => {
-        return immutable(state, {
+      [ActionTypes.APPLY_SORT]: (state, action) => 
+        immutable(state, {
           orderProperty: { $set: action.payload.property },
-          orderDirection:  { $set: action.payload.direction },
-        });
-      },
+          orderDirection: { $set: action.payload.direction },
+        }),
       [LOCATION_CHANGE]: (state, action) => {
         if (action.payload.location.pathname.includes('/datasets/details/')) {
           // michael can you help us with this
