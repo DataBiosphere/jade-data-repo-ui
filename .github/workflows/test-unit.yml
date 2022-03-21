@@ -18,6 +18,7 @@ on:
     - cron: '0 4 * * *' # run at 4 AM UTC, 12PM EST.
 jobs:
   unit_test:
+    name: Cypress Unit Tests
     timeout-minutes: 10
     strategy:
       matrix:
@@ -35,4 +36,4 @@ jobs:
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
         run: |
-          npx cypress run --record
+          npx cypress run-ct --record
