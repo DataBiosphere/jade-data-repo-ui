@@ -140,7 +140,7 @@ export default {
           page: { $set: 0 },
         });
       },
-      [ActionTypes.APPLY_SORT]: (state, action) => 
+      [ActionTypes.APPLY_SORT]: (state, action) =>
         immutable(state, {
           orderProperty: { $set: action.payload.property },
           orderDirection: { $set: action.payload.direction },
