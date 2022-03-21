@@ -53,14 +53,14 @@ const ROWS_PER_PAGE = [5, 10, 25];
 function LightTable({
   classes,
   columns,
+  filteredCount,
   handleEnumeration,
   itemType,
   rowKey,
   rows,
+  searchString,
   summary,
   totalCount,
-  filteredCount,
-  searchString,
 }) {
   const [orderDirection, setOrderDirection] = useState('desc');
   const [orderBy, setOrderBy] = useState('created_date');
@@ -193,8 +193,8 @@ function LightTable({
 LightTable.propTypes = {
   classes: PropTypes.object.isRequired,
   columns: PropTypes.arrayOf(PropTypes.object),
-  handleEnumeration: PropTypes.func,
   filteredCount: PropTypes.number,
+  handleEnumeration: PropTypes.func,
   itemType: PropTypes.string.isRequired,
   rowKey: PropTypes.func,
   rows: PropTypes.arrayOf(PropTypes.object),
