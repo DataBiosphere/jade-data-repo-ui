@@ -41,6 +41,7 @@ const useStyles = makeStyles((theme) => ({
     height: '100%',
     fontFamily: theme.typography.fontFamily,
     fontWeight: theme.typography.fontWeight,
+    backgroundColor: '#fafafa',
   },
   grow: {
     flexGrow: 1,

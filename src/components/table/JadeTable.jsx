@@ -11,7 +11,7 @@ import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { pageQuery, applySort } from 'actions/index';
-import { JadeTableHead } from './JadeTableHead';
+import JadeTableHead from './JadeTableHead';
 import { ellipsis } from '../../libs/styles';
 import { COLUMN_MODES, GOOGLE_CLOUD_RESOURCE } from '../../constants';
 
@@ -35,6 +35,7 @@ const styles = (theme) => ({
     margin: 'auto',
   },
   cell: {
+    borderBottomColor: theme.palette.lightTable.bottomColor,
     ...ellipsis,
   },
   nullValue: {
