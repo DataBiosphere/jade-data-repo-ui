@@ -23,8 +23,8 @@ import JadeTable from '../../table/JadeTable';
 import InfoView from './sidebar/panels/InfoView';
 import ShareSnapshot from './sidebar/panels/ShareSnapshot';
 import SnapshotPopup from '../../snapshot/SnapshotPopup';
-import { DATASET_INCLUDE_OPTIONS } from '../../../constants';
-import AppBreadcrumbs, { contextChildLink } from '../../AppBreadcrumbs';
+import { COLLECTION_TYPE, DATASET_INCLUDE_OPTIONS } from '../../../constants';
+import AppBreadcrumbs from '../../AppBreadcrumbs/AppBreadcrumbs';
 
 const styles = (theme) => ({
   pageRoot: { ...theme.mixins.pageRoot },
@@ -202,8 +202,8 @@ export class DatasetDataView extends React.PureComponent {
     return (
       <div className={classes.pageRoot}>
         <AppBreadcrumbs
-          context={{ type: 'datasets', id: dataset.id, name: dataset.name }}
-          links={[contextChildLink('data', 'Data')]}
+          context={{ type: COLLECTION_TYPE.DATASET, id: dataset.id, name: dataset.name }}
+          links={[{ text: 'Data', to: 'data' }]}
         />
         <Typography variant="h3" className={classes.pageTitle}>
           {dataset.name}

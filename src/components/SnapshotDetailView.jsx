@@ -13,9 +13,9 @@ import {
 import DetailViewHeader from './DetailViewHeader';
 
 import DatasetTable from './table/DatasetTable';
-import { SNAPSHOT_INCLUDE_OPTIONS, SNAPSHOT_ROLES } from '../constants';
+import { COLLECTION_TYPE, SNAPSHOT_INCLUDE_OPTIONS, SNAPSHOT_ROLES } from '../constants';
 import { getRoleMembersFromPolicies } from '../libs/utils';
-import AppBreadcrumbs from './AppBreadcrumbs';
+import AppBreadcrumbs from './AppBreadcrumbs/AppBreadcrumbs';
 
 const styles = (theme) => ({
   pageRoot: { ...theme.mixins.pageRoot },
@@ -143,7 +143,11 @@ export class SnapshotDetailView extends React.PureComponent {
     return (
       <div className={classes.pageRoot}>
         <AppBreadcrumbs
-          context={{ type: 'snapshots', id: snapshot.id || '', name: snapshot.name || '' }}
+          context={{
+            type: COLLECTION_TYPE.SNAPSHOT,
+            id: snapshot.id || '',
+            name: snapshot.name || '',
+          }}
         />
         <div id="snapshot-detail-view" className={classes.wrapper}>
           <div className={classes.width}>

@@ -21,10 +21,11 @@ const styles = (theme: any) => ({
   },
 });
 
-type Context = { type: string; id: string; name: string };
+export type Context = { type: string; id: string; name: string };
+export type BreadcrumbElement = { text: string; to: string };
 
 type AppBreadcrumbsProps = {
-  links: Array<Function>;
+  links: Array<BreadcrumbElement>;
   context: Context;
 };
 
@@ -35,7 +36,15 @@ const BreadcrumbsLink = withStyles(styles)((props: any) => {
 
 const TerminalBreadcrumb = withStyles(styles)((props: any) => {
   const { classes, ...other } = props;
-  return <Link color="primary" className={classes.terminalBreadcrumb} {...other} />;
+  return (
+    <Link
+      component={RouterLink}
+      color="primary"
+      className={classes.terminalBreadcrumb}
+      {...other}
+      onClick={(e) => e.preventDefault()}
+    />
+  );
 });
 
 const Breadcrumb = withStyles(styles)((props: any) => {
@@ -45,33 +54,9 @@ const Breadcrumb = withStyles(styles)((props: any) => {
   return <BreadcrumbsLink {...props} />;
 });
 
-function dashboardLink(key: string, disabled: boolean) {
+function breadcrumbLink(text: string, to: string, disabled: boolean) {
   return (
-    <Breadcrumb key={key} to="/" disabled={disabled}>
-      Dashboard
-    </Breadcrumb>
-  );
-}
-
-function contextLink(context: Context) {
-  return (key: string, disabled: boolean) => (
-    <Breadcrumb key={key} to={`/${context.type}`} disabled={disabled}>
-      {capitalize(context.type)}
-    </Breadcrumb>
-  );
-}
-
-function collectionLink(context: Context) {
-  return (key: string, disabled: boolean) => (
-    <Breadcrumb key={key} to={`/${context.type}/${context.id}`} disabled={disabled}>
-      {context.name}
-    </Breadcrumb>
-  );
-}
-
-export function contextChildLink(child: string, text: string) {
-  return (key: string, disabled: boolean) => (
-    <Breadcrumb key={key} to={child} disabled={disabled}>
+    <Breadcrumb key={text.toLowerCase()} to={to} disabled={disabled}>
       {text}
     </Breadcrumb>
   );
@@ -80,16 +65,22 @@ export function contextChildLink(child: string, text: string) {
 const AppBreadcrumbs: React.FC<AppBreadcrumbsProps> = (props) => {
   const { context, links } = props;
 
-  const contextLinks: Array<Function> = [
-    dashboardLink,
-    contextLink(context),
-    collectionLink(context),
+  const breadcrumbs: Array<BreadcrumbElement> = [
+    { text: 'Dashboard', to: '' },
+    { text: `${capitalize(context.type)}s`, to: `${context.type}s` },
+    { text: context.name, to: context.id },
+    ...(links || []),
   ];
-  const toRender: Array<Function> = [...contextLinks, ...(links || [])];
+
+  const hierarchy: Array<string> = [];
 
   return (
     <Breadcrumbs aria-label="breadcrumb">
-      {toRender.map((linkFunc, i) => linkFunc(i, i === toRender.length - 1))}
+      {breadcrumbs.map((obj, i) => {
+        hierarchy.push(obj.to);
+        const link = `${hierarchy.join('/')}`;
+        return breadcrumbLink(obj.text, link, i === breadcrumbs.length - 1);
+      })}
     </Breadcrumbs>
   );
 };

@@ -6,9 +6,9 @@ import { getDatasetById, getDatasetPolicy, getUserDatasetRoles } from 'actions';
 import { Typography } from '@material-ui/core';
 import DatasetRelationshipsPanel from './DatasetOverviewSchemaPanel';
 import { useOnMount } from '../../../libs/utils';
-import { DATASET_INCLUDE_OPTIONS } from '../../../constants';
+import { COLLECTION_TYPE, DATASET_INCLUDE_OPTIONS } from '../../../constants';
 import DatasetOverviewPanel from './DatasetOverviewPanel';
-import AppBreadcrumbs from '../../AppBreadcrumbs';
+import AppBreadcrumbs from '../../AppBreadcrumbs/AppBreadcrumbs';
 
 const styles = (theme) => ({
   pageRoot: { ...theme.mixins.pageRoot },
@@ -72,7 +72,9 @@ function DatasetOverview(props) {
 
   return datasetPolicies && dataset && dataset.id === datasetId ? (
     <div className={classes.pageRoot}>
-      <AppBreadcrumbs context={{ type: 'datasets', id: datasetId, name: dataset.name }} />
+      <AppBreadcrumbs
+        context={{ type: COLLECTION_TYPE.DATASET, id: datasetId, name: dataset.name }}
+      />
       <Typography variant="h3" className={classes.pageTitle}>
         {dataset.name}
       </Typography>

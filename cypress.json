@@ -3,5 +3,7 @@
   "viewportWidth": 1920,
   "viewportHeight": 1080,
   "defaultCommandTimeout": 60000,
-  "requestTimeout": 120000
+  "requestTimeout": 120000,
+  "componentFolder": "src",
+  "testFiles": "**/*test.{js,jsx,ts,tsx}"
 }
