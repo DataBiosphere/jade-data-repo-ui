@@ -23,7 +23,7 @@ import JadeTable from '../../table/JadeTable';
 import InfoView from './sidebar/panels/InfoView';
 import ShareSnapshot from './sidebar/panels/ShareSnapshot';
 import SnapshotPopup from '../../snapshot/SnapshotPopup';
-import { COLLECTION_TYPE, DATASET_INCLUDE_OPTIONS } from '../../../constants';
+import { BREADCRUMB_TYPE, DATASET_INCLUDE_OPTIONS } from '../../../constants';
 import AppBreadcrumbs from '../../AppBreadcrumbs/AppBreadcrumbs';
 
 const styles = (theme) => ({
@@ -202,7 +202,7 @@ export class DatasetDataView extends React.PureComponent {
     return (
       <div className={classes.pageRoot}>
         <AppBreadcrumbs
-          context={{ type: COLLECTION_TYPE.DATASET, id: dataset.id, name: dataset.name }}
+          context={{ type: BREADCRUMB_TYPE.DATASET, id: dataset.id, name: dataset.name }}
           childBreadcrumbs={[{ text: 'Data', to: 'data' }]}
         />
         <Typography variant="h3" className={classes.pageTitle}>

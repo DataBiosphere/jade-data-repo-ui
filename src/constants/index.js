@@ -94,7 +94,6 @@ export const ActionTypes = keyMirror({
   GET_SERVER_STATUS_SUCCESS: undefined,
   GET_SERVER_STATUS_FAILURE: undefined,
   GET_SERVER_STATUS_DOWN: undefined,
-  SET_BREADCRUMBS: undefined,
 });
 
 /**
@@ -164,7 +163,7 @@ export const SNAPSHOT_INCLUDE_OPTIONS = {
   DATA_PROJECT: 'DATA_PROJECT',
 };
 
-export const COLLECTION_TYPE = {
+export const BREADCRUMB_TYPE = {
   DATASET: 'dataset',
   SNAPSHOT: 'snapshot',
 };

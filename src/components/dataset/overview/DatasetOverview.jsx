@@ -6,7 +6,7 @@ import { getDatasetById, getDatasetPolicy, getUserDatasetRoles } from 'actions';
 import { Typography } from '@material-ui/core';
 import DatasetRelationshipsPanel from './DatasetOverviewSchemaPanel';
 import { useOnMount } from '../../../libs/utils';
-import { COLLECTION_TYPE, DATASET_INCLUDE_OPTIONS } from '../../../constants';
+import { BREADCRUMB_TYPE, DATASET_INCLUDE_OPTIONS } from '../../../constants';
 import DatasetOverviewPanel from './DatasetOverviewPanel';
 import AppBreadcrumbs from '../../AppBreadcrumbs/AppBreadcrumbs';
 
@@ -73,7 +73,7 @@ function DatasetOverview(props) {
   return datasetPolicies && dataset && dataset.id === datasetId ? (
     <div className={classes.pageRoot}>
       <AppBreadcrumbs
-        context={{ type: COLLECTION_TYPE.DATASET, id: datasetId, name: dataset.name }}
+        context={{ type: BREADCRUMB_TYPE.DATASET, id: datasetId, name: dataset.name }}
       />
       <Typography variant="h3" className={classes.pageTitle}>
         {dataset.name}

@@ -18,14 +18,14 @@ const styles = (theme: any) => ({
 });
 
 export type Context = { type: string; id: string; name: string };
-export type BreadcrumbElement = { text: string; to: string };
+export type Breadcrumb = { text: string; to: string };
 
 type AppBreadcrumbsProps = {
-  childBreadcrumbs: Array<BreadcrumbElement>;
+  childBreadcrumbs: Array<Breadcrumb>;
   context: Context;
 };
 
-const Breadcrumb = withStyles(styles)((props: any) => {
+const BreadcrumbLink = withStyles(styles)((props: any) => {
   const { classes, ...other } = props;
   if (props.disabled) {
     return (
@@ -44,7 +44,7 @@ const Breadcrumb = withStyles(styles)((props: any) => {
 const AppBreadcrumbs: React.FC<AppBreadcrumbsProps> = (props) => {
   const { context, childBreadcrumbs } = props;
 
-  const breadcrumbs: Array<BreadcrumbElement> = [
+  const breadcrumbs: Array<Breadcrumb> = [
     { text: 'Dashboard', to: '' },
     { text: `${capitalize(context.type)}s`, to: `${context.type}s` },
     { text: context.name, to: context.id },
@@ -61,9 +61,9 @@ const AppBreadcrumbs: React.FC<AppBreadcrumbsProps> = (props) => {
         hierarchy.push(to);
         const link = `${hierarchy.join('/')}`;
         return (
-          <Breadcrumb key={text.toLowerCase()} to={link} disabled={disabled}>
+          <BreadcrumbLink key={text.toLowerCase()} to={link} disabled={disabled}>
             {text}
-          </Breadcrumb>
+          </BreadcrumbLink>
         );
       })}
     </Breadcrumbs>

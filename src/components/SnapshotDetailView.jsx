@@ -13,7 +13,7 @@ import {
 import DetailViewHeader from './DetailViewHeader';
 
 import DatasetTable from './table/DatasetTable';
-import { COLLECTION_TYPE, SNAPSHOT_INCLUDE_OPTIONS, SNAPSHOT_ROLES } from '../constants';
+import { BREADCRUMB_TYPE, SNAPSHOT_INCLUDE_OPTIONS, SNAPSHOT_ROLES } from '../constants';
 import { getRoleMembersFromPolicies } from '../libs/utils';
 import AppBreadcrumbs from './AppBreadcrumbs/AppBreadcrumbs';
 
@@ -144,7 +144,7 @@ export class SnapshotDetailView extends React.PureComponent {
       <div className={classes.pageRoot}>
         <AppBreadcrumbs
           context={{
-            type: COLLECTION_TYPE.SNAPSHOT,
+            type: BREADCRUMB_TYPE.SNAPSHOT,
             id: snapshot.id || '',
             name: snapshot.name || '',
           }}
