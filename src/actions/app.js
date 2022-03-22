@@ -175,16 +175,17 @@ export const { runQuery } = createActions({
 });
 
 export const { previewData } = createActions({
-  [ActionTypes.PREVIEW_DATA_SUCCESS]: (queryResults, columns) => ({
-    queryResults,
-    columns,
-  }),
   [ActionTypes.PREVIEW_DATA]: (snapshotId, table, columns, totalRowCount) => ({
     snapshotId,
     table,
     columns,
     totalRowCount,
   }),
+  [ActionTypes.PREVIEW_DATA_SUCCESS]: (queryResults, columns) => ({
+    queryResults,
+    columns,
+  }),
+  [ActionTypes.PREVIEW_DATA_FAILURE]: (errMsg) => ({ errMsg }),
 });
 
 export const { previewData } = createActions({
