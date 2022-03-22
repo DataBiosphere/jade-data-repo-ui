@@ -11,6 +11,16 @@ import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { pageQuery, applySort } from 'actions/index';
+import {
+  Dialog,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  IconButton,
+  Link,
+  Typography,
+} from '@material-ui/core';
+import CloseIcon from '@material-ui/icons/Close';
 import JadeTableHead from './JadeTableHead';
 import { ellipsis } from '../../libs/styles';
 import { COLUMN_MODES, GOOGLE_CLOUD_RESOURCE } from '../../constants';
@@ -43,6 +53,14 @@ const styles = (theme) => ({
     textColor: theme.palette.primary.dark,
     color: theme.palette.primary.dark,
   },
+  dialogContentText: {
+    width: 'max-content',
+    maxWidth: '800px',
+  },
+  seeMoreLink: {
+    ...theme.mixins.jadeLink,
+    cursor: 'pointer',
+  },
 });
 
 export class JadeTable extends React.PureComponent {
@@ -55,6 +73,11 @@ export class JadeTable extends React.PureComponent {
       pageToTokenMap: {},
       orderBy: '',
       order: '',
+      seeMore: {
+        open: false,
+        title: '',
+        contents: '',
+      },
     };
   }
 
@@ -68,6 +91,8 @@ export class JadeTable extends React.PureComponent {
     queryResults: PropTypes.object,
     rows: PropTypes.array,
   };
+
+  maxRepeatedValues = 5;
 
   handleChangePage = (event, newPage) => {
     const { dispatch, queryResults, dataset } = this.props;
@@ -131,32 +156,72 @@ export class JadeTable extends React.PureComponent {
     });
   };
 
-  handleArrayValues = (value, column) => {
-    const returnValue = [];
-    if (column.mode === COLUMN_MODES.REPEATED) {
-      returnValue.push(<span key="start">[</span>);
-    }
-    returnValue.push(
-      ...value.flatMap((v, i) => [
-        _.isNull(v) ? this.handleNullValue(v) : v,
-        i < value.length - 1 ? (
+  handleSeeMoreOpen = (values, title) => {
+    this.setState({
+      seeMore: {
+        open: true,
+        title,
+        contents: values,
+      },
+    });
+  };
+
+  handleSeeMoreClose = () => {
+    this.setState({
+      seeMore: {
+        open: false,
+        title: '',
+        contents: '',
+      },
+    });
+  };
+
+  handleRepeatedValues = (values, columnName, classes) => {
+    const allValues = [];
+    const cleanValues = values.map((v) => (_.isNull(v) ? this.handleNullValue(v) : v));
+    const start = <span key="start">[</span>;
+    const end = <span key="end">]</span>;
+    for (let i = 0; i < cleanValues.length; i++) {
+      const thisValue = cleanValues[i];
+      if (i < cleanValues.length - 1) {
+        allValues.push(
           <span key={`sep-${i}`}>
-            _.isNull(v) ? this.handleNullValue(v) : ,<br />
-          </span>
-        ) : undefined,
-      ]),
-    );
-    if (column.mode === COLUMN_MODES.REPEATED) {
-      returnValue.push(<span key="end">]</span>);
+            {thisValue},<br />
+          </span>,
+        );
+      } else {
+        allValues.push(thisValue);
+      }
     }
-    return returnValue;
+    const valuesToDisplay = [start, ...allValues, end];
+    if (allValues.length > this.maxRepeatedValues) {
+      const ellipses = <span key="ellipses">...</span>;
+      const seeMore = (
+        <span key="see-more">
+          <Link
+            className={classes.seeMoreLink}
+            onClick={() => this.handleSeeMoreOpen(valuesToDisplay, columnName)}
+          >
+            <br />
+            See full list
+          </Link>
+        </span>
+      );
+      return [start, ...allValues.slice(0, this.maxRepeatedValues), ellipses, end, seeMore];
+    }
+
+    return valuesToDisplay;
   };
 
   handleNullValue = (classes) => <span className={classes.nullValue}>null</span>;
 
   handleValues = (value, column, classes) => {
     if (_.isArray(value)) {
-      return this.handleArrayValues(value, column);
+      if (column.mode === COLUMN_MODES.REPEATED) {
+        return this.handleRepeatedValues(value, column.id, classes);
+      }
+      const singleValue = value[0];
+      return _.isNull(singleValue) ? this.handleNullValue(singleValue) : singleValue;
     }
     if (_.isNull(value)) {
       return this.handleNullValue(classes);
@@ -166,7 +231,7 @@ export class JadeTable extends React.PureComponent {
 
   render() {
     const { classes, queryResults, columns, rows, polling, delay } = this.props;
-    const { page, rowsPerPage, orderBy, order } = this.state;
+    const { page, rowsPerPage, orderBy, order, seeMore } = this.state;
 
     return (
       <Paper className={classes.root}>
@@ -224,6 +289,24 @@ export class JadeTable extends React.PureComponent {
           onChangePage={this.handleChangePage}
           onChangeRowsPerPage={this.handleChangeRowsPerPage}
         />
+        <Dialog open={seeMore.open} scroll="paper">
+          <DialogTitle disableTypography={true} id="see-more-dialog-title">
+            <Typography variant="h4" style={{ float: 'left' }}>
+              {seeMore.title}
+            </Typography>
+            <IconButton size="small" style={{ float: 'right' }} onClick={this.handleSeeMoreClose}>
+              <CloseIcon />
+            </IconButton>
+          </DialogTitle>
+          <DialogContent dividers={true}>
+            <DialogContentText
+              className={classes.dialogContentText}
+              id="see-more-dialog-content-text"
+            >
+              {seeMore.contents}
+            </DialogContentText>
+          </DialogContent>
+        </Dialog>
       </Paper>
     );
   }
