@@ -102,7 +102,7 @@ function JadeTable({
         _.isNull(v) ? handleNullValue(v) : v,
         i < value.length - 1 ? (
           <span key={`sep-${i}`}>
-            _.isNull(v) ? handleNullValue(v) : ,<br />
+            {_.isNull(v) ? handleNullValue(v) : ','}<br />
           </span>
         ) : undefined,
       ]),
