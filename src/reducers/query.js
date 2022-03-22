@@ -8,6 +8,8 @@ export const queryState = {
   baseQuery: '',
   columns: null,
   delay: false,
+  errMsg: '',
+  error: false,
   filterData: {},
   filterStatement: '',
   joinStatement: '',
@@ -68,13 +70,11 @@ export default {
           return res;
         });
         const queryParams = {
-          // pageToken: queryResults.pageToken,
-          // projectId: queryResults.jobReference.projectId,
-          // jobId: queryResults.jobReference.jobId,
           totalRows: action.payload.totalRowCount,
         };
 
         return immutable(state, {
+          error: { $set: false },
           queryParams: { $set: queryParams },
           columns: { $set: columns },
           rows: { $set: rows },
@@ -113,8 +113,15 @@ export default {
         }),
       [ActionTypes.PREVIEW_DATA]: (state) =>
         immutable(state, {
+          error: { $set: false },
           queryParams: { $set: {} },
           polling: { $set: true },
+        }),
+      [ActionTypes.PREVIEW_DATA_FAILURE]: (state, action) =>
+        immutable(state, {
+          error: { $set: true },
+          errorMsg: { $set: action.payload },
+          polling: { $set: false },
         }),
       [ActionTypes.CHANGE_ROWS_PER_PAGE]: (state, action) =>
         immutable(state, {

@@ -520,6 +520,10 @@ export function* previewData({ payload }) {
     });
   } catch (err) {
     showNotification(err);
+    yield put({
+      type: ActionTypes.PREVIEW_DATA_FAILURE,
+      payload: err,
+    });
   }
 }
 

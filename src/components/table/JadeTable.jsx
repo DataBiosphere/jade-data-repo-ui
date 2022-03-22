@@ -10,6 +10,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import LoadingSpinner from 'components/common/LoadingSpinner';
+import Failure from 'components/common/Failure';
 import { changeRowsPerPage, changePage, applySort } from 'actions/index';
 import JadeTableHead from './JadeTableHead';
 import { ellipsis } from '../../libs/styles';
@@ -41,6 +42,8 @@ function JadeTable({
   columns,
   delay,
   dispatch,
+  errMsg,
+  error,
   orderDirection,
   page,
   polling,
@@ -100,7 +103,7 @@ function JadeTable({
   return (
     <Paper className={classes.root}>
       <div className={classes.tableWrapper}>
-        {rows && columns && (
+        {rows && columns && !error && (
           <Table stickyHeader aria-label="sticky table">
             <JadeTableHead
               allowSort={allowSort}
@@ -138,9 +141,10 @@ function JadeTable({
         {polling && (
           <LoadingSpinner
             delay={delay}
-            delayMessage="For large datasets, it can take a few minutes to fetch results from BigQuery. Thank you for your patience."
+            delayMessage="For large datasets, it can take a few minutes to fetch results. Thank you for your patience."
           />
         )}
+        {error && <Failure errString={errMsg} />}
       </div>
       <TablePagination
         rowsPerPageOptions={TABLE_DEFAULT_ROWS_PER_PAGE_OPTIONS}
@@ -161,6 +165,8 @@ JadeTable.propTypes = {
   columns: PropTypes.array,
   delay: PropTypes.bool,
   dispatch: PropTypes.func.isRequired,
+  errMsg: PropTypes.string,
+  error: PropTypes.bool,
   orderDirection: PropTypes.string,
   page: PropTypes.number.isRequired,
   polling: PropTypes.bool,
@@ -174,6 +180,7 @@ function mapStateToProps(state) {
   return {
     columns: state.query.columns,
     delay: state.query.delay,
+    error: state.query.error,
     filterData: state.query.filterData,
     filterStatement: state.query.filterStatement,
     orderDirection: state.query.orderDirection,

@@ -79,6 +79,7 @@ export const ActionTypes = keyMirror({
   RUN_QUERY_SUCCESS: undefined,
   PREVIEW_DATA: undefined,
   PREVIEW_DATA_SUCCESS: undefined,
+  PREVIEW_DATA_FAILURE: undefined,
   QUERY_MENU_SELECT: undefined,
   APPLY_FILTERS: undefined,
   APPLY_FILTERS_SUCCESS: undefined,
