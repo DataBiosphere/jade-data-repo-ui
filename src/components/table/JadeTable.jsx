@@ -90,12 +90,35 @@ function JadeTable({
     dispatch(applySort(newOrderProperty, newOrderDirection));
   };
 
+  const handleNullValue = () => <span className={classes.nullValue}>null</span>;
+
   const handleArrayValues = (value, column) => {
+    const returnValue = [];
+    if (column.mode === COLUMN_MODES.REPEATED) {
+      returnValue.push(<span key="start">[</span>);
+    }
+    returnValue.push(
+      ...value.flatMap((v, i) => [
+        _.isNull(v) ? handleNullValue(v) : v,
+        i < value.length - 1 ? (
+          <span key={`sep-${i}`}>
+            _.isNull(v) ? handleNullValue(v) : ,<br />
+          </span>
+        ) : undefined,
+      ]),
+    );
+    if (column.mode === COLUMN_MODES.REPEATED) {
+      returnValue.push(<span key="end">]</span>);
+    }
+    return returnValue;
+  };
+
+  const handleValues = (value, column) => {
     if (_.isArray(value)) {
-      return this.handleArrayValues(value, column);
+      return handleArrayValues(value, column);
     }
     if (_.isNull(value)) {
-      return this.handleNullValue(classes);
+      return handleNullValue();
     }
     return value;
   };
@@ -118,7 +141,7 @@ function JadeTable({
                   return (
                     <TableRow hover tabIndex={-1} key={drId}>
                       {columns.map((column) => {
-                        const value = handleArrayValues(row[column.id], column);
+                        const value = handleValues(row[column.id], column);
                         return (
                           !_.isUndefined(value) && (
                             <TableCell
