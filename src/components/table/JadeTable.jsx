@@ -38,6 +38,11 @@ const styles = (theme) => ({
     borderBottomColor: theme.palette.lightTable.bottomColor,
     ...ellipsis,
   },
+  nullValue: {
+    fontStyle: 'italic',
+    textColor: theme.palette.primary.dark,
+    color: theme.palette.primary.dark,
+  },
 });
 
 export class JadeTable extends React.PureComponent {
@@ -127,25 +132,34 @@ export class JadeTable extends React.PureComponent {
   };
 
   handleArrayValues = (value, column) => {
+    const returnValue = [];
+    if (column.mode === COLUMN_MODES.REPEATED) {
+      returnValue.push(<span key="start">[</span>);
+    }
+    returnValue.push(
+      ...value.flatMap((v, i) => [
+        _.isNull(v) ? this.handleNullValue(v) : v,
+        i < value.length - 1 ? (
+          <span key={`sep-${i}`}>
+            _.isNull(v) ? this.handleNullValue(v) : ,<br />
+          </span>
+        ) : undefined,
+      ]),
+    );
+    if (column.mode === COLUMN_MODES.REPEATED) {
+      returnValue.push(<span key="end">]</span>);
+    }
+    return returnValue;
+  };
+
+  handleNullValue = (classes) => <span className={classes.nullValue}>null</span>;
+
+  handleValues = (value, column, classes) => {
     if (_.isArray(value)) {
-      const returnValue = [];
-      if (column.mode === COLUMN_MODES.REPEATED) {
-        returnValue.push(<span key="start">[</span>);
-      }
-      returnValue.push(
-        ...value.flatMap((v, i) => [
-          v,
-          i < value.length - 1 ? (
-            <span key={`sep-${i}`}>
-              ,<br />
-            </span>
-          ) : undefined,
-        ]),
-      );
-      if (column.mode === COLUMN_MODES.REPEATED) {
-        returnValue.push(<span key="end">]</span>);
-      }
-      return returnValue;
+      return this.handleArrayValues(value, column);
+    }
+    if (_.isNull(value)) {
+      return this.handleNullValue(classes);
     }
     return value;
   };
@@ -173,7 +187,7 @@ export class JadeTable extends React.PureComponent {
                     return (
                       <TableRow hover tabIndex={-1} key={drId}>
                         {columns.map((column) => {
-                          const value = this.handleArrayValues(row[column.id], column);
+                          const value = this.handleValues(row[column.id], column, classes);
                           return (
                             !_.isUndefined(value) && (
                               <TableCell
