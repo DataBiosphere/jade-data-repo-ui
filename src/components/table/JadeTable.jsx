@@ -138,7 +138,7 @@ export class JadeTable extends React.PureComponent {
     }
     returnValue.push(
       ...value.flatMap((v, i) => [
-        v,
+        _.isNull(v) ? this.handleNullValue(v) : v,
         i < value.length - 1 ? (
           <span key={`sep-${i}`}>
             _.isNull(v) ? this.handleNullValue(v) : ,<br />
