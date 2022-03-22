@@ -9,7 +9,12 @@ import moment from 'moment';
 import _ from 'lodash';
 
 import { showNotification } from 'modules/notifications';
-import { ActionTypes, STATUS, TABLE_DEFAULT_ROWS_PER_PAGE } from '../constants';
+import {
+  ActionTypes,
+  DATAREPO_ROW_ID_COLUMN_NAME,
+  STATUS,
+  TABLE_DEFAULT_ROWS_PER_PAGE,
+} from '../constants';
 
 /**
  * Switch Menu
@@ -165,7 +170,6 @@ export function* createSnapshot() {
   const mode = 'byQuery';
   const selectedAsset = _.find(dataset.schema.assets, (asset) => asset.name === assetName);
   const { rootTable } = selectedAsset;
-  const drRowId = 'datarepo_row_id';
 
   const snapshotRequest = {
     name,
@@ -178,7 +182,7 @@ export function* createSnapshot() {
         mode,
         querySpec: {
           assetName,
-          query: `SELECT ${datasetName}.${rootTable}.${drRowId} ${joinStatement} ${filterStatement}`,
+          query: `SELECT ${datasetName}.${rootTable}.${DATAREPO_ROW_ID_COLUMN_NAME} ${joinStatement} ${filterStatement}`,
         },
       },
     ],
@@ -304,11 +308,11 @@ export function* removeSnapshotPolicyMember({ payload }) {
  */
 
 export function* getDatasets({ payload }) {
-  const limit = payload.limit || 10;
-  const offset = payload.offset || 0;
-  const filter = payload.searchString || '';
-  const sort = payload.sort || 'created_date';
-  const direction = payload.direction || 'desc';
+  const limit = payload.limit;
+  const offset = payload.offset;
+  const filter = payload.searchString;
+  const sort = payload.sort;
+  const direction = payload.direction;
   try {
     const response = yield call(
       authGet,

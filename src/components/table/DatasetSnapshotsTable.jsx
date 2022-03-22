@@ -26,7 +26,7 @@ class DatasetSnapshotsTable extends React.PureComponent {
 
   componentDidMount() {
     const { dispatch, dataset } = this.props;
-    dispatch(getDatasetSnapshots(null, null, null, null, [dataset.id]));
+    dispatch(getDatasetSnapshots(null, null, 'created_date', 'desc', [dataset.id]));
   }
 
   handleFilterSnapshots = (limit, offset, sort, sortDirection) => {
@@ -39,7 +39,7 @@ class DatasetSnapshotsTable extends React.PureComponent {
     const columns = [
       {
         label: 'Snapshot Name',
-        property: 'name',
+        name: 'name',
         render: (row) => (
           <Link to={`/snapshots/${row.id}/overview`} className={classes.jadeLink}>
             {row.name}
@@ -48,11 +48,11 @@ class DatasetSnapshotsTable extends React.PureComponent {
       },
       {
         label: 'Description',
-        property: 'description',
+        name: 'description',
       },
       {
         label: 'Date created',
-        property: 'created_date',
+        name: 'created_date',
         render: (row) => moment(row.createdDate).fromNow(),
       },
     ];

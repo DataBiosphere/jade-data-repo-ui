@@ -17,7 +17,11 @@ import LoadingSpinner from 'components/common/LoadingSpinner';
 import QueryViewSidebar from './sidebar/QueryViewSidebar';
 import InfoView from './sidebar/panels/InfoView';
 import ShareSnapshot from './sidebar/panels/ShareSnapshot';
-import { DATASET_INCLUDE_OPTIONS, GOOGLE_CLOUD_RESOURCE } from '../../../constants';
+import {
+  DATAREPO_ROW_ID_COLUMN_NAME,
+  DATASET_INCLUDE_OPTIONS,
+  GOOGLE_CLOUD_RESOURCE,
+} from '../../../constants';
 
 const QUERY_LIMIT = 1000;
 
@@ -118,7 +122,7 @@ function DatasetQueryView({
         runQuery(
           dataset.dataProject,
           `#standardSQL
-          SELECT datarepo_row_id,
+          SELECT ${DATAREPO_ROW_ID_COLUMN_NAME},
             ${selectedTable.columns.map((column) => column.name).join(', ')} ${fromClause}
             ${orderProperty ? `ORDER BY ${orderProperty} ${orderDirection}` : ''}
           LIMIT ${QUERY_LIMIT}`,

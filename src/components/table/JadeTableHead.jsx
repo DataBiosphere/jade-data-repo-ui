@@ -7,7 +7,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
-import { COLUMN_MODES } from '../../constants';
+import { DATAREPO_ROW_ID_COLUMN_NAME } from '../../constants';
 
 const styles = (theme) => ({
   root: {
@@ -25,26 +25,24 @@ function JadeTableHead({ allowSort, columns, createSortHandler, orderProperty, o
       <TableRow>
         {columns.map(
           (column) =>
-            column.id !== 'datarepo_row_id' && (
+            column.name !== DATAREPO_ROW_ID_COLUMN_NAME && (
               <TableCell
-                key={column.id}
+                key={column.name}
                 align={column.numeric ? 'right' : 'left'}
                 padding={column.disablePadding ? 'none' : 'default'}
-                sortDirection={orderProperty === column.id ? orderDirection : false}
-                data-cy={`columnheader-${column.id}`}
+                sortDirection={orderProperty === column.name ? orderDirection : false}
+                data-cy={`columnheader-${column.name}`}
               >
-                {allowSort && column.mode !== COLUMN_MODES.REPEATED && (
+                {allowSort && !column.array_of && (
                   <TableSortLabel
-                    active={orderProperty === column.id}
-                    direction={orderDirection !== '' ? orderDirection : 'desc'}
-                    onClick={() => createSortHandler(column.id)}
+                    active={orderProperty === column.name}
+                    direction={orderDirection}
+                    onClick={() => createSortHandler(column.name)}
                   >
-                    {column.label}
+                    {column.name}
                   </TableSortLabel>
                 )}
-                {(!allowSort || column.mode === COLUMN_MODES.REPEATED) && (
-                  <span>{column.label}</span>
-                )}
+                {(!allowSort || column.array_of) && <span>{column.name}</span>}
               </TableCell>
             ),
         )}
@@ -57,8 +55,8 @@ JadeTableHead.propTypes = {
   allowSort: PropTypes.bool,
   columns: PropTypes.array,
   createSortHandler: PropTypes.func,
-  orderDirection: PropTypes.string,
-  orderProperty: PropTypes.string,
+  orderDirection: PropTypes.string.isRequired,
+  orderProperty: PropTypes.string.isRequired,
 };
 
 function mapStateToProps(state) {

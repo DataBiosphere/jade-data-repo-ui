@@ -121,7 +121,7 @@ function LightTable({
                 const darkRow = index % 2 !== 0;
                 return (
                   <TableRow
-                    key={rowKey ? rowKey(row) : row.id}
+                    key={rowKey ? rowKey(row) : row.name}
                     className={clsx({
                       [classes.row]: true,
                       [classes.darkRow]: darkRow,
@@ -131,10 +131,10 @@ function LightTable({
                     {columns.map((col) => (
                       <TableCell
                         className={classes.cell}
-                        key={col.property}
+                        key={col.name}
                         style={{ wordBreak: 'break-word' }}
                       >
-                        {col.render ? col.render(row) : row[col.property]}
+                        {col.render ? col.render(row) : row[col.name]}
                       </TableCell>
                     ))}
                   </TableRow>

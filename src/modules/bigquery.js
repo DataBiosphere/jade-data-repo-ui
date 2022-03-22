@@ -3,7 +3,7 @@ import React from 'react';
 import axios from 'axios';
 import _ from 'lodash';
 import AwesomeDebouncePromise from 'awesome-debounce-promise';
-import { COLUMN_MODES } from '../constants';
+import { COLUMN_MODES, DATAREPO_ROW_ID_COLUMN_NAME } from '../constants';
 
 export default class BigQuery {
   constructor() {
@@ -12,11 +12,9 @@ export default class BigQuery {
 
   transformColumns = (queryResults) =>
     _.get(queryResults, 'schema.fields', []).map((field) => ({
-      id: field.name,
-      label: field.name,
-      minWidth: 100,
-      type: field.type,
-      mode: field.mode,
+      name: field.name,
+      datatype: field.type,
+      array_of: field.mode === COLUMN_MODES.REPEATED,
     }));
 
   transformRows = (queryResults, columns) => {
@@ -32,17 +30,17 @@ export default class BigQuery {
     const res = {};
     for (i = 0; i < columns.length; i++) {
       const column = columns[i];
-      const columnId = column.id;
-      const columnType = column.type;
-      const columnMode = column.mode;
+      const columnId = column.name;
+      const columnType = column.datatype;
+      const columnArrayOf = column.array_of;
 
       let value = row[i];
       if (value !== null) {
         // Convert into an array if it's not already one
-        if (columnMode !== COLUMN_MODES.REPEATED) {
-          value = [value];
-        } else {
+        if (columnArrayOf) {
           value = value.map((v) => v.v);
+        } else {
+          value = [value];
         }
 
         if (columnType === 'INTEGER') {
@@ -57,8 +55,8 @@ export default class BigQuery {
           value = value.map((v) => new Date(v * 1000).toLocaleString());
         }
       }
-      if (columnId === 'datarepo_row_id') {
-        res.datarepo_id = value;
+      if (columnId === DATAREPO_ROW_ID_COLUMN_NAME) {
+        res.datarepo_row_id = value;
       } else {
         res[columnId] = value;
       }
@@ -71,9 +69,6 @@ export default class BigQuery {
 
   significantDigits = (amount) =>
     new Intl.NumberFormat('en-US', { maximumSignificantDigits: 3 }).format(amount);
-
-  calculateColumns = (columns) =>
-    columns.map((column) => ({ title: column.name, field: column.name }));
 
   buildSnapshotFilterStatement = (filterMap, dataset) =>
     this.buildFilterStatement(filterMap, dataset);

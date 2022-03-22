@@ -50,27 +50,28 @@ export class LightTableHead extends React.PureComponent {
         <TableRow>
           {columns.map(
             (col) => (
+              // TODO - where is .numeric and .disablePadding set?
               <TableCell
                 className={classes.cell}
-                key={col.property}
+                key={col.name}
                 align={col.numeric ? 'right' : 'left'}
                 padding={col.disablePadding ? 'none' : 'default'}
-                sortDirection={orderProperty === col.id ? orderDirection : false}
+                sortDirection={orderProperty === col.name ? orderDirection : false}
               >
                 {summary ? (
-                  col.label
+                  col.name
                 ) : (
                   <div>
-                    {col.label}
+                    {col.label ?? col.name}
                     <TerraTooltip
                       title="Sort"
                       placement={col.numeric ? 'bottom-end' : 'bottom-start'}
                       enterDelay={300}
                     >
                       <TableSortLabel
-                        active={orderProperty === col.property}
+                        active={orderProperty === col.name}
                         direction={orderDirection}
-                        onClick={this.createSortHandler(col.property)}
+                        onClick={this.createSortHandler(col.name)}
                         IconComponent={Sort}
                         style={{ float: 'right' }}
                       />

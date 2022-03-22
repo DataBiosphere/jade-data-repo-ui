@@ -38,7 +38,7 @@ class SnapshotTable extends React.PureComponent {
     const columns = [
       {
         label: 'Snapshot Name',
-        property: 'name',
+        name: 'name',
         render: (row) => (
           <Link to={`/snapshots/${row.id}`} className={classes.jadeLink}>
             {row.name}
@@ -47,21 +47,21 @@ class SnapshotTable extends React.PureComponent {
       },
       {
         label: 'Description',
-        property: 'description',
+        name: 'description',
       },
       {
         label: 'Date created',
-        property: 'created_date',
+        name: 'created_date',
         render: (row) => moment(row.createdDate).fromNow(),
       },
       {
         label: 'Storage Regions',
-        property: 'storage',
+        name: 'storage',
         render: (row) => Array.from(new Set(row.storage.map((s) => s.region))).join(', '),
       },
       {
         label: 'Cloud Platform',
-        property: 'platform',
+        name: 'platform',
         render: renderCloudPlatforms,
       },
     ];

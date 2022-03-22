@@ -105,6 +105,9 @@ export const ActionTypes = keyMirror({
  * @constant {Object} STATUS
  * @memberof Constants
  */
+
+export const DATAREPO_ROW_ID_COLUMN_NAME = 'datarepo_row_id';
+
 export const STATUS = {
   IDLE: 'idle',
   RUNNING: 'running',
@@ -118,7 +121,7 @@ export const IMAGE = {
 };
 
 export const DB_COLUMNS = {
-  ROW_ID: 'datarepo_row_id',
+  ROW_ID: DATAREPO_ROW_ID_COLUMN_NAME,
 };
 
 export const COLUMN_MODES = {

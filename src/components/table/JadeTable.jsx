@@ -14,7 +14,7 @@ import Failure from 'components/common/Failure';
 import { changeRowsPerPage, changePage, applySort } from 'actions/index';
 import JadeTableHead from './JadeTableHead';
 import { ellipsis } from '../../libs/styles';
-import { COLUMN_MODES, TABLE_DEFAULT_ROWS_PER_PAGE_OPTIONS } from '../../constants';
+import { TABLE_DEFAULT_ROWS_PER_PAGE_OPTIONS } from '../../constants';
 
 // eslint-disable-next-line no-unused-vars
 const styles = (theme) => ({
@@ -94,7 +94,7 @@ function JadeTable({
 
   const handleArrayValues = (value, column) => {
     const returnValue = [];
-    if (column.mode === COLUMN_MODES.REPEATED) {
+    if (column.array_of) {
       returnValue.push(<span key="start">[</span>);
     }
     returnValue.push(
@@ -108,7 +108,7 @@ function JadeTable({
         ) : undefined,
       ]),
     );
-    if (column.mode === COLUMN_MODES.REPEATED) {
+    if (column.array_of) {
       returnValue.push(<span key="end">]</span>);
     }
     return returnValue;
@@ -137,18 +137,18 @@ function JadeTable({
             {!polling && (
               <TableBody data-cy="tableBody">
                 {rows.map((row, i) => {
-                  const drId = row.datarepo_id;
+                  const drId = row.datarepo_row_id;
 
                   return (
                     <TableRow hover tabIndex={-1} key={drId}>
                       {columns.map((column) => {
-                        const value = handleValues(row[column.id], column);
+                        const value = handleValues(row[column.name], column);
                         return (
                           !_.isUndefined(value) && (
                             <TableCell
-                              key={`${column.id}-${drId}`}
+                              key={`${column.name}-${drId}`}
                               className={classes.cell}
-                              data-cy={`cellvalue-${column.id}-${i}`}
+                              data-cy={`cellvalue-${column.name}-${i}`}
                             >
                               {value}
                             </TableCell>
