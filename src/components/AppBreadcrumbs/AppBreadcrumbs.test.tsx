@@ -3,14 +3,14 @@ import { mount } from '@cypress/react';
 import { Router } from 'react-router-dom';
 import history from 'modules/hist';
 import AppBreadcrumbs from './AppBreadcrumbs';
-import { COLLECTION_TYPE } from '../../constants';
+import { BREADCRUMB_TYPE } from '../../constants';
 
 describe('AppBreadcrumbs', () => {
   it('should render the path to the current dataset', () => {
     mount(
       <Router history={history}>
         <AppBreadcrumbs
-          context={{ type: COLLECTION_TYPE.DATASET, id: 'foo-bar', name: 'testDataset' }}
+          context={{ type: BREADCRUMB_TYPE.DATASET, id: 'foo-bar', name: 'testDataset' }}
           childBreadcrumbs={[]}
         />
       </Router>,
@@ -30,7 +30,7 @@ describe('AppBreadcrumbs', () => {
     mount(
       <Router history={history}>
         <AppBreadcrumbs
-          context={{ type: COLLECTION_TYPE.DATASET, id: 'foo-bar', name: 'testDataset' }}
+          context={{ type: BREADCRUMB_TYPE.DATASET, id: 'foo-bar', name: 'testDataset' }}
           childBreadcrumbs={[{ text: 'Data', to: 'data' }]}
         />
       </Router>,
@@ -49,7 +49,7 @@ describe('AppBreadcrumbs', () => {
     mount(
       <Router history={history}>
         <AppBreadcrumbs
-          context={{ type: COLLECTION_TYPE.SNAPSHOT, id: 'foo-bar-snapshot', name: 'testSnapshot' }}
+          context={{ type: BREADCRUMB_TYPE.SNAPSHOT, id: 'foo-bar-snapshot', name: 'testSnapshot' }}
           childBreadcrumbs={[]}
         />
       </Router>,
@@ -70,7 +70,7 @@ describe('AppBreadcrumbs', () => {
     mount(
       <Router history={history}>
         <AppBreadcrumbs
-          context={{ type: COLLECTION_TYPE.DATASET, id: 'foo-bar', name: 'testDataset' }}
+          context={{ type: BREADCRUMB_TYPE.DATASET, id: 'foo-bar', name: 'testDataset' }}
           childBreadcrumbs={[]}
         />
       </Router>,
@@ -81,7 +81,7 @@ describe('AppBreadcrumbs', () => {
     mount(
       <Router history={history}>
         <AppBreadcrumbs
-          context={{ type: COLLECTION_TYPE.DATASET, id: 'foo-bar', name: 'testDataset' }}
+          context={{ type: BREADCRUMB_TYPE.DATASET, id: 'foo-bar', name: 'testDataset' }}
           childBreadcrumbs={[{ text: 'Data', to: 'data' }]}
         />
       </Router>,
