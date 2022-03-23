@@ -1,0 +1,27 @@
+[
+  {
+    "name": "V2F_GWAS_Summary_Statistics",
+    "tables": [
+      "ancestry_specific_meta_analysis",
+      "feature_consequence",
+      "dataset_specific_analysis",
+      "frequency_analysis",
+      "trans_ethnic_meta_analysis",
+      "transcript_consequence",
+      "variant"
+    ],
+    "upload_prefix": "gs://jade-testdata-useastregion/V2F_GWAS_Summary_Statistics",
+    "format": "json",
+    "stewards": ["JadeStewards-dev@dev.test.firecloud.org"],
+    "custodians": [],
+    "snapshot_creators": []
+  },
+  {
+    "name": "NonStewardDataset",
+    "tables": [],
+    "format": "json",
+    "stewards": [],
+    "custodians": [],
+    "snapshot_creators": ["JadeStewards-dev@dev.test.firecloud.org"]
+  }
+]

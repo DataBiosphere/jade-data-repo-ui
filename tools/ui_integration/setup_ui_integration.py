@@ -6,33 +6,6 @@ import os
 import time
 import uuid
 
-DATASETS_TO_UPLOAD = [
-    {
-        "name": "V2F_GWAS_Summary_Statistics",
-        "tables": [
-            "ancestry_specific_meta_analysis",
-            "feature_consequence",
-            "dataset_specific_analysis",
-            "frequency_analysis",
-            "trans_ethnic_meta_analysis",
-            "transcript_consequence",
-            "variant",
-        ],
-        "format": "json",
-        "stewards": ["JadeStewards-dev@dev.test.firecloud.org"],
-        "custodians": [],
-        "snapshot_creators": []
-    },
-    {
-        "name": "NonStewardDataset",
-        "tables": [],
-        "format": "json",
-        "stewards": [],
-        "custodians": [],
-        "snapshot_creators": ["JadeStewards-dev@dev.test.firecloud.org"]
-    }
-]
-
 
 class Clients:
     def __init__(self, host):
@@ -88,9 +61,10 @@ def dataset_ingest_json(clients, dataset_id, dataset_to_upload):
     for table in dataset_to_upload['tables']:
         with open(os.path.join("files", dataset_to_upload["name"],
                                f"{table}.{dataset_to_upload['format']}")) as table_csv:
+            upload_prefix = dataset_to_upload['upload_prefix']
             ingest_request = {
                 "format": "json",
-                "path": f"gs://jade-testdata-useastregion/V2F_GWAS_Summary_Statistics/{table}.json",
+                "path": f"{upload_prefix}/{table}.json",
                 "table": table
             }
             print(f"Ingesting data into {dataset_to_upload['name']}/{table}")
@@ -127,9 +101,40 @@ def create_dataset(clients, dataset_to_upload, profile_id):
     return dataset
 
 
+def get_datasets_to_upload(filename):
+    with open(filename) as f:
+        return json.load(f)
+
+
+def add_snapshot_policy_members(clients, snapshot_id, snapshot_to_upload):
+    for user in snapshot_to_upload.get('discoverers'):
+        print(f"Adding {user} as a discoverer")
+        clients.snapshots_api.add_snapshot_policy_member(snapshot_id, "discoverer", policy_member={"email": user})
+
+
+def create_snapshots(clients, dataset_name, snapshots, profile_id):
+    for snapshot_to_upload in snapshots:
+        for i in range(len(snapshots)):
+            snapshot_name = f"{snapshot_to_upload['name']}{i + 1}"
+            print(f"Creating snapshot {snapshot_name}")
+            snapshot_request = {
+                'name': snapshot_name,
+                'description': snapshot_to_upload['description'],
+                'contents': [{'datasetName': dataset_name,
+                              'mode': 'byFullView'}],
+                'profileId': profile_id
+            }
+            snapshot = wait_for_job(clients, clients.snapshots_api.create_snapshot(snapshot=snapshot_request))
+            print(f"Created snapshot {snapshot_name} with id: {snapshot['id']}")
+            add_snapshot_policy_members(clients, snapshot['id'], snapshot_to_upload)
+            snapshots.append(snapshot)
+    return snapshots
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--host', default='https://jade-4.datarepo-integration.broadinstitute.org')
+    parser.add_argument('--datasets', default='datarepo_datasets.json')
     parser.add_argument('--profile_id')
     args = parser.parse_args()
     clients = Clients(args.host)
@@ -140,13 +145,11 @@ def main():
         profile_id = profile_job_response['id']
 
     datasets = []
-    for dataset_to_upload in DATASETS_TO_UPLOAD:
+    for dataset_to_upload in get_datasets_to_upload(args.datasets):
         created_dataset = create_dataset(clients, dataset_to_upload, profile_id)
-
         datasets.append(created_dataset)
-
-    for dataset in datasets:
-        print(f"Created dataset {dataset['name']} with id: {dataset['id']}")
+        if dataset_to_upload.get('snapshots'):
+            create_snapshots(clients, dataset_to_upload['name'], dataset_to_upload['snapshots'], profile_id)
 
 
 if __name__ == "__main__":
