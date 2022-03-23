@@ -1,9 +1,18 @@
 The `setup_ui_integration.py` script can be used to easily create datasets and snapshots in the Data Repo.
 
-Usage:
+###Usage:
 1. `pip3 install -r requirements.txt`
 2. `gcloud auth login <user>`
-3. `python setup_ui_integration.py --host <datarepo_url> --datasets <dataset_specification_file> --profile_id <profile_id>`
+3. `python setup_ui_integration.py --host <datarepo_url> --datasets <datasets_to_create_json_file> --profile_id <profile_id>`
 
-When run with the default values, this script will create datasets for the Data Repo UI tests 
-in the "integration 4" deployment using a new billing profile.
+Note: When run with the default values, this script will create datasets for the Data Repo UI tests 
+in the "integration 4" environment using a new billing profile.
+
+###Adding a new dataset:
+1. Create a new directory in "files".
+2. Add a json file (named `dataset_schema.json`) that contains the JSON request to create the dataset.
+3. Add a json file per dataset table (named `<table>.json`) containing the metadata rows to add to the dataset.
+4. Upload the metadata files from #3 to a gcs bucket. Ensure that the user running the script, the user's proxy account, 
+and the Data Repo API service account have at least storage viewer access on the gcs bucket.
+5. In the JSON file that lists which datasets to create (e.g. `datarepo_datasets.json`), define a new dataset where the 
+"schema" is the name of the new directory and the "upload_prefix" is the gs path to the metadata files.
