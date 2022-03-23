@@ -120,6 +120,7 @@ def add_snapshot_policy_members(clients, snapshot_id, snapshot_to_upload):
 
 
 def create_snapshots(clients, dataset_name, snapshots, profile_id):
+    snapshot_ids = []
     for snapshot_to_upload in snapshots:
         for i in range(snapshot_to_upload['count']):
             snapshot_name = f"{snapshot_to_upload['name']}{i + 1}"
@@ -133,8 +134,8 @@ def create_snapshots(clients, dataset_name, snapshots, profile_id):
             snapshot = wait_for_job(clients, clients.snapshots_api.create_snapshot(snapshot=snapshot_request))
             print(f"Created snapshot {snapshot_name} with id: {snapshot['id']}")
             add_snapshot_policy_members(clients, snapshot['id'], snapshot_to_upload)
-            snapshots.append(snapshot)
-    return snapshots
+            snapshot_ids.append(snapshot['id'])
+    return snapshot_ids
 
 
 def main():
@@ -150,12 +151,20 @@ def main():
         profile_job_response = create_billing_profile(clients)
         profile_id = profile_job_response['id']
 
-    datasets = []
+    outputs = []
     for dataset_to_upload in get_datasets_to_upload(args.datasets):
         created_dataset = create_dataset(clients, dataset_to_upload, profile_id)
-        datasets.append(created_dataset)
+        dataset_name = created_dataset['name']
+        output_ids = {dataset_name: {'dataset_id': created_dataset['id']}}
         if dataset_to_upload.get('snapshots'):
-            create_snapshots(clients, dataset_to_upload['name'], dataset_to_upload['snapshots'], profile_id)
+            snapshot_ids = create_snapshots(clients, dataset_to_upload['name'], dataset_to_upload['snapshots'],
+                                            profile_id)
+            output_ids[dataset_name]['snapshot_ids'] = snapshot_ids
+            outputs.append(output_ids)
+
+    output_filename = f"{args.datasets.split('.')[0]}_outputs.json"
+    with open(output_filename, 'w') as f:
+        json.dump(outputs, f)
 
 
 if __name__ == "__main__":
