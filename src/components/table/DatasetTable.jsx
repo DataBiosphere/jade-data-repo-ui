@@ -39,6 +39,7 @@ class DatasetTable extends React.PureComponent {
       {
         label: 'Dataset Name',
         name: 'name',
+        allowSort: true,
         render: (row) => (
           <div>
             <Link to={`/datasets/${row.id}`} className={classes.jadeLink}>
@@ -50,20 +51,24 @@ class DatasetTable extends React.PureComponent {
       {
         label: 'Description',
         name: 'description',
+        allowSort: true,
       },
       {
         label: 'Date created',
         name: 'created_date',
+        allowSort: true,
         render: (row) => moment(row.createdDate).fromNow(),
       },
       {
         label: 'Storage Regions',
         name: 'storage',
+        allowSort: false,
         render: (row) => Array.from(new Set(row.storage.map((s) => s.region))).join(', '),
       },
       {
         label: 'Cloud Platform',
         name: 'platform',
+        allowSort: false,
         render: renderCloudPlatforms,
       },
     ];

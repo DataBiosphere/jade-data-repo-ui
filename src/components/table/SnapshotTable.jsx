@@ -39,6 +39,7 @@ class SnapshotTable extends React.PureComponent {
       {
         label: 'Snapshot Name',
         name: 'name',
+        allowSort: true,
         render: (row) => (
           <Link to={`/snapshots/${row.id}`} className={classes.jadeLink}>
             {row.name}
@@ -48,20 +49,24 @@ class SnapshotTable extends React.PureComponent {
       {
         label: 'Description',
         name: 'description',
+        allowSort: true,
       },
       {
         label: 'Date created',
         name: 'created_date',
+        allowSort: true,
         render: (row) => moment(row.createdDate).fromNow(),
       },
       {
         label: 'Storage Regions',
         name: 'storage',
+        allowSort: false,
         render: (row) => Array.from(new Set(row.storage.map((s) => s.region))).join(', '),
       },
       {
         label: 'Cloud Platform',
         name: 'platform',
+        allowSort: false,
         render: renderCloudPlatforms,
       },
     ];

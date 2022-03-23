@@ -50,16 +50,15 @@ export class LightTableHead extends React.PureComponent {
         <TableRow>
           {columns.map(
             (col) => (
-              // TODO - where is .numeric and .disablePadding set?
               <TableCell
                 className={classes.cell}
                 key={col.name}
-                align={col.numeric ? 'right' : 'left'}
-                padding={col.disablePadding ? 'none' : 'default'}
+                align="left"
+                padding="default"
                 sortDirection={orderProperty === col.name ? orderDirection : false}
               >
-                {summary ? (
-                  col.name
+                {summary || !col.allowSort ? (
+                  col.label ?? col.name
                 ) : (
                   <div>
                     {col.label ?? col.name}

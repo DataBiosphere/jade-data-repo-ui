@@ -308,11 +308,8 @@ export function* removeSnapshotPolicyMember({ payload }) {
  */
 
 export function* getDatasets({ payload }) {
-  const limit = payload.limit;
-  const offset = payload.offset;
-  const filter = payload.searchString;
-  const sort = payload.sort;
-  const direction = payload.direction;
+  const { limit, offset, sort, direction } = payload;
+  const filter = payload.filter || '';
   try {
     const response = yield call(
       authGet,

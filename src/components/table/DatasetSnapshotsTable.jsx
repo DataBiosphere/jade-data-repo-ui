@@ -40,6 +40,7 @@ class DatasetSnapshotsTable extends React.PureComponent {
       {
         label: 'Snapshot Name',
         name: 'name',
+        allowSort: true,
         render: (row) => (
           <Link to={`/snapshots/${row.id}/overview`} className={classes.jadeLink}>
             {row.name}
@@ -49,10 +50,12 @@ class DatasetSnapshotsTable extends React.PureComponent {
       {
         label: 'Description',
         name: 'description',
+        allowSort: true,
       },
       {
         label: 'Date created',
         name: 'created_date',
+        allowSort: true,
         render: (row) => moment(row.createdDate).fromNow(),
       },
     ];

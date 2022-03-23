@@ -7,7 +7,6 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
-import { DATAREPO_ROW_ID_COLUMN_NAME } from '../../constants';
 
 const styles = (theme) => ({
   root: {
@@ -23,29 +22,26 @@ function JadeTableHead({ allowSort, columns, createSortHandler, orderProperty, o
   return (
     <TableHead>
       <TableRow>
-        {columns.map(
-          (column) =>
-            column.name !== DATAREPO_ROW_ID_COLUMN_NAME && (
-              <TableCell
-                key={column.name}
-                align={column.numeric ? 'right' : 'left'}
-                padding={column.disablePadding ? 'none' : 'default'}
-                sortDirection={orderProperty === column.name ? orderDirection : false}
-                data-cy={`columnheader-${column.name}`}
+        {columns.map((column) => (
+          <TableCell
+            key={column.name}
+            align="left"
+            padding="default"
+            sortDirection={orderProperty === column.name ? orderDirection : false}
+            data-cy={`columnheader-${column.name}`}
+          >
+            {allowSort && !column.array_of && (
+              <TableSortLabel
+                active={orderProperty === column.name}
+                direction={orderDirection}
+                onClick={() => createSortHandler(column.name)}
               >
-                {allowSort && !column.array_of && (
-                  <TableSortLabel
-                    active={orderProperty === column.name}
-                    direction={orderDirection}
-                    onClick={() => createSortHandler(column.name)}
-                  >
-                    {column.name}
-                  </TableSortLabel>
-                )}
-                {(!allowSort || column.array_of) && <span>{column.name}</span>}
-              </TableCell>
-            ),
-        )}
+                {column.name}
+              </TableSortLabel>
+            )}
+            {(!allowSort || column.array_of) && <span>{column.name}</span>}
+          </TableCell>
+        ))}
       </TableRow>
     </TableHead>
   );
