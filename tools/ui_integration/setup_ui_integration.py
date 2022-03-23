@@ -122,7 +122,8 @@ def add_snapshot_policy_members(clients, snapshot_id, snapshot_to_upload):
 def create_snapshots(clients, dataset_name, snapshots, profile_id):
     snapshot_ids = []
     for snapshot_to_upload in snapshots:
-        for i in range(snapshot_to_upload['count']):
+        count = snapshot_to_upload.get('count', 1)
+        for i in range(count):
             snapshot_name = f"{snapshot_to_upload['name']}{i + 1}"
             snapshot_request = {
                 'name': snapshot_name,

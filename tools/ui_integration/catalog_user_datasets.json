@@ -15,8 +15,7 @@
       {
         "name": "StewardCatalogSnapshot",
         "description": "A snapshot that only has stewards.",
-        "stewards": [],
-        "count": 1
+        "stewards": []
       }
     ]
   }

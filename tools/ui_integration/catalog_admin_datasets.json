@@ -15,19 +15,16 @@
       {
         "name": "ReadableCatalogSnapshot",
         "description": "A readable snapshot.",
-        "readers": ["datacataloguser@test.firecloud.org"],
-        "count": 1
+        "readers": ["datacataloguser@test.firecloud.org"]
       },
       {
         "name": "DiscoverableCatalogSnapshot",
         "description": "A discoverable snapshot.",
-        "discoverers": ["datacataloguser@test.firecloud.org"],
-        "count": 1
+        "discoverers": ["datacataloguser@test.firecloud.org"]
       },
       {
         "name": "PrivateCatalogSnapshot",
-        "description": "A snapshot that is not shared with anyone.",
-        "count": 1
+        "description": "A snapshot that is not shared with anyone."
       }
     ]
   }
