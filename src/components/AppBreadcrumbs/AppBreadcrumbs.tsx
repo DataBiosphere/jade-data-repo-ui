@@ -1,13 +1,10 @@
 import React from 'react';
-import { withStyles } from '@material-ui/core/styles';
-import { Breadcrumbs, Link } from '@material-ui/core';
+import { Theme, withStyles } from '@material-ui/core/styles';
+import { Breadcrumbs, Link, LinkProps } from '@material-ui/core';
 import { Link as RouterLink } from 'react-router-dom';
+import { ClassNameMap } from '@material-ui/styles';
 
-function capitalize(str: string): string {
-  return str.charAt(0).toUpperCase() + str.slice(1);
-}
-
-const styles = (theme: any) => ({
+const styles = (theme: Theme) => ({
   terminalBreadcrumb: {
     color: theme.palette.primary.dark,
     cursor: 'default',
@@ -17,41 +14,45 @@ const styles = (theme: any) => ({
   },
 });
 
-export type Context = { type: string; id: string; name: string };
-export type Breadcrumb = { text: string; to: string };
+type Context = { type: string; id: string; name: string };
+type Breadcrumb = { text: string; to: string };
 
 type AppBreadcrumbsProps = {
-  childBreadcrumbs: Array<Breadcrumb>;
+  childBreadcrumbs: Breadcrumb[];
   context: Context;
 };
 
-const BreadcrumbLink = withStyles(styles)((props: any) => {
-  const { classes, ...other } = props;
-  if (props.disabled) {
-    return (
-      <Link
-        component={RouterLink}
-        color="primary"
-        className={classes.terminalBreadcrumb}
-        onClick={(e) => e.preventDefault()}
-        {...other}
-      />
-    );
-  }
-  return <Link component={RouterLink} color="primary" {...other} />;
-});
+const BreadcrumbLink = withStyles(styles)(
+  (props: LinkProps<RouterLink, { classes: ClassNameMap; disabled: boolean }>) => {
+    const { classes, ...other } = props;
+    if (props.disabled) {
+      return (
+        <Link
+          component={RouterLink}
+          color="primary"
+          className={classes.terminalBreadcrumb}
+          onClick={(e) => e.preventDefault()}
+          {...other}
+        />
+      );
+    }
+    return <Link component={RouterLink} color="primary" {...other} />;
+  },
+);
 
-const AppBreadcrumbs: React.FC<AppBreadcrumbsProps> = (props) => {
-  const { context, childBreadcrumbs } = props;
+const AppBreadcrumbs = ({ context, childBreadcrumbs }: AppBreadcrumbsProps) => {
+  const { id, name, type } = context;
 
-  const breadcrumbs: Array<Breadcrumb> = [
+  const capitalize = (str: string): string => str.charAt(0).toUpperCase() + str.slice(1);
+
+  const breadcrumbs: Breadcrumb[] = [
     { text: 'Dashboard', to: '' },
-    { text: `${capitalize(context.type)}s`, to: `${context.type}s` },
-    { text: context.name, to: context.id },
+    { text: `${capitalize(type)}s`, to: `${type}s` },
+    { text: name, to: id },
     ...(childBreadcrumbs || []),
   ];
 
-  const hierarchy: Array<string> = [];
+  const hierarchy: string[] = [];
 
   return (
     <Breadcrumbs aria-label="breadcrumb">
@@ -70,4 +71,4 @@ const AppBreadcrumbs: React.FC<AppBreadcrumbsProps> = (props) => {
   );
 };
 
-export default withStyles(styles)(AppBreadcrumbs);
+export default AppBreadcrumbs;
