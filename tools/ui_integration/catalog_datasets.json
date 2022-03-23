@@ -1,0 +1,27 @@
+[
+  {
+    "name": "CatalogTestDataset",
+    "tables": [
+      "participant",
+      "sample"
+    ],
+    "upload_prefix": "gs://catalog-testdata-useastregion/CatalogTestDataset",
+    "format": "json",
+    "stewards": [],
+    "custodians": [],
+    "snapshot_creators": [],
+    "snapshots": [
+      {
+        "name": "nTestDiscoverableSnapshot",
+        "description": "A discoverable snapshot.",
+        "discoverers": ["JadeStewards-dev@dev.test.firecloud.org"],
+        "count": 1
+      },
+      {
+        "name": "TestPrivateSnapshot",
+        "description": "A snapshot that is not shared with anyone.",
+        "discoverers": [],
+        "count": 1
+      }]
+  }
+]
