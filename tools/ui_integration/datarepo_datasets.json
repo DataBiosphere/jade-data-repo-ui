@@ -1,6 +1,7 @@
 [
   {
     "name": "V2F_GWAS_Summary_Statistics",
+    "schema": "V2F_GWAS_Summary_Statistics",
     "tables": [
       "ancestry_specific_meta_analysis",
       "feature_consequence",
@@ -18,6 +19,7 @@
   },
   {
     "name": "NonStewardDataset",
+    "schema": "V2F_GWAS_Summary_Statistics",
     "tables": [],
     "format": "json",
     "stewards": [],

@@ -1,6 +1,7 @@
 [
   {
-    "name": "CatalogTestDataset",
+    "name": "AdminCatalogTestDataset",
+    "schema": "CatalogTestDataset",
     "tables": [
       "participant",
       "sample"
@@ -12,16 +13,17 @@
     "snapshot_creators": [],
     "snapshots": [
       {
-        "name": "nTestDiscoverableSnapshot",
+        "name": "DiscoverableCatalogSnapshot",
         "description": "A discoverable snapshot.",
-        "discoverers": ["JadeStewards-dev@dev.test.firecloud.org"],
+        "discoverers": ["datacataloguser@test.firecloud.org"],
         "count": 1
       },
       {
-        "name": "TestPrivateSnapshot",
+        "name": "PrivateCatalogSnapshot",
         "description": "A snapshot that is not shared with anyone.",
         "discoverers": [],
         "count": 1
-      }]
+      }
+    ]
   }
 ]

@@ -59,7 +59,7 @@ def add_billing_profile_members(clients, profile_id):
 
 def dataset_ingest_json(clients, dataset_id, dataset_to_upload):
     for table in dataset_to_upload['tables']:
-        with open(os.path.join("files", dataset_to_upload["name"],
+        with open(os.path.join("files", dataset_to_upload["schema"],
                                f"{table}.{dataset_to_upload['format']}")) as table_csv:
             upload_prefix = dataset_to_upload['upload_prefix']
             ingest_request = {
@@ -87,8 +87,9 @@ def create_dataset(clients, dataset_to_upload, profile_id):
     dataset_name = dataset_to_upload['name']
 
     dataset = None
-    with open(os.path.join("files", dataset_name, "dataset_schema.json")) as dataset_schema_json:
+    with open(os.path.join("files", dataset_to_upload['schema'], "dataset_schema.json")) as dataset_schema_json:
         dataset_request = json.load(dataset_schema_json)
+        dataset_request['name'] = dataset_name
         dataset_request['defaultProfileId'] = profile_id
         print(f"Creating dataset {dataset_name}")
         dataset = wait_for_job(clients, clients.datasets_api.create_dataset(dataset=dataset_request))
@@ -114,9 +115,8 @@ def add_snapshot_policy_members(clients, snapshot_id, snapshot_to_upload):
 
 def create_snapshots(clients, dataset_name, snapshots, profile_id):
     for snapshot_to_upload in snapshots:
-        for i in range(len(snapshots)):
+        for i in range(snapshot_to_upload['count']):
             snapshot_name = f"{snapshot_to_upload['name']}{i + 1}"
-            print(f"Creating snapshot {snapshot_name}")
             snapshot_request = {
                 'name': snapshot_name,
                 'description': snapshot_to_upload['description'],
