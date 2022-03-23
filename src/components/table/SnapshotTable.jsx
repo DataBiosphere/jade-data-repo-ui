@@ -40,7 +40,7 @@ class SnapshotTable extends React.PureComponent {
         label: 'Snapshot Name',
         property: 'name',
         render: (row) => (
-          <Link to={`/snapshots/details/${row.id}`} className={classes.jadeLink}>
+          <Link to={`/snapshots/${row.id}`} className={classes.jadeLink}>
             {row.name}
           </Link>
         ),

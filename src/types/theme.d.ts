@@ -73,6 +73,8 @@ declare module '@mui/material/styles' {
   interface CustomMixinsOptions extends MixinsOptions {
     jadeLink?: CSSProperties;
     containerWidth?: CSSProperties;
+    pageRoot?: CSSProperties;
+    pageTitle?: CSSProperties;
   }
 
   interface CustomConstants {

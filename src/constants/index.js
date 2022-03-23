@@ -162,3 +162,8 @@ export const SNAPSHOT_INCLUDE_OPTIONS = {
   PROFILE: 'PROFILE',
   DATA_PROJECT: 'DATA_PROJECT',
 };
+
+export const BREADCRUMB_TYPE = {
+  DATASET: 'dataset',
+  SNAPSHOT: 'snapshot',
+};

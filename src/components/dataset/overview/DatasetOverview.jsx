@@ -6,16 +6,13 @@ import { getDatasetById, getDatasetPolicy, getUserDatasetRoles } from 'actions';
 import { Typography } from '@material-ui/core';
 import DatasetRelationshipsPanel from './DatasetOverviewSchemaPanel';
 import { useOnMount } from '../../../libs/utils';
-import { DATASET_INCLUDE_OPTIONS } from '../../../constants';
+import { BREADCRUMB_TYPE, DATASET_INCLUDE_OPTIONS } from '../../../constants';
 import DatasetOverviewPanel from './DatasetOverviewPanel';
+import AppBreadcrumbs from '../../AppBreadcrumbs/AppBreadcrumbs';
 
-const styles = () => ({
-  pageRoot: {
-    padding: '16px 24px',
-    display: 'flex',
-    flexDirection: 'column',
-    height: '100%',
-  },
+const styles = (theme) => ({
+  pageRoot: { ...theme.mixins.pageRoot },
+  pageTitle: { ...theme.mixins.pageTitle },
   root: {
     // TODO: expect this to change as more components are added
     height: '100%',
@@ -46,9 +43,6 @@ const styles = () => ({
   spacer: {
     height: '4rem',
   },
-  pageTitle: {
-    marginBottom: '1rem',
-  },
   snapshotCardsContainer: {
     display: 'grid',
     gridTemplateColumns: 'repeat(auto-fill, minmax(360px, 32%))',
@@ -78,6 +72,9 @@ function DatasetOverview(props) {
 
   return datasetPolicies && dataset && dataset.id === datasetId ? (
     <div className={classes.pageRoot}>
+      <AppBreadcrumbs
+        context={{ type: BREADCRUMB_TYPE.DATASET, id: datasetId, name: dataset.name }}
+      />
       <Typography variant="h3" className={classes.pageTitle}>
         {dataset.name}
       </Typography>
