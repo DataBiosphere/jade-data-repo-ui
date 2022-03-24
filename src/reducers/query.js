@@ -165,9 +165,14 @@ export default {
         }),
       [ActionTypes.RESET_QUERY]: (state) =>
         immutable(state, {
+          filterData: { $set: {} },
+          filterStatement: { $set: '' },
+          joinStatement: { $set: '' },
+          queryParams: { $set: {} },
+          polling: { $set: false },
+          page: { $set: 0 },
           orderProperty: { $set: '' },
           orderDirection: { $set: 'desc' },
-          page: { $set: 0 },
         }),
       [LOCATION_CHANGE]: (state) =>
         immutable(state, {

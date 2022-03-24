@@ -86,7 +86,7 @@ export class FilterPanel extends React.PureComponent {
     this.state = {
       filterMap: {},
       searchString: '',
-      openFilter: {},
+      openFilter: '',
     };
   }
 
@@ -154,10 +154,10 @@ export class FilterPanel extends React.PureComponent {
 
   handleOpenFilter = (filter) => {
     const { openFilter } = this.state;
-    if (filter === openFilter) {
-      this.setState({ openFilter: {} });
+    if (filter.name === openFilter) {
+      this.setState({ openFilter: '' });
     } else {
-      this.setState({ openFilter: filter });
+      this.setState({ openFilter: filter.name });
     }
   };
 
@@ -176,7 +176,13 @@ export class FilterPanel extends React.PureComponent {
       canLink,
     } = this.props;
     const { searchString, openFilter } = this.state;
-    const filteredColumns = table.columns.filter((column) => column.name.includes(searchString));
+    const filteredColumns = table.columns
+      .filter((column) => column.name.includes(searchString))
+      .map((column) => ({
+        dataType: column.datatype,
+        arrayOf: column.array_of,
+        name: column.name,
+      }));
     const billingErrorMessage =
       "You cannot create a snapshot because you do not have access to the dataset's billing profile.";
 
@@ -207,7 +213,7 @@ export class FilterPanel extends React.PureComponent {
             table.name &&
             filteredColumns.map((c) => (
               <div
-                className={clsx({ [classes.highlighted]: c === openFilter })}
+                className={clsx({ [classes.highlighted]: c.name === openFilter })}
                 data-cy="filterItem"
                 key={c.name}
               >
@@ -217,9 +223,13 @@ export class FilterPanel extends React.PureComponent {
                   onClick={() => this.handleOpenFilter(c)}
                 >
                   {c.name}
-                  {c === openFilter ? <ExpandLess /> : <ExpandMore />}
+                  {c.name === openFilter ? <ExpandLess /> : <ExpandMore />}
                 </ListItem>
-                <Collapse in={c === openFilter} timeout="auto" className={classes.panelContent}>
+                <Collapse
+                  in={c.name === openFilter}
+                  timeout="auto"
+                  className={classes.panelContent}
+                >
                   <QueryViewSidebarItem
                     column={c}
                     dataset={dataset}
