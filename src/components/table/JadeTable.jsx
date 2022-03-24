@@ -73,7 +73,6 @@ function JadeTable({
 
   const createSortHandler = (property) => {
     let newOrderDirection = '';
-    let newOrderProperty = property;
 
     if (orderDirection === 'asc') {
       newOrderDirection = 'desc';
@@ -82,7 +81,7 @@ function JadeTable({
       newOrderDirection = 'asc';
     }
 
-    dispatch(applySort(newOrderProperty, newOrderDirection));
+    dispatch(applySort(property, newOrderDirection));
   };
 
   const handleNullValue = () => <span className={classes.nullValue}>null</span>;
