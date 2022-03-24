@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import LoadingSpinner from 'components/common/LoadingSpinner';
-import { previewData, getSnapshotById } from 'actions/index';
+import { resetQuery, previewData, getSnapshotById } from 'actions/index';
 
 import QueryView from 'components/common/query/QueryView';
 import { RESOURCE_TYPE, SNAPSHOT_INCLUDE_OPTIONS } from '../../../constants';
@@ -74,7 +74,7 @@ function SnapshotDataView({ dispatch, match, queryParams, snapshot }) {
   };
 
   const handleChangeTable = (value) => {
-    // TODO - dispatch resetQuery()
+    dispatch(resetQuery());
     setSelected(value);
     setSelectedTable(snapshot.tables.find((t) => t.name === value));
   };
