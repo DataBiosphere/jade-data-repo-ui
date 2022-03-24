@@ -51,7 +51,7 @@ const styles = (theme) => ({
   },
 });
 
-export class SnapshotDetailView extends React.PureComponent {
+export class SnapshotOverview extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -192,4 +192,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(withStyles(styles)(SnapshotDetailView));
+export default connect(mapStateToProps)(withStyles(styles)(SnapshotOverview));

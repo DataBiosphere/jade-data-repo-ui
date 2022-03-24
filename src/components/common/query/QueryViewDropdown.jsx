@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import JadeDropdown from '../../dataset/query/JadeDropdown';
+import JadeDropdown from '../../dataset/data/JadeDropdown';
 
 function QueryViewDropdown({ onSelectedItem, options }) {
   const [table, setTable] = useState(options[0]);

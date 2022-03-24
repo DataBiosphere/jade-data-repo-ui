@@ -7,7 +7,7 @@ import { previewData, getSnapshotById } from 'actions/index';
 import QueryView from 'components/common/query/QueryView';
 import { RESOURCE_TYPE, SNAPSHOT_INCLUDE_OPTIONS } from '../../../constants';
 
-function SnapshotQueryView({ dispatch, match, queryParams, snapshot }) {
+function SnapshotDataView({ dispatch, match, queryParams, snapshot }) {
   const [selected, setSelected] = useState('');
   const [selectedTable, setSelectedTable] = useState(null);
   const [sidebarWidth, setSidebarWidth] = useState(0);
@@ -103,7 +103,7 @@ function SnapshotQueryView({ dispatch, match, queryParams, snapshot }) {
   );
 }
 
-SnapshotQueryView.propTypes = {
+SnapshotDataView.propTypes = {
   dispatch: PropTypes.func.isRequired,
   match: PropTypes.object,
   queryParams: PropTypes.object,
@@ -118,4 +118,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(SnapshotQueryView);
+export default connect(mapStateToProps)(SnapshotDataView);

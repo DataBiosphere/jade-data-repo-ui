@@ -6,7 +6,7 @@ import Grid from '@material-ui/core/Grid';
 import { Button, Typography } from '@material-ui/core';
 
 import { Link } from 'react-router-dom';
-import SidebarDrawer from '../../dataset/query/sidebar/SidebarDrawer';
+import SidebarDrawer from 'components/dataset/data/sidebar/SidebarDrawer';
 import QueryViewDropdown from './QueryViewDropdown';
 import JadeTable from '../../table/JadeTable';
 import SnapshotPopup from '../../snapshot/SnapshotPopup';

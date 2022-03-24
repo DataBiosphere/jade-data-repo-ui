@@ -8,11 +8,11 @@ import PropTypes from 'prop-types';
 import history from 'modules/hist';
 
 import HelpContainer from 'components/help/HelpContainer';
+import SnapshotOverview from 'components/SnapshotOverview';
 import HomeView from '../components/HomeView';
-import SnapshotDetailView from '../components/SnapshotDetailView';
 import DatasetOverview from '../components/dataset/overview/DatasetOverview';
-import DatasetDataView from '../components/dataset/query/DatasetDataView';
-import SnapshotQueryView from '../components/snapshot/query/SnapshotQueryView';
+import DatasetDataView from '../components/dataset/data/DatasetDataView';
+import SnapshotDataView from '../components/snapshot/data/SnapshotDataView';
 
 const styles = (theme) => ({
   wrapper: {
@@ -104,8 +104,8 @@ class Private extends React.Component {
                       <Route exact path="/snapshots" component={HomeView} />
                       <Route exact path="/datasets/:uuid" component={DatasetOverview} />
                       <Route exact path="/datasets/:uuid/data" component={DatasetDataView} />
-                      <Route exact path="/snapshots/:uuid" component={SnapshotDetailView} />
-                      <Route exact path="/snapshots/:uuid/data" component={SnapshotQueryView} />
+                      <Route exact path="/snapshots/:uuid" component={SnapshotOverview} />
+                      <Route exact path="/snapshots/:uuid/data" component={SnapshotDataView} />
                     </Switch>
                   </div>
                 </Fragment>
