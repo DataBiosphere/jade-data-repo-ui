@@ -18,7 +18,7 @@ export class CategoryWrapper extends React.PureComponent {
     const { column, dataset, tableName, token, filterStatement, joinStatement } = this.props;
     const bq = new BigQuery();
 
-    if (!column.array_of) {
+    if (!column.arrayOf) {
       bq.getColumnDistinct(
         column.name,
         dataset,
@@ -53,7 +53,7 @@ export class CategoryWrapper extends React.PureComponent {
     const { column, dataset, tableName, token, filterStatement, joinStatement } = this.props;
     if (filterStatement !== prevProps.filterStatement || tableName !== prevProps.tableName) {
       const bq = new BigQuery();
-      if (column.array_of) {
+      if (column.arrayOf) {
         this.setState({
           values: {},
           originalValues: {},

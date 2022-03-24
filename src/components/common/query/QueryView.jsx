@@ -27,7 +27,6 @@ const styles = (theme) => ({
 });
 
 function QueryView({
-  allowSort,
   canLink,
   classes,
   handleChangeTable,
@@ -74,7 +73,6 @@ function QueryView({
               <Grid item xs={11}>
                 <div className={classes.scrollTable}>
                   <JadeTable
-                    allowSort={allowSort}
                     updateDataOnChange={updateDataOnChange}
                     queryParams={queryParams}
                     title={selected}
@@ -102,7 +100,6 @@ function QueryView({
 }
 
 QueryView.propTypes = {
-  allowSort: PropTypes.bool,
   canLink: PropTypes.bool,
   classes: PropTypes.object,
   handleChangeTable: PropTypes.func,

@@ -18,7 +18,7 @@ const styles = (theme) => ({
   },
 });
 
-function JadeTableHead({ allowSort, columns, createSortHandler, orderProperty, orderDirection }) {
+function JadeTableHead({ columns, createSortHandler, orderProperty, orderDirection }) {
   return (
     <TableHead>
       <TableRow>
@@ -30,7 +30,7 @@ function JadeTableHead({ allowSort, columns, createSortHandler, orderProperty, o
             sortDirection={orderProperty === column.name ? orderDirection : false}
             data-cy={`columnheader-${column.name}`}
           >
-            {allowSort && !column.array_of && (
+            {column.allowSort && (
               <TableSortLabel
                 active={orderProperty === column.name}
                 direction={orderDirection}
@@ -39,7 +39,7 @@ function JadeTableHead({ allowSort, columns, createSortHandler, orderProperty, o
                 {column.name}
               </TableSortLabel>
             )}
-            {(!allowSort || column.array_of) && <span>{column.name}</span>}
+            {!column.allowSort && <span>{column.name}</span>}
           </TableCell>
         ))}
       </TableRow>
@@ -48,7 +48,6 @@ function JadeTableHead({ allowSort, columns, createSortHandler, orderProperty, o
 }
 
 JadeTableHead.propTypes = {
-  allowSort: PropTypes.bool,
   columns: PropTypes.array,
   createSortHandler: PropTypes.func,
   orderDirection: PropTypes.string.isRequired,

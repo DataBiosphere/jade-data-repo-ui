@@ -172,7 +172,6 @@ function DatasetQueryView({
 
   return (
     <QueryView
-      allowSort={true}
       resourceLoaded={datasetLoaded}
       resourceName={dataset.name}
       tableNames={tableNames}

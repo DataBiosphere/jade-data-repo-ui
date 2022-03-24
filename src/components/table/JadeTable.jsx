@@ -37,7 +37,6 @@ const styles = (theme) => ({
 });
 
 function JadeTable({
-  allowSort,
   classes,
   columns,
   delay,
@@ -94,7 +93,7 @@ function JadeTable({
 
   const handleArrayValues = (value, column) => {
     const returnValue = [];
-    if (column.array_of) {
+    if (column.arrayOf) {
       returnValue.push(<span key="start">[</span>);
     }
     returnValue.push(
@@ -108,7 +107,7 @@ function JadeTable({
         ) : undefined,
       ]),
     );
-    if (column.array_of) {
+    if (column.arrayOf) {
       returnValue.push(<span key="end">]</span>);
     }
     return returnValue;
@@ -129,11 +128,7 @@ function JadeTable({
       <div className={classes.tableWrapper}>
         {rows && columns && !error && (
           <Table stickyHeader aria-label="sticky table">
-            <JadeTableHead
-              allowSort={allowSort}
-              columns={columns}
-              createSortHandler={createSortHandler}
-            />
+            <JadeTableHead columns={columns} createSortHandler={createSortHandler} />
             {!polling && (
               <TableBody data-cy="tableBody">
                 {rows.map((row, i) => {
@@ -184,7 +179,6 @@ function JadeTable({
 }
 
 JadeTable.propTypes = {
-  allowSort: PropTypes.bool,
   classes: PropTypes.object,
   columns: PropTypes.array,
   delay: PropTypes.bool,

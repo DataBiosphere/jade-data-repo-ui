@@ -84,7 +84,6 @@ function SnapshotQueryView({ dispatch, match, queryParams, snapshot }) {
 
   return (
     <QueryView
-      allowSort={false}
       resourceLoaded={snapshotLoaded}
       resourceName={snapshot.name}
       tableNames={tableNames}

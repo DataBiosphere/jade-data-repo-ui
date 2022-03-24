@@ -13,8 +13,9 @@ export default class BigQuery {
   transformColumns = (queryResults) =>
     _.get(queryResults, 'schema.fields', []).map((field) => ({
       name: field.name,
-      datatype: field.type,
-      array_of: field.mode === COLUMN_MODES.REPEATED,
+      dataType: field.type,
+      arrayOf: field.mode === COLUMN_MODES.REPEATED,
+      allowSort: field.mode !== COLUMN_MODES.REPEATED,
     }));
 
   transformRows = (queryResults, columns) => {
@@ -31,8 +32,8 @@ export default class BigQuery {
     for (i = 0; i < columns.length; i++) {
       const column = columns[i];
       const columnId = column.name;
-      const columnType = column.datatype;
-      const columnArrayOf = column.array_of;
+      const columnType = column.dataType;
+      const columnArrayOf = column.arrayOf;
 
       let value = row[i];
       if (value !== null) {
