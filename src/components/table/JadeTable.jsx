@@ -75,12 +75,8 @@ function JadeTable({
     let newOrderDirection = '';
     let newOrderProperty = property;
 
-    if (orderDirection === '') {
-      newOrderDirection = 'desc';
-    }
     if (orderDirection === 'asc') {
-      newOrderDirection = '';
-      newOrderProperty = '';
+      newOrderDirection = 'desc';
     }
     if (orderDirection === 'desc') {
       newOrderDirection = 'asc';

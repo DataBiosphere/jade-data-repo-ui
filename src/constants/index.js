@@ -77,6 +77,7 @@ export const ActionTypes = keyMirror({
   GET_CONFIGURATION_SUCCESS: undefined,
   RUN_QUERY: undefined,
   RUN_QUERY_SUCCESS: undefined,
+  RESET_QUERY: undefined,
   PREVIEW_DATA: undefined,
   PREVIEW_DATA_SUCCESS: undefined,
   PREVIEW_DATA_FAILURE: undefined,

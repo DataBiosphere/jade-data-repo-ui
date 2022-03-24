@@ -227,6 +227,10 @@ export const { applySort } = createActions({
   }),
 });
 
+export const { resetQuery } = createActions({
+  [ActionTypes.RESET_QUERY]: () => ({}),
+});
+
 export const { changeRowsPerPage } = createActions({
   [ActionTypes.CHANGE_ROWS_PER_PAGE]: (rowsPerPage) => rowsPerPage,
 });

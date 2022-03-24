@@ -163,6 +163,12 @@ export default {
           orderProperty: { $set: action.payload.property },
           orderDirection: { $set: action.payload.direction },
         }),
+      [ActionTypes.RESET_QUERY]: (state) =>
+        immutable(state, {
+          orderProperty: { $set: '' },
+          orderDirection: { $set: 'desc' },
+          page: { $set: 0 },
+        }),
       [LOCATION_CHANGE]: (state) =>
         immutable(state, {
           filterData: { $set: {} },

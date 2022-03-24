@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import {
+  resetQuery,
   runQuery,
   getDatasetById,
   getDatasetPolicy,
@@ -153,6 +154,7 @@ function DatasetQueryView({
   };
 
   const handleChangeTable = (value) => {
+    dispatch(resetQuery());
     setSelected(value);
     setSelectedTable(dataset.schema.tables.find((t) => t.name === value));
   };
