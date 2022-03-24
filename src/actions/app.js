@@ -188,21 +188,6 @@ export const { previewData } = createActions({
   [ActionTypes.PREVIEW_DATA_FAILURE]: (errMsg) => ({ errMsg }),
 });
 
-export const { previewData } = createActions({
-  [ActionTypes.PREVIEW_DATA_SUCCESS]: (queryResults, columns) => ({
-    queryResults,
-    columns,
-  }),
-  [ActionTypes.PREVIEW_DATA]: (snapshotId, offset, limit, table, columns, totalRowCount) => ({
-    snapshotId,
-    offset,
-    limit,
-    table,
-    columns,
-    totalRowCount,
-  }),
-});
-
 export const { pageQuery } = createActions({
   [ActionTypes.PAGE_QUERY]: (pageToken, projectId, jobId, location) => ({
     pageToken,

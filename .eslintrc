@@ -218,7 +218,6 @@
       "warn",
       2
     ],
-    "react/jsx-filename-extension": ["warn"],
     "react/jsx-key": "warn",
     "react/jsx-no-target-blank": "off",
     "react/jsx-props-no-spreading": "off",

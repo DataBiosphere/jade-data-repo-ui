@@ -3,7 +3,6 @@ import immutable from 'immutability-helper';
 import { LOCATION_CHANGE } from 'connected-react-router';
 import { ActionTypes, TABLE_DEFAULT_ROWS_PER_PAGE } from 'constants/index';
 import BigQuery from 'modules/bigquery';
-import { reduce, rest } from 'lodash';
 
 export const queryState = {
   baseQuery: '',
@@ -51,35 +50,13 @@ export default {
         });
       },
       [ActionTypes.PREVIEW_DATA_SUCCESS]: (state, action) => {
-        const queryResults = action.payload.queryResults.data.result;
-
-        // TODO - I think we actually want the BQ to conform to this format
+        const rows = action.payload.queryResults.data.result;
         const columns = action.payload.columns.map((column) => ({
-          id: column.name,
-          label: column.name,
-          minWidth: 100,
-          type: column.datatype,
-          mode: column.array_of ? 'REPEATED' : 'NULLABLE',
+          name: column.name,
+          dataType: column.datatype,
+          arrayOf: column.array_of,
+          allowSort: false,
         }));
-        // TODO - this is pretty gross. Rework for both BQ & here.
-        const rows = queryResults.map((row) => {
-          const res = {};
-          columns.forEach((col) => {
-            res[col.id] = row[col.id];
-          });
-          res.datarepo_id = row.datarepo_row_id;
-          return res;
-        });
-        // TODO - this is pretty gross. Rework for both BQ & here.
-        let rows = queryResults.map(row => {
-          const res = {};
-          columns.forEach(col => {
-            res[col.id] = row[col.id];
-          })
-          res.datarepo_id = row['datarepo_row_id'];
-          return res;
-        })
-        console.log(rows);
         const queryParams = {
           totalRows: action.payload.totalRowCount,
         };
@@ -91,7 +68,7 @@ export default {
           rows: { $set: rows },
           polling: { $set: false },
           delay: { $set: false },
-          resultsCount: { $set: queryResults.length },
+          resultsCount: { $set: rows.length },
         });
       },
       [ActionTypes.PAGE_QUERY_SUCCESS]: (state, action) => {

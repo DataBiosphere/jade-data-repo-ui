@@ -190,7 +190,7 @@ export class DetailViewHeader extends React.PureComponent {
                     </TerraTooltip>
                   )}
                 </Grid>
-                <Link to="query">
+                <Link to={`/snapshots/${of.id}/data`}>
                   <Button
                     className={classes.viewSnapshotButton}
                     color="primary"

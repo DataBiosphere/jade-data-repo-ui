@@ -10,8 +10,12 @@ import SidebarDrawer from '../../dataset/query/sidebar/SidebarDrawer';
 import QueryViewDropdown from './QueryViewDropdown';
 import JadeTable from '../../table/JadeTable';
 import SnapshotPopup from '../../snapshot/SnapshotPopup';
+import AppBreadcrumbs from '../../AppBreadcrumbs/AppBreadcrumbs';
+import { BREADCRUMB_TYPE } from '../../../constants';
 
 const styles = (theme) => ({
+  pageRoot: { ...theme.mixins.pageRoot },
+  pageTitle: { ...theme.mixins.pageTitle },
   wrapper: {
     paddingTop: theme.spacing(0),
     padding: theme.spacing(4),
@@ -19,10 +23,6 @@ const styles = (theme) => ({
   scrollTable: {
     overflowY: 'auto',
     height: '100%',
-  },
-  headerArea: {
-    paddingTop: theme.spacing(1),
-    paddingBottom: theme.spacing(1),
   },
 });
 
@@ -34,8 +34,10 @@ function QueryView({
   handleDrawerWidth,
   panels,
   queryParams,
+  resourceId,
   resourceLoaded,
   resourceName,
+  resourceType,
   selected,
   selectedTable,
   sidebarWidth,
@@ -44,42 +46,49 @@ function QueryView({
   return (
     <Fragment>
       {resourceLoaded && (
-        <Fragment>
-          <Grid container spacing={0} className={classes.wrapper}>
-            <Grid container spacing={1}>
-              <Grid item xs={12}>
-                <Typography variant="h3" className={classes.headerArea}>
-                  {resourceName}
-                </Typography>
-              </Grid>
-              <Grid item xs={3}>
-                <QueryViewDropdown options={tableNames} onSelectedItem={handleChangeTable} />
-              </Grid>
-              <Grid item xs={3}>
-                <Link to="overview">
-                  <Button
-                    className={classes.viewDatasetButton}
-                    color="primary"
-                    variant="outlined"
-                    disableElevation
-                    size="large"
-                  >
-                    Back to Overview
-                  </Button>
-                </Link>
-              </Grid>
+        <div className={classes.pageRoot}>
+          <AppBreadcrumbs
+            context={{
+              type:
+                resourceType === BREADCRUMB_TYPE.DATASET
+                  ? BREADCRUMB_TYPE.DATASET
+                  : BREADCRUMB_TYPE.SNAPSHOT,
+              id: resourceId,
+              name: resourceName,
+            }}
+            childBreadcrumbs={[{ text: 'Data', to: 'data' }]}
+          />
+          <Typography variant="h3" className={classes.pageTitle}>
+            {resourceName}
+          </Typography>
+          <Grid container spacing={1}>
+            <Grid item xs={3}>
+              <QueryViewDropdown options={tableNames} onSelectedItem={handleChangeTable} />
             </Grid>
-            <Grid container spacing={0}>
-              <Grid item xs={11}>
-                <div className={classes.scrollTable}>
-                  <JadeTable
-                    updateDataOnChange={updateDataOnChange}
-                    queryParams={queryParams}
-                    title={selected}
-                    table={selectedTable}
-                  />
-                </div>
-              </Grid>
+            <Grid item xs={3}>
+              <Link to={`/${resourceType}s/${resourceId}`}>
+                <Button
+                  className={classes.viewDatasetButton}
+                  color="primary"
+                  variant="outlined"
+                  disableElevation
+                  size="large"
+                >
+                  Back to Overview
+                </Button>
+              </Link>
+            </Grid>
+          </Grid>
+          <Grid container spacing={0}>
+            <Grid item xs={11}>
+              <div className={classes.scrollTable}>
+                <JadeTable
+                  updateDataOnChange={updateDataOnChange}
+                  queryParams={queryParams}
+                  title={selected}
+                  table={selectedTable}
+                />
+              </div>
             </Grid>
           </Grid>
           {panels.length > 0 && (
@@ -93,7 +102,7 @@ function QueryView({
             />
           )}
           <SnapshotPopup />
-        </Fragment>
+        </div>
       )}
     </Fragment>
   );
@@ -106,8 +115,10 @@ QueryView.propTypes = {
   handleDrawerWidth: PropTypes.func,
   panels: PropTypes.array,
   queryParams: PropTypes.object,
+  resourceId: PropTypes.string,
   resourceLoaded: PropTypes.bool,
   resourceName: PropTypes.string,
+  resourceType: PropTypes.string,
   selected: PropTypes.string,
   selectedTable: PropTypes.object,
   sidebarWidth: PropTypes.number,

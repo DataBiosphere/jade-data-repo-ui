@@ -22,6 +22,7 @@ import {
   DATAREPO_ROW_ID_COLUMN_NAME,
   DATASET_INCLUDE_OPTIONS,
   GOOGLE_CLOUD_RESOURCE,
+  RESOURCE_TYPE,
 } from '../../../constants';
 
 const QUERY_LIMIT = 1000;
@@ -174,8 +175,10 @@ function DatasetQueryView({
 
   return (
     <QueryView
+      resourceId={dataset.id}
       resourceLoaded={datasetLoaded}
       resourceName={dataset.name}
+      resourceType={RESOURCE_TYPE.DATASET}
       tableNames={tableNames}
       handleChangeTable={handleChangeTable}
       updateDataOnChange={updateDataOnChange}

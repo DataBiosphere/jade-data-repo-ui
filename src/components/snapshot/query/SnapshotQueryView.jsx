@@ -5,7 +5,7 @@ import LoadingSpinner from 'components/common/LoadingSpinner';
 import { previewData, getSnapshotById } from 'actions/index';
 
 import QueryView from 'components/common/query/QueryView';
-import { SNAPSHOT_INCLUDE_OPTIONS } from '../../../constants';
+import { RESOURCE_TYPE, SNAPSHOT_INCLUDE_OPTIONS } from '../../../constants';
 
 function SnapshotQueryView({ dispatch, match, queryParams, snapshot }) {
   const [selected, setSelected] = useState('');
@@ -74,6 +74,7 @@ function SnapshotQueryView({ dispatch, match, queryParams, snapshot }) {
   };
 
   const handleChangeTable = (value) => {
+    // TODO - dispatch resetQuery()
     setSelected(value);
     setSelectedTable(snapshot.tables.find((t) => t.name === value));
   };
@@ -84,8 +85,10 @@ function SnapshotQueryView({ dispatch, match, queryParams, snapshot }) {
 
   return (
     <QueryView
+      resourceId={snapshot.id}
       resourceLoaded={snapshotLoaded}
       resourceName={snapshot.name}
+      resourceType={RESOURCE_TYPE.SNAPSHOT}
       tableNames={tableNames}
       handleChangeTable={handleChangeTable}
       updateDataOnChange={updateDataOnChange}
