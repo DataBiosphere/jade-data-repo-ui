@@ -93,22 +93,16 @@ function LightTable({
   };
 
   useEffect(() => {
-    const offset = page * rowsPerPage;
     setEmptyRows(
       rowsPerPage < filteredCount
         ? rowsPerPage - Math.min(rowsPerPage, filteredCount - page * rowsPerPage)
         : 0,
     );
-    handleEnumeration(rowsPerPage, offset, orderProperty, orderDirection, searchString);
-  }, [
-    searchString,
-    page,
-    rowsPerPage,
-    filteredCount,
-    handleEnumeration,
-    orderProperty,
-    orderDirection,
-  ]);
+  }, [setEmptyRows, rowsPerPage, filteredCount, page]);
+
+  useEffect(() => {
+    handleEnumeration(rowsPerPage, page * rowsPerPage, orderProperty, orderDirection, searchString);
+  }, [searchString, page, rowsPerPage, handleEnumeration, orderProperty, orderDirection]);
 
   return (
     <div>

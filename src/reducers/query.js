@@ -163,19 +163,17 @@ export default {
           orderProperty: { $set: action.payload.property },
           orderDirection: { $set: action.payload.direction },
         }),
-      [LOCATION_CHANGE]: (state, action) => {
-        if (action.payload.location.pathname.includes('/datasets/details/')) {
-          // michael can you help us with this
-          return immutable(state, {
-            filterData: { $set: {} },
-            filterStatement: { $set: '' },
-            joinStatement: { $set: '' },
-            queryParams: { $set: {} },
-            polling: { $set: false },
-          });
-        }
-        return state;
-      },
+      [LOCATION_CHANGE]: (state) =>
+        immutable(state, {
+          filterData: { $set: {} },
+          filterStatement: { $set: '' },
+          joinStatement: { $set: '' },
+          queryParams: { $set: {} },
+          polling: { $set: false },
+          page: { $set: 0 },
+          orderProperty: { $set: '' },
+          orderDirection: { $set: 'desc' },
+        }),
       [ActionTypes.COUNT_RESULTS_SUCCESS]: (state, action) =>
         immutable(state, {
           resultsCount: { $set: action.resultsCount },
