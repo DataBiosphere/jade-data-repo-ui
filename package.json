@@ -80,6 +80,7 @@
     "xlsx": "^0.17.0"
   },
   "devDependencies": {
+    "@openapitools/openapi-generator-cli": "^2.4.26",
     "@svgr/webpack": "^5.5.0",
     "@types/lodash": "^4.14.180",
     "@types/react-redux": "^7.1.23",
@@ -113,7 +114,8 @@
     "lint": "eslint  --ext .js --ext .jsx src cypress tools",
     "test": "react-app-rewired test",
     "eject": "react-app-rewired eject",
-    "ingest": "node --inspect tools/ingest ingest"
+    "ingest": "node --inspect tools/ingest ingest",
+    "codegen": "openapi-generator-cli generate -g typescript-axios -i ${TDR_OPEN_API_YAML_LOCATION:=https://data.terra.bio/data-repository-openapi.yaml} -o ./src/generated/tdr --skip-validate-spec"
   },
   "husky": {
     "hooks": {
