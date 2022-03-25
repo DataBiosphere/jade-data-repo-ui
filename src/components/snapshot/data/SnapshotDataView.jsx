@@ -70,7 +70,16 @@ function SnapshotDataView({ dispatch, match, page, queryParams, rowsPerPage, sna
         ),
       );
     }
-  }, [snapshotLoaded, snapshot.id, match.params.uuid, selected, selectedTable, page, rowsPerPage]);
+  }, [
+    snapshotLoaded,
+    snapshot.id,
+    match.params.uuid,
+    selected,
+    selectedTable,
+    page,
+    rowsPerPage,
+    dispatch,
+  ]);
 
   // TODO - this doesn't do anything until we add panels
   const handleDrawerWidth = (width) => {
