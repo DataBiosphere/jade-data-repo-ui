@@ -7,7 +7,7 @@ import { Button, Typography } from '@material-ui/core';
 
 import { Link } from 'react-router-dom';
 import SidebarDrawer from 'components/dataset/data/sidebar/SidebarDrawer';
-import QueryViewDropdown from './QueryViewDropdown';
+import DataViewDropdown from './DataViewDropdown';
 import JadeTable from '../../table/JadeTable';
 import SnapshotPopup from '../../snapshot/SnapshotPopup';
 import AppBreadcrumbs from '../../AppBreadcrumbs/AppBreadcrumbs';
@@ -26,7 +26,7 @@ const styles = (theme) => ({
   },
 });
 
-function QueryView({
+function DataView({
   canLink,
   classes,
   handleChangeTable,
@@ -63,7 +63,7 @@ function QueryView({
           </Typography>
           <Grid container spacing={1}>
             <Grid item xs={3}>
-              <QueryViewDropdown options={tableNames} onSelectedItem={handleChangeTable} />
+              <DataViewDropdown options={tableNames} onSelectedItem={handleChangeTable} />
             </Grid>
             <Grid item xs={3}>
               <Link to={`/${resourceType}s/${resourceId}`}>
@@ -108,7 +108,7 @@ function QueryView({
   );
 }
 
-QueryView.propTypes = {
+DataView.propTypes = {
   canLink: PropTypes.bool,
   classes: PropTypes.object,
   handleChangeTable: PropTypes.func,
@@ -126,4 +126,4 @@ QueryView.propTypes = {
   updateDataOnChange: PropTypes.func.isRequired,
 };
 
-export default withStyles(styles)(QueryView);
+export default withStyles(styles)(DataView);

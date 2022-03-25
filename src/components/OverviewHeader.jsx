@@ -64,7 +64,7 @@ const styles = (theme) => ({
   },
 });
 
-export class DetailViewHeader extends React.PureComponent {
+export class OverviewHeader extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -284,4 +284,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(withStyles(styles)(DetailViewHeader));
+export default connect(mapStateToProps)(withStyles(styles)(OverviewHeader));

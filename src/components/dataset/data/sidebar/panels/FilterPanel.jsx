@@ -16,8 +16,8 @@ import {
 } from '@material-ui/core';
 import { ExpandMore, ExpandLess, Search } from '@material-ui/icons';
 import TerraTooltip from 'components/common/TerraTooltip';
-import QueryViewSidebarItem from '../QueryViewSidebarItem';
-import QuerySidebarPanel from '../QuerySidebarPanel';
+import DataViewSidebarItem from '../DataViewSidebarItem';
+import DataSidebarPanel from '../DataSidebarPanel';
 import { applyFilters } from '../../../../../actions';
 
 const styles = (theme) => ({
@@ -199,7 +199,7 @@ export class FilterPanel extends React.PureComponent {
             </Grid>
           </Box>
           <div className={clsx(classes.filterPanel, { [classes.hide]: !open })}>
-            <QuerySidebarPanel selected={selected} data-cy="snapshotCard" />
+            <DataSidebarPanel selected={selected} data-cy="snapshotCard" />
           </div>
           <ListItem button className={clsx(classes.searchBar, classes.panelContent)}>
             <Search color="primary" fontSize="small" />
@@ -230,7 +230,7 @@ export class FilterPanel extends React.PureComponent {
                   timeout="auto"
                   className={classes.panelContent}
                 >
-                  <QueryViewSidebarItem
+                  <DataViewSidebarItem
                     column={c}
                     dataset={dataset}
                     filterData={filterData}

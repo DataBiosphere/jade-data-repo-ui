@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import JadeDropdown from '../../dataset/data/JadeDropdown';
 
-function QueryViewDropdown({ onSelectedItem, options }) {
+function DataViewDropdown({ onSelectedItem, options }) {
   const [table, setTable] = useState(options[0]);
 
   const handleChange = (event) => {
@@ -20,9 +20,9 @@ function QueryViewDropdown({ onSelectedItem, options }) {
   );
 }
 
-QueryViewDropdown.propTypes = {
+DataViewDropdown.propTypes = {
   onSelectedItem: PropTypes.func,
   options: PropTypes.array,
 };
 
-export default QueryViewDropdown;
+export default DataViewDropdown;

@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import LoadingSpinner from 'components/common/LoadingSpinner';
 import { resetQuery, previewData, getSnapshotById } from 'actions/index';
 
-import QueryView from 'components/common/query/QueryView';
+import DataView from 'components/common/data/DataView';
 import { RESOURCE_TYPE, SNAPSHOT_INCLUDE_OPTIONS } from '../../../constants';
 
 function SnapshotDataView({ dispatch, match, queryParams, snapshot }) {
@@ -84,7 +84,7 @@ function SnapshotDataView({ dispatch, match, queryParams, snapshot }) {
   }
 
   return (
-    <QueryView
+    <DataView
       resourceId={snapshot.id}
       resourceLoaded={snapshotLoaded}
       resourceName={snapshot.name}

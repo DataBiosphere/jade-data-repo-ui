@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import FilterPanel from './panels/FilterPanel';
 import CreateSnapshotPanel from './panels/CreateSnapshotPanel';
 
-export class QueryViewSidebar extends React.PureComponent {
+export class DataViewSidebar extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -48,4 +48,4 @@ export class QueryViewSidebar extends React.PureComponent {
   }
 }
 
-export default QueryViewSidebar;
+export default DataViewSidebar;

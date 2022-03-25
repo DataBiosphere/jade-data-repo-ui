@@ -14,7 +14,7 @@ const styles = (theme) => ({
   },
 });
 
-export class QueryViewSidebarItem extends React.PureComponent {
+export class DataViewSidebarItem extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -146,4 +146,4 @@ export class QueryViewSidebarItem extends React.PureComponent {
   }
 }
 
-export default withStyles(styles)(QueryViewSidebarItem);
+export default withStyles(styles)(DataViewSidebarItem);

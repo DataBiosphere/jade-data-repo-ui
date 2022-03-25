@@ -13,9 +13,9 @@ import {
 } from 'actions/index';
 import { FilterList, Info, People } from '@material-ui/icons';
 
-import QueryView from 'components/common/query/QueryView';
+import DataView from 'components/common/data/DataView';
 import LoadingSpinner from 'components/common/LoadingSpinner';
-import QueryViewSidebar from './sidebar/QueryViewSidebar';
+import DataViewSidebar from './sidebar/DataViewSidebar';
 import InfoView from './sidebar/panels/InfoView';
 import ShareSnapshot from './sidebar/panels/ShareSnapshot';
 import {
@@ -27,7 +27,7 @@ import {
 
 const QUERY_LIMIT = 1000;
 
-function DatasetQueryView({
+function DatasetDataView({
   dataset,
   dispatch,
   filterStatement,
@@ -90,7 +90,7 @@ function DatasetQueryView({
         {
           icon: FilterList,
           width: 600,
-          component: QueryViewSidebar,
+          component: DataViewSidebar,
           selectedTable,
           dataset,
         },
@@ -174,7 +174,7 @@ function DatasetQueryView({
   }
 
   return (
-    <QueryView
+    <DataView
       resourceId={dataset.id}
       resourceLoaded={datasetLoaded}
       resourceName={dataset.name}
@@ -193,7 +193,7 @@ function DatasetQueryView({
   );
 }
 
-DatasetQueryView.propTypes = {
+DatasetDataView.propTypes = {
   dataset: PropTypes.object,
   dispatch: PropTypes.func.isRequired,
   filterStatement: PropTypes.string.isRequired,
@@ -217,4 +217,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(DatasetQueryView);
+export default connect(mapStateToProps)(DatasetDataView);
