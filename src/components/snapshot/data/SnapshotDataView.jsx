@@ -58,7 +58,15 @@ function SnapshotDataView({ dispatch, match, queryParams, snapshot }) {
   }, [snapshot, match]);
 
   const updateDataOnChange = useCallback(() => {
-    dispatch(previewData(snapshot.id, selected, selectedTable.columns, selectedTable.rowCount));
+    dispatch(
+      previewData(
+        RESOURCE_TYPE.SNAPSHOT,
+        snapshot.id,
+        selected,
+        selectedTable.columns,
+        selectedTable.rowCount,
+      ),
+    );
   }, [dispatch, snapshot.id, selected, selectedTable]);
 
   useEffect(() => {

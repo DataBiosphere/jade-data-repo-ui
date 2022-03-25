@@ -504,11 +504,10 @@ export function* watchGetDatasetByIdSuccess() {
  */
 
 export function* previewData({ payload }) {
-  // TODO - make this query generic between dataset & snapshot
   const queryState = yield select(getQuery);
   const offset = queryState.page * queryState.rowsPerPage;
   const limit = queryState.rowsPerPage;
-  const query = `/api/repository/v1/snapshots/${payload.snapshotId}/data/${payload.table}?offset=${offset}&limit=${limit}`;
+  const query = `/api/repository/v1/${payload.resourceType}s/${payload.resourceId}/data/${payload.table}?offset=${offset}&limit=${limit}`;
   try {
     const response = yield call(authGet, query);
     yield put({

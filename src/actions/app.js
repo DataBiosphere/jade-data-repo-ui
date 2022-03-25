@@ -175,8 +175,9 @@ export const { runQuery } = createActions({
 });
 
 export const { previewData } = createActions({
-  [ActionTypes.PREVIEW_DATA]: (snapshotId, table, columns, totalRowCount) => ({
-    snapshotId,
+  [ActionTypes.PREVIEW_DATA]: (resourceType, resourceId, table, columns, totalRowCount) => ({
+    resourceType,
+    resourceId,
     table,
     columns,
     totalRowCount,
