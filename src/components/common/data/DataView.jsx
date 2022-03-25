@@ -30,7 +30,7 @@ function DataView({
   canLink,
   classes,
   handleChangeTable,
-  updateDataOnChange,
+  pageBQQuery,
   handleDrawerWidth,
   panels,
   queryParams,
@@ -83,7 +83,7 @@ function DataView({
             <Grid item xs={11}>
               <div className={classes.scrollTable}>
                 <JadeTable
-                  updateDataOnChange={updateDataOnChange}
+                  pageBQQuery={pageBQQuery}
                   queryParams={queryParams}
                   title={selected}
                   table={selectedTable}
@@ -123,7 +123,7 @@ DataView.propTypes = {
   selectedTable: PropTypes.object,
   sidebarWidth: PropTypes.number,
   tableNames: PropTypes.array,
-  updateDataOnChange: PropTypes.func.isRequired,
+  pageBQQuery: PropTypes.func,
 };
 
 export default withStyles(styles)(DataView);

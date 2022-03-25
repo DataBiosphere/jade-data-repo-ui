@@ -160,7 +160,7 @@ function DatasetDataView({
     setSelectedTable(dataset.schema.tables.find((t) => t.name === value));
   };
 
-  const updateDataOnChange = () => {
+  const pageBQQuery = () => {
     const bqStorage = dataset.storage.find(
       (s) => s.cloudResource === GOOGLE_CLOUD_RESOURCE.BIGQUERY,
     );
@@ -181,7 +181,7 @@ function DatasetDataView({
       resourceType={RESOURCE_TYPE.DATASET}
       tableNames={tableNames}
       handleChangeTable={handleChangeTable}
-      updateDataOnChange={updateDataOnChange}
+      pageBQQuery={pageBQQuery}
       queryParams={queryParams}
       selected={selected}
       selectedTable={selectedTable}

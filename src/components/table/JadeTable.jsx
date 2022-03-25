@@ -49,7 +49,7 @@ function JadeTable({
   queryParams,
   rows,
   rowsPerPage,
-  updateDataOnChange,
+  pageBQQuery,
 }) {
   const [count, setCount] = useState(0);
 
@@ -60,15 +60,21 @@ function JadeTable({
     }
   }, [queryParams]);
 
+  // Once we no longer need to support BQ Querying,
+  // we can remove the async/await call and pageBQQuery()
   const handleChangePage = async (event, newPage) => {
     await dispatch(changePage(newPage));
-    updateDataOnChange();
+    if (pageBQQuery) {
+      pageBQQuery();
+    }
   };
 
   const handleChangeRowsPerPage = async (event) => {
     const newRowsPerPage = parseInt(event.target.value, 10);
     await dispatch(changeRowsPerPage(newRowsPerPage));
-    updateDataOnChange();
+    if (pageBQQuery) {
+      pageBQQuery();
+    }
   };
 
   const createSortHandler = (property) => {
@@ -186,7 +192,7 @@ JadeTable.propTypes = {
   queryParams: PropTypes.object,
   rows: PropTypes.array,
   rowsPerPage: PropTypes.number.isRequired,
-  updateDataOnChange: PropTypes.func.isRequired,
+  pageBQQuery: PropTypes.func,
 };
 
 function mapStateToProps(state) {

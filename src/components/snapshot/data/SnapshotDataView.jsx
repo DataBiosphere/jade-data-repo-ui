@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import LoadingSpinner from 'components/common/LoadingSpinner';
@@ -7,7 +7,7 @@ import { resetQuery, previewData, getSnapshotById } from 'actions/index';
 import DataView from 'components/common/data/DataView';
 import { RESOURCE_TYPE, SNAPSHOT_INCLUDE_OPTIONS } from '../../../constants';
 
-function SnapshotDataView({ dispatch, match, queryParams, snapshot }) {
+function SnapshotDataView({ dispatch, match, page, queryParams, rowsPerPage, snapshot }) {
   const [selected, setSelected] = useState('');
   const [selectedTable, setSelectedTable] = useState(null);
   const [sidebarWidth, setSidebarWidth] = useState(0);
@@ -57,24 +57,20 @@ function SnapshotDataView({ dispatch, match, queryParams, snapshot }) {
     }
   }, [snapshot, match]);
 
-  const updateDataOnChange = useCallback(() => {
-    dispatch(
-      previewData(
-        RESOURCE_TYPE.SNAPSHOT,
-        snapshot.id,
-        selected,
-        selectedTable.columns,
-        selectedTable.rowCount,
-      ),
-    );
-  }, [dispatch, snapshot.id, selected, selectedTable]);
-
   useEffect(() => {
     const snapshotId = match.params.uuid;
     if (snapshotLoaded && snapshotId === snapshot.id) {
-      updateDataOnChange();
+      dispatch(
+        previewData(
+          RESOURCE_TYPE.SNAPSHOT,
+          snapshot.id,
+          selected,
+          selectedTable.columns,
+          selectedTable.rowCount,
+        ),
+      );
     }
-  }, [snapshotLoaded, snapshot, dispatch, match, selected, selectedTable, updateDataOnChange]);
+  }, [snapshotLoaded, snapshot.id, match.params.uuid, selected, selectedTable, page, rowsPerPage]);
 
   // TODO - this doesn't do anything until we add panels
   const handleDrawerWidth = (width) => {
@@ -99,7 +95,6 @@ function SnapshotDataView({ dispatch, match, queryParams, snapshot }) {
       resourceType={RESOURCE_TYPE.SNAPSHOT}
       tableNames={tableNames}
       handleChangeTable={handleChangeTable}
-      updateDataOnChange={updateDataOnChange}
       queryParams={queryParams}
       selected={selected}
       selectedTable={selectedTable}
@@ -114,14 +109,18 @@ function SnapshotDataView({ dispatch, match, queryParams, snapshot }) {
 SnapshotDataView.propTypes = {
   dispatch: PropTypes.func.isRequired,
   match: PropTypes.object,
+  page: PropTypes.number,
   queryParams: PropTypes.object,
+  rowsPerPage: PropTypes.number,
   snapshot: PropTypes.object,
 };
 
 function mapStateToProps(state) {
   return {
+    page: state.query.page,
     profile: state.profiles.profile,
     queryParams: state.query.queryParams,
+    rowsPerPage: state.query.rowsPerPage,
     snapshot: state.snapshots.snapshot,
   };
 }
