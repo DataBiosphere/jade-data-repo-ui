@@ -308,12 +308,11 @@ export function* removeSnapshotPolicyMember({ payload }) {
  */
 
 export function* getDatasets({ payload }) {
-  const { limit, offset, sort, direction } = payload;
-  const filter = payload.filter || '';
+  const { limit, offset, sort, direction, searchString } = payload;
   try {
     const response = yield call(
       authGet,
-      `/api/repository/v1/datasets?offset=${offset}&limit=${limit}&sort=${sort}&direction=${direction}&filter=${filter}`,
+      `/api/repository/v1/datasets?offset=${offset}&limit=${limit}&sort=${sort}&direction=${direction}&filter=${searchString}`,
     );
     yield put({
       type: ActionTypes.GET_DATASETS_SUCCESS,
