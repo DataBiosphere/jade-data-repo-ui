@@ -1,8 +1,14 @@
-import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
+import {
+  applyMiddleware,
+  combineReducers,
+  compose,
+  createStore,
+  Store,
+} from 'redux';
 import { connectRouter } from 'connected-react-router';
 
 import rootSaga from 'sagas/index';
-import rootReducer from 'reducers/index';
+import rootReducer, { initialTdrState, TdrState } from 'reducers/index';
 import history from 'modules/hist';
 import { History } from 'history';
 import middleware, { sagaMiddleware } from './middleware';
@@ -17,7 +23,7 @@ const reducer = (hist: History) =>
 const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 /* istanbul ignore next */
-const configStore = (initialState = {}): any => {
+const configStore = (initialState: TdrState = initialTdrState): Store<TdrState> => {
   const store = createStore(
     reducer(history),
     initialState,
@@ -34,12 +40,10 @@ const configStore = (initialState = {}): any => {
     });
   }
 
-  return {
-    store,
-  };
+  return store;
 };
 
-const { store } = configStore();
+const store = configStore();
 
 // @ts-ignore
 global.store = store;

@@ -2,11 +2,24 @@ import { handleActions } from 'redux-actions';
 import immutable from 'immutability-helper';
 import _ from 'lodash';
 
-import { ActionTypes, IMAGE, STATUS } from 'constants/index';
+import { ActionTypes, IMAGE, STATUS } from '../constants';
 
 const JADE_FEATURE_PREFIX = 'jade-feature-';
 
-export const userState = {
+export interface UserState {
+  isInitiallyLoaded: boolean,
+  isAuthenticated: boolean,
+  status: STATUS,
+  name: string,
+  image: IMAGE,
+  email: string,
+  token: string,
+  tokenExpiration: number
+  features: any,
+  isTimeoutEnabled: boolean,
+}
+
+export const initialUserState: UserState = {
   isInitiallyLoaded: false,
   isAuthenticated: false,
   status: STATUS.IDLE,
@@ -14,7 +27,7 @@ export const userState = {
   image: IMAGE.DEFAULT, // with default the material ui AccountCircle image will show
   email: '',
   token: '',
-  tokenExpiration: '',
+  tokenExpiration: 0,
   features: {},
   isTimeoutEnabled: false,
 };
@@ -64,6 +77,6 @@ export default {
         });
       },
     },
-    userState,
+    initialUserState,
   ),
 };

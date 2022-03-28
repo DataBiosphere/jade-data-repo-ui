@@ -1,12 +1,19 @@
 import { handleActions } from 'redux-actions';
 import immutable from 'immutability-helper';
 
-import { ActionTypes, STATUS } from 'constants/index';
+import { ActionTypes, STATUS } from '../constants';
 
-export const jobState = {
+export interface JobState {
+  finished: string,
+  jobId: string,
+  jobStatus: STATUS,
+  jobResultObjectId: string,
+}
+
+export const initialJobState : JobState = {
   finished: '',
   jobId: '',
-  jobStatus: '',
+  jobStatus: STATUS.IDLE,
   jobResultObjectId: '',
 };
 
@@ -61,8 +68,8 @@ export default {
         immutable(state, {
           jobId: { $set: '' },
         }),
-      [ActionTypes.USER_LOGOUT]: () => jobState,
+      [ActionTypes.USER_LOGOUT]: () => initialJobState,
     },
-    jobState,
+    initialJobState,
   ),
 };

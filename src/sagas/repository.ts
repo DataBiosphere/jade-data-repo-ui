@@ -10,7 +10,7 @@ import _ from 'lodash';
 
 import { showNotification } from 'modules/notifications';
 import { ActionTypes, STATUS } from '../constants';
-import { State } from '../types/state';
+import { TdrState } from 'reducers';
 
 /**
  * Switch Menu
@@ -19,12 +19,12 @@ import { State } from '../types/state';
  * @param state
  */
 
-export const getToken = (state: State) => state.user.token;
-export const getTokenExpiration = (state: State) => state.user.tokenExpiration;
-export const getSnapshotState = (state: State) => state.snapshots;
-export const getQuery = (state: State) => state.query;
-export const getDataset = (state: State) => state.datasets.dataset;
-export const getSamUrl = (state: State) => state.configuration.samUrl;
+export const getToken = (state: TdrState) => state.user.token;
+export const getTokenExpiration = (state: TdrState) => state.user.tokenExpiration;
+export const getSnapshotState = (state: TdrState) => state.snapshots;
+export const getQuery = (state: TdrState) => state.query;
+export const getDataset = (state: TdrState) => state.datasets.dataset;
+export const getSamUrl = (state: TdrState) => state.configuration.configObject.samUrl;
 
 export const timeoutMsg = 'Your session has timed out. Please refresh the page.';
 
@@ -470,15 +470,15 @@ export function* getDatasetTablePreview({ payload }: any): any {
 /**
  * billing profile
  */
-export function* getBillingProfileById(profileId: string): any {
+export function* getBillingProfileById({ payload }: any): any {
   try {
+    const profileId = payload.profileId;
     const response = yield call(authGet, `/api/resources/v1/profiles/${profileId}`);
     yield put({
       type: ActionTypes.GET_BILLING_PROFILE_BY_ID_SUCCESS,
       profile: { data: response },
     });
   } catch (err) {
-    showNotification(err);
     yield put({
       type: ActionTypes.GET_BILLING_PROFILE_BY_ID_EXCEPTION,
     });
@@ -489,7 +489,7 @@ export function* watchGetDatasetByIdSuccess(): any {
   const requestChan = yield actionChannel(ActionTypes.GET_DATASET_BY_ID_SUCCESS);
   while (true) {
     const { dataset } = yield take(requestChan);
-    yield call(getBillingProfileById, dataset.data.data.defaultProfileId);
+    yield call(getBillingProfileById, { profileId: dataset.data.data.defaultProfileId });
   }
 }
 

@@ -177,7 +177,7 @@ function mapStateToProps(state) {
     user: state.user,
     snapshot: state.snapshots.snapshot,
     snapshotPolicies: state.snapshots.snapshotPolicies,
-    terraUrl: state.configuration.terraUrl,
+    terraUrl: state.configuration.configObject.terraUrl,
     canReadPolicies: state.snapshots.canReadPolicies,
     userRoles: state.snapshots.userRoles,
   };

@@ -3,9 +3,43 @@ import immutable from 'immutability-helper';
 import BigQuery from 'modules/bigquery';
 import { LOCATION_CHANGE } from 'connected-react-router';
 
-import { ActionTypes } from 'constants/index';
+import { ActionTypes } from '../constants';
+import {
+  DatasetModel,
+  PolicyModel,
+  SnapshotExportResponseModel,
+  SnapshotModel,
+  SnapshotSummaryModel
+} from '../generated/tdr';
 
-const defaultSnapshotRequest = {
+//TODO: convert to autogenned SnapshotRequestModel
+export interface SnapshotRequest {
+  name: string,
+  description: string,
+  assetName: string,
+  filterStatement: string,
+  joinStatement: string,
+  readers: Array<string>,
+}
+
+export interface SnapshotState {
+  snapshot: SnapshotModel,
+  snapshots: Array<SnapshotSummaryModel>,
+  snapshotPolicies: Array<PolicyModel>,
+  canReadPolicies: boolean,
+  dataset: DatasetModel,
+  snapshotCount: number,
+  dialogIsOpen: boolean,
+  // for snapshot creation
+  snapshotRequest: SnapshotRequest,
+  userRoles: Array<string>,
+  // for snapshot export to workspace
+  exportIsProcessing: boolean,
+  exportIsDone: boolean,
+  exportResponse: SnapshotExportResponseModel,
+}
+
+const defaultSnapshotRequest: SnapshotRequest = {
   name: '',
   description: '',
   assetName: '',
@@ -14,8 +48,7 @@ const defaultSnapshotRequest = {
   readers: [],
 };
 
-export const snapshotState = {
-  // snapshot info
+export const initialSnapshotState: SnapshotState = {
   snapshot: {},
   snapshots: [],
   snapshotPolicies: [],
@@ -178,8 +211,8 @@ export default {
         immutable(state, {
           snapshotRequest: { $set: defaultSnapshotRequest },
         }),
-      [ActionTypes.USER_LOGOUT]: () => snapshotState,
+      [ActionTypes.USER_LOGOUT]: () => initialSnapshotState,
     },
-    snapshotState,
+    initialSnapshotState,
   ),
 };

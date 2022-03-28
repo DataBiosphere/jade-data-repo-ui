@@ -169,7 +169,7 @@ export function App(props) {
   // This needs to render the iframe AND reset the timeout
   const signOut = () => {
     const { isTimeoutEnabled } = user;
-    logout({ clientId: configuration.clientId }).then(() => {
+    logout({ clientId: configuration.configObject.clientId }).then(() => {
       dispatch(logOut());
       handleClose();
       if (isTimeoutEnabled) {
@@ -231,7 +231,7 @@ export function App(props) {
       </AppBar>
       <div className={classes.content}>
         {!status.tdrOperational && <ServerErrorView />}
-        {status.tdrOperational && user.isInitiallyLoaded && configuration.clientId && (
+        {status.tdrOperational && user.isInitiallyLoaded && configuration.configObject.clientId && (
           <Switch>
             <RoutePublic
               isAuthenticated={user.isAuthenticated}

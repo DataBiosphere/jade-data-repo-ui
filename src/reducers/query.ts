@@ -1,10 +1,23 @@
 import { handleActions } from 'redux-actions';
 import immutable from 'immutability-helper';
 import { LOCATION_CHANGE } from 'connected-react-router';
-import { ActionTypes } from 'constants/index';
+import { ActionTypes } from '../constants';
 import BigQuery from 'modules/bigquery';
 
-export const queryState = {
+export interface QueryState {
+  baseQuery: string,
+  delay: boolean,
+  filterData: any,
+  filterStatement: string,
+  pageSize: number,
+  projectId: string,
+  queryResults: any,
+  orderBy: string,
+  polling: boolean,
+  resultsCount: number,
+}
+
+export const initialQueryState: QueryState = {
   baseQuery: '',
   delay: false,
   filterData: {},
@@ -96,8 +109,8 @@ export default {
         immutable(state, {
           resultsCount: { $set: action.resultsCount },
         }),
-      [ActionTypes.USER_LOGOUT]: () => queryState,
+      [ActionTypes.USER_LOGOUT]: () => initialQueryState,
     },
-    queryState,
+    initialQueryState,
   ),
 };

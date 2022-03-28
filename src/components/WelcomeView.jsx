@@ -216,7 +216,7 @@ export class WelcomeView extends React.PureComponent {
 
 function mapStateToProps(state) {
   return {
-    terraUrl: state.configuration.terraUrl,
+    terraUrl: state.configuration.configObject.terraUrl,
   };
 }
 

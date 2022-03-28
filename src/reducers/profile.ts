@@ -1,9 +1,15 @@
 import { handleActions } from 'redux-actions';
 import immutable from 'immutability-helper';
 
-import { ActionTypes } from 'constants/index';
+import { ActionTypes } from '../constants';
+import { BillingProfileModel } from '../generated/tdr';
 
-export const profileState = {
+export interface ProfileState {
+  profiles: Array<BillingProfileModel>,
+  profile: BillingProfileModel,
+}
+
+export const initialProfileState: ProfileState = {
   profiles: [],
   profile: {},
 };
@@ -23,8 +29,8 @@ export default {
         immutable(state, {
           profile: {},
         }),
-      [ActionTypes.USER_LOGOUT]: () => profileState,
+      [ActionTypes.USER_LOGOUT]: () => initialProfileState,
     },
-    profileState,
+    initialProfileState,
   ),
 };

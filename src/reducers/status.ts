@@ -1,12 +1,18 @@
 import { handleActions } from 'redux-actions';
 import immutable from 'immutability-helper';
 
-import { ActionTypes } from 'constants/index';
+import { ActionTypes } from '../constants';
+import { RepositoryStatusModel } from '../generated/tdr';
 
-export const statusState = {
+export interface StatusState {
+  tdrOperational: boolean,
+  apiIsUp: boolean,
+  serverStatus?: RepositoryStatusModel,
+}
+
+export const initialStatusState: StatusState = {
   tdrOperational: true,
   apiIsUp: true,
-  serverStatus: {},
 };
 
 interface StatusOptions {
@@ -45,6 +51,6 @@ export default {
           apiIsUp: { $set: action.status.apiIsUp },
         }),
     },
-    statusState,
+    initialStatusState,
   ),
 };

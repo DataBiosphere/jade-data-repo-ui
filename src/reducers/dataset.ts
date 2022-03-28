@@ -1,9 +1,20 @@
 import { handleActions } from 'redux-actions';
 import immutable from 'immutability-helper';
 
-import { ActionTypes } from 'constants/index';
+import { ActionTypes } from '../constants';
+import { DatasetModel, DatasetSummaryModel, PolicyModel, SnapshotSummaryModel } from '../generated/tdr';
 
-export const datasetState = {
+export interface DatasetState {
+  datasets: Array<DatasetSummaryModel>,
+  dataset: DatasetModel,
+  datasetsCount: number,
+  datasetPolicies: Array<PolicyModel>,
+  userRoles: Array<string>,
+  datasetSnapshots: Array<SnapshotSummaryModel>,
+  datasetSnapshotsCount: number,
+};
+
+export const initialDatasetState: DatasetState = {
   datasets: [],
   dataset: {},
   datasetsCount: 0,
@@ -81,8 +92,8 @@ export default {
           dataset: { schema: { tables: { [i]: { preview: { $set: action.preview.data.rows } } } } },
         });
       },
-      [ActionTypes.USER_LOGOUT]: () => datasetState,
+      [ActionTypes.USER_LOGOUT]: () => initialDatasetState,
     },
-    datasetState,
+    initialDatasetState,
   ),
 };
