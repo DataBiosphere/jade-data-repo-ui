@@ -13,7 +13,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { pageQuery, applySort } from 'actions/index';
 import JadeTableHead from './JadeTableHead';
 import { ellipsis } from '../../libs/styles';
-import { COLUMN_MODES, GOOGLE_CLOUD_RESOURCE } from '../../constants';
+import { ColumnModes, GoogleCloudResource } from '../../constants';
 
 // eslint-disable-next-line no-unused-vars
 const styles = (theme) => ({
@@ -68,7 +68,7 @@ export class JadeTable extends React.PureComponent {
     const { dispatch, queryResults, dataset } = this.props;
     const { page, rowsPerPage, pageToTokenMap } = this.state;
     const bqStorage = dataset.storage.find(
-      (s) => s.cloudResource === GOOGLE_CLOUD_RESOURCE.BIGQUERY,
+      (s) => s.cloudResource === GoogleCloudResource.BIGQUERY,
     );
     const location = bqStorage?.region;
     if (page === 0) {
@@ -129,7 +129,7 @@ export class JadeTable extends React.PureComponent {
   handleArrayValues = (value, column) => {
     if (_.isArray(value)) {
       const returnValue = [];
-      if (column.mode === COLUMN_MODES.REPEATED) {
+      if (column.mode === ColumnModes.REPEATED) {
         returnValue.push(<span key="start">[</span>);
       }
       returnValue.push(
@@ -142,7 +142,7 @@ export class JadeTable extends React.PureComponent {
           ) : undefined,
         ]),
       );
-      if (column.mode === COLUMN_MODES.REPEATED) {
+      if (column.mode === ColumnModes.REPEATED) {
         returnValue.push(<span key="end">]</span>);
       }
       return returnValue;

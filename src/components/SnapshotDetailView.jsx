@@ -13,7 +13,7 @@ import {
 import DetailViewHeader from './DetailViewHeader';
 
 import DatasetTable from './table/DatasetTable';
-import { SNAPSHOT_INCLUDE_OPTIONS, SNAPSHOT_ROLES } from '../constants';
+import { SnapshotIncludeOptions, SnapshotRoles } from '../constants';
 import { getRoleMembersFromPolicies } from '../libs/utils';
 
 const styles = (theme) => ({
@@ -79,12 +79,12 @@ export class SnapshotDetailView extends React.PureComponent {
       getSnapshotById({
         snapshotId,
         include: [
-          SNAPSHOT_INCLUDE_OPTIONS.SOURCES,
-          SNAPSHOT_INCLUDE_OPTIONS.TABLES,
-          SNAPSHOT_INCLUDE_OPTIONS.RELATIONSHIPS,
-          SNAPSHOT_INCLUDE_OPTIONS.ACCESS_INFORMATION,
-          SNAPSHOT_INCLUDE_OPTIONS.PROFILE,
-          SNAPSHOT_INCLUDE_OPTIONS.DATA_PROJECT,
+          SnapshotIncludeOptions.SOURCES,
+          SnapshotIncludeOptions.TABLES,
+          SnapshotIncludeOptions.RELATIONSHIPS,
+          SnapshotIncludeOptions.ACCESS_INFORMATION,
+          SnapshotIncludeOptions.PROFILE,
+          SnapshotIncludeOptions.DATA_PROJECT,
         ],
       }),
     );
@@ -94,22 +94,22 @@ export class SnapshotDetailView extends React.PureComponent {
 
   addReader = (newEmail) => {
     const { snapshot, dispatch } = this.props;
-    dispatch(addSnapshotPolicyMember(snapshot.id, newEmail, SNAPSHOT_ROLES.READER));
+    dispatch(addSnapshotPolicyMember(snapshot.id, newEmail, SnapshotRoles.READER));
   };
 
   removeReader = (removeableEmail) => {
     const { snapshot, dispatch } = this.props;
-    dispatch(removeSnapshotPolicyMember(snapshot.id, removeableEmail, SNAPSHOT_ROLES.READER));
+    dispatch(removeSnapshotPolicyMember(snapshot.id, removeableEmail, SnapshotRoles.READER));
   };
 
   addSteward = (newEmail) => {
     const { snapshot, dispatch } = this.props;
-    dispatch(addSnapshotPolicyMember(snapshot.id, newEmail, SNAPSHOT_ROLES.STEWARD));
+    dispatch(addSnapshotPolicyMember(snapshot.id, newEmail, SnapshotRoles.STEWARD));
   };
 
   removeSteward = (removeableEmail) => {
     const { snapshot, dispatch } = this.props;
-    dispatch(removeSnapshotPolicyMember(snapshot.id, removeableEmail, SNAPSHOT_ROLES.STEWARD));
+    dispatch(removeSnapshotPolicyMember(snapshot.id, removeableEmail, SnapshotRoles.STEWARD));
   };
 
   handleFilterDatasets = (limit, offset, sort, sortDirection, searchString) => {
@@ -136,8 +136,8 @@ export class SnapshotDetailView extends React.PureComponent {
     } = this.props;
     const { filteredDatasets } = this.state;
 
-    const snapshotReaders = getRoleMembersFromPolicies(snapshotPolicies, SNAPSHOT_ROLES.READER);
-    const snapshotStewards = getRoleMembersFromPolicies(snapshotPolicies, SNAPSHOT_ROLES.STEWARD);
+    const snapshotReaders = getRoleMembersFromPolicies(snapshotPolicies, SnapshotRoles.READER);
+    const snapshotStewards = getRoleMembersFromPolicies(snapshotPolicies, SnapshotRoles.STEWARD);
     const datasets = snapshot && snapshot.source && snapshot.source.map((s) => s.dataset);
 
     return (

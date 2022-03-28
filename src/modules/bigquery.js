@@ -3,7 +3,7 @@ import React from 'react';
 import axios from 'axios';
 import _ from 'lodash';
 import AwesomeDebouncePromise from 'awesome-debounce-promise';
-import { COLUMN_MODES } from '../constants';
+import { ColumnModes } from '../constants';
 
 export default class BigQuery {
   constructor() {
@@ -39,7 +39,7 @@ export default class BigQuery {
       let value = row[i];
       if (value !== null) {
         // Convert into an array if it's not already one
-        if (columnMode !== COLUMN_MODES.REPEATED) {
+        if (columnMode !== ColumnModes.REPEATED) {
           value = [value];
         } else {
           value = value.map((v) => v.v);

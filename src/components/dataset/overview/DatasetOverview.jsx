@@ -6,7 +6,7 @@ import { getDatasetById, getDatasetPolicy, getUserDatasetRoles } from 'actions';
 import { Typography } from '@material-ui/core';
 import DatasetRelationshipsPanel from './DatasetOverviewSchemaPanel';
 import { useOnMount } from '../../../libs/utils';
-import { DATASET_INCLUDE_OPTIONS } from '../../../constants';
+import { DatasetIncludeOptions } from '../../../constants';
 import DatasetOverviewPanel from './DatasetOverviewPanel';
 
 const styles = () => ({
@@ -64,11 +64,11 @@ function DatasetOverview(props) {
       getDatasetById({
         datasetId,
         include: [
-          DATASET_INCLUDE_OPTIONS.SCHEMA,
-          DATASET_INCLUDE_OPTIONS.ACCESS_INFORMATION,
-          DATASET_INCLUDE_OPTIONS.PROFILE,
-          DATASET_INCLUDE_OPTIONS.DATA_PROJECT,
-          DATASET_INCLUDE_OPTIONS.STORAGE,
+          DatasetIncludeOptions.SCHEMA,
+          DatasetIncludeOptions.ACCESS_INFORMATION,
+          DatasetIncludeOptions.PROFILE,
+          DatasetIncludeOptions.DATA_PROJECT,
+          DatasetIncludeOptions.STORAGE,
         ],
       }),
     );

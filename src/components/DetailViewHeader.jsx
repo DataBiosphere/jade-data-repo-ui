@@ -20,7 +20,7 @@ import {
 import { Launch } from '@material-ui/icons';
 import UserList from './UserList';
 import TerraTooltip from './common/TerraTooltip';
-import { SNAPSHOT_ROLES } from '../constants';
+import { SnapshotRoles } from '../constants';
 
 const styles = (theme) => ({
   title: {
@@ -123,7 +123,7 @@ export class DetailViewHeader extends React.PureComponent {
     } = this.props;
     const { exportGsPaths } = this.state;
     const loading = _.isNil(of) || _.isEmpty(of);
-    const canManageUsers = userRoles.includes(SNAPSHOT_ROLES.STEWARD);
+    const canManageUsers = userRoles.includes(SnapshotRoles.STEWARD);
 
     const linkToBq = of.accessInformation?.bigQuery !== undefined;
     const consoleLink = linkToBq

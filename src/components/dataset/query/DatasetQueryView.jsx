@@ -23,7 +23,7 @@ import JadeTable from '../../table/JadeTable';
 import InfoView from './sidebar/panels/InfoView';
 import ShareSnapshot from './sidebar/panels/ShareSnapshot';
 import SnapshotPopup from '../../snapshot/SnapshotPopup';
-import { DATASET_INCLUDE_OPTIONS } from '../../../constants';
+import { DatasetIncludeOptions } from '../../../constants';
 
 const styles = (theme) => ({
   wrapper: {
@@ -80,11 +80,11 @@ export class DatasetQueryView extends React.PureComponent {
         getDatasetById({
           datasetId,
           include: [
-            DATASET_INCLUDE_OPTIONS.SCHEMA,
-            DATASET_INCLUDE_OPTIONS.ACCESS_INFORMATION,
-            DATASET_INCLUDE_OPTIONS.PROFILE,
-            DATASET_INCLUDE_OPTIONS.DATA_PROJECT,
-            DATASET_INCLUDE_OPTIONS.STORAGE,
+            DatasetIncludeOptions.SCHEMA,
+            DatasetIncludeOptions.ACCESS_INFORMATION,
+            DatasetIncludeOptions.PROFILE,
+            DatasetIncludeOptions.DATA_PROJECT,
+            DatasetIncludeOptions.STORAGE,
           ],
         }),
       );

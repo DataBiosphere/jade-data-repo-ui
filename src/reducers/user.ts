@@ -2,16 +2,16 @@ import { handleActions } from 'redux-actions';
 import immutable from 'immutability-helper';
 import _ from 'lodash';
 
-import { ActionTypes, IMAGE, STATUS } from '../constants';
+import { ActionTypes, Image, Status } from '../constants';
 
 const JADE_FEATURE_PREFIX = 'jade-feature-';
 
 export interface UserState {
   isInitiallyLoaded: boolean,
   isAuthenticated: boolean,
-  status: STATUS,
+  status: Status,
   name: string,
-  image: IMAGE,
+  image: Image,
   email: string,
   token: string,
   tokenExpiration: number
@@ -22,9 +22,9 @@ export interface UserState {
 export const initialUserState: UserState = {
   isInitiallyLoaded: false,
   isAuthenticated: false,
-  status: STATUS.IDLE,
+  status: Status.IDLE,
   name: '', // TODO is there a placeholder that this should get? go google accounts ever not have names?
-  image: IMAGE.DEFAULT, // with default the material ui AccountCircle image will show
+  image: Image.DEFAULT, // with default the material ui AccountCircle image will show
   email: '',
   token: '',
   tokenExpiration: 0,
@@ -39,7 +39,7 @@ export default {
         immutable(state, {
           isInitiallyLoaded: { $set: true },
           isAuthenticated: { $set: true },
-          status: { $set: STATUS.READY },
+          status: { $set: Status.READY },
           name: { $set: action.payload.name },
           image: { $set: action.payload.image },
           email: { $set: action.payload.email },
@@ -51,8 +51,8 @@ export default {
         immutable(state, {
           isInitiallyLoaded: { $set: true },
           isAuthenticated: { $set: false },
-          status: { $set: STATUS.IDLE },
-          image: { $set: IMAGE.DEFAULT },
+          status: { $set: Status.IDLE },
+          image: { $set: Image.DEFAULT },
           name: { $set: '' },
           email: { $set: '' },
           token: { $set: '' },

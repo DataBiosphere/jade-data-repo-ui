@@ -1,19 +1,19 @@
 import { handleActions } from 'redux-actions';
 import immutable from 'immutability-helper';
 
-import { ActionTypes, STATUS } from '../constants';
+import { ActionTypes, Status } from '../constants';
 
 export interface JobState {
   finished: string,
   jobId: string,
-  jobStatus: STATUS,
+  jobStatus: Status,
   jobResultObjectId: string,
 }
 
 export const initialJobState : JobState = {
   finished: '',
   jobId: '',
-  jobStatus: STATUS.IDLE,
+  jobStatus: Status.IDLE,
   jobResultObjectId: '',
 };
 
@@ -46,11 +46,11 @@ export default {
         }),
       [ActionTypes.CREATE_SNAPSHOT_SUCCESS]: (state: any) =>
         immutable(state, {
-          jobStatus: { $set: STATUS.SUCCESS },
+          jobStatus: { $set: Status.SUCCESS },
         }),
       [ActionTypes.CREATE_SNAPSHOT_FAILURE]: (state: any) =>
         immutable(state, {
-          jobStatus: { $set: STATUS.ERROR },
+          jobStatus: { $set: Status.ERROR },
         }),
       [ActionTypes.EXPORT_SNAPSHOT_JOB]: (state: any, action: JobAction) =>
         immutable(state, {
@@ -58,11 +58,11 @@ export default {
         }),
       [ActionTypes.EXPORT_SNAPSHOT_SUCCESS]: (state: any) =>
         immutable(state, {
-          jobStatus: { $set: STATUS.SUCCESS },
+          jobStatus: { $set: Status.SUCCESS },
         }),
       [ActionTypes.EXPORT_SNAPSHOT_FAILURE]: (state: any) =>
         immutable(state, {
-          jobStatus: { $set: STATUS.ERROR },
+          jobStatus: { $set: Status.ERROR },
         }),
       [ActionTypes.CLEAR_JOB_ID]: (state: any) =>
         immutable(state, {

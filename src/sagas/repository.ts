@@ -9,8 +9,8 @@ import moment from 'moment';
 import _ from 'lodash';
 
 import { showNotification } from 'modules/notifications';
-import { ActionTypes, STATUS } from '../constants';
-import { TdrState } from 'reducers';
+import { ActionTypes, Status } from '../constants';
+import { TdrState } from '../reducers';
 
 /**
  * Switch Menu
@@ -80,7 +80,7 @@ function* pollJobWorker(
   try {
     const response = yield call(authGet, `/api/repository/v1/jobs/${jobId}`);
     const jobStatus = response.data.job_status;
-    if (jobStatus !== STATUS.RUNNING) {
+    if (jobStatus !== Status.RUNNING) {
       const resultResponse = yield call(authGet, `/api/repository/v1/jobs/${jobId}/result`);
       if (jobStatus === 'succeeded' && resultResponse && resultResponse.data) {
         yield put({

@@ -99,7 +99,7 @@ export enum ActionTypes {
  * @constant {Object} STATUS
  * @memberof Constants
  */
-export enum STATUS {
+export enum Status {
   IDLE = 'idle',
   RUNNING = 'running',
   READY = 'ready',
@@ -107,43 +107,43 @@ export enum STATUS {
   ERROR = 'error',
 }
 
-export enum IMAGE {
+export enum Image {
   DEFAULT = 'default',
 }
 
-export enum DB_COLUMNS {
+export enum DbColumns {
   ROW_ID = 'datarepo_row_id',
 }
 
-export enum COLUMN_MODES {
+export enum ColumnModes {
   NULLABLE = 'NULLABLE',
   REPEATED = 'REPEATED',
   REQUIRED = 'REQUIRED',
 }
 
-export enum SNAPSHOT_ROLES {
+export enum SnapshotRoles {
   STEWARD = 'steward',
   READER = 'reader',
 }
 
-export enum GOOGLE_CLOUD_RESOURCE {
+export enum GoogleCloudResource {
   BIGQUERY = 'bigquery',
   FIRESTORE = 'firestore',
   BUCKET = 'bucket',
 }
 
-export enum DATASET_ROLES {
+export enum DatasetRoles {
   STEWARD = 'steward',
   CUSTODIAN = 'custodian',
   SNAPSHOT_CREATOR = 'snapshot_creator',
 }
 
-export enum IAM_RESOURCE_TYPES {
+export enum IamResourceTypes {
   DATASET = 'dataset',
   SNAPSHOT = 'datasnapshot',
 }
 
-export enum DATASET_INCLUDE_OPTIONS {
+export enum DatasetIncludeOptions {
   NONE = 'NONE',
   SCHEMA = 'SCHEMA',
   ACCESS_INFORMATION = 'ACCESS_INFORMATION',
@@ -152,7 +152,7 @@ export enum DATASET_INCLUDE_OPTIONS {
   STORAGE = 'STORAGE',
 }
 
-export enum SNAPSHOT_INCLUDE_OPTIONS {
+export enum SnapshotIncludeOptions {
   NONE = 'NONE',
   TABLES = 'TABLES',
   RELATIONSHIPS = 'RELATIONSHIPS',

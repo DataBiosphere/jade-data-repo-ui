@@ -19,7 +19,7 @@ import { Link } from 'react-router-dom';
 import clsx from 'clsx';
 import { openSnapshotDialog, getSnapshotById, getSnapshotPolicy } from 'actions/index';
 import { push } from 'modules/hist';
-import { SNAPSHOT_INCLUDE_OPTIONS } from '../../constants';
+import { SnapshotIncludeOptions } from '../../constants';
 
 const styles = (theme) => ({
   snapshotName: {
@@ -100,12 +100,12 @@ export class SnapshotPopup extends React.PureComponent {
         getSnapshotById({
           snapshotId: snapshot.id,
           include: [
-            SNAPSHOT_INCLUDE_OPTIONS.SOURCES,
-            SNAPSHOT_INCLUDE_OPTIONS.TABLES,
-            SNAPSHOT_INCLUDE_OPTIONS.RELATIONSHIPS,
-            SNAPSHOT_INCLUDE_OPTIONS.ACCESS_INFORMATION,
-            SNAPSHOT_INCLUDE_OPTIONS.PROFILE,
-            SNAPSHOT_INCLUDE_OPTIONS.DATA_PROJECT,
+            SnapshotIncludeOptions.SOURCES,
+            SnapshotIncludeOptions.TABLES,
+            SnapshotIncludeOptions.RELATIONSHIPS,
+            SnapshotIncludeOptions.ACCESS_INFORMATION,
+            SnapshotIncludeOptions.PROFILE,
+            SnapshotIncludeOptions.DATA_PROJECT,
           ],
         }),
       );
