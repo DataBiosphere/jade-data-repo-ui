@@ -53,6 +53,7 @@ const NotFound = (props: { classes: ClassNameMap }) => {
         <Button
           className={classes.button}
           component={RouterLink}
+          disableElevation
           color="primary"
           variant="contained"
           size="large"
