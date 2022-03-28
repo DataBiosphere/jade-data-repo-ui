@@ -203,7 +203,7 @@ export class JadeTable extends React.PureComponent {
             onClick={() => this.handleSeeMoreOpen(valuesToDisplay, columnName)}
           >
             <br />
-            See full list
+            See all {allValues.length} values
           </Link>
         </span>
       );
