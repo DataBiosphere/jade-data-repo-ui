@@ -30,8 +30,8 @@ function DataView({
   canLink,
   classes,
   handleChangeTable,
-  pageBQQuery,
   handleDrawerWidth,
+  pageBQQuery,
   panels,
   queryParams,
   resourceId,
@@ -113,6 +113,7 @@ DataView.propTypes = {
   classes: PropTypes.object,
   handleChangeTable: PropTypes.func,
   handleDrawerWidth: PropTypes.func,
+  pageBQQuery: PropTypes.func,
   panels: PropTypes.array,
   queryParams: PropTypes.object,
   resourceId: PropTypes.string,
@@ -123,7 +124,6 @@ DataView.propTypes = {
   selectedTable: PropTypes.object,
   sidebarWidth: PropTypes.number,
   tableNames: PropTypes.array,
-  pageBQQuery: PropTypes.func,
 };
 
 export default withStyles(styles)(DataView);

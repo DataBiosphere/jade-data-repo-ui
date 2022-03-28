@@ -45,11 +45,11 @@ function JadeTable({
   error,
   orderDirection,
   page,
+  pageBQQuery,
   polling,
   queryParams,
   rows,
   rowsPerPage,
-  pageBQQuery,
 }) {
   const [count, setCount] = useState(0);
 
@@ -188,11 +188,11 @@ JadeTable.propTypes = {
   error: PropTypes.bool,
   orderDirection: PropTypes.string,
   page: PropTypes.number.isRequired,
+  pageBQQuery: PropTypes.func,
   polling: PropTypes.bool,
   queryParams: PropTypes.object,
   rows: PropTypes.array,
   rowsPerPage: PropTypes.number.isRequired,
-  pageBQQuery: PropTypes.func,
 };
 
 function mapStateToProps(state) {
