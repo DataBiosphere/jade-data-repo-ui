@@ -24,7 +24,7 @@ import {
 import CloseIcon from '@material-ui/icons/Close';
 import JadeTableHead from './JadeTableHead';
 import { ellipsis } from '../../libs/styles';
-import { TABLE_DEFAULT_ROWS_PER_PAGE_OPTIONS, COLUMN_MODES } from '../../constants';
+import { TABLE_DEFAULT_ROWS_PER_PAGE_OPTIONS } from '../../constants';
 
 // eslint-disable-next-line no-unused-vars
 const styles = (theme) => ({
@@ -112,21 +112,17 @@ function JadeTable({
 
   const handleSeeMoreOpen = (values, title) => {
     setSeeMore({
-      seeMore: {
-        open: true,
-        title,
-        contents: values,
-      },
+      open: true,
+      title,
+      contents: values,
     });
   };
 
   const handleSeeMoreClose = () => {
     setSeeMore({
-      seeMore: {
-        open: false,
-        title: '',
-        contents: '',
-      },
+      open: false,
+      title: '',
+      contents: '',
     });
   };
 
@@ -171,8 +167,8 @@ function JadeTable({
 
   const handleValues = (value, column) => {
     if (_.isArray(value)) {
-      if (column.mode === COLUMN_MODES.REPEATED) {
-        return handleRepeatedValues(value, column.id, classes);
+      if (column.arrayOf) {
+        return handleRepeatedValues(value, column.name, classes);
       }
       const singleValue = value[0];
       return _.isNull(singleValue) ? handleNullValue(singleValue) : singleValue;
@@ -203,7 +199,7 @@ function JadeTable({
                             <TableCell
                               key={`${column.name}-${drId}`}
                               className={classes.cell}
-                              data-cy={`cellvalue-${column.name}-${i}`}
+                              data-cy={`cellValue-${column.name}-${i}`}
                             >
                               {value}
                             </TableCell>
