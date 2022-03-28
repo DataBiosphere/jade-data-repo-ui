@@ -12,6 +12,7 @@ import HomeView from '../components/HomeView';
 import SnapshotDetailView from '../components/SnapshotDetailView';
 import DatasetOverview from '../components/dataset/overview/DatasetOverview';
 import DatasetDataView from '../components/dataset/query/DatasetDataView';
+import NotFound from './NotFound';
 
 const styles = (theme) => ({
   wrapper: {
@@ -105,6 +106,7 @@ class Private extends React.Component {
                       <Route exact path="/datasets/:uuid" component={DatasetOverview} />
                       <Route exact path="/datasets/:uuid/data" component={DatasetDataView} />
                       <Route exact path="/snapshots/:uuid" component={SnapshotDetailView} />
+                      <Route component={NotFound} />
                     </Switch>
                   </div>
                 </Fragment>
