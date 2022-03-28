@@ -1,0 +1,38 @@
+name: unit
+on:
+  workflow_dispatch: {}
+  pull_request:
+    branches:
+      - develop
+    paths:
+      - '!*'
+      - 'src/**'
+      - 'package.json'
+      - 'cypress.json'
+      - 'cypress/**'
+      - 'Dockerfile'
+      - 'Dockerfile.direct'
+      - 'config-overrides.js'
+      - '.github/workflows/test-e2e.yml'
+  schedule:
+    - cron: '0 4 * * *' # run at 4 AM UTC, 12PM EST.
+jobs:
+  unit_test:
+    name: Cypress Unit Tests
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        node-version: [14.x]
+    if: "!contains( github.event.pull_request.labels.*.name, 'skip-ci')"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Cypress Run Component Tests
+        uses: cypress-io/github-action@v2
+        with:
+          command: npx cypress run-ct

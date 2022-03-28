@@ -225,7 +225,7 @@ export class SnapshotPopup extends React.PureComponent {
           </Paper>
           <div className={classes.actions}>
             <Button className={classes.jadeLink} color="primary">
-              <Link to={`/snapshots/details/${snapshot.id}`}>Go to Snapshot Details Page</Link>
+              <Link to={`/snapshots/${snapshot.id}`}>Go to Snapshot Details Page</Link>
             </Button>
           </div>
         </DialogContent>

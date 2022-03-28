@@ -24,7 +24,8 @@
   "plugins": [
     "babel",
     "cypress",
-    "redux-saga"
+    "redux-saga",
+    "react-hooks"
   ],
   "rules": {
     "array-callback-return": "off",
@@ -134,6 +135,9 @@
       "single",
       "avoid-escape"
     ],
+    "react/jsx-no-bind": "error",
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "error",
     "require-jsdoc": [
       "off",
       {
@@ -197,6 +201,7 @@
     ],
     "jsx-quotes": "warn",
     "react/forbid-prop-types": "off",
+    "react/jsx-filename-extension": [2, { "extensions": [".js", ".jsx", ".ts", ".tsx"] }],
     "react/jsx-closing-bracket-location": [
       "warn",
       "line-aligned"

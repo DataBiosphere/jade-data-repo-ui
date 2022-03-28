@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -9,8 +9,9 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import { pageQuery, applySort } from 'actions/index';
+import LoadingSpinner from 'components/common/LoadingSpinner';
+import Failure from 'components/common/Failure';
+import { changeRowsPerPage, changePage, applySort } from 'actions/index';
 import {
   Dialog,
   DialogContent,
@@ -23,7 +24,7 @@ import {
 import CloseIcon from '@material-ui/icons/Close';
 import JadeTableHead from './JadeTableHead';
 import { ellipsis } from '../../libs/styles';
-import { COLUMN_MODES, GOOGLE_CLOUD_RESOURCE } from '../../constants';
+import { TABLE_DEFAULT_ROWS_PER_PAGE_OPTIONS, COLUMN_MODES } from '../../constants';
 
 // eslint-disable-next-line no-unused-vars
 const styles = (theme) => ({
@@ -33,16 +34,6 @@ const styles = (theme) => ({
   tableWrapper: {
     height: 'calc(100vh - 300px)',
     overflow: 'auto',
-  },
-  spinWrapper: {
-    height: 'calc(100% - 60px)',
-    display: 'grid',
-    width: 500,
-    textAlign: 'center',
-    margin: 'auto',
-  },
-  spinner: {
-    margin: 'auto',
   },
   cell: {
     borderBottomColor: theme.palette.lightTable.bottomColor,
@@ -63,101 +54,64 @@ const styles = (theme) => ({
   },
 });
 
-export class JadeTable extends React.PureComponent {
-  constructor(props) {
-    super(props);
+function JadeTable({
+  classes,
+  columns,
+  delay,
+  dispatch,
+  errMsg,
+  error,
+  orderDirection,
+  page,
+  pageBQQuery,
+  polling,
+  queryParams,
+  rows,
+  rowsPerPage,
+}) {
+  const [count, setCount] = useState(0);
+  const [seeMore, setSeeMore] = useState({ open: false, title: '', contents: '' });
 
-    this.state = {
-      page: 0,
-      rowsPerPage: 100,
-      pageToTokenMap: {},
-      orderBy: '',
-      order: '',
-      seeMore: {
-        open: false,
-        title: '',
-        contents: '',
-      },
-    };
-  }
+  const maxRepeatedValues = 5;
+  useEffect(() => {
+    const c = parseInt(queryParams.totalRows, 10);
+    if (c >= 0) {
+      setCount(c);
+    }
+  }, [queryParams]);
 
-  static propTypes = {
-    classes: PropTypes.object,
-    columns: PropTypes.array,
-    dataset: PropTypes.object,
-    delay: PropTypes.bool,
-    dispatch: PropTypes.func.isRequired,
-    polling: PropTypes.bool,
-    queryResults: PropTypes.object,
-    rows: PropTypes.array,
+  // Once we no longer need to support BQ Querying,
+  // we can remove the async/await call and pageBQQuery()
+  const handleChangePage = async (event, newPage) => {
+    await dispatch(changePage(newPage));
+    if (pageBQQuery) {
+      pageBQQuery();
+    }
   };
 
-  maxRepeatedValues = 5;
-
-  handleChangePage = (event, newPage) => {
-    const { dispatch, queryResults, dataset } = this.props;
-    const { page, rowsPerPage, pageToTokenMap } = this.state;
-    const bqStorage = dataset.storage.find(
-      (s) => s.cloudResource === GOOGLE_CLOUD_RESOURCE.BIGQUERY,
-    );
-    const location = bqStorage?.region;
-    if (page === 0) {
-      pageToTokenMap[0] = undefined;
+  const handleChangeRowsPerPage = async (event) => {
+    const newRowsPerPage = parseInt(event.target.value, 10);
+    await dispatch(changeRowsPerPage(newRowsPerPage));
+    if (pageBQQuery) {
+      pageBQQuery();
     }
-
-    if (newPage > page) {
-      pageToTokenMap[newPage] = queryResults.pageToken;
-    }
-
-    dispatch(
-      pageQuery(
-        pageToTokenMap[newPage],
-        queryResults.jobReference.projectId,
-        queryResults.jobReference.jobId,
-        rowsPerPage,
-        location,
-      ),
-    );
-    this.setState({
-      page: newPage,
-      pageToTokenMap,
-    });
   };
 
-  handleChangeRowsPerPage = (event) => {
-    this.setState({
-      rowsPerPage: parseInt(event.target.value, 10),
-      page: 0,
-    });
+  const createSortHandler = (property) => {
+    let newOrderDirection = '';
+
+    if (orderDirection === 'asc') {
+      newOrderDirection = 'desc';
+    }
+    if (orderDirection === 'desc') {
+      newOrderDirection = 'asc';
+    }
+
+    dispatch(applySort(property, newOrderDirection));
   };
 
-  createSortHandler = (property) => {
-    const { dispatch } = this.props;
-    const { order } = this.state;
-    let newOrder = '';
-    let newOrderBy = property;
-
-    if (order === '') {
-      newOrder = 'desc';
-    }
-    if (order === 'asc') {
-      newOrder = '';
-      newOrderBy = '';
-    }
-    if (order === 'desc') {
-      newOrder = 'asc';
-    }
-
-    dispatch(applySort(newOrderBy, order));
-
-    this.setState({
-      order: newOrder,
-      orderBy: newOrderBy,
-    });
-  };
-
-  handleSeeMoreOpen = (values, title) => {
-    this.setState({
+  const handleSeeMoreOpen = (values, title) => {
+    setSeeMore({
       seeMore: {
         open: true,
         title,
@@ -166,8 +120,8 @@ export class JadeTable extends React.PureComponent {
     });
   };
 
-  handleSeeMoreClose = () => {
-    this.setState({
+  const handleSeeMoreClose = () => {
+    setSeeMore({
       seeMore: {
         open: false,
         title: '',
@@ -176,9 +130,11 @@ export class JadeTable extends React.PureComponent {
     });
   };
 
-  handleRepeatedValues = (values, columnName, classes) => {
+  const handleNullValue = () => <span className={classes.nullValue}>null</span>;
+
+  const handleRepeatedValues = (values, columnName) => {
     const allValues = [];
-    const cleanValues = values.map((v) => (_.isNull(v) ? this.handleNullValue(v) : v));
+    const cleanValues = values.map((v) => (_.isNull(v) ? handleNullValue(v) : v));
     const start = <span key="start">[</span>;
     const end = <span key="end">]</span>;
     for (let i = 0; i < cleanValues.length; i++) {
@@ -194,135 +150,141 @@ export class JadeTable extends React.PureComponent {
       }
     }
     const valuesToDisplay = [start, ...allValues, end];
-    if (allValues.length > this.maxRepeatedValues) {
+    if (allValues.length > maxRepeatedValues) {
       const ellipses = <span key="ellipses">...</span>;
-      const seeMore = (
+      const seeMoreLink = (
         <span key="see-more">
           <Link
             className={classes.seeMoreLink}
-            onClick={() => this.handleSeeMoreOpen(valuesToDisplay, columnName)}
+            onClick={() => handleSeeMoreOpen(valuesToDisplay, columnName)}
           >
             <br />
             See all {allValues.length} values
           </Link>
         </span>
       );
-      return [start, ...allValues.slice(0, this.maxRepeatedValues), ellipses, end, seeMore];
+      return [start, ...allValues.slice(0, maxRepeatedValues), ellipses, end, seeMoreLink];
     }
 
     return valuesToDisplay;
   };
 
-  handleNullValue = (classes) => <span className={classes.nullValue}>null</span>;
-
-  handleValues = (value, column, classes) => {
+  const handleValues = (value, column) => {
     if (_.isArray(value)) {
       if (column.mode === COLUMN_MODES.REPEATED) {
-        return this.handleRepeatedValues(value, column.id, classes);
+        return handleRepeatedValues(value, column.id, classes);
       }
       const singleValue = value[0];
-      return _.isNull(singleValue) ? this.handleNullValue(singleValue) : singleValue;
+      return _.isNull(singleValue) ? handleNullValue(singleValue) : singleValue;
     }
     if (_.isNull(value)) {
-      return this.handleNullValue(classes);
+      return handleNullValue();
     }
     return value;
   };
 
-  render() {
-    const { classes, queryResults, columns, rows, polling, delay } = this.props;
-    const { page, rowsPerPage, orderBy, order, seeMore } = this.state;
+  return (
+    <Paper className={classes.root}>
+      <div className={classes.tableWrapper}>
+        {rows && columns && !error && (
+          <Table stickyHeader aria-label="sticky table">
+            <JadeTableHead columns={columns} createSortHandler={createSortHandler} />
+            {!polling && (
+              <TableBody data-cy="tableBody">
+                {rows.map((row, i) => {
+                  const drId = row.datarepo_row_id;
 
-    return (
-      <Paper className={classes.root}>
-        <div className={classes.tableWrapper}>
-          {rows && columns && (
-            <Table stickyHeader aria-label="sticky table">
-              <JadeTableHead
-                columns={columns}
-                orderBy={orderBy}
-                order={order}
-                createSortHandler={this.createSortHandler}
-              />
-              {!polling && (
-                <TableBody data-cy="tableBody">
-                  {rows.map((row, i) => {
-                    const drId = row.datarepo_id;
-
-                    return (
-                      <TableRow hover tabIndex={-1} key={drId}>
-                        {columns.map((column) => {
-                          const value = this.handleValues(row[column.id], column, classes);
-                          return (
-                            !_.isUndefined(value) && (
-                              <TableCell
-                                key={`${column.id}-${drId}`}
-                                className={classes.cell}
-                                data-cy={`cellvalue-${column.id}-${i}`}
-                              >
-                                {value}
-                              </TableCell>
-                            )
-                          );
-                        })}
-                      </TableRow>
-                    );
-                  })}
-                </TableBody>
-              )}
-            </Table>
-          )}
-          {polling && (
-            <div className={classes.spinWrapper}>
-              <CircularProgress className={classes.spinner} />
-              {delay &&
-                'For large datasets, it can take a few minutes to fetch results from BigQuery. Thank you for your patience.'}
-            </div>
-          )}
-        </div>
-        <TablePagination
-          rowsPerPageOptions={[100]}
-          component="div"
-          count={parseInt(queryResults.totalRows, 10) || 0}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onChangePage={this.handleChangePage}
-          onChangeRowsPerPage={this.handleChangeRowsPerPage}
-        />
-        <Dialog open={seeMore.open} scroll="paper">
-          <DialogTitle disableTypography={true} id="see-more-dialog-title">
-            <Typography variant="h4" style={{ float: 'left' }}>
-              {seeMore.title}
-            </Typography>
-            <IconButton size="small" style={{ float: 'right' }} onClick={this.handleSeeMoreClose}>
-              <CloseIcon />
-            </IconButton>
-          </DialogTitle>
-          <DialogContent dividers={true}>
-            <DialogContentText
-              className={classes.dialogContentText}
-              id="see-more-dialog-content-text"
-            >
-              {seeMore.contents}
-            </DialogContentText>
-          </DialogContent>
-        </Dialog>
-      </Paper>
-    );
-  }
+                  return (
+                    <TableRow hover tabIndex={-1} key={drId}>
+                      {columns.map((column) => {
+                        const value = handleValues(row[column.name], column);
+                        return (
+                          !_.isUndefined(value) && (
+                            <TableCell
+                              key={`${column.name}-${drId}`}
+                              className={classes.cell}
+                              data-cy={`cellvalue-${column.name}-${i}`}
+                            >
+                              {value}
+                            </TableCell>
+                          )
+                        );
+                      })}
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            )}
+          </Table>
+        )}
+        {polling && (
+          <LoadingSpinner
+            delay={delay}
+            delayMessage="For large datasets, it can take a few minutes to fetch results. Thank you for your patience."
+          />
+        )}
+        {error && <Failure errString={errMsg} />}
+      </div>
+      <TablePagination
+        rowsPerPageOptions={TABLE_DEFAULT_ROWS_PER_PAGE_OPTIONS}
+        component="div"
+        count={count}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onChangePage={handleChangePage}
+        onChangeRowsPerPage={handleChangeRowsPerPage}
+      />
+      <Dialog open={seeMore.open} scroll="paper">
+        <DialogTitle disableTypography={true} id="see-more-dialog-title">
+          <Typography variant="h4" style={{ float: 'left' }}>
+            {seeMore.title}
+          </Typography>
+          <IconButton size="small" style={{ float: 'right' }} onClick={handleSeeMoreClose}>
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent dividers={true}>
+          <DialogContentText
+            className={classes.dialogContentText}
+            id="see-more-dialog-content-text"
+          >
+            {seeMore.contents}
+          </DialogContentText>
+        </DialogContent>
+      </Dialog>
+    </Paper>
+  );
 }
+
+JadeTable.propTypes = {
+  classes: PropTypes.object,
+  columns: PropTypes.array,
+  delay: PropTypes.bool,
+  dispatch: PropTypes.func.isRequired,
+  errMsg: PropTypes.string,
+  error: PropTypes.bool,
+  orderDirection: PropTypes.string,
+  page: PropTypes.number.isRequired,
+  pageBQQuery: PropTypes.func,
+  polling: PropTypes.bool,
+  queryParams: PropTypes.object,
+  rows: PropTypes.array,
+  rowsPerPage: PropTypes.number.isRequired,
+};
 
 function mapStateToProps(state) {
   return {
-    dataset: state.datasets.dataset,
+    columns: state.query.columns,
     delay: state.query.delay,
+    error: state.query.error,
     filterData: state.query.filterData,
     filterStatement: state.query.filterStatement,
-    token: state.user.token,
-    queryResults: state.query.queryResults,
-    columns: state.query.columns,
-    rows: state.query.rows,
+    orderDirection: state.query.orderDirection,
+    page: state.query.page,
     polling: state.query.polling,
+    queryParams: state.query.queryParams,
+    rows: state.query.rows,
+    rowsPerPage: state.query.rowsPerPage,
   };
 }
 
