@@ -15,7 +15,8 @@ export default class PreviewTable extends React.PureComponent {
     }
     const columns = table.columns.map((col, j) => ({
       label: col.name,
-      property: col.name,
+      name: col.name,
+      allowSort: true,
       render: (row) => {
         // the first column is the row id, we won't display it but we do use it for the rowKey below
         const value = row.f[j + 1].v;

@@ -8,10 +8,11 @@ import PropTypes from 'prop-types';
 import history from 'modules/hist';
 
 import HelpContainer from 'components/help/HelpContainer';
+import SnapshotOverview from 'components/SnapshotOverview';
 import HomeView from '../components/HomeView';
-import SnapshotDetailView from '../components/SnapshotDetailView';
 import DatasetOverview from '../components/dataset/overview/DatasetOverview';
-import DatasetDataView from '../components/dataset/query/DatasetDataView';
+import DatasetDataView from '../components/dataset/data/DatasetDataView';
+import SnapshotDataView from '../components/snapshot/data/SnapshotDataView';
 import NotFound from './NotFound';
 
 const styles = (theme) => ({
@@ -63,7 +64,6 @@ const styles = (theme) => ({
 class Private extends React.Component {
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    features: PropTypes.object,
   };
 
   static prefixMatcher = new RegExp('/[^/]*');
@@ -105,7 +105,8 @@ class Private extends React.Component {
                       <Route exact path="/snapshots" component={HomeView} />
                       <Route exact path="/datasets/:uuid" component={DatasetOverview} />
                       <Route exact path="/datasets/:uuid/data" component={DatasetDataView} />
-                      <Route exact path="/snapshots/:uuid" component={SnapshotDetailView} />
+                      <Route exact path="/snapshots/:uuid" component={SnapshotOverview} />
+                      <Route exact path="/snapshots/:uuid/data" component={SnapshotDataView} />
                       <Route component={NotFound} />
                     </Switch>
                   </div>

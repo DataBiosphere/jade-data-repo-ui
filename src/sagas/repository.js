@@ -9,7 +9,12 @@ import moment from 'moment';
 import _ from 'lodash';
 
 import { showNotification } from 'modules/notifications';
-import { ActionTypes, STATUS } from '../constants';
+import {
+  ActionTypes,
+  DATAREPO_ROW_ID_COLUMN_NAME,
+  STATUS,
+  TABLE_DEFAULT_ROWS_PER_PAGE,
+} from '../constants';
 
 /**
  * Switch Menu
@@ -165,7 +170,6 @@ export function* createSnapshot() {
   const mode = 'byQuery';
   const selectedAsset = _.find(dataset.schema.assets, (asset) => asset.name === assetName);
   const { rootTable } = selectedAsset;
-  const drRowId = 'datarepo_row_id';
 
   const snapshotRequest = {
     name,
@@ -178,7 +182,7 @@ export function* createSnapshot() {
         mode,
         querySpec: {
           assetName,
-          query: `SELECT ${datasetName}.${rootTable}.${drRowId} ${joinStatement} ${filterStatement}`,
+          query: `SELECT ${datasetName}.${rootTable}.${DATAREPO_ROW_ID_COLUMN_NAME} ${joinStatement} ${filterStatement}`,
         },
       },
     ],
@@ -229,6 +233,14 @@ export function* getSnapshots({ payload }) {
 }
 
 export function* getSnapshotById({ payload }) {
+  yield put({
+    type: ActionTypes.CHANGE_PAGE,
+    payload: 0,
+  });
+  yield put({
+    type: ActionTypes.CHANGE_ROWS_PER_PAGE,
+    payload: TABLE_DEFAULT_ROWS_PER_PAGE,
+  });
   const { snapshotId, include } = payload;
   const includeUrl = include ? `?${_.map(include, (inc) => `include=${inc}`).join('&')}` : '';
   try {
@@ -296,15 +308,11 @@ export function* removeSnapshotPolicyMember({ payload }) {
  */
 
 export function* getDatasets({ payload }) {
-  const limit = payload.limit || 10;
-  const offset = payload.offset || 0;
-  const filter = payload.searchString || '';
-  const sort = payload.sort || 'created_date';
-  const direction = payload.direction || 'desc';
+  const { limit, offset, sort, direction, searchString } = payload;
   try {
     const response = yield call(
       authGet,
-      `/api/repository/v1/datasets?offset=${offset}&limit=${limit}&sort=${sort}&direction=${direction}&filter=${filter}`,
+      `/api/repository/v1/datasets?offset=${offset}&limit=${limit}&sort=${sort}&direction=${direction}&filter=${searchString}`,
     );
     yield put({
       type: ActionTypes.GET_DATASETS_SUCCESS,
@@ -316,6 +324,14 @@ export function* getDatasets({ payload }) {
 }
 
 export function* getDatasetById({ payload }) {
+  yield put({
+    type: ActionTypes.CHANGE_PAGE,
+    payload: 0,
+  });
+  yield put({
+    type: ActionTypes.CHANGE_ROWS_PER_PAGE,
+    payload: TABLE_DEFAULT_ROWS_PER_PAGE,
+  });
   const { datasetId, include } = payload;
   const includeUrl = include ? `?${_.map(include, (inc) => `include=${inc}`).join('&')}` : '';
   try {
@@ -483,6 +499,34 @@ export function* watchGetDatasetByIdSuccess() {
 }
 
 /**
+ * Preview Data
+ */
+
+export function* previewData({ payload }) {
+  const queryState = yield select(getQuery);
+  const offset = queryState.page * queryState.rowsPerPage;
+  const limit = queryState.rowsPerPage;
+  const query = `/api/repository/v1/${payload.resourceType}s/${payload.resourceId}/data/${payload.table}?offset=${offset}&limit=${limit}`;
+  try {
+    const response = yield call(authGet, query);
+    yield put({
+      type: ActionTypes.PREVIEW_DATA_SUCCESS,
+      payload: {
+        queryResults: response,
+        columns: payload.columns,
+        totalRowCount: payload.totalRowCount,
+      },
+    });
+  } catch (err) {
+    showNotification(err);
+    yield put({
+      type: ActionTypes.PREVIEW_DATA_FAILURE,
+      payload: err,
+    });
+  }
+}
+
+/**
  * bigquery
  */
 
@@ -508,9 +552,10 @@ function* pollQuery(projectId, jobId) {
 export function* runQuery({ payload }) {
   try {
     const url = `/bigquery/v2/projects/${payload.projectId}/queries`;
+    const queryState = yield select(getQuery);
     const body = {
       query: payload.query,
-      maxResults: payload.maxResults,
+      maxResults: queryState.rowsPerPage,
     };
     const response = yield call(authPost, url, body);
     const { jobComplete } = response.data;
@@ -532,11 +577,34 @@ export function* runQuery({ payload }) {
   }
 }
 
+export function* changeRowsPerPage(rowsPerPage) {
+  try {
+    yield put({
+      type: ActionTypes.CHANGE_ROWS_PER_PAGE,
+      rowsPerPage,
+    });
+  } catch (err) {
+    showNotification(err);
+  }
+}
+
+export function* changePage(page) {
+  try {
+    yield put({
+      type: ActionTypes.CHANGE_PAGE,
+      page,
+    });
+  } catch (err) {
+    showNotification(err);
+  }
+}
+
 export function* pageQuery({ payload }) {
   try {
     const url = `/bigquery/v2/projects/${payload.projectId}/queries/${payload.jobId}`;
+    const queryState = yield select(getQuery);
     const params = {
-      maxResults: payload.pageSize,
+      maxResults: queryState.rowsPerPage,
       pageToken: payload.pageToken,
       location: payload.location,
     };
@@ -615,6 +683,7 @@ export default function* root() {
     takeLatest(ActionTypes.REMOVE_DATASET_POLICY_MEMBER, removeDatasetPolicyMember),
     takeLatest(ActionTypes.GET_DATASET_TABLE_PREVIEW, getDatasetTablePreview),
     takeLatest(ActionTypes.RUN_QUERY, runQuery),
+    takeLatest(ActionTypes.PREVIEW_DATA, previewData),
     takeLatest(ActionTypes.PAGE_QUERY, pageQuery),
     takeLatest(ActionTypes.COUNT_RESULTS, countResults),
     takeLatest(ActionTypes.GET_FEATURES, getFeatures),
