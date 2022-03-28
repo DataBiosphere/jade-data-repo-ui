@@ -4,13 +4,13 @@ import immutable from 'immutability-helper';
 import { ActionTypes, Status } from '../constants';
 
 export interface JobState {
-  finished: string,
-  jobId: string,
-  jobStatus: Status,
-  jobResultObjectId: string,
+  finished: string;
+  jobId: string;
+  jobStatus: Status;
+  jobResultObjectId: string;
 }
 
-export const initialJobState : JobState = {
+export const initialJobState: JobState = {
   finished: '',
   jobId: '',
   jobStatus: Status.IDLE,

@@ -1,10 +1,4 @@
-import {
-  applyMiddleware,
-  combineReducers,
-  compose,
-  createStore,
-  Store,
-} from 'redux';
+import { applyMiddleware, combineReducers, compose, createStore, Store } from 'redux';
 import { connectRouter } from 'connected-react-router';
 
 import rootSaga from 'sagas/index';

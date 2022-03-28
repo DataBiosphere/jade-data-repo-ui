@@ -5,8 +5,8 @@ import { ActionTypes } from '../constants';
 import { BillingProfileModel } from '../generated/tdr';
 
 export interface ProfileState {
-  profiles: Array<BillingProfileModel>,
-  profile: BillingProfileModel,
+  profiles: Array<BillingProfileModel>;
+  profile: BillingProfileModel;
 }
 
 export const initialProfileState: ProfileState = {

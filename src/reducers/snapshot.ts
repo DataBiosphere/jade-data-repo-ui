@@ -9,34 +9,34 @@ import {
   PolicyModel,
   SnapshotExportResponseModel,
   SnapshotModel,
-  SnapshotSummaryModel
+  SnapshotSummaryModel,
 } from '../generated/tdr';
 
 //TODO: convert to autogenned SnapshotRequestModel
 export interface SnapshotRequest {
-  name: string,
-  description: string,
-  assetName: string,
-  filterStatement: string,
-  joinStatement: string,
-  readers: Array<string>,
+  name: string;
+  description: string;
+  assetName: string;
+  filterStatement: string;
+  joinStatement: string;
+  readers: Array<string>;
 }
 
 export interface SnapshotState {
-  snapshot: SnapshotModel,
-  snapshots: Array<SnapshotSummaryModel>,
-  snapshotPolicies: Array<PolicyModel>,
-  canReadPolicies: boolean,
-  dataset: DatasetModel,
-  snapshotCount: number,
-  dialogIsOpen: boolean,
+  snapshot: SnapshotModel;
+  snapshots: Array<SnapshotSummaryModel>;
+  snapshotPolicies: Array<PolicyModel>;
+  canReadPolicies: boolean;
+  dataset: DatasetModel;
+  snapshotCount: number;
+  dialogIsOpen: boolean;
   // for snapshot creation
-  snapshotRequest: SnapshotRequest,
-  userRoles: Array<string>,
+  snapshotRequest: SnapshotRequest;
+  userRoles: Array<string>;
   // for snapshot export to workspace
-  exportIsProcessing: boolean,
-  exportIsDone: boolean,
-  exportResponse: SnapshotExportResponseModel,
+  exportIsProcessing: boolean;
+  exportIsDone: boolean;
+  exportResponse: SnapshotExportResponseModel;
 }
 
 const defaultSnapshotRequest: SnapshotRequest = {

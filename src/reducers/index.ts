@@ -2,7 +2,10 @@ import userReducer, { UserState, initialUserState } from './user';
 import snapshotReducer, { SnapshotState, initialSnapshotState } from './snapshot';
 import datasetReducer, { DatasetState, initialDatasetState } from './dataset';
 import jobReducer, { JobState, initialJobState } from './job';
-import configurationReducer, { ConfigurationState, initialConfigurationState } from './configuration';
+import configurationReducer, {
+  ConfigurationState,
+  initialConfigurationState,
+} from './configuration';
 import queryReducer, { QueryState, initialQueryState } from './query';
 import statusReducer, { StatusState, initialStatusState } from './status';
 import profileReducer, { ProfileState, initialProfileState } from './profile';

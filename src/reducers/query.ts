@@ -5,16 +5,16 @@ import { ActionTypes } from '../constants';
 import BigQuery from 'modules/bigquery';
 
 export interface QueryState {
-  baseQuery: string,
-  delay: boolean,
-  filterData: any,
-  filterStatement: string,
-  pageSize: number,
-  projectId: string,
-  queryResults: any,
-  orderBy: string,
-  polling: boolean,
-  resultsCount: number,
+  baseQuery: string;
+  delay: boolean;
+  filterData: any;
+  filterStatement: string;
+  pageSize: number;
+  projectId: string;
+  queryResults: any;
+  orderBy: string;
+  polling: boolean;
+  resultsCount: number;
 }
 
 export const initialQueryState: QueryState = {

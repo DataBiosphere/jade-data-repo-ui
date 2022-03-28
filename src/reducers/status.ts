@@ -5,9 +5,9 @@ import { ActionTypes } from '../constants';
 import { RepositoryStatusModel } from '../generated/tdr';
 
 export interface StatusState {
-  tdrOperational: boolean,
-  apiIsUp: boolean,
-  serverStatus?: RepositoryStatusModel,
+  tdrOperational: boolean;
+  apiIsUp: boolean;
+  serverStatus?: RepositoryStatusModel;
 }
 
 export const initialStatusState: StatusState = {

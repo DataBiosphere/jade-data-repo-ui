@@ -40,7 +40,7 @@ declare module '@mui/material/styles' {
     lightTable?: Partial<CustomPaletteColors>;
     panel?: Partial<CustomPaletteColors>;
     terra?: Partial<CustomPaletteColors>;
-    primary?: Partial<CustomPaletteColors>
+    primary?: Partial<CustomPaletteColors>;
   }
 
   interface CustomPalette extends Palette {

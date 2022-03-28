@@ -2,17 +2,22 @@ import { handleActions } from 'redux-actions';
 import immutable from 'immutability-helper';
 
 import { ActionTypes } from '../constants';
-import { DatasetModel, DatasetSummaryModel, PolicyModel, SnapshotSummaryModel } from '../generated/tdr';
+import {
+  DatasetModel,
+  DatasetSummaryModel,
+  PolicyModel,
+  SnapshotSummaryModel,
+} from '../generated/tdr';
 
 export interface DatasetState {
-  datasets: Array<DatasetSummaryModel>,
-  dataset: DatasetModel,
-  datasetsCount: number,
-  datasetPolicies: Array<PolicyModel>,
-  userRoles: Array<string>,
-  datasetSnapshots: Array<SnapshotSummaryModel>,
-  datasetSnapshotsCount: number,
-};
+  datasets: Array<DatasetSummaryModel>;
+  dataset: DatasetModel;
+  datasetsCount: number;
+  datasetPolicies: Array<PolicyModel>;
+  userRoles: Array<string>;
+  datasetSnapshots: Array<SnapshotSummaryModel>;
+  datasetSnapshotsCount: number;
+}
 
 export const initialDatasetState: DatasetState = {
   datasets: [],

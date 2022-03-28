@@ -7,16 +7,16 @@ import { ActionTypes, Image, Status } from '../constants';
 const JADE_FEATURE_PREFIX = 'jade-feature-';
 
 export interface UserState {
-  isInitiallyLoaded: boolean,
-  isAuthenticated: boolean,
-  status: Status,
-  name: string,
-  image: Image,
-  email: string,
-  token: string,
-  tokenExpiration: number
-  features: any,
-  isTimeoutEnabled: boolean,
+  isInitiallyLoaded: boolean;
+  isAuthenticated: boolean;
+  status: Status;
+  name: string;
+  image: Image;
+  email: string;
+  token: string;
+  tokenExpiration: number;
+  features: any;
+  isTimeoutEnabled: boolean;
 }
 
 export const initialUserState: UserState = {
