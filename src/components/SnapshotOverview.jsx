@@ -10,9 +10,8 @@ import {
   removeSnapshotPolicyMember,
   getUserSnapshotRoles,
 } from 'actions/index';
-import DetailViewHeader from './DetailViewHeader';
-
 import DatasetTable from './table/DatasetTable';
+import OverviewHeader from './OverviewHeader';
 import { BREADCRUMB_TYPE, SNAPSHOT_INCLUDE_OPTIONS, SNAPSHOT_ROLES } from '../constants';
 import { getRoleMembersFromPolicies } from '../libs/utils';
 import AppBreadcrumbs from './AppBreadcrumbs/AppBreadcrumbs';
@@ -51,7 +50,7 @@ const styles = (theme) => ({
   },
 });
 
-export class SnapshotDetailView extends React.PureComponent {
+export class SnapshotOverview extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -151,7 +150,7 @@ export class SnapshotDetailView extends React.PureComponent {
         />
         <div id="snapshot-detail-view" className={classes.wrapper}>
           <div className={classes.width}>
-            <DetailViewHeader
+            <OverviewHeader
               of={snapshot}
               stewards={snapshotStewards}
               addSteward={this.addSteward}
@@ -192,4 +191,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(withStyles(styles)(SnapshotDetailView));
+export default connect(mapStateToProps)(withStyles(styles)(SnapshotOverview));

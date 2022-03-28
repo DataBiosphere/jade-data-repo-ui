@@ -77,12 +77,18 @@ export const ActionTypes = keyMirror({
   GET_CONFIGURATION_SUCCESS: undefined,
   RUN_QUERY: undefined,
   RUN_QUERY_SUCCESS: undefined,
+  RESET_QUERY: undefined,
+  PREVIEW_DATA: undefined,
+  PREVIEW_DATA_SUCCESS: undefined,
+  PREVIEW_DATA_FAILURE: undefined,
   QUERY_MENU_SELECT: undefined,
   APPLY_FILTERS: undefined,
   APPLY_FILTERS_SUCCESS: undefined,
   POLL_QUERY: undefined,
   PAGE_QUERY: undefined,
   PAGE_QUERY_SUCCESS: undefined,
+  CHANGE_ROWS_PER_PAGE: undefined,
+  CHANGE_PAGE: undefined,
   APPLY_SORT: undefined,
   OPEN_SNAPSHOT_DIALOG: undefined,
   COUNT_RESULTS: undefined,
@@ -100,6 +106,9 @@ export const ActionTypes = keyMirror({
  * @constant {Object} STATUS
  * @memberof Constants
  */
+
+export const DATAREPO_ROW_ID_COLUMN_NAME = 'datarepo_row_id';
+
 export const STATUS = {
   IDLE: 'idle',
   RUNNING: 'running',
@@ -113,7 +122,7 @@ export const IMAGE = {
 };
 
 export const DB_COLUMNS = {
-  ROW_ID: 'datarepo_row_id',
+  ROW_ID: DATAREPO_ROW_ID_COLUMN_NAME,
 };
 
 export const COLUMN_MODES = {
@@ -167,3 +176,12 @@ export const BREADCRUMB_TYPE = {
   DATASET: 'dataset',
   SNAPSHOT: 'snapshot',
 };
+
+export const RESOURCE_TYPE = {
+  DATASET: 'dataset',
+  SNAPSHOT: 'snapshot',
+};
+
+//** Shared Defaults */
+export const TABLE_DEFAULT_ROWS_PER_PAGE = 100;
+export const TABLE_DEFAULT_ROWS_PER_PAGE_OPTIONS = [25, 100, 250];

@@ -85,7 +85,7 @@ describe('test error handling', () => {
 
     cy.wait(['@getDataset', '@getDatasetPolicies', '@getQueryResults', '@getQueryJobResults']);
     cy.contains(
-      'For large datasets, it can take a few minutes to fetch results from BigQuery. Thank you for your patience.',
+      'For large datasets, it can take a few minutes to fetch results. Thank you for your patience.',
     ).should('be.visible');
   });
 });

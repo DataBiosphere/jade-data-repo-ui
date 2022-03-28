@@ -18,6 +18,7 @@ import {
   FormHelperText,
 } from '@material-ui/core';
 import { Launch } from '@material-ui/icons';
+import { Link } from 'react-router-dom';
 import UserList from './UserList';
 import TerraTooltip from './common/TerraTooltip';
 import { SNAPSHOT_ROLES } from '../constants';
@@ -57,9 +58,13 @@ const styles = (theme) => ({
     marginTop: '20px',
     marginBottom: '10px',
   },
+  viewSnapshotButton: {
+    width: '100%',
+    marginBottom: '12px',
+  },
 });
 
-export class DetailViewHeader extends React.PureComponent {
+export class OverviewHeader extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -185,6 +190,16 @@ export class DetailViewHeader extends React.PureComponent {
                     </TerraTooltip>
                   )}
                 </Grid>
+                <Link to={`/snapshots/${of.id}/data`}>
+                  <Button
+                    className={classes.viewSnapshotButton}
+                    color="primary"
+                    variant="outlined"
+                    disableElevation
+                  >
+                    View Snapshot
+                  </Button>
+                </Link>
               </Grid>
             )}
             {stewards && canReadPolicies && (
@@ -269,4 +284,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(withStyles(styles)(DetailViewHeader));
+export default connect(mapStateToProps)(withStyles(styles)(OverviewHeader));

@@ -168,19 +168,32 @@ export const { hideAlert } = createActions({
 
 export const { runQuery } = createActions({
   [ActionTypes.RUN_QUERY_SUCCESS]: (result) => result,
-  [ActionTypes.RUN_QUERY]: (projectId, query, maxResults) => ({
+  [ActionTypes.RUN_QUERY]: (projectId, query) => ({
     projectId,
     query,
-    maxResults,
   }),
 });
 
+export const { previewData } = createActions({
+  [ActionTypes.PREVIEW_DATA]: (resourceType, resourceId, table, columns, totalRowCount) => ({
+    resourceType,
+    resourceId,
+    table,
+    columns,
+    totalRowCount,
+  }),
+  [ActionTypes.PREVIEW_DATA_SUCCESS]: (queryResults, columns) => ({
+    queryResults,
+    columns,
+  }),
+  [ActionTypes.PREVIEW_DATA_FAILURE]: (errMsg) => ({ errMsg }),
+});
+
 export const { pageQuery } = createActions({
-  [ActionTypes.PAGE_QUERY]: (pageToken, projectId, jobId, pageSize, location) => ({
+  [ActionTypes.PAGE_QUERY]: (pageToken, projectId, jobId, location) => ({
     pageToken,
     projectId,
     jobId,
-    pageSize,
     location,
   }),
 });
@@ -198,6 +211,18 @@ export const { applySort } = createActions({
     property,
     direction,
   }),
+});
+
+export const { resetQuery } = createActions({
+  [ActionTypes.RESET_QUERY]: () => ({}),
+});
+
+export const { changeRowsPerPage } = createActions({
+  [ActionTypes.CHANGE_ROWS_PER_PAGE]: (rowsPerPage) => rowsPerPage,
+});
+
+export const { changePage } = createActions({
+  [ActionTypes.CHANGE_PAGE]: (page) => page,
 });
 
 export const { openSnapshotDialog } = createActions({

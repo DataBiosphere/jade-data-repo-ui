@@ -14,7 +14,7 @@ const styles = (theme) => ({
   },
 });
 
-export class QueryViewSidebarItem extends React.PureComponent {
+export class DataViewSidebarItem extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -54,7 +54,7 @@ export class QueryViewSidebarItem extends React.PureComponent {
   handleChange = (value) => {
     const { column } = this.props;
     const { filterMap } = this.state;
-    const type = ['string', 'text'].includes(column.datatype) ? 'value' : 'range';
+    const type = ['string', 'text'].includes(column.dataType) ? 'value' : 'range';
     const exclude = _.get(filterMap, 'exclude', false);
     this.setState({ filterMap: { value, type, exclude } });
   };
@@ -125,7 +125,7 @@ export class QueryViewSidebarItem extends React.PureComponent {
         default:
           return <div />;
       }
-    })(column.datatype);
+    })(column.dataType);
     return (
       <div>
         {item}
@@ -146,4 +146,4 @@ export class QueryViewSidebarItem extends React.PureComponent {
   }
 }
 
-export default withStyles(styles)(QueryViewSidebarItem);
+export default withStyles(styles)(DataViewSidebarItem);
