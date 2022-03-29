@@ -28,6 +28,22 @@ export const queryState = {
 export default {
   query: handleActions(
     {
+      [ActionTypes.GET_SNAPSHOTS]: (state) =>
+        immutable(state, {
+          polling: { $set: true },
+        }),
+      [ActionTypes.GET_SNAPSHOTS_SUCCESS]: (state) =>
+        immutable(state, {
+          polling: { $set: false },
+        }),
+      [ActionTypes.GET_DATASETS]: (state) =>
+        immutable(state, {
+          polling: { $set: true },
+        }),
+      [ActionTypes.GET_DATASETS_SUCCESS]: (state) =>
+        immutable(state, {
+          polling: { $set: false },
+        }),
       [ActionTypes.RUN_QUERY_SUCCESS]: (state, action) => {
         const bigquery = new BigQuery();
         const queryResults = action.results.data;
