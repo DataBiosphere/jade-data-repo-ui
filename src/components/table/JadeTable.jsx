@@ -12,6 +12,16 @@ import TableRow from '@material-ui/core/TableRow';
 import LoadingSpinner from 'components/common/LoadingSpinner';
 import Failure from 'components/common/Failure';
 import { changeRowsPerPage, changePage, applySort } from 'actions/index';
+import {
+  Dialog,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  IconButton,
+  Link,
+  Typography,
+} from '@material-ui/core';
+import CloseIcon from '@material-ui/icons/Close';
 import JadeTableHead from './JadeTableHead';
 import { ellipsis } from '../../libs/styles';
 import { TABLE_DEFAULT_ROWS_PER_PAGE_OPTIONS } from '../../constants';
@@ -34,6 +44,14 @@ const styles = (theme) => ({
     textColor: theme.palette.primary.dark,
     color: theme.palette.primary.dark,
   },
+  dialogContentText: {
+    width: 'max-content',
+    maxWidth: '800px',
+  },
+  seeMoreLink: {
+    ...theme.mixins.jadeLink,
+    cursor: 'pointer',
+  },
 });
 
 function JadeTable({
@@ -52,7 +70,9 @@ function JadeTable({
   rowsPerPage,
 }) {
   const [count, setCount] = useState(0);
+  const [seeMore, setSeeMore] = useState({ open: false, title: '', contents: '' });
 
+  const maxRepeatedValues = 5;
   useEffect(() => {
     const c = parseInt(queryParams.totalRows, 10);
     if (c >= 0) {
@@ -90,33 +110,68 @@ function JadeTable({
     dispatch(applySort(property, newOrderDirection));
   };
 
+  const handleSeeMoreOpen = (values, title) => {
+    setSeeMore({
+      open: true,
+      title,
+      contents: values,
+    });
+  };
+
+  const handleSeeMoreClose = () => {
+    setSeeMore({
+      open: false,
+      title: '',
+      contents: '',
+    });
+  };
+
   const handleNullValue = () => <span className={classes.nullValue}>null</span>;
 
-  const handleArrayValues = (value, column) => {
-    const returnValue = [];
-    if (column.arrayOf) {
-      returnValue.push(<span key="start">[</span>);
-    }
-    returnValue.push(
-      ...value.flatMap((v, i) => [
-        _.isNull(v) ? handleNullValue(v) : v,
-        i < value.length - 1 ? (
+  const handleRepeatedValues = (values, columnName) => {
+    const allValues = [];
+    const cleanValues = values.map((v) => (_.isNull(v) ? handleNullValue(v) : v));
+    const start = <span key="start">[</span>;
+    const end = <span key="end">]</span>;
+    for (let i = 0; i < cleanValues.length; i++) {
+      const thisValue = cleanValues[i];
+      if (i < cleanValues.length - 1) {
+        allValues.push(
           <span key={`sep-${i}`}>
-            {_.isNull(v) ? handleNullValue(v) : ','}
-            <br />
-          </span>
-        ) : undefined,
-      ]),
-    );
-    if (column.arrayOf) {
-      returnValue.push(<span key="end">]</span>);
+            {thisValue},<br />
+          </span>,
+        );
+      } else {
+        allValues.push(thisValue);
+      }
     }
-    return returnValue;
+    const valuesToDisplay = [start, ...allValues, end];
+    if (allValues.length > maxRepeatedValues) {
+      const ellipses = <span key="ellipses">...</span>;
+      const seeMoreLink = (
+        <span key="see-more">
+          <Link
+            className={classes.seeMoreLink}
+            onClick={() => handleSeeMoreOpen(valuesToDisplay, columnName)}
+          >
+            <br />
+            See all {allValues.length} values
+          </Link>
+        </span>
+      );
+      return [start, ...allValues.slice(0, maxRepeatedValues), ellipses, end, seeMoreLink];
+    }
+
+    return valuesToDisplay;
   };
 
   const handleValues = (value, column) => {
     if (_.isArray(value)) {
-      return handleArrayValues(value, column);
+      if (column.arrayOf) {
+        return handleRepeatedValues(value, column.name, classes);
+      }
+      const singleValue = value[0];
+      return _.isNull(singleValue) ? handleNullValue(singleValue) : singleValue;
     }
     if (_.isNull(value)) {
       return handleNullValue();
@@ -144,7 +199,7 @@ function JadeTable({
                             <TableCell
                               key={`${column.name}-${drId}`}
                               className={classes.cell}
-                              data-cy={`cellvalue-${column.name}-${i}`}
+                              data-cy={`cellValue-${column.name}-${i}`}
                             >
                               {value}
                             </TableCell>
@@ -175,6 +230,24 @@ function JadeTable({
         onChangePage={handleChangePage}
         onChangeRowsPerPage={handleChangeRowsPerPage}
       />
+      <Dialog open={seeMore.open} scroll="paper">
+        <DialogTitle disableTypography={true} id="see-more-dialog-title">
+          <Typography variant="h4" style={{ float: 'left' }}>
+            {seeMore.title}
+          </Typography>
+          <IconButton size="small" style={{ float: 'right' }} onClick={handleSeeMoreClose}>
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent dividers={true}>
+          <DialogContentText
+            className={classes.dialogContentText}
+            id="see-more-dialog-content-text"
+          >
+            {seeMore.contents}
+          </DialogContentText>
+        </DialogContent>
+      </Dialog>
     </Paper>
   );
 }
