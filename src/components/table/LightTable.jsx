@@ -202,6 +202,7 @@ LightTable.propTypes = {
   itemType: PropTypes.string.isRequired,
   orderDirection: PropTypes.string,
   orderProperty: PropTypes.string,
+  polling: PropTypes.bool.isRequired,
   rowKey: PropTypes.func,
   rows: PropTypes.arrayOf(PropTypes.object),
   searchString: PropTypes.string,
