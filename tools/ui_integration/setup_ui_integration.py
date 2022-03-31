@@ -87,7 +87,7 @@ def create_dataset(clients, dataset_to_upload, profile_id):
     dataset_name = dataset_to_upload['name']
 
     dataset = None
-    with open(os.path.join("files", dataset_to_upload['schema'], "dataset_schema.json")) as dataset_schema_json:
+    with open(os.path.join("files", dataset_to_upload["schema"], "dataset_schema.json")) as dataset_schema_json:
         dataset_request = json.load(dataset_schema_json)
         dataset_request['name'] = dataset_name
         dataset_request['defaultProfileId'] = profile_id
