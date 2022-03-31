@@ -13,6 +13,11 @@
     "snapshot_creators": [],
     "snapshots": [
       {
+        "name": "StewardCatalogSnapshot",
+        "description": "A snapshot that only has stewards.",
+        "stewards": ["datacataloguser@test.firecloud.org"]
+      },
+      {
         "name": "ReadableCatalogSnapshot",
         "description": "A readable snapshot.",
         "readers": ["datacataloguser@test.firecloud.org"]
