@@ -1,6 +1,6 @@
 The `setup_ui_integration.py` script can be used to easily create datasets and snapshots in the Data Repo.
 
-###Usage:
+### Usage:
 1. `pip3 install -r requirements.txt`
 2. `gcloud auth login <user>`
 3. `python setup_ui_integration.py --host <datarepo_url> --datasets <datasets_to_create_json_file> --profile_id <profile_id>`
