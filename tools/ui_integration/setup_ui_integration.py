@@ -110,7 +110,7 @@ def get_datasets_to_upload(filename):
 def add_snapshot_policy_members(clients, snapshot_id, snapshot_to_upload):
     for steward in snapshot_to_upload.get('stewards'):
         print(f"Adding {steward} as a steward")
-        clients.snapshots_api.add_dataset_policy_member(snapshot_id, "steward", policy_member={"email": steward})
+        clients.snapshots_api.add_snapshot_policy_member(snapshot_id, "steward", policy_member={"email": steward})
     for reader in snapshot_to_upload.get('readers'):
         print(f"Adding {reader} as a reader")
         clients.snapshots_api.add_snapshot_policy_member(snapshot_id, "reader", policy_member={"email": reader})
@@ -142,14 +142,14 @@ def create_snapshots(clients, dataset_name, snapshots, profile_id):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--host', default='https://jade-4.datarepo-integration.broadinstitute.org')
-    parser.add_argument('--datasets', default='datarepo_datasets.json')
+    parser.add_argument('--datasets', default='./suites/datarepo_datasets.json')
     parser.add_argument('--profile_id')
     args = parser.parse_args()
     clients = Clients(args.host)
 
     profile_id = args.profile_id
     if profile_id is None:
-        profile_job_response = create_billing_profile(clients)
+        profile_job_response = create_billing_profile(clients, args.profile_id)
         profile_id = profile_job_response['id']
 
     outputs = []
@@ -163,7 +163,7 @@ def main():
             output_ids[dataset_name]['snapshot_ids'] = snapshot_ids
             outputs.append(output_ids)
 
-    output_filename = f"{args.datasets.split('.')[0]}_outputs.json"
+    output_filename = f"{os.path.basename(args.datasets.split).split('.')[0]}_outputs.json"
     with open(output_filename, 'w') as f:
         json.dump(outputs, f)
 
