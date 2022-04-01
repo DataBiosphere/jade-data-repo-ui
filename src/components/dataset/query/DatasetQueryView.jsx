@@ -1,8 +1,8 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
+import { withStyles } from '@mui/styles';
+import Grid from '@mui/material/Grid';
 
 import {
   applyFilters,
@@ -12,8 +12,8 @@ import {
   countResults,
   getUserDatasetRoles,
 } from 'actions/index';
-import { Button, Typography } from '@material-ui/core';
-import { FilterList, Info, People } from '@material-ui/icons';
+import { Button, Typography } from '@mui/material';
+import { FilterList, Info, People } from '@mui/icons-material';
 
 import { Link } from 'react-router-dom';
 import QueryViewSidebar from './sidebar/QueryViewSidebar';

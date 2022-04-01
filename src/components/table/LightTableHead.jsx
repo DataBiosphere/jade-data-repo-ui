@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
-import { Sort } from '@material-ui/icons';
+import { withStyles } from '@mui/styles';
+import TableCell from '@mui/material/TableCell';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import TableSortLabel from '@mui/material/TableSortLabel';
+import { Sort } from '@mui/icons-material';
 import TerraTooltip from '../common/TerraTooltip';
 
 const styles = (theme) => ({
@@ -52,7 +52,7 @@ export class LightTableHead extends React.PureComponent {
                 className={classes.cell}
                 key={col.property}
                 align={col.numeric ? 'right' : 'left'}
-                padding={col.disablePadding ? 'none' : 'default'}
+                padding={col.disablePadding ? 'none' : 'normal'}
                 sortDirection={orderBy === col.id ? orderDirection : false}
               >
                 {summary ? (

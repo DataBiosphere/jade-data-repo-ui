@@ -2,14 +2,14 @@ import React from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles } from '@mui/styles';
 
-import Card from '@material-ui/core/Card';
-import List from '@material-ui/core/List';
-import ListSubheader from '@material-ui/core/ListSubheader';
-import ListItem from '@material-ui/core/ListItem';
-import { Chip, Collapse, Badge } from '@material-ui/core';
-import { ExpandLess } from '@material-ui/icons';
+import Card from '@mui/material/Card';
+import List from '@mui/material/List';
+import ListSubheader from '@mui/material/ListSubheader';
+import ListItem from '@mui/material/ListItem';
+import { Chip, Collapse, Badge } from '@mui/material';
+import { ExpandLess } from '@mui/icons-material';
 import { applyFilters } from '../../../../actions';
 
 const styles = (theme) => ({
@@ -29,9 +29,7 @@ const styles = (theme) => ({
     fontWeight: 500,
   },
   box: {
-    margin: `${theme.spacing(1)}px ${theme.spacing(2)}px ${theme.spacing(1)}px ${theme.spacing(
-      2,
-    )}px`,
+    margin: `${theme.spacing(1)} ${theme.spacing(2)} ${theme.spacing(1)} ${theme.spacing(2)}`,
   },
   smallText: {
     'font-size': '.75rem',

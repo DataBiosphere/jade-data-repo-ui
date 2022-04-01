@@ -3,7 +3,7 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { ReactComponent as ExitSVG } from 'media/icons/times-light.svg';
 import { connect } from 'react-redux';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles } from '@mui/styles';
 import {
   Dialog,
   DialogTitle,
@@ -13,8 +13,8 @@ import {
   Button,
   Chip,
   CircularProgress,
-} from '@material-ui/core';
-import { CameraAlt, Today } from '@material-ui/icons';
+} from '@mui/material';
+import { CameraAlt, Today } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 import clsx from 'clsx';
 import { openSnapshotDialog, getSnapshotById, getSnapshotPolicy } from 'actions/index';
@@ -128,9 +128,7 @@ export class SnapshotPopup extends React.PureComponent {
     if (notReady) {
       return (
         <Dialog open={isOpen}>
-          <DialogTitle>
-            <Typography variant="h5">Your data snapshot is being created</Typography>
-          </DialogTitle>
+          <DialogTitle>Your data snapshot is being created</DialogTitle>
           <DialogContent>
             {/* TODO: Make this loading state more descriptive */}
             <div className={clsx(classes.centered, classes.content)}>

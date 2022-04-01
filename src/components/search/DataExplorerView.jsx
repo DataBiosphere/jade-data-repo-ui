@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import { Divider } from '@material-ui/core';
+import { withStyles } from '@mui/styles';
+import { Divider } from '@mui/material';
 
 const styles = (theme) => ({
   title: {
@@ -12,8 +12,8 @@ const styles = (theme) => ({
     padding: theme.spacing(4),
   },
   section: {
-    padding: `${theme.spacing(2)}px ${theme.spacing(4)}px`,
-    margin: `${theme.spacing(1)}px 0px`,
+    padding: `${theme.spacing(2)} ${theme.spacing(4)}`,
+    margin: `${theme.spacing(1)} 0px`,
   },
 });
 
@@ -37,7 +37,7 @@ class DataExplorerView extends React.PureComponent {
   }
 }
 
-// eslint-disable-next-line no-unused-vars
+//eslint-disable-next-line @typescript-eslint/no-unused-vars
 function mapStateToProps(state) {
   return {};
 }

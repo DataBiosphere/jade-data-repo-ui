@@ -2,7 +2,7 @@ import React from 'react';
 import _ from 'lodash';
 import clsx from 'clsx';
 import { connect } from 'react-redux';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles } from '@mui/styles';
 import PropTypes from 'prop-types';
 import {
   Box,
@@ -13,8 +13,8 @@ import {
   ListItem,
   Collapse,
   Divider,
-} from '@material-ui/core';
-import { ExpandMore, ExpandLess, Search } from '@material-ui/icons';
+} from '@mui/material';
+import { ExpandMore, ExpandLess, Search } from '@mui/icons-material';
 import QueryViewSidebarItem from '../QueryViewSidebarItem';
 import QuerySidebarPanel from '../QuerySidebarPanel';
 import { applyFilters } from '../../../../../actions';
@@ -46,7 +46,7 @@ const styles = (theme) => ({
     textAlign: 'end',
   },
   panelContent: {
-    padding: `0px ${theme.spacing(2)}px`,
+    padding: `0px ${theme.spacing(2)}`,
   },
   rowOne: {
     flex: 1,

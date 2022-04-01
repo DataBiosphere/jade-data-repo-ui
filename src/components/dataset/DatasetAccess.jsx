@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Grid } from '@material-ui/core';
+import { Grid } from '@mui/material';
 import UserList from '../UserList';
 import { DatasetRoles } from '../../constants';
 import { getRoleMembersFromPolicies } from '../../libs/utils';

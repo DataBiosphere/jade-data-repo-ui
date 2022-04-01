@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { TextField, Input } from '@material-ui/core';
+import { TextField, Input } from '@mui/material';
 
 export class RangeInput extends React.PureComponent {
   static propTypes = {

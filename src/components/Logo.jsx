@@ -1,5 +1,5 @@
 import React from 'react';
-import { withStyles } from '@material-ui/core';
+import { withStyles } from '@mui/styles';
 import PropTypes from 'prop-types';
 import { push } from 'modules/hist';
 
@@ -9,6 +9,7 @@ const styles = (theme) => ({
   logoContainer: {
     display: 'flex',
     alignItems: 'center',
+    cursor: 'pointer',
   },
   logo: {
     alignItems: 'flex-start',

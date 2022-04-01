@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TablePagination from '@material-ui/core/TablePagination';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
+import { withStyles } from '@mui/styles';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TablePagination from '@mui/material/TablePagination';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
 
 import clsx from 'clsx';
 import LightTableHead from './LightTableHead';
@@ -175,8 +175,8 @@ function LightTable({
               disableRipple: true,
               className: classes.paginationButton,
             }}
-            onChangePage={handleChangePage}
-            onChangeRowsPerPage={handleChangeRowsPerPage}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
             labelDisplayedRows={({ from, to, count }) => {
               if (count === totalCount) {
                 return `${from}-${to} of ${count}`;
@@ -193,8 +193,8 @@ function LightTable({
 LightTable.propTypes = {
   classes: PropTypes.object.isRequired,
   columns: PropTypes.arrayOf(PropTypes.object),
-  handleEnumeration: PropTypes.func,
   filteredCount: PropTypes.number,
+  handleEnumeration: PropTypes.func,
   itemType: PropTypes.string.isRequired,
   rowKey: PropTypes.func,
   rows: PropTypes.arrayOf(PropTypes.object),

@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import Tab from '@material-ui/core/Tab';
-import { Tabs } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
+import Tab from '@mui/material/Tab';
+import { Tabs } from '@mui/material';
+import { withStyles } from '@mui/styles';
 import DatasetView from './DatasetView';
 import SnapshotView from './SnapshotView';
 import SearchTable from './table/SearchTable';
@@ -72,8 +72,8 @@ const styles = (theme) => ({
   },
 });
 
-const HomeView = ({ classes, location }) => {
-  const prefixMatcher = new RegExp('/[^/]*');
+function HomeView({ classes, location }) {
+  const prefixMatcher = /\/[^/]*/;
   const [searchString, setSearchString] = useState('');
   const tabValue = prefixMatcher.exec(location.pathname)[0];
   let tableValue;
@@ -119,7 +119,7 @@ const HomeView = ({ classes, location }) => {
       {tableValue}
     </div>
   );
-};
+}
 
 HomeView.propTypes = {
   classes: PropTypes.object,

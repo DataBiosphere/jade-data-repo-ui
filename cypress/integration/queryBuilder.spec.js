@@ -22,6 +22,7 @@ describe('test query builder', () => {
     cy.wait(['@getDataset', '@getDatasetPolicies', '@getBillingProfileById']);
   });
 
+  //eslint-disable-next-line @typescript-eslint/no-empty-function
   it('does render', () => {});
 
   describe('arrays work as expected', () => {

@@ -1,3 +1,4 @@
+/* eslint-disable import/no-import-module-exports */
 import { applyMiddleware, combineReducers, compose, createStore, Store } from 'redux';
 import { connectRouter } from 'connected-react-router';
 
@@ -6,6 +7,7 @@ import rootReducer, { initialTdrState, TdrState } from 'reducers/index';
 import history from 'modules/hist';
 import { History } from 'history';
 import middleware, { sagaMiddleware } from './middleware';
+/* eslint-enable import/no-import-module-exports */
 
 const reducer = (hist: History) =>
   combineReducers({
@@ -30,6 +32,7 @@ const configStore = (initialState: TdrState = initialTdrState): Store<TdrState> 
   if (module.hot) {
     // @ts-ignore
     module.hot.accept('reducers', () => {
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
       store.replaceReducer(require('reducers/index').default);
     });
   }

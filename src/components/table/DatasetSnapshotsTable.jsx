@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles } from '@mui/styles';
 
 import { connect } from 'react-redux';
 import LightTable from './LightTable';
@@ -41,8 +41,8 @@ class DatasetSnapshotsTable extends React.PureComponent {
         label: 'Snapshot Name',
         property: 'name',
         render: (row) => (
-          <Link to={`/snapshots/details/${row.id}`} className={classes.jadeLink}>
-            {row.name}
+          <Link to={`/snapshots/details/${row.id}`}>
+            <span className={classes.jadeLink}>{row.name}</span>
           </Link>
         ),
       },

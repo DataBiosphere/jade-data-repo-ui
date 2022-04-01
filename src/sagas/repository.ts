@@ -489,7 +489,11 @@ export function* watchGetDatasetByIdSuccess(): any {
   const requestChan = yield actionChannel(ActionTypes.GET_DATASET_BY_ID_SUCCESS);
   while (true) {
     const { dataset } = yield take(requestChan);
-    yield call(getBillingProfileById, { profileId: dataset.data.data.defaultProfileId });
+    // Trigger an action to fetch billing profile
+    yield put({
+      type: ActionTypes.GET_BILLING_PROFILE_BY_ID,
+      payload: { profileId: dataset.data.data.defaultProfileId },
+    });
   }
 }
 

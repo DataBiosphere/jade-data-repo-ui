@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles } from '@mui/styles';
 
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import TableCell from '@material-ui/core/TableCell';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import TableCell from '@mui/material/TableCell';
+import TableSortLabel from '@mui/material/TableSortLabel';
 import { ColumnModes } from '../../constants';
 
 const styles = (theme) => ({
@@ -40,7 +40,7 @@ export class JadeTableHead extends React.PureComponent {
                   className={classes.header}
                   key={column.id}
                   align={column.numeric ? 'right' : 'left'}
-                  padding={column.disablePadding ? 'none' : 'default'}
+                  padding={column.disablePadding ? 'none' : 'normal'}
                   sortDirection={orderBy === column.id ? order : false}
                   data-cy={`columnheader-${column.id}`}
                 >

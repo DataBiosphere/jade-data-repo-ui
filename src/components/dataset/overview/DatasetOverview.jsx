@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles } from '@mui/styles';
 import { getDatasetById, getDatasetPolicy, getUserDatasetRoles } from 'actions';
-import { Typography } from '@material-ui/core';
+import { Typography } from '@mui/material';
 import DatasetRelationshipsPanel from './DatasetOverviewSchemaPanel';
 import { useOnMount } from '../../../libs/utils';
 import { DatasetIncludeOptions } from '../../../constants';

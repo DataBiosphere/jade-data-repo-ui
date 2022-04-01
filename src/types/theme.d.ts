@@ -6,7 +6,7 @@ import {
   PaletteOptions,
 } from '@mui/material/styles/createPalette';
 import { Typography, TypographyOptions } from '@mui/material/styles/createTypography';
-import { Overrides } from '@material-ui/core/styles/overrides';
+import { Overrides } from '@mui/styles/overrides';
 import { CSSProperties, Mixins, MixinsOptions } from '@mui/material/styles/createMixins';
 
 declare module '@mui/material/styles' {
@@ -66,12 +66,16 @@ declare module '@mui/material/styles' {
   }
 
   interface CustomMixins extends Mixins {
-    jadeLink: CSSProperties;
+    jadeLink: JadeLink;
     containerWidth: CSSProperties;
   }
 
+  interface JadeLink extends CSSProperties {
+    '&:hover': CSSProperties;
+  }
+
   interface CustomMixinsOptions extends MixinsOptions {
-    jadeLink?: CSSProperties;
+    jadeLink?: JadeLink;
     containerWidth?: CSSProperties;
   }
 

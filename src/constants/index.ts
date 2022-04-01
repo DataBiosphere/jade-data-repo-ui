@@ -154,6 +154,7 @@ export enum DatasetIncludeOptions {
 
 export enum SnapshotIncludeOptions {
   NONE = 'NONE',
+  SOURCES = 'SOURCES',
   TABLES = 'TABLES',
   RELATIONSHIPS = 'RELATIONSHIPS',
   ACCESS_INFORMATION = 'ACCESS_INFORMATION',

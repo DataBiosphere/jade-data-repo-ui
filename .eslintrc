@@ -2,9 +2,13 @@
   "extends": [
     "airbnb",
     "plugin:prettier/recommended",
-    "prettier/react"
+    "prettier/react",
+    "react-app",
+    "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended"
   ],
-  "parser": "babel-eslint",
+  "parser": "@babel/eslint-parser",
   "env": {
     "browser": true,
     "cypress/globals": true,
@@ -104,14 +108,7 @@
     "no-template-curly-in-string": "warn",
     "no-trailing-spaces": "warn",
     "no-underscore-dangle": "off",
-    "no-unused-vars": [
-      "error",
-      {
-        "vars": "all",
-        "args": "after-used",
-        "ignoreRestSiblings": false
-      }
-    ],
+    "no-unused-vars": "off", // disabled in favor of typescript config (noUnusedLocals and noUnusedParameters=true)
     "object-curly-newline": "off",
     "object-shorthand": [
       "warn",
@@ -274,7 +271,8 @@
         "ts": "never",
         "tsx": "never"
       }
-    ]
+    ],
+    "@typescript-eslint/ban-ts-comment": "off"
   },
   "settings": {
     "import/resolver": {

@@ -7,15 +7,25 @@ import { Router } from 'react-router-dom';
 import { getUser } from 'modules/auth';
 import history from 'modules/hist';
 import globalTheme from 'modules/theme';
-import { ThemeProvider } from '@material-ui/styles';
+import { ThemeProvider } from '@mui/material/styles';
 import axios from 'axios';
 import { logIn, getFeatures, logOut } from 'actions/index';
 import { ActionTypes } from 'constants/index';
+// For some reason, @emotion package doesn't register with linter.  Ignoring for now
+//eslint-disable-next-line import/no-extraneous-dependencies
+import createCache from '@emotion/cache';
+//eslint-disable-next-line import/no-extraneous-dependencies
+import { CacheProvider } from '@emotion/react';
 
 import { store } from 'store/index';
 
 import config from 'config';
 import App from 'containers/App';
+
+const cache = createCache({
+  key: 'css',
+  prepend: false,
+});
 
 function checkStatus() {
   return new Promise((resolve, reject) => {
@@ -127,9 +137,11 @@ function render(Component) {
           titleAttributes={{ itemprop: 'name', lang: 'en-us' }}
         />
         <Router history={history}>
-          <ThemeProvider theme={globalTheme}>
-            <Component />
-          </ThemeProvider>
+          <CacheProvider value={cache}>
+            <ThemeProvider theme={globalTheme}>
+              <Component />
+            </ThemeProvider>
+          </CacheProvider>
         </Router>
       </Provider>,
       root,
@@ -144,5 +156,6 @@ bootstrap()
   .then(() => render(App))
   .catch((err) => {
     // TODO: display in UI
+    //eslint-disable-next-line no-console
     console.error(err);
   });

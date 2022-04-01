@@ -1,15 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles } from '@mui/styles';
 import { Link, Redirect } from 'react-router-dom';
 import MultiSelect from 'react-select';
 import { Control, Form, actions, Errors } from 'react-redux-form';
 import _ from 'lodash';
 import xlsx from 'xlsx';
 import Combinatorics from 'js-combinatorics';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
 
 import { createSnapshot, getDatasets, getDatasetById } from 'actions/index';
 import ManageUsers from './ManageUsersView';
@@ -96,8 +96,12 @@ const styles = (theme) => ({
   selector: {
     width: '380px',
   },
+  formRow: {
+    paddingBottom: '1em',
+  },
 });
 
+/* eslint-disable react/jsx-pascal-case */
 export class SnapshotCreateView extends React.PureComponent {
   static propTypes = {
     asset: PropTypes.string,
@@ -214,7 +218,6 @@ export class SnapshotCreateView extends React.PureComponent {
   };
 
   render() {
-    const FormRow = (props) => <div style={{ paddingBottom: '1em' }}>{props.children}</div>;
     const { asset, classes, createdSnapshot, jobId, ids, readers, datasets, dataset } = this.props;
     const datasetOptions = this.getDatasetOptions(datasets);
     const assetOptions = this.getAssetOptions(dataset);
@@ -226,25 +229,27 @@ export class SnapshotCreateView extends React.PureComponent {
           <div className={classes.title}>Create Snapshot</div>
           <p>Fill out the following fields to create a new snapshot</p>
           <Form model="snapshot">
-            <FormRow>
+            <div className={classes.formRow}>
               <div className={classes.nameSnapshot}>
                 <Control.text
                   model="snapshot.name"
                   id="snapshot.name"
                   required
                   validators={{ name: this.validateName }}
+                  //eslint-disable-next-line react/no-unstable-nested-components
                   component={(props) => (
                     <TextField {...props} placeholder="Snapshot Name" variant="outlined" />
                   )}
                 />
               </div>
-            </FormRow>
+            </div>
 
-            <FormRow>
+            <div className={classes.formRow}>
               <Control.textarea
                 model="snapshot.description"
                 id="snapshot.description"
                 required
+                //eslint-disable-next-line react/no-unstable-nested-components
                 component={(props) => (
                   <TextField
                     {...props}
@@ -257,12 +262,13 @@ export class SnapshotCreateView extends React.PureComponent {
                   />
                 )}
               />
-            </FormRow>
-            <FormRow>
+            </div>
+            <div className={classes.formRow}>
               <div className={classes.manageUsers}>
                 <Control.custom
                   id="snapshot.readers"
                   model="snapshot.readers"
+                  //eslint-disable-next-line react/no-unstable-nested-components
                   component={(props) => (
                     <ManageUsers
                       {...props}
@@ -274,12 +280,13 @@ export class SnapshotCreateView extends React.PureComponent {
                   )}
                 />
               </div>
-            </FormRow>
-            <FormRow>
+            </div>
+            <div className={classes.formRow}>
               <Control.select
                 id="snapshot.dataset"
                 model="snapshot.dataset"
                 className={classes.selector}
+                //eslint-disable-next-line react/no-unstable-nested-components
                 component={(props) => (
                   <MultiSelect
                     {...props}
@@ -290,13 +297,14 @@ export class SnapshotCreateView extends React.PureComponent {
                   />
                 )}
               />
-            </FormRow>
+            </div>
 
-            <FormRow>
+            <div className={classes.formRow}>
               <Control.select
                 id="snapshot.asset"
                 model="snapshot.asset"
                 className={classes.selector}
+                //eslint-disable-next-line react/no-unstable-nested-components
                 component={(props) => (
                   <MultiSelect
                     {...props}
@@ -312,9 +320,9 @@ export class SnapshotCreateView extends React.PureComponent {
                   />
                 )}
               />
-            </FormRow>
+            </div>
 
-            <FormRow>
+            <div className={classes.formRow}>
               <input
                 type="file"
                 id="snapshot.upload"
@@ -326,11 +334,11 @@ export class SnapshotCreateView extends React.PureComponent {
                   Import Ids
                 </Button>
               </label>
-            </FormRow>
+            </div>
 
             <Errors model="snapshot" />
 
-            <FormRow>
+            <div className={classes.formRow}>
               {createdSnapshot ? (
                 <Redirect push to={`/snapshots/requests/${jobId}`} />
               ) : (
@@ -349,13 +357,14 @@ export class SnapshotCreateView extends React.PureComponent {
                   Cancel
                 </Button>
               </Link>
-            </FormRow>
+            </div>
           </Form>
         </div>
       </div>
     );
   }
 }
+/* eslint-enable react/jsx-pascal-case */
 
 /* istanbul ignore next */
 function mapStateToProps(state) {

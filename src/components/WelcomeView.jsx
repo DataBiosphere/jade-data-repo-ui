@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { renderLoginButton } from 'modules/auth';
-import { withStyles } from '@material-ui/core/styles';
-import { LaunchOutlined } from '@material-ui/icons';
+import { withStyles } from '@mui/styles';
+import { LaunchOutlined } from '@mui/icons-material';
 
 import Hero from 'media/images/hero.png';
 import LogoGrey from 'media/brand/logo-grey.svg';
@@ -74,7 +74,7 @@ const styles = (theme) => ({
     width: '100%',
     background: 'rgb(109 110 112)',
     color: '#FFFFFF',
-    padding: `0 ${theme.spacing(2)}px`,
+    padding: `0 ${theme.spacing(2)}`,
     display: 'flex',
     alignItems: 'center',
   },

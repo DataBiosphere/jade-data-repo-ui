@@ -2,7 +2,7 @@ import _ from 'lodash';
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles } from '@mui/styles';
 import { exportSnapshot, resetSnapshotExport } from 'actions/index';
 import { connect } from 'react-redux';
 import {
@@ -16,8 +16,8 @@ import {
   FormGroup,
   FormControlLabel,
   FormHelperText,
-} from '@material-ui/core';
-import { Launch } from '@material-ui/icons';
+} from '@mui/material';
+import { Launch } from '@mui/icons-material';
 import UserList from './UserList';
 import TerraTooltip from './common/TerraTooltip';
 import { SnapshotRoles } from '../constants';
