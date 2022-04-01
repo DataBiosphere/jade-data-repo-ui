@@ -108,13 +108,13 @@ def get_datasets_to_upload(filename):
 
 
 def add_snapshot_policy_members(clients, snapshot_id, snapshot_to_upload):
-    for steward in snapshot_to_upload.get('stewards'):
+    for steward in snapshot_to_upload.get('stewards', []):
         print(f"Adding {steward} as a steward")
         clients.snapshots_api.add_snapshot_policy_member(snapshot_id, "steward", policy_member={"email": steward})
-    for reader in snapshot_to_upload.get('readers'):
+    for reader in snapshot_to_upload.get('readers', []):
         print(f"Adding {reader} as a reader")
         clients.snapshots_api.add_snapshot_policy_member(snapshot_id, "reader", policy_member={"email": reader})
-    for discoverer in snapshot_to_upload.get('discoverers'):
+    for discoverer in snapshot_to_upload.get('discoverers', []):
         print(f"Adding {discoverer} as a discoverer")
         clients.snapshots_api.add_snapshot_policy_member(snapshot_id, "discoverer", policy_member={"email": discoverer})
 
@@ -149,7 +149,7 @@ def main():
 
     profile_id = args.profile_id
     if profile_id is None:
-        profile_job_response = create_billing_profile(clients, args.profile_id)
+        profile_job_response = create_billing_profile(clients)
         profile_id = profile_job_response['id']
 
     outputs = []
