@@ -39,7 +39,7 @@ def wait_for_job(clients, job_model):
             raise "Unrecognized job state %s" % result.job_status
 
 
-def create_billing_profile(clients):
+def create_billing_profile(clients, add_jade_stewards):
     with open(os.path.join("files", "billing_profile.json")) as billing_profile_json:
         billing_profile_request = json.load(billing_profile_json)
         profile_id = str(uuid.uuid4())
@@ -47,7 +47,8 @@ def create_billing_profile(clients):
         billing_profile_request['profileName'] = billing_profile_request['profileName'] + f'_{profile_id}'
         print(f"Creating billing profile with id: {profile_id}")
         profile = wait_for_job(clients, clients.profiles_api.create_profile(billing_profile_request=billing_profile_request))
-        add_billing_profile_members(clients, profile_id)
+        if add_jade_stewards:
+            add_billing_profile_members(clients, profile_id)
         return profile
 
 
@@ -147,9 +148,10 @@ def main():
     args = parser.parse_args()
     clients = Clients(args.host)
 
+    add_jade_stewards = 'dev' in args.host or 'integration' in args.host
     profile_id = args.profile_id
     if profile_id is None:
-        profile_job_response = create_billing_profile(clients)
+        profile_job_response = create_billing_profile(clients, add_jade_stewards)
         profile_id = profile_job_response['id']
 
     outputs = []
@@ -163,7 +165,7 @@ def main():
             output_ids[dataset_name]['snapshot_ids'] = snapshot_ids
             outputs.append(output_ids)
 
-    output_filename = f"{os.path.basename(args.datasets.split).split('.')[0]}_outputs.json"
+    output_filename = f"{os.path.basename(args.datasets).split('.')[0]}_outputs.json"
     with open(output_filename, 'w') as f:
         json.dump(outputs, f)
 
