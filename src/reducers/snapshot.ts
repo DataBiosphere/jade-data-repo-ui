@@ -12,7 +12,7 @@ import {
   SnapshotSummaryModel,
 } from '../generated/tdr';
 
-//TODO: convert to autogenned SnapshotRequestModel
+// TODO: convert to autogenned SnapshotRequestModel
 export interface SnapshotRequest {
   name: string;
   description: string;

@@ -472,7 +472,7 @@ export function* getDatasetTablePreview({ payload }: any): any {
  */
 export function* getBillingProfileById({ payload }: any): any {
   try {
-    const profileId = payload.profileId;
+    const { profileId } = payload;
     const response = yield call(authGet, `/api/resources/v1/profiles/${profileId}`);
     yield put({
       type: ActionTypes.GET_BILLING_PROFILE_BY_ID_SUCCESS,
@@ -603,6 +603,7 @@ export function* getFeatures(): any {
       groups: response.data,
     });
   } catch (err) {
+    //eslint-disable-next-line no-console
     console.warn('Error feature flag information from Sam', err);
   }
 }

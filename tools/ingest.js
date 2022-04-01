@@ -133,7 +133,6 @@ function findDatasetByName(token, name, host) {
 }
 
 // unpack positional arguments
-//eslint-disable-next-line @typescript-eslint/no-unused-vars
 const [command, datasetName] = argv._;
 // unpack others
 const { bucketName, jc, targetEnv, targetName, targetUrl, srcEnv } = argv;

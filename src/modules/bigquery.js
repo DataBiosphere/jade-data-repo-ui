@@ -1,4 +1,3 @@
-//eslint-disable-next-line @typescript-eslint/no-unused-vars
 import React from 'react';
 import axios from 'axios';
 import _ from 'lodash';

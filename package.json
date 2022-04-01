@@ -116,7 +116,7 @@
   "scripts": {
     "start": "npm run codegen && EXTEND_ESLINT=true react-app-rewired start",
     "build": "npm run codegen && react-app-rewired build",
-    "lint": "npm run codegen && eslint  --ext .js --ext .jsx src cypress tools",
+    "lint": "npm run codegen && eslint  --ext .js --ext .jsx --ext .ts --ext .tsx src cypress tools",
     "test": "npm run codegen && react-app-rewired test",
     "eject": "react-app-rewired eject",
     "ingest": "node --inspect tools/ingest ingest",

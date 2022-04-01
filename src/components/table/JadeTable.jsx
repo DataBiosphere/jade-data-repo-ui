@@ -15,7 +15,6 @@ import JadeTableHead from './JadeTableHead';
 import { ellipsis } from '../../libs/styles';
 import { ColumnModes, GoogleCloudResource } from '../../constants';
 
-// eslint-disable-next-line no-unused-vars
 const styles = (theme) => ({
   root: {
     width: '100%',

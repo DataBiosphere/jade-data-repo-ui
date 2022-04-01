@@ -109,6 +109,7 @@
     "no-trailing-spaces": "warn",
     "no-underscore-dangle": "off",
     "no-unused-vars": "off", // disabled in favor of typescript config (noUnusedLocals and noUnusedParameters=true)
+    "@typescript-eslint/no-unused-vars": "off",
     "object-curly-newline": "off",
     "object-shorthand": [
       "warn",
@@ -272,7 +273,10 @@
         "tsx": "never"
       }
     ],
-    "@typescript-eslint/ban-ts-comment": "off"
+    "import/no-anonymous-default-export": "off", // this rule doesn't make much sense to me
+    "@typescript-eslint/ban-ts-comment": "off",
+    "@typescript-eslint/no-explicit-any": "off", // Leave off until we finish out initial conversion to TS
+    "react/jsx-filename-extension": "off"
   },
   "settings": {
     "import/resolver": {
