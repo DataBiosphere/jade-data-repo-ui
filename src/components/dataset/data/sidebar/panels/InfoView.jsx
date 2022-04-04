@@ -9,7 +9,7 @@ import { withStyles } from '@mui/styles';
 import Grid from '@mui/material/Grid';
 import { Close, ExpandMore, HelpOutline, Launch } from '@mui/icons-material';
 import IconButton from '@mui/material/IconButton';
-import TerraTooltip from '../../../../common/TerraTooltip';
+import TerraTooltip from 'components/common/TerraTooltip';
 import { renderStorageResources } from '../../../../../libs/render-utils';
 import InfoViewDatasetAccess from './InfoViewDatasetAccess';
 

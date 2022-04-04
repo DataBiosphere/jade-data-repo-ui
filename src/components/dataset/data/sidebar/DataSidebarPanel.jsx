@@ -20,7 +20,7 @@ const styles = (theme) => ({
   },
 });
 
-export class QuerySidebarPanel extends React.PureComponent {
+export class DataSidebarPanel extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object,
     dataset: PropTypes.object,
@@ -78,4 +78,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(withStyles(styles)(QuerySidebarPanel));
+export default connect(mapStateToProps)(withStyles(styles)(DataSidebarPanel));

@@ -18,11 +18,13 @@ import {
   FormHelperText,
 } from '@mui/material';
 import { Launch } from '@mui/icons-material';
+import { Link } from 'react-router-dom';
 import UserList from './UserList';
 import TerraTooltip from './common/TerraTooltip';
 import { SnapshotRoles } from '../constants';
 
 const styles = (theme) => ({
+  pageTitle: { ...theme.mixins.pageTitle },
   title: {
     color: theme.palette.primary.main,
     fontSize: '44px',
@@ -56,9 +58,13 @@ const styles = (theme) => ({
     marginTop: '20px',
     marginBottom: '10px',
   },
+  viewSnapshotButton: {
+    width: '100%',
+    marginBottom: '12px',
+  },
 });
 
-export class DetailViewHeader extends React.PureComponent {
+export class OverviewHeader extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -142,7 +148,7 @@ export class DetailViewHeader extends React.PureComponent {
             <CircularProgress />
           ) : (
             <Fragment>
-              <Typography noWrap className={classes.title}>
+              <Typography noWrap variant="h3" className={classes.pageTitle}>
                 {of.name}
               </Typography>
               <Typography>{of.description}</Typography>
@@ -184,6 +190,16 @@ export class DetailViewHeader extends React.PureComponent {
                     </TerraTooltip>
                   )}
                 </Grid>
+                <Link to={`/snapshots/${of.id}/data`}>
+                  <Button
+                    className={classes.viewSnapshotButton}
+                    color="primary"
+                    variant="outlined"
+                    disableElevation
+                  >
+                    View Snapshot
+                  </Button>
+                </Link>
               </Grid>
             )}
             {stewards && canReadPolicies && (
@@ -268,4 +284,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(withStyles(styles)(DetailViewHeader));
+export default connect(mapStateToProps)(withStyles(styles)(OverviewHeader));

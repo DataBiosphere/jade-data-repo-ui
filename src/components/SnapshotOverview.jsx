@@ -10,18 +10,17 @@ import {
   removeSnapshotPolicyMember,
   getUserSnapshotRoles,
 } from 'actions/index';
-import DetailViewHeader from './DetailViewHeader';
-
 import DatasetTable from './table/DatasetTable';
-import { SnapshotIncludeOptions, SnapshotRoles } from '../constants';
+import { BreadcrumbType, SnapshotIncludeOptions, SnapshotRoles } from '../constants';
+import OverviewHeader from './OverviewHeader';
 import { getRoleMembersFromPolicies } from '../libs/utils';
+import AppBreadcrumbs from './AppBreadcrumbs/AppBreadcrumbs';
 
 const styles = (theme) => ({
+  pageRoot: { ...theme.mixins.pageRoot },
   wrapper: {
     display: 'flex',
     justifyContent: 'center',
-    padding: theme.spacing(4),
-    margin: theme.spacing(4),
   },
   width: {
     ...theme.mixins.containerWidth,
@@ -51,7 +50,7 @@ const styles = (theme) => ({
   },
 });
 
-export class SnapshotDetailView extends React.PureComponent {
+export class SnapshotOverview extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -141,31 +140,40 @@ export class SnapshotDetailView extends React.PureComponent {
     const datasets = snapshot && snapshot.source && snapshot.source.map((s) => s.dataset);
 
     return (
-      <div id="snapshot-detail-view" className={classes.wrapper}>
-        <div className={classes.width}>
-          <DetailViewHeader
-            of={snapshot}
-            stewards={snapshotStewards}
-            addSteward={this.addSteward}
-            removeSteward={this.removeSteward}
-            readers={snapshotReaders}
-            addReader={this.addReader}
-            removeReader={this.removeReader}
-            terraUrl={terraUrl}
-            canReadPolicies={canReadPolicies}
-            dispatch={dispatch}
-            userRoles={userRoles}
-            user={user}
-          />
-          {snapshot && snapshot.source && (
-            <DatasetTable
-              datasets={filteredDatasets || datasets}
-              datasetsCount={snapshot.source.length}
-              features={user.features}
-              handleFilterDatasets={this.handleFilterDatasets}
-              searchString=""
+      <div className={classes.pageRoot}>
+        <AppBreadcrumbs
+          context={{
+            type: BreadcrumbType.SNAPSHOT,
+            id: snapshot.id || '',
+            name: snapshot.name || '',
+          }}
+        />
+        <div id="snapshot-detail-view" className={classes.wrapper}>
+          <div className={classes.width}>
+            <OverviewHeader
+              of={snapshot}
+              stewards={snapshotStewards}
+              addSteward={this.addSteward}
+              removeSteward={this.removeSteward}
+              readers={snapshotReaders}
+              addReader={this.addReader}
+              removeReader={this.removeReader}
+              terraUrl={terraUrl}
+              canReadPolicies={canReadPolicies}
+              dispatch={dispatch}
+              userRoles={userRoles}
+              user={user}
             />
-          )}
+            {snapshot && snapshot.source && (
+              <DatasetTable
+                datasets={filteredDatasets || datasets}
+                datasetsCount={snapshot.source.length}
+                features={user.features}
+                handleFilterDatasets={this.handleFilterDatasets}
+                searchString=""
+              />
+            )}
+          </div>
         </div>
       </div>
     );
@@ -183,4 +191,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(withStyles(styles)(SnapshotDetailView));
+export default connect(mapStateToProps)(withStyles(styles)(SnapshotOverview));

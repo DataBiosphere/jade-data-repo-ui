@@ -28,7 +28,8 @@
   "plugins": [
     "babel",
     "cypress",
-    "redux-saga"
+    "redux-saga",
+    "react-hooks"
   ],
   "rules": {
     "array-callback-return": "off",
@@ -132,6 +133,9 @@
       "single",
       "avoid-escape"
     ],
+    "react/jsx-no-bind": "error",
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "error",
     "require-jsdoc": [
       "off",
       {
@@ -195,6 +199,7 @@
     ],
     "jsx-quotes": "warn",
     "react/forbid-prop-types": "off",
+    "react/jsx-filename-extension": [2, { "extensions": [".js", ".jsx", ".ts", ".tsx"] }],
     "react/jsx-closing-bracket-location": [
       "warn",
       "line-aligned"
@@ -275,8 +280,7 @@
     ],
     "import/no-anonymous-default-export": "off", // this rule doesn't make much sense to me
     "@typescript-eslint/ban-ts-comment": "off",
-    "@typescript-eslint/no-explicit-any": "off", // Leave off until we finish out initial conversion to TS
-    "react/jsx-filename-extension": "off"
+    "@typescript-eslint/no-explicit-any": "off" // Leave off until we finish out initial conversion to TS
   },
   "settings": {
     "import/resolver": {

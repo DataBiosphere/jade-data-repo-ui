@@ -34,11 +34,6 @@ class DatasetView extends React.PureComponent {
     searchString: PropTypes.string,
   };
 
-  componentDidMount() {
-    const { dispatch } = this.props;
-    dispatch(getDatasets());
-  }
-
   handleFilterDatasets = (limit, offset, sort, sortDirection, searchString) => {
     const { dispatch } = this.props;
     dispatch(getDatasets(limit, offset, sort, sortDirection, searchString));

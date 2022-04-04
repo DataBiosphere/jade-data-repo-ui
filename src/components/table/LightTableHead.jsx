@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@mui/styles';
+import { connect } from 'react-redux';
+
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
@@ -30,8 +32,8 @@ export class LightTableHead extends React.PureComponent {
     classes: PropTypes.object.isRequired,
     columns: PropTypes.arrayOf(PropTypes.object),
     onRequestSort: PropTypes.func.isRequired,
-    orderBy: PropTypes.string.isRequired,
     orderDirection: PropTypes.string.isRequired,
+    orderProperty: PropTypes.string.isRequired,
     summary: PropTypes.bool,
   };
 
@@ -41,7 +43,7 @@ export class LightTableHead extends React.PureComponent {
   };
 
   render() {
-    const { classes, columns, orderDirection, orderBy, summary } = this.props;
+    const { classes, columns, orderDirection, orderProperty, summary } = this.props;
 
     return (
       <TableHead className={classes.head}>
@@ -50,25 +52,25 @@ export class LightTableHead extends React.PureComponent {
             (col) => (
               <TableCell
                 className={classes.cell}
-                key={col.property}
-                align={col.numeric ? 'right' : 'left'}
-                padding={col.disablePadding ? 'none' : 'normal'}
-                sortDirection={orderBy === col.id ? orderDirection : false}
+                key={col.name}
+                align="left"
+                padding="normal"
+                sortDirection={orderProperty === col.name ? orderDirection : false}
               >
-                {summary ? (
-                  col.label
+                {summary || !col.allowSort ? (
+                  col.label ?? col.name
                 ) : (
                   <div>
-                    {col.label}
+                    {col.label ?? col.name}
                     <TerraTooltip
                       title="Sort"
                       placement={col.numeric ? 'bottom-end' : 'bottom-start'}
                       enterDelay={300}
                     >
                       <TableSortLabel
-                        active={orderBy === col.property}
+                        active={orderProperty === col.name}
                         direction={orderDirection}
-                        onClick={this.createSortHandler(col.property)}
+                        onClick={this.createSortHandler(col.name)}
                         IconComponent={Sort}
                         style={{ float: 'right' }}
                       />
@@ -85,4 +87,11 @@ export class LightTableHead extends React.PureComponent {
   }
 }
 
-export default withStyles(styles)(LightTableHead);
+function mapStateToProps(state) {
+  return {
+    orderDirection: state.query.orderDirection,
+    orderProperty: state.query.orderProperty,
+  };
+}
+
+export default connect(mapStateToProps)(withStyles(styles)(LightTableHead));

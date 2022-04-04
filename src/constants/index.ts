@@ -161,3 +161,17 @@ export enum SnapshotIncludeOptions {
   PROFILE = 'PROFILE',
   DATA_PROJECT = 'DATA_PROJECT',
 }
+
+export enum BreadcrumbType {
+  DATASET = 'dataset',
+  SNAPSHOT = 'snapshot',
+}
+
+export enum ResourceType {
+  DATASET = 'dataset',
+  SNAPSHOT = 'snapshot',
+}
+
+/** Shared Defaults */
+export const TABLE_DEFAULT_ROWS_PER_PAGE = 100;
+export const TABLE_DEFAULT_ROWS_PER_PAGE_OPTIONS = [25, 100, 250];

@@ -1,6 +1,6 @@
 FROM node:14
 
-RUN npm install cypress@9.2.1
+RUN npm install cypress@9.5.2
 
 COPY . /
 

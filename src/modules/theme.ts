@@ -245,6 +245,15 @@ const theme = createTheme({
     containerWidth: {
       width: '100%',
     },
+    pageRoot: {
+      padding: '16px 24px',
+      display: 'flex',
+      flexDirection: 'column',
+      height: '100%',
+    },
+    pageTitle: {
+      marginBottom: '1rem',
+    },
   },
   constants: {
     navBarHeight: '64px',

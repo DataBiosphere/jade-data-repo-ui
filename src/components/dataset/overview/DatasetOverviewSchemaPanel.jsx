@@ -86,14 +86,14 @@ export class DatasetOverviewSchemaPanel extends React.PureComponent {
     const { classes, dataset } = this.props;
     return (
       <Paper className={classes.root} elevation={4}>
-        <Link to="query">
+        <Link to={`${dataset.id}/data`}>
           <Button
             className={classes.viewDatasetButton}
             color="primary"
             variant="outlined"
             disableElevation
           >
-            View Dataset
+            View Dataset Data
           </Button>
         </Link>
 
