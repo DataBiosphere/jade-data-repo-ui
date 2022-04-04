@@ -35,7 +35,7 @@ describe('test dataset sharing', () => {
       .should('contain.text', 'Manage Stewards');
 
     cy.get(
-      '.MuiTypography-root > .MuiButtonBase-root > .MuiIconButton-label > .MuiSvgIcon-root',
+      '.MuiTypography-root > .MuiButtonBase-root > .MuiSvgIcon-root',
     ).click();
 
     cy.get('.MuiAccordionDetails-root :nth-child(2) > > :nth-child(3) > button')
