@@ -1,9 +1,7 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-
-import { Button, Typography } from '@material-ui/core';
+import { withStyles } from '@mui/styles';
+import { Button, Grid, Typography } from '@mui/material';
 
 import { Link } from 'react-router-dom';
 import SidebarDrawer from 'components/dataset/data/sidebar/SidebarDrawer';

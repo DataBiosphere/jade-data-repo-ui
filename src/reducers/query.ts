@@ -2,25 +2,41 @@ import { handleActions } from 'redux-actions';
 import immutable from 'immutability-helper';
 import { LOCATION_CHANGE } from 'connected-react-router';
 import BigQuery from 'modules/bigquery';
+import { ColumnModel } from 'generated/tdr';
 
 import { ActionTypes, TABLE_DEFAULT_ROWS_PER_PAGE } from '../constants';
 
+export interface Column {
+  name: string;
+  dataType: string;
+  arrayOf: boolean;
+  allowSort: boolean;
+}
+
 export interface QueryState {
   baseQuery: string;
+  columns: Array<Column>;
   delay: boolean;
+  errMsg: string;
+  error: boolean;
   filterData: any;
   filterStatement: string;
+  joinStatement: string;
   pageSize: number;
   projectId: string;
-  queryResults: any;
-  orderBy: string;
+  queryParams: object;
+  rows: Array<object>;
+  orderProperty: string;
+  orderDirection: string;
   polling: boolean;
   resultsCount: number;
+  page: number;
+  rowsPerPage: number;
 }
 
 export const initialQueryState: QueryState = {
   baseQuery: '',
-  columns: null,
+  columns: [],
   delay: false,
   errMsg: '',
   error: false,
@@ -30,7 +46,7 @@ export const initialQueryState: QueryState = {
   pageSize: 0,
   projectId: '',
   queryParams: {},
-  rows: null,
+  rows: [],
   orderProperty: '',
   orderDirection: '',
   polling: false,
@@ -65,7 +81,7 @@ export default {
       },
       [ActionTypes.PREVIEW_DATA_SUCCESS]: (state, action) => {
         const rows = action.payload.queryResults.data.result;
-        const columns = action.payload.columns.map((column) => ({
+        const columns = action.payload.columns.map((column: ColumnModel) => ({
           name: column.name,
           dataType: column.datatype,
           arrayOf: column.array_of,

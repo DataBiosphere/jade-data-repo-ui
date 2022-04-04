@@ -11,7 +11,7 @@ import {
   getUserDatasetRoles,
   pageQuery,
 } from 'actions/index';
-import { FilterList, Info, People } from '@material-ui/icons';
+import { FilterList, Info, People } from '@mui/icons-material';
 
 import DataView from 'components/common/data/DataView';
 import LoadingSpinner from 'components/common/LoadingSpinner';

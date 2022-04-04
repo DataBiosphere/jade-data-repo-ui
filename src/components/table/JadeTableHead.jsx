@@ -27,7 +27,7 @@ function JadeTableHead({ columns, createSortHandler, orderProperty, orderDirecti
           <TableCell
             key={column.name}
             align="left"
-            padding="default"
+            padding="normal"
             sortDirection={orderProperty === column.name ? orderDirection : false}
             data-cy={`columnheader-${column.name}`}
           >

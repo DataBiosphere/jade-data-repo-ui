@@ -1,5 +1,5 @@
 import React from 'react';
-import { Breadcrumbs } from '@material-ui/core';
+import { Breadcrumbs } from '@mui/material';
 import BreadcrumbLink from './BreadcrumbLink';
 
 type Context = { type: string; id: string; name: string };

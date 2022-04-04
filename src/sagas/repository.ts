@@ -512,7 +512,7 @@ export function* watchGetDatasetByIdSuccess(): any {
  * Preview Data
  */
 
-export function* previewData({ payload }) {
+export function* previewData({ payload }: any): any {
   const queryState = yield select(getQuery);
   const offset = queryState.page * queryState.rowsPerPage;
   const limit = queryState.rowsPerPage;
@@ -587,7 +587,7 @@ export function* runQuery({ payload }: any): any {
   }
 }
 
-export function* changeRowsPerPage(rowsPerPage) {
+export function* changeRowsPerPage(rowsPerPage: number): any {
   try {
     yield put({
       type: ActionTypes.CHANGE_ROWS_PER_PAGE,
@@ -598,7 +598,7 @@ export function* changeRowsPerPage(rowsPerPage) {
   }
 }
 
-export function* changePage(page) {
+export function* changePage(page: number): any {
   try {
     yield put({
       type: ActionTypes.CHANGE_PAGE,
