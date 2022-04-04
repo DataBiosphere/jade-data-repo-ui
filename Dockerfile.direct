@@ -1,6 +1,11 @@
 FROM node:14
 
-RUN npm install cypress@9.5.2
+# Install java to run codegen
+RUN apt-get update && \
+    apt-get install -y software-properties-common && \
+    add-apt-repository ppa:openjdk-r/ppa && \
+    apt-get update && \
+    apt-get install -y default-jre
 
 COPY . /
 
