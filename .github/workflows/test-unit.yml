@@ -32,7 +32,11 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
+      - name: npm ci
+        run: npm ci
+      - name: Run codegen
+        run: npm run codegen
       - name: Cypress Run Component Tests
         uses: cypress-io/github-action@v2
         with:
-          command: npm run codegen && npx cypress run-ct
+          command: npx cypress run-ct
