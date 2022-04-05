@@ -35,4 +35,4 @@ jobs:
       - name: Cypress Run Component Tests
         uses: cypress-io/github-action@v2
         with:
-          command: npx cypress run-ct
+          command: npm run codegen && npx cypress run-ct
