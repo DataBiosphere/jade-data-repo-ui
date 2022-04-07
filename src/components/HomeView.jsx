@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import Tab from '@mui/material/Tab';
-import { Tabs } from '@mui/material';
+import { Tab, Tabs } from '@mui/material';
 import { withStyles } from '@mui/styles';
 import DatasetView from './DatasetView';
 import SnapshotView from './SnapshotView';

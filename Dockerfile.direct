@@ -12,5 +12,8 @@ COPY . /
 RUN npm ci && \
   npm run build --production
 
+# Uninstall java
+RUN apt purge -y default-jre
+
 FROM nginxinc/nginx-unprivileged:stable-alpine
 COPY --from=0 /build /usr/share/nginx/html

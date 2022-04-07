@@ -1,12 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@mui/styles';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
-import IconButton from '@mui/material/IconButton';
+import {
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogActions,
+  DialogActions,
+  IconButton,
+} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
 import { Edit } from '@mui/icons-material';

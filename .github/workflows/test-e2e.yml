@@ -70,6 +70,11 @@ jobs:
       - name: check npm start
         run: |
           npm start & npx wait-on http://localhost:3000
+      # Build the Docker image using the final way
+      - name: Test that building the main docker container works
+        run: |
+          rm -rf jade-dev-account.pem
+          docker build -t gcr.io/${{ env.gcr_google_project }}/jade-data-repo-ui:test_${GCR_TAG} .
       # Build the Docker image
       - name: Build
         run: |

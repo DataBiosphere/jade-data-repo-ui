@@ -1,8 +1,9 @@
 import React from 'react';
 import { Breadcrumbs } from '@mui/material';
 import BreadcrumbLink from './BreadcrumbLink';
+import { BreadcrumbType } from '../../constants';
 
-type Context = { type: string; id: string; name: string };
+type Context = { type: BreadcrumbType; id: string; name: string };
 type Breadcrumb = { text: string; to: string };
 
 type AppBreadcrumbsProps = {

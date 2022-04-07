@@ -137,6 +137,7 @@ function render(Component) {
           titleAttributes={{ itemprop: 'name', lang: 'en-us' }}
         />
         <Router history={history}>
+          {/* CachingProvider is a way to control how css is rendered in the DOM */}
           <CacheProvider value={cache}>
             <ThemeProvider theme={globalTheme}>
               <Component />

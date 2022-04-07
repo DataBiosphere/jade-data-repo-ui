@@ -89,7 +89,6 @@ describe('AppBreadcrumbs', () => {
         </ThemeProvider>
       </Router>,
     );
-    cy.log('here1');
     cy.get('.MuiBreadcrumbs-ol > :nth-child(3) > a > span').should('have.css', 'cursor', 'pointer');
     cy.get('.MuiBreadcrumbs-ol > :nth-child(5) > a > span ').should(
       'have.css',
@@ -108,7 +107,6 @@ describe('AppBreadcrumbs', () => {
       </Router>,
     );
 
-    cy.log('here2');
     cy.get('.MuiBreadcrumbs-ol > :nth-child(5) > a > span').should('have.css', 'cursor', 'pointer');
     cy.get('.MuiBreadcrumbs-ol > :nth-child(7) > a > span').should('have.css', 'cursor', 'default');
   });
