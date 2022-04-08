@@ -4,16 +4,16 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import { Switch, Route } from 'react-router-dom';
-import ReactNotification from 'react-notifications-component';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import { makeStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Button from '@material-ui/core/Button';
-import MenuItem from '@material-ui/core/MenuItem';
-import Menu from '@material-ui/core/Menu';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import Avatar from '@material-ui/core/Avatar';
+import { ReactNotifications } from 'react-notifications-component';
+import CssBaseline from '@mui/material/CssBaseline';
+import { withStyles } from 'tss-react/mui';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Button from '@mui/material/Button';
+import MenuItem from '@mui/material/MenuItem';
+import Menu from '@mui/material/Menu';
+import AccountCircle from '@mui/icons-material/AccountCircle';
+import Avatar from '@mui/material/Avatar';
 
 import { logout } from 'modules/auth';
 import Home from 'routes/Home';
@@ -36,7 +36,7 @@ import { LogoutIframe, IdleStatusMonitor } from 'components/IdleStatusMonitor';
 
 const drawerWidth = 240;
 
-const useStyles = makeStyles((theme) => ({
+const styles = (theme) => ({
   root: {
     height: '100%',
     fontFamily: theme.typography.fontFamily,
@@ -58,7 +58,6 @@ const useStyles = makeStyles((theme) => ({
   },
   toolbar: {
     paddingRight: 24, // keep right padding when drawer closed
-    backgroundColor: theme.palette.terra.darkGreen,
     background: `0px url(${HeaderLeft}) no-repeat,right url(${HeaderRight}) no-repeat`,
   },
   toolbarIcon: {
@@ -147,13 +146,12 @@ const useStyles = makeStyles((theme) => ({
   },
   signOutText: {
     fontSize: 12,
-    padding: `0 ${theme.spacing(2)}px 0 0`,
+    padding: `0 ${theme.spacing(2)} 0 0`,
   },
-}));
+});
 
 export function App(props) {
-  const { user, dispatch, configuration, status } = props;
-  const classes = useStyles();
+  const { classes, user, dispatch, configuration, status } = props;
   const [anchorEl, setAnchorEl] = useState(null);
   const [renderLogout, setRenderLogout] = useState(false);
   const open = Boolean(anchorEl);
@@ -169,7 +167,7 @@ export function App(props) {
   // This needs to render the iframe AND reset the timeout
   const signOut = () => {
     const { isTimeoutEnabled } = user;
-    logout({ clientId: configuration.clientId }).then(() => {
+    logout({ clientId: configuration.configObject.clientId }).then(() => {
       dispatch(logOut());
       handleClose();
       if (isTimeoutEnabled) {
@@ -183,8 +181,8 @@ export function App(props) {
       <CssBaseline />
       <IdleStatusMonitor user={user} signOut={signOut} />
       {renderLogout && <LogoutIframe id={user.id} dismissLogout={() => setRenderLogout(false)} />}
-      <ReactNotification />
-      <AppBar className={classes.appBar}>
+      <ReactNotifications />
+      <AppBar classes={{ root: classes.appBar }}>
         <Toolbar className={classes.toolbar}>
           <Logo />
           <div className={classes.grow} />
@@ -207,7 +205,7 @@ export function App(props) {
                 <Menu
                   id="menu-appbar"
                   anchorEl={anchorEl}
-                  getContentAnchorEl={null}
+                  getcontentanchorel={null}
                   anchorOrigin={{
                     vertical: 'bottom',
                     horizontal: 'left',
@@ -231,7 +229,7 @@ export function App(props) {
       </AppBar>
       <div className={classes.content}>
         {!status.tdrOperational && <ServerErrorView />}
-        {status.tdrOperational && user.isInitiallyLoaded && configuration.clientId && (
+        {status.tdrOperational && user.isInitiallyLoaded && configuration.configObject.clientId && (
           <Switch>
             <RoutePublic
               isAuthenticated={user.isAuthenticated}
@@ -260,6 +258,7 @@ export function App(props) {
 }
 
 App.propTypes = {
+  classes: PropTypes.object.isRequired,
   configuration: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
   status: PropTypes.object.isRequired,
@@ -274,4 +273,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default hot(connect(mapStateToProps)(App));
+export default hot(connect(mapStateToProps)(withStyles(App, styles)));

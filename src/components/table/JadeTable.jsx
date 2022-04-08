@@ -2,21 +2,30 @@ import React, { useState, useEffect } from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TablePagination from '@material-ui/core/TablePagination';
-import TableRow from '@material-ui/core/TableRow';
+import { withStyles } from '@mui/styles';
+import {
+  Dialog,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  IconButton,
+  Link,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TablePagination,
+  TableRow,
+  Typography,
+} from '@mui/material';
+import { Close } from '@mui/icons-material';
 import LoadingSpinner from 'components/common/LoadingSpinner';
 import Failure from 'components/common/Failure';
-import { changeRowsPerPage, changePage, applySort } from 'actions/index';
+import { applySort, changePage, changeRowsPerPage } from 'actions/index';
 import JadeTableHead from './JadeTableHead';
 import { ellipsis } from '../../libs/styles';
 import { TABLE_DEFAULT_ROWS_PER_PAGE_OPTIONS } from '../../constants';
 
-// eslint-disable-next-line no-unused-vars
 const styles = (theme) => ({
   root: {
     width: '100%',
@@ -33,6 +42,14 @@ const styles = (theme) => ({
     fontStyle: 'italic',
     textColor: theme.palette.primary.dark,
     color: theme.palette.primary.dark,
+  },
+  dialogContentText: {
+    width: 'max-content',
+    maxWidth: '800px',
+  },
+  seeMoreLink: {
+    ...theme.mixins.jadeLink,
+    cursor: 'pointer',
   },
 });
 
@@ -52,7 +69,9 @@ function JadeTable({
   rowsPerPage,
 }) {
   const [count, setCount] = useState(0);
+  const [seeMore, setSeeMore] = useState({ open: false, title: '', contents: '' });
 
+  const maxRepeatedValues = 5;
   useEffect(() => {
     const c = parseInt(queryParams.totalRows, 10);
     if (c >= 0) {
@@ -90,33 +109,68 @@ function JadeTable({
     dispatch(applySort(property, newOrderDirection));
   };
 
+  const handleSeeMoreOpen = (values, title) => {
+    setSeeMore({
+      open: true,
+      title,
+      contents: values,
+    });
+  };
+
+  const handleSeeMoreClose = () => {
+    setSeeMore({
+      open: false,
+      title: '',
+      contents: '',
+    });
+  };
+
   const handleNullValue = () => <span className={classes.nullValue}>null</span>;
 
-  const handleArrayValues = (value, column) => {
-    const returnValue = [];
-    if (column.arrayOf) {
-      returnValue.push(<span key="start">[</span>);
-    }
-    returnValue.push(
-      ...value.flatMap((v, i) => [
-        _.isNull(v) ? handleNullValue(v) : v,
-        i < value.length - 1 ? (
+  const handleRepeatedValues = (values, columnName) => {
+    const allValues = [];
+    const cleanValues = values.map((v) => (_.isNull(v) ? handleNullValue(v) : v));
+    const start = <span key="start">[</span>;
+    const end = <span key="end">]</span>;
+    for (let i = 0; i < cleanValues.length; i++) {
+      const thisValue = cleanValues[i];
+      if (i < cleanValues.length - 1) {
+        allValues.push(
           <span key={`sep-${i}`}>
-            {_.isNull(v) ? handleNullValue(v) : ','}
-            <br />
-          </span>
-        ) : undefined,
-      ]),
-    );
-    if (column.arrayOf) {
-      returnValue.push(<span key="end">]</span>);
+            {thisValue},<br />
+          </span>,
+        );
+      } else {
+        allValues.push(thisValue);
+      }
     }
-    return returnValue;
+    const valuesToDisplay = [start, ...allValues, end];
+    if (allValues.length > maxRepeatedValues) {
+      const ellipses = <span key="ellipses">...</span>;
+      const seeMoreLink = (
+        <span key="see-more">
+          <Link
+            className={classes.seeMoreLink}
+            onClick={() => handleSeeMoreOpen(valuesToDisplay, columnName)}
+          >
+            <br />
+            See all {allValues.length} values
+          </Link>
+        </span>
+      );
+      return [start, ...allValues.slice(0, maxRepeatedValues), ellipses, end, seeMoreLink];
+    }
+
+    return valuesToDisplay;
   };
 
   const handleValues = (value, column) => {
     if (_.isArray(value)) {
-      return handleArrayValues(value, column);
+      if (column.arrayOf) {
+        return handleRepeatedValues(value, column.name, classes);
+      }
+      const singleValue = value[0];
+      return _.isNull(singleValue) ? handleNullValue(singleValue) : singleValue;
     }
     if (_.isNull(value)) {
       return handleNullValue();
@@ -144,7 +198,7 @@ function JadeTable({
                             <TableCell
                               key={`${column.name}-${drId}`}
                               className={classes.cell}
-                              data-cy={`cellvalue-${column.name}-${i}`}
+                              data-cy={`cellValue-${column.name}-${i}`}
                             >
                               {value}
                             </TableCell>
@@ -172,9 +226,27 @@ function JadeTable({
         count={count}
         rowsPerPage={rowsPerPage}
         page={page}
-        onChangePage={handleChangePage}
-        onChangeRowsPerPage={handleChangeRowsPerPage}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
       />
+      <Dialog open={seeMore.open} scroll="paper">
+        <DialogTitle disableTypography={true} id="see-more-dialog-title">
+          <Typography variant="h4" style={{ float: 'left' }}>
+            {seeMore.title}
+          </Typography>
+          <IconButton size="small" style={{ float: 'right' }} onClick={handleSeeMoreClose}>
+            <Close />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent dividers={true}>
+          <DialogContentText
+            className={classes.dialogContentText}
+            id="see-more-dialog-content-text"
+          >
+            {seeMore.contents}
+          </DialogContentText>
+        </DialogContent>
+      </Dialog>
     </Paper>
   );
 }

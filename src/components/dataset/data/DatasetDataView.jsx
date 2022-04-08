@@ -11,7 +11,7 @@ import {
   getUserDatasetRoles,
   pageQuery,
 } from 'actions/index';
-import { FilterList, Info, People } from '@material-ui/icons';
+import { FilterList, Info, People } from '@mui/icons-material';
 
 import DataView from 'components/common/data/DataView';
 import LoadingSpinner from 'components/common/LoadingSpinner';
@@ -19,10 +19,10 @@ import DataViewSidebar from './sidebar/DataViewSidebar';
 import InfoView from './sidebar/panels/InfoView';
 import ShareSnapshot from './sidebar/panels/ShareSnapshot';
 import {
-  DATAREPO_ROW_ID_COLUMN_NAME,
-  DATASET_INCLUDE_OPTIONS,
-  GOOGLE_CLOUD_RESOURCE,
-  RESOURCE_TYPE,
+  DbColumns,
+  DatasetIncludeOptions,
+  GoogleCloudResource,
+  ResourceType,
 } from '../../../constants';
 
 const QUERY_LIMIT = 1000;
@@ -53,11 +53,11 @@ function DatasetDataView({
       getDatasetById({
         datasetId,
         include: [
-          DATASET_INCLUDE_OPTIONS.SCHEMA,
-          DATASET_INCLUDE_OPTIONS.ACCESS_INFORMATION,
-          DATASET_INCLUDE_OPTIONS.PROFILE,
-          DATASET_INCLUDE_OPTIONS.DATA_PROJECT,
-          DATASET_INCLUDE_OPTIONS.STORAGE,
+          DatasetIncludeOptions.SCHEMA,
+          DatasetIncludeOptions.ACCESS_INFORMATION,
+          DatasetIncludeOptions.PROFILE,
+          DatasetIncludeOptions.DATA_PROJECT,
+          DatasetIncludeOptions.STORAGE,
         ],
       }),
     );
@@ -124,7 +124,7 @@ function DatasetDataView({
         runQuery(
           dataset.dataProject,
           `#standardSQL
-          SELECT ${DATAREPO_ROW_ID_COLUMN_NAME},
+          SELECT ${DbColumns.ROW_ID},
             ${selectedTable.columns.map((column) => column.name).join(', ')} ${fromClause}
             ${orderProperty ? `ORDER BY ${orderProperty} ${orderDirection}` : ''}
           LIMIT ${QUERY_LIMIT}`,
@@ -161,9 +161,7 @@ function DatasetDataView({
   };
 
   const pageBQQuery = () => {
-    const bqStorage = dataset.storage.find(
-      (s) => s.cloudResource === GOOGLE_CLOUD_RESOURCE.BIGQUERY,
-    );
+    const bqStorage = dataset.storage.find((s) => s.cloudResource === GoogleCloudResource.BIGQUERY);
     const location = bqStorage?.region;
 
     dispatch(pageQuery(queryParams.pageToken, queryParams.projectId, queryParams.jobId, location));
@@ -178,7 +176,7 @@ function DatasetDataView({
       resourceId={dataset.id}
       resourceLoaded={datasetLoaded}
       resourceName={dataset.name}
-      resourceType={RESOURCE_TYPE.DATASET}
+      resourceType={ResourceType.DATASET}
       tableNames={tableNames}
       handleChangeTable={handleChangeTable}
       pageBQQuery={pageBQQuery}

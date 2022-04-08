@@ -1,10 +1,10 @@
-import { Theme, withStyles } from '@material-ui/core/styles';
-import { Link, LinkProps } from '@material-ui/core';
+import { CustomTheme } from '@mui/material/styles';
+import { Link, LinkProps } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
-import { ClassNameMap } from '@material-ui/styles';
+import { ClassNameMap, withStyles } from '@mui/styles';
 import React from 'react';
 
-const styles = (theme: Theme) => ({
+const styles = (theme: CustomTheme) => ({
   terminalBreadcrumb: {
     color: theme.palette.primary.dark,
     cursor: 'default',
@@ -12,23 +12,26 @@ const styles = (theme: Theme) => ({
       textDecoration: 'none',
     },
   },
+  jadeLink: {
+    ...theme.mixins.jadeLink,
+  },
 });
 
 const BreadcrumbLink = withStyles(styles)(
   (props: LinkProps<RouterLink, { classes: ClassNameMap; disabled: boolean }>) => {
-    const { classes, ...other } = props;
+    const { classes, children, ...other } = props;
     if (props.disabled) {
       return (
-        <Link
-          component={RouterLink}
-          color="primary"
-          className={classes.terminalBreadcrumb}
-          onClick={(e) => e.preventDefault()}
-          {...other}
-        />
+        <Link component={RouterLink} color="primary" onClick={(e) => e.preventDefault()} {...other}>
+          <span className={classes.terminalBreadcrumb}>{children}</span>
+        </Link>
       );
     }
-    return <Link component={RouterLink} color="primary" {...other} />;
+    return (
+      <Link component={RouterLink} color="primary" {...other}>
+        <span className={classes.jadeLink}>{children}</span>
+      </Link>
+    );
   },
 );
 

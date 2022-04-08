@@ -1,9 +1,8 @@
-// eslint-disable-next-line no-unused-vars
 import React from 'react';
 import axios from 'axios';
 import _ from 'lodash';
 import AwesomeDebouncePromise from 'awesome-debounce-promise';
-import { COLUMN_MODES, DATAREPO_ROW_ID_COLUMN_NAME } from '../constants';
+import { ColumnModes, DbColumns } from '../constants';
 
 export default class BigQuery {
   constructor() {
@@ -14,8 +13,8 @@ export default class BigQuery {
     _.get(queryResults, 'schema.fields', []).map((field) => ({
       name: field.name,
       dataType: field.type,
-      arrayOf: field.mode === COLUMN_MODES.REPEATED,
-      allowSort: field.mode !== COLUMN_MODES.REPEATED,
+      arrayOf: field.mode === ColumnModes.REPEATED,
+      allowSort: field.mode !== ColumnModes.REPEATED,
     }));
 
   transformRows = (queryResults, columns) => {
@@ -56,7 +55,7 @@ export default class BigQuery {
           value = value.map((v) => new Date(v * 1000).toLocaleString());
         }
       }
-      if (columnId === DATAREPO_ROW_ID_COLUMN_NAME) {
+      if (columnId === DbColumns.ROW_ID) {
         res.datarepo_row_id = value;
       } else {
         res[columnId] = value;

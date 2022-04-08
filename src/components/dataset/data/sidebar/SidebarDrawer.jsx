@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
-import { List, ListItem, Box, Drawer } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
+import { List, ListItem, Box, Drawer } from '@mui/material';
+import { withStyles } from '@mui/styles';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 

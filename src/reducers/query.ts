@@ -1,12 +1,42 @@
 import { handleActions } from 'redux-actions';
 import immutable from 'immutability-helper';
 import { LOCATION_CHANGE } from 'connected-react-router';
-import { ActionTypes, TABLE_DEFAULT_ROWS_PER_PAGE } from 'constants/index';
 import BigQuery from 'modules/bigquery';
+import { ColumnModel } from 'generated/tdr';
 
-export const queryState = {
+import { ActionTypes, TABLE_DEFAULT_ROWS_PER_PAGE } from '../constants';
+
+export interface Column {
+  name: string;
+  dataType: string;
+  arrayOf: boolean;
+  allowSort: boolean;
+}
+
+export interface QueryState {
+  baseQuery: string;
+  columns: Array<Column>;
+  delay: boolean;
+  errMsg: string;
+  error: boolean;
+  filterData: any;
+  filterStatement: string;
+  joinStatement: string;
+  pageSize: number;
+  projectId: string;
+  queryParams: object;
+  rows: Array<object>;
+  orderProperty: string;
+  orderDirection: string;
+  polling: boolean;
+  resultsCount: number;
+  page: number;
+  rowsPerPage: number;
+}
+
+export const initialQueryState: QueryState = {
   baseQuery: '',
-  columns: null,
+  columns: [],
   delay: false,
   errMsg: '',
   error: false,
@@ -16,7 +46,7 @@ export const queryState = {
   pageSize: 0,
   projectId: '',
   queryParams: {},
-  rows: null,
+  rows: [],
   orderProperty: '',
   orderDirection: '',
   polling: false,
@@ -44,7 +74,7 @@ export default {
         immutable(state, {
           polling: { $set: false },
         }),
-      [ActionTypes.RUN_QUERY_SUCCESS]: (state, action) => {
+      [ActionTypes.RUN_QUERY_SUCCESS]: (state, action: any) => {
         const bigquery = new BigQuery();
         const queryResults = action.results.data;
 
@@ -65,9 +95,9 @@ export default {
           page: { $set: 0 },
         });
       },
-      [ActionTypes.PREVIEW_DATA_SUCCESS]: (state, action) => {
+      [ActionTypes.PREVIEW_DATA_SUCCESS]: (state, action: any) => {
         const rows = action.payload.queryResults.data.result;
-        const columns = action.payload.columns.map((column) => ({
+        const columns = action.payload.columns.map((column: ColumnModel) => ({
           name: column.name,
           dataType: column.datatype,
           arrayOf: column.array_of,
@@ -87,7 +117,7 @@ export default {
           resultsCount: { $set: rows.length },
         });
       },
-      [ActionTypes.PAGE_QUERY_SUCCESS]: (state, action) => {
+      [ActionTypes.PAGE_QUERY_SUCCESS]: (state, action: any) => {
         const bigquery = new BigQuery();
         const queryResults = action.results.data;
 
@@ -121,22 +151,22 @@ export default {
           queryParams: { $set: {} },
           polling: { $set: true },
         }),
-      [ActionTypes.PREVIEW_DATA_FAILURE]: (state, action) =>
+      [ActionTypes.PREVIEW_DATA_FAILURE]: (state, action: any) =>
         immutable(state, {
           error: { $set: true },
-          errorMsg: { $set: action.payload },
+          errMsg: { $set: action.payload },
           polling: { $set: false },
         }),
-      [ActionTypes.CHANGE_ROWS_PER_PAGE]: (state, action) =>
+      [ActionTypes.CHANGE_ROWS_PER_PAGE]: (state, action: any) =>
         immutable(state, {
           page: { $set: 0 },
           rowsPerPage: { $set: action.payload },
         }),
-      [ActionTypes.CHANGE_PAGE]: (state, action) =>
+      [ActionTypes.CHANGE_PAGE]: (state, action: any) =>
         immutable(state, {
           page: { $set: action.payload },
         }),
-      [ActionTypes.APPLY_FILTERS]: (state, action) => {
+      [ActionTypes.APPLY_FILTERS]: (state, action: any) => {
         const bigquery = new BigQuery();
         const filterStatement = bigquery.buildFilterStatement(action.payload.filters);
         const joinStatement = bigquery.buildJoinStatement(
@@ -151,7 +181,7 @@ export default {
           page: { $set: 0 },
         });
       },
-      [ActionTypes.APPLY_SORT]: (state, action) =>
+      [ActionTypes.APPLY_SORT]: (state, action: any) =>
         immutable(state, {
           orderProperty: { $set: action.payload.property },
           orderDirection: { $set: action.payload.direction },
@@ -178,12 +208,12 @@ export default {
           orderProperty: { $set: '' },
           orderDirection: { $set: 'desc' },
         }),
-      [ActionTypes.COUNT_RESULTS_SUCCESS]: (state, action) =>
+      [ActionTypes.COUNT_RESULTS_SUCCESS]: (state, action: any) =>
         immutable(state, {
           resultsCount: { $set: action.resultsCount },
         }),
-      [ActionTypes.USER_LOGOUT]: () => queryState,
+      [ActionTypes.USER_LOGOUT]: () => initialQueryState,
     },
-    queryState,
+    initialQueryState,
   ),
 };

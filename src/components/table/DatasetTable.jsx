@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles } from '@mui/styles';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
 import { renderCloudPlatforms } from '../../libs/render-utils';
@@ -42,8 +42,8 @@ class DatasetTable extends React.PureComponent {
         allowSort: true,
         render: (row) => (
           <div>
-            <Link to={`/datasets/${row.id}`} className={classes.jadeLink}>
-              {row.name}
+            <Link to={`/datasets/${row.id}`}>
+              <span className={classes.jadeLink}>{row.name}</span>
             </Link>
           </div>
         ),

@@ -1,9 +1,7 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-
-import { Button, Typography } from '@material-ui/core';
+import { withStyles } from '@mui/styles';
+import { Button, Grid, Typography } from '@mui/material';
 
 import { Link } from 'react-router-dom';
 import SidebarDrawer from 'components/dataset/data/sidebar/SidebarDrawer';
@@ -11,7 +9,7 @@ import DataViewDropdown from './DataViewDropdown';
 import JadeTable from '../../table/JadeTable';
 import SnapshotPopup from '../../snapshot/SnapshotPopup';
 import AppBreadcrumbs from '../../AppBreadcrumbs/AppBreadcrumbs';
-import { BREADCRUMB_TYPE } from '../../../constants';
+import { BreadcrumbType } from '../../../constants';
 
 const styles = (theme) => ({
   pageRoot: { ...theme.mixins.pageRoot },
@@ -44,15 +42,16 @@ function DataView({
   tableNames,
 }) {
   return (
+    //eslint-disable-next-line react/jsx-no-useless-fragment
     <Fragment>
       {resourceLoaded && (
         <div className={classes.pageRoot}>
           <AppBreadcrumbs
             context={{
               type:
-                resourceType === BREADCRUMB_TYPE.DATASET
-                  ? BREADCRUMB_TYPE.DATASET
-                  : BREADCRUMB_TYPE.SNAPSHOT,
+                resourceType === BreadcrumbType.DATASET
+                  ? BreadcrumbType.DATASET
+                  : BreadcrumbType.SNAPSHOT,
               id: resourceId,
               name: resourceName,
             }}

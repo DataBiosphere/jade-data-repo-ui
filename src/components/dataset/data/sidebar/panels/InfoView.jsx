@@ -4,17 +4,11 @@ import moment from 'moment';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Button,
-  Typography,
-} from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import { Close, ExpandMore, HelpOutline, Launch } from '@material-ui/icons';
-import IconButton from '@material-ui/core/IconButton';
+import { Accordion, AccordionDetails, AccordionSummary, Button, Typography } from '@mui/material';
+import { withStyles } from '@mui/styles';
+import Grid from '@mui/material/Grid';
+import { Close, ExpandMore, HelpOutline, Launch } from '@mui/icons-material';
+import IconButton from '@mui/material/IconButton';
 import TerraTooltip from 'components/common/TerraTooltip';
 import { renderStorageResources } from '../../../../../libs/render-utils';
 import InfoViewDatasetAccess from './InfoViewDatasetAccess';

@@ -1,11 +1,11 @@
 @import 'media/fonts/Montserrat.css';
 @import '~animate.css/animate.css';
 
-body,
-input,
-textarea,
-select,
-button {
+body.tdr,
+body.tdr input,
+body.tdr textarea,
+body.tdr select,
+body.tdr button {
   font-family: 'Montserrat', sans-serif;
   font-variant-numeric: tabular-nums;
   -webkit-font-smoothing: antialiased;
@@ -19,11 +19,11 @@ button {
 }
 
 html,
-body {
+body.tdr {
   height: 100%;
 }
 
-body {
+body.tdr {
   background-color: #fafbfc;
   color: #333f52;
   margin: 0;
@@ -35,11 +35,11 @@ body {
   overflow-x: auto;
 }
 
-table {
+body.tdr table {
   border-collapse: collapse;
 }
 
-a {
+body.tdr a {
   color: unset;
   text-decoration: unset;
 }
@@ -61,65 +61,65 @@ a {
   overflow-y: scroll;
 }
 
-.table-row:not(:hover) .hover-only {
+body.tdr .table-row:not(:hover) .hover-only {
   visibility: hidden;
 }
 
-.focus-style:focus {
+body.tdr .focus-style:focus {
   /* Note: using CSS and !important here because react-interactive focus style wasn't applying on autofocus */
   border: 1px solid #74ae43 !important;
   outline: none !important;
 }
 
 /* Overrides for toast notifications library (react-notifications-component) */
-.notification-default {
+body.tdr .notification-default {
   background-color: #525c6c;
   border-left: 8px solid #333f52;
 }
 
-.notification-success {
+body.tdr .notification-success {
   background-color: #74ae43;
   border-left: 8px solid #5d9033;
 }
 
-.notification-danger {
+body.tdr .notification-danger {
   background-color: #db3214;
   border-left: 8px solid #ba250a;
 }
 
-.notification-info {
+body.tdr .notification-info {
   background-color: #5aa6da;
   border-left: 8px solid #2691d0;
 }
 
-.notification-warning {
+body.tdr .notification-warning {
   background-color: #f7981c;
   border-left: 8px solid #dc8412;
 }
 
-.notification-awesome {
+body.tdr .notification-awesome {
   background-color: #a180a9;
   border-left: 8px solid #8a6194;
 }
 
-.notification-item,
-.notification-item-root,
-.notification-message,
-.notification-title {
+body.tdr .notification-item,
+body.tdr .notification-item-root,
+body.tdr .notification-message,
+body.tdr .notification-title {
   font-family: unset;
 }
 
 /* Styles for content rendered by marked (also used by react-simplemde-editor) */
-.markdown-body a,
-.simplemde-container .editor-preview a {
+body.tdr .markdown-body a,
+body.tdr .simplemde-container .editor-preview a {
   color: #74ae43;
 }
 
-.markdown-body a:hover,
-.simplemde-container .editor-preview a:hover {
+body.tdr .markdown-body a:hover,
+body.tdr .simplemde-container .editor-preview a:hover {
   color: #89bb60;
 }
 
-.markdown-body {
+body.tdr .markdown-body {
   font-family: 'Montserrat', sans-serif;
 }

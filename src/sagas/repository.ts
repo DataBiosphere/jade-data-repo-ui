@@ -9,36 +9,32 @@ import moment from 'moment';
 import _ from 'lodash';
 
 import { showNotification } from 'modules/notifications';
-import {
-  ActionTypes,
-  DATAREPO_ROW_ID_COLUMN_NAME,
-  STATUS,
-  TABLE_DEFAULT_ROWS_PER_PAGE,
-} from '../constants';
+import { ActionTypes, Status, DbColumns, TABLE_DEFAULT_ROWS_PER_PAGE } from '../constants';
+import { TdrState } from '../reducers';
 
 /**
  * Switch Menu
  *
- * @param {Object} action
  *
+ * @param state
  */
 
-export const getToken = (state) => state.user.token;
-export const getTokenExpiration = (state) => state.user.tokenExpiration;
-export const getSnapshotState = (state) => state.snapshots;
-export const getQuery = (state) => state.query;
-export const getDataset = (state) => state.datasets.dataset;
-export const getSamUrl = (state) => state.configuration.samUrl;
+export const getToken = (state: TdrState) => state.user.token;
+export const getTokenExpiration = (state: TdrState) => state.user.tokenExpiration;
+export const getSnapshotState = (state: TdrState) => state.snapshots;
+export const getQuery = (state: TdrState) => state.query;
+export const getDataset = (state: TdrState) => state.datasets.dataset;
+export const getSamUrl = (state: TdrState) => state.configuration.configObject.samUrl;
 
 export const timeoutMsg = 'Your session has timed out. Please refresh the page.';
 
-export function* checkToken() {
+export function* checkToken(): any {
   const tokenExpiration = yield select(getTokenExpiration);
   // if this fails, should isAuthenticated be flipped?
   return moment(moment()).isSameOrBefore(parseInt(tokenExpiration, 10));
 }
 
-export function* authGet(url, params = {}) {
+export function* authGet(url: string, params = {}): any {
   if (yield call(checkToken)) {
     // check expiration time against now
     const token = yield select(getToken);
@@ -50,7 +46,7 @@ export function* authGet(url, params = {}) {
   throw timeoutMsg;
 }
 
-export function* authPost(url, params) {
+export function* authPost(url: string, params: any): any {
   if (yield call(checkToken)) {
     // check expiration time against now
     const token = yield select(getToken);
@@ -61,7 +57,7 @@ export function* authPost(url, params) {
   throw timeoutMsg;
 }
 
-export function* authDelete(url) {
+export function* authDelete(url: string): any {
   if (yield call(checkToken)) {
     // check expiration time against now
     const token = yield select(getToken);
@@ -75,11 +71,16 @@ export function* authDelete(url) {
 /**
  * Saga poller
  */
-function* pollJobWorker(jobId, jobTypeSuccess, jobTypeFailure, jobTypeException) {
+function* pollJobWorker(
+  jobId: string,
+  jobTypeSuccess: string,
+  jobTypeFailure: string,
+  jobTypeException: string,
+): any {
   try {
     const response = yield call(authGet, `/api/repository/v1/jobs/${jobId}`);
     const jobStatus = response.data.job_status;
-    if (jobStatus !== STATUS.RUNNING) {
+    if (jobStatus !== Status.RUNNING) {
       const resultResponse = yield call(authGet, `/api/repository/v1/jobs/${jobId}/result`);
       if (jobStatus === 'succeeded' && resultResponse && resultResponse.data) {
         yield put({
@@ -108,7 +109,7 @@ function* pollJobWorker(jobId, jobTypeSuccess, jobTypeFailure, jobTypeException)
   }
 }
 
-export function* exportSnapshot({ payload }) {
+export function* exportSnapshot({ payload }: any): any {
   try {
     yield put({
       type: ActionTypes.EXPORT_SNAPSHOT_START,
@@ -150,11 +151,12 @@ export function* resetSnapshotExport() {
     });
   }
 }
+
 /**
  * Snapshots.
  */
 
-export function* createSnapshot() {
+export function* createSnapshot(): any {
   const snapshots = yield select(getSnapshotState);
   const dataset = yield select(getDataset);
   const {
@@ -182,7 +184,7 @@ export function* createSnapshot() {
         mode,
         querySpec: {
           assetName,
-          query: `SELECT ${datasetName}.${rootTable}.${DATAREPO_ROW_ID_COLUMN_NAME} ${joinStatement} ${filterStatement}`,
+          query: `SELECT ${datasetName}.${rootTable}.${DbColumns.ROW_ID} ${joinStatement} ${filterStatement}`,
         },
       },
     ],
@@ -209,7 +211,7 @@ export function* createSnapshot() {
   }
 }
 
-export function* getSnapshots({ payload }) {
+export function* getSnapshots({ payload }: any): any {
   const offset = payload.offset || 0;
   const limit = payload.limit || 10;
   const filter = payload.searchString || '';
@@ -219,7 +221,7 @@ export function* getSnapshots({ payload }) {
   const { successType } = payload;
   // TODO what's the best way to stringify this? I bet there's a good library:
   let datasetIdsQuery = '';
-  datasetIds.map((id) => (datasetIdsQuery += `&datasetIds=${id}`));
+  datasetIds.map((id: string) => (datasetIdsQuery += `&datasetIds=${id}`));
   const query = `/api/repository/v1/snapshots?offset=${offset}&limit=${limit}&sort=${sort}&direction=${direction}&filter=${filter}`;
   try {
     const response = yield call(authGet, query + datasetIdsQuery);
@@ -232,7 +234,7 @@ export function* getSnapshots({ payload }) {
   }
 }
 
-export function* getSnapshotById({ payload }) {
+export function* getSnapshotById({ payload }: any): any {
   yield put({
     type: ActionTypes.CHANGE_PAGE,
     payload: 0,
@@ -254,7 +256,7 @@ export function* getSnapshotById({ payload }) {
   }
 }
 
-export function* getSnapshotPolicy({ payload }) {
+export function* getSnapshotPolicy({ payload }: any): any {
   const snapshotId = payload;
   try {
     const response = yield call(authGet, `/api/repository/v1/snapshots/${snapshotId}/policies`);
@@ -269,7 +271,7 @@ export function* getSnapshotPolicy({ payload }) {
   }
 }
 
-export function* addSnapshotPolicyMember({ payload }) {
+export function* addSnapshotPolicyMember({ payload }: any): any {
   const { snapshotId, user, policy } = payload;
   const userObject = { email: user };
   try {
@@ -288,7 +290,7 @@ export function* addSnapshotPolicyMember({ payload }) {
   }
 }
 
-export function* removeSnapshotPolicyMember({ payload }) {
+export function* removeSnapshotPolicyMember({ payload }: any): any {
   const { snapshotId, user, policy } = payload;
   const url = `/api/repository/v1/snapshots/${snapshotId}/policies/${policy}/members/${user}`;
   try {
@@ -307,7 +309,7 @@ export function* removeSnapshotPolicyMember({ payload }) {
  * Datasets.
  */
 
-export function* getDatasets({ payload }) {
+export function* getDatasets({ payload }: any): any {
   const { limit, offset, sort, direction, searchString } = payload;
   try {
     const response = yield call(
@@ -323,7 +325,7 @@ export function* getDatasets({ payload }) {
   }
 }
 
-export function* getDatasetById({ payload }) {
+export function* getDatasetById({ payload }: any): any {
   yield put({
     type: ActionTypes.CHANGE_PAGE,
     payload: 0,
@@ -345,7 +347,7 @@ export function* getDatasetById({ payload }) {
   }
 }
 
-export function* getDatasetPolicy({ payload }) {
+export function* getDatasetPolicy({ payload }: any): any {
   const datasetId = payload;
   try {
     const response = yield call(authGet, `/api/repository/v1/datasets/${datasetId}/policies`);
@@ -358,7 +360,11 @@ export function* getDatasetPolicy({ payload }) {
   }
 }
 
-export function* getSamRolesForResource(resourceId, resourceTypeName, actionType) {
+export function* getSamRolesForResource(
+  resourceId: string,
+  resourceTypeName: string,
+  actionType: string,
+): any {
   try {
     const response = yield call(
       authGet,
@@ -373,12 +379,12 @@ export function* getSamRolesForResource(resourceId, resourceTypeName, actionType
   }
 }
 
-export function* getUserDatasetRoles({ payload }) {
+export function* getUserDatasetRoles({ payload }: any): any {
   const datasetId = payload;
   yield getSamRolesForResource(datasetId, 'datasets', ActionTypes.GET_USER_DATASET_ROLES_SUCCESS);
 }
 
-export function* getUserSnapshotRoles({ payload }) {
+export function* getUserSnapshotRoles({ payload }: any): any {
   const snapshotId = payload;
   yield getSamRolesForResource(
     snapshotId,
@@ -387,7 +393,7 @@ export function* getUserSnapshotRoles({ payload }) {
   );
 }
 
-export function* addDatasetPolicyMember({ payload }) {
+export function* addDatasetPolicyMember({ payload }: any): any {
   const { datasetId, user, policy } = payload;
   const userObject = { email: user };
   try {
@@ -406,7 +412,7 @@ export function* addDatasetPolicyMember({ payload }) {
   }
 }
 
-export function* removeDatasetPolicyMember({ payload }) {
+export function* removeDatasetPolicyMember({ payload }: any): any {
   const { datasetId, user, policy } = payload;
   const url = `/api/repository/v1/datasets/${datasetId}/policies/${policy}/members/${user}`;
   try {
@@ -421,7 +427,7 @@ export function* removeDatasetPolicyMember({ payload }) {
   }
 }
 
-export function* addCustodianToDataset({ payload }) {
+export function* addCustodianToDataset({ payload }: any): any {
   const { datasetId } = payload;
   const custodian = payload.users[0];
   const custodianObject = { email: custodian };
@@ -440,7 +446,7 @@ export function* addCustodianToDataset({ payload }) {
   }
 }
 
-export function* removeCustodianFromDataset({ payload }) {
+export function* removeCustodianFromDataset({ payload }: any): any {
   const { datasetId } = payload;
   const custodian = payload.user;
   const url = `/api/repository/v1/datasets/${datasetId}/policies/custodian/members/${custodian}`;
@@ -455,7 +461,7 @@ export function* removeCustodianFromDataset({ payload }) {
   }
 }
 
-export function* getDatasetTablePreview({ payload }) {
+export function* getDatasetTablePreview({ payload }: any): any {
   const { dataset, tableName } = payload;
   const datasetProject = dataset.dataProject;
   const datasetBqSnapshotName = `datarepo_${dataset.name}`;
@@ -475,26 +481,30 @@ export function* getDatasetTablePreview({ payload }) {
 /**
  * billing profile
  */
-export function* getBillingProfileById(profileId) {
+export function* getBillingProfileById({ payload }: any): any {
   try {
+    const { profileId } = payload;
     const response = yield call(authGet, `/api/resources/v1/profiles/${profileId}`);
     yield put({
       type: ActionTypes.GET_BILLING_PROFILE_BY_ID_SUCCESS,
       profile: { data: response },
     });
   } catch (err) {
-    showNotification(err);
     yield put({
       type: ActionTypes.GET_BILLING_PROFILE_BY_ID_EXCEPTION,
     });
   }
 }
 
-export function* watchGetDatasetByIdSuccess() {
+export function* watchGetDatasetByIdSuccess(): any {
   const requestChan = yield actionChannel(ActionTypes.GET_DATASET_BY_ID_SUCCESS);
   while (true) {
     const { dataset } = yield take(requestChan);
-    yield call(getBillingProfileById, dataset.data.data.defaultProfileId);
+    // Trigger an action to fetch billing profile
+    yield put({
+      type: ActionTypes.GET_BILLING_PROFILE_BY_ID,
+      payload: { profileId: dataset.data.data.defaultProfileId },
+    });
   }
 }
 
@@ -502,7 +512,7 @@ export function* watchGetDatasetByIdSuccess() {
  * Preview Data
  */
 
-export function* previewData({ payload }) {
+export function* previewData({ payload }: any): any {
   const queryState = yield select(getQuery);
   const offset = queryState.page * queryState.rowsPerPage;
   const limit = queryState.rowsPerPage;
@@ -530,7 +540,7 @@ export function* previewData({ payload }) {
  * bigquery
  */
 
-function* pollQuery(projectId, jobId) {
+function* pollQuery(projectId: string, jobId: string): any {
   try {
     const url = `/bigquery/v2/projects/${projectId}/queries/${jobId}`;
     const response = yield call(authGet, url);
@@ -549,7 +559,7 @@ function* pollQuery(projectId, jobId) {
   }
 }
 
-export function* runQuery({ payload }) {
+export function* runQuery({ payload }: any): any {
   try {
     const url = `/bigquery/v2/projects/${payload.projectId}/queries`;
     const queryState = yield select(getQuery);
@@ -577,7 +587,7 @@ export function* runQuery({ payload }) {
   }
 }
 
-export function* changeRowsPerPage(rowsPerPage) {
+export function* changeRowsPerPage(rowsPerPage: number): any {
   try {
     yield put({
       type: ActionTypes.CHANGE_ROWS_PER_PAGE,
@@ -588,7 +598,7 @@ export function* changeRowsPerPage(rowsPerPage) {
   }
 }
 
-export function* changePage(page) {
+export function* changePage(page: number): any {
   try {
     yield put({
       type: ActionTypes.CHANGE_PAGE,
@@ -599,7 +609,7 @@ export function* changePage(page) {
   }
 }
 
-export function* pageQuery({ payload }) {
+export function* pageQuery({ payload }: any): any {
   try {
     const url = `/bigquery/v2/projects/${payload.projectId}/queries/${payload.jobId}`;
     const queryState = yield select(getQuery);
@@ -619,7 +629,7 @@ export function* pageQuery({ payload }) {
   }
 }
 
-export function* countResults({ payload }) {
+export function* countResults({ payload }: any): any {
   try {
     const url = `/bigquery/v2/projects/${payload.projectId}/queries`;
     const body = {
@@ -646,7 +656,7 @@ export function* countResults({ payload }) {
  * feature flag stuff
  */
 
-export function* getFeatures() {
+export function* getFeatures(): any {
   try {
     const samUrl = yield select(getSamUrl);
     const url = `${samUrl}/api/groups/v1`;
@@ -656,6 +666,7 @@ export function* getFeatures() {
       groups: response.data,
     });
   } catch (err) {
+    //eslint-disable-next-line no-console
     console.warn('Error feature flag information from Sam', err);
   }
 }

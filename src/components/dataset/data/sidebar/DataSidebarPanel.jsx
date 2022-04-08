@@ -2,9 +2,9 @@ import React from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles } from '@mui/styles';
 
-import { Card, List, ListSubheader, LinearProgress, Button } from '@material-ui/core';
+import { Card, List, ListSubheader, LinearProgress, Button } from '@mui/material';
 import AppliedFilterList from './AppliedFilterList';
 import { applyFilters } from '../../../../actions';
 

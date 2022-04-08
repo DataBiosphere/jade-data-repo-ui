@@ -149,51 +149,88 @@ const theme = createTheme({
   shape: {
     borderRadius: 5,
   },
-  overrides: {
-    MuiExpansionPanel: {
-      root: {
-        '&$expanded': {
-          margin: '0px',
+  components: {
+    MuiAppBar: {
+      styleOverrides: {
+        root: {
+          backgroundColor: baseColors.successDark,
+          boxShadow: 'none',
         },
       },
     },
-    MuiExpansionPanelSummary: {
-      root: {
-        '&$expanded': {
-          minHeight: 'inherit',
+    MuiAccordion: {
+      styleOverrides: {
+        root: {
+          '&$expanded': {
+            margin: '0px',
+          },
         },
       },
-      content: {
-        '&$expanded': {
-          margin: 0,
+    },
+    MuiAccordionSummary: {
+      styleOverrides: {
+        root: {
+          '&$expanded': {
+            minHeight: 'inherit',
+          },
+        },
+        content: {
+          '&$expanded': {
+            margin: 0,
+          },
         },
       },
     },
     MuiTablePagination: {
-      actions: {
-        marginRight: '20px',
+      styleOverrides: {
+        actions: {
+          marginRight: '20px',
+        },
       },
     },
     MuiButton: {
-      containedPrimary: {
-        backgroundColor: LINK,
-        color: WHITE,
-        '&:hover': {
-          backgroundColor: LINK_HOVER,
+      styleOverrides: {
+        containedPrimary: {
+          backgroundColor: LINK,
+          color: WHITE,
+          '&:hover': {
+            backgroundColor: LINK_HOVER,
+          },
         },
       },
     },
     MuiOutlinedInput: {
-      root: {
-        '& $notchedOutline': {
-          borderColor: '#c0c0c0',
+      styleOverrides: {
+        root: {
+          '& $notchedOutline': {
+            borderColor: '#c0c0c0',
+          },
+        },
+      },
+    },
+    MuiTable: {
+      styleOverrides: {
+        root: {
+          fontFamily: 'inherit',
         },
       },
     },
     MuiTableCell: {
-      root: {
-        '& $stickyHeader': {
-          backgroundColor: '#fafafa',
+      styleOverrides: {
+        root: {
+          '& $stickyHeader': {
+            backgroundColor: '#fafafa',
+          },
+        },
+      },
+    },
+    MuiTab: {
+      styleOverrides: {
+        root: {
+          minWidth: 160,
+          '&.Mui-selected': {
+            color: baseColors.dark,
+          },
         },
       },
     },

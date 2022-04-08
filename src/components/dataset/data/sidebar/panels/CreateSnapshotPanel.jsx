@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles } from '@mui/styles';
 import { connect } from 'react-redux';
 
-import { Button, Divider, TextField, Typography } from '@material-ui/core';
+import { Button, Divider, TextField, Typography } from '@mui/material';
 import { snapshotCreateDetails } from 'actions/index';
 import CreateSnapshotDropdown from '../CreateSnapshotDropdown';
 import ShareSnapshot from './ShareSnapshot';

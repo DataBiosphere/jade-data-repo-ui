@@ -3,7 +3,7 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { ReactComponent as ExitSVG } from 'media/icons/times-light.svg';
 import { connect } from 'react-redux';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles } from '@mui/styles';
 import {
   Dialog,
   DialogTitle,
@@ -13,13 +13,13 @@ import {
   Button,
   Chip,
   CircularProgress,
-} from '@material-ui/core';
-import { CameraAlt, Today } from '@material-ui/icons';
+} from '@mui/material';
+import { CameraAlt, Today } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 import clsx from 'clsx';
 import { openSnapshotDialog, getSnapshotById, getSnapshotPolicy } from 'actions/index';
 import { push } from 'modules/hist';
-import { SNAPSHOT_INCLUDE_OPTIONS } from '../../constants';
+import { SnapshotIncludeOptions } from '../../constants';
 
 const styles = (theme) => ({
   snapshotName: {
@@ -100,12 +100,12 @@ export class SnapshotPopup extends React.PureComponent {
         getSnapshotById({
           snapshotId: snapshot.id,
           include: [
-            SNAPSHOT_INCLUDE_OPTIONS.SOURCES,
-            SNAPSHOT_INCLUDE_OPTIONS.TABLES,
-            SNAPSHOT_INCLUDE_OPTIONS.RELATIONSHIPS,
-            SNAPSHOT_INCLUDE_OPTIONS.ACCESS_INFORMATION,
-            SNAPSHOT_INCLUDE_OPTIONS.PROFILE,
-            SNAPSHOT_INCLUDE_OPTIONS.DATA_PROJECT,
+            SnapshotIncludeOptions.SOURCES,
+            SnapshotIncludeOptions.TABLES,
+            SnapshotIncludeOptions.RELATIONSHIPS,
+            SnapshotIncludeOptions.ACCESS_INFORMATION,
+            SnapshotIncludeOptions.PROFILE,
+            SnapshotIncludeOptions.DATA_PROJECT,
           ],
         }),
       );
@@ -128,9 +128,7 @@ export class SnapshotPopup extends React.PureComponent {
     if (notReady) {
       return (
         <Dialog open={isOpen}>
-          <DialogTitle>
-            <Typography variant="h5">Your data snapshot is being created</Typography>
-          </DialogTitle>
+          <DialogTitle>Your data snapshot is being created</DialogTitle>
           <DialogContent>
             {/* TODO: Make this loading state more descriptive */}
             <div className={clsx(classes.centered, classes.content)}>

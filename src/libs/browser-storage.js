@@ -8,6 +8,7 @@ import { maybeParseJSON, subscribable } from 'libs/utils';
  */
 
 const forceSetItem = (storage, key, value) => {
+  // eslint-disable-next-line no-constant-condition
   while (true) {
     try {
       storage.setItem(key, value);
@@ -15,6 +16,7 @@ const forceSetItem = (storage, key, value) => {
     } catch (error) {
       const candidates = _.filter(([k]) => _.startsWith('dynamic-storage/', k), _.toPairs(storage));
       if (!candidates.length) {
+        // eslint-disable-next-line no-console
         console.error('Could not write to storage, and no entries to delete');
         return;
       }

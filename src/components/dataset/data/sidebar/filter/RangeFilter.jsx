@@ -1,10 +1,10 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 
 import BigQuery from 'modules/bigquery';
 
-import { Slider, Grid } from '@material-ui/core';
+import { Slider, Grid, Typography } from '@mui/material';
 import RangeInput from './RangeInput';
 
 export class RangeFilter extends React.PureComponent {
@@ -85,7 +85,7 @@ export class RangeFilter extends React.PureComponent {
             />
           </Grid>
           <Grid item xs={2}>
-            —
+            <Typography>-</Typography>
           </Grid>
           <Grid item xs={5}>
             <RangeInput
@@ -97,17 +97,15 @@ export class RangeFilter extends React.PureComponent {
           </Grid>
         </Grid>
         <Grid container={true}>
-          <Fragment>
-            <Slider
-              value={value.map(parseFloat)}
-              onChange={this.handleSliderValue}
-              valueLabelDisplay="off"
-              aria-labelledby="range-slider"
-              min={parseFloat(minVal)}
-              max={parseFloat(maxVal)}
-              step={step}
-            />
-          </Fragment>
+          <Slider
+            value={value.map(parseFloat)}
+            onChange={this.handleSliderValue}
+            valueLabelDisplay="off"
+            aria-labelledby="range-slider"
+            min={parseFloat(minVal)}
+            max={parseFloat(maxVal)}
+            step={step}
+          />
         </Grid>
       </div>
     );

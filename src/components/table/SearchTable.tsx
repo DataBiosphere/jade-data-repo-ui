@@ -1,11 +1,9 @@
 import React from 'react';
-import { withStyles } from '@material-ui/core/styles';
-import InputBase from '@material-ui/core/InputBase';
+import InputBase from '@mui/material/InputBase';
 import { ReactComponent as ExitSVG } from 'media/icons/times-light.svg';
 import { ReactComponent as SearchSVG } from 'media/icons/search_icon.svg';
-import { fade } from '@material-ui/core/styles/colorManipulator';
-import { createStyles, CustomTheme } from '@mui/material/styles';
-import { WithStyles } from '@mui/styles';
+import { alpha, CustomTheme } from '@mui/material/styles';
+import { WithStyles, createStyles, withStyles } from '@mui/styles';
 
 const styles = (theme: CustomTheme) =>
   createStyles({
@@ -15,7 +13,7 @@ const styles = (theme: CustomTheme) =>
       border: `1px solid ${theme.palette.common.border}`,
       backgroundColor: theme.palette.common.selectedTextBackground,
       '&:hover': {
-        backgroundColor: fade(theme.palette.common.selection, 0.2),
+        backgroundColor: alpha(theme.palette.common.selection, 0.2),
       },
       position: 'relative',
       borderRadius: '35px',
@@ -29,8 +27,7 @@ const styles = (theme: CustomTheme) =>
       paddingTop: theme.spacing(1.3),
     },
     searchInput: {
-      paddingTop: theme.spacing(1),
-      paddingLeft: theme.spacing(3.7),
+      paddingLeft: `${theme.spacing(3.7)} !important`,
     },
     inputRoot: {
       width: '100%',

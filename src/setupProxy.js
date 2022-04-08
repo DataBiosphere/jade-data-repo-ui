@@ -1,3 +1,4 @@
+//eslint-disable-next-line @typescript-eslint/no-var-requires
 const { createProxyMiddleware } = require('http-proxy-middleware');
 
 const proxyUrl = process.env.PROXY_URL || 'http://localhost:8080';

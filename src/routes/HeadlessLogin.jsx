@@ -2,9 +2,9 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
-import { withStyles } from '@material-ui/core/styles';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import { withStyles } from '@mui/styles';
 import { logIn } from '../actions/index';
 
 const styles = () => ({
@@ -57,7 +57,6 @@ export class HeadlessLogin extends React.PureComponent {
   }
 }
 
-// eslint-disable-next-line no-unused-vars
 function mapStateToProps(state) {
   return {};
 }

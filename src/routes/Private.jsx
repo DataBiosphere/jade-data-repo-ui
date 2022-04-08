@@ -1,8 +1,8 @@
 import React, { Fragment } from 'react';
 import { Link, Redirect, Route, Router, Switch } from 'react-router-dom';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import { withStyles } from '@material-ui/core/styles';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import { withStyles } from '@mui/styles';
 import { ConnectedRouter } from 'connected-react-router';
 import PropTypes from 'prop-types';
 import history from 'modules/hist';
@@ -13,6 +13,7 @@ import HomeView from '../components/HomeView';
 import DatasetOverview from '../components/dataset/overview/DatasetOverview';
 import DatasetDataView from '../components/dataset/data/DatasetDataView';
 import SnapshotDataView from '../components/snapshot/data/SnapshotDataView';
+import NotFound from './NotFound';
 
 const styles = (theme) => ({
   wrapper: {
@@ -63,9 +64,11 @@ const styles = (theme) => ({
 class Private extends React.Component {
   static propTypes = {
     classes: PropTypes.object.isRequired,
+    // eslint-disable-next-line react/no-unused-prop-types
+    features: PropTypes.object,
   };
 
-  static prefixMatcher = new RegExp('/[^/]*');
+  static prefixMatcher = /\/[^/]*/;
 
   render() {
     const { classes } = this.props;
@@ -106,6 +109,7 @@ class Private extends React.Component {
                       <Route exact path="/datasets/:uuid/data" component={DatasetDataView} />
                       <Route exact path="/snapshots/:uuid" component={SnapshotOverview} />
                       <Route exact path="/snapshots/:uuid/data" component={SnapshotDataView} />
+                      <Route component={NotFound} />
                     </Switch>
                   </div>
                 </Fragment>

@@ -81,13 +81,17 @@ jobs:
           gcloud auth activate-service-account --key-file jade-dev-account.json
           gcloud auth configure-docker --quiet
           docker push gcr.io/broad-jade-dev/jade-data-repo-ui:${GCR_TAG}
+      # Echo what the image deployed was (useful for running skaffold deploy --image ... )
+      - name: Echo tagged image
+        run: |
+          echo "Pushed docker image gcr.io/broad-jade-dev/jade-data-repo-ui:${GCR_TAG}"
       - name: 'Deploy to cluster with Helm'
         uses: broadinstitute/datarepo-actions/actions/main@0.59.0
         with:
           actions_subcommand: 'helmdeploy'
           helm_create_secret_manager_secret_version: '0.0.6'
-          helm_datarepo_api_chart_version: 0.0.320
-          helm_datarepo_ui_chart_version: 0.0.141
+          helm_datarepo_api_chart_version: 0.0.329
+          helm_datarepo_ui_chart_version: 0.0.145
           helm_gcloud_sqlproxy_chart_version: 0.19.7
           helm_oidc_proxy_chart_version: 0.0.31
           helm_imagetag_update: 'ui'
