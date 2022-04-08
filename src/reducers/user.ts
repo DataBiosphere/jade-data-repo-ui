@@ -17,6 +17,7 @@ export interface UserState {
   tokenExpiration: number;
   features: any;
   isTimeoutEnabled: boolean;
+  id: string;
 }
 
 export const initialUserState: UserState = {
@@ -30,12 +31,13 @@ export const initialUserState: UserState = {
   tokenExpiration: 0,
   features: {},
   isTimeoutEnabled: false,
+  id: '',
 };
 
 export default {
   user: handleActions(
     {
-      [ActionTypes.USER_LOGIN]: (state: any, action: any) =>
+      [ActionTypes.USER_LOGIN]: (state, action: any) =>
         immutable(state, {
           isInitiallyLoaded: { $set: true },
           isAuthenticated: { $set: true },
@@ -47,7 +49,7 @@ export default {
           tokenExpiration: { $set: action.payload.tokenExpiration },
           id: { $set: action.payload.id },
         }),
-      [ActionTypes.USER_LOGOUT]: (state: any) =>
+      [ActionTypes.USER_LOGOUT]: (state) =>
         immutable(state, {
           isInitiallyLoaded: { $set: true },
           isAuthenticated: { $set: false },
@@ -56,10 +58,10 @@ export default {
           name: { $set: '' },
           email: { $set: '' },
           token: { $set: '' },
-          tokenExpiration: { $set: '' },
+          tokenExpiration: { $set: 0 },
           features: { $set: {} },
         }),
-      [ActionTypes.GET_FEATURES_SUCCESS]: (state: any, action: any) => {
+      [ActionTypes.GET_FEATURES_SUCCESS]: (state, action: any) => {
         const isTimeoutEnabled = _.some(action.groups, { groupName: 'session_timeout' });
         const features = {};
         action.groups

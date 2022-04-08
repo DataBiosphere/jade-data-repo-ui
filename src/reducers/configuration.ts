@@ -15,7 +15,7 @@ export const initialConfigurationState: ConfigurationState = {
 export default {
   configuration: handleActions(
     {
-      [ActionTypes.GET_CONFIGURATION_SUCCESS]: (state: ConfigurationState, action: any) =>
+      [ActionTypes.GET_CONFIGURATION_SUCCESS]: (state, action: any) =>
         immutable(state, { configObject: { $set: action.configuration } }),
     },
     initialConfigurationState,

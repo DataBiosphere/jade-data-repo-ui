@@ -28,6 +28,9 @@ const styles = (theme: CustomTheme) => ({
   button: {
     marginTop: '1em',
   },
+  buttonText: {
+    color: theme.palette.common.white,
+  },
 });
 
 function NotFound(props: { classes: ClassNameMap }) {
@@ -59,7 +62,7 @@ function NotFound(props: { classes: ClassNameMap }) {
           size="large"
           to="/"
         >
-          Return to Dashboard
+          <span className={classes.buttonText}>Return to Dashboard</span>
         </Button>
       </Grid>
       <Grid item xs={6}>

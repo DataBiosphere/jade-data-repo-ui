@@ -29,6 +29,7 @@ export interface SnapshotState {
   canReadPolicies: boolean;
   dataset: DatasetModel;
   snapshotCount: number;
+  filteredSnapshotCount: number;
   dialogIsOpen: boolean;
   // for snapshot creation
   snapshotRequest: SnapshotRequest;
@@ -55,6 +56,7 @@ export const initialSnapshotState: SnapshotState = {
   canReadPolicies: false,
   dataset: {},
   snapshotCount: 0,
+  filteredSnapshotCount: 0,
   dialogIsOpen: false,
   // for snapshot creation
   snapshotRequest: defaultSnapshotRequest,
@@ -66,8 +68,10 @@ export const initialSnapshotState: SnapshotState = {
 };
 
 // We need this method to apply the response from add/remove snapshot members since the API only returns the affected group
-const snapshotMembershipResultApply = (action: any) => (snapshotPolicies: any) =>
-  snapshotPolicies.map((p: any) => {
+const snapshotMembershipResultApply = (action: any) => (
+  snapshotPolicies: Array<PolicyModel>,
+): Array<PolicyModel> =>
+  snapshotPolicies.map((p) => {
     if (p.name === action.policy) {
       const policy = action.snapshot.data.data.policies.find(
         (ap: any) => ap.name === action.policy,
@@ -80,89 +84,89 @@ const snapshotMembershipResultApply = (action: any) => (snapshotPolicies: any) =
 export default {
   snapshots: handleActions(
     {
-      [ActionTypes.GET_SNAPSHOTS_SUCCESS]: (state: any, action: any) =>
+      [ActionTypes.GET_SNAPSHOTS_SUCCESS]: (state, action: any) =>
         immutable(state, {
           snapshots: { $set: action.snapshots.data.data.items },
           snapshotCount: { $set: action.snapshots.data.data.total },
           filteredSnapshotCount: { $set: action.snapshots.data.data.filteredTotal },
         }),
-      [ActionTypes.CREATE_SNAPSHOT_JOB]: (state: any) =>
+      [ActionTypes.CREATE_SNAPSHOT_JOB]: (state) =>
         immutable(state, {
           snapshot: { $set: {} },
           dialogIsOpen: { $set: true },
         }),
-      [ActionTypes.CREATE_SNAPSHOT_SUCCESS]: (state: any, action: any) =>
+      [ActionTypes.CREATE_SNAPSHOT_SUCCESS]: (state, action: any) =>
         immutable(state, {
           snapshot: { $set: action.payload.jobResult },
         }),
-      [ActionTypes.CREATE_SNAPSHOT_FAILURE]: (state: any) =>
+      [ActionTypes.CREATE_SNAPSHOT_FAILURE]: (state) =>
         immutable(state, {
           dialogIsOpen: { $set: false },
         }),
-      [ActionTypes.CREATE_SNAPSHOT_EXCEPTION]: (state: any) =>
+      [ActionTypes.CREATE_SNAPSHOT_EXCEPTION]: (state) =>
         immutable(state, {
           dialogIsOpen: { $set: false },
         }),
-      [ActionTypes.EXPORT_SNAPSHOT_START]: (state: any) =>
+      [ActionTypes.EXPORT_SNAPSHOT_START]: (state) =>
         immutable(state, {
           exportIsProcessing: { $set: true },
           exportIsDone: { $set: false },
         }),
-      [ActionTypes.EXPORT_SNAPSHOT_JOB]: (state: any) =>
+      [ActionTypes.EXPORT_SNAPSHOT_JOB]: (state) =>
         immutable(state, {
           exportResponse: { $set: {} },
         }),
-      [ActionTypes.EXPORT_SNAPSHOT_SUCCESS]: (state: any, action: any) =>
+      [ActionTypes.EXPORT_SNAPSHOT_SUCCESS]: (state, action: any) =>
         immutable(state, {
           exportResponse: { $set: action.payload.jobResult },
           exportIsProcessing: { $set: false },
           exportIsDone: { $set: true },
         }),
-      [ActionTypes.EXPORT_SNAPSHOT_FAILURE]: (state: any) =>
+      [ActionTypes.EXPORT_SNAPSHOT_FAILURE]: (state) =>
         immutable(state, {
           exportResponse: { $set: {} },
           exportIsProcessing: { $set: false },
           exportIsDone: { $set: false },
         }),
-      [ActionTypes.EXPORT_SNAPSHOT_EXCEPTION]: (state: any) =>
+      [ActionTypes.EXPORT_SNAPSHOT_EXCEPTION]: (state) =>
         immutable(state, {
           exportResponse: { $set: {} },
           exportIsProcessing: { $set: false },
           exportIsDone: { $set: false },
         }),
-      [ActionTypes.RESET_SNAPSHOT_EXPORT]: (state: any) =>
+      [ActionTypes.RESET_SNAPSHOT_EXPORT]: (state) =>
         immutable(state, {
           exportResponse: { $set: {} },
           exportIsProcessing: { $set: false },
           exportIsDone: { $set: false },
         }),
-      [ActionTypes.GET_SNAPSHOT_BY_ID_SUCCESS]: (state: any, action: any) =>
+      [ActionTypes.GET_SNAPSHOT_BY_ID_SUCCESS]: (state, action: any) =>
         immutable(state, {
           snapshot: { $set: action.snapshot.data.data },
         }),
-      [ActionTypes.GET_SNAPSHOT_POLICY_SUCCESS]: (state: any, action: any) =>
+      [ActionTypes.GET_SNAPSHOT_POLICY_SUCCESS]: (state, action: any) =>
         immutable(state, {
           snapshotPolicies: { $set: action.snapshot.data.data.policies },
           canReadPolicies: { $set: true },
         }),
-      [ActionTypes.GET_SNAPSHOT_POLICY_FAILURE]: (state: any) =>
+      [ActionTypes.GET_SNAPSHOT_POLICY_FAILURE]: (state) =>
         immutable(state, {
           snapshotPolicies: { $set: [] },
           canReadPolicies: { $set: false },
         }),
-      [ActionTypes.ADD_SNAPSHOT_POLICY_MEMBER_SUCCESS]: (state: any, action: any) =>
+      [ActionTypes.ADD_SNAPSHOT_POLICY_MEMBER_SUCCESS]: (state, action: any) =>
         immutable(state, {
           snapshotPolicies: { $apply: snapshotMembershipResultApply(action) },
         }),
-      [ActionTypes.REMOVE_SNAPSHOT_POLICY_MEMBER_SUCCESS]: (state: any, action: any) =>
+      [ActionTypes.REMOVE_SNAPSHOT_POLICY_MEMBER_SUCCESS]: (state, action: any) =>
         immutable(state, {
           snapshotPolicies: { $apply: snapshotMembershipResultApply(action) },
         }),
-      [ActionTypes.GET_USER_SNAPSHOT_ROLES]: (state: any) =>
+      [ActionTypes.GET_USER_SNAPSHOT_ROLES]: (state) =>
         immutable(state, {
           userRoles: { $set: [] },
         }),
-      [ActionTypes.GET_USER_SNAPSHOT_ROLES_SUCCESS]: (state: any, action: any) =>
+      [ActionTypes.GET_USER_SNAPSHOT_ROLES_SUCCESS]: (state, action: any) =>
         immutable(state, {
           userRoles: { $set: action.roles.data },
         }),
@@ -170,11 +174,11 @@ export default {
         immutable(state, {
           dialogIsOpen: { $set: false },
         }),
-      [ActionTypes.OPEN_SNAPSHOT_DIALOG]: (state: any, action: any) =>
+      [ActionTypes.OPEN_SNAPSHOT_DIALOG]: (state, action: any) =>
         immutable(state, {
           dialogIsOpen: { $set: action.payload },
         }),
-      [ActionTypes.APPLY_FILTERS]: (state: any, action: any) => {
+      [ActionTypes.APPLY_FILTERS]: (state, action: any) => {
         const bigquery = new BigQuery();
         const { filters, dataset } = action.payload;
 
@@ -184,7 +188,7 @@ export default {
           snapshotRequest: { filterStatement: { $set: filterStatement } },
         });
       },
-      [ActionTypes.SNAPSHOT_CREATE_DETAILS]: (state: any, action: any) => {
+      [ActionTypes.SNAPSHOT_CREATE_DETAILS]: (state, action: any) => {
         const bigquery = new BigQuery();
         const { name, description, assetName, filterData, dataset } = action.payload;
 
@@ -201,13 +205,13 @@ export default {
           snapshotRequest: { $set: snapshotRequest },
         });
       },
-      [ActionTypes.ADD_READERS_TO_SNAPSHOT]: (state: any, action: any) => {
+      [ActionTypes.ADD_READERS_TO_SNAPSHOT]: (state, action: any) => {
         const snapshotRequest = { ...state.snapshotRequest, readers: action.payload };
         return immutable(state, {
           snapshotRequest: { $set: snapshotRequest },
         });
       },
-      [LOCATION_CHANGE]: (state: any) =>
+      [LOCATION_CHANGE]: (state) =>
         immutable(state, {
           snapshotRequest: { $set: defaultSnapshotRequest },
         }),

@@ -58,7 +58,7 @@ export const initialQueryState: QueryState = {
 export default {
   query: handleActions(
     {
-      [ActionTypes.RUN_QUERY_SUCCESS]: (state: any, action: any) => {
+      [ActionTypes.RUN_QUERY_SUCCESS]: (state, action: any) => {
         const bigquery = new BigQuery();
         const queryResults = action.results.data;
 
@@ -79,7 +79,7 @@ export default {
           page: { $set: 0 },
         });
       },
-      [ActionTypes.PREVIEW_DATA_SUCCESS]: (state, action) => {
+      [ActionTypes.PREVIEW_DATA_SUCCESS]: (state, action: any) => {
         const rows = action.payload.queryResults.data.result;
         const columns = action.payload.columns.map((column: ColumnModel) => ({
           name: column.name,
@@ -101,7 +101,7 @@ export default {
           resultsCount: { $set: rows.length },
         });
       },
-      [ActionTypes.PAGE_QUERY_SUCCESS]: (state: any, action: any) => {
+      [ActionTypes.PAGE_QUERY_SUCCESS]: (state, action: any) => {
         const bigquery = new BigQuery();
         const queryResults = action.results.data;
 
@@ -120,12 +120,12 @@ export default {
           rows: { $set: rows },
         });
       },
-      [ActionTypes.RUN_QUERY]: (state: any) =>
+      [ActionTypes.RUN_QUERY]: (state) =>
         immutable(state, {
           queryParams: { $set: {} },
           polling: { $set: true },
         }),
-      [ActionTypes.POLL_QUERY]: (state: any) =>
+      [ActionTypes.POLL_QUERY]: (state) =>
         immutable(state, {
           delay: { $set: true },
         }),
@@ -135,22 +135,22 @@ export default {
           queryParams: { $set: {} },
           polling: { $set: true },
         }),
-      [ActionTypes.PREVIEW_DATA_FAILURE]: (state, action) =>
+      [ActionTypes.PREVIEW_DATA_FAILURE]: (state, action: any) =>
         immutable(state, {
           error: { $set: true },
-          errorMsg: { $set: action.payload },
+          errMsg: { $set: action.payload },
           polling: { $set: false },
         }),
-      [ActionTypes.CHANGE_ROWS_PER_PAGE]: (state, action) =>
+      [ActionTypes.CHANGE_ROWS_PER_PAGE]: (state, action: any) =>
         immutable(state, {
           page: { $set: 0 },
           rowsPerPage: { $set: action.payload },
         }),
-      [ActionTypes.CHANGE_PAGE]: (state, action) =>
+      [ActionTypes.CHANGE_PAGE]: (state, action: any) =>
         immutable(state, {
           page: { $set: action.payload },
         }),
-      [ActionTypes.APPLY_FILTERS]: (state: any, action: any) => {
+      [ActionTypes.APPLY_FILTERS]: (state, action: any) => {
         const bigquery = new BigQuery();
         const filterStatement = bigquery.buildFilterStatement(action.payload.filters);
         const joinStatement = bigquery.buildJoinStatement(
@@ -165,7 +165,7 @@ export default {
           page: { $set: 0 },
         });
       },
-      [ActionTypes.APPLY_SORT]: (state: any, action: any) =>
+      [ActionTypes.APPLY_SORT]: (state, action: any) =>
         immutable(state, {
           orderProperty: { $set: action.payload.property },
           orderDirection: { $set: action.payload.direction },
@@ -192,7 +192,7 @@ export default {
           orderProperty: { $set: '' },
           orderDirection: { $set: 'desc' },
         }),
-      [ActionTypes.COUNT_RESULTS_SUCCESS]: (state: any, action: any) =>
+      [ActionTypes.COUNT_RESULTS_SUCCESS]: (state, action: any) =>
         immutable(state, {
           resultsCount: { $set: action.resultsCount },
         }),

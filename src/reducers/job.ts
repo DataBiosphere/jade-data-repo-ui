@@ -18,7 +18,7 @@ export const initialJobState: JobState = {
 };
 
 interface ResponseOptions {
-  status: string;
+  status: Status;
   jobId: string;
   data: {
     id: string;
@@ -32,39 +32,39 @@ interface JobAction {
 export default {
   jobs: handleActions(
     {
-      [ActionTypes.GET_JOB_BY_ID_SUCCESS]: (state: any, action: JobAction) =>
+      [ActionTypes.GET_JOB_BY_ID_SUCCESS]: (state, action: JobAction) =>
         immutable(state, {
           jobStatus: { $set: action.payload.status },
         }),
-      [ActionTypes.GET_JOB_RESULT_SUCCESS]: (state: any, action: JobAction) =>
+      [ActionTypes.GET_JOB_RESULT_SUCCESS]: (state, action: JobAction) =>
         immutable(state, {
           jobResultObjectId: { $set: action.payload.data.id },
         }),
-      [ActionTypes.CREATE_SNAPSHOT_JOB]: (state: any, action: JobAction) =>
+      [ActionTypes.CREATE_SNAPSHOT_JOB]: (state, action: JobAction) =>
         immutable(state, {
           jobId: { $set: action.payload.jobId },
         }),
-      [ActionTypes.CREATE_SNAPSHOT_SUCCESS]: (state: any) =>
+      [ActionTypes.CREATE_SNAPSHOT_SUCCESS]: (state) =>
         immutable(state, {
           jobStatus: { $set: Status.SUCCESS },
         }),
-      [ActionTypes.CREATE_SNAPSHOT_FAILURE]: (state: any) =>
+      [ActionTypes.CREATE_SNAPSHOT_FAILURE]: (state) =>
         immutable(state, {
           jobStatus: { $set: Status.ERROR },
         }),
-      [ActionTypes.EXPORT_SNAPSHOT_JOB]: (state: any, action: JobAction) =>
+      [ActionTypes.EXPORT_SNAPSHOT_JOB]: (state, action: JobAction) =>
         immutable(state, {
           jobId: { $set: action.payload.jobId },
         }),
-      [ActionTypes.EXPORT_SNAPSHOT_SUCCESS]: (state: any) =>
+      [ActionTypes.EXPORT_SNAPSHOT_SUCCESS]: (state) =>
         immutable(state, {
           jobStatus: { $set: Status.SUCCESS },
         }),
-      [ActionTypes.EXPORT_SNAPSHOT_FAILURE]: (state: any) =>
+      [ActionTypes.EXPORT_SNAPSHOT_FAILURE]: (state) =>
         immutable(state, {
           jobStatus: { $set: Status.ERROR },
         }),
-      [ActionTypes.CLEAR_JOB_ID]: (state: any) =>
+      [ActionTypes.CLEAR_JOB_ID]: (state) =>
         immutable(state, {
           jobId: { $set: '' },
         }),

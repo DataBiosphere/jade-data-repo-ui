@@ -259,6 +259,7 @@ export class OverviewHeader extends React.PureComponent {
                 className={classes.exportButton}
                 variant="contained"
                 color="primary"
+                disableElevation
               >
                 <a
                   target="_blank"

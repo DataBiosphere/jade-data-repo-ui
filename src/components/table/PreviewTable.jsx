@@ -6,11 +6,12 @@ import LightTable from './LightTable';
 export default class PreviewTable extends React.PureComponent {
   static propTypes = {
     table: PropTypes.object.isRequired,
+    tablePreview: PropTypes.object,
   };
 
   render() {
-    const { table } = this.props;
-    if (!table.preview) {
+    const { table, tablePreview } = this.props;
+    if (!tablePreview) {
       return <div>No data.</div>;
     }
     const columns = table.columns.map((col, j) => ({
@@ -32,7 +33,7 @@ export default class PreviewTable extends React.PureComponent {
       <LightTable
         columns={columns}
         rowKey={keyFn}
-        rows={table.preview}
+        rows={tablePreview}
         summary={true}
         itemType="rows"
       />

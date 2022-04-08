@@ -12,7 +12,9 @@ import {
 export interface DatasetState {
   datasets: Array<DatasetSummaryModel>;
   dataset: DatasetModel;
+  datasetPreview: Record<string, Array<Record<string, any>>>;
   datasetsCount: number;
+  filteredDatasetsCount: number;
   datasetPolicies: Array<PolicyModel>;
   userRoles: Array<string>;
   datasetSnapshots: Array<SnapshotSummaryModel>;
@@ -22,7 +24,9 @@ export interface DatasetState {
 export const initialDatasetState: DatasetState = {
   datasets: [],
   dataset: {},
+  datasetPreview: {},
   datasetsCount: 0,
+  filteredDatasetsCount: 0,
   datasetPolicies: [],
   userRoles: [],
   datasetSnapshots: [],
@@ -44,7 +48,7 @@ const datasetMembershipResultApply = (action: any) => (
 export default {
   datasets: handleActions(
     {
-      [ActionTypes.GET_DATASETS_SUCCESS]: (state: any, action: any): any =>
+      [ActionTypes.GET_DATASETS_SUCCESS]: (state, action: any): any =>
         immutable(state, {
           datasets: { $set: action.datasets.data.data.items },
           datasetsCount: { $set: action.datasets.data.data.total },
@@ -54,49 +58,53 @@ export default {
         immutable(state, {
           dataset: {},
         }),
-      [ActionTypes.GET_DATASET_BY_ID_SUCCESS]: (state: any, action: any) =>
+      [ActionTypes.GET_DATASET_BY_ID_SUCCESS]: (state, action: any) =>
         immutable(state, {
           dataset: { $set: action.dataset.data.data },
         }),
-      [ActionTypes.GET_DATASET_POLICY_SUCCESS]: (state: any, action: any) =>
+      [ActionTypes.GET_DATASET_POLICY_SUCCESS]: (state, action: any) =>
         immutable(state, {
           datasetPolicies: { $set: action.policy.data.policies },
         }),
-      [ActionTypes.ADD_CUSTODIAN_TO_DATASET_SUCCESS]: (state: any, action: any) =>
+      [ActionTypes.ADD_CUSTODIAN_TO_DATASET_SUCCESS]: (state, action: any) =>
         immutable(state, {
           datasetPolicies: { $set: action.policy.data.policies },
         }),
-      [ActionTypes.REMOVE_CUSTODIAN_FROM_DATASET_SUCCESS]: (state: any, action: any) =>
+      [ActionTypes.REMOVE_CUSTODIAN_FROM_DATASET_SUCCESS]: (state, action: any) =>
         immutable(state, {
           datasetPolicies: { $set: action.policy.data.policies },
         }),
-      [ActionTypes.ADD_DATASET_POLICY_MEMBER_SUCCESS]: (state: any, action: any) =>
+      [ActionTypes.ADD_DATASET_POLICY_MEMBER_SUCCESS]: (state, action: any) =>
         immutable(state, {
           datasetPolicies: { $apply: datasetMembershipResultApply(action) },
         }),
-      [ActionTypes.REMOVE_DATASET_POLICY_MEMBER_SUCCESS]: (state: any, action: any) =>
+      [ActionTypes.REMOVE_DATASET_POLICY_MEMBER_SUCCESS]: (state, action: any) =>
         immutable(state, {
           datasetPolicies: { $apply: datasetMembershipResultApply(action) },
         }),
-      [ActionTypes.GET_USER_DATASET_ROLES]: (state: any) =>
+      [ActionTypes.GET_USER_DATASET_ROLES]: (state) =>
         immutable(state, {
           userRoles: { $set: [] },
         }),
-      [ActionTypes.GET_USER_DATASET_ROLES_SUCCESS]: (state: any, action: any) =>
+      [ActionTypes.GET_USER_DATASET_ROLES_SUCCESS]: (state, action: any) =>
         immutable(state, {
           userRoles: { $set: action.roles.data },
         }),
-      [ActionTypes.GET_DATASET_SNAPSHOTS_SUCCESS]: (state: any, action: any) =>
+      [ActionTypes.GET_DATASET_SNAPSHOTS_SUCCESS]: (state, action: any) =>
         immutable(state, {
           datasetSnapshots: { $set: action.snapshots.data.data.items },
           datasetSnapshotsCount: { $set: action.snapshots.data.data.total },
         }),
-      [ActionTypes.GET_DATASET_TABLE_PREVIEW_SUCCESS]: (state: any, action: any) => {
-        const i = state.dataset.schema.tables.findIndex(
+      [ActionTypes.GET_DATASET_TABLE_PREVIEW_SUCCESS]: (state, action: any) => {
+        const i = state.dataset?.schema?.tables.findIndex(
           (table: any) => table.name === action.tableName,
         );
+        if (i === undefined) {
+          return state;
+        }
         return immutable(state, {
-          dataset: { schema: { tables: { [i]: { preview: { $set: action.preview.data.rows } } } } },
+          datasetPreview: { [action.tableName]: { $set: action.preview.data.rows } },
+          // datasetPreview: { schema: { tables: { [i]: { preview: { $set: action.preview.data.rows } } } } },
         });
       },
       [ActionTypes.USER_LOGOUT]: () => initialDatasetState,
