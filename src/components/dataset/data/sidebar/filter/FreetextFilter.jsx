@@ -2,16 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 
-import TextField from '@material-ui/core/TextField';
-import Chip from '@material-ui/core/Chip';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import { withStyles } from '@material-ui/core/styles';
-import { FormControlLabel, Checkbox, Typography } from '@material-ui/core';
+import TextField from '@mui/material/TextField';
+import Chip from '@mui/material/Chip';
+import Autocomplete from '@mui/material/Autocomplete';
+import { withStyles } from '@mui/styles';
+import { FormControlLabel, Checkbox, Typography } from '@mui/material';
 import BigQuery from 'modules/bigquery';
 
 const styles = (theme) => ({
   listItem: {
-    margin: `${theme.spacing(0.5)}px 0px`,
+    margin: `${theme.spacing(0.5)} 0px`,
   },
   chip: {
     backgroundColor: theme.palette.common.white,
@@ -121,7 +121,6 @@ export class FreetextFilter extends React.PureComponent {
     return (
       <div>
         <Autocomplete
-          debug={true}
           multiple
           id={`autocomplete-${column.name}`}
           options={options}

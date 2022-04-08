@@ -1,8 +1,8 @@
 import React, { Fragment } from 'react';
 import { Link, Redirect, Route, Router, Switch } from 'react-router-dom';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import { withStyles } from '@material-ui/core/styles';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import { withStyles } from '@mui/styles';
 import { ConnectedRouter } from 'connected-react-router';
 import PropTypes from 'prop-types';
 import history from 'modules/hist';
@@ -64,9 +64,11 @@ const styles = (theme) => ({
 class Private extends React.Component {
   static propTypes = {
     classes: PropTypes.object.isRequired,
+    // eslint-disable-next-line react/no-unused-prop-types
+    features: PropTypes.object,
   };
 
-  static prefixMatcher = new RegExp('/[^/]*');
+  static prefixMatcher = /\/[^/]*/;
 
   render() {
     const { classes } = this.props;

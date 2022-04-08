@@ -2,16 +2,7 @@ import React, { useState, useEffect } from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TablePagination from '@material-ui/core/TablePagination';
-import TableRow from '@material-ui/core/TableRow';
-import LoadingSpinner from 'components/common/LoadingSpinner';
-import Failure from 'components/common/Failure';
-import { changeRowsPerPage, changePage, applySort } from 'actions/index';
+import { withStyles } from '@mui/styles';
 import {
   Dialog,
   DialogContent,
@@ -19,14 +10,22 @@ import {
   DialogTitle,
   IconButton,
   Link,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TablePagination,
+  TableRow,
   Typography,
-} from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/Close';
+} from '@mui/material';
+import { Close } from '@mui/icons-material';
+import LoadingSpinner from 'components/common/LoadingSpinner';
+import Failure from 'components/common/Failure';
+import { applySort, changePage, changeRowsPerPage } from 'actions/index';
 import JadeTableHead from './JadeTableHead';
 import { ellipsis } from '../../libs/styles';
 import { TABLE_DEFAULT_ROWS_PER_PAGE_OPTIONS } from '../../constants';
 
-// eslint-disable-next-line no-unused-vars
 const styles = (theme) => ({
   root: {
     width: '100%',
@@ -227,8 +226,8 @@ function JadeTable({
         count={count}
         rowsPerPage={rowsPerPage}
         page={page}
-        onChangePage={handleChangePage}
-        onChangeRowsPerPage={handleChangeRowsPerPage}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
       />
       <Dialog open={seeMore.open} scroll="paper">
         <DialogTitle disableTypography={true} id="see-more-dialog-title">
@@ -236,7 +235,7 @@ function JadeTable({
             {seeMore.title}
           </Typography>
           <IconButton size="small" style={{ float: 'right' }} onClick={handleSeeMoreClose}>
-            <CloseIcon />
+            <Close />
           </IconButton>
         </DialogTitle>
         <DialogContent dividers={true}>

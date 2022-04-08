@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles } from '@mui/styles';
 import { renderCloudPlatforms } from '../../libs/render-utils';
 
 import LightTable from './LightTable';
@@ -41,8 +41,8 @@ class SnapshotTable extends React.PureComponent {
         name: 'name',
         allowSort: true,
         render: (row) => (
-          <Link to={`/snapshots/${row.id}`} className={classes.jadeLink}>
-            {row.name}
+          <Link to={`/snapshots/${row.id}`}>
+            <span className={classes.jadeLink}>{row.name}</span>
           </Link>
         ),
       },

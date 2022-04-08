@@ -7,6 +7,7 @@ import _ from 'lodash/fp';
  * exactly the right thing to do. This function makes the intention clear and avoids the lint error.
  */
 export const useOnMount = (fn) => {
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(fn, []);
 };
 
@@ -15,7 +16,10 @@ export const validateSnapshotName = (name) =>
 
 const maybeCall = (maybeFn) => (_.isFunction(maybeFn) ? maybeFn() : maybeFn);
 
-export const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+export const delay = (ms) =>
+  new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
 
 export const cond = (...args) => {
   // eslint-disable-next-line no-console

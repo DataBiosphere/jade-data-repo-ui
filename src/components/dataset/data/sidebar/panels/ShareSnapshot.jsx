@@ -3,8 +3,9 @@ import _ from 'lodash';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles } from '@mui/styles';
 import {
+  Autocomplete,
   Button,
   Divider,
   IconButton,
@@ -13,9 +14,8 @@ import {
   Select,
   TextField,
   Typography,
-} from '@material-ui/core';
-import { MoreVert } from '@material-ui/icons';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+} from '@mui/material';
+import { MoreVert } from '@mui/icons-material';
 import { isEmail } from 'validator';
 import { addReadersToSnapshot, createSnapshot } from 'actions/index';
 
@@ -27,7 +27,7 @@ const styles = (theme) => ({
     padding: theme.spacing(2),
   },
   section: {
-    margin: `${theme.spacing(1)}px 0px`,
+    margin: `${theme.spacing(1)} 0px`,
     overflowX: 'hidden',
   },
   sharingArea: {
@@ -68,8 +68,9 @@ const styles = (theme) => ({
   bottom: {
     position: 'fixed',
     bottom: '0',
-    right: `${sidebarWidth + theme.spacing(1)}px`,
-    width: `${drawerWidth - theme.spacing(4)}px`,
+    right: `${sidebarWidth}px`,
+    width: `${drawerWidth}px`,
+    padding: `0 ${theme.spacing(1)}`,
     textAlign: 'end',
   },
   buttonContainer: {

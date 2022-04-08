@@ -1,15 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogActions from '@material-ui/core/DialogActions';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
+import { withStyles } from '@mui/styles';
+import {
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogActions,
+  DialogContent,
+  IconButton,
+} from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 
-import { Edit } from '@material-ui/icons';
+import { Edit } from '@mui/icons-material';
 import ManageUsersView from './ManageUsersView';
 
 const styles = (theme) => ({
@@ -30,7 +32,7 @@ const styles = (theme) => ({
   },
   dialogContent: {
     margin: 0,
-    padding: theme.spacing(2),
+    padding: `${theme.spacing(2)} !important`,
   },
   dialogActions: {
     borderTop: `1px solid ${theme.palette.divider}`,

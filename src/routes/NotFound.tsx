@@ -1,11 +1,11 @@
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import OopsISpilledMyTerra from 'media/images/terra404_mug.svg';
-import { ClassNameMap } from '@material-ui/styles';
-import { Button, Grid, Typography } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles, ClassNameMap } from '@mui/styles';
+import { Button, Grid, Typography } from '@mui/material';
+import { CustomTheme } from '@mui/material/styles';
 
-const styles = (theme: any) => ({
+const styles = (theme: CustomTheme) => ({
   pageRoot: {
     padding: '16px 24px',
     height: '75%',
@@ -28,9 +28,12 @@ const styles = (theme: any) => ({
   button: {
     marginTop: '1em',
   },
+  buttonText: {
+    color: theme.palette.common.white,
+  },
 });
 
-const NotFound = (props: { classes: ClassNameMap }) => {
+function NotFound(props: { classes: ClassNameMap }) {
   const { classes } = props;
   return (
     <Grid
@@ -59,7 +62,7 @@ const NotFound = (props: { classes: ClassNameMap }) => {
           size="large"
           to="/"
         >
-          Return to Dashboard
+          <span className={classes.buttonText}>Return to Dashboard</span>
         </Button>
       </Grid>
       <Grid item xs={6}>
@@ -67,6 +70,6 @@ const NotFound = (props: { classes: ClassNameMap }) => {
       </Grid>
     </Grid>
   );
-};
+}
 
 export default withStyles(styles)(NotFound);

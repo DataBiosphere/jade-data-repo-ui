@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles } from '@mui/styles';
 import { ReactComponent as ExitSVG } from 'media/icons/times-light.svg';
 import { ReactComponent as QuestionCircleSVG } from 'media/icons/question-circle-solid.svg';
 import HelpFooter from './HelpFooter';

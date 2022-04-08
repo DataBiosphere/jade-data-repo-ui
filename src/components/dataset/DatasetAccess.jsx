@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Grid } from '@material-ui/core';
+import { Grid } from '@mui/material';
 import UserList from '../UserList';
-import { DATASET_ROLES } from '../../constants';
+import { DatasetRoles } from '../../constants';
 import { getRoleMembersFromPolicies } from '../../libs/utils';
 import { addDatasetPolicyMember, removeDatasetPolicyMember } from '../../actions';
 
@@ -21,11 +21,11 @@ function DatasetAccess(props) {
     };
   };
   const { horizontal, policies, userRoles } = props;
-  const stewards = getRoleMembersFromPolicies(policies, DATASET_ROLES.STEWARD);
-  const custodians = getRoleMembersFromPolicies(policies, DATASET_ROLES.CUSTODIAN);
-  const snapshotCreators = getRoleMembersFromPolicies(policies, DATASET_ROLES.SNAPSHOT_CREATOR);
+  const stewards = getRoleMembersFromPolicies(policies, DatasetRoles.STEWARD);
+  const custodians = getRoleMembersFromPolicies(policies, DatasetRoles.CUSTODIAN);
+  const snapshotCreators = getRoleMembersFromPolicies(policies, DatasetRoles.SNAPSHOT_CREATOR);
 
-  const canManageUsers = userRoles.includes(DATASET_ROLES.STEWARD);
+  const canManageUsers = userRoles.includes(DatasetRoles.STEWARD);
   const gridItemXs = horizontal ? 4 : 12;
 
   return (
@@ -35,8 +35,8 @@ function DatasetAccess(props) {
           users={stewards}
           typeOfUsers="Stewards"
           canManageUsers={canManageUsers}
-          addUser={addUser(DATASET_ROLES.STEWARD)}
-          removeUser={removeUser(DATASET_ROLES.STEWARD)}
+          addUser={addUser(DatasetRoles.STEWARD)}
+          removeUser={removeUser(DatasetRoles.STEWARD)}
           horizontal={horizontal}
         />
       </Grid>
@@ -45,8 +45,8 @@ function DatasetAccess(props) {
           users={custodians}
           typeOfUsers="Custodians"
           canManageUsers={canManageUsers}
-          addUser={addUser(DATASET_ROLES.CUSTODIAN)}
-          removeUser={removeUser(DATASET_ROLES.CUSTODIAN)}
+          addUser={addUser(DatasetRoles.CUSTODIAN)}
+          removeUser={removeUser(DatasetRoles.CUSTODIAN)}
           horizontal={horizontal}
         />
       </Grid>
@@ -55,8 +55,8 @@ function DatasetAccess(props) {
           users={snapshotCreators}
           typeOfUsers="Snapshot Creators"
           canManageUsers={canManageUsers}
-          addUser={addUser(DATASET_ROLES.SNAPSHOT_CREATOR)}
-          removeUser={removeUser(DATASET_ROLES.SNAPSHOT_CREATOR)}
+          addUser={addUser(DatasetRoles.SNAPSHOT_CREATOR)}
+          removeUser={removeUser(DatasetRoles.SNAPSHOT_CREATOR)}
           horizontal={horizontal}
         />
       </Grid>

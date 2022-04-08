@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Grid, Tab, Tabs, Typography } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
+import { Grid, Tab, Tabs, Typography } from '@mui/material';
+import { withStyles } from '@mui/styles';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import { renderCloudPlatforms, renderStorageResources } from '../../../libs/render-utils';

@@ -1,16 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
+import { withStyles } from '@mui/styles';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
 
-import { ReactComponent as ErrorIcon } from 'media/icons/warning-standard-solid.svg';
+import { Error } from '@mui/icons-material';
 
 const styles = (theme) => ({
   card: {
     borderRadius: 5,
     backgroundColor: theme.palette.error.main,
-    boxShadow: `${theme.spacing(1) * -1}px 0 0 0 ${theme.palette.error.dark}`,
+    boxShadow: `-${theme.spacing(1)} 0 0 0 ${theme.palette.error.dark}`,
     color: theme.palette.primary.contrastText,
     width: '100%',
   },
@@ -25,11 +25,12 @@ const styles = (theme) => ({
     fontFamily: theme.typography.fontFamily,
     fontSize: 12,
     fontWeight: 600,
-    padding: `0 0 0 ${theme.spacing(2)}px`,
+    padding: `0 0 0 ${theme.spacing(2)}`,
   },
   icon: {
     fill: theme.palette.primary.contrastText,
     height: theme.spacing(4),
+    width: theme.spacing(4),
   },
 });
 
@@ -54,7 +55,7 @@ export class Toast extends React.PureComponent {
       <Card className={classes.card}>
         <CardContent className={classes.content}>
           <div className={classes.cardBody}>
-            <ErrorIcon className={classes.icon} alt="logo" />
+            <Error className={classes.icon} alt="logo" />
             <div className={classes.text}>{errString}</div>
           </div>
         </CardContent>

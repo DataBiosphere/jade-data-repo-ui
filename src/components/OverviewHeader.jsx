@@ -2,7 +2,7 @@ import _ from 'lodash';
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles } from '@mui/styles';
 import { exportSnapshot, resetSnapshotExport } from 'actions/index';
 import { connect } from 'react-redux';
 import {
@@ -16,12 +16,12 @@ import {
   FormGroup,
   FormControlLabel,
   FormHelperText,
-} from '@material-ui/core';
-import { Launch } from '@material-ui/icons';
+} from '@mui/material';
+import { Launch } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 import UserList from './UserList';
 import TerraTooltip from './common/TerraTooltip';
-import { SNAPSHOT_ROLES } from '../constants';
+import { SnapshotRoles } from '../constants';
 
 const styles = (theme) => ({
   pageTitle: { ...theme.mixins.pageTitle },
@@ -129,7 +129,7 @@ export class OverviewHeader extends React.PureComponent {
     } = this.props;
     const { exportGsPaths } = this.state;
     const loading = _.isNil(of) || _.isEmpty(of);
-    const canManageUsers = userRoles.includes(SNAPSHOT_ROLES.STEWARD);
+    const canManageUsers = userRoles.includes(SnapshotRoles.STEWARD);
 
     const linkToBq = of.accessInformation?.bigQuery !== undefined;
     const consoleLink = linkToBq
@@ -259,6 +259,7 @@ export class OverviewHeader extends React.PureComponent {
                 className={classes.exportButton}
                 variant="contained"
                 color="primary"
+                disableElevation
               >
                 <a
                   target="_blank"

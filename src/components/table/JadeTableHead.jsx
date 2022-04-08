@@ -1,12 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles } from '@mui/styles';
 import { connect } from 'react-redux';
 
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import TableCell from '@material-ui/core/TableCell';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import TableCell from '@mui/material/TableCell';
+import TableSortLabel from '@mui/material/TableSortLabel';
+import { ColumnModes } from '../../constants';
 
 const styles = (theme) => ({
   root: {
@@ -26,7 +27,7 @@ function JadeTableHead({ columns, createSortHandler, orderProperty, orderDirecti
           <TableCell
             key={column.name}
             align="left"
-            padding="default"
+            padding="normal"
             sortDirection={orderProperty === column.name ? orderDirection : false}
             data-cy={`columnheader-${column.name}`}
           >

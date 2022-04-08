@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles } from '@mui/styles';
 import { getDatasetById, getDatasetPolicy, getUserDatasetRoles } from 'actions';
-import { Typography } from '@material-ui/core';
+import { Typography } from '@mui/material';
 import DatasetRelationshipsPanel from './DatasetOverviewSchemaPanel';
 import { useOnMount } from '../../../libs/utils';
-import { BREADCRUMB_TYPE, DATASET_INCLUDE_OPTIONS } from '../../../constants';
+import { BreadcrumbType, DatasetIncludeOptions } from '../../../constants';
 import DatasetOverviewPanel from './DatasetOverviewPanel';
 import AppBreadcrumbs from '../../AppBreadcrumbs/AppBreadcrumbs';
 
@@ -58,11 +58,11 @@ function DatasetOverview(props) {
       getDatasetById({
         datasetId,
         include: [
-          DATASET_INCLUDE_OPTIONS.SCHEMA,
-          DATASET_INCLUDE_OPTIONS.ACCESS_INFORMATION,
-          DATASET_INCLUDE_OPTIONS.PROFILE,
-          DATASET_INCLUDE_OPTIONS.DATA_PROJECT,
-          DATASET_INCLUDE_OPTIONS.STORAGE,
+          DatasetIncludeOptions.SCHEMA,
+          DatasetIncludeOptions.ACCESS_INFORMATION,
+          DatasetIncludeOptions.PROFILE,
+          DatasetIncludeOptions.DATA_PROJECT,
+          DatasetIncludeOptions.STORAGE,
         ],
       }),
     );
@@ -73,7 +73,7 @@ function DatasetOverview(props) {
   return datasetPolicies && dataset && dataset.id === datasetId ? (
     <div className={classes.pageRoot}>
       <AppBreadcrumbs
-        context={{ type: BREADCRUMB_TYPE.DATASET, id: datasetId, name: dataset.name }}
+        context={{ type: BreadcrumbType.DATASET, id: datasetId, name: dataset.name }}
       />
       <Typography variant="h3" className={classes.pageTitle}>
         {dataset.name}

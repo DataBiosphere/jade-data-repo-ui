@@ -3,9 +3,44 @@ import immutable from 'immutability-helper';
 import BigQuery from 'modules/bigquery';
 import { LOCATION_CHANGE } from 'connected-react-router';
 
-import { ActionTypes } from 'constants/index';
+import { ActionTypes } from '../constants';
+import {
+  DatasetModel,
+  PolicyModel,
+  SnapshotExportResponseModel,
+  SnapshotModel,
+  SnapshotSummaryModel,
+} from '../generated/tdr';
 
-const defaultSnapshotRequest = {
+// TODO: convert to autogenned SnapshotRequestModel
+export interface SnapshotRequest {
+  name: string;
+  description: string;
+  assetName: string;
+  filterStatement: string;
+  joinStatement: string;
+  readers: Array<string>;
+}
+
+export interface SnapshotState {
+  snapshot: SnapshotModel;
+  snapshots: Array<SnapshotSummaryModel>;
+  snapshotPolicies: Array<PolicyModel>;
+  canReadPolicies: boolean;
+  dataset: DatasetModel;
+  snapshotCount: number;
+  filteredSnapshotCount: number;
+  dialogIsOpen: boolean;
+  // for snapshot creation
+  snapshotRequest: SnapshotRequest;
+  userRoles: Array<string>;
+  // for snapshot export to workspace
+  exportIsProcessing: boolean;
+  exportIsDone: boolean;
+  exportResponse: SnapshotExportResponseModel;
+}
+
+const defaultSnapshotRequest: SnapshotRequest = {
   name: '',
   description: '',
   assetName: '',
@@ -14,14 +49,14 @@ const defaultSnapshotRequest = {
   readers: [],
 };
 
-export const snapshotState = {
-  // snapshot info
+export const initialSnapshotState: SnapshotState = {
   snapshot: {},
   snapshots: [],
   snapshotPolicies: [],
   canReadPolicies: false,
   dataset: {},
   snapshotCount: 0,
+  filteredSnapshotCount: 0,
   dialogIsOpen: false,
   // for snapshot creation
   snapshotRequest: defaultSnapshotRequest,
@@ -33,10 +68,14 @@ export const snapshotState = {
 };
 
 // We need this method to apply the response from add/remove snapshot members since the API only returns the affected group
-const snapshotMembershipResultApply = (action) => (snapshotPolicies) =>
+const snapshotMembershipResultApply = (action: any) => (
+  snapshotPolicies: Array<PolicyModel>,
+): Array<PolicyModel> =>
   snapshotPolicies.map((p) => {
     if (p.name === action.policy) {
-      const policy = action.snapshot.data.data.policies.find((ap) => ap.name === action.policy);
+      const policy = action.snapshot.data.data.policies.find(
+        (ap: any) => ap.name === action.policy,
+      );
       return policy || p;
     }
     return p;
@@ -45,7 +84,7 @@ const snapshotMembershipResultApply = (action) => (snapshotPolicies) =>
 export default {
   snapshots: handleActions(
     {
-      [ActionTypes.GET_SNAPSHOTS_SUCCESS]: (state, action) =>
+      [ActionTypes.GET_SNAPSHOTS_SUCCESS]: (state, action: any) =>
         immutable(state, {
           snapshots: { $set: action.snapshots.data.data.items },
           snapshotCount: { $set: action.snapshots.data.data.total },
@@ -56,7 +95,7 @@ export default {
           snapshot: { $set: {} },
           dialogIsOpen: { $set: true },
         }),
-      [ActionTypes.CREATE_SNAPSHOT_SUCCESS]: (state, action) =>
+      [ActionTypes.CREATE_SNAPSHOT_SUCCESS]: (state, action: any) =>
         immutable(state, {
           snapshot: { $set: action.payload.jobResult },
         }),
@@ -77,7 +116,7 @@ export default {
         immutable(state, {
           exportResponse: { $set: {} },
         }),
-      [ActionTypes.EXPORT_SNAPSHOT_SUCCESS]: (state, action) =>
+      [ActionTypes.EXPORT_SNAPSHOT_SUCCESS]: (state, action: any) =>
         immutable(state, {
           exportResponse: { $set: action.payload.jobResult },
           exportIsProcessing: { $set: false },
@@ -101,11 +140,11 @@ export default {
           exportIsProcessing: { $set: false },
           exportIsDone: { $set: false },
         }),
-      [ActionTypes.GET_SNAPSHOT_BY_ID_SUCCESS]: (state, action) =>
+      [ActionTypes.GET_SNAPSHOT_BY_ID_SUCCESS]: (state, action: any) =>
         immutable(state, {
           snapshot: { $set: action.snapshot.data.data },
         }),
-      [ActionTypes.GET_SNAPSHOT_POLICY_SUCCESS]: (state, action) =>
+      [ActionTypes.GET_SNAPSHOT_POLICY_SUCCESS]: (state, action: any) =>
         immutable(state, {
           snapshotPolicies: { $set: action.snapshot.data.data.policies },
           canReadPolicies: { $set: true },
@@ -115,11 +154,11 @@ export default {
           snapshotPolicies: { $set: [] },
           canReadPolicies: { $set: false },
         }),
-      [ActionTypes.ADD_SNAPSHOT_POLICY_MEMBER_SUCCESS]: (state, action) =>
+      [ActionTypes.ADD_SNAPSHOT_POLICY_MEMBER_SUCCESS]: (state, action: any) =>
         immutable(state, {
           snapshotPolicies: { $apply: snapshotMembershipResultApply(action) },
         }),
-      [ActionTypes.REMOVE_SNAPSHOT_POLICY_MEMBER_SUCCESS]: (state, action) =>
+      [ActionTypes.REMOVE_SNAPSHOT_POLICY_MEMBER_SUCCESS]: (state, action: any) =>
         immutable(state, {
           snapshotPolicies: { $apply: snapshotMembershipResultApply(action) },
         }),
@@ -127,7 +166,7 @@ export default {
         immutable(state, {
           userRoles: { $set: [] },
         }),
-      [ActionTypes.GET_USER_SNAPSHOT_ROLES_SUCCESS]: (state, action) =>
+      [ActionTypes.GET_USER_SNAPSHOT_ROLES_SUCCESS]: (state, action: any) =>
         immutable(state, {
           userRoles: { $set: action.roles.data },
         }),
@@ -135,11 +174,11 @@ export default {
         immutable(state, {
           dialogIsOpen: { $set: false },
         }),
-      [ActionTypes.OPEN_SNAPSHOT_DIALOG]: (state, action) =>
+      [ActionTypes.OPEN_SNAPSHOT_DIALOG]: (state, action: any) =>
         immutable(state, {
           dialogIsOpen: { $set: action.payload },
         }),
-      [ActionTypes.APPLY_FILTERS]: (state, action) => {
+      [ActionTypes.APPLY_FILTERS]: (state, action: any) => {
         const bigquery = new BigQuery();
         const { filters, dataset } = action.payload;
 
@@ -149,7 +188,7 @@ export default {
           snapshotRequest: { filterStatement: { $set: filterStatement } },
         });
       },
-      [ActionTypes.SNAPSHOT_CREATE_DETAILS]: (state, action) => {
+      [ActionTypes.SNAPSHOT_CREATE_DETAILS]: (state, action: any) => {
         const bigquery = new BigQuery();
         const { name, description, assetName, filterData, dataset } = action.payload;
 
@@ -166,7 +205,7 @@ export default {
           snapshotRequest: { $set: snapshotRequest },
         });
       },
-      [ActionTypes.ADD_READERS_TO_SNAPSHOT]: (state, action) => {
+      [ActionTypes.ADD_READERS_TO_SNAPSHOT]: (state, action: any) => {
         const snapshotRequest = { ...state.snapshotRequest, readers: action.payload };
         return immutable(state, {
           snapshotRequest: { $set: snapshotRequest },
@@ -176,8 +215,8 @@ export default {
         immutable(state, {
           snapshotRequest: { $set: defaultSnapshotRequest },
         }),
-      [ActionTypes.USER_LOGOUT]: () => snapshotState,
+      [ActionTypes.USER_LOGOUT]: () => initialSnapshotState,
     },
-    snapshotState,
+    initialSnapshotState,
   ),
 };

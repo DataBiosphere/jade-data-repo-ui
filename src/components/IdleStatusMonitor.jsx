@@ -3,14 +3,8 @@ import React, { useEffect, useState } from 'react';
 import { lastActiveTimeStore } from 'libs/state'; // stub
 import * as Utils from 'libs/utils';
 import PropTypes from 'prop-types';
-import {
-  Dialog,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Button,
-  withStyles,
-} from '@material-ui/core';
+import { Dialog, DialogContent, DialogContentText, DialogTitle, Button } from '@mui/material';
+import { withStyles } from '@mui/styles';
 import moment from 'moment';
 
 // Styles
@@ -79,7 +73,7 @@ CountdownModal.propTypes = {
   onSignOut: PropTypes.func,
 };
 
-const InactivityTimer = ({ id, timeout, countdownStart, onSignOut }) => {
+function InactivityTimer({ id, timeout, countdownStart, onSignOut }) {
   const { [id]: lastRecordedActivity } = Utils.useStore(lastActiveTimeStore) || {};
   const [currentTime, setDelay] = Utils.useCurrentTime();
   const { timedOut, showCountdown, countdown } = getIdleData({
@@ -119,7 +113,7 @@ const InactivityTimer = ({ id, timeout, countdownStart, onSignOut }) => {
   }, [onSignOut, timedOut]);
 
   return showCountdown && <CountdownModal onSignOut={onSignOut} countdown={countdown} />;
-};
+}
 
 InactivityTimer.propTypes = {
   countdownStart: PropTypes.number,
@@ -128,17 +122,19 @@ InactivityTimer.propTypes = {
   timeout: PropTypes.number,
 };
 
-export const LogoutIframe = ({ id, dismissLogout }) => (
-  <iframe
-    title="logout"
-    style={{ display: 'none' }}
-    src="https://www.google.com/accounts/Logout"
-    onLoad={() => {
-      setLastActive(id);
-      dismissLogout();
-    }}
-  />
-);
+export function LogoutIframe({ id, dismissLogout }) {
+  return (
+    <iframe
+      title="logout"
+      style={{ display: 'none' }}
+      src="https://www.google.com/accounts/Logout"
+      onLoad={() => {
+        setLastActive(id);
+        dismissLogout();
+      }}
+    />
+  );
+}
 
 LogoutIframe.propTypes = {
   dismissLogout: PropTypes.func.isRequired,

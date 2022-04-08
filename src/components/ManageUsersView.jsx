@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import Chip from '@material-ui/core/Chip';
-import TextField from '@material-ui/core/TextField';
+import { withStyles } from '@mui/styles';
+import Button from '@mui/material/Button';
+import Chip from '@mui/material/Chip';
+import TextField from '@mui/material/TextField';
 import { isEmail } from 'validator';
 
 const styles = (theme) => ({

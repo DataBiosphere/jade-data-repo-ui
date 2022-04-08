@@ -1,6 +1,6 @@
 import React from 'react';
 import Toast from 'components/Toast';
-import { store } from 'react-notifications-component';
+import { Store } from 'react-notifications-component';
 import _ from 'lodash';
 
 export function showNotification(err) {
@@ -16,7 +16,7 @@ export function showNotification(err) {
     }
   }
 
-  store.addNotification({
+  Store.addNotification({
     content: <Toast errorMsg={message} status={status} />,
     insert: 'top',
     container: 'top-right',

@@ -1,8 +1,9 @@
 import React from 'react';
-import { Breadcrumbs } from '@material-ui/core';
+import { Breadcrumbs } from '@mui/material';
 import BreadcrumbLink from './BreadcrumbLink';
+import { BreadcrumbType } from '../../constants';
 
-type Context = { type: string; id: string; name: string };
+type Context = { type: BreadcrumbType; id: string; name: string };
 type Breadcrumb = { text: string; to: string };
 
 type AppBreadcrumbsProps = {
@@ -10,7 +11,7 @@ type AppBreadcrumbsProps = {
   context: Context;
 };
 
-const AppBreadcrumbs = ({ context, childBreadcrumbs }: AppBreadcrumbsProps) => {
+function AppBreadcrumbs({ context, childBreadcrumbs }: AppBreadcrumbsProps) {
   const { id, name, type } = context;
 
   const capitalize = (str: string): string => str.charAt(0).toUpperCase() + str.slice(1);
@@ -39,6 +40,6 @@ const AppBreadcrumbs = ({ context, childBreadcrumbs }: AppBreadcrumbsProps) => {
       })}
     </Breadcrumbs>
   );
-};
+}
 
 export default AppBreadcrumbs;

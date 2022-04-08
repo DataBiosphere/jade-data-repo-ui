@@ -12,6 +12,7 @@
  * you may need to give yourself permissions to upload to the jade-testdata bucket as well
  */
 
+/* eslint-disable no-console, @typescript-eslint/no-var-requires */
 const https = require('https');
 const _ = require('lodash');
 const fs = require('fs');
@@ -132,7 +133,6 @@ function findDatasetByName(token, name, host) {
 }
 
 // unpack positional arguments
-// eslint-disable-next-line no-unused-vars
 const [command, datasetName] = argv._;
 // unpack others
 const { bucketName, jc, targetEnv, targetName, targetUrl, srcEnv } = argv;
@@ -236,3 +236,4 @@ const { bucketName, jc, targetEnv, targetName, targetUrl, srcEnv } = argv;
     console.error(e);
   }
 })();
+/* eslint-enable no-console, @typescript-eslint/no-var-requires*/

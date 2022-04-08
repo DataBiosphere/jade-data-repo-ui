@@ -5,7 +5,7 @@ import LoadingSpinner from 'components/common/LoadingSpinner';
 import { resetQuery, previewData, getSnapshotById } from 'actions/index';
 
 import DataView from 'components/common/data/DataView';
-import { RESOURCE_TYPE, SNAPSHOT_INCLUDE_OPTIONS } from '../../../constants';
+import { ResourceType, SnapshotIncludeOptions } from '../../../constants';
 
 function SnapshotDataView({ dispatch, match, page, queryParams, rowsPerPage, snapshot }) {
   const [selected, setSelected] = useState('');
@@ -22,12 +22,12 @@ function SnapshotDataView({ dispatch, match, page, queryParams, rowsPerPage, sna
       getSnapshotById({
         snapshotId,
         include: [
-          SNAPSHOT_INCLUDE_OPTIONS.SOURCES,
-          SNAPSHOT_INCLUDE_OPTIONS.TABLES,
-          SNAPSHOT_INCLUDE_OPTIONS.RELATIONSHIPS,
-          SNAPSHOT_INCLUDE_OPTIONS.ACCESS_INFORMATION,
-          SNAPSHOT_INCLUDE_OPTIONS.PROFILE,
-          SNAPSHOT_INCLUDE_OPTIONS.DATA_PROJECT,
+          SnapshotIncludeOptions.SOURCES,
+          SnapshotIncludeOptions.TABLES,
+          SnapshotIncludeOptions.RELATIONSHIPS,
+          SnapshotIncludeOptions.ACCESS_INFORMATION,
+          SnapshotIncludeOptions.PROFILE,
+          SnapshotIncludeOptions.DATA_PROJECT,
         ],
       }),
     );
@@ -62,7 +62,7 @@ function SnapshotDataView({ dispatch, match, page, queryParams, rowsPerPage, sna
     if (snapshotLoaded && snapshotId === snapshot.id) {
       dispatch(
         previewData(
-          RESOURCE_TYPE.SNAPSHOT,
+          ResourceType.SNAPSHOT,
           snapshot.id,
           selected,
           selectedTable.columns,
@@ -101,7 +101,7 @@ function SnapshotDataView({ dispatch, match, page, queryParams, rowsPerPage, sna
       resourceId={snapshot.id}
       resourceLoaded={snapshotLoaded}
       resourceName={snapshot.name}
-      resourceType={RESOURCE_TYPE.SNAPSHOT}
+      resourceType={ResourceType.SNAPSHOT}
       tableNames={tableNames}
       handleChangeTable={handleChangeTable}
       queryParams={queryParams}

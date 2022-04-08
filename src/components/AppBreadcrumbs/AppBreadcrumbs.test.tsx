@@ -2,17 +2,21 @@ import React from 'react';
 import { mount } from '@cypress/react';
 import { Router } from 'react-router-dom';
 import history from 'modules/hist';
+import globalTheme from 'modules/theme';
+import { ThemeProvider } from '@mui/styles';
 import AppBreadcrumbs from './AppBreadcrumbs';
-import { BREADCRUMB_TYPE } from '../../constants';
+import { BreadcrumbType } from '../../constants';
 
 describe('AppBreadcrumbs', () => {
   it('should render the path to the current dataset', () => {
     mount(
       <Router history={history}>
-        <AppBreadcrumbs
-          context={{ type: BREADCRUMB_TYPE.DATASET, id: 'foo-bar', name: 'testDataset' }}
-          childBreadcrumbs={[]}
-        />
+        <ThemeProvider theme={globalTheme}>
+          <AppBreadcrumbs
+            context={{ type: BreadcrumbType.DATASET, id: 'foo-bar', name: 'testDataset' }}
+            childBreadcrumbs={[]}
+          />
+        </ThemeProvider>
       </Router>,
     );
 
@@ -29,10 +33,12 @@ describe('AppBreadcrumbs', () => {
 
     mount(
       <Router history={history}>
-        <AppBreadcrumbs
-          context={{ type: BREADCRUMB_TYPE.DATASET, id: 'foo-bar', name: 'testDataset' }}
-          childBreadcrumbs={[{ text: 'Data', to: 'data' }]}
-        />
+        <ThemeProvider theme={globalTheme}>
+          <AppBreadcrumbs
+            context={{ type: BreadcrumbType.DATASET, id: 'foo-bar', name: 'testDataset' }}
+            childBreadcrumbs={[{ text: 'Data', to: 'data' }]}
+          />
+        </ThemeProvider>
       </Router>,
     );
 
@@ -48,10 +54,16 @@ describe('AppBreadcrumbs', () => {
   it('should render the path to the current snapshot', () => {
     mount(
       <Router history={history}>
-        <AppBreadcrumbs
-          context={{ type: BREADCRUMB_TYPE.SNAPSHOT, id: 'foo-bar-snapshot', name: 'testSnapshot' }}
-          childBreadcrumbs={[]}
-        />
+        <ThemeProvider theme={globalTheme}>
+          <AppBreadcrumbs
+            context={{
+              type: BreadcrumbType.SNAPSHOT,
+              id: 'foo-bar-snapshot',
+              name: 'testSnapshot',
+            }}
+            childBreadcrumbs={[]}
+          />
+        </ThemeProvider>
       </Router>,
     );
     cy.get('.MuiBreadcrumbs-ol > :nth-child(1) > a')
@@ -69,25 +81,33 @@ describe('AppBreadcrumbs', () => {
   it('should disable the last link in the breadcrumbs', () => {
     mount(
       <Router history={history}>
-        <AppBreadcrumbs
-          context={{ type: BREADCRUMB_TYPE.DATASET, id: 'foo-bar', name: 'testDataset' }}
-          childBreadcrumbs={[]}
-        />
+        <ThemeProvider theme={globalTheme}>
+          <AppBreadcrumbs
+            context={{ type: BreadcrumbType.DATASET, id: 'foo-bar', name: 'testDataset' }}
+            childBreadcrumbs={[]}
+          />
+        </ThemeProvider>
       </Router>,
     );
-    cy.get('.MuiBreadcrumbs-ol > :nth-child(3) > a').should('have.css', 'cursor', 'pointer');
-    cy.get('.MuiBreadcrumbs-ol > :nth-child(5) > a').should('have.css', 'cursor', 'default');
+    cy.get('.MuiBreadcrumbs-ol > :nth-child(3) > a > span').should('have.css', 'cursor', 'pointer');
+    cy.get('.MuiBreadcrumbs-ol > :nth-child(5) > a > span ').should(
+      'have.css',
+      'cursor',
+      'default',
+    );
 
     mount(
       <Router history={history}>
-        <AppBreadcrumbs
-          context={{ type: BREADCRUMB_TYPE.DATASET, id: 'foo-bar', name: 'testDataset' }}
-          childBreadcrumbs={[{ text: 'Data', to: 'data' }]}
-        />
+        <ThemeProvider theme={globalTheme}>
+          <AppBreadcrumbs
+            context={{ type: BreadcrumbType.DATASET, id: 'foo-bar', name: 'testDataset' }}
+            childBreadcrumbs={[{ text: 'Data', to: 'data' }]}
+          />
+        </ThemeProvider>
       </Router>,
     );
 
-    cy.get('.MuiBreadcrumbs-ol > :nth-child(5) > a').should('have.css', 'cursor', 'pointer');
-    cy.get('.MuiBreadcrumbs-ol > :nth-child(7) > a').should('have.css', 'cursor', 'default');
+    cy.get('.MuiBreadcrumbs-ol > :nth-child(5) > a > span').should('have.css', 'cursor', 'pointer');
+    cy.get('.MuiBreadcrumbs-ol > :nth-child(7) > a > span').should('have.css', 'cursor', 'default');
   });
 });

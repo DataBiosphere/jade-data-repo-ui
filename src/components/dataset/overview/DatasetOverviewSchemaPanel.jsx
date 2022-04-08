@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Paper, Typography } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
-import { TreeItem, TreeView } from '@material-ui/lab';
-import { AddBoxOutlined, IndeterminateCheckBoxOutlined } from '@material-ui/icons';
-import { fade } from '@material-ui/core/styles/colorManipulator';
+import { Box, Button, Paper, Typography } from '@mui/material';
+import { TreeItem, TreeView } from '@mui/lab';
+import { AddBoxOutlined, IndeterminateCheckBoxOutlined } from '@mui/icons-material';
+import { alpha } from '@mui/material/styles';
+import { withStyles } from '@mui/styles';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
@@ -27,7 +27,13 @@ const styles = (theme) => ({
 });
 
 const StyledTreeItem = withStyles((theme) => ({
+  content: {
+    padding: 0,
+    backgroundColor: 'white !important',
+    cursor: 'default',
+  },
   iconContainer: {
+    cursor: 'pointer',
     '& .close': {
       opacity: 0.3,
     },
@@ -35,7 +41,7 @@ const StyledTreeItem = withStyles((theme) => ({
   group: {
     marginLeft: 7,
     paddingLeft: 5,
-    borderLeft: `2px dashed ${fade(theme.palette.primary.main, 0.5)}`,
+    borderLeft: `2px dashed ${alpha(theme.palette.primary.main, 0.5)}`,
   },
   label: {
     marginTop: '4px',
@@ -60,7 +66,13 @@ export class DatasetOverviewSchemaPanel extends React.PureComponent {
         <StyledTreeItem
           key={`${i}`}
           nodeId={`${i}`}
-          label={<Typography variant="h6">{table.name}</Typography>}
+          label={
+            <Box sx={{ cursor: 'pointer' }}>
+              <Typography variant="h6" sx={{ cursor: 'pointer' }}>
+                {table.name}
+              </Typography>
+            </Box>
+          }
         >
           {table.columns.map((column, j) => (
             <StyledTreeItem key={`${i}${j}`} nodeId={`${i}${j}`} label={column.name} />

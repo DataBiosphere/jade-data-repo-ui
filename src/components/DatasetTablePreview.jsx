@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles } from '@mui/styles';
 import { getDatasetTablePreview } from 'actions/index';
-import TableChart from '@material-ui/icons/TableChartOutlined';
+import TableChart from '@mui/icons-material/TableChartOutlined';
 import PreviewTable from './table/PreviewTable';
 import TablePicker from './TablePicker';
 
@@ -30,6 +30,7 @@ export class DatasetTablePreview extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object.isRequired,
     dataset: PropTypes.object,
+    datasetPreview: PropTypes.object,
     dispatch: PropTypes.func.isRequired,
   };
 
@@ -48,6 +49,15 @@ export class DatasetTablePreview extends React.PureComponent {
     const { currentTable } = this.state;
     if (dataset && dataset.schema) {
       return dataset.schema.tables.find((t) => t.name === currentTable);
+    }
+    return null;
+  }
+
+  getTablePreview() {
+    const { datasetPreview } = this.props;
+    const { currentTable } = this.state;
+    if (datasetPreview) {
+      return datasetPreview[currentTable];
     }
     return null;
   }
@@ -77,7 +87,7 @@ export class DatasetTablePreview extends React.PureComponent {
             pickTable={this.pickTable}
           />
         ) : (
-          <PreviewTable table={this.getTable()} />
+          <PreviewTable table={this.getTable()} tablePreview={this.getTablePreview()} />
         )}
       </div>
     );
@@ -87,6 +97,7 @@ export class DatasetTablePreview extends React.PureComponent {
 function mapStateToProps(state) {
   return {
     dataset: state.datasets.dataset,
+    datasetPreview: state.datasets.datasetPreview,
   };
 }
 

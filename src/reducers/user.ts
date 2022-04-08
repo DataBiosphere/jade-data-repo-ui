@@ -2,31 +2,46 @@ import { handleActions } from 'redux-actions';
 import immutable from 'immutability-helper';
 import _ from 'lodash';
 
-import { IMAGE, STATUS, ActionTypes } from 'constants/index';
+import { ActionTypes, Image, Status } from '../constants';
 
 const JADE_FEATURE_PREFIX = 'jade-feature-';
 
-export const userState = {
+export interface UserState {
+  isInitiallyLoaded: boolean;
+  isAuthenticated: boolean;
+  status: Status;
+  name: string;
+  image: Image;
+  email: string;
+  token: string;
+  tokenExpiration: number;
+  features: any;
+  isTimeoutEnabled: boolean;
+  id: string;
+}
+
+export const initialUserState: UserState = {
   isInitiallyLoaded: false,
   isAuthenticated: false,
-  status: STATUS.IDLE,
+  status: Status.IDLE,
   name: '', // TODO is there a placeholder that this should get? go google accounts ever not have names?
-  image: IMAGE.DEFAULT, // with default the material ui AccountCircle image will show
+  image: Image.DEFAULT, // with default the material ui AccountCircle image will show
   email: '',
   token: '',
-  tokenExpiration: '',
+  tokenExpiration: 0,
   features: {},
   isTimeoutEnabled: false,
+  id: '',
 };
 
 export default {
   user: handleActions(
     {
-      [ActionTypes.USER_LOGIN]: (state, action) =>
+      [ActionTypes.USER_LOGIN]: (state, action: any) =>
         immutable(state, {
           isInitiallyLoaded: { $set: true },
           isAuthenticated: { $set: true },
-          status: { $set: STATUS.READY },
+          status: { $set: Status.READY },
           name: { $set: action.payload.name },
           image: { $set: action.payload.image },
           email: { $set: action.payload.email },
@@ -38,22 +53,23 @@ export default {
         immutable(state, {
           isInitiallyLoaded: { $set: true },
           isAuthenticated: { $set: false },
-          status: { $set: STATUS.IDLE },
-          image: { $set: IMAGE.DEFAULT },
+          status: { $set: Status.IDLE },
+          image: { $set: Image.DEFAULT },
           name: { $set: '' },
           email: { $set: '' },
           token: { $set: '' },
-          tokenExpiration: { $set: '' },
+          tokenExpiration: { $set: 0 },
           features: { $set: {} },
         }),
-      [ActionTypes.GET_FEATURES_SUCCESS]: (state, action) => {
+      [ActionTypes.GET_FEATURES_SUCCESS]: (state, action: any) => {
         const isTimeoutEnabled = _.some(action.groups, { groupName: 'session_timeout' });
         const features = {};
         action.groups
-          .map((group) => group.groupName)
-          .filter((groupName) => groupName.startsWith(JADE_FEATURE_PREFIX))
-          .map((feature) => feature.substring(JADE_FEATURE_PREFIX.length))
-          .forEach((feature) => {
+          .map((group: any) => group.groupName)
+          .filter((groupName: string) => groupName.startsWith(JADE_FEATURE_PREFIX))
+          .map((feature: string) => feature.substring(JADE_FEATURE_PREFIX.length))
+          .forEach((feature: string) => {
+            // @ts-ignore
             features[feature] = true;
           });
 
@@ -63,6 +79,6 @@ export default {
         });
       },
     },
-    userState,
+    initialUserState,
   ),
 };
