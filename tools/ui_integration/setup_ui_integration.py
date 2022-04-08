@@ -6,33 +6,6 @@ import os
 import time
 import uuid
 
-DATASETS_TO_UPLOAD = [
-    {
-        "name": "V2F_GWAS_Summary_Statistics",
-        "tables": [
-            "ancestry_specific_meta_analysis",
-            "feature_consequence",
-            "dataset_specific_analysis",
-            "frequency_analysis",
-            "trans_ethnic_meta_analysis",
-            "transcript_consequence",
-            "variant",
-        ],
-        "format": "json",
-        "stewards": ["JadeStewards-dev@dev.test.firecloud.org"],
-        "custodians": [],
-        "snapshot_creators": []
-    },
-    {
-        "name": "NonStewardDataset",
-        "tables": [],
-        "format": "json",
-        "stewards": [],
-        "custodians": [],
-        "snapshot_creators": ["JadeStewards-dev@dev.test.firecloud.org"]
-    }
-]
-
 
 class Clients:
     def __init__(self, host):
@@ -66,7 +39,7 @@ def wait_for_job(clients, job_model):
             raise "Unrecognized job state %s" % result.job_status
 
 
-def create_billing_profile(clients):
+def create_billing_profile(clients, add_jade_stewards):
     with open(os.path.join("files", "billing_profile.json")) as billing_profile_json:
         billing_profile_request = json.load(billing_profile_json)
         profile_id = str(uuid.uuid4())
@@ -74,7 +47,8 @@ def create_billing_profile(clients):
         billing_profile_request['profileName'] = billing_profile_request['profileName'] + f'_{profile_id}'
         print(f"Creating billing profile with id: {profile_id}")
         profile = wait_for_job(clients, clients.profiles_api.create_profile(billing_profile_request=billing_profile_request))
-        add_billing_profile_members(clients, profile_id)
+        if add_jade_stewards:
+            add_billing_profile_members(clients, profile_id)
         return profile
 
 
@@ -86,11 +60,12 @@ def add_billing_profile_members(clients, profile_id):
 
 def dataset_ingest_json(clients, dataset_id, dataset_to_upload):
     for table in dataset_to_upload['tables']:
-        with open(os.path.join("files", dataset_to_upload["name"],
+        with open(os.path.join("files", dataset_to_upload["schema"],
                                f"{table}.{dataset_to_upload['format']}")) as table_csv:
+            upload_prefix = dataset_to_upload['upload_prefix']
             ingest_request = {
                 "format": "json",
-                "path": f"gs://jade-testdata-useastregion/V2F_GWAS_Summary_Statistics/{table}.json",
+                "path": f"{upload_prefix}/{table}.json",
                 "table": table
             }
             print(f"Ingesting data into {dataset_to_upload['name']}/{table}")
@@ -113,8 +88,9 @@ def create_dataset(clients, dataset_to_upload, profile_id):
     dataset_name = dataset_to_upload['name']
 
     dataset = None
-    with open(os.path.join("files", dataset_name, "dataset_schema.json")) as dataset_schema_json:
+    with open(os.path.join("files", dataset_to_upload["schema"], "dataset_schema.json")) as dataset_schema_json:
         dataset_request = json.load(dataset_schema_json)
+        dataset_request['name'] = dataset_name
         dataset_request['defaultProfileId'] = profile_id
         print(f"Creating dataset {dataset_name}")
         dataset = wait_for_job(clients, clients.datasets_api.create_dataset(dataset=dataset_request))
@@ -127,26 +103,71 @@ def create_dataset(clients, dataset_to_upload, profile_id):
     return dataset
 
 
+def get_datasets_to_upload(filename):
+    with open(filename) as f:
+        return json.load(f)
+
+
+def add_snapshot_policy_members(clients, snapshot_id, snapshot_to_upload):
+    for steward in snapshot_to_upload.get('stewards', []):
+        print(f"Adding {steward} as a steward")
+        clients.snapshots_api.add_snapshot_policy_member(snapshot_id, "steward", policy_member={"email": steward})
+    for reader in snapshot_to_upload.get('readers', []):
+        print(f"Adding {reader} as a reader")
+        clients.snapshots_api.add_snapshot_policy_member(snapshot_id, "reader", policy_member={"email": reader})
+    for discoverer in snapshot_to_upload.get('discoverers', []):
+        print(f"Adding {discoverer} as a discoverer")
+        clients.snapshots_api.add_snapshot_policy_member(snapshot_id, "discoverer", policy_member={"email": discoverer})
+
+
+def create_snapshots(clients, dataset_name, snapshots, profile_id):
+    snapshot_ids = []
+    for snapshot_to_upload in snapshots:
+        count = snapshot_to_upload.get('count', 1)
+        for i in range(count):
+            snapshot_name = f"{snapshot_to_upload['name']}{i + 1}"
+            snapshot_request = {
+                'name': snapshot_name,
+                'description': snapshot_to_upload['description'],
+                'contents': [{'datasetName': dataset_name,
+                              'mode': 'byFullView'}],
+                'profileId': profile_id
+            }
+            snapshot = wait_for_job(clients, clients.snapshots_api.create_snapshot(snapshot=snapshot_request))
+            print(f"Created snapshot {snapshot_name} with id: {snapshot['id']}")
+            add_snapshot_policy_members(clients, snapshot['id'], snapshot_to_upload)
+            snapshot_ids.append(snapshot['id'])
+    return snapshot_ids
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--host', default='https://jade-4.datarepo-integration.broadinstitute.org')
+    parser.add_argument('--datasets', default='./suites/datarepo_datasets.json')
     parser.add_argument('--profile_id')
     args = parser.parse_args()
     clients = Clients(args.host)
 
+    add_jade_stewards = 'dev' in args.host or 'integration' in args.host
     profile_id = args.profile_id
     if profile_id is None:
-        profile_job_response = create_billing_profile(clients)
+        profile_job_response = create_billing_profile(clients, add_jade_stewards)
         profile_id = profile_job_response['id']
 
-    datasets = []
-    for dataset_to_upload in DATASETS_TO_UPLOAD:
+    outputs = []
+    for dataset_to_upload in get_datasets_to_upload(args.datasets):
         created_dataset = create_dataset(clients, dataset_to_upload, profile_id)
+        dataset_name = created_dataset['name']
+        output_ids = {dataset_name: {'dataset_id': created_dataset['id']}}
+        if dataset_to_upload.get('snapshots'):
+            snapshot_ids = create_snapshots(clients, dataset_to_upload['name'], dataset_to_upload['snapshots'],
+                                            profile_id)
+            output_ids[dataset_name]['snapshot_ids'] = snapshot_ids
+            outputs.append(output_ids)
 
-        datasets.append(created_dataset)
-
-    for dataset in datasets:
-        print(f"Created dataset {dataset['name']} with id: {dataset['id']}")
+    output_filename = f"{os.path.basename(args.datasets).split('.')[0]}_outputs.json"
+    with open(output_filename, 'w') as f:
+        json.dump(outputs, f)
 
 
 if __name__ == "__main__":
