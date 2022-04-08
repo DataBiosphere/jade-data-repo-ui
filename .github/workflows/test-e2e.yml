@@ -74,7 +74,7 @@ jobs:
       - name: Test that building the main docker container works
         run: |
           rm -rf jade-dev-account.pem
-          docker build -t gcr.io/${{ env.gcr_google_project }}/jade-data-repo-ui:test_${GCR_TAG} .
+          docker build -t gcr.io/broad-jade-dev/jade-data-repo-ui:test_${GCR_TAG} .
       # Build the Docker image
       - name: Build
         run: |
