@@ -231,6 +231,9 @@ export function* getSnapshots({ payload }: any): any {
     });
   } catch (err) {
     showNotification(err);
+    yield put({
+      type: ActionTypes.GET_SNAPSHOTS_FAILURE,
+    });
   }
 }
 
@@ -322,6 +325,9 @@ export function* getDatasets({ payload }: any): any {
     });
   } catch (err) {
     showNotification(err);
+    yield put({
+      type: ActionTypes.GET_DATASETS_FAILURE,
+    });
   }
 }
 

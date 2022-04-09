@@ -58,6 +58,18 @@ export const initialQueryState: QueryState = {
 export default {
   query: handleActions(
     {
+      [ActionTypes.GET_DATASETS]: (state) =>
+        immutable(state, {
+          polling: { $set: true },
+        }),
+      [ActionTypes.GET_DATASETS_SUCCESS]: (state) =>
+        immutable(state, {
+          polling: { $set: false },
+        }),
+      [ActionTypes.GET_DATASETS_FAILURE]: (state) =>
+        immutable(state, {
+          polling: { $set: false },
+        }),
       [ActionTypes.GET_SNAPSHOTS]: (state) =>
         immutable(state, {
           polling: { $set: true },
@@ -66,11 +78,7 @@ export default {
         immutable(state, {
           polling: { $set: false },
         }),
-      [ActionTypes.GET_DATASETS]: (state) =>
-        immutable(state, {
-          polling: { $set: true },
-        }),
-      [ActionTypes.GET_DATASETS_SUCCESS]: (state) =>
+      [ActionTypes.GET_SNAPSHOTS_FAILURE]: (state) =>
         immutable(state, {
           polling: { $set: false },
         }),
