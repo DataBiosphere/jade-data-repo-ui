@@ -19,6 +19,7 @@ export interface DatasetState {
   userRoles: Array<string>;
   datasetSnapshots: Array<SnapshotSummaryModel>;
   datasetSnapshotsCount: number;
+  loading: boolean;
 }
 
 export const initialDatasetState: DatasetState = {
@@ -31,6 +32,7 @@ export const initialDatasetState: DatasetState = {
   userRoles: [],
   datasetSnapshots: [],
   datasetSnapshotsCount: 0,
+  loading: false,
 };
 
 // We need this method to apply the response from add/remove snapshot members since the API only returns the affected group
@@ -48,11 +50,20 @@ const datasetMembershipResultApply = (action: any) => (
 export default {
   datasets: handleActions(
     {
+      [ActionTypes.GET_DATASETS]: (state) =>
+        immutable(state, {
+          loading: { $set: true },
+        }),
+      [ActionTypes.GET_DATASETS_FAILURE]: (state) =>
+        immutable(state, {
+          loading: { $set: false },
+        }),
       [ActionTypes.GET_DATASETS_SUCCESS]: (state, action: any): any =>
         immutable(state, {
           datasets: { $set: action.datasets.data.data.items },
           datasetsCount: { $set: action.datasets.data.data.total },
           filteredDatasetsCount: { $set: action.datasets.data.data.filteredTotal },
+          loading: { $set: false },
         }),
       [ActionTypes.GET_DATASET_BY_ID]: (state) =>
         immutable(state, {
@@ -90,10 +101,19 @@ export default {
         immutable(state, {
           userRoles: { $set: action.roles.data },
         }),
+      [ActionTypes.GET_DATASET_SNAPSHOTS]: (state) =>
+        immutable(state, {
+          loading: { $set: true },
+        }),
+      [ActionTypes.GET_DATASET_SNAPSHOTS_FAILURE]: (state) =>
+        immutable(state, {
+          loading: { $set: false },
+        }),
       [ActionTypes.GET_DATASET_SNAPSHOTS_SUCCESS]: (state, action: any) =>
         immutable(state, {
           datasetSnapshots: { $set: action.snapshots.data.data.items },
           datasetSnapshotsCount: { $set: action.snapshots.data.data.total },
+          loading: { $set: false },
         }),
       [ActionTypes.GET_DATASET_TABLE_PREVIEW_SUCCESS]: (state, action: any) => {
         const i = state.dataset?.schema?.tables.findIndex(

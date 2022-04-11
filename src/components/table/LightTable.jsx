@@ -60,9 +60,9 @@ function LightTable({
   filteredCount,
   handleEnumeration,
   itemType,
+  loading,
   orderDirection,
   orderProperty,
-  polling,
   rowKey,
   rows,
   searchString,
@@ -108,7 +108,7 @@ function LightTable({
 
   return (
     <div>
-      {!polling && (
+      {!loading && (
         <Paper className={classes.root}>
           <Table className={classes.table}>
             <LightTableHead columns={columns} onRequestSort={handleRequestSort} summary={summary} />
@@ -188,7 +188,7 @@ function LightTable({
           )}
         </Paper>
       )}
-      {polling && <LoadingSpinner delay={false} delayMessage="" />}
+      {loading && <LoadingSpinner delay={false} delayMessage="" />}
     </div>
   );
 }
@@ -200,9 +200,9 @@ LightTable.propTypes = {
   filteredCount: PropTypes.number,
   handleEnumeration: PropTypes.func,
   itemType: PropTypes.string.isRequired,
+  loading: PropTypes.bool.isRequired,
   orderDirection: PropTypes.string,
   orderProperty: PropTypes.string,
-  polling: PropTypes.bool.isRequired,
   rowKey: PropTypes.func,
   rows: PropTypes.arrayOf(PropTypes.object),
   searchString: PropTypes.string,
@@ -214,7 +214,6 @@ function mapStateToProps(state) {
   return {
     orderDirection: state.query.orderDirection,
     orderProperty: state.query.orderProperty,
-    polling: state.query.polling,
   };
 }
 

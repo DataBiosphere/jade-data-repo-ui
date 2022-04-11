@@ -32,6 +32,7 @@ export class DatasetTablePreview extends React.PureComponent {
     dataset: PropTypes.object,
     datasetPreview: PropTypes.object,
     dispatch: PropTypes.func.isRequired,
+    loading: PropTypes.bool.isRequired,
   };
 
   componentDidMount() {
@@ -72,7 +73,7 @@ export class DatasetTablePreview extends React.PureComponent {
   };
 
   render() {
-    const { classes, dataset } = this.props;
+    const { classes, dataset, loading } = this.props;
     const { currentTable, pickerOpen } = this.state;
     return (
       <div>
@@ -87,7 +88,11 @@ export class DatasetTablePreview extends React.PureComponent {
             pickTable={this.pickTable}
           />
         ) : (
-          <PreviewTable table={this.getTable()} tablePreview={this.getTablePreview()} />
+          <PreviewTable
+            loading={loading}
+            table={this.getTable()}
+            tablePreview={this.getTablePreview()}
+          />
         )}
       </div>
     );
@@ -98,6 +103,7 @@ function mapStateToProps(state) {
   return {
     dataset: state.datasets.dataset,
     datasetPreview: state.datasets.datasetPreview,
+    loading: state.datasets.loading,
   };
 }
 

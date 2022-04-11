@@ -92,6 +92,7 @@ export class ServerErrorView extends React.PureComponent {
                 rows={systemRows}
                 summary={summary}
                 totalCount={systemsCount}
+                loading={false}
               />
             </div>
           )}

@@ -18,6 +18,7 @@ class SnapshotTable extends React.PureComponent {
     classes: PropTypes.object.isRequired,
     filteredSnapshotCount: PropTypes.number,
     handleFilterSnapshots: PropTypes.func,
+    loading: PropTypes.bool.isRequired,
     searchString: PropTypes.string,
     snapshotCount: PropTypes.number,
     snapshots: PropTypes.array.isRequired,
@@ -30,6 +31,7 @@ class SnapshotTable extends React.PureComponent {
       handleFilterSnapshots,
       snapshotCount,
       filteredSnapshotCount,
+      loading,
       snapshots,
       summary,
       searchString,
@@ -81,6 +83,7 @@ class SnapshotTable extends React.PureComponent {
           totalCount={snapshotCount}
           filteredCount={filteredSnapshotCount}
           searchString={searchString}
+          loading={loading}
         />
       </div>
     );

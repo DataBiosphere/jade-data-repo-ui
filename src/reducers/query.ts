@@ -58,30 +58,6 @@ export const initialQueryState: QueryState = {
 export default {
   query: handleActions(
     {
-      [ActionTypes.GET_DATASETS]: (state) =>
-        immutable(state, {
-          polling: { $set: true },
-        }),
-      [ActionTypes.GET_DATASETS_SUCCESS]: (state) =>
-        immutable(state, {
-          polling: { $set: false },
-        }),
-      [ActionTypes.GET_DATASETS_FAILURE]: (state) =>
-        immutable(state, {
-          polling: { $set: false },
-        }),
-      [ActionTypes.GET_SNAPSHOTS]: (state) =>
-        immutable(state, {
-          polling: { $set: true },
-        }),
-      [ActionTypes.GET_SNAPSHOTS_SUCCESS]: (state) =>
-        immutable(state, {
-          polling: { $set: false },
-        }),
-      [ActionTypes.GET_SNAPSHOTS_FAILURE]: (state) =>
-        immutable(state, {
-          polling: { $set: false },
-        }),
       [ActionTypes.RUN_QUERY_SUCCESS]: (state, action: any) => {
         const bigquery = new BigQuery();
         const queryResults = action.results.data;

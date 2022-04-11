@@ -19,6 +19,7 @@ class DatasetSnapshotsTable extends React.PureComponent {
     classes: PropTypes.object.isRequired,
     dataset: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired,
+    loading: PropTypes.bool.isRequired,
     snapshotCount: PropTypes.number,
     snapshots: PropTypes.array.isRequired,
     summary: PropTypes.bool,
@@ -35,7 +36,7 @@ class DatasetSnapshotsTable extends React.PureComponent {
   };
 
   render() {
-    const { classes, snapshotCount, snapshots, summary } = this.props;
+    const { classes, loading, snapshotCount, snapshots, summary } = this.props;
     const columns = [
       {
         label: 'Snapshot Name',
@@ -68,6 +69,7 @@ class DatasetSnapshotsTable extends React.PureComponent {
           rows={snapshots}
           summary={summary}
           totalCount={snapshotCount}
+          loading={loading}
         />
       </div>
     );
@@ -79,6 +81,7 @@ function mapStateToProps(state) {
     dataset: state.datasets.dataset,
     snapshots: state.datasets.datasetSnapshots,
     snapshotCount: state.datasets.datasetSnapshotsCount,
+    loading: state.datasets.loading,
   };
 }
 

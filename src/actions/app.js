@@ -46,6 +46,7 @@ export const { getSnapshots } = createActions({
     searchString,
     datasetIds,
     successType: ActionTypes.GET_SNAPSHOTS_SUCCESS,
+    failureType: ActionTypes.GET_SNAPSHOTS_FAILURE,
   }),
 });
 
@@ -58,6 +59,7 @@ export const { getDatasetSnapshots } = createActions({
     direction,
     datasetIds,
     successType: ActionTypes.GET_DATASET_SNAPSHOTS_SUCCESS,
+    failureType: ActionTypes.GET_DATASET_SNAPSHOTS_FAILURE,
   }),
 });
 

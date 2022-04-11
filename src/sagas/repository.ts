@@ -218,7 +218,7 @@ export function* getSnapshots({ payload }: any): any {
   const sort = payload.sort || 'created_date';
   const direction = payload.direction || 'desc';
   const datasetIds = payload.datasetIds || [];
-  const { successType } = payload;
+  const { successType, failureType } = payload;
   // TODO what's the best way to stringify this? I bet there's a good library:
   let datasetIdsQuery = '';
   datasetIds.map((id: string) => (datasetIdsQuery += `&datasetIds=${id}`));
@@ -232,7 +232,7 @@ export function* getSnapshots({ payload }: any): any {
   } catch (err) {
     showNotification(err);
     yield put({
-      type: ActionTypes.GET_SNAPSHOTS_FAILURE,
+      type: failureType,
     });
   }
 }
