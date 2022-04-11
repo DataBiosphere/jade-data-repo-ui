@@ -110,7 +110,7 @@ jobs:
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
         run: |
-          npx cypress run --record
+          npx cypress run
       - name: 'Clean state lock from used Namespace on API deploy'
         if: always()
         uses: broadinstitute/datarepo-actions/actions/main@0.59.0
