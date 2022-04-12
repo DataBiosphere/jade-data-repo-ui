@@ -31,6 +31,7 @@ export interface SnapshotState {
   snapshotCount: number;
   filteredSnapshotCount: number;
   dialogIsOpen: boolean;
+  loading: boolean;
   // for snapshot creation
   snapshotRequest: SnapshotRequest;
   userRoles: Array<string>;
@@ -58,6 +59,7 @@ export const initialSnapshotState: SnapshotState = {
   snapshotCount: 0,
   filteredSnapshotCount: 0,
   dialogIsOpen: false,
+  loading: false,
   // for snapshot creation
   snapshotRequest: defaultSnapshotRequest,
   userRoles: [],
@@ -84,11 +86,20 @@ const snapshotMembershipResultApply = (action: any) => (
 export default {
   snapshots: handleActions(
     {
+      [ActionTypes.GET_SNAPSHOTS]: (state) =>
+        immutable(state, {
+          loading: { $set: true },
+        }),
+      [ActionTypes.GET_SNAPSHOTS_FAILURE]: (state) =>
+        immutable(state, {
+          loading: { $set: false },
+        }),
       [ActionTypes.GET_SNAPSHOTS_SUCCESS]: (state, action: any) =>
         immutable(state, {
           snapshots: { $set: action.snapshots.data.data.items },
           snapshotCount: { $set: action.snapshots.data.data.total },
           filteredSnapshotCount: { $set: action.snapshots.data.data.filteredTotal },
+          loading: { $set: false },
         }),
       [ActionTypes.CREATE_SNAPSHOT_JOB]: (state) =>
         immutable(state, {

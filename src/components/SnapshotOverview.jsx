@@ -9,7 +9,7 @@ import {
   addSnapshotPolicyMember,
   removeSnapshotPolicyMember,
   getUserSnapshotRoles,
-} from 'actions/index';
+} from '../actions';
 import DatasetTable from './table/DatasetTable';
 import { BreadcrumbType, SnapshotIncludeOptions, SnapshotRoles } from '../constants';
 import OverviewHeader from './OverviewHeader';
@@ -62,6 +62,7 @@ export class SnapshotOverview extends React.PureComponent {
     canReadPolicies: PropTypes.bool,
     classes: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired,
+    loading: PropTypes.bool.isRequired,
     match: PropTypes.object.isRequired,
     snapshot: PropTypes.object,
     snapshotPolicies: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -132,6 +133,7 @@ export class SnapshotOverview extends React.PureComponent {
       canReadPolicies,
       dispatch,
       userRoles,
+      loading,
     } = this.props;
     const { filteredDatasets } = this.state;
 
@@ -171,6 +173,7 @@ export class SnapshotOverview extends React.PureComponent {
                 features={user.features}
                 handleFilterDatasets={this.handleFilterDatasets}
                 searchString=""
+                loading={loading}
               />
             )}
           </div>
@@ -188,6 +191,7 @@ function mapStateToProps(state) {
     terraUrl: state.configuration.configObject.terraUrl,
     canReadPolicies: state.snapshots.canReadPolicies,
     userRoles: state.snapshots.userRoles,
+    loading: state.snapshots.loading,
   };
 }
 

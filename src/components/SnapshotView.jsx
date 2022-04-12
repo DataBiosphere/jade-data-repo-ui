@@ -29,6 +29,7 @@ class SnapshotView extends React.PureComponent {
     classes: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired,
     filteredSnapshotCount: PropTypes.number,
+    loading: PropTypes.bool.isRequired,
     searchString: PropTypes.string,
     snapshotCount: PropTypes.number,
     snapshots: PropTypes.array.isRequired,
@@ -42,7 +43,14 @@ class SnapshotView extends React.PureComponent {
   };
 
   render() {
-    const { classes, snapshotCount, filteredSnapshotCount, snapshots, searchString } = this.props;
+    const {
+      classes,
+      loading,
+      snapshotCount,
+      filteredSnapshotCount,
+      snapshots,
+      searchString,
+    } = this.props;
     return (
       <div id="snapshots" className={classes.wrapper}>
         <div className={classes.width}>
@@ -53,6 +61,7 @@ class SnapshotView extends React.PureComponent {
               snapshots={snapshots}
               handleFilterSnapshots={this.handleFilterSnapshots}
               searchString={searchString}
+              loading={loading}
             />
           </div>
         </div>
@@ -67,6 +76,7 @@ function mapStateToProps(state) {
     snapshots: state.snapshots.snapshots,
     snapshotCount: state.snapshots.snapshotCount,
     filteredSnapshotCount: state.snapshots.filteredSnapshotCount,
+    loading: state.snapshots.loading,
   };
 }
 

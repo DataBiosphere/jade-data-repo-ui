@@ -31,6 +31,7 @@ class DatasetView extends React.PureComponent {
     dispatch: PropTypes.func.isRequired,
     features: PropTypes.object,
     filteredDatasetsCount: PropTypes.number,
+    loading: PropTypes.bool.isRequired,
     searchString: PropTypes.string,
   };
 
@@ -45,6 +46,7 @@ class DatasetView extends React.PureComponent {
       datasets,
       datasetsCount,
       filteredDatasetsCount,
+      loading,
       features,
       searchString,
     } = this.props;
@@ -60,6 +62,7 @@ class DatasetView extends React.PureComponent {
                 handleFilterDatasets={this.handleFilterDatasets}
                 filteredDatasetsCount={filteredDatasetsCount}
                 searchString={searchString}
+                loading={loading}
               />
             )}
           </div>
@@ -75,6 +78,7 @@ function mapStateToProps(state) {
     datasetsCount: state.datasets.datasetsCount,
     filteredDatasetsCount: state.datasets.filteredDatasetsCount,
     features: state.user.features,
+    loading: state.datasets.loading,
   };
 }
 

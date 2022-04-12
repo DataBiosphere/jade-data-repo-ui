@@ -5,12 +5,13 @@ import LightTable from './LightTable';
 
 export default class PreviewTable extends React.PureComponent {
   static propTypes = {
+    loading: PropTypes.bool.isRequired,
     table: PropTypes.object.isRequired,
     tablePreview: PropTypes.object,
   };
 
   render() {
-    const { table, tablePreview } = this.props;
+    const { loading, table, tablePreview } = this.props;
     if (!tablePreview) {
       return <div>No data.</div>;
     }
@@ -36,6 +37,7 @@ export default class PreviewTable extends React.PureComponent {
         rows={tablePreview}
         summary={true}
         itemType="rows"
+        loading={loading}
       />
     );
   }

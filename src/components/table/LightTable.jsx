@@ -12,6 +12,7 @@ import { connect } from 'react-redux';
 
 import clsx from 'clsx';
 import LightTableHead from './LightTableHead';
+import LoadingSpinner from '../common/LoadingSpinner';
 
 const styles = (theme) => ({
   root: {
@@ -59,6 +60,7 @@ function LightTable({
   filteredCount,
   handleEnumeration,
   itemType,
+  loading,
   orderDirection,
   orderProperty,
   rowKey,
@@ -106,84 +108,87 @@ function LightTable({
 
   return (
     <div>
-      <Paper className={classes.root}>
-        <Table className={classes.table}>
-          <LightTableHead columns={columns} onRequestSort={handleRequestSort} summary={summary} />
-          <TableBody>
-            {rows && rows.length > 0 ? (
-              rows.map((row, index) => {
-                const darkRow = index % 2 !== 0;
-                return (
-                  <TableRow
-                    key={rowKey ? rowKey(row) : row.name}
-                    className={clsx({
-                      [classes.row]: true,
-                      [classes.darkRow]: darkRow,
-                      [classes.lightRow]: !darkRow,
-                    })}
-                  >
-                    {columns.map((col) => (
-                      <TableCell
-                        className={classes.cell}
-                        key={col.name}
-                        style={{ wordBreak: 'break-word' }}
-                      >
-                        {col.render ? col.render(row) : row[col.name]}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                );
-              })
-            ) : (
-              <TableRow className={classes.row}>
-                {filteredCount < totalCount ? (
-                  <TableCell colSpan={columns.length}>No {itemType} match your filter</TableCell>
-                ) : (
-                  <TableCell colSpan={columns.length}>
-                    No {itemType} have been created yet
-                  </TableCell>
-                )}
-              </TableRow>
-            )}
-            {rows && emptyRows > 0 && rows.length < rowsPerPage && (
-              <TableRow style={{ height: ROW_HEIGHT * emptyRows }}>
-                <TableCell colSpan={columns.length} />
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-        {!summary && rows && filteredCount > rowsPerPage && (
-          <TablePagination
-            rowsPerPageOptions={ROWS_PER_PAGE}
-            component="div"
-            count={filteredCount}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            backIconButtonProps={{
-              'aria-label': 'Previous Page',
-              disableTouchRipple: true,
-              disableFocusRipple: true,
-              disableRipple: true,
-              className: classes.paginationButton,
-            }}
-            nextIconButtonProps={{
-              'aria-label': 'Next Page',
-              disableTouchRipple: true,
-              disableFocusRipple: true,
-              disableRipple: true,
-              className: classes.paginationButton,
-            }}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-            labelDisplayedRows={({ from, to, count }) => {
-              if (count === totalCount) {
-                return `${from}-${to} of ${count}`;
-              }
-              return `${from}-${to} of ${count} filtered, ${totalCount} total`;
-            }}
-          />
-        )}
-      </Paper>
+      {!loading && (
+        <Paper className={classes.root}>
+          <Table className={classes.table}>
+            <LightTableHead columns={columns} onRequestSort={handleRequestSort} summary={summary} />
+            <TableBody>
+              {rows && rows.length > 0 ? (
+                rows.map((row, index) => {
+                  const darkRow = index % 2 !== 0;
+                  return (
+                    <TableRow
+                      key={rowKey ? rowKey(row) : row.name}
+                      className={clsx({
+                        [classes.row]: true,
+                        [classes.darkRow]: darkRow,
+                        [classes.lightRow]: !darkRow,
+                      })}
+                    >
+                      {columns.map((col) => (
+                        <TableCell
+                          className={classes.cell}
+                          key={col.name}
+                          style={{ wordBreak: 'break-word' }}
+                        >
+                          {col.render ? col.render(row) : row[col.name]}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  );
+                })
+              ) : (
+                <TableRow className={classes.row}>
+                  {filteredCount < totalCount ? (
+                    <TableCell colSpan={columns.length}>No {itemType} match your filter</TableCell>
+                  ) : (
+                    <TableCell colSpan={columns.length}>
+                      No {itemType} have been created yet
+                    </TableCell>
+                  )}
+                </TableRow>
+              )}
+              {rows && emptyRows > 0 && rows.length < rowsPerPage && (
+                <TableRow style={{ height: ROW_HEIGHT * emptyRows }}>
+                  <TableCell colSpan={columns.length} />
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+          {!summary && rows && filteredCount > rowsPerPage && (
+            <TablePagination
+              rowsPerPageOptions={ROWS_PER_PAGE}
+              component="div"
+              count={filteredCount}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              backIconButtonProps={{
+                'aria-label': 'Previous Page',
+                disableTouchRipple: true,
+                disableFocusRipple: true,
+                disableRipple: true,
+                className: classes.paginationButton,
+              }}
+              nextIconButtonProps={{
+                'aria-label': 'Next Page',
+                disableTouchRipple: true,
+                disableFocusRipple: true,
+                disableRipple: true,
+                className: classes.paginationButton,
+              }}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+              labelDisplayedRows={({ from, to, count }) => {
+                if (count === totalCount) {
+                  return `${from}-${to} of ${count}`;
+                }
+                return `${from}-${to} of ${count} filtered, ${totalCount} total`;
+              }}
+            />
+          )}
+        </Paper>
+      )}
+      {loading && <LoadingSpinner delay={false} delayMessage="" />}
     </div>
   );
 }
@@ -195,6 +200,7 @@ LightTable.propTypes = {
   filteredCount: PropTypes.number,
   handleEnumeration: PropTypes.func,
   itemType: PropTypes.string.isRequired,
+  loading: PropTypes.bool.isRequired,
   orderDirection: PropTypes.string,
   orderProperty: PropTypes.string,
   rowKey: PropTypes.func,

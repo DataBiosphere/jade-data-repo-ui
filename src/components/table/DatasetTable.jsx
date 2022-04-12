@@ -20,6 +20,7 @@ class DatasetTable extends React.PureComponent {
     datasetsCount: PropTypes.number,
     filteredDatasetsCount: PropTypes.number,
     handleFilterDatasets: PropTypes.func,
+    loading: PropTypes.bool.isRequired,
     searchString: PropTypes.string,
     summary: PropTypes.bool,
   };
@@ -31,6 +32,7 @@ class DatasetTable extends React.PureComponent {
       datasetsCount,
       filteredDatasetsCount,
       handleFilterDatasets,
+      loading,
       summary,
       searchString,
     } = this.props;
@@ -82,6 +84,7 @@ class DatasetTable extends React.PureComponent {
         totalCount={datasetsCount}
         filteredCount={filteredDatasetsCount}
         searchString={searchString}
+        loading={loading}
       />
     );
   }
