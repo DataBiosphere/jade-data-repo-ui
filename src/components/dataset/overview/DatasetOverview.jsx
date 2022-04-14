@@ -81,7 +81,7 @@ function DatasetOverview(props) {
       <div className={classes.root}>
         <div className={classes.infoColumn}>
           <div className={classes.infoColumnPanel}>
-            <DatasetRelationshipsPanel dataset={dataset} />
+            <DatasetRelationshipsPanel tables={dataset.schema.tables} resourceType="Dataset" resourceId={dataset.id}/>
           </div>
         </div>
         <div className={classes.mainColumn}>

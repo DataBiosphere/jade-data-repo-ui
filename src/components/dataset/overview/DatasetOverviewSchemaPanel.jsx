@@ -52,17 +52,19 @@ const StyledTreeItem = withStyles((theme) => ({
 export class DatasetOverviewSchemaPanel extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object,
-    dataset: PropTypes.object,
+    tables: PropTypes.arrayOf(PropTypes.object),
+    resourceType: PropTypes.string,
+    resourceId: PropTypes.string,
   };
 
-  datasetTables = (dataset) => (
+  datasetTables = (tables) => (
     <TreeView
       aria-label="dataset schema navigator"
       defaultCollapseIcon={<IndeterminateCheckBoxOutlined color="primary" />}
       defaultExpandIcon={<AddBoxOutlined color="primary" />}
       defaultExpanded={['0']}
     >
-      {dataset.schema.tables.map((table, i) => (
+      {tables.map((table, i) => (
         <StyledTreeItem
           key={`${i}`}
           nodeId={`${i}`}
@@ -83,41 +85,35 @@ export class DatasetOverviewSchemaPanel extends React.PureComponent {
   );
 
   render() {
-    const { classes, dataset } = this.props;
+    const { classes, tables, resourceType, resourceId } = this.props;
     return (
       <Paper className={classes.root} elevation={4}>
-        <Link to={`${dataset.id}/data`}>
+        <Link to={`${resourceId}/data`}>
           <Button
             className={classes.viewDatasetButton}
             color="primary"
             variant="outlined"
             disableElevation
           >
-            View Dataset Data
+            View {resourceType} Data
           </Button>
         </Link>
 
         <Typography className={classes.sectionHeader} variant="h5">
-          Dataset Schema
+          {resourceType} Schema
         </Typography>
         <div>
           <Typography className={classes.sectionHeader} variant="h5" style={{ float: 'left' }}>
             Tables
           </Typography>
           <Typography style={{ float: 'left', padding: '6px 0px' }}>
-            ({dataset.schema.tables.length})
+            ({tables.length})
           </Typography>
         </div>
-        {this.datasetTables(dataset)}
+        {this.datasetTables(tables)}
       </Paper>
     );
   }
 }
 
-function mapStateToProps(state) {
-  return {
-    dataset: state.datasets.dataset,
-  };
-}
-
-export default connect(mapStateToProps)(withStyles(styles)(DatasetOverviewSchemaPanel));
+export default (withStyles(styles)(DatasetOverviewSchemaPanel));
