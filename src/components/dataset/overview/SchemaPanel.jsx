@@ -5,7 +5,6 @@ import { TreeItem, TreeView } from '@mui/lab';
 import { AddBoxOutlined, IndeterminateCheckBoxOutlined } from '@mui/icons-material';
 import { alpha } from '@mui/material/styles';
 import { withStyles } from '@mui/styles';
-import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 const styles = (theme) => ({
@@ -49,12 +48,12 @@ const StyledTreeItem = withStyles((theme) => ({
   },
 }))((props) => <TreeItem {...props} />);
 
-export class DatasetOverviewSchemaPanel extends React.PureComponent {
+export class SchemaPanel extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object,
-    tables: PropTypes.arrayOf(PropTypes.object),
-    resourceType: PropTypes.string,
     resourceId: PropTypes.string,
+    resourceType: PropTypes.string,
+    tables: PropTypes.arrayOf(PropTypes.object),
   };
 
   datasetTables = (tables) => (
@@ -106,9 +105,7 @@ export class DatasetOverviewSchemaPanel extends React.PureComponent {
           <Typography className={classes.sectionHeader} variant="h5" style={{ float: 'left' }}>
             Tables
           </Typography>
-          <Typography style={{ float: 'left', padding: '6px 0px' }}>
-            ({tables.length})
-          </Typography>
+          <Typography style={{ float: 'left', padding: '6px 0px' }}>({tables.length})</Typography>
         </div>
         {this.datasetTables(tables)}
       </Paper>
@@ -116,4 +113,4 @@ export class DatasetOverviewSchemaPanel extends React.PureComponent {
   }
 }
 
-export default (withStyles(styles)(DatasetOverviewSchemaPanel));
+export default withStyles(styles)(SchemaPanel);
