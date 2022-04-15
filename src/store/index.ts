@@ -46,3 +46,4 @@ const store = configStore();
 global.store = store;
 
 export { store };
+export type AppDispatch = typeof store.dispatch;
