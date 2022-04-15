@@ -7,6 +7,7 @@ import moment from 'moment';
 import { renderCloudPlatforms, renderStorageResources } from '../../../libs/render-utils';
 import DatasetAccess from '../DatasetAccess';
 import DatasetSnapshotsTable from '../../table/DatasetSnapshotsTable';
+import TabPanel from '../../common/TabPanel';
 
 const styles = (theme) => ({
   root: {
@@ -32,32 +33,7 @@ const styles = (theme) => ({
     borderBottom: `6px solid ${theme.palette.terra.green}`,
     transition: 'none',
   },
-  tabPanel: {
-    padding: '1em 1em 1em 28px',
-  },
 });
-
-function TabPanel(props) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
-      {value === index && <div>{children}</div>}
-    </div>
-  );
-}
-
-TabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.any.isRequired,
-  value: PropTypes.any.isRequired,
-};
 
 function a11yProps(index) {
   return {
@@ -100,7 +76,7 @@ function DatasetOverviewPanel(props) {
           {...a11yProps(1)}
         />
       </Tabs>
-      <TabPanel className={classes.tabPanel} value={value} index={0}>
+      <TabPanel value={value} index={0}>
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <Typography variant="h6">Description:</Typography>
@@ -121,7 +97,7 @@ function DatasetOverviewPanel(props) {
         </Grid>
         <DatasetAccess horizontal={true} />
       </TabPanel>
-      <TabPanel className={classes.tabPanel} value={value} index={1}>
+      <TabPanel value={value} index={1}>
         <DatasetSnapshotsTable />
       </TabPanel>
     </div>
