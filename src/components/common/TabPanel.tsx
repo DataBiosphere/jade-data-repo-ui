@@ -1,14 +1,21 @@
-import PropTypes from 'prop-types';
 import React from 'react';
-import { withStyles } from '@mui/styles';
+import { createStyles, ClassNameMap, withStyles } from '@mui/styles';
 
-const styles = () => ({
-  tabPanel: {
-    padding: '1em 1em 1em 28px',
-  },
-});
+const styles = () =>
+  createStyles({
+    tabPanel: {
+      padding: '1em 1em 1em 28px',
+    },
+  });
 
-function TabPanel(props) {
+type TabPanelProps = {
+  children: React.ReactNode;
+  classes: ClassNameMap;
+  index: number;
+  value: number;
+};
+
+function TabPanel(props: TabPanelProps) {
   const { classes, children, value, index } = props;
   return (
     <div
@@ -22,12 +29,5 @@ function TabPanel(props) {
     </div>
   );
 }
-
-TabPanel.propTypes = {
-  classes: PropTypes.object,
-  children: PropTypes.node,
-  index: PropTypes.any.isRequired,
-  value: PropTypes.any.isRequired,
-};
 
 export default withStyles(styles)(TabPanel);

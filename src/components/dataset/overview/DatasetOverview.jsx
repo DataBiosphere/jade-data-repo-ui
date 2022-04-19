@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { withStyles } from '@mui/styles';
 import { getDatasetById, getDatasetPolicy, getUserDatasetRoles } from 'actions';
 import { Typography } from '@mui/material';
-import DatasetRelationshipsPanel from './SchemaPanel';
+import DatasetRelationshipsPanel from '../../common/overview/SchemaPanel';
 import { useOnMount } from '../../../libs/utils';
 import { BreadcrumbType, DatasetIncludeOptions } from '../../../constants';
 import DatasetOverviewPanel from './DatasetOverviewPanel';

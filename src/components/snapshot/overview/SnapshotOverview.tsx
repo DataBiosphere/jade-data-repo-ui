@@ -10,7 +10,7 @@ import { getSnapshotById, getSnapshotPolicy, getUserSnapshotRoles } from '../../
 import { PolicyModel, SnapshotModel } from '../../../generated/tdr';
 import AppBreadcrumbs from '../../AppBreadcrumbs/AppBreadcrumbs';
 import SnapshotOverviewPanel from './SnapshotOverviewPanel';
-import SnapshotRelationshipsPanel from '../../dataset/overview/SchemaPanel';
+import SnapshotRelationshipsPanel from '../../common/overview/SchemaPanel';
 import { AppDispatch } from '../../../store';
 
 const styles = () =>
@@ -78,10 +78,7 @@ function SnapshotOverview(props: AllSnapshotProps) {
     dispatch(getUserSnapshotRoles(snapshotId));
   });
 
-  return snapshotPolicies &&
-    snapshot &&
-    snapshot.tables &&
-    snapshot.id === snapshotId ? (
+  return snapshotPolicies && snapshot && snapshot.tables && snapshot.id === snapshotId ? (
     <div className={classes.pageRoot}>
       <AppBreadcrumbs
         context={{
