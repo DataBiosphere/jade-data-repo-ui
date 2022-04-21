@@ -40,7 +40,7 @@ function SnapshotAccess(props: SnapshotAccessProps) {
 
   return (
     <Grid container spacing={1}>
-      <Grid item xs={gridItemXs}>
+      <Grid item xs={gridItemXs} data-cy="snapshot-stewards">
         <UserList
           users={stewards}
           typeOfUsers="Stewards"
@@ -50,7 +50,7 @@ function SnapshotAccess(props: SnapshotAccessProps) {
           horizontal={horizontal}
         />
       </Grid>
-      <Grid item xs={gridItemXs}>
+      <Grid item xs={gridItemXs} data-cy="snapshot-readers">
         <UserList
           users={readers}
           typeOfUsers="Readers"
@@ -60,7 +60,7 @@ function SnapshotAccess(props: SnapshotAccessProps) {
           horizontal={horizontal}
         />
       </Grid>
-      <Grid item xs={gridItemXs}>
+      <Grid item xs={gridItemXs} data-cy="snapshot-discoverers">
         <UserList
           users={discoverers}
           typeOfUsers="Discoverers"

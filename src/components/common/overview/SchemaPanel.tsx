@@ -59,6 +59,7 @@ type SchemaPanelProps = {
 const datasetTables = (tables: Array<TableModel>) => (
   <TreeView
     aria-label="dataset schema navigator"
+    data-cy="schema-navigator"
     defaultCollapseIcon={<IndeterminateCheckBoxOutlined color="primary" />}
     defaultExpandIcon={<AddBoxOutlined color="primary" />}
     defaultExpanded={['0']}
@@ -69,14 +70,19 @@ const datasetTables = (tables: Array<TableModel>) => (
         nodeId={`${i}`}
         label={
           <Box sx={{ cursor: 'pointer' }}>
-            <Typography variant="h6" sx={{ cursor: 'pointer' }}>
+            <Typography data-cy="table-name" variant="h6" sx={{ cursor: 'pointer' }}>
               {table.name}
             </Typography>
           </Box>
         }
       >
         {table.columns.map((column, j) => (
-          <StyledTreeItem key={`${i}${j}`} nodeId={`${i}${j}`} label={column.name} />
+          <StyledTreeItem
+            data-cy="column-name"
+            key={`${i}${j}`}
+            nodeId={`${i}${j}`}
+            label={column.name}
+          />
         ))}
       </StyledTreeItem>
     ))}
@@ -86,8 +92,8 @@ const datasetTables = (tables: Array<TableModel>) => (
 function SchemaPanel(props: SchemaPanelProps) {
   const { classes, resourceId, resourceType, tables } = props;
   return (
-    <Paper className={classes.root} elevation={4}>
-      <Link to={`${resourceId}/data`}>
+    <Paper className={classes.root} elevation={4} data-cy="schema-panel">
+      <Link to={`${resourceId}/data`} data-cy="view-data-link">
         <Button
           className={classes.viewDatasetButton}
           color="primary"
@@ -98,14 +104,16 @@ function SchemaPanel(props: SchemaPanelProps) {
         </Button>
       </Link>
 
-      <Typography className={classes.sectionHeader} variant="h5">
+      <Typography data-cy="schema-header" className={classes.sectionHeader} variant="h5">
         {resourceType} Schema
       </Typography>
       <div>
         <Typography className={classes.sectionHeader} variant="h5" style={{ float: 'left' }}>
           Tables
         </Typography>
-        <Typography style={{ float: 'left', padding: '6px 0px' }}>({tables.length})</Typography>
+        <Typography data-cy="table-count" style={{ float: 'left', padding: '6px 0px' }}>
+          ({tables.length})
+        </Typography>
       </div>
       {datasetTables(tables)}
     </Paper>

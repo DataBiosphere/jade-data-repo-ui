@@ -76,6 +76,7 @@ function SnapshotExport(props: SnapshotExportProps) {
       </Typography>
       <FormGroup>
         <FormControlLabel
+          data-cy="gs-paths-checkbox"
           control={gsPathsCheckbox}
           label="Convert DRS URLs to Google Cloud Storage Paths (gs://...)"
         />
@@ -88,6 +89,7 @@ function SnapshotExport(props: SnapshotExportProps) {
       {!isProcessing && !isDone && (
         <TerraTooltip title="Exporting a snapshot to a workspace means that all members of your workspace will be able to have read only access to the tables and files in the snapshot">
           <Button
+            data-cy="export-snapshot-button"
             onClick={exportToWorkspaceCopy}
             className={classes.exportButton}
             variant="outlined"
@@ -98,7 +100,12 @@ function SnapshotExport(props: SnapshotExportProps) {
         </TerraTooltip>
       )}
       {isProcessing && !isDone && (
-        <Button className={classes.exportButton} variant="outlined" color="primary">
+        <Button
+          data-cy="preparing-snapshot-button"
+          className={classes.exportButton}
+          variant="outlined"
+          color="primary"
+        >
           <CircularProgress size={25} />
           <div className={classes.labelRight}>Preparing snapshot</div>
         </Button>
@@ -110,6 +117,7 @@ function SnapshotExport(props: SnapshotExportProps) {
         exportResponse.format &&
         exportResponse.format.parquet && (
           <Button
+            data-cy="snapshot-export-ready-button"
             onClick={resetExport}
             className={classes.exportButton}
             variant="contained"

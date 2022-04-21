@@ -7,7 +7,7 @@ type Context = { type: BreadcrumbType; id: string; name: string };
 type Breadcrumb = { text: string; to: string };
 
 type AppBreadcrumbsProps = {
-  childBreadcrumbs: Breadcrumb[];
+  childBreadcrumbs?: Breadcrumb[];
   context: Context;
 };
 

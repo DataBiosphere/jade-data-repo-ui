@@ -72,6 +72,7 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
         aria-label="simple tabs example"
       >
         <Tab
+          data-cy="snapshot-summary-tab"
           label="Snapshot Summary"
           classes={{ selected: classes.tabSelected }}
           disableFocusRipple
@@ -79,6 +80,7 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
           {...a11yProps(0)}
         />
         <Tab
+          data-cy="snapshot-export-tab"
           label="Export Snapshot"
           classes={{ selected: classes.tabSelected }}
           disableFocusRipple
@@ -90,15 +92,17 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <Typography variant="h6">Description:</Typography>
-            <Typography>{snapshot.description}</Typography>
+            <Typography data-cy="snapshot-description">{snapshot.description}</Typography>
           </Grid>
           <Grid item xs={4}>
             <Typography variant="h6">Root dataset:</Typography>
-            <Typography>{sourceDataset.name}</Typography>
+            <Typography data-cy="snapshot-source-dataset">{sourceDataset.name}</Typography>
           </Grid>
           <Grid item xs={4}>
             <Typography variant="h6">Date Created:</Typography>
-            <Typography>{moment(snapshot.createdDate).fromNow()}</Typography>
+            <Typography data-cy="snapshot-date-created">
+              {moment(snapshot.createdDate).fromNow()}
+            </Typography>
           </Grid>
           <Grid item xs={4}>
             <Typography variant="h6">Storage:</Typography>
