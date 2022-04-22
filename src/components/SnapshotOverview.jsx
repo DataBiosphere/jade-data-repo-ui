@@ -165,6 +165,7 @@ export class SnapshotOverview extends React.PureComponent {
               dispatch={dispatch}
               userRoles={userRoles}
               user={user}
+              snapshot={snapshot}
             />
             {snapshot && snapshot.source && (
               <DatasetTable

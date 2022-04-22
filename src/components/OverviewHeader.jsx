@@ -89,7 +89,7 @@ export class OverviewHeader extends React.PureComponent {
     readers: PropTypes.arrayOf(PropTypes.string),
     removeReader: PropTypes.func,
     removeSteward: PropTypes.func,
-    // snapshotGoogleProject: PropTypes.string,
+    snapshot: PropTypes.object,
     stewards: PropTypes.arrayOf(PropTypes.string).isRequired,
     terraUrl: PropTypes.string,
     user: PropTypes.object,
@@ -115,7 +115,7 @@ export class OverviewHeader extends React.PureComponent {
   };
 
   createSpreadsheet = async () => {
-    // const { snapshotGoogleProject } = this.props;
+    const { snapshot } = this.props;
     this.setState({
       isSheetProcessing: true,
     });
@@ -125,7 +125,7 @@ export class OverviewHeader extends React.PureComponent {
     window.gapi.client.sheets.spreadsheets
       .create({
         properties: {
-          title: 'ShelbyTestAg test_data table_Query',
+          title: snapshot.accessInformation.bigQuery.datasetName,
         },
       })
       .then((response) => {
@@ -136,25 +136,21 @@ export class OverviewHeader extends React.PureComponent {
         let requests = [];
         // Connect to datasource
         // TODO - loop through and add a data source for each table
-        requests.push({
-          addDataSource: {
-            dataSource: {
-              spec: {
-                bigQuery: {
-                  projectId: 'datarepo-dev-a759d765',
-                  // Note: Can't use tableSpec for BQ views
-                  // tableSpec: {
-                  //   tableProjectId: 'datarepo-dev-a759d765',
-                  //   datasetId: 'ShelbyTestAg',
-                  //   tableId: 'test_data',
-                  // },
-                  querySpec: {
-                    rawQuery: 'Select * from `datarepo-dev-a759d765.ShelbyTestAg.test_data`',
+        snapshot.accessInformation.bigQuery.tables.forEach((table) => {
+          requests.push({
+            addDataSource: {
+              dataSource: {
+                spec: {
+                  bigQuery: {
+                    projectId: snapshot.accessInformation.bigQuery.projectId,
+                    querySpec: {
+                      rawQuery: table.sampleQuery,
+                    },
                   },
                 },
               },
             },
-          },
+          });
         });
         const batchUpdateRequest = { requests: requests };
 
