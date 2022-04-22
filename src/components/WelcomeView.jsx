@@ -108,7 +108,13 @@ export class WelcomeView extends React.PureComponent {
     const { dispatch } = this.props;
     const loginOptions = {
       id: 'signin-button-container',
-      scopes: ['openid', 'profile', 'email', 'https://www.googleapis.com/auth/bigquery.readonly'],
+      scopes: [
+        'openid',
+        'profile',
+        'email',
+        'https://www.googleapis.com/auth/bigquery.readonly',
+        'https://www.googleapis.com/auth/spreadsheets',
+      ],
       onsuccess: (user) =>
         dispatch(
           logIn(user.name, user.imageUrl, user.email, user.accessToken, user.accessTokenExpiration),

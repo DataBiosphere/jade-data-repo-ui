@@ -9,7 +9,7 @@ const AUTH2_LOAD_TIMEOUT_MS = 10000;
 // pageload time.
 const auth2Load = new Promise((resolve, reject) => {
   const auth2LoadTimer = window.setTimeout(reject, AUTH2_LOAD_TIMEOUT_MS);
-  window.gapi.load('auth2', () => {
+  window.gapi.load('client:auth2', () => {
     window.clearTimeout(auth2LoadTimer);
     resolve();
   });

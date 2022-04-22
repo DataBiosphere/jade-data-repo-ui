@@ -69,6 +69,9 @@ export class OverviewHeader extends React.PureComponent {
     super(props);
     this.state = {
       exportGsPaths: false,
+      isSheetProcessing: false,
+      isSheetDone: false,
+      sheetUrl: '',
     };
   }
 
@@ -109,6 +112,38 @@ export class OverviewHeader extends React.PureComponent {
     });
   };
 
+  createSpreadsheet = async () => {
+    this.setState({
+      isSheetProcessing: true,
+    });
+    const DISCOVERY_DOCS = ['https://sheets.googleapis.com/$discovery/rest?version=v4'];
+    await window.gapi.client.init({ discoveryDocs: DISCOVERY_DOCS });
+    console.log('createSpreadsheet request');
+    window.gapi.client.sheets.spreadsheets
+      .create({
+        properties: {
+          title: 'TestShelby',
+        },
+      })
+      .then((response) => {
+        console.log('Response: ' + response.result.spreadsheetUrl);
+        this.setState({
+          sheetUrl: response.result.spreadsheetUrl,
+          isSheetProcessing: false,
+          isSheetDone: true,
+        });
+      });
+    // TODO: Handle error case
+  };
+
+  resetSpreadsheet = () => {
+    this.setState({
+      isSheetProcessing: false,
+      isSheetDone: false,
+      spreadsheetUrl: '',
+    });
+  };
+
   render() {
     const {
       addSteward,
@@ -127,12 +162,15 @@ export class OverviewHeader extends React.PureComponent {
       userRoles,
       user,
     } = this.props;
-    const { exportGsPaths } = this.state;
+    const { exportGsPaths, isSheetDone, isSheetProcessing, sheetUrl } = this.state;
     const loading = _.isNil(of) || _.isEmpty(of);
     const canManageUsers = userRoles.includes(SnapshotRoles.STEWARD);
 
     const linkToBq = of.accessInformation?.bigQuery !== undefined;
     const consoleLink = linkToBq
+      ? `${of.accessInformation.bigQuery.link}&authuser=${user?.email}`
+      : '';
+    const sheetsLink = linkToBq
       ? `${of.accessInformation.bigQuery.link}&authuser=${user?.email}`
       : '';
     const gsPathsCheckbox = !isProcessing ? (
@@ -219,6 +257,42 @@ export class OverviewHeader extends React.PureComponent {
                 removeUser={removeReader}
                 canManageUsers={canManageUsers}
               />
+            )}
+            <Divider className={classes.separator} />
+            <Typography variant="h6" className={classes.section}>
+              Create a Google Sheet linked to BQ Dataset
+            </Typography>
+            {!isSheetProcessing && !isSheetDone && (
+              <TerraTooltip title="Creating a google sheet means that you will get a read-only copy of Tabular data in a google sheet">
+                <Button
+                  onClick={this.createSpreadsheet}
+                  className={classes.exportButton}
+                  variant="outlined"
+                  color="primary"
+                >
+                  Create Google Sheet
+                </Button>
+              </TerraTooltip>
+            )}
+            {isSheetProcessing && !isSheetDone && (
+              <Button className={classes.exportButton} variant="outlined" color="primary">
+                <CircularProgress size={25} />
+                <div className={classes.labelRight}>Preparing Google Sheet</div>
+              </Button>
+            )}
+            {!isSheetProcessing && isSheetDone && (
+              <Button
+                className={classes.exportButton}
+                onClick={this.resetSpreadsheet}
+                variant="contained"
+                color="primary"
+                endIcon={<Launch />}
+                disableElevation
+              >
+                <a target="_blank" rel="noopener noreferrer" href={sheetUrl}>
+                  Open Google Sheet
+                </a>
+              </Button>
             )}
             <Divider className={classes.separator} />
             <Typography variant="h6" className={classes.section}>
