@@ -61,18 +61,13 @@ export CYPRESS_GOOGLE_TOKEN=<YOUR-TOKEN-HERE>
 
 `npm run lint` / `npm run lint:styles`
 
-### Unit Testing
+### Testing
 
-- jest 23.x
-- enzyme 3.x
+- cypress 9.x
 
-`npm test`
+To run end-to-end tests: `npx cypress run` or `npx cypress open` (interactive mode)
 
-### End 2 End Testing
-
-- cypress 9.2.1
-
-`npx cypress open` or `npx cypress run`
+To run unit tests: `npx cypress run-ct` or `npx cypress open-ct` (interactive mode)
 
 ## skaffold
 To render your own local skaffold.yaml run the following with your initials
