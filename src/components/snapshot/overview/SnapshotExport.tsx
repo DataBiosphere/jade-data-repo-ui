@@ -47,9 +47,25 @@ type SnapshotExportProps = {
   terraUrl: string | undefined;
 };
 
+const formatExportUrl = (
+  terraUrl: string,
+  window: string,
+  snapshot: SnapshotModel,
+  manifest: string,
+) => `${terraUrl}#import-data?url=${window}
+    &snapshotId=${snapshot.id}
+    &format=tdrexport
+    &snapshotName=${snapshot.name}
+    &tdrmanifest=${manifest}`;
+
 function SnapshotExport(props: SnapshotExportProps) {
   const [exportGsPaths, setExportGsPaths] = React.useState(false);
   const { classes, dispatch, exportResponse, isDone, isProcessing, of, terraUrl } = props;
+  const exportResponseManifest =
+    exportResponse &&
+    exportResponse.format &&
+    exportResponse.format.parquet &&
+    exportResponse.format.parquet.manifest;
 
   const handleExportGsPathsChanged = () => {
     setExportGsPaths(!exportGsPaths);
@@ -110,28 +126,23 @@ function SnapshotExport(props: SnapshotExportProps) {
           <div className={classes.labelRight}>Preparing snapshot</div>
         </Button>
       )}
-      {!isProcessing &&
-        isDone &&
-        terraUrl &&
-        exportResponse &&
-        exportResponse.format &&
-        exportResponse.format.parquet && (
-          <Button
-            data-cy="snapshot-export-ready-button"
-            onClick={resetExport}
-            className={classes.exportButton}
-            variant="contained"
-            color="primary"
+      {!isProcessing && isDone && terraUrl && exportResponseManifest && (
+        <Button
+          data-cy="snapshot-export-ready-button"
+          onClick={resetExport}
+          className={classes.exportButton}
+          variant="contained"
+          color="primary"
+        >
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            href={formatExportUrl(terraUrl, window.location.origin, of, exportResponseManifest)}
           >
-            <a
-              target="_blank"
-              rel="noopener noreferrer"
-              href={`${terraUrl}#import-data?url=${window.location.origin}&snapshotId=${of.id}&format=tdrexport&snapshotName=${of.name}&tdrmanifest=${exportResponse.format.parquet.manifest}`}
-            >
-              Snapshot ready - continue
-            </a>
-          </Button>
-        )}
+            Snapshot ready - continue
+          </a>
+        </Button>
+      )}
     </div>
   );
 }
