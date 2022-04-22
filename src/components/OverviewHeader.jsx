@@ -71,6 +71,7 @@ export class OverviewHeader extends React.PureComponent {
       exportGsPaths: false,
       isSheetProcessing: false,
       isSheetDone: false,
+      sheetId: '',
       sheetUrl: '',
     };
   }
@@ -88,6 +89,7 @@ export class OverviewHeader extends React.PureComponent {
     readers: PropTypes.arrayOf(PropTypes.string),
     removeReader: PropTypes.func,
     removeSteward: PropTypes.func,
+    // snapshotGoogleProject: PropTypes.string,
     stewards: PropTypes.arrayOf(PropTypes.string).isRequired,
     terraUrl: PropTypes.string,
     user: PropTypes.object,
@@ -113,6 +115,7 @@ export class OverviewHeader extends React.PureComponent {
   };
 
   createSpreadsheet = async () => {
+    // const { snapshotGoogleProject } = this.props;
     this.setState({
       isSheetProcessing: true,
     });
@@ -122,13 +125,48 @@ export class OverviewHeader extends React.PureComponent {
     window.gapi.client.sheets.spreadsheets
       .create({
         properties: {
-          title: 'TestShelby',
+          title: 'ShelbyTestAg test_data table_Query',
         },
       })
       .then((response) => {
         console.log('Response: ' + response.result.spreadsheetUrl);
         this.setState({
           sheetUrl: response.result.spreadsheetUrl,
+        });
+        let requests = [];
+        // Connect to datasource
+        // TODO - loop through and add a data source for each table
+        requests.push({
+          addDataSource: {
+            dataSource: {
+              spec: {
+                bigQuery: {
+                  projectId: 'datarepo-dev-a759d765',
+                  // Note: Can't use tableSpec for BQ views
+                  // tableSpec: {
+                  //   tableProjectId: 'datarepo-dev-a759d765',
+                  //   datasetId: 'ShelbyTestAg',
+                  //   tableId: 'test_data',
+                  // },
+                  querySpec: {
+                    rawQuery: 'Select * from `datarepo-dev-a759d765.ShelbyTestAg.test_data`',
+                  },
+                },
+              },
+            },
+          },
+        });
+        const batchUpdateRequest = { requests: requests };
+
+        window.gapi.client.sheets.spreadsheets
+          .batchUpdate({
+            spreadsheetId: response.result.spreadsheetId,
+            resource: batchUpdateRequest,
+          })
+          .then((response2) => {
+            console.log('after batch update');
+          });
+        this.setState({
           isSheetProcessing: false,
           isSheetDone: true,
         });
@@ -354,6 +392,7 @@ export class OverviewHeader extends React.PureComponent {
 function mapStateToProps(state) {
   return {
     isProcessing: state.snapshots.exportIsProcessing,
+    // snapshotGoogleProject: state.snapshot.dataProject,
     isDone: state.snapshots.exportIsDone,
     exportResponse: state.snapshots.exportResponse,
   };

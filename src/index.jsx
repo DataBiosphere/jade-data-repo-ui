@@ -75,8 +75,6 @@ function bootstrap() {
             });
             getUser({
               client_id: configData.clientId,
-              discoveryDocs: ['https://sheets.googleapis.com/$discovery/rest?version=v4'], // Not sure if this is needed
-              scope: 'https://www.googleapis.com/auth/spreadsheets', // Is it okay if we automatically set this scope?
             })
               .then((user) => {
                 if (user != null) {
