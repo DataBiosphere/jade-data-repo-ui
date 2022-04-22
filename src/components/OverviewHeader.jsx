@@ -71,7 +71,6 @@ export class OverviewHeader extends React.PureComponent {
       exportGsPaths: false,
       isSheetProcessing: false,
       isSheetDone: false,
-      sheetId: '',
       sheetUrl: '',
     };
   }
@@ -135,7 +134,6 @@ export class OverviewHeader extends React.PureComponent {
         });
         let requests = [];
         // Connect to datasource
-        // TODO - loop through and add a data source for each table
         snapshot.accessInformation.bigQuery.tables.forEach((table) => {
           requests.push({
             addDataSource: {
@@ -144,7 +142,7 @@ export class OverviewHeader extends React.PureComponent {
                   bigQuery: {
                     projectId: snapshot.accessInformation.bigQuery.projectId,
                     querySpec: {
-                      rawQuery: table.sampleQuery,
+                      rawQuery: table.sampleQuery, // Need to build own query so not limited to 1k rows
                     },
                   },
                 },
@@ -202,9 +200,6 @@ export class OverviewHeader extends React.PureComponent {
 
     const linkToBq = of.accessInformation?.bigQuery !== undefined;
     const consoleLink = linkToBq
-      ? `${of.accessInformation.bigQuery.link}&authuser=${user?.email}`
-      : '';
-    const sheetsLink = linkToBq
       ? `${of.accessInformation.bigQuery.link}&authuser=${user?.email}`
       : '';
     const gsPathsCheckbox = !isProcessing ? (
@@ -388,7 +383,6 @@ export class OverviewHeader extends React.PureComponent {
 function mapStateToProps(state) {
   return {
     isProcessing: state.snapshots.exportIsProcessing,
-    // snapshotGoogleProject: state.snapshot.dataProject,
     isDone: state.snapshots.exportIsDone,
     exportResponse: state.snapshots.exportResponse,
   };
