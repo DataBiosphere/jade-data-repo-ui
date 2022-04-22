@@ -43,7 +43,7 @@ class UserList extends React.PureComponent {
       horizontal,
       removeUser,
       typeOfUsers,
-      users
+      users,
     } = this.props;
 
     return (
