@@ -4,23 +4,22 @@ import ReactDOM from 'react-dom';
 import Helmet from 'react-helmet';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
-import { getUser } from 'modules/auth';
 import history from 'modules/hist';
 import globalTheme from 'modules/theme';
 import { ThemeProvider } from '@mui/material/styles';
 import axios from 'axios';
-import { logIn, getFeatures, logOut } from 'actions/index';
-import { ActionTypes } from 'constants/index';
+import { AuthProvider } from 'react-oidc-context';
 // For some reason, @emotion package doesn't register with linter.  Ignoring for now
 //eslint-disable-next-line import/no-extraneous-dependencies
 import createCache from '@emotion/cache';
 //eslint-disable-next-line import/no-extraneous-dependencies
 import { CacheProvider } from '@emotion/react';
 
-import { store } from 'store/index';
-
 import config from 'config';
 import App from 'containers/App';
+
+import { ActionTypes } from './constants';
+import { store } from './store';
 
 const cache = createCache({
   key: 'css',
@@ -53,10 +52,8 @@ function bootstrap() {
   return new Promise((resolve, reject) => {
     // We need to do this (in order) before bothering to render:
     // 1. Check status of the server
-    // 2. grab the configuration + load Google's auth2 library (in parallel)
-    // 3. get the client id out of the config and use it to logIn
-    // 4. put the config and user details into the store
-    // 5. render
+    // 2. Get the client id and put the config into the store
+    // 3. render
     checkStatus()
       .then((response) => {
         store.dispatch({
@@ -73,29 +70,9 @@ function bootstrap() {
               type: ActionTypes.GET_CONFIGURATION_SUCCESS,
               configuration: configData,
             });
-            getUser({ client_id: configData.clientId })
-              .then((user) => {
-                if (user != null) {
-                  store.dispatch(
-                    logIn(
-                      user.name,
-                      user.imageUrl,
-                      user.email,
-                      user.accessToken,
-                      user.accessTokenExpiration,
-                      user.id,
-                    ),
-                  );
-                  store.dispatch(getFeatures());
-                } else {
-                  store.dispatch(logOut());
-                }
-                resolve();
-              })
-              .catch(reject);
+            resolve();
           })
           .catch(reject);
-        resolve();
       })
       .catch((error) => {
         // The API returns a 503 UNAVAILABLE from the  '/status' endpoint if dependencies are down.
@@ -124,6 +101,25 @@ function bootstrap() {
 
 function render(Component) {
   const root = document.getElementById('react');
+  const { configuration } = store.getState();
+  const googleAuthority = 'https://accounts.google.com';
+  // TODO once we no longer query BQ directly, we'll no longer need the BQ scope
+  const scopes = ['openid', 'email', 'profile'];
+  if (configuration.authorityEndpoint === googleAuthority) {
+    scopes.push('https://www.googleapis.com/auth/bigquery.readonly');
+  }
+  const oidcConfig = {
+    authority: configuration.configObject.authorityEndpoint,
+    client_id: configuration.configObject.oidcClientId,
+    // overwrite the auth endpoint to use the one hosted by TDR
+    metadata: {
+      authorization_endpoint: `${window.origin}/oauth2/authorize`,
+      token_endpoint: `${window.origin}/oauth2/token`,
+    },
+    redirect_uri: `${window.origin}/oauth2-redirect`,
+    prompt: 'login',
+    scope: scopes.join(' '),
+  };
 
   if (root) {
     ReactDOM.render(
@@ -140,7 +136,9 @@ function render(Component) {
           {/* CachingProvider is a way to control how css is rendered in the DOM */}
           <CacheProvider value={cache}>
             <ThemeProvider theme={globalTheme}>
-              <Component />
+              <AuthProvider {...oidcConfig}>
+                <Component />
+              </AuthProvider>
             </ThemeProvider>
           </CacheProvider>
         </Router>

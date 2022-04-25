@@ -1,14 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { renderLoginButton } from 'modules/auth';
 import { withStyles } from '@mui/styles';
 import { LaunchOutlined } from '@mui/icons-material';
 
 import Hero from 'media/images/hero.png';
 import LogoGrey from 'media/brand/logo-grey.svg';
 
-import { logOut, logIn } from 'actions/index';
+import LoginButton from './auth/LoginButton';
 
 const styles = (theme) => ({
   containerWrapper: {
@@ -21,36 +20,28 @@ const styles = (theme) => ({
     fontFamily: theme.typography.fontFamily,
     justifyContent: 'space-between',
     flex: 1,
-  },
-  title: {
-    fontSize: '54px',
-    lineHeight: '54px',
-    paddingBottom: theme.spacing(2),
-    fontWeight: 'bold',
-  },
-  subtitle: {
-    fontSize: '20px',
-    paddingBottom: theme.spacing(2),
-  },
-  mainContent: {
-    display: 'inline-block',
-    color: theme.typography.color,
-    overflow: 'hidden',
-    marginTop: theme.spacing(10),
-    padding: theme.spacing(10),
-    paddingRight: '500px',
     background: `url(${Hero})`,
     backgroundPositionX: 'right',
     backgroundPositionY: 'top',
     backgroundRepeat: 'no-repeat',
     backgroundSize: '750px',
   },
-  newUser: {
-    color: theme.palette.secondary.contrastText,
-    fontSize: '18px',
-    fontWeight: '300',
+  title: {
+    fontSize: '54px',
+    lineHeight: '54px',
     paddingBottom: theme.spacing(2),
-    paddingTop: theme.spacing(4),
+    fontWeight: '600',
+  },
+  subtitle: {
+    fontSize: '16px',
+  },
+  mainContent: {
+    display: 'inline-block',
+    color: theme.typography.color,
+    overflow: 'hidden',
+    marginTop: theme.spacing(5),
+    padding: theme.spacing(10),
+    paddingRight: '650px',
   },
   jadeLink: {
     ...theme.mixins.jadeLink,
@@ -100,23 +91,8 @@ const styles = (theme) => ({
 export class WelcomeView extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    dispatch: PropTypes.func.isRequired,
     terraUrl: PropTypes.string,
   };
-
-  componentDidMount() {
-    const { dispatch } = this.props;
-    const loginOptions = {
-      id: 'signin-button-container',
-      scopes: ['openid', 'profile', 'email', 'https://www.googleapis.com/auth/bigquery.readonly'],
-      onsuccess: (user) =>
-        dispatch(
-          logIn(user.name, user.imageUrl, user.email, user.accessToken, user.accessTokenExpiration),
-        ),
-      onfailure: () => dispatch(logOut()),
-    };
-    renderLoginButton(loginOptions);
-  }
 
   render() {
     const { classes, terraUrl } = this.props;
@@ -132,25 +108,25 @@ export class WelcomeView extends React.PureComponent {
             </p>
             <p className={classes.subtitle}>
               <a
-                className={classes.jadeLink}
                 href="https://support.terra.bio/hc/en-us"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Find how-to's, documentation, video tutorials, and discussion forums
-                <LaunchOutlined fontSize="small" />
+                <span className={classes.jadeLink}>
+                  Find how-to's, documentation, video tutorials, and discussion forums
+                  <LaunchOutlined fontSize="small" />
+                </span>
               </a>
             </p>
-            <div id="signin-button-container" />
-            <div className={classes.newUser}>New User?</div>
-            <div className={classes.header}>Terra Data Repository requires a Google account.</div>
+            <LoginButton />
+            <div className={classes.header}>Terra Data Repository requires a Terra account.</div>
             <p>
-              Terra Data Repository uses your Terra account which uses a Google account. Once you
-              have signed in and completed the user profile registration step, you can start using
-              Terra and Terra Data Repository.
+              Terra Data Repository uses your Terra account. Once you have signed in and completed
+              the user profile registration step, you can start using Terra and Terra Data
+              Repository.
             </p>
-            <a href={terraUrl} className={classes.terraLink}>
-              Need to create a Terra account?
+            <a href={terraUrl}>
+              <span className={classes.terraLink}>Need to create a Terra account?</span>
             </a>
             <hr />
             <div>
@@ -207,7 +183,7 @@ export class WelcomeView extends React.PureComponent {
             <LaunchOutlined className={classes.footerLaunch} />
           </a>
           <div className={classes.footerSeparator} />
-          <span className={classes.copyright}>Copyright ©2021</span>
+          <span className={classes.copyright}>Copyright ©2022</span>
         </div>
       </div>
     );
