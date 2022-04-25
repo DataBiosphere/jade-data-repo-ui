@@ -4,7 +4,7 @@
  */
 import { actionChannel, all, fork, put, call, select, take, takeLatest } from 'redux-saga/effects';
 import { delay } from 'redux-saga';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import moment from 'moment';
 import _ from 'lodash';
 
@@ -19,8 +19,10 @@ import { TdrState } from '../reducers';
  * @param state
  */
 
+export const getUser = (state: TdrState) => state.user;
 export const getToken = (state: TdrState) => state.user.token;
 export const getTokenExpiration = (state: TdrState) => state.user.tokenExpiration;
+export const getDelegateToken = (state: TdrState) => state.user.delegateToken;
 export const getSnapshotState = (state: TdrState) => state.snapshots;
 export const getQuery = (state: TdrState) => state.query;
 export const getDataset = (state: TdrState) => state.datasets.dataset;
@@ -28,42 +30,58 @@ export const getSamUrl = (state: TdrState) => state.configuration.configObject.s
 
 export const timeoutMsg = 'Your session has timed out. Please refresh the page.';
 
-export function* checkToken(): any {
-  const tokenExpiration = yield select(getTokenExpiration);
+export function* checkToken() {
+  const tokenExpiration: ReturnType<typeof getTokenExpiration> = yield select(getTokenExpiration);
   // if this fails, should isAuthenticated be flipped?
-  return moment(moment()).isSameOrBefore(parseInt(tokenExpiration, 10));
+  return moment(moment()).isSameOrBefore(tokenExpiration);
 }
 
-export function* authGet(url: string, params = {}): any {
-  if (yield call(checkToken)) {
+function* getTokenToUse(isDelegateToken: boolean) {
+  let token: string;
+  if (isDelegateToken) {
+    token = yield select(getDelegateToken);
+  } else {
+    token = yield select(getToken);
+  }
+  return token;
+}
+
+export function* authGet(url: string, params = {}, isDelegateToken = false) {
+  const tokenIsValid: boolean = yield call(checkToken);
+  if (tokenIsValid) {
     // check expiration time against now
-    const token = yield select(getToken);
-    return yield call(axios.get, url, {
+    const token: string = yield call(getTokenToUse, isDelegateToken);
+    const result: AxiosResponse = yield call(axios.get, url, {
       params,
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
     });
+    return result;
   }
   throw timeoutMsg;
 }
 
-export function* authPost(url: string, params: any): any {
-  if (yield call(checkToken)) {
+export function* authPost(url: string, params = {}, isDelegateToken = false) {
+  const tokenIsValid: boolean = yield call(checkToken);
+  if (tokenIsValid) {
     // check expiration time against now
-    const token = yield select(getToken);
-    return yield call(axios.post, url, params, {
+    const token: string = yield call(getTokenToUse, isDelegateToken);
+    const result: AxiosResponse = yield call(axios.post, url, params, {
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
     });
+    return result;
   }
   throw timeoutMsg;
 }
 
-export function* authDelete(url: string): any {
-  if (yield call(checkToken)) {
+export function* authDelete(url: string, isDelegateToken = false) {
+  const tokenIsValid: boolean = yield call(checkToken);
+  if (tokenIsValid) {
     // check expiration time against now
-    const token = yield select(getToken);
-    return yield call(axios.delete, url, {
+    const token: string = yield call(getTokenToUse, isDelegateToken);
+    const result: AxiosResponse = yield call(axios.delete, url, {
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
     });
+    return result;
   }
   throw timeoutMsg;
 }
@@ -473,7 +491,7 @@ export function* getDatasetTablePreview({ payload }: any): any {
   const datasetBqSnapshotName = `datarepo_${dataset.name}`;
   const url = `/bigquery/v2/projects/${datasetProject}/datasets/${datasetBqSnapshotName}/tables/${tableName}/data`;
   try {
-    const response = yield call(authGet, `${url}?maxResults=100`);
+    const response = yield call(authGet, `${url}?maxResults=100`, true);
     yield put({
       type: ActionTypes.GET_DATASET_TABLE_PREVIEW_SUCCESS,
       preview: response,
@@ -549,7 +567,7 @@ export function* previewData({ payload }: any): any {
 function* pollQuery(projectId: string, jobId: string): any {
   try {
     const url = `/bigquery/v2/projects/${projectId}/queries/${jobId}`;
-    const response = yield call(authGet, url);
+    const response = yield call(authGet, url, true);
     const { jobComplete } = response.data;
     if (jobComplete) {
       yield put({
@@ -573,7 +591,7 @@ export function* runQuery({ payload }: any): any {
       query: payload.query,
       maxResults: queryState.rowsPerPage,
     };
-    const response = yield call(authPost, url, body);
+    const response = yield call(authPost, url, body, true);
     const { jobComplete } = response.data;
     const { jobId } = response.data.jobReference;
     if (jobComplete) {
@@ -624,7 +642,7 @@ export function* pageQuery({ payload }: any): any {
       pageToken: payload.pageToken,
       location: payload.location,
     };
-    const response = yield call(authGet, url, params);
+    const response = yield call(authGet, url, params, true);
 
     yield put({
       type: ActionTypes.PAGE_QUERY_SUCCESS,
@@ -641,7 +659,7 @@ export function* countResults({ payload }: any): any {
     const body = {
       query: payload.query,
     };
-    const response = yield call(authPost, url, body);
+    const response = yield call(authPost, url, body, true);
     const { jobComplete } = response.data;
     const { jobId } = response.data.jobReference;
     if (jobComplete) {
@@ -677,6 +695,20 @@ export function* getFeatures(): any {
   }
 }
 
+export function* getUserStatus(): any {
+  try {
+    yield call(authGet, '/api/repository/v1/register/user');
+    yield put({
+      type: ActionTypes.GET_USER_STATUS_SUCCESS,
+    });
+  } catch (err) {
+    showNotification(err);
+    yield put({
+      type: ActionTypes.GET_USER_STATUS_FAILURE,
+    });
+  }
+}
+
 /**
  * App Sagas
  */
@@ -707,6 +739,7 @@ export default function* root() {
     takeLatest(ActionTypes.GET_BILLING_PROFILE_BY_ID, getBillingProfileById),
     takeLatest(ActionTypes.GET_USER_DATASET_ROLES, getUserDatasetRoles),
     takeLatest(ActionTypes.GET_USER_SNAPSHOT_ROLES, getUserSnapshotRoles),
+    takeLatest(ActionTypes.GET_USER_STATUS, getUserStatus),
     fork(watchGetDatasetByIdSuccess),
   ]);
 }
