@@ -70,7 +70,6 @@
     "redux-actions": "^2.6.5",
     "redux-immutable-state-invariant": "^2.1.0",
     "redux-logger": "^3.0.6",
-    "redux-mock-store": "^1.5.4",
     "redux-saga": "^0.16.2",
     "rxjs": "^7.5.5",
     "symbol-observable": "^4.0.0",
@@ -117,6 +116,7 @@
     "react-app-rewired": "^2.1.8",
     "react-dom": "npm:@hot-loader/react-dom@^17.0.2",
     "react-hot-loader": "^4.13.0",
+    "redux-mock-store": "^1.5.4",
     "yargs": "^17.0.1"
   },
   "scripts": {
