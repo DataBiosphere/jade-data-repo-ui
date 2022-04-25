@@ -19,7 +19,7 @@ on:
 jobs:
   unit_test:
     name: Cypress Unit Tests
-    timeout-minutes: 10
+    timeout-minutes: 30
     strategy:
       matrix:
         node-version: [14.x]
