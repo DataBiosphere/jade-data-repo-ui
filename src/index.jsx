@@ -116,7 +116,7 @@ function render(Component) {
       authorization_endpoint: `${window.origin}/oauth2/authorize`,
       token_endpoint: `${window.origin}/oauth2/token`,
     },
-    redirect_uri: `${window.origin}/oauth2-redirect`,
+    redirect_uri: `${window.origin}/redirect-from-oauth`,
     prompt: 'login',
     scope: scopes.join(' '),
   };

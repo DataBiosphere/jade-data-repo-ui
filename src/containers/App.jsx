@@ -244,7 +244,7 @@ export function App(props) {
         {!status.tdrOperational && <ServerErrorView />}
         {status.tdrOperational && configuration.configObject.clientId && !auth.isLoading && (
           <Switch>
-            <Route path="/oauth2-redirect" exact component={LoadingSpinner} />
+            <Route path="/redirect-from-oauth" exact component={LoadingSpinner} />
             <RoutePublic
               isAuthenticated={user.isAuthenticated}
               path="/login"
