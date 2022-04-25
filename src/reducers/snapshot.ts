@@ -226,7 +226,7 @@ export default {
         immutable(state, {
           snapshotRequest: { $set: defaultSnapshotRequest },
         }),
-      [ActionTypes.USER_LOGOUT]: () => initialSnapshotState,
+      [ActionTypes.USER_LOGOUT_SUCCESS]: () => initialSnapshotState,
     },
     initialSnapshotState,
   ),

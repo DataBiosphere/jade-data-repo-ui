@@ -29,7 +29,7 @@ export default {
         immutable(state, {
           profile: {},
         }),
-      [ActionTypes.USER_LOGOUT]: () => initialProfileState,
+      [ActionTypes.USER_LOGOUT_SUCCESS]: () => initialProfileState,
     },
     initialProfileState,
   ),

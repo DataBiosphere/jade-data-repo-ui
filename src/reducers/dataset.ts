@@ -127,7 +127,7 @@ export default {
           // datasetPreview: { schema: { tables: { [i]: { preview: { $set: action.preview.data.rows } } } } },
         });
       },
-      [ActionTypes.USER_LOGOUT]: () => initialDatasetState,
+      [ActionTypes.USER_LOGOUT_SUCCESS]: () => initialDatasetState,
     },
     initialDatasetState,
   ),
