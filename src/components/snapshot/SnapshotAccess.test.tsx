@@ -66,7 +66,7 @@ describe('Snapshot access info', () => {
       .should('contain.text', 'Discoverers')
       .within(() => {
         cy.get('[data-cy="user-email"]').then((user) => {
-          cy.wrap(user[0]).should('contain.text', '[None]');
+          cy.wrap(user[0]).should('contain.text', '(None)');
         });
       });
   });
