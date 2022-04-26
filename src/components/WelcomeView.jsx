@@ -53,8 +53,10 @@ const styles = (theme) => ({
     textDecoration: 'none',
   },
   header: {
-    fontSize: '24px',
-    lineHeight: '36px',
+    paddingTop: theme.spacing(2),
+    fontSize: '16px',
+    fontWeight: '600',
+    lineHeight: '24px',
   },
   warning: {
     fontWeight: '900',

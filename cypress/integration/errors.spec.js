@@ -70,13 +70,13 @@ describe('test error handling', () => {
   it('displays loading message', () => {
     cy.route({
       method: 'POST',
-      url: 'bigquery/v2/projects/*/queries',
+      url: 'bigquery/v2/projects/**/queries',
       status: 200,
       response: { jobComplete: false, jobReference: { jobId: 'jobId' } },
     }).as('getQueryResults');
     cy.route({
       method: 'GET',
-      url: 'bigquery/v2/projects/*/queries/jobId',
+      url: 'bigquery/v2/projects/**/queries/jobId',
       status: 200,
       response: { jobComplete: false, jobReference: { jobId: 'jobId' } },
     }).as('getQueryJobResults');
