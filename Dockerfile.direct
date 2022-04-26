@@ -1,11 +1,10 @@
-FROM node:14
+FROM node:14.0-buster
 
 # Install java to run codegen
 RUN apt-get update && \
     apt-get install -y software-properties-common && \
-    add-apt-repository ppa:openjdk-r/ppa && \
     apt-get update && \
-    apt-get install -y default-jre
+    apt-get install -y openjdk-11-jdk
 
 COPY . /
 
