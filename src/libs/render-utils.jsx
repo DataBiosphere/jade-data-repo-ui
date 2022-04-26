@@ -19,7 +19,7 @@ export const renderCloudPlatforms = (row) => (
 
 export const renderStorageResources = (dataset) =>
   dataset.storage.map((storageResource, i) => (
-    <Typography key={i}>
+    <Typography data-cy="storage-resource" key={i}>
       {storageResource.cloudResource}: {storageResource.region}
     </Typography>
   ));

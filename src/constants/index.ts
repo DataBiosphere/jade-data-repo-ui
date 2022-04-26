@@ -133,6 +133,7 @@ export enum ColumnModes {
 export enum SnapshotRoles {
   STEWARD = 'steward',
   READER = 'reader',
+  DISCOVERER = 'discoverer',
 }
 
 export enum GoogleCloudResource {

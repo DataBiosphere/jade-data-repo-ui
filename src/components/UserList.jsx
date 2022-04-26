@@ -60,7 +60,7 @@ class UserList extends React.PureComponent {
             />
           )}
         </div>
-        <div className={classes.values}>
+        <div data-cy="user-email" className={classes.values}>
           {users.length === 0 && <Typography className={classes.noUsers}>(None)</Typography>}
           {users.map((user) => (
             <Typography noWrap key={user}>

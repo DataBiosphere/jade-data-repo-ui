@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { withStyles } from '@mui/styles';
 import { getDatasetById, getDatasetPolicy, getUserDatasetRoles } from 'actions';
 import { Typography } from '@mui/material';
-import DatasetRelationshipsPanel from './DatasetOverviewSchemaPanel';
+import DatasetRelationshipsPanel from '../../common/overview/SchemaPanel';
 import { useOnMount } from '../../../libs/utils';
 import { BreadcrumbType, DatasetIncludeOptions } from '../../../constants';
 import DatasetOverviewPanel from './DatasetOverviewPanel';
@@ -81,7 +81,11 @@ function DatasetOverview(props) {
       <div className={classes.root}>
         <div className={classes.infoColumn}>
           <div className={classes.infoColumnPanel}>
-            <DatasetRelationshipsPanel dataset={dataset} />
+            <DatasetRelationshipsPanel
+              tables={dataset.schema.tables}
+              resourceType="Dataset"
+              resourceId={dataset.id}
+            />
           </div>
         </div>
         <div className={classes.mainColumn}>

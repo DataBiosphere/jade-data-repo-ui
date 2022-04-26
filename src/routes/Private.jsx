@@ -8,11 +8,11 @@ import PropTypes from 'prop-types';
 import history from 'modules/hist';
 
 import HelpContainer from 'components/help/HelpContainer';
-import SnapshotOverview from 'components/SnapshotOverview';
 import HomeView from '../components/HomeView';
-import DatasetOverview from '../components/dataset/overview/DatasetOverview';
 import DatasetDataView from '../components/dataset/data/DatasetDataView';
+import DatasetOverview from '../components/dataset/overview/DatasetOverview';
 import SnapshotDataView from '../components/snapshot/data/SnapshotDataView';
+import SnapshotOverview from '../components/snapshot/overview/SnapshotOverview';
 import NotFound from './NotFound';
 
 const styles = (theme) => ({
