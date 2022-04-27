@@ -52,11 +52,8 @@ const formatExportUrl = (
   window: string,
   snapshot: SnapshotModel,
   manifest: string,
-) => `${terraUrl}#import-data?url=${window}
-    &snapshotId=${snapshot.id}
-    &format=tdrexport
-    &snapshotName=${snapshot.name}
-    &tdrmanifest=${manifest}`;
+) =>
+  `${terraUrl}#import-data?url=${window}&snapshotId=${snapshot.id}&format=tdrexport&snapshotName=${snapshot.name}&tdrmanifest=${manifest}`;
 
 function SnapshotExport(props: SnapshotExportProps) {
   const [exportGsPaths, setExportGsPaths] = React.useState(false);
