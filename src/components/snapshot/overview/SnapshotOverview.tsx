@@ -86,6 +86,7 @@ function SnapshotOverview(props: AllSnapshotProps) {
           id: snapshot.id || '',
           name: snapshot.name || '',
         }}
+        childBreadcrumbs={[]}
       />
       <Typography variant="h3" className={classes.pageTitle}>
         {snapshot.name}

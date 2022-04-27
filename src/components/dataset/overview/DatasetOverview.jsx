@@ -74,6 +74,7 @@ function DatasetOverview(props) {
     <div className={classes.pageRoot}>
       <AppBreadcrumbs
         context={{ type: BreadcrumbType.DATASET, id: datasetId, name: dataset.name }}
+        childBreadcrumbs={[]}
       />
       <Typography variant="h3" className={classes.pageTitle}>
         {dataset.name}
