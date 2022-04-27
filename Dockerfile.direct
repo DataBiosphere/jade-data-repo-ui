@@ -2,9 +2,7 @@ FROM node:14.0-buster
 
 # Install java to run codegen
 RUN apt-get update && \
-    apt-get install -y software-properties-common && \
-    apt-get update && \
-    apt-get install -y openjdk-11-jdk
+    apt-get install -y software-properties-common openjdk-11-jre
 
 COPY . /
 
@@ -12,7 +10,7 @@ RUN npm ci && \
   npm run build --production
 
 # Uninstall java
-RUN apt purge -y default-jre
+RUN apt purge -y openjdk-11-jre
 
 FROM nginxinc/nginx-unprivileged:stable-alpine
 COPY --from=0 /build /usr/share/nginx/html
