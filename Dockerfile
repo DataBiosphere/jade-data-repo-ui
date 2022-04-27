@@ -1,11 +1,8 @@
-FROM node:14
+FROM node:14.0-buster
 
 # Install java to run codegen
 RUN apt-get update && \
-    apt-get install -y software-properties-common && \
-    add-apt-repository ppa:openjdk-r/ppa && \
-    apt-get update && \
-    apt-get install -y default-jre
+    apt-get install -y software-properties-common openjdk-11-jre
 
 RUN set -x \
   && git clone https://github.com/DataBiosphere/jade-data-repo-ui \
@@ -15,7 +12,7 @@ RUN set -x \
   && npm run build --production
 
 # Uninstall java
-RUN apt purge -y default-jre
+RUN apt purge -y openjdk-11-jre
 
 FROM us.gcr.io/broad-dsp-gcr-public/base/nginx:stable-alpine
 COPY --from=0 /jade-data-repo-ui/build /usr/share/nginx/html
