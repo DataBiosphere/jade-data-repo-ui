@@ -76,7 +76,7 @@ describe('test error handling', () => {
     }).as('getQueryResults');
     cy.route({
       method: 'GET',
-      url: 'bigquery/v2/projects/**/queries/jobId',
+      url: 'bigquery/v2/projects/**/queries/jobId*',
       status: 200,
       response: { jobComplete: false, jobReference: { jobId: 'jobId' } },
     }).as('getQueryJobResults');
