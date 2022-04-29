@@ -8,6 +8,7 @@ import SnapshotAccess from '../SnapshotAccess';
 import TabPanel from '../../common/TabPanel';
 import SnapshotExport from './SnapshotExport';
 import { SnapshotModel } from '../../../generated/tdr';
+import SnapshotGoogleSheet from './SnapshotGoogleSheet';
 
 const styles = (theme: CustomTheme) =>
   createStyles({
@@ -117,6 +118,7 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
         <Grid container spacing={2}>
           <Grid item xs={6}>
             <SnapshotExport of={snapshot} />
+            <SnapshotGoogleSheet of={snapshot} />
           </Grid>
         </Grid>
       </TabPanel>
