@@ -8,6 +8,7 @@ import history from 'modules/hist';
 import globalTheme from 'modules/theme';
 import { ThemeProvider } from '@mui/material/styles';
 import axios from 'axios';
+import { WebStorageStateStore } from 'oidc-client-ts';
 import { AuthProvider } from 'react-oidc-context';
 // For some reason, @emotion package doesn't register with linter.  Ignoring for now
 //eslint-disable-next-line import/no-extraneous-dependencies
@@ -119,6 +120,7 @@ function render(Component) {
     redirect_uri: `${window.origin}/redirect-from-oauth`,
     prompt: 'login',
     scope: scopes.join(' '),
+    userStore: new WebStorageStateStore({ store: window.localStorage }),
   };
 
   if (root) {

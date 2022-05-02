@@ -158,17 +158,10 @@ export function App(props) {
   const auth = useAuth();
   // This effect clause is needed to handle when the auth library loads the token on page refresh
   useEffect(() => {
-    (() => {
-      if (
-        auth.isAuthenticated &&
-        !auth.isLoading &&
-        !user.isAuthenticated &&
-        !auth.activeNavigator
-      ) {
-        dispatch(logInSuccess(auth.user));
-        dispatch(getUserStatus());
-      }
-    })();
+    if (auth.isAuthenticated && !auth.isLoading && !user.isAuthenticated && !auth.activeNavigator) {
+      dispatch(logInSuccess(auth.user));
+      dispatch(getUserStatus());
+    }
   }, [auth, dispatch, user]);
 
   const handleMenu = (event) => {
