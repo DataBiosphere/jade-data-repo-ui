@@ -1,14 +1,10 @@
 import React, { useState } from 'react';
 import { ClassNameMap, createStyles, withStyles } from '@mui/styles';
-import {
-  Button,
-  CircularProgress,
-  Typography,
-} from '@mui/material';
+import { Button, CircularProgress, Typography } from '@mui/material';
 import { CustomTheme } from '@mui/material/styles';
+import GoogleSheets from 'modules/googlesheets';
 import TerraTooltip from '../../common/TerraTooltip';
 import { SnapshotModel } from '../../../generated/tdr';
-import GoogleSheets from 'modules/googlesheets';
 
 const styles = (theme: CustomTheme) =>
   createStyles({
@@ -35,24 +31,24 @@ type SnapshotGoogleSheetProps = {
   of: SnapshotModel;
 };
 
-function SnapshotGoogleSheet(props:  SnapshotGoogleSheetProps) {
-    const { classes, of } = props;
-    const [isSheetProcessing, setIsSheetProcessing] = useState(false);
-    const [isSheetDone, setIsSheetDone] = useState(false);
-    const [sheetUrl, setSheetUrl] = useState('');
+function SnapshotGoogleSheet(props: SnapshotGoogleSheetProps) {
+  const { classes, of } = props;
+  const [isSheetProcessing, setIsSheetProcessing] = useState(false);
+  const [isSheetDone, setIsSheetDone] = useState(false);
+  const [sheetUrl, setSheetUrl] = useState('');
 
-    const handleCreateGoogleSheet = async () => {
-        setIsSheetProcessing(true);
-        const googleSheets = new GoogleSheets();
-        setSheetUrl(await googleSheets.createSheet(of.name));
-        setIsSheetProcessing(false);
-        setIsSheetDone(true);
-      };
-    
-      const resetCreate = () => {
-        setIsSheetProcessing(false);
-        setIsSheetDone(false);
-      }
+  const handleCreateGoogleSheet = async () => {
+    setIsSheetProcessing(true);
+    const googleSheets = new GoogleSheets();
+    setSheetUrl(await googleSheets.createSheet(of.name));
+    setIsSheetProcessing(false);
+    setIsSheetDone(true);
+  };
+
+  const resetCreate = () => {
+    setIsSheetProcessing(false);
+    setIsSheetDone(false);
+  };
 
   return (
     <div>
@@ -91,11 +87,7 @@ function SnapshotGoogleSheet(props:  SnapshotGoogleSheetProps) {
           variant="contained"
           color="primary"
         >
-          <a
-            target="_blank"
-            rel="noopener noreferrer"
-            href={sheetUrl}
-          >
+          <a target="_blank" rel="noopener noreferrer" href={sheetUrl}>
             Google Sheet ready - continue
           </a>
         </Button>

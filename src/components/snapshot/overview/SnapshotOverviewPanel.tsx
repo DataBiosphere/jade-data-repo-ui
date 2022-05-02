@@ -118,6 +118,8 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
         <Grid container spacing={2}>
           <Grid item xs={6}>
             <SnapshotExport of={snapshot} />
+          </Grid>
+          <Grid item xs={6}>
             <SnapshotGoogleSheet of={snapshot} />
           </Grid>
         </Grid>

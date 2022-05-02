@@ -10,7 +10,7 @@ export default class GoogleSheets {
   }
 
   createSheet = (sheetName, token) => {
-    const url = `/googlesheets/v4/spreadsheets`;
+    const url = '/googlesheets/v4/spreadsheets';
 
     return axios
       .post(
