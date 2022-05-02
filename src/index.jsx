@@ -106,8 +106,11 @@ function render(Component) {
   const googleAuthority = 'https://accounts.google.com';
   // TODO once we no longer query BQ directly, we'll no longer need the BQ scope
   const scopes = ['openid', 'email', 'profile'];
-  if (configuration.authorityEndpoint === googleAuthority) {
+  let redirectUri = `${window.origin}/redirect-from-oauth`;
+  if (configuration.configObject.authorityEndpoint === googleAuthority) {
     scopes.push('https://www.googleapis.com/auth/bigquery.readonly');
+    // In the case where we are logging in with the Google oauth provider, redirect to the root
+    redirectUri = window.origin;
   }
   const oidcConfig = {
     authority: configuration.configObject.authorityEndpoint,
@@ -117,7 +120,7 @@ function render(Component) {
       authorization_endpoint: `${window.origin}/oauth2/authorize`,
       token_endpoint: `${window.origin}/oauth2/token`,
     },
-    redirect_uri: `${window.origin}/redirect-from-oauth`,
+    redirect_uri: redirectUri,
     prompt: 'login',
     scope: scopes.join(' '),
     userStore: new WebStorageStateStore({ store: window.localStorage }),
