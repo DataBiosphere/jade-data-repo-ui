@@ -34,6 +34,11 @@ type SnapshotGoogleSheetProps = {
   token: string;
 };
 
+type GoogleSheetCreateResponse = {
+  spreadsheetUrl: string;
+  spreadsheetId: string;
+};
+
 function SnapshotGoogleSheet(props: SnapshotGoogleSheetProps) {
   const { classes, of, token } = props;
   const [isSheetProcessing, setIsSheetProcessing] = useState(false);
@@ -43,7 +48,9 @@ function SnapshotGoogleSheet(props: SnapshotGoogleSheetProps) {
   const handleCreateGoogleSheet = async () => {
     setIsSheetProcessing(true);
     const googleSheets = new GoogleSheets();
-    setSheetUrl(await googleSheets.createSheet(of.name, token));
+    const response: GoogleSheetCreateResponse = await googleSheets.createSheet(of.name, token);
+    setSheetUrl(response.spreadsheetUrl);
+    await googleSheets.addBQSources(response.spreadsheetId, of, token);
     setIsSheetProcessing(false);
     setIsSheetDone(true);
   };

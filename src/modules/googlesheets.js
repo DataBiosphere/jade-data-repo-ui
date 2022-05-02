@@ -27,6 +27,41 @@ export default class GoogleSheets {
           },
         },
       )
-      .then((response) => response.result.spreadsheetUrl);
+      .then((response) => ({
+        spreadsheetId: response.data.spreadsheetId,
+        spreadsheetUrl: response.data.spreadsheetUrl,
+      }));
+  };
+
+  addBQSources = (spreadsheetId, snapshot, token) => {
+    const url = `/googlesheets/v4/spreadsheets/${spreadsheetId}:batchUpdate`;
+
+    let requests = [];
+    snapshot.accessInformation.bigQuery.tables.forEach((table) => {
+      requests.push({
+        addDataSource: {
+          dataSource: {
+            spec: {
+              bigQuery: {
+                projectId: snapshot.accessInformation.bigQuery.projectId,
+                querySpec: {
+                  rawQuery: table.sampleQuery, // Need to build own query so not limited to 1k rows
+                },
+              },
+            },
+          },
+        },
+      });
+    });
+
+    const batchUpdateRequest = { requests: requests };
+    axios
+      .post(url, batchUpdateRequest, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => console.log('after batch update'));
   };
 }
