@@ -250,12 +250,15 @@ export function App(props) {
               exact
               component={HeadlessLogin}
             />
-            <RoutePrivate
-              isAuthenticated={user.isAuthenticated}
-              path="/"
-              component={Private}
-              features={user.features}
-            />
+            {user.isInitiallyLoaded && (
+              <RoutePrivate
+                isAuthenticated={user.isAuthenticated}
+                path="/"
+                component={Private}
+                features={user.features}
+              />
+            )}
+            {!user.isInitiallyLoaded && <Route path="/" component={LoadingSpinner} />}
             <Route component={NotFound} />
           </Switch>
         )}
