@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
 import { ClassNameMap, createStyles, withStyles } from '@mui/styles';
 import { Button, CircularProgress, Typography } from '@mui/material';
 import { CustomTheme } from '@mui/material/styles';
 import GoogleSheets from 'modules/googlesheets';
 import TerraTooltip from '../../common/TerraTooltip';
 import { SnapshotModel } from '../../../generated/tdr';
+import { TdrState } from '../../../reducers';
 
 const styles = (theme: CustomTheme) =>
   createStyles({
@@ -29,10 +31,11 @@ const styles = (theme: CustomTheme) =>
 type SnapshotGoogleSheetProps = {
   classes: ClassNameMap;
   of: SnapshotModel;
+  token: string;
 };
 
 function SnapshotGoogleSheet(props: SnapshotGoogleSheetProps) {
-  const { classes, of } = props;
+  const { classes, of, token } = props;
   const [isSheetProcessing, setIsSheetProcessing] = useState(false);
   const [isSheetDone, setIsSheetDone] = useState(false);
   const [sheetUrl, setSheetUrl] = useState('');
@@ -40,7 +43,7 @@ function SnapshotGoogleSheet(props: SnapshotGoogleSheetProps) {
   const handleCreateGoogleSheet = async () => {
     setIsSheetProcessing(true);
     const googleSheets = new GoogleSheets();
-    setSheetUrl(await googleSheets.createSheet(of.name));
+    setSheetUrl(await googleSheets.createSheet(of.name, token));
     setIsSheetProcessing(false);
     setIsSheetDone(true);
   };
@@ -96,4 +99,10 @@ function SnapshotGoogleSheet(props: SnapshotGoogleSheetProps) {
   );
 }
 
-export default withStyles(styles)(SnapshotGoogleSheet);
+function mapStateToProps(state: TdrState) {
+  return {
+    token: state.user.token,
+  };
+}
+
+export default connect(mapStateToProps)(withStyles(styles)(SnapshotGoogleSheet));
