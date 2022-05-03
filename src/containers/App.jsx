@@ -181,6 +181,7 @@ export function App(props) {
     }
   };
 
+  console.log(user);
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -258,7 +259,13 @@ export function App(props) {
                 features={user.features}
               />
             )}
-            {!user.isInitiallyLoaded && <Route path="/" component={LoadingSpinner} />}
+            {!user.isInitiallyLoaded && (
+              <RoutePrivate
+                isAuthenticated={auth.isAuthenticated && !auth.isLoading && !user.isTest}
+                path="/"
+                component={LoadingSpinner}
+              />
+            )}
             <Route component={NotFound} />
           </Switch>
         )}

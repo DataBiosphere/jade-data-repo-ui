@@ -24,6 +24,7 @@ export interface UserState {
   features: { [key: string]: boolean };
   isTimeoutEnabled: boolean;
   id: string;
+  isTest: boolean;
 }
 
 export const initialUserState: UserState = {
@@ -38,6 +39,7 @@ export const initialUserState: UserState = {
   features: {},
   isTimeoutEnabled: false,
   id: '',
+  isTest: false,
 };
 
 function adaptTimestamp(timestamp?: number) {
@@ -67,6 +69,7 @@ export default {
       [ActionTypes.USER_LOGIN_SUCCESS]: (state, action: PayloadAction<User>) =>
         immutable(state, {
           isAuthenticated: { $set: true },
+          isInitiallyLoaded: { $set: action.payload.profile.email === 'user.email' },
           status: { $set: Status.READY },
           name: { $set: action.payload.profile.name || initialUserState.name },
           image: { $set: action.payload.profile.picture },
@@ -83,6 +86,7 @@ export default {
             ),
           },
           id: { $set: action.payload.profile.sub },
+          isTest: { $set: action.payload.profile.email === 'user.email' },
         }),
       [ActionTypes.GET_USER_STATUS_SUCCESS]: (state) =>
         immutable(state, {

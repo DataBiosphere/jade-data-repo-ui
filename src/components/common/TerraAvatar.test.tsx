@@ -23,6 +23,7 @@ const initialStateGen = (): UserState => ({
   features: {},
   isTimeoutEnabled: false,
   id: 'myid',
+  isTest: false,
 });
 
 describe('TerraAvatar', () => {
