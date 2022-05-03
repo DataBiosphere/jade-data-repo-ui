@@ -17,6 +17,9 @@ export enum ActionTypes {
   USER_LOGOUT = 'USER_LOGOUT',
   USER_LOGOUT_SUCCESS = 'USER_LOGOUT_SUCCESS',
   USER_LOGOUT_FAILURE = 'USER_LOGOUT_FAILURE',
+  GET_USER_STATUS = 'GET_USER_STATUS',
+  GET_USER_STATUS_SUCCESS = 'GET_USER_STATUS_SUCCESS',
+  GET_USER_STATUS_FAILURE = 'GET_USER_STATUS_FAILURE',
   CHANGE_PAGE = 'CHANGE_PAGE',
   CHANGE_ROWS_PER_PAGE = 'CHANGE_ROWS_PER_PAGE',
   CREATE_SNAPSHOT = 'CREATE_SNAPSHOT',
@@ -114,10 +117,6 @@ export enum Status {
   READY = 'ready',
   SUCCESS = 'success', // should this be succeeded ?
   ERROR = 'error',
-}
-
-export enum Image {
-  DEFAULT = 'default',
 }
 
 export enum DbColumns {

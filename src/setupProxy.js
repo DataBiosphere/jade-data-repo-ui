@@ -27,6 +27,13 @@ module.exports = (app) => {
     }),
   );
   app.use(
+    '/oauth2',
+    createProxyMiddleware({
+      target: proxyUrl,
+      changeOrigin: true,
+    }),
+  );
+  app.use(
     '/bigquery',
     createProxyMiddleware({
       target: bigQueryApi,

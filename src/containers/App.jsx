@@ -1,21 +1,14 @@
 import { hot } from 'react-hot-loader/root';
-import React, { useState } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import { Switch, Route } from 'react-router-dom';
 import { ReactNotifications } from 'react-notifications-component';
-import CssBaseline from '@mui/material/CssBaseline';
 import { withStyles } from 'tss-react/mui';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import Button from '@mui/material/Button';
-import MenuItem from '@mui/material/MenuItem';
-import Menu from '@mui/material/Menu';
-import AccountCircle from '@mui/icons-material/AccountCircle';
-import Avatar from '@mui/material/Avatar';
+import { AppBar, Backdrop, Button, Menu, MenuItem, Toolbar } from '@mui/material';
+import CssBaseline from '@mui/material/CssBaseline';
 
-import { logout } from 'modules/auth';
 import Home from 'routes/Home';
 import HeadlessLogin from 'routes/HeadlessLogin';
 import Private from 'routes/Private';
@@ -28,11 +21,14 @@ import { ReactComponent as CarrotSVG } from 'media/icons/angle-line.svg';
 import { ReactComponent as SignOutSVG } from 'media/icons/logout-line.svg';
 import HeaderLeft from 'media/images/header-left-hexes.svg';
 import HeaderRight from 'media/images/header-right-hexes.svg';
-import { logOut } from 'actions';
-
 import 'react-notifications-component/dist/theme.css';
 import ServerErrorView from 'components/ServerErrorView';
 import { LogoutIframe, IdleStatusMonitor } from 'components/IdleStatusMonitor';
+import { useAuth } from 'react-oidc-context';
+import TerraAvatar from 'components/common/TerraAvatar';
+import LoadingSpinner from 'components/common/LoadingSpinner';
+
+import { logOut, logInSuccess, getUserStatus } from '../actions';
 
 const drawerWidth = 240;
 
@@ -125,7 +121,7 @@ const styles = (theme) => ({
   },
   carrotButton: {
     '&:hover': {
-      backgroundColor: 'transparent',
+      backgroundColor: 'transparent !important',
     },
   },
   content: {
@@ -148,6 +144,9 @@ const styles = (theme) => ({
     fontSize: 12,
     padding: `0 ${theme.spacing(2)} 0 0`,
   },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+  },
 });
 
 export function App(props) {
@@ -155,6 +154,15 @@ export function App(props) {
   const [anchorEl, setAnchorEl] = useState(null);
   const [renderLogout, setRenderLogout] = useState(false);
   const open = Boolean(anchorEl);
+
+  const auth = useAuth();
+  // This effect clause is needed to handle when the auth library loads the token on page refresh
+  useEffect(() => {
+    if (auth.isAuthenticated && !auth.isLoading && !user.isAuthenticated && !auth.activeNavigator) {
+      dispatch(logInSuccess(auth.user));
+      dispatch(getUserStatus());
+    }
+  }, [auth, dispatch, user]);
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -164,16 +172,13 @@ export function App(props) {
     setAnchorEl(null);
   };
 
-  // This needs to render the iframe AND reset the timeout
   const signOut = () => {
     const { isTimeoutEnabled } = user;
-    logout({ clientId: configuration.configObject.clientId }).then(() => {
-      dispatch(logOut());
-      handleClose();
-      if (isTimeoutEnabled) {
-        setRenderLogout(true);
-      }
-    });
+    dispatch(logOut(auth));
+    handleClose();
+    if (isTimeoutEnabled) {
+      setRenderLogout(true);
+    }
   };
 
   return (
@@ -186,10 +191,10 @@ export function App(props) {
         <Toolbar className={classes.toolbar}>
           <Logo />
           <div className={classes.grow} />
-          {user.isAuthenticated && (
+          {user.isAuthenticated && user.isInitiallyLoaded && (
             <div className={classes.userSection}>
               <div>
-                {user.image ? <Avatar src={user.image} alt={user.name} /> : <AccountCircle />}
+                <TerraAvatar />
               </div>
               <div className={classes.userName}>{user.name}</div>
               <div>
@@ -199,6 +204,7 @@ export function App(props) {
                   onClick={handleMenu}
                   className={classes.carrotButton}
                   color="inherit"
+                  disableRipple
                 >
                   <CarrotSVG className={open ? classes.carrotOpen : classes.carrotClose} />
                 </Button>
@@ -229,8 +235,9 @@ export function App(props) {
       </AppBar>
       <div className={classes.content}>
         {!status.tdrOperational && <ServerErrorView />}
-        {status.tdrOperational && user.isInitiallyLoaded && configuration.configObject.clientId && (
+        {status.tdrOperational && configuration.configObject.clientId && !auth.isLoading && (
           <Switch>
+            <Route path="/redirect-from-oauth" exact component={LoadingSpinner} />
             <RoutePublic
               isAuthenticated={user.isAuthenticated}
               path="/login"
@@ -243,14 +250,30 @@ export function App(props) {
               exact
               component={HeadlessLogin}
             />
-            <RoutePrivate
-              isAuthenticated={user.isAuthenticated}
-              path="/"
-              component={Private}
-              features={user.features}
-            />
+            {user.isInitiallyLoaded && (
+              <RoutePrivate
+                isAuthenticated={user.isAuthenticated}
+                path="/"
+                component={Private}
+                features={user.features}
+              />
+            )}
+            {!user.isInitiallyLoaded && (
+              <RoutePrivate
+                isAuthenticated={auth.isAuthenticated && !auth.isLoading && !user.isTest}
+                path="/"
+                component={LoadingSpinner}
+              />
+            )}
             <Route component={NotFound} />
           </Switch>
+        )}
+        {/* Show the welcome page with an overlay while the login dialog is open */}
+        {status.tdrOperational && configuration.configObject.clientId && auth.isLoading && (
+          <Fragment>
+            <Home key="home" />
+            <Backdrop key="backdrop" className={classes.backdrop} open={true} />
+          </Fragment>
         )}
       </div>
     </div>

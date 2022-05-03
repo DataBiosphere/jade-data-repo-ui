@@ -68,7 +68,7 @@ export default {
         immutable(state, {
           jobId: { $set: '' },
         }),
-      [ActionTypes.USER_LOGOUT]: () => initialJobState,
+      [ActionTypes.USER_LOGOUT_SUCCESS]: () => initialJobState,
     },
     initialJobState,
   ),

@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { withStyles } from '@mui/styles';
-import { logIn } from '../actions/index';
+import { logInSuccess } from '../actions/index';
 
 const styles = () => ({
   wrapper: {
@@ -39,7 +39,17 @@ export class HeadlessLogin extends React.PureComponent {
 
     const expireTime = Date.now() + 8640000;
 
-    dispatch(logIn('user.name', 'user.imageUrl', 'user.email', token, expireTime));
+    dispatch(
+      logInSuccess({
+        profile: {
+          name: 'user.name',
+          picture: 'user.imageUrl',
+          email: 'user.email',
+        },
+        access_token: token,
+        expires_at: expireTime,
+      }),
+    );
   };
 
   render() {
@@ -47,7 +57,7 @@ export class HeadlessLogin extends React.PureComponent {
 
     return (
       <div className={classes.wrapper}>
-        <h1>michael's secret login page</h1>
+        <h1>E2E secret login page</h1>
         <TextField id="tokenInput" label="Password" type="password" onChange={this.handleChange} />
         <Button id="e2eLoginButton" onClick={this.handleLoginButton}>
           Log In

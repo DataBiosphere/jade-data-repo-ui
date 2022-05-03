@@ -196,7 +196,7 @@ export default {
         immutable(state, {
           resultsCount: { $set: action.resultsCount },
         }),
-      [ActionTypes.USER_LOGOUT]: () => initialQueryState,
+      [ActionTypes.USER_LOGOUT_SUCCESS]: () => initialQueryState,
     },
     initialQueryState,
   ),
