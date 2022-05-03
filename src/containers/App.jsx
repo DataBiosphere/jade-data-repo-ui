@@ -181,7 +181,6 @@ export function App(props) {
     }
   };
 
-  console.log(user);
   return (
     <div className={classes.root}>
       <CssBaseline />
