@@ -108,7 +108,7 @@ function render(Component) {
   const scopes = ['openid', 'email', 'profile'];
   if (configuration.configObject.authorityEndpoint === googleAuthority) {
     scopes.push('https://www.googleapis.com/auth/bigquery.readonly');
-    scopes.push('https://www.googleapis.com/auth/spreadsheets'); 
+    scopes.push('https://www.googleapis.com/auth/spreadsheets');
   }
   const oidcConfig = {
     authority: configuration.configObject.authorityEndpoint,
