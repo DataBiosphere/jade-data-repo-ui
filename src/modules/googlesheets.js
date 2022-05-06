@@ -37,7 +37,12 @@ export default class GoogleSheets {
     const url = `/googlesheets/v4/spreadsheets/${spreadsheetId}:batchUpdate`;
 
     let requests = [];
-    snapshot.accessInformation.bigQuery.tables.forEach((table) => {
+    let sheetInfo = [];
+    snapshot.accessInformation.bigQuery.tables.forEach((table, index) => {
+      sheetInfo.push({
+        sheetIndex: index + 1,
+        sheetName: table.name,
+      });
       requests.push({
         addDataSource: {
           dataSource: {
@@ -54,6 +59,48 @@ export default class GoogleSheets {
       });
     });
 
+    const batchUpdateRequest = { requests: requests };
+    axios
+      .post(url, batchUpdateRequest, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => console.log('after batch update'));
+    return sheetInfo;
+  };
+
+  getSpreadsheetDetails = async (spreadsheetId, token) => {
+    const url = `/googlesheets/v4/spreadsheets/${spreadsheetId}`;
+    return axios
+      .get(url, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => response);
+  };
+
+  cleanupSheet = async (spreadsheetId, sheetInfo, token) => {
+    const spreadSheetDetails = await this.getSpreadsheetDetails(spreadsheetId, token);
+    const url = `/googlesheets/v4/spreadsheets/${spreadsheetId}:batchUpdate`;
+
+    let requests = [];
+    sheetInfo.forEach((sheet) => {
+      const sheetId = spreadSheetDetails.data.sheets[sheet.sheetIndex].properties.sheetId;
+      requests.push({
+        updateSheetProperties: {
+          properties: {
+            sheetId: sheetId,
+            title: sheet.sheetName,
+          },
+          fields: 'title',
+        },
+      });
+    });
+    //TODO - delete sheet1
     const batchUpdateRequest = { requests: requests };
     axios
       .post(url, batchUpdateRequest, {
