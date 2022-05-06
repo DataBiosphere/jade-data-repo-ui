@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { ClassNameMap, createStyles, withStyles } from '@mui/styles';
 import { Button, CircularProgress, Typography } from '@mui/material';
 import { CustomTheme } from '@mui/material/styles';
-import GoogleSheets from 'modules/googlesheets';
+import { createSheet, addBQSources, SheetInfo } from 'modules/googlesheets';
 import TerraTooltip from '../../common/TerraTooltip';
 import { SnapshotModel } from '../../../generated/tdr';
 import { TdrState } from '../../../reducers';
@@ -39,11 +39,6 @@ type GoogleSheetCreateResponse = {
   spreadsheetId: string;
 };
 
-type GoogleSheetDetails = {
-  sheetIndex: number;
-  sheetName: string;
-};
-
 function SnapshotGoogleSheet(props: SnapshotGoogleSheetProps) {
   const { classes, of, token } = props;
   const [isSheetProcessing, setIsSheetProcessing] = useState(false);
@@ -52,15 +47,11 @@ function SnapshotGoogleSheet(props: SnapshotGoogleSheetProps) {
 
   const handleCreateGoogleSheet = async () => {
     setIsSheetProcessing(true);
-    const googleSheets = new GoogleSheets();
-    const response: GoogleSheetCreateResponse = await googleSheets.createSheet(of.name, token);
+    const response: GoogleSheetCreateResponse = await createSheet(of?.name ?? '', token);
     setSheetUrl(response.spreadsheetUrl);
-    const sheets: GoogleSheetDetails[] = await googleSheets.addBQSources(
-      response.spreadsheetId,
-      of,
-      token,
-    );
-    await googleSheets.cleanupSheet(response.spreadsheetId, sheets, token);
+    const sheets: SheetInfo[] = await addBQSources(response.spreadsheetId, of, token);
+    console.log(sheets);
+    // await cleanupSheet(response.spreadsheetId, sheets, token);
     setIsSheetProcessing(false);
     setIsSheetDone(true);
   };
