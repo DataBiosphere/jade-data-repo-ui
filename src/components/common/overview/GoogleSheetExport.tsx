@@ -1,7 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { connect } from 'react-redux';
 import { ClassNameMap, createStyles, withStyles } from '@mui/styles';
 import { Button, CircularProgress, Typography } from '@mui/material';
 import { CustomTheme } from '@mui/material/styles';
+import { AccessInfoBigQueryModel } from 'generated/tdr';
+import {
+  addBQSources,
+  cleanupSheet,
+  createSheet,
+  SheetInfo,
+  SpreadsheetInfo,
+} from 'modules/googlesheets';
+import { TdrState } from '../../../reducers';
 
 const styles = (theme: CustomTheme) =>
   createStyles({
@@ -23,26 +33,47 @@ const styles = (theme: CustomTheme) =>
     },
   });
 
-type SnapshotGoogleSheetProps = {
+type GoogleSheetProps = {
   classes: ClassNameMap;
   buttonLabel: string;
-  handleCreateGoogleSheet: () => void;
-  isSheetProcessing: boolean;
-  isSheetDone: boolean;
-  resetCreate: () => void;
-  sheetUrl: string;
+  bigQueryAccessInfo: AccessInfoBigQueryModel | undefined;
+  token: string;
 };
 
-function GoogleSheetExport(props: SnapshotGoogleSheetProps) {
-  const {
-    classes,
-    buttonLabel,
-    handleCreateGoogleSheet,
-    isSheetProcessing,
-    isSheetDone,
-    resetCreate,
-    sheetUrl,
-  } = props;
+function GoogleSheetExport(props: GoogleSheetProps) {
+  const { classes, buttonLabel, bigQueryAccessInfo, token } = props;
+  const [isSheetProcessing, setIsSheetProcessing] = useState(false);
+  const [isSheetDone, setIsSheetDone] = useState(false);
+  const [sheetUrl, setSheetUrl] = useState('');
+
+  const handleCreateGoogleSheet = async () => {
+    if (bigQueryAccessInfo) {
+      setIsSheetProcessing(true);
+      const response: SpreadsheetInfo = await createSheet(bigQueryAccessInfo.datasetName, token);
+      setSheetUrl(response.spreadsheetUrl);
+      const sheets: SheetInfo[] = await addBQSources(
+        response.spreadsheetId,
+        bigQueryAccessInfo,
+        token,
+      );
+      // If no BQ sources added to sheets object, then something errored.
+      if (sheets.length > 0) {
+        await cleanupSheet(response.spreadsheetId, sheets, token);
+        setIsSheetProcessing(false);
+        setIsSheetDone(true);
+      } else {
+        // await deleteSpreadsheetOnFailure(response.spreadsheetId, token);
+        // reset create sheet button if not successful
+        setIsSheetProcessing(false);
+        setIsSheetDone(false);
+      }
+    }
+  };
+
+  const resetCreate = () => {
+    setIsSheetProcessing(false);
+    setIsSheetDone(false);
+  };
 
   return (
     <div>
@@ -52,7 +83,7 @@ function GoogleSheetExport(props: SnapshotGoogleSheetProps) {
       </Typography>
       {!isSheetProcessing && !isSheetDone && (
         <Button
-          data-cy="export-snapshot-button"
+          data-cy="export-google-sheet-button"
           onClick={handleCreateGoogleSheet}
           className={classes.exportButton}
           variant="outlined"
@@ -63,7 +94,7 @@ function GoogleSheetExport(props: SnapshotGoogleSheetProps) {
       )}
       {isSheetProcessing && !isSheetDone && (
         <Button
-          data-cy="preparing-snapshot-button"
+          data-cy="preparing-google-sheet-button"
           className={classes.exportButton}
           variant="outlined"
           color="primary"
@@ -74,7 +105,7 @@ function GoogleSheetExport(props: SnapshotGoogleSheetProps) {
       )}
       {!isSheetProcessing && isSheetDone && (
         <Button
-          data-cy="snapshot-export-ready-button"
+          data-cy="google-sheet-export-ready-button"
           onClick={resetCreate}
           className={classes.exportButton}
           variant="contained"
@@ -89,4 +120,10 @@ function GoogleSheetExport(props: SnapshotGoogleSheetProps) {
   );
 }
 
-export default withStyles(styles)(GoogleSheetExport);
+function mapStateToProps(state: TdrState) {
+  return {
+    token: state.user.token,
+  };
+}
+
+export default connect(mapStateToProps)(withStyles(styles)(GoogleSheetExport));

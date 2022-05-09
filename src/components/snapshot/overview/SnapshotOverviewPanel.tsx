@@ -3,12 +3,12 @@ import { Grid, Tab, Tabs, Typography } from '@mui/material';
 import { createStyles, WithStyles, withStyles } from '@mui/styles';
 import moment from 'moment';
 import { CustomTheme } from '@mui/material/styles';
+import GoogleSheetExport from 'components/common/overview/GoogleSheetExport';
 import { renderStorageResources } from '../../../libs/render-utils';
 import SnapshotAccess from '../SnapshotAccess';
 import TabPanel from '../../common/TabPanel';
 import SnapshotExport from './SnapshotExport';
 import { SnapshotModel } from '../../../generated/tdr';
-import SnapshotGoogleSheet from './SnapshotGoogleSheet';
 
 const styles = (theme: CustomTheme) =>
   createStyles({
@@ -120,7 +120,10 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
             <SnapshotExport of={snapshot} />
           </Grid>
           <Grid item xs={6}>
-            <SnapshotGoogleSheet classes={classes} of={snapshot} />
+            <GoogleSheetExport
+              buttonLabel="Export Snapshot to Google Sheets"
+              bigQueryAccessInfo={snapshot?.accessInformation?.bigQuery}
+            />
           </Grid>
         </Grid>
       </TabPanel>

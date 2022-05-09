@@ -4,6 +4,7 @@ import { Grid, Tab, Tabs, Typography } from '@mui/material';
 import { withStyles } from '@mui/styles';
 import { connect } from 'react-redux';
 import moment from 'moment';
+import GoogleSheetExport from 'components/common/overview/GoogleSheetExport';
 import { renderCloudPlatforms, renderStorageResources } from '../../../libs/render-utils';
 import DatasetAccess from '../DatasetAccess';
 import DatasetSnapshotsTable from '../../table/DatasetSnapshotsTable';
@@ -75,6 +76,13 @@ function DatasetOverviewPanel(props) {
           disableRipple
           {...a11yProps(1)}
         />
+        <Tab
+          label="Export Dataset"
+          classes={{ selected: classes.tabSelected }}
+          disableFocusRipple
+          disableRipple
+          {...a11yProps(2)}
+        />
       </Tabs>
       <TabPanel value={value} index={0}>
         <Grid container spacing={2}>
@@ -99,6 +107,16 @@ function DatasetOverviewPanel(props) {
       </TabPanel>
       <TabPanel value={value} index={1}>
         <DatasetSnapshotsTable />
+      </TabPanel>
+      <TabPanel value={value} index={2}>
+        <Grid container spacing={2}>
+          <Grid item xs={6}>
+            <GoogleSheetExport
+              buttonLabel="Export Dataset to Google Sheets"
+              bigQueryAccessInfo={dataset.accessInformation.bigQuery}
+            />
+          </Grid>
+        </Grid>
       </TabPanel>
     </div>
   );

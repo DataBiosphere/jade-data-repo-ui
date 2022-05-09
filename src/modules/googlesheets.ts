@@ -1,6 +1,6 @@
 import axios from 'axios';
 import _ from 'lodash';
-import { SnapshotModel } from '../generated/tdr';
+import { AccessInfoBigQueryModel } from '../generated/tdr';
 import { showNotification } from './notifications';
 
 export type SpreadsheetInfo = {
@@ -45,24 +45,23 @@ export const createSheet: any = async (sheetName: string, token: string) => {
 // But ran into errors around concurrent requests from the sheets api
 export const addBQSources: any = async (
   spreadsheetId: string,
-  snapshot: SnapshotModel,
+  bigQueryAccessInfo: AccessInfoBigQueryModel,
   token: string,
 ) => {
   const url = `/googlesheets/v4/spreadsheets/${spreadsheetId}:batchUpdate`;
   const sheetInfo: Array<SheetInfo> = [];
   let index = 0;
-  if (snapshot?.accessInformation?.bigQuery?.tables) {
-    const bigQueryDetails = snapshot.accessInformation.bigQuery;
-    for (const table of bigQueryDetails.tables) {
+  if (bigQueryAccessInfo?.tables) {
+    for (const table of bigQueryAccessInfo.tables) {
       const requests: object[] = [
         {
           addDataSource: {
             dataSource: {
               spec: {
                 bigQuery: {
-                  projectId: bigQueryDetails.projectId,
+                  projectId: bigQueryAccessInfo.projectId,
                   querySpec: {
-                    rawQuery: `select * from \`${bigQueryDetails.projectId}.${bigQueryDetails.datasetName}.${table.name}\``,
+                    rawQuery: `select * from \`${bigQueryAccessInfo.projectId}.${bigQueryAccessInfo.datasetName}.${table.name}\``,
                   },
                 },
               },
