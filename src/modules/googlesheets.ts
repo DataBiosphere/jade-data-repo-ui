@@ -17,11 +17,12 @@ export const createSheet = async (sheetName: string, token: string) => {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
-    });
-  return ({
+    },
+  );
+  return {
     spreadsheetId: response.data.spreadsheetId,
     spreadsheetUrl: response.data.spreadsheetUrl,
-  });
+  };
 };
 
 export type SheetInfo = {
@@ -29,14 +30,18 @@ export type SheetInfo = {
   title: string;
 };
 
-export const addBQSources: any = async (spreadsheetId: string, snapshot: SnapshotModel, token: string) => {
-  const url = `/googlesheets/v4/spreadsheets/${spreadsheetId}:batchUpdate`;  
-  let requests: object[] = [];
-    let sheetInfo: Array<SheetInfo> = [];
-    let index = 0;
-    if (snapshot?.accessInformation?.bigQuery?.tables) {
-      for (const table of snapshot.accessInformation.bigQuery.tables) {
-        requests.push({
+export const addBQSources: any = async (
+  spreadsheetId: string,
+  snapshot: SnapshotModel,
+  token: string,
+) => {
+  const url = `/googlesheets/v4/spreadsheets/${spreadsheetId}:batchUpdate`;
+  let sheetInfo: Array<SheetInfo> = [];
+  let index = 0;
+  if (snapshot?.accessInformation?.bigQuery?.tables) {
+    for (const table of snapshot.accessInformation.bigQuery.tables) {
+      let requests: object[] = [
+        {
           addDataSource: {
             dataSource: {
               spec: {
@@ -49,44 +54,45 @@ export const addBQSources: any = async (spreadsheetId: string, snapshot: Snapsho
               },
             },
           },
-        });
-        const batchUpdateRequest = {
-          requests: requests,
-          includeSpreadsheetInResponse: true,
-        };
-        //const result: SheetInfo = await sendRequest(spreadsheetId, batchUpdateRequest, token, table.name, index);
-        const response = await axios
-        .post(url, batchUpdateRequest, {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        sheetInfo.push({
-          sheetId: response.data.updatedSpreadsheet.sheets[index + 1]?.properties.sheetId,
-          title: table.name,
-        });
+        },
+      ];
+      const batchUpdateRequest = {
+        requests: requests,
+        includeSpreadsheetInResponse: true,
+      };
+      //const result: SheetInfo = await sendRequest(spreadsheetId, batchUpdateRequest, token, table.name, index);
+      /* eslint-disable no-await-in-loop */
+      const response = await axios.post(url, batchUpdateRequest, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      sheetInfo.push({
+        sheetId: response.data.updatedSpreadsheet.sheets[index + 1]?.properties.sheetId,
+        title: table.name,
+      });
+      index++;
     }
-    
   }
   return sheetInfo;
-}
+};
 
-  // export const sendRequest: SheetInfo = async (spreadsheetId: string, batchUpdateRequest: object[], token: string, tableName: string, index: number) => {
-  //   const url = `/googlesheets/v4/spreadsheets/${spreadsheetId}:batchUpdate`;
+// export const sendRequest: SheetInfo = async (spreadsheetId: string, batchUpdateRequest: object[], token: string, tableName: string, index: number) => {
+//   const url = `/googlesheets/v4/spreadsheets/${spreadsheetId}:batchUpdate`;
 
-  //   const response = await axios
-  //     .post(url, batchUpdateRequest, {
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //         Authorization: `Bearer ${token}`,
-  //       },
-  //     });
-  //   return ({
-  //     sheetId: response.data.updatedSpreadsheet.sheets[index + 1]?.properties.sheetId,
-  //     sheetName: tableName,
-  //   });
-  // };
+//   const response = await axios
+//     .post(url, batchUpdateRequest, {
+//       headers: {
+//         'Content-Type': 'application/json',
+//         Authorization: `Bearer ${token}`,
+//       },
+//     });
+//   return ({
+//     sheetId: response.data.updatedSpreadsheet.sheets[index + 1]?.properties.sheetId,
+//     sheetName: tableName,
+//   });
+// };
 
 //   // getSpreadsheetDetails = async (spreadsheetId, token) => {
 //   //   const url = `/googlesheets/v4/spreadsheets/${spreadsheetId}`;
@@ -100,31 +106,30 @@ export const addBQSources: any = async (spreadsheetId: string, snapshot: Snapsho
 //   //     .then((response) => response);
 //   // };
 
-  // export const cleanupSheet = async (spreadsheetId: string, sheetInfo: SheetInfo[], token: string) => {
-  //   //const spreadSheetDetails = await this.getSpreadsheetDetails(spreadsheetId, token);
-  //   const url = `/googlesheets/v4/spreadsheets/${spreadsheetId}:batchUpdate`;
+// export const cleanupSheet = async (spreadsheetId: string, sheetInfo: SheetInfo[], token: string) => {
+//   //const spreadSheetDetails = await this.getSpreadsheetDetails(spreadsheetId, token);
+//   const url = `/googlesheets/v4/spreadsheets/${spreadsheetId}:batchUpdate`;
 
-  //   let requests: object[] = [];
-  //   sheetInfo.forEach((sheet) => {
-  //     requests.push({
-  //       updateSheetProperties: {
-  //         properties: {
-  //           sheetId: sheet.sheetId,
-  //           title: sheet.title,
-  //         },
-  //         fields: 'title',
-  //       },
-  //     });
-  //   });
-  //   //TODO - delete sheet1
-  //   const batchUpdateRequest = { requests: requests };
-  //   axios
-  //     .post(url, batchUpdateRequest, {
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //         Authorization: `Bearer ${token}`,
-  //       },
-  //     })
-  //     .then((response) => console.log('after batch update'));
-  // };
-
+//   let requests: object[] = [];
+//   sheetInfo.forEach((sheet) => {
+//     requests.push({
+//       updateSheetProperties: {
+//         properties: {
+//           sheetId: sheet.sheetId,
+//           title: sheet.title,
+//         },
+//         fields: 'title',
+//       },
+//     });
+//   });
+//   //TODO - delete sheet1
+//   const batchUpdateRequest = { requests: requests };
+//   axios
+//     .post(url, batchUpdateRequest, {
+//       headers: {
+//         'Content-Type': 'application/json',
+//         Authorization: `Bearer ${token}`,
+//       },
+//     })
+//     .then((response) => console.log('after batch update'));
+// };
