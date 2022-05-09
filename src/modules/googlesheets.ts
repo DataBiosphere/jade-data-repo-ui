@@ -139,3 +139,17 @@ export const cleanupSheet = async (
       showNotification(err);
     });
 };
+
+// export const deleteSpreadsheetOnFailure = (spreadsheetId: string, token: string) => {
+//   const url = `/drive/v3/files/${spreadsheetId}`;
+//   axios
+//     .delete(url, {
+//       headers: {
+//         'Content-Type': 'application/json',
+//         Authorization: `Bearer ${token}`,
+//       },
+//     })
+//     .catch((err) => {
+//       showNotification(err);
+//     });
+// };
