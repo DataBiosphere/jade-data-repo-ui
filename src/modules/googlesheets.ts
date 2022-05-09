@@ -128,10 +128,14 @@ export const cleanupSheet = async (
     requests: requests,
     includeSpreadsheetInResponse: true,
   };
-  axios.post(url, batchUpdateRequest, {
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  axios
+    .post(url, batchUpdateRequest, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .catch((err) => {
+      showNotification(err);
+    });
 };
