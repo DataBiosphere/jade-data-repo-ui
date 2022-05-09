@@ -51,9 +51,16 @@ function SnapshotGoogleSheet(props: SnapshotGoogleSheetProps) {
     const response: SpreadsheetInfo = await createSheet(of?.name ?? '', token);
     setSheetUrl(response.spreadsheetUrl);
     const sheets: SheetInfo[] = await addBQSources(response.spreadsheetId, of, token);
-    await cleanupSheet(response.spreadsheetId, sheets, token);
-    setIsSheetProcessing(false);
-    setIsSheetDone(true);
+    // If no BQ sources added to sheets object, then something errored.
+    if (sheets.length > 0) {
+      await cleanupSheet(response.spreadsheetId, sheets, token);
+      setIsSheetProcessing(false);
+      setIsSheetDone(true);
+    } else {
+      // reset create sheet button if not successful
+      setIsSheetProcessing(false);
+      setIsSheetDone(false);
+    }
   };
 
   const resetCreate = () => {

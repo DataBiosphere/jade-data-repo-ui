@@ -10,7 +10,7 @@ export function showNotification(err) {
     const errDetail = _.get(err.response, 'data.errorDetail');
     status = String(err.response.status);
     if (_.isEmpty(errDetail)) {
-      message = _.get(err.response, 'data.message');
+      message = _.get(err.response, 'data.message') ?? _.get(err.response, 'data.error.message');
     } else {
       message = String(errDetail);
     }

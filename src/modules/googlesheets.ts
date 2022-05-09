@@ -1,6 +1,7 @@
 import axios from 'axios';
 import _ from 'lodash';
 import { SnapshotModel } from '../generated/tdr';
+import { showNotification } from './notifications';
 
 export type SpreadsheetInfo = {
   spreadsheetId: string;
@@ -15,25 +16,28 @@ export type SheetInfo = {
 export const createSheet: any = async (sheetName: string, token: string) => {
   const url = '/googlesheets/v4/spreadsheets';
 
-  const response = await axios.post(
-    url,
-    {
-      properties: {
-        title: sheetName,
+  return axios
+    .post(
+      url,
+      {
+        properties: {
+          title: sheetName,
+        },
       },
-    },
-    {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
       },
-    },
-  );
-  const info: SpreadsheetInfo = {
-    spreadsheetId: response.data.spreadsheetId,
-    spreadsheetUrl: response.data.spreadsheetUrl,
-  };
-  return info;
+    )
+    .then((response) => ({
+      spreadsheetId: response.data.spreadsheetId,
+      spreadsheetUrl: response.data.spreadsheetUrl,
+    }))
+    .catch((err) => {
+      showNotification(err);
+    });
 };
 
 // Adding data sources for each table one by one
@@ -71,16 +75,24 @@ export const addBQSources: any = async (
         includeSpreadsheetInResponse: true,
       };
       /* eslint-disable no-await-in-loop */
-      const response = await axios.post(url, batchUpdateRequest, {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      sheetInfo.push({
-        sheetId: response.data.updatedSpreadsheet.sheets[index + 1]?.properties.sheetId,
-        title: table.name,
-      });
+      const response = await axios
+        .post(url, batchUpdateRequest, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .catch((err) => {
+          showNotification(err);
+        });
+      if (response) {
+        sheetInfo.push({
+          sheetId: response.data.updatedSpreadsheet.sheets[index + 1]?.properties.sheetId,
+          title: table.name,
+        });
+      } else {
+        return [];
+      }
       index++;
     }
   }
@@ -95,33 +107,31 @@ export const cleanupSheet = async (
   token: string,
 ) => {
   const url = `/googlesheets/v4/spreadsheets/${spreadsheetId}:batchUpdate`;
-  if (sheetInfo.length > 0) {
-    const requests: object[] = [];
-    sheetInfo.forEach((sheet) => {
-      requests.push({
-        updateSheetProperties: {
-          properties: {
-            sheetId: sheet.sheetId,
-            title: sheet.title,
-          },
-          fields: 'title',
-        },
-      });
-    });
+  const requests: object[] = [];
+  sheetInfo.forEach((sheet) => {
     requests.push({
-      deleteSheet: {
-        sheetId: 0,
+      updateSheetProperties: {
+        properties: {
+          sheetId: sheet.sheetId,
+          title: sheet.title,
+        },
+        fields: 'title',
       },
     });
-    const batchUpdateRequest = {
-      requests: requests,
-      includeSpreadsheetInResponse: true,
-    };
-    axios.post(url, batchUpdateRequest, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-    });
-  }
+  });
+  requests.push({
+    deleteSheet: {
+      sheetId: 0,
+    },
+  });
+  const batchUpdateRequest = {
+    requests: requests,
+    includeSpreadsheetInResponse: true,
+  };
+  axios.post(url, batchUpdateRequest, {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  });
 };
