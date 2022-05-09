@@ -38,7 +38,7 @@ export const createSheet: any = async (sheetName: string, token: string) => {
 
 // Adding data sources for each table one by one
 // In theory, could do a batch request for all data sources
-// I was running into errors around concurrent requests from the sheets api
+// But ran into errors around concurrent requests from the sheets api
 export const addBQSources: any = async (
   spreadsheetId: string,
   snapshot: SnapshotModel,
