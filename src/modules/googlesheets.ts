@@ -48,16 +48,17 @@ export const addBQSources: any = async (
   const sheetInfo: Array<SheetInfo> = [];
   let index = 0;
   if (snapshot?.accessInformation?.bigQuery?.tables) {
-    for (const table of snapshot.accessInformation.bigQuery.tables) {
+    const bigQueryDetails = snapshot.accessInformation.bigQuery;
+    for (const table of bigQueryDetails.tables) {
       const requests: object[] = [
         {
           addDataSource: {
             dataSource: {
               spec: {
                 bigQuery: {
-                  projectId: snapshot.accessInformation.bigQuery.projectId,
+                  projectId: bigQueryDetails.projectId,
                   querySpec: {
-                    rawQuery: table.sampleQuery, // Need to build own query so not limited to 1k rows
+                    rawQuery: `select * from \`${bigQueryDetails.projectId}.${bigQueryDetails.datasetName}.${table.name}\``,
                   },
                 },
               },
