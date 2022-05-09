@@ -120,7 +120,7 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
             <SnapshotExport of={snapshot} />
           </Grid>
           <Grid item xs={6}>
-            <SnapshotGoogleSheet of={snapshot} />
+            <SnapshotGoogleSheet classes={classes} of={snapshot} />
           </Grid>
         </Grid>
       </TabPanel>

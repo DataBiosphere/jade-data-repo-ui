@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { ClassNameMap, createStyles, withStyles } from '@mui/styles';
-import { Button, CircularProgress, Typography } from '@mui/material';
-import { CustomTheme } from '@mui/material/styles';
+import { ClassNameMap } from '@mui/styles';
 import {
   createSheet,
   addBQSources,
@@ -11,29 +9,9 @@ import {
   SpreadsheetInfo,
   SheetInfo,
 } from 'modules/googlesheets';
-import TerraTooltip from '../../common/TerraTooltip';
+import GoogleSheetExport from '../../common/overview/GoogleSheetExport';
 import { SnapshotModel } from '../../../generated/tdr';
 import { TdrState } from '../../../reducers';
-
-const styles = (theme: CustomTheme) =>
-  createStyles({
-    card: {
-      display: 'inline-block',
-      padding: theme.spacing(4),
-      width: '100%',
-    },
-    exportButton: {
-      marginTop: '0.5rem',
-      height: '36px',
-      width: '100%',
-    },
-    centered: {
-      textAlign: 'center',
-    },
-    labelRight: {
-      paddingLeft: '10px',
-    },
-  });
 
 type SnapshotGoogleSheetProps = {
   classes: ClassNameMap;
@@ -71,48 +49,15 @@ function SnapshotGoogleSheet(props: SnapshotGoogleSheetProps) {
   };
 
   return (
-    <div>
-      <Typography variant="h6" className={classes.section}>
-        Create a new Google Sheet and connect to Big Query Views for Snapshot
-      </Typography>
-      {!isSheetProcessing && !isSheetDone && (
-        <TerraTooltip title="Create new google with connected to big query">
-          <Button
-            data-cy="export-snapshot-button"
-            onClick={handleCreateGoogleSheet}
-            className={classes.exportButton}
-            variant="outlined"
-            color="primary"
-          >
-            Create Google Sheet
-          </Button>
-        </TerraTooltip>
-      )}
-      {isSheetProcessing && !isSheetDone && (
-        <Button
-          data-cy="preparing-snapshot-button"
-          className={classes.exportButton}
-          variant="outlined"
-          color="primary"
-        >
-          <CircularProgress size={25} />
-          <div className={classes.labelRight}>Preparing Google Sheet</div>
-        </Button>
-      )}
-      {!isSheetProcessing && isSheetDone && (
-        <Button
-          data-cy="snapshot-export-ready-button"
-          onClick={resetCreate}
-          className={classes.exportButton}
-          variant="contained"
-          color="primary"
-        >
-          <a target="_blank" rel="noopener noreferrer" href={sheetUrl}>
-            Google Sheet ready - continue
-          </a>
-        </Button>
-      )}
-    </div>
+    <GoogleSheetExport
+      buttonLabel="Export Snapshot to Google Sheets"
+      classes={classes}
+      handleCreateGoogleSheet={handleCreateGoogleSheet}
+      isSheetProcessing={isSheetProcessing}
+      isSheetDone={isSheetDone}
+      resetCreate={resetCreate}
+      sheetUrl={sheetUrl}
+    />
   );
 }
 
@@ -122,4 +67,4 @@ function mapStateToProps(state: TdrState) {
   };
 }
 
-export default connect(mapStateToProps)(withStyles(styles)(SnapshotGoogleSheet));
+export default connect(mapStateToProps)(SnapshotGoogleSheet);
