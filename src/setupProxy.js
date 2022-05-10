@@ -4,7 +4,7 @@ const { createProxyMiddleware } = require('http-proxy-middleware');
 const proxyUrl = process.env.PROXY_URL || 'http://localhost:8080';
 const bigQueryApi = 'https://bigquery.googleapis.com';
 const googleSheetsApi = 'https://sheets.googleapis.com';
-const driveApi = 'https://www.googleapis.com';
+// const driveApi = 'https://www.googleapis.com';
 
 module.exports = (app) => {
   app.use(
@@ -50,11 +50,11 @@ module.exports = (app) => {
       pathRewrite: { '^/googlesheets': '' }
     }),
   );
-  app.use(
-    '/drive',
-    createProxyMiddleware({
-      target: driveApi ,
-      changeOrigin: true,
-    }),
-  );
+  // app.use(
+  //   '/drive',
+  //   createProxyMiddleware({
+  //     target: driveApi ,
+  //     changeOrigin: true,
+  //   }),
+  // );
 };

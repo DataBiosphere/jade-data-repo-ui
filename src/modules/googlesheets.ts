@@ -51,49 +51,47 @@ export const addBQSources: any = async (
   const url = `/googlesheets/v4/spreadsheets/${spreadsheetId}:batchUpdate`;
   const sheetInfo: Array<SheetInfo> = [];
   let index = 0;
-  if (bigQueryAccessInfo?.tables) {
-    for (const table of bigQueryAccessInfo.tables) {
-      const requests: object[] = [
-        {
-          addDataSource: {
-            dataSource: {
-              spec: {
-                bigQuery: {
-                  projectId: bigQueryAccessInfo.projectId,
-                  querySpec: {
-                    rawQuery: `select * from \`${bigQueryAccessInfo.projectId}.${bigQueryAccessInfo.datasetName}.${table.name}\``,
-                  },
+  for (const table of bigQueryAccessInfo.tables) {
+    const requests: object[] = [
+      {
+        addDataSource: {
+          dataSource: {
+            spec: {
+              bigQuery: {
+                projectId: bigQueryAccessInfo.projectId,
+                querySpec: {
+                  rawQuery: `select * from \`${bigQueryAccessInfo.projectId}.${bigQueryAccessInfo.datasetName}.${table.name}\``,
                 },
               },
             },
           },
         },
-      ];
-      const batchUpdateRequest = {
-        requests: requests,
-        includeSpreadsheetInResponse: true,
-      };
-      /* eslint-disable no-await-in-loop */
-      const response = await axios
-        .post(url, batchUpdateRequest, {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .catch((err) => {
-          showNotification(err);
-        });
-      if (response) {
-        sheetInfo.push({
-          sheetId: response.data.updatedSpreadsheet.sheets[index + 1]?.properties.sheetId,
-          title: table.name,
-        });
-      } else {
-        return [];
-      }
-      index++;
+      },
+    ];
+    const batchUpdateRequest = {
+      requests: requests,
+      includeSpreadsheetInResponse: true,
+    };
+    /* eslint-disable no-await-in-loop */
+    const response = await axios
+      .post(url, batchUpdateRequest, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .catch((err) => {
+        showNotification(err);
+      });
+    if (response) {
+      sheetInfo.push({
+        sheetId: response.data.updatedSpreadsheet.sheets[index + 1]?.properties.sheetId,
+        title: table.name,
+      });
+    } else {
+      return [];
     }
+    index++;
   }
   return sheetInfo;
 };
