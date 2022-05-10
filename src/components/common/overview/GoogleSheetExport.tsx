@@ -31,6 +31,9 @@ const styles = (theme: CustomTheme) =>
     labelRight: {
       paddingLeft: '10px',
     },
+    section: {
+      paddingBottom: theme.spacing(1),
+    },
   });
 
 type GoogleSheetProps = {
@@ -78,6 +81,9 @@ function GoogleSheetExport(props: GoogleSheetProps) {
   return (
     <div>
       <Typography variant="h6" className={classes.section}>
+        Export to Google Connected Sheets
+      </Typography>
+      <Typography variant="body1" className={classes.section}>
         With Connected Sheets, you can access, analyze, visualize and share many rows of BigQuery
         data from your Sheets spreadsheet. The Google Sheet will be saved to your Google drive.
       </Typography>

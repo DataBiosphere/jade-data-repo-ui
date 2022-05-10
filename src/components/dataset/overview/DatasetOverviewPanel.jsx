@@ -46,6 +46,7 @@ function a11yProps(index) {
 function DatasetOverviewPanel(props) {
   const [value, setValue] = React.useState(0);
   const { classes, dataset } = props;
+  const linkToBq = dataset.accessInformation?.bigQuery !== undefined;
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -76,13 +77,15 @@ function DatasetOverviewPanel(props) {
           disableRipple
           {...a11yProps(1)}
         />
-        <Tab
-          label="Export Dataset"
-          classes={{ selected: classes.tabSelected }}
-          disableFocusRipple
-          disableRipple
-          {...a11yProps(2)}
-        />
+        {linkToBq && (
+          <Tab
+            label="Export Dataset"
+            classes={{ selected: classes.tabSelected }}
+            disableFocusRipple
+            disableRipple
+            {...a11yProps(2)}
+          />
+        )}
       </Tabs>
       <TabPanel value={value} index={0}>
         <Grid container spacing={2}>
@@ -108,16 +111,18 @@ function DatasetOverviewPanel(props) {
       <TabPanel value={value} index={1}>
         <DatasetSnapshotsTable />
       </TabPanel>
-      <TabPanel value={value} index={2}>
-        <Grid container spacing={2}>
-          <Grid item xs={6}>
-            <GoogleSheetExport
-              buttonLabel="Export Dataset to Google Sheets"
-              bigQueryAccessInfo={dataset.accessInformation.bigQuery}
-            />
+      {linkToBq && (
+        <TabPanel value={value} index={2}>
+          <Grid container spacing={6}>
+            <Grid item xs={6}>
+              <GoogleSheetExport
+                buttonLabel="Export Dataset to Google Sheets"
+                bigQueryAccessInfo={dataset.accessInformation.bigQuery}
+              />
+            </Grid>
           </Grid>
-        </Grid>
-      </TabPanel>
+        </TabPanel>
+      )}
     </div>
   );
 }

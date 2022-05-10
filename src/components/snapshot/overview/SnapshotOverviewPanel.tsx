@@ -56,6 +56,7 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
   const { classes, snapshot } = props;
   // @ts-ignore
   const sourceDataset = snapshot.source[0].dataset;
+  const linkToBq = snapshot.accessInformation?.bigQuery !== undefined;
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -115,16 +116,18 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
         <SnapshotAccess horizontal={true} />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <Grid container spacing={2}>
+        <Grid container spacing={6}>
           <Grid item xs={6}>
             <SnapshotExport of={snapshot} />
           </Grid>
-          <Grid item xs={6}>
-            <GoogleSheetExport
-              buttonLabel="Export Snapshot to Google Sheets"
-              bigQueryAccessInfo={snapshot?.accessInformation?.bigQuery}
-            />
-          </Grid>
+          {linkToBq && (
+            <Grid item xs={6}>
+              <GoogleSheetExport
+                buttonLabel="Export Snapshot to Google Sheets"
+                bigQueryAccessInfo={snapshot?.accessInformation?.bigQuery}
+              />
+            </Grid>
+          )}
         </Grid>
       </TabPanel>
     </div>
