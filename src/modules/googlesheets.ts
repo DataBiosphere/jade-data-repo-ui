@@ -14,6 +14,8 @@ export type SheetInfo = {
 };
 
 export const createSheet: any = async (sheetName: string, token: string) => {
+  // Using google drive api endpoint rather than google sheets api
+  // in order to facilitate file delete on error
   const url = '/drive/v3/files';
   return axios
     .post(
