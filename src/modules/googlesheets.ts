@@ -14,16 +14,11 @@ export type SheetInfo = {
 };
 
 export const createSheet: any = async (sheetName: string, token: string) => {
-  const url = '/googlesheets/v4/spreadsheets';
-
+  const url = '/drive/v3/files';
   return axios
     .post(
       url,
-      {
-        properties: {
-          title: sheetName,
-        },
-      },
+      { mimeType: 'application/vnd.google-apps.spreadsheet', name: sheetName },
       {
         headers: {
           'Content-Type': 'application/json',
@@ -32,8 +27,8 @@ export const createSheet: any = async (sheetName: string, token: string) => {
       },
     )
     .then((response) => ({
-      spreadsheetId: response.data.spreadsheetId,
-      spreadsheetUrl: response.data.spreadsheetUrl,
+      spreadsheetId: response.data.id,
+      spreadsheetUrl: `https://docs.google.com/spreadsheets/d/${response.data.id}`,
     }))
     .catch((err) => {
       showNotification(err);
@@ -137,16 +132,16 @@ export const cleanupSheet = async (
     });
 };
 
-// export const deleteSpreadsheetOnFailure = (spreadsheetId: string, token: string) => {
-//   const url = `/drive/v3/files/${spreadsheetId}`;
-//   axios
-//     .delete(url, {
-//       headers: {
-//         'Content-Type': 'application/json',
-//         Authorization: `Bearer ${token}`,
-//       },
-//     })
-//     .catch((err) => {
-//       showNotification(err);
-//     });
-// };
+export const deleteSpreadsheetOnFailure = (spreadsheetId: string, token: string) => {
+  const url = `/drive/v3/files/${spreadsheetId}`;
+  axios
+    .delete(url, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .catch((err) => {
+      showNotification(err);
+    });
+};

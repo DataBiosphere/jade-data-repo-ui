@@ -8,6 +8,7 @@ import {
   addBQSources,
   cleanupSheet,
   createSheet,
+  deleteSpreadsheetOnFailure,
   SheetInfo,
   SpreadsheetInfo,
 } from 'modules/googlesheets';
@@ -65,7 +66,7 @@ function GoogleSheetExport(props: GoogleSheetProps) {
         setIsSheetProcessing(false);
         setIsSheetDone(true);
       } else {
-        // await deleteSpreadsheetOnFailure(response.spreadsheetId, token);
+        await deleteSpreadsheetOnFailure(response.spreadsheetId, token);
         // reset create sheet button if not successful
         setIsSheetProcessing(false);
         setIsSheetDone(false);
