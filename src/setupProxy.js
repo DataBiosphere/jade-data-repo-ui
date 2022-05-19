@@ -47,7 +47,7 @@ module.exports = (app) => {
     createProxyMiddleware({
       target: googleSheetsApi,
       changeOrigin: true,
-      pathRewrite: { '^/googlesheets': '' }
+      pathRewrite: { '^/googlesheets': '' },
     }),
   );
   app.use(
