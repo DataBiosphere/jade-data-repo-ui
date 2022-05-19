@@ -66,7 +66,7 @@ export const addBQSources: any = async (
       },
     ];
     const batchUpdateRequest = {
-      requests: requests,
+      requests,
       includeSpreadsheetInResponse: true,
     };
     /* eslint-disable no-await-in-loop */
@@ -119,7 +119,7 @@ export const cleanupSheet = async (
     },
   });
   const batchUpdateRequest = {
-    requests: requests,
+    requests,
     includeSpreadsheetInResponse: true,
   };
   axios
