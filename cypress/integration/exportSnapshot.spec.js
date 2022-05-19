@@ -12,9 +12,9 @@ describe('test export snapshot', () => {
     cy.get('#e2eLoginButton').click();
     cy.get('a[href*="/snapshots"]').click();
 
-    cy.get('[placeholder="Search keyword or description"]').type('SnapshotSimpleWMS2');
-    cy.contains(/SnapshotSimpleWMS2/g).should('be.visible');
-    cy.contains(/SnapshotSimpleWMS2/g).click();
+    cy.get('[placeholder="Search keyword or description"]').type('V2FGWASSummaryStatisticsSnapshot1');
+    cy.contains(/V2FGWASSummaryStatisticsSnapshot1/g).should('be.visible');
+    cy.contains(/V2FGWASSummaryStatisticsSnapshot1/g).click();
   });
 
   it('exports to google sheets', () => {
@@ -26,7 +26,7 @@ describe('test export snapshot', () => {
       response: {
         spreadsheetId: '1ygRuVn-r8wJAqvLFt6Bu3AAwNJtHgIcq1pdYwhKg8Lg',
         properties: {
-          title: 'SnapshotSimpleWMS2',
+          title: 'V2FGWASSummaryStatisticsSnapshot1',
           locale: 'en_US',
           autoRecalc: 'ON_CHANGE',
           timeZone: 'Etc/GMT',
@@ -66,7 +66,7 @@ describe('test export snapshot', () => {
                   bigQuery: {
                     projectId: 'broad-jade-int-4-data',
                     querySpec: {
-                      rawQuery: 'select * from `broad-jade-int-4-data.SnapshotSimpleWMS2.vcf_file`',
+                      rawQuery: 'select * from `broad-jade-int-4-data.V2FGWASSummaryStatisticsSnapshot1.vcf_file`',
                     },
                   },
                 },
@@ -80,7 +80,7 @@ describe('test export snapshot', () => {
         updatedSpreadsheet: {
           spreadsheetId: '1ygRuVn-r8wJAqvLFt6Bu3AAwNJtHgIcq1pdYwhKg8Lg',
           properties: {
-            title: 'SnapshotSimpleWMS2',
+            title: 'V2FGWASSummaryStatisticsSnapshot1',
             locale: 'en_US',
             autoRecalc: 'ON_CHANGE',
             timeZone: 'Etc/GMT',
@@ -128,7 +128,7 @@ describe('test export snapshot', () => {
                 bigQuery: {
                   projectId: 'broad-jade-int-4-data',
                   querySpec: {
-                    rawQuery: 'select * from `broad-jade-int-4-data.SnapshotSimpleWMS2.vcf_file`',
+                    rawQuery: 'select * from `broad-jade-int-4-data.V2FGWASSummaryStatisticsSnapshot1.vcf_file`',
                   },
                 },
               },
