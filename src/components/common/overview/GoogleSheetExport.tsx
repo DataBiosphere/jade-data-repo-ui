@@ -26,6 +26,9 @@ const styles = (theme: CustomTheme) =>
       height: '36px',
       width: '100%',
     },
+    buttonText: {
+      color: theme.palette.common.white,
+    },
     centered: {
       textAlign: 'center',
     },
@@ -113,14 +116,14 @@ function GoogleSheetExport(props: GoogleSheetProps) {
       {!isSheetProcessing && isSheetDone && (
         <Button
           data-cy="google-sheet-export-ready-button"
-          onClick={resetCreate}
           className={classes.exportButton}
-          variant="contained"
           color="primary"
+          href={sheetUrl}
+          onClick={resetCreate}
+          target="_blank"
+          variant="contained"
         >
-          <a target="_blank" rel="noopener noreferrer" href={sheetUrl}>
-            Google Sheet ready - continue
-          </a>
+          <span className={classes.buttonText}> Google Sheet ready - continue</span>
         </Button>
       )}
     </div>
