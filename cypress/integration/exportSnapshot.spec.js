@@ -23,120 +23,91 @@ describe('test export snapshot', () => {
     cy.contains(/Export Snapshot/g).click();
     cy.route({
       method: 'POST',
-      url: 'googlesheets/v4/spreadsheets',
+      url: 'drive/v3/files',
       status: 200,
       response: {
-        spreadsheetId: '1ygRuVn-r8wJAqvLFt6Bu3AAwNJtHgIcq1pdYwhKg8Lg',
-        properties: {
-          title: 'V2FGWASSummaryStatisticsSnapshot1',
-          locale: 'en_US',
-          autoRecalc: 'ON_CHANGE',
-          timeZone: 'Etc/GMT',
-          defaultFormat: {},
-          spreadsheetTheme: {},
-        },
-        sheets: [
-          {
-            properties: {
-              sheetId: 0,
-              title: 'Sheet1',
-              index: 0,
-              sheetType: 'GRID',
-              gridProperties: {
-                rowCount: 1000,
-                columnCount: 26,
-              },
-            },
-          },
-        ],
-        spreadsheetUrl:
-          'https://docs.google.com/spreadsheets/d/1ygRuVn-r8wJAqvLFt6Bu3AAwNJtHgIcq1pdYwhKg8Lg/edit?ouid=116750588729799936913',
-      },
+        kind: "drive#file",
+        id: "1dn_K-ehwE3SoVl-HzcUO0GuN3sYXAlKTfv5JF7RuTTU",
+        name: "V2FGWASSummaryStatisticsSnapshot1",
+        mimeType: "application/vnd.google-apps.spreadsheet"
+       },
     }).as('createSpreadsheet');
     cy.route({
       method: 'POST',
       url: 'googlesheets/v4/spreadsheets/**:batchUpdate',
       status: 200,
-      response: {
-        spreadsheetId: '1ygRuVn-r8wJAqvLFt6Bu3AAwNJtHgIcq1pdYwhKg8Lg',
+      response:  {
+        spreadsheetId: "1dn_K-ehwE3SoVl-HzcUO0GuN3sYXAlKTfv5JF7RuTTU",
         replies: [
           {
-            addDataSource: {
-              dataSource: {
-                dataSourceId: '1506402027',
-                spec: {
-                  bigQuery: {
-                    projectId: 'broad-jade-int-4-data',
-                    querySpec: {
-                      rawQuery:
-                        'select * from `broad-jade-int-4-data.V2FGWASSummaryStatisticsSnapshot1.vcf_file`',
-                    },
-                  },
-                },
+            "addDataSource": {
+              "dataSource": {
+                "dataSourceId": "1037464130",
+                "spec": {
+                  "bigQuery": {
+                    "projectId": "datarepo-dev-3654df96",
+                    "querySpec": {
+                      "rawQuery": "select * from `datarepo-dev-3654df96.V2FGWASSummaryStatisticsSnapshot1.ancestry_specific_meta_analysis`"
+                    }
+                  }
+                }
               },
-              dataExecutionStatus: {
-                state: 'RUNNING',
-              },
-            },
-          },
+              "dataExecutionStatus": {
+                "state": "RUNNING"
+              }
+            }
+          }
         ],
         updatedSpreadsheet: {
-          spreadsheetId: '1ygRuVn-r8wJAqvLFt6Bu3AAwNJtHgIcq1pdYwhKg8Lg',
-          properties: {
-            title: 'V2FGWASSummaryStatisticsSnapshot1',
-            locale: 'en_US',
-            autoRecalc: 'ON_CHANGE',
-            timeZone: 'Etc/GMT',
-            defaultFormat: {},
-            spreadsheetTheme: {},
+          "spreadsheetId": "1dn_K-ehwE3SoVl-HzcUO0GuN3sYXAlKTfv5JF7RuTTU",
+          "properties": {
+            "title": "V2FGWASSummaryStatisticsSnapshot1",
           },
-          sheets: [
+          "sheets": [
             {
-              properties: {
-                sheetId: 0,
-                title: 'Sheet1',
-                index: 0,
-                sheetType: 'GRID',
-                gridProperties: {
-                  rowCount: 1000,
-                  columnCount: 26,
-                },
-              },
+              "properties": {
+                "sheetId": 0,
+                "title": "Sheet1",
+                "index": 0,
+                "sheetType": "GRID",
+                "gridProperties": {
+                  "rowCount": 1000,
+                  "columnCount": 26
+                }
+              }
             },
             {
-              properties: {
-                sheetId: 437309300,
-                title: 'Connected Sheet 1',
-                index: 1,
-                sheetType: 'DATA_SOURCE',
-                gridProperties: {
-                  rowCount: 1,
-                  columnCount: 1,
+              "properties": {
+                "sheetId": 789616320,
+                "title": "Connected Sheet 1",
+                "index": 1,
+                "sheetType": "DATA_SOURCE",
+                "gridProperties": {
+                  "rowCount": 1,
+                  "columnCount": 1
                 },
-                dataSourceSheetProperties: {
-                  dataSourceId: '1506402027',
-                  dataExecutionStatus: {
-                    state: 'NOT_STARTED',
-                  },
-                },
-              },
-            },
+                "dataSourceSheetProperties": {
+                  "dataSourceId": "1037464130",
+                  "dataExecutionStatus": {
+                    "state": "RUNNING"
+                  }
+                }
+              }
+            }
           ],
-          spreadsheetUrl:
-            'https://docs.google.com/spreadsheets/d/1ygRuVn-r8wJAqvLFt6Bu3AAwNJtHgIcq1pdYwhKg8Lg/edit?ouid=116750588729799936913',
-          dataSources: [
+          "spreadsheetUrl": "https://docs.google.com/spreadsheets/d/1dn_K-ehwE3SoVl-HzcUO0GuN3sYXAlKTfv5JF7RuTTU/edit?ouid=116750588729799936913",
+          "dataSources": [
             {
-              dataSourceId: '1506402027',
-              spec: {
-                bigQuery: {
-                  projectId: 'broad-jade-int-4-data',
-                  querySpec: {
-                    rawQuery:
-                      'select * from `broad-jade-int-4-data.V2FGWASSummaryStatisticsSnapshot1.vcf_file`',
-                  },
-                },
-              },
-            },
+              "dataSourceId": "1037464130",
+              "spec": {
+                "bigQuery": {
+                  "projectId": "datarepo-dev-3654df96",
+                  "querySpec": {
+                    "rawQuery": "select * from `datarepo-dev-3654df96.V2FGWASSummaryStatisticsSnapshot1.ancestry_specific_meta_analysis`"
+                  }
+                }
+              }
+            }
           ],
         },
       },
@@ -144,7 +115,8 @@ describe('test export snapshot', () => {
 
     cy.contains('Export Snapshot to Google Sheets').should('be.visible');
     cy.contains('Export Snapshot to Google Sheets').click();
-    cy.wait(['@createSpreadsheet', '@addBQSources']);
+    cy.wait('@createSpreadsheet');
+    cy.wait('@addBQSources').wait('@addBQSources').wait('@addBQSources').wait('@addBQSources').wait('@addBQSources').wait('@addBQSources').wait('@addBQSources').wait('@addBQSources');
     cy.contains('Google Sheet ready - continue').should('be.visible');
   });
 });
