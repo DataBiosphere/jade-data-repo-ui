@@ -53,6 +53,11 @@ function GoogleSheetExport(props: GoogleSheetProps) {
   const [isSheetDone, setIsSheetDone] = useState(false);
   const [sheetUrl, setSheetUrl] = useState('');
 
+  const resetCreate = () => {
+    setIsSheetProcessing(false);
+    setIsSheetDone(false);
+  };
+
   const handleCreateGoogleSheet = async () => {
     if (bigQueryAccessInfo) {
       setIsSheetProcessing(true);
@@ -69,17 +74,10 @@ function GoogleSheetExport(props: GoogleSheetProps) {
         setIsSheetProcessing(false);
         setIsSheetDone(true);
       } else {
-        await deleteSpreadsheetOnFailure(response.spreadsheetId, token);
-        // reset create sheet button if not successful
-        setIsSheetProcessing(false);
-        setIsSheetDone(false);
+        deleteSpreadsheetOnFailure(response.spreadsheetId, token);
+        resetCreate();
       }
     }
-  };
-
-  const resetCreate = () => {
-    setIsSheetProcessing(false);
-    setIsSheetDone(false);
   };
 
   return (
