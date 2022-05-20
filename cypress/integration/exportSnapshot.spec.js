@@ -12,7 +12,9 @@ describe('test export snapshot', () => {
     cy.get('#e2eLoginButton').click();
     cy.get('a[href*="/snapshots"]').click();
 
-    cy.get('[placeholder="Search keyword or description"]').type('V2FGWASSummaryStatisticsSnapshot1');
+    cy.get('[placeholder="Search keyword or description"]').type(
+      'V2FGWASSummaryStatisticsSnapshot1',
+    );
     cy.contains(/V2FGWASSummaryStatisticsSnapshot1/g).should('be.visible');
     cy.contains(/V2FGWASSummaryStatisticsSnapshot1/g).click();
   });
@@ -66,7 +68,8 @@ describe('test export snapshot', () => {
                   bigQuery: {
                     projectId: 'broad-jade-int-4-data',
                     querySpec: {
-                      rawQuery: 'select * from `broad-jade-int-4-data.V2FGWASSummaryStatisticsSnapshot1.vcf_file`',
+                      rawQuery:
+                        'select * from `broad-jade-int-4-data.V2FGWASSummaryStatisticsSnapshot1.vcf_file`',
                     },
                   },
                 },
@@ -128,7 +131,8 @@ describe('test export snapshot', () => {
                 bigQuery: {
                   projectId: 'broad-jade-int-4-data',
                   querySpec: {
-                    rawQuery: 'select * from `broad-jade-int-4-data.V2FGWASSummaryStatisticsSnapshot1.vcf_file`',
+                    rawQuery:
+                      'select * from `broad-jade-int-4-data.V2FGWASSummaryStatisticsSnapshot1.vcf_file`',
                   },
                 },
               },
