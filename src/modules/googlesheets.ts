@@ -57,7 +57,7 @@ export const addBQSources: any = async (
               bigQuery: {
                 projectId: bigQueryAccessInfo.projectId,
                 querySpec: {
-                  rawQuery: `select * from \`${bigQueryAccessInfo.projectId}.${bigQueryAccessInfo.datasetName}.${table.name}\``,
+                  rawQuery: table.sampleQuery,
                 },
               },
             },
