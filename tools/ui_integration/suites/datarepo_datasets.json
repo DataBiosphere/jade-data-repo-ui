@@ -15,7 +15,14 @@
     "format": "json",
     "stewards": ["JadeStewards-dev@dev.test.firecloud.org"],
     "custodians": [],
-    "snapshot_creators": []
+    "snapshot_creators": [],
+    "snapshots": [
+      {
+        "name": "V2FGWASSummaryStatisticsSnapshot",
+        "description": "Test Sansphot",
+        "readers": ["JadeStewards-dev@dev.test.firecloud.org"]
+      }
+    ]
   },
   {
     "name": "NonStewardDataset",

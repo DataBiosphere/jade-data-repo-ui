@@ -3,6 +3,7 @@ import { Grid, Tab, Tabs, Typography } from '@mui/material';
 import { createStyles, WithStyles, withStyles } from '@mui/styles';
 import moment from 'moment';
 import { CustomTheme } from '@mui/material/styles';
+import GoogleSheetExport from 'components/common/overview/GoogleSheetExport';
 import { renderStorageResources } from '../../../libs/render-utils';
 import SnapshotAccess from '../SnapshotAccess';
 import TabPanel from '../../common/TabPanel';
@@ -55,6 +56,7 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
   const { classes, snapshot } = props;
   // @ts-ignore
   const sourceDataset = snapshot.source[0].dataset;
+  const linkToBq = snapshot.accessInformation?.bigQuery !== undefined;
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -114,10 +116,18 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
         <SnapshotAccess horizontal={true} />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <Grid container spacing={2}>
+        <Grid container spacing={6}>
           <Grid item xs={6}>
             <SnapshotExport of={snapshot} />
           </Grid>
+          {linkToBq && (
+            <Grid item xs={6}>
+              <GoogleSheetExport
+                buttonLabel="Export Snapshot to Google Sheets"
+                bigQueryAccessInfo={snapshot?.accessInformation?.bigQuery}
+              />
+            </Grid>
+          )}
         </Grid>
       </TabPanel>
     </div>
