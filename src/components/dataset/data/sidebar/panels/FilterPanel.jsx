@@ -280,7 +280,7 @@ function mapStateToProps(state) {
     filterData: state.query.filterData,
     filterStatement: state.query.filterStatement,
     joinStatement: state.query.joinStatement,
-    token: state.user.token,
+    token: state.user.delegateToken,
   };
 }
 
