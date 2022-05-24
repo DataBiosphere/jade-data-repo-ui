@@ -62,20 +62,24 @@ function GoogleSheetExport(props: GoogleSheetProps) {
     if (bigQueryAccessInfo) {
       setIsSheetProcessing(true);
       const response: SpreadsheetInfo = await createSheet(bigQueryAccessInfo.datasetName, token);
-      setSheetUrl(response.spreadsheetUrl);
-      const sheets: SheetInfo[] = await addBQSources(
-        response.spreadsheetId,
-        bigQueryAccessInfo,
-        token,
-      );
-      // If no BQ sources added to sheets object, then something errored.
-      if (sheets.length > 0) {
-        await cleanupSheet(response.spreadsheetId, sheets, token);
-        setIsSheetProcessing(false);
-        setIsSheetDone(true);
-      } else {
-        deleteSpreadsheetOnFailure(response.spreadsheetId, token);
+      if (response?.spreadsheetId == null) {
         resetCreate();
+      } else {
+        setSheetUrl(response.spreadsheetUrl);
+        const sheets: SheetInfo[] = await addBQSources(
+          response.spreadsheetId,
+          bigQueryAccessInfo,
+          token,
+        );
+        // If no BQ sources added to sheets object, then something errored.
+        if (sheets.length > 0) {
+          await cleanupSheet(response.spreadsheetId, sheets, token);
+          setIsSheetProcessing(false);
+          setIsSheetDone(true);
+        } else {
+          deleteSpreadsheetOnFailure(response.spreadsheetId, token);
+          resetCreate();
+        }
       }
     }
   };
@@ -130,7 +134,7 @@ function GoogleSheetExport(props: GoogleSheetProps) {
 
 function mapStateToProps(state: TdrState) {
   return {
-    token: state.user.token,
+    token: state.user.delegateToken,
   };
 }
 
