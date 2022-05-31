@@ -13,6 +13,7 @@ import { ManagedGroupMembershipEntry } from 'models/group';
 export const logIn = createAction<AuthContextProps>(ActionTypes.USER_LOGIN);
 export const logInSuccess = createAction<User>(ActionTypes.USER_LOGIN_SUCCESS);
 export const logInFailure = createAction<void>(ActionTypes.USER_LOGIN_FAILURE);
+export const userRefresh = createAction<User>(ActionTypes.USER_REFRESH);
 export const logOut = createAction<AuthContextProps>(ActionTypes.USER_LOGOUT);
 export const getUserStatus = createAction<AuthContextProps>(ActionTypes.GET_USER_STATUS);
 export const getUserStatusSuccess = createAction<User>(ActionTypes.GET_USER_STATUS_SUCCESS);

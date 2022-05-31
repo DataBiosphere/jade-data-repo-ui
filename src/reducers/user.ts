@@ -88,6 +88,22 @@ export default {
           id: { $set: action.payload.profile.sub },
           isTest: { $set: action.payload.profile.email === 'user.email' },
         }),
+      [ActionTypes.USER_REFRESH]: (state, action: PayloadAction<User>) =>
+        immutable(state, {
+          isAuthenticated: { $set: true },
+          status: { $set: Status.READY },
+          token: { $set: action.payload.access_token || action.payload.id_token || '' },
+          delegateToken: {
+            $set: (action.payload.profile.idp_access_token ||
+              action.payload.access_token ||
+              action.payload.id_token) as string,
+          },
+          tokenExpiration: {
+            $set: adaptTimestamp(
+              action.payload.expires_at || extractExpiration(action.payload.id_token),
+            ),
+          },
+        }),
       [ActionTypes.GET_USER_STATUS_SUCCESS]: (state) =>
         immutable(state, {
           isInitiallyLoaded: { $set: true },
