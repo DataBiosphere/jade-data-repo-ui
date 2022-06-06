@@ -161,7 +161,7 @@ export function App(props) {
     if (auth.isAuthenticated && !auth.isLoading && !user.isAuthenticated && !auth.activeNavigator) {
       dispatch(logInSuccess(auth.user));
       dispatch(getUserStatus());
-      auth.events.addUserLoaded(u => dispatch(userRefresh(u)));
+      auth.events.addUserLoaded((u) => dispatch(userRefresh(u)));
     }
   }, [auth, dispatch, user]);
 

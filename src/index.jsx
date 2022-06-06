@@ -103,14 +103,15 @@ function bootstrap() {
 function render(Component) {
   const root = document.getElementById('react');
   const { configuration } = store.getState();
-  const isGoogleAuthority = configuration.configObject.authorityEndpoint.startsWith('https://accounts.google.com');
+  const isGoogleAuthority = configuration.configObject.authorityEndpoint.startsWith(
+    'https://accounts.google.com',
+  );
   const metadata = {
     authorization_endpoint: `${window.origin}/oauth2/authorize`,
-    token_endpoint: `${window.origin}/oauth2/token`
+    token_endpoint: `${window.origin}/oauth2/token`,
   };
 
   const scopes = ['openid', 'email', 'profile'];
-  console.log(isGoogleAuthority, configuration.configObject.authorityEndpoint);
   if (isGoogleAuthority) {
     // TODO once we no longer query BQ directly, we'll no longer need the BQ scope
     scopes.push('https://www.googleapis.com/auth/bigquery.readonly');
@@ -128,10 +129,11 @@ function render(Component) {
     scope: scopes.join(' '),
     loadUserInfo: isGoogleAuthority,
     userStore: new WebStorageStateStore({ store: window.localStorage }),
-    extraQueryParams: {'access_type': 'offline'},
+    extraQueryParams: { access_type: 'offline' },
   };
 
-  // Log oauth client events
+  // Log oauth client events.  Do no check in code where this gets set higher since we won't want
+  // to accidentally log tokens
   Log.setLevel(Log.WARN);
   Log.setLogger(console);
 
