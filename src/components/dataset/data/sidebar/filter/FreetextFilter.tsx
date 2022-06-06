@@ -1,15 +1,19 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import React, { useState, SyntheticEvent, ClipboardEvent, ChangeEvent, KeyboardEvent } from 'react';
 import _ from 'lodash';
 
 import TextField from '@mui/material/TextField';
 import Chip from '@mui/material/Chip';
-import Autocomplete from '@mui/material/Autocomplete';
-import { withStyles } from '@mui/styles';
+import { CustomTheme } from '@mui/material/styles';
+import Autocomplete, {
+  AutocompleteChangeReason,
+  AutocompleteChangeDetails,
+} from '@mui/material/Autocomplete';
+import { ClassNameMap, withStyles } from '@mui/styles';
 import { FormControlLabel, Checkbox, Typography } from '@mui/material';
 import BigQuery from 'modules/bigquery';
+import { ColumnModel, DatasetModel } from 'generated/tdr';
 
-const styles = (theme) => ({
+const styles = (theme: CustomTheme) => ({
   listItem: {
     margin: `${theme.spacing(0.5)} 0px`,
   },
@@ -18,6 +22,33 @@ const styles = (theme) => ({
     borderRadius: theme.shape.borderRadius,
   },
 });
+
+type FilterMap = {
+  exclude: boolean;
+  value: Array<string>;
+};
+
+type SelectStatementValue = {
+  v: string;
+};
+
+type SelectStatementResponse = {
+  f: Array<SelectStatementValue>;
+};
+
+type FreetextFilterProps = {
+  classes: ClassNameMap;
+  column: ColumnModel;
+  dataset: DatasetModel;
+  filterMap: FilterMap;
+  filterStatement: string;
+  handleChange: (value: (string | string[])[]) => null;
+  handleFilters: () => null;
+  joinStatement: string;
+  tableName: string;
+  toggleExclude: (checked: boolean) => null;
+  token: string;
+};
 
 function FreetextFilter({
   classes,
@@ -28,17 +59,16 @@ function FreetextFilter({
   handleChange,
   handleFilters,
   joinStatement,
-  table,
   tableName,
   toggleExclude,
   token,
-}) {
-  const [options, setOptions] = useState([]);
+}: FreetextFilterProps) {
+  const [options, setOptions] = useState<any>([]);
   const [inputValue, setInputValue] = useState('');
   const bq = new BigQuery();
 
-  const transformResponse = (response) => {
-    const newOptions = [];
+  const transformResponse = (response: Array<SelectStatementResponse>) => {
+    const newOptions: Array<string> = [];
     if (response) {
       // eslint-disable-next-line
       response.map((r) => {
@@ -49,7 +79,7 @@ function FreetextFilter({
     setOptions(newOptions);
   };
 
-  const onInputChange = async (event) => {
+  const onInputChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
 
     setInputValue(value);
@@ -67,27 +97,33 @@ function FreetextFilter({
     transformResponse(response);
   };
 
-  const onChange = (event, value) => {
+  const onChange = (
+    _event: SyntheticEvent<Element, Event>,
+    value: (string | string[])[],
+    _reason: AutocompleteChangeReason,
+    _details?: AutocompleteChangeDetails<string[]> | undefined,
+  ) => {
     setInputValue('');
     handleChange(value);
   };
 
-  const handleReturn = (event) => {
+  const handleReturn = (event: KeyboardEvent) => {
     if (event.key === 'Enter') {
       handleFilters();
     }
   };
 
-  const onPaste = (event) => {
+  const onPaste = (event: ClipboardEvent) => {
     event.preventDefault();
     const text = event.clipboardData.getData('text');
     const selections = text.split(/[ ,\n]+/);
-    const nonEmpty = selections.filter((s) => s !== '');
-    const updatedValueArray = _.get(filterMap, 'value', []).concat(nonEmpty);
+    const nonEmpty: Array<string> = selections.filter((s: string) => s !== '');
+    const exisitingArray: Array<string> = _.get(filterMap, 'value', []);
+    const updatedValueArray: Array<string> = exisitingArray.concat(nonEmpty);
     handleChange(updatedValueArray);
   };
 
-  const deleteChip = (option) => {
+  const deleteChip = (option: string) => {
     const selected = _.filter(filterMap.value, (v) => v !== option);
     handleChange(selected);
   };
@@ -148,20 +184,5 @@ function FreetextFilter({
     </div>
   );
 }
-
-FreetextFilter.propTypes = {
-  classes: PropTypes.object,
-  column: PropTypes.object,
-  dataset: PropTypes.object,
-  filterMap: PropTypes.object,
-  filterStatement: PropTypes.string,
-  handleChange: PropTypes.func,
-  handleFilters: PropTypes.func,
-  joinStatement: PropTypes.string,
-  table: PropTypes.string,
-  tableName: PropTypes.string,
-  toggleExclude: PropTypes.func,
-  token: PropTypes.string,
-};
 
 export default withStyles(styles)(FreetextFilter);
