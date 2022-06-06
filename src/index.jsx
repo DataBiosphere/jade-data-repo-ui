@@ -117,7 +117,7 @@ function render(Component) {
     scopes.push('https://www.googleapis.com/auth/bigquery.readonly');
     scopes.push('https://www.googleapis.com/auth/drive.file');
 
-    metadata['userinfo_endpoint'] = 'https://openidconnect.googleapis.com/v1/userinfo';
+    metadata.userinfo_endpoint = 'https://openidconnect.googleapis.com/v1/userinfo';
   }
   const oidcConfig = {
     authority: configuration.configObject.authorityEndpoint,
