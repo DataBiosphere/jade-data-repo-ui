@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import { CategoryFilter } from './CategoryFilter';
 import { ColumnModel, TableModel } from 'generated/tdr';
+import { CategoryFilter } from './CategoryFilter';
 
 // TODO Duplicated in FreetextFilter
 type FilterMap = {

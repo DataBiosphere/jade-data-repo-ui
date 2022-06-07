@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import _ from 'lodash';
 import BigQuery from 'modules/bigquery';
 import PropTypes from 'prop-types';
@@ -7,18 +7,28 @@ import CategoryFilterGroup from './CategoryFilterGroup';
 
 const CHECKBOX_THRESHOLD = 10;
 
-export class CategoryWrapper extends React.PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {
-      values: {},
-      originalValues: {},
-    };
+function CategoryWrapper({
+  column,
+  dataset,
+  filterMap,
+  filterStatement,
+  handleChange,
+  handleFilters,
+  joinStatement,
+  tableName,
+  toggleExclude,
+  token,
+}) {
+  const [values, setValues] = useState({});
+  const [originalValues, setOriginalValues] = useState({});
 
-    const { column, dataset, tableName, token, filterStatement, joinStatement } = this.props;
+  useEffect(() => {
     const bq = new BigQuery();
 
-    if (!column.arrayOf) {
+    if (column.arrayOf) {
+      setValues({});
+      setOriginalValues({});
+    } else {
       bq.getColumnDistinct(
         column.name,
         dataset,
@@ -27,61 +37,15 @@ export class CategoryWrapper extends React.PureComponent {
         filterStatement,
         joinStatement,
       ).then((response) => {
-        const newResponse = this.transformResponse(response);
-        this.setState({
-          values: newResponse,
-          originalValues: newResponse,
-        });
+        const newResponse = transformResponse(response);
+        setValues(newResponse);
+        // TODO - figure out why only setting this when the table is different
+        setOriginalValues(newResponse);
       });
     }
-  }
+  }, [column, dataset, tableName, token, filterStatement, joinStatement]);
 
-  static propTypes = {
-    column: PropTypes.object,
-    dataset: PropTypes.object,
-    filterMap: PropTypes.object,
-    filterStatement: PropTypes.string,
-    handleChange: PropTypes.func,
-    handleFilters: PropTypes.func,
-    joinStatement: PropTypes.string,
-    tableName: PropTypes.string,
-    toggleExclude: PropTypes.func,
-    token: PropTypes.string,
-  };
-
-  componentDidUpdate(prevProps) {
-    const { column, dataset, tableName, token, filterStatement, joinStatement } = this.props;
-    if (filterStatement !== prevProps.filterStatement || tableName !== prevProps.tableName) {
-      const bq = new BigQuery();
-      if (column.arrayOf) {
-        this.setState({
-          values: {},
-          originalValues: {},
-        });
-      } else {
-        bq.getColumnDistinct(
-          column.name,
-          dataset,
-          tableName,
-          token,
-          filterStatement,
-          joinStatement,
-        ).then((response) => {
-          const newResponse = this.transformResponse(response);
-          this.setState({
-            values: newResponse,
-          });
-          if (tableName !== prevProps.tableName) {
-            this.setState({
-              originalValues: newResponse,
-            });
-          }
-        });
-      }
-    }
-  }
-
-  transformResponse = (response) => {
+  const transformResponse = (response) => {
     const counts = {};
     if (response) {
       // eslint-disable-next-line
@@ -94,50 +58,48 @@ export class CategoryWrapper extends React.PureComponent {
     return counts;
   };
 
-  render() {
-    const { values, originalValues } = this.state;
-    const {
-      column,
-      handleChange,
-      handleFilters,
-      tableName,
-      filterMap,
-      toggleExclude,
-      dataset,
-      token,
-      filterStatement,
-      joinStatement,
-    } = this.props;
-    if (values && originalValues && _.size(originalValues) <= CHECKBOX_THRESHOLD) {
-      return (
-        <CategoryFilterGroup
-          column={column}
-          filterMap={filterMap}
-          handleChange={handleChange}
-          originalValues={originalValues}
-          values={values}
-          table={tableName}
-        />
-      );
-    }
+  if (values && originalValues && _.size(originalValues) <= CHECKBOX_THRESHOLD) {
     return (
-      <FreetextFilter
+      <CategoryFilterGroup
         column={column}
-        handleChange={handleChange}
-        handleFilters={handleFilters}
         filterMap={filterMap}
+        handleChange={handleChange}
         originalValues={originalValues}
         values={values}
         table={tableName}
-        toggleExclude={toggleExclude}
-        dataset={dataset}
-        token={token}
-        tableName={tableName}
-        filterStatement={filterStatement}
-        joinStatement={joinStatement}
       />
     );
   }
+  return (
+    <FreetextFilter
+      column={column}
+      handleChange={handleChange}
+      handleFilters={handleFilters}
+      filterMap={filterMap}
+      originalValues={originalValues}
+      values={values}
+      table={tableName}
+      toggleExclude={toggleExclude}
+      dataset={dataset}
+      token={token}
+      tableName={tableName}
+      filterStatement={filterStatement}
+      joinStatement={joinStatement}
+    />
+  );
 }
+
+CategoryWrapper.propTypes = {
+  column: PropTypes.object,
+  dataset: PropTypes.object,
+  filterMap: PropTypes.object,
+  filterStatement: PropTypes.string,
+  handleChange: PropTypes.func,
+  handleFilters: PropTypes.func,
+  joinStatement: PropTypes.string,
+  tableName: PropTypes.string,
+  toggleExclude: PropTypes.func,
+  token: PropTypes.string,
+};
 
 export default CategoryWrapper;
