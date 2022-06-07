@@ -12,6 +12,20 @@ function* userLogin({ payload }: PayloadAction<AuthContextProps>) {
       type: ActionTypes.USER_LOGIN_SUCCESS,
       payload: response,
     });
+
+    // Note the code below should in spirit match the auth logic in App.jsx
+    // Invoke reading getting the user's status
+    yield put({
+      type: ActionTypes.GET_USER_STATUS,
+    });
+
+    // Add user info load listener
+    yield payload.events.addUserLoaded((u) => {
+      put({
+        type: ActionTypes.USER_REFRESH,
+        payload: u,
+      });
+    });
   } catch (err) {
     //eslint-disable-next-line no-console
     console.log('Error signing in', err);
