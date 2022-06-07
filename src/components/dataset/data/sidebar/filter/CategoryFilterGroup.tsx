@@ -2,15 +2,37 @@ import React, { useEffect, useState } from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { CategoryFilter } from './CategoryFilter';
+import { ColumnModel, TableModel } from 'generated/tdr';
 
-function CategoryFilterGroup({ column, filterMap, handleChange, originalValues, table, values }) {
-  const [selected, setSelected] = useState({});
+// TODO Duplicated in FreetextFilter
+type FilterMap = {
+  exclude: boolean;
+  value: Array<string>;
+};
+
+type CategoryFilterGroupProps = {
+  column: ColumnModel;
+  filterMap: FilterMap;
+  handleChange: (value: (string | string[])[]) => null;
+  originalValues: any;
+  table: TableModel;
+  values: any;
+};
+function CategoryFilterGroup({
+  column,
+  filterMap,
+  handleChange,
+  originalValues,
+  table,
+  values,
+}: CategoryFilterGroupProps) {
+  const [selected, setSelected] = useState<Array<string>>([]);
 
   useEffect(() => {
-    setSelected(_.get(filterMap, 'value', {}));
+    setSelected(_.get(filterMap, 'value', []));
   }, [filterMap]);
 
-  const handleFilterChange = (box) => {
+  const handleFilterChange = (box: any) => {
     const selectedClone = _.clone(selected);
     if (box.value) {
       selectedClone[box.name] = box.value;
