@@ -8,7 +8,7 @@ import history from 'modules/hist';
 import globalTheme from 'modules/theme';
 import { ThemeProvider } from '@mui/material/styles';
 import axios from 'axios';
-import { WebStorageStateStore } from 'oidc-client-ts';
+import { WebStorageStateStore, Log } from 'oidc-client-ts';
 import { AuthProvider } from 'react-oidc-context';
 // For some reason, @emotion package doesn't register with linter.  Ignoring for now
 //eslint-disable-next-line import/no-extraneous-dependencies
@@ -103,26 +103,39 @@ function bootstrap() {
 function render(Component) {
   const root = document.getElementById('react');
   const { configuration } = store.getState();
-  const googleAuthority = 'https://accounts.google.com';
-  // TODO once we no longer query BQ directly, we'll no longer need the BQ scope
+  const isGoogleAuthority = configuration.configObject.authorityEndpoint.startsWith(
+    'https://accounts.google.com',
+  );
+  const metadata = {
+    authorization_endpoint: `${window.origin}/oauth2/authorize`,
+    token_endpoint: `${window.origin}/oauth2/token`,
+  };
+
   const scopes = ['openid', 'email', 'profile'];
-  if (configuration.configObject.authorityEndpoint === googleAuthority) {
+  if (isGoogleAuthority) {
+    // TODO once we no longer query BQ directly, we'll no longer need the BQ scope
     scopes.push('https://www.googleapis.com/auth/bigquery.readonly');
     scopes.push('https://www.googleapis.com/auth/drive.file');
+
+    metadata.userinfo_endpoint = 'https://openidconnect.googleapis.com/v1/userinfo';
   }
   const oidcConfig = {
     authority: configuration.configObject.authorityEndpoint,
     client_id: configuration.configObject.oidcClientId,
     // overwrite the auth endpoint to use the one hosted by TDR
-    metadata: {
-      authorization_endpoint: `${window.origin}/oauth2/authorize`,
-      token_endpoint: `${window.origin}/oauth2/token`,
-    },
+    metadata,
     redirect_uri: `${window.origin}/redirect-from-oauth`,
-    prompt: 'login',
+    prompt: 'consent',
     scope: scopes.join(' '),
+    loadUserInfo: isGoogleAuthority,
     userStore: new WebStorageStateStore({ store: window.localStorage }),
+    extraQueryParams: { access_type: 'offline' },
   };
+
+  // Log oauth client events.  Do no check in code where this gets set higher since we won't want
+  // to accidentally log tokens
+  Log.setLevel(Log.WARN);
+  Log.setLogger(console);
 
   if (root) {
     ReactDOM.render(

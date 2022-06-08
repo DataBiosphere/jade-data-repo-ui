@@ -28,7 +28,7 @@ import { useAuth } from 'react-oidc-context';
 import TerraAvatar from 'components/common/TerraAvatar';
 import LoadingSpinner from 'components/common/LoadingSpinner';
 
-import { logOut, logInSuccess, getUserStatus } from '../actions';
+import { logOut, logInSuccess, getUserStatus, userRefresh } from '../actions';
 
 const drawerWidth = 240;
 
@@ -161,6 +161,7 @@ export function App(props) {
     if (auth.isAuthenticated && !auth.isLoading && !user.isAuthenticated && !auth.activeNavigator) {
       dispatch(logInSuccess(auth.user));
       dispatch(getUserStatus());
+      auth.events.addUserLoaded((u) => dispatch(userRefresh(u)));
     }
   }, [auth, dispatch, user]);
 
