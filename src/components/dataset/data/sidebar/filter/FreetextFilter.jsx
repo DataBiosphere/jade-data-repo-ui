@@ -99,12 +99,13 @@ export class FreetextFilter extends React.PureComponent {
   };
 
   onPaste = (event) => {
-    const { handleChange } = this.props;
+    const { handleChange, filterMap } = this.props;
     event.preventDefault();
     const text = event.clipboardData.getData('text');
     const selections = text.split(/[ ,\n]+/);
     const nonEmpty = selections.filter((s) => s !== '');
-    handleChange(nonEmpty);
+    const updatedValueArray = _.get(filterMap, 'value', []).concat(nonEmpty);
+    handleChange(updatedValueArray);
   };
 
   deleteChip = (option) => {
