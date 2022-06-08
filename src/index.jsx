@@ -125,7 +125,7 @@ function render(Component) {
     // overwrite the auth endpoint to use the one hosted by TDR
     metadata,
     redirect_uri: `${window.origin}/redirect-from-oauth`,
-    prompt: 'login',
+    prompt: 'consent',
     scope: scopes.join(' '),
     loadUserInfo: isGoogleAuthority,
     userStore: new WebStorageStateStore({ store: window.localStorage }),
