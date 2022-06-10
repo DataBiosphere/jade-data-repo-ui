@@ -31,7 +31,7 @@ function LoginButton({ classes, dispatch }: IProps) {
       disableElevation
       className={classes.root}
     >
-      Login
+      Sign in
     </Button>
   );
 }

@@ -118,6 +118,7 @@ function render(Component) {
     scopes.push('https://www.googleapis.com/auth/drive.file');
 
     metadata.userinfo_endpoint = 'https://openidconnect.googleapis.com/v1/userinfo';
+    metadata.revocation_endpoint = 'https://oauth2.googleapis.com/revoke';
   }
   const oidcConfig = {
     authority: configuration.configObject.authorityEndpoint,
@@ -130,6 +131,7 @@ function render(Component) {
     loadUserInfo: isGoogleAuthority,
     userStore: new WebStorageStateStore({ store: window.localStorage }),
     extraQueryParams: { access_type: 'offline' },
+    revokeTokensOnSignout: true,
   };
 
   // Log oauth client events.  Do no check in code where this gets set higher since we won't want
