@@ -37,13 +37,21 @@ function* userLogin({ payload }: PayloadAction<AuthContextProps>) {
 
 function* userLogout({ payload }: PayloadAction<AuthContextProps>) {
   try {
+    if (payload.settings.metadata?.revocation_endpoint) {
+      yield call(payload.revokeTokens);
+    }
+  } catch (err) {
+    //eslint-disable-next-line no-console
+    console.warn('Error revoking tokens', err);
+  }
+  try {
     yield call(payload.removeUser);
     yield put({
       type: ActionTypes.USER_LOGOUT_SUCCESS,
     });
   } catch (err) {
     //eslint-disable-next-line no-console
-    console.log('Error signing out', err);
+    console.warn('Error signing out', err);
     yield put({
       type: ActionTypes.USER_LOGOUT_SUCCESS,
     });
