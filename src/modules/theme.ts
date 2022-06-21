@@ -190,6 +190,9 @@ const theme = createTheme({
     },
     MuiButton: {
       styleOverrides: {
+        root: {
+          borderRadius: '2px',
+        },
         containedPrimary: {
           backgroundColor: LINK,
           color: WHITE,
