@@ -9,6 +9,7 @@ import SnapshotAccess from '../SnapshotAccess';
 import TabPanel from '../../common/TabPanel';
 import SnapshotExport from './SnapshotExport';
 import { SnapshotModel } from '../../../generated/tdr';
+import { Link } from 'react-router-dom';
 
 const styles = (theme: CustomTheme) =>
   createStyles({
@@ -37,6 +38,9 @@ const styles = (theme: CustomTheme) =>
     },
     tabPanel: {
       padding: '1em 1em 1em 28px',
+    },
+    jadeLink: {
+      ...theme.mixins.jadeLink,
     },
   });
 
@@ -98,7 +102,11 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
           </Grid>
           <Grid item xs={4}>
             <Typography variant="h6">Root dataset:</Typography>
-            <Typography data-cy="snapshot-source-dataset">{sourceDataset.name}</Typography>
+            <Typography data-cy="snapshot-source-dataset">
+              <Link to={`/datasets/${sourceDataset.id}`}>
+                <span className={classes.jadeLink}>{sourceDataset.name}</span>
+              </Link>
+            </Typography>
           </Grid>
           <Grid item xs={4}>
             <Typography variant="h6">Date Created:</Typography>
