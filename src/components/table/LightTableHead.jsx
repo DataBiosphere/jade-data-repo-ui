@@ -27,65 +27,67 @@ const styles = (theme) => ({
   },
 });
 
-export class LightTableHead extends React.PureComponent {
-  static propTypes = {
-    classes: PropTypes.object.isRequired,
-    columns: PropTypes.arrayOf(PropTypes.object),
-    onRequestSort: PropTypes.func.isRequired,
-    orderDirection: PropTypes.string.isRequired,
-    orderProperty: PropTypes.string.isRequired,
-    summary: PropTypes.bool,
-  };
-
-  createSortHandler = (property) => (event) => {
-    const { onRequestSort } = this.props;
+function LightTableHead({
+  classes,
+  columns,
+  onRequestSort,
+  orderDirection,
+  orderProperty,
+  summary,
+}) {
+  const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
 
-  render() {
-    const { classes, columns, orderDirection, orderProperty, summary } = this.props;
-
-    return (
-      <TableHead className={classes.head}>
-        <TableRow>
-          {columns.map(
-            (col) => (
-              <TableCell
-                className={classes.cell}
-                key={col.name}
-                align="left"
-                padding="normal"
-                sortDirection={orderProperty === col.name ? orderDirection : false}
-              >
-                {summary || !col.allowSort ? (
-                  col.label ?? col.name
-                ) : (
-                  <div>
-                    {col.label ?? col.name}
-                    <TerraTooltip
-                      title="Sort"
-                      placement={col.numeric ? 'bottom-end' : 'bottom-start'}
-                      enterDelay={300}
-                    >
-                      <TableSortLabel
-                        active={orderProperty === col.name}
-                        direction={orderDirection}
-                        onClick={this.createSortHandler(col.name)}
-                        IconComponent={Sort}
-                        style={{ float: 'right' }}
-                      />
-                    </TerraTooltip>
-                  </div>
-                )}
-              </TableCell>
-            ),
-            this,
-          )}
-        </TableRow>
-      </TableHead>
-    );
-  }
+  return (
+    <TableHead className={classes.head}>
+      <TableRow>
+        {columns.map(
+          (col) => (
+            <TableCell
+              className={classes.cell}
+              key={col.name}
+              align="left"
+              padding="normal"
+              sortDirection={orderProperty === col.name ? orderDirection : false}
+            >
+              {summary || !col.allowSort ? (
+                col.label ?? col.name
+              ) : (
+                <div>
+                  {col.label ?? col.name}
+                  <TerraTooltip
+                    title="Sort"
+                    placement={col.numeric ? 'bottom-end' : 'bottom-start'}
+                    enterDelay={300}
+                  >
+                    <TableSortLabel
+                      active={orderProperty === col.name}
+                      direction={orderDirection}
+                      onClick={createSortHandler(col.name)}
+                      IconComponent={Sort}
+                      style={{ float: 'right' }}
+                    />
+                  </TerraTooltip>
+                </div>
+              )}
+            </TableCell>
+          ),
+          this,
+        )}
+      </TableRow>
+    </TableHead>
+  );
 }
+
+LightTableHead.propTypes = {
+  classes: PropTypes.object.isRequired,
+  columns: PropTypes.arrayOf(PropTypes.object),
+  onRequestSort: PropTypes.func.isRequired,
+  orderDirection: PropTypes.string.isRequired,
+  orderProperty: PropTypes.string.isRequired,
+  summary: PropTypes.bool,
+};
 
 function mapStateToProps(state) {
   return {
