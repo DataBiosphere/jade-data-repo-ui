@@ -1,16 +1,16 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from '@mui/styles';
 import { connect } from 'react-redux';
 
-import TableCell from '@mui/material/TableCell';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import TableSortLabel from '@mui/material/TableSortLabel';
+import { SortDirection, TableCell, TableHead, TableRow, TableSortLabel } from '@mui/material';
 import { Sort } from '@mui/icons-material';
-import TerraTooltip from '../common/TerraTooltip';
+import { CustomTheme } from '@mui/material/styles';
+import { ClassNameMap, withStyles } from '@mui/styles';
 
-const styles = (theme) => ({
+import TerraTooltip from '../common/TerraTooltip';
+import { TableColumn, OrderDirectionOptions } from '../../reducers/query';
+import { TdrState } from '../../reducers';
+
+const styles = (theme: CustomTheme) => ({
   head: {
     color: theme.palette.primary.dark,
     backgroundColor: theme.palette.lightTable.cellBackgroundDark,
@@ -27,6 +27,15 @@ const styles = (theme) => ({
   },
 });
 
+type LightTableHeadProps = {
+  classes: ClassNameMap;
+  columns: Array<TableColumn>;
+  onRequestSort: (event: any, property: string) => void;
+  orderDirection: OrderDirectionOptions;
+  orderProperty: string;
+  summary: boolean;
+};
+
 function LightTableHead({
   classes,
   columns,
@@ -34,22 +43,24 @@ function LightTableHead({
   orderDirection,
   orderProperty,
   summary,
-}) {
-  const createSortHandler = (property) => (event) => {
+}: LightTableHeadProps) {
+  const createSortHandler = (property: string) => (event: any) => {
     onRequestSort(event, property);
   };
 
   return (
     <TableHead className={classes.head}>
       <TableRow>
-        {columns.map(
-          (col) => (
+        {columns.map((col: TableColumn) => {
+          const sortDir: SortDirection =
+            orderProperty === col.name ? orderDirection ?? false : false;
+          return (
             <TableCell
               className={classes.cell}
               key={col.name}
               align="left"
               padding="normal"
-              sortDirection={orderProperty === col.name ? orderDirection : false}
+              sortDirection={sortDir}
             >
               {summary || !col.allowSort ? (
                 col.label ?? col.name
@@ -72,24 +83,14 @@ function LightTableHead({
                 </div>
               )}
             </TableCell>
-          ),
-          this,
-        )}
+          );
+        })}
       </TableRow>
     </TableHead>
   );
 }
 
-LightTableHead.propTypes = {
-  classes: PropTypes.object.isRequired,
-  columns: PropTypes.arrayOf(PropTypes.object),
-  onRequestSort: PropTypes.func.isRequired,
-  orderDirection: PropTypes.string.isRequired,
-  orderProperty: PropTypes.string.isRequired,
-  summary: PropTypes.bool,
-};
-
-function mapStateToProps(state) {
+function mapStateToProps(state: TdrState) {
   return {
     orderDirection: state.query.orderDirection,
     orderProperty: state.query.orderProperty,
