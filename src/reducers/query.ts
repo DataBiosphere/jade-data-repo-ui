@@ -6,20 +6,26 @@ import { ColumnModel } from 'generated/tdr';
 
 import { ActionTypes, TABLE_DEFAULT_ROWS_PER_PAGE } from '../constants';
 
-export type TableColumn = {
+export type TableColumnType = {
   name: string;
   dataType: string;
   arrayOf: boolean;
   allowSort: boolean;
   label: string;
   numeric: boolean;
+  render: (row: object) => string;
+};
+
+export type TableRowType = {
+  name: string;
+  [column: string]: string;
 };
 
 export type OrderDirectionOptions = 'asc' | 'desc' | undefined;
 
 export interface QueryState {
   baseQuery: string;
-  columns: Array<TableColumn>;
+  columns: Array<TableColumnType>;
   delay: boolean;
   errMsg: string;
   error: boolean;
@@ -29,7 +35,7 @@ export interface QueryState {
   pageSize: number;
   projectId: string;
   queryParams: object;
-  rows: Array<object>;
+  rows: Array<TableRowType>;
   orderProperty: string;
   orderDirection: OrderDirectionOptions;
   polling: boolean;

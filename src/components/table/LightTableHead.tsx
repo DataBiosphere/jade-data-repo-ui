@@ -7,7 +7,7 @@ import { CustomTheme } from '@mui/material/styles';
 import { ClassNameMap, withStyles } from '@mui/styles';
 
 import TerraTooltip from '../common/TerraTooltip';
-import { TableColumn, OrderDirectionOptions } from '../../reducers/query';
+import { TableColumnType, OrderDirectionOptions } from '../../reducers/query';
 import { TdrState } from '../../reducers';
 
 const styles = (theme: CustomTheme) => ({
@@ -29,7 +29,7 @@ const styles = (theme: CustomTheme) => ({
 
 type LightTableHeadProps = {
   classes: ClassNameMap;
-  columns: Array<TableColumn>;
+  columns: Array<TableColumnType>;
   onRequestSort: (event: any, property: string) => void;
   orderDirection: OrderDirectionOptions;
   orderProperty: string;
@@ -51,7 +51,7 @@ function LightTableHead({
   return (
     <TableHead className={classes.head}>
       <TableRow>
-        {columns.map((col: TableColumn) => {
+        {columns.map((col: TableColumnType) => {
           const sortDir: SortDirection =
             orderProperty === col.name ? orderDirection ?? false : false;
           return (

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from '@mui/styles';
+import { ClassNameMap, withStyles } from '@mui/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -9,19 +8,23 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { applySort } from 'actions/index';
 import { connect } from 'react-redux';
+import { CustomTheme } from '@mui/material/styles';
 
 import clsx from 'clsx';
 import LightTableHead from './LightTableHead';
 import LoadingSpinner from '../common/LoadingSpinner';
+import { AppDispatch } from '../../store';
+import { TableColumnType, TableRowType, OrderDirectionOptions } from '../../reducers/query';
+import { TdrState } from '../../reducers';
 
-const styles = (theme) => ({
+const styles = (theme: CustomTheme) => ({
   root: {
     border: `1px solid ${theme.palette.lightTable.borderColor}`,
     borderRadius: `${theme.shape.borderRadius}px ${theme.shape.borderRadius}px 0 0`,
     boxShadow: 'none',
-    overflowX: 'auto',
+    // overflowX: 'auto',
     width: '100%',
-    overflowWrap: 'break-word',
+    // overflowWrap: 'break-word',
   },
   table: {
     borderRadius: `${theme.shape.borderRadius}px ${theme.shape.borderRadius}px 0 0`,
@@ -42,7 +45,7 @@ const styles = (theme) => ({
   paginationButton: {
     borderRadius: `${theme.shape.borderRadius}px`,
     margin: '0px 2px',
-    transition: null,
+    // transition: null,
     padding: '0.25rem',
     border: `1px solid ${theme.palette.lightTable.paginationBlue}`,
     color: theme.palette.lightTable.paginationBlue,
@@ -52,6 +55,29 @@ const styles = (theme) => ({
 const DEFAULT_PAGE_SIZE = 10;
 const ROW_HEIGHT = 50;
 const ROWS_PER_PAGE = [5, 10, 25];
+
+type LightTableProps = {
+  classes: ClassNameMap;
+  columns: Array<TableColumnType>;
+  dispatch: AppDispatch;
+  filteredCount: number;
+  handleEnumeration: (
+    rowsPerPage: number,
+    rowsForCurrentPage: number,
+    orderProperty: string,
+    orderDirection: OrderDirectionOptions,
+    searchString: string,
+  ) => void;
+  itemType: string;
+  loading: boolean;
+  orderDirection: OrderDirectionOptions;
+  orderProperty: string;
+  rowKey: (row: object) => string;
+  rows: Array<TableRowType>;
+  searchString: string;
+  summary: boolean;
+  totalCount: number;
+};
 
 function LightTable({
   classes,
@@ -68,7 +94,7 @@ function LightTable({
   searchString,
   summary,
   totalCount,
-}) {
+}: LightTableProps) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(DEFAULT_PAGE_SIZE);
   const [emptyRows, setEmptyRows] = useState(
@@ -77,7 +103,7 @@ function LightTable({
       : 0,
   );
 
-  const handleRequestSort = (event, sort) => {
+  const handleRequestSort = (_event: any, sort: string) => {
     let newOrder = 'desc';
     if (orderProperty === sort && orderDirection === 'desc') {
       newOrder = 'asc';
@@ -85,12 +111,12 @@ function LightTable({
     dispatch(applySort(sort, newOrder));
   };
 
-  const handleChangeRowsPerPage = (event) => {
+  const handleChangeRowsPerPage = (event: any) => {
     const limit = event.target.value;
     setRowsPerPage(limit);
   };
 
-  const handleChangePage = (event, newPage) => {
+  const handleChangePage = (_event: any, newPage: number) => {
     setPage(newPage);
   };
 
@@ -193,24 +219,7 @@ function LightTable({
   );
 }
 
-LightTable.propTypes = {
-  classes: PropTypes.object.isRequired,
-  columns: PropTypes.arrayOf(PropTypes.object),
-  dispatch: PropTypes.func.isRequired,
-  filteredCount: PropTypes.number,
-  handleEnumeration: PropTypes.func,
-  itemType: PropTypes.string.isRequired,
-  loading: PropTypes.bool.isRequired,
-  orderDirection: PropTypes.string,
-  orderProperty: PropTypes.string,
-  rowKey: PropTypes.func,
-  rows: PropTypes.arrayOf(PropTypes.object),
-  searchString: PropTypes.string,
-  summary: PropTypes.bool,
-  totalCount: PropTypes.number,
-};
-
-function mapStateToProps(state) {
+function mapStateToProps(state: TdrState) {
   return {
     orderDirection: state.query.orderDirection,
     orderProperty: state.query.orderProperty,
