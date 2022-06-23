@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from '@mui/styles';
+import { ClassNameMap, withStyles } from '@mui/styles';
 import { Button, Grid, Typography } from '@mui/material';
+import { CustomTheme } from '@mui/material/styles';
 
 import { Link } from 'react-router-dom';
 import SidebarDrawer from 'components/dataset/data/sidebar/SidebarDrawer';
@@ -11,7 +11,7 @@ import SnapshotPopup from '../../snapshot/SnapshotPopup';
 import AppBreadcrumbs from '../../AppBreadcrumbs/AppBreadcrumbs';
 import { BreadcrumbType } from '../../../constants';
 
-const styles = (theme) => ({
+const styles = (theme: CustomTheme) => ({
   pageRoot: { ...theme.mixins.pageRoot },
   pageTitle: { ...theme.mixins.pageTitle },
   wrapper: {
@@ -19,10 +19,28 @@ const styles = (theme) => ({
     padding: theme.spacing(4),
   },
   scrollTable: {
-    overflowY: 'auto',
+    // overflowY: 'auto',
     height: '100%',
   },
 });
+
+type DataViewProps = {
+  canLink: boolean;
+  classes: ClassNameMap;
+  handleChangeTable: () => void;
+  handleDrawerWidth: () => void;
+  pageBQQuery: () => void;
+  panels: Array<object>;
+  queryParams: object;
+  resourceId: string;
+  resourceLoaded: boolean;
+  resourceName: string;
+  resourceType: string;
+  selected: boolean;
+  selectedTable: string;
+  sidebarWidth: number;
+  tableNames: Array<string>;
+};
 
 function DataView({
   canLink,
@@ -40,7 +58,7 @@ function DataView({
   selectedTable,
   sidebarWidth,
   tableNames,
-}) {
+}: DataViewProps) {
   return (
     //eslint-disable-next-line react/jsx-no-useless-fragment
     <Fragment>
@@ -106,23 +124,5 @@ function DataView({
     </Fragment>
   );
 }
-
-DataView.propTypes = {
-  canLink: PropTypes.bool,
-  classes: PropTypes.object,
-  handleChangeTable: PropTypes.func,
-  handleDrawerWidth: PropTypes.func,
-  pageBQQuery: PropTypes.func,
-  panels: PropTypes.array,
-  queryParams: PropTypes.object,
-  resourceId: PropTypes.string,
-  resourceLoaded: PropTypes.bool,
-  resourceName: PropTypes.string,
-  resourceType: PropTypes.string,
-  selected: PropTypes.string,
-  selectedTable: PropTypes.object,
-  sidebarWidth: PropTypes.number,
-  tableNames: PropTypes.array,
-};
 
 export default withStyles(styles)(DataView);

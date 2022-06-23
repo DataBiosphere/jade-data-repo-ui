@@ -6,7 +6,7 @@ import TableCell from '@mui/material/TableCell';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { applySort } from 'actions/index';
+import { applySort, changePage, changeRowsPerPage } from 'actions/index';
 import { connect } from 'react-redux';
 import { CustomTheme } from '@mui/material/styles';
 
@@ -72,6 +72,7 @@ type LightTableProps = {
   loading: boolean;
   orderDirection: OrderDirectionOptions;
   orderProperty: string;
+  pageBQQuery?: () => void;
   rowKey: (row: object) => string;
   rows: Array<TableRowType>;
   searchString: string;
@@ -89,6 +90,7 @@ function LightTable({
   loading,
   orderDirection,
   orderProperty,
+  pageBQQuery,
   rowKey,
   rows,
   searchString,
@@ -111,13 +113,29 @@ function LightTable({
     dispatch(applySort(sort, newOrder));
   };
 
-  const handleChangeRowsPerPage = (event: any) => {
+  const handleChangeRowsPerPage = async (event: any) => {
     const limit = event.target.value;
     setRowsPerPage(limit);
+
+    // Dispatching for JadeTable Combo
+    const newRowsPerPage = parseInt(limit, 10);
+    await dispatch(changeRowsPerPage(newRowsPerPage));
+    if (pageBQQuery) {
+      pageBQQuery();
+    }
   };
 
-  const handleChangePage = (_event: any, newPage: number) => {
+  const handleChangePage = async (_event: any, newPage: number) => {
+    // TODO - conver this to use redux state
     setPage(newPage);
+
+    // Dispatching page change to store for JadeTable Combo
+    // Once we no longer need to support BQ Querying,
+    // we can remove the async/await call and pageBQQuery()
+    await dispatch(changePage(newPage));
+    if (pageBQQuery) {
+      pageBQQuery();
+    }
   };
 
   useEffect(() => {
