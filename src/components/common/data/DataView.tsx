@@ -11,12 +11,7 @@ import DataViewDropdown from './DataViewDropdown';
 import SnapshotPopup from '../../snapshot/SnapshotPopup';
 import AppBreadcrumbs from '../../AppBreadcrumbs/AppBreadcrumbs';
 import { BreadcrumbType } from '../../../constants';
-import {
-  OrderDirectionOptions,
-  TableColumnType,
-  TableRowType,
-  QueryParams,
-} from '../../../reducers/query';
+import { OrderDirectionOptions, TableColumnType, TableRowType } from '../../../reducers/query';
 import { TdrState } from '../../../reducers';
 
 const styles = (theme: CustomTheme) => ({
@@ -42,7 +37,6 @@ type DataViewProps = {
   pageBQQuery: () => void;
   panels: Array<object>;
   polling: boolean;
-  queryParams: QueryParams;
   resourceId: string;
   resourceLoaded: boolean;
   resourceName: string;
@@ -65,7 +59,6 @@ function DataView({
   pageBQQuery,
   panels,
   polling,
-  queryParams,
   resourceId,
   resourceLoaded,
   resourceName,
@@ -154,7 +147,7 @@ function DataView({
                   rows={rows}
                   searchString={filterStatement}
                   summary={false}
-                  totalCount={queryParams?.totalRows ?? 0} //TODO
+                  totalCount={resultsCount} //TODO - this is the filtered count
                 />
               </div>
             </Grid>
@@ -186,7 +179,6 @@ function mapStateToProps(state: TdrState) {
     orderDirection: state.query.orderDirection,
     page: state.query.page,
     polling: state.query.polling,
-    queryParams: state.query.queryParams,
     resultsCount: state.query.resultsCount,
     rows: state.query.rows,
     rowsPerPage: state.query.rowsPerPage,
