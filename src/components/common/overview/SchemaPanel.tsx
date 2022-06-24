@@ -6,9 +6,9 @@ import { AddBoxOutlined, IndeterminateCheckBoxOutlined } from '@mui/icons-materi
 import { alpha, CustomTheme } from '@mui/material/styles';
 import { ClassNameMap, createStyles, withStyles } from '@mui/styles';
 import { Link } from 'react-router-dom';
-import { ColumnModel, TableModel } from '../../../generated/tdr';
 import clsx from 'clsx';
 import { ellipsis } from 'libs/styles';
+import { ColumnModel, TableModel } from '../../../generated/tdr';
 import TerraTooltip from '../TerraTooltip';
 
 const styles = (theme: CustomTheme) =>
@@ -37,7 +37,6 @@ const styles = (theme: CustomTheme) =>
       whiteSpace: 'nowrap',
       display: 'flex',
       flexDirection: 'row',
-      // ...ellipsis,
     },
     columnBox: {
       background: '#e6e6e6',
@@ -125,7 +124,7 @@ type SchemaPanelProps = {
 const renderTableName = (table: TableModel) => {
   const retVal = [<span key="name">{table.name}</span>];
   if (_.isNumber(table.rowCount)) {
-    const noun = table.rowCount == 1 ? 'row' : 'rows';
+    const noun = table.rowCount === 1 ? 'row' : 'rows';
     retVal.push(
       <span key="count" style={{ fontWeight: 500 }}>
         &nbsp;({table.rowCount} {noun})

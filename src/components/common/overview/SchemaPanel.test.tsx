@@ -1,8 +1,8 @@
 import { mount } from '@cypress/react';
 import { Router } from 'react-router-dom';
-import { ThemeProvider } from '@mui/styles';
+import { ClassNameMap, ThemeProvider } from '@mui/styles';
 import React from 'react';
-import { TableDataType } from 'generated/tdr';
+import { TableDataType, TableModel } from 'generated/tdr';
 import history from '../../../modules/hist';
 import globalTheme from '../../../modules/theme';
 import SchemaPanel from './SchemaPanel';
@@ -10,17 +10,21 @@ import SchemaPanel from './SchemaPanel';
 const snapshotId = 'testUUID';
 const resourceType = 'Snapshot';
 const dataLink = `${snapshotId}/data`;
-const tables = [
+const tables: Array<TableModel> = [
   {
     name: 'Participant',
     columns: [
       {
         name: 'id',
         datatype: TableDataType.String,
+        array_of: false,
+        required: false,
       },
       {
         name: 'age',
         datatype: TableDataType.Integer,
+        array_of: false,
+        required: false,
       },
     ],
   },
