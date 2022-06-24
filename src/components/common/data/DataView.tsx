@@ -2,14 +2,17 @@ import React, { Fragment } from 'react';
 import { ClassNameMap, withStyles } from '@mui/styles';
 import { Button, Grid, Typography } from '@mui/material';
 import { CustomTheme } from '@mui/material/styles';
+import { connect } from 'react-redux';
 
 import { Link } from 'react-router-dom';
+import LightTable from 'components/table/LightTable';
 import SidebarDrawer from 'components/dataset/data/sidebar/SidebarDrawer';
 import DataViewDropdown from './DataViewDropdown';
-import JadeTable from '../../table/JadeTable';
 import SnapshotPopup from '../../snapshot/SnapshotPopup';
 import AppBreadcrumbs from '../../AppBreadcrumbs/AppBreadcrumbs';
 import { BreadcrumbType } from '../../../constants';
+import { OrderDirectionOptions, TableColumnType, TableRowType } from '../../../reducers/query';
+import { TdrState } from '../../../reducers';
 
 const styles = (theme: CustomTheme) => ({
   pageRoot: { ...theme.mixins.pageRoot },
@@ -27,15 +30,19 @@ const styles = (theme: CustomTheme) => ({
 type DataViewProps = {
   canLink: boolean;
   classes: ClassNameMap;
+  columns: Array<TableColumnType>;
+  filterStatement: string;
   handleChangeTable: () => void;
   handleDrawerWidth: () => void;
   pageBQQuery: () => void;
   panels: Array<object>;
-  queryParams: object;
+  polling: boolean;
+  // queryParams: object;
   resourceId: string;
   resourceLoaded: boolean;
   resourceName: string;
   resourceType: string;
+  rows: Array<TableRowType>;
   selected: boolean;
   selectedTable: string;
   sidebarWidth: number;
@@ -45,20 +52,50 @@ type DataViewProps = {
 function DataView({
   canLink,
   classes,
+  columns,
+  filterStatement,
   handleChangeTable,
   handleDrawerWidth,
   pageBQQuery,
   panels,
-  queryParams,
+  polling,
+  // queryParams,
   resourceId,
   resourceLoaded,
   resourceName,
   resourceType,
+  rows,
   selected,
   selectedTable,
   sidebarWidth,
   tableNames,
 }: DataViewProps) {
+  const handleFilter = (
+    rowsPerPage: number,
+    rowsForCurrentPage: number,
+    orderProperty: string,
+    orderDirection: OrderDirectionOptions,
+    searchString: string,
+  ) => {
+    console.log(
+      'TODO - handle filter' +
+        rowsPerPage +
+        ', ' +
+        rowsForCurrentPage +
+        ', ' +
+        orderProperty +
+        ', ' +
+        orderDirection +
+        ', ' +
+        searchString,
+    );
+  };
+
+  const rowKey = (row: TableRowType): string => {
+    const drId = row.datarepo_row_id;
+    return drId ?? row.name;
+  };
+
   return (
     //eslint-disable-next-line react/jsx-no-useless-fragment
     <Fragment>
@@ -99,11 +136,18 @@ function DataView({
           <Grid container spacing={0}>
             <Grid item xs={11}>
               <div className={classes.scrollTable}>
-                <JadeTable
+                <LightTable
+                  columns={columns}
+                  filteredCount={10} // TODO
+                  handleEnumeration={handleFilter}
+                  itemType={resourceType} //TODO
+                  loading={polling}
                   pageBQQuery={pageBQQuery}
-                  queryParams={queryParams}
-                  title={selected}
-                  table={selectedTable}
+                  rowKey={rowKey}
+                  rows={rows}
+                  searchString={filterStatement}
+                  summary={false}
+                  totalCount={12} //TODO
                 />
               </div>
             </Grid>
@@ -125,4 +169,20 @@ function DataView({
   );
 }
 
-export default withStyles(styles)(DataView);
+function mapStateToProps(state: TdrState) {
+  return {
+    columns: state.query.columns,
+    delay: state.query.delay,
+    error: state.query.error,
+    filterData: state.query.filterData,
+    filterStatement: state.query.filterStatement,
+    orderDirection: state.query.orderDirection,
+    page: state.query.page,
+    polling: state.query.polling,
+    queryParams: state.query.queryParams,
+    rows: state.query.rows,
+    rowsPerPage: state.query.rowsPerPage,
+  };
+}
+
+export default connect(mapStateToProps)(withStyles(styles)(DataView));

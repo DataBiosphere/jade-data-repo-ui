@@ -73,7 +73,7 @@ type LightTableProps = {
   orderDirection: OrderDirectionOptions;
   orderProperty: string;
   pageBQQuery?: () => void;
-  rowKey: (row: object) => string;
+  rowKey: (row: TableRowType) => string;
   rows: Array<TableRowType>;
   searchString: string;
   summary: boolean;
@@ -160,9 +160,10 @@ function LightTable({
               {rows && rows.length > 0 ? (
                 rows.map((row, index) => {
                   const darkRow = index % 2 !== 0;
+                  const rowKeyVal = rowKey ? rowKey(row) : row.name;
                   return (
                     <TableRow
-                      key={rowKey ? rowKey(row) : row.name}
+                      key={rowKeyVal}
                       className={clsx({
                         [classes.row]: true,
                         [classes.darkRow]: darkRow,
@@ -172,7 +173,7 @@ function LightTable({
                       {columns.map((col) => (
                         <TableCell
                           className={classes.cell}
-                          key={col.name}
+                          key={`${col.name}-${rowKeyVal}`}
                           style={{ wordBreak: 'break-word' }}
                         >
                           {col.render ? col.render(row) : row[col.name]}
