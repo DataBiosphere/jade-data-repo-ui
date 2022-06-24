@@ -16,6 +16,7 @@ import LoadingSpinner from '../common/LoadingSpinner';
 import { AppDispatch } from '../../store';
 import { TableColumnType, TableRowType, OrderDirectionOptions } from '../../reducers/query';
 import { TdrState } from '../../reducers';
+import { TABLE_DEFAULT_ROWS_PER_PAGE_OPTIONS } from '../../constants';
 
 const styles = (theme: CustomTheme) => ({
   root: {
@@ -52,9 +53,7 @@ const styles = (theme: CustomTheme) => ({
   },
 });
 
-const DEFAULT_PAGE_SIZE = 10;
 const ROW_HEIGHT = 50;
-const ROWS_PER_PAGE = [5, 10, 25];
 
 type LightTableProps = {
   classes: ClassNameMap;
@@ -72,9 +71,11 @@ type LightTableProps = {
   loading: boolean;
   orderDirection: OrderDirectionOptions;
   orderProperty: string;
+  page: number;
   pageBQQuery?: () => void;
   rowKey: (row: TableRowType) => string;
   rows: Array<TableRowType>;
+  rowsPerPage: number;
   searchString: string;
   summary: boolean;
   totalCount: number;
@@ -90,15 +91,15 @@ function LightTable({
   loading,
   orderDirection,
   orderProperty,
+  page,
   pageBQQuery,
   rowKey,
   rows,
+  rowsPerPage,
   searchString,
   summary,
   totalCount,
 }: LightTableProps) {
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(DEFAULT_PAGE_SIZE);
   const [emptyRows, setEmptyRows] = useState(
     rowsPerPage < filteredCount
       ? rowsPerPage - Math.min(rowsPerPage, filteredCount - page * rowsPerPage)
@@ -114,24 +115,16 @@ function LightTable({
   };
 
   const handleChangeRowsPerPage = async (event: any) => {
-    const limit = event.target.value;
-    setRowsPerPage(limit);
-
-    // Dispatching for JadeTable Combo
-    const newRowsPerPage = parseInt(limit, 10);
+    const newRowsPerPage = parseInt(event.target.value, 10);
     await dispatch(changeRowsPerPage(newRowsPerPage));
     if (pageBQQuery) {
       pageBQQuery();
     }
   };
 
+  // Once we no longer need to support BQ Querying,
+  // we can remove the async/await call and pageBQQuery()
   const handleChangePage = async (_event: any, newPage: number) => {
-    // TODO - conver this to use redux state
-    setPage(newPage);
-
-    // Dispatching page change to store for JadeTable Combo
-    // Once we no longer need to support BQ Querying,
-    // we can remove the async/await call and pageBQQuery()
     await dispatch(changePage(newPage));
     if (pageBQQuery) {
       pageBQQuery();
@@ -200,13 +193,15 @@ function LightTable({
               )}
             </TableBody>
           </Table>
-          {!summary && rows && filteredCount > rowsPerPage && (
+          {!summary && rows && (
             <TablePagination
-              rowsPerPageOptions={ROWS_PER_PAGE}
+              rowsPerPageOptions={TABLE_DEFAULT_ROWS_PER_PAGE_OPTIONS}
               component="div"
               count={filteredCount}
               rowsPerPage={rowsPerPage}
               page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
               backIconButtonProps={{
                 'aria-label': 'Previous Page',
                 disableTouchRipple: true,
@@ -221,8 +216,6 @@ function LightTable({
                 disableRipple: true,
                 className: classes.paginationButton,
               }}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
               labelDisplayedRows={({ from, to, count }) => {
                 if (count === totalCount) {
                   return `${from}-${to} of ${count}`;
@@ -242,6 +235,8 @@ function mapStateToProps(state: TdrState) {
   return {
     orderDirection: state.query.orderDirection,
     orderProperty: state.query.orderProperty,
+    page: state.query.page,
+    rowsPerPage: state.query.rowsPerPage,
   };
 }
 

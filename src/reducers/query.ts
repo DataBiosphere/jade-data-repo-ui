@@ -23,6 +23,13 @@ export type TableRowType = {
 
 export type OrderDirectionOptions = 'asc' | 'desc' | undefined;
 
+export type QueryParams = {
+  pageToken?: string; // only needed for direct BQ Queries
+  projectId?: string; // only needed for direct BQ Queries
+  jobId?: string; // only needed for direct BQ Queries
+  totalRows?: number;
+};
+
 export interface QueryState {
   baseQuery: string;
   columns: Array<TableColumnType>;
@@ -34,7 +41,7 @@ export interface QueryState {
   joinStatement: string;
   pageSize: number;
   projectId: string;
-  queryParams: object;
+  queryParams: QueryParams;
   rows: Array<TableRowType>;
   orderProperty: string;
   orderDirection: OrderDirectionOptions;

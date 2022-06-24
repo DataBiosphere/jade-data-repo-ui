@@ -11,7 +11,12 @@ import DataViewDropdown from './DataViewDropdown';
 import SnapshotPopup from '../../snapshot/SnapshotPopup';
 import AppBreadcrumbs from '../../AppBreadcrumbs/AppBreadcrumbs';
 import { BreadcrumbType } from '../../../constants';
-import { OrderDirectionOptions, TableColumnType, TableRowType } from '../../../reducers/query';
+import {
+  OrderDirectionOptions,
+  TableColumnType,
+  TableRowType,
+  QueryParams,
+} from '../../../reducers/query';
 import { TdrState } from '../../../reducers';
 
 const styles = (theme: CustomTheme) => ({
@@ -37,11 +42,12 @@ type DataViewProps = {
   pageBQQuery: () => void;
   panels: Array<object>;
   polling: boolean;
-  // queryParams: object;
+  queryParams: QueryParams;
   resourceId: string;
   resourceLoaded: boolean;
   resourceName: string;
   resourceType: string;
+  resultsCount: number;
   rows: Array<TableRowType>;
   selected: boolean;
   selectedTable: string;
@@ -59,11 +65,12 @@ function DataView({
   pageBQQuery,
   panels,
   polling,
-  // queryParams,
+  queryParams,
   resourceId,
   resourceLoaded,
   resourceName,
   resourceType,
+  resultsCount,
   rows,
   selected,
   selectedTable,
@@ -138,7 +145,7 @@ function DataView({
               <div className={classes.scrollTable}>
                 <LightTable
                   columns={columns}
-                  filteredCount={10} // TODO
+                  filteredCount={resultsCount}
                   handleEnumeration={handleFilter}
                   itemType={resourceType} //TODO
                   loading={polling}
@@ -147,7 +154,7 @@ function DataView({
                   rows={rows}
                   searchString={filterStatement}
                   summary={false}
-                  totalCount={12} //TODO
+                  totalCount={queryParams?.totalRows ?? 0} //TODO
                 />
               </div>
             </Grid>
@@ -180,6 +187,7 @@ function mapStateToProps(state: TdrState) {
     page: state.query.page,
     polling: state.query.polling,
     queryParams: state.query.queryParams,
+    resultsCount: state.query.resultsCount,
     rows: state.query.rows,
     rowsPerPage: state.query.rowsPerPage,
   };
