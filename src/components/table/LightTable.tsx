@@ -67,10 +67,10 @@ type LightTableProps = {
     orderDirection: OrderDirectionOptions,
     searchString: string,
   ) => void;
-  itemType: string;
   loading: boolean;
   orderDirection: OrderDirectionOptions;
   orderProperty: string;
+  noRowsMessage: string;
   page: number;
   pageBQQuery?: () => void;
   rowKey: (row: TableRowType) => string;
@@ -87,8 +87,8 @@ function LightTable({
   dispatch,
   filteredCount,
   handleEnumeration,
-  itemType,
   loading,
+  noRowsMessage,
   orderDirection,
   orderProperty,
   page,
@@ -177,13 +177,7 @@ function LightTable({
                 })
               ) : (
                 <TableRow className={classes.row}>
-                  {filteredCount < totalCount ? (
-                    <TableCell colSpan={columns.length}>No {itemType} match your filter</TableCell>
-                  ) : (
-                    <TableCell colSpan={columns.length}>
-                      No {itemType} have been created yet
-                    </TableCell>
-                  )}
+                  <TableCell colSpan={columns.length}>{noRowsMessage}</TableCell>
                 </TableRow>
               )}
               {rows && emptyRows > 0 && rows.length < rowsPerPage && (

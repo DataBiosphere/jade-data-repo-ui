@@ -140,8 +140,8 @@ function DataView({
                   columns={columns}
                   filteredCount={resultsCount}
                   handleEnumeration={handleFilter}
-                  itemType={resourceType} //TODO
                   loading={polling}
+                  noRowsMessage="No rows exist in the table" // TODO - handle case where filtered
                   pageBQQuery={pageBQQuery}
                   rowKey={rowKey}
                   rows={rows}

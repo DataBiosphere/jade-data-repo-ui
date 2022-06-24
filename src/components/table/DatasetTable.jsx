@@ -79,6 +79,11 @@ class DatasetTable extends React.PureComponent {
         columns={columns}
         handleEnumeration={handleFilterDatasets}
         itemType="datasets"
+        noRowsMessage={
+          filteredDatasetsCount < datasetsCount
+            ? 'No datasets match your filter'
+            : 'No datasets have been created yet'
+        }
         rows={datasets}
         summary={summary}
         totalCount={datasetsCount}

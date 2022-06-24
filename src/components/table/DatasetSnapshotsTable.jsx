@@ -65,7 +65,7 @@ class DatasetSnapshotsTable extends React.PureComponent {
         <LightTable
           columns={columns}
           handleEnumeration={this.handleFilterSnapshots}
-          itemType="snapshots"
+          noRowsMessage="No snapshots have been created yet"
           rows={snapshots}
           summary={summary}
           totalCount={snapshotCount}
