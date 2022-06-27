@@ -23,7 +23,6 @@ import LoadingSpinner from 'components/common/LoadingSpinner';
 import Failure from 'components/common/Failure';
 import { applySort, changePage, changeRowsPerPage } from 'actions/index';
 import JadeTableHead from './JadeTableHead';
-import { ellipsis } from '../../libs/styles';
 import { TABLE_DEFAULT_ROWS_PER_PAGE_OPTIONS } from '../../constants';
 
 const styles = (theme) => ({
@@ -36,7 +35,7 @@ const styles = (theme) => ({
   },
   cell: {
     borderBottomColor: theme.palette.lightTable.bottomColor,
-    ...ellipsis,
+    ...theme.mixins.ellipsis,
   },
   nullValue: {
     fontStyle: 'italic',

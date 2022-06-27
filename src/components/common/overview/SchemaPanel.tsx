@@ -4,10 +4,9 @@ import { Box, Button, Paper, Typography } from '@mui/material';
 import { TreeItem, TreeItemProps, TreeView } from '@mui/lab';
 import { AddBoxOutlined, IndeterminateCheckBoxOutlined } from '@mui/icons-material';
 import { alpha, CustomTheme } from '@mui/material/styles';
-import { ClassNameMap, createStyles, withStyles } from '@mui/styles';
+import { ClassNameMap, createStyles, WithStyles, withStyles } from '@mui/styles';
 import { Link } from 'react-router-dom';
 import clsx from 'clsx';
-import { ellipsis } from 'libs/styles';
 import { ColumnModel, TableModel } from '../../../generated/tdr';
 import TerraTooltip from '../TerraTooltip';
 
@@ -69,7 +68,9 @@ const styles = (theme: CustomTheme) =>
       lineHeight: '1.1rem',
       maxWidth: 260,
       display: 'block',
-      ...ellipsis,
+    },
+    ellipsis: {
+      ...theme.mixins.ellipsis,
     },
   });
 
@@ -114,12 +115,11 @@ const StyledTreeItem = withStyles((theme) => ({
   },
 }))((props: TreeItemProps) => <TreeItem {...props} />);
 
-type SchemaPanelProps = {
-  classes: ClassNameMap;
+interface IProps extends WithStyles<typeof styles> {
   resourceId: string;
   resourceType: string;
   tables: Array<TableModel>;
-};
+}
 
 const renderTableName = (table: TableModel) => {
   const retVal = [<span key="name">{table.name}</span>];
@@ -150,7 +150,9 @@ const renderColumnName = (
   retVal.push(
     <span
       key="name"
-      className={clsx(classes.columnNamePlain, { [classes.columnNameHighlight]: isPk })}
+      className={clsx(classes.columnNamePlain, classes.ellipsis, {
+        [classes.columnNameHighlight]: isPk,
+      })}
     >
       {column.name}
       {column.required ? ' *' : ''}
@@ -212,36 +214,32 @@ const datasetTables = (tables: Array<TableModel>, classes: ClassNameMap<string>)
     ))}
   </TreeView>
 );
+const SchemaPanel = withStyles(styles)(({ classes, resourceId, resourceType, tables }: IProps) => (
+  <Paper className={classes.root} elevation={4} data-cy="schema-panel">
+    <Link to={`${resourceId}/data`} data-cy="view-data-link">
+      <Button
+        className={classes.viewDatasetButton}
+        color="primary"
+        variant="outlined"
+        disableElevation
+      >
+        View {resourceType} Data
+      </Button>
+    </Link>
 
-function SchemaPanel(props: SchemaPanelProps) {
-  const { classes, resourceId, resourceType, tables } = props;
-  return (
-    <Paper className={classes.root} elevation={4} data-cy="schema-panel">
-      <Link to={`${resourceId}/data`} data-cy="view-data-link">
-        <Button
-          className={classes.viewDatasetButton}
-          color="primary"
-          variant="outlined"
-          disableElevation
-        >
-          View {resourceType} Data
-        </Button>
-      </Link>
-
-      <Typography data-cy="schema-header" className={classes.sectionHeader} variant="h5">
-        {resourceType} Schema
+    <Typography data-cy="schema-header" className={classes.sectionHeader} variant="h5">
+      {resourceType} Schema
+    </Typography>
+    <div>
+      <Typography className={classes.sectionHeader} variant="h5" style={{ float: 'left' }}>
+        Tables
       </Typography>
-      <div>
-        <Typography className={classes.sectionHeader} variant="h5" style={{ float: 'left' }}>
-          Tables
-        </Typography>
-        <Typography data-cy="table-count" style={{ float: 'left', padding: '6px 0px' }}>
-          &nbsp;({tables.length})
-        </Typography>
-      </div>
-      <div className={classes.schemaSection}>{datasetTables(tables, classes)}</div>
-    </Paper>
-  );
-}
+      <Typography data-cy="table-count" style={{ float: 'left', padding: '6px 0px' }}>
+        &nbsp;({tables.length})
+      </Typography>
+    </div>
+    <div className={classes.schemaSection}>{datasetTables(tables, classes)}</div>
+  </Paper>
+));
 
-export default withStyles(styles)(SchemaPanel);
+export default SchemaPanel;

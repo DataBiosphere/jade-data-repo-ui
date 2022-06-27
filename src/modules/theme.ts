@@ -257,6 +257,12 @@ const theme = createTheme({
     pageTitle: {
       marginBottom: '1rem',
     },
+    ellipsis: {
+      wordWrap: 'break-word',
+      whiteSpace: 'nowrap',
+      textOverflow: 'ellipsis',
+      overflow: 'hidden',
+    },
   },
   constants: {
     navBarHeight: '64px',

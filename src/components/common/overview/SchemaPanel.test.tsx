@@ -1,6 +1,6 @@
 import { mount } from '@cypress/react';
 import { Router } from 'react-router-dom';
-import { ClassNameMap, ThemeProvider } from '@mui/styles';
+import { ThemeProvider } from '@mui/styles';
 import React from 'react';
 import { TableDataType, TableModel } from 'generated/tdr';
 import history from '../../../modules/hist';

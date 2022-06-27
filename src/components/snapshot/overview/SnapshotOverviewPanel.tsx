@@ -5,7 +5,6 @@ import moment from 'moment';
 import { CustomTheme } from '@mui/material/styles';
 import GoogleSheetExport from 'components/common/overview/GoogleSheetExport';
 import { Link } from 'react-router-dom';
-import { ellipsis } from 'libs/styles';
 import { renderStorageResources } from '../../../libs/render-utils';
 import SnapshotAccess from '../SnapshotAccess';
 import TabPanel from '../../common/TabPanel';
@@ -41,7 +40,7 @@ const styles = (theme: CustomTheme) =>
       padding: '1em 1em 1em 28px',
     },
     datasetText: {
-      ...ellipsis,
+      ...theme.mixins.ellipsis,
     },
     jadeLink: {
       ...theme.mixins.jadeLink,
