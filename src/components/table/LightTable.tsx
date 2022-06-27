@@ -1,11 +1,22 @@
 import React, { useState, useEffect } from 'react';
+import _ from 'lodash';
 import { ClassNameMap, withStyles } from '@mui/styles';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TablePagination from '@mui/material/TablePagination';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
+import {
+  Dialog,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  IconButton,
+  Link,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TablePagination,
+  TableRow,
+  Typography,
+} from '@mui/material';
+import { Close } from '@mui/icons-material';
 import { applySort, changePage, changeRowsPerPage } from 'actions/index';
 import { connect } from 'react-redux';
 import { CustomTheme } from '@mui/material/styles';
@@ -16,6 +27,7 @@ import LoadingSpinner from '../common/LoadingSpinner';
 import { AppDispatch } from '../../store';
 import { TableColumnType, TableRowType, OrderDirectionOptions } from '../../reducers/query';
 import { TdrState } from '../../reducers';
+// import { ellipsis } from '../../libs/styles';
 import { TABLE_DEFAULT_ROWS_PER_PAGE_OPTIONS } from '../../constants';
 
 const styles = (theme: CustomTheme) => ({
@@ -27,6 +39,23 @@ const styles = (theme: CustomTheme) => ({
     width: '100%',
     // overflowWrap: 'break-word',
   },
+  tableWrapper: {
+    height: 'calc(100vh - 300px)',
+    overflow: 'auto',
+  },
+  nullValue: {
+    fontStyle: 'italic',
+    textColor: theme.palette.primary.dark,
+    color: theme.palette.primary.dark,
+  },
+  dialogContentText: {
+    width: 'max-content',
+    maxWidth: '800px',
+  },
+  seeMoreLink: {
+    ...theme.mixins.jadeLink,
+    cursor: 'pointer',
+  },
   table: {
     borderRadius: `${theme.shape.borderRadius}px ${theme.shape.borderRadius}px 0 0`,
     minWidth: 700,
@@ -36,6 +65,7 @@ const styles = (theme: CustomTheme) => ({
   },
   cell: {
     borderBottom: `1px solid ${theme.palette.lightTable.bottomColor}`,
+    // ...ellipsis,
   },
   lightRow: {
     backgroundColor: theme.palette.lightTable.callBackgroundLight,
@@ -54,6 +84,7 @@ const styles = (theme: CustomTheme) => ({
 });
 
 const ROW_HEIGHT = 50;
+const MAX_REPEATED_VALUES = 5;
 
 type LightTableProps = {
   classes: ClassNameMap;
@@ -100,6 +131,7 @@ function LightTable({
   summary,
   totalCount,
 }: LightTableProps) {
+  const [seeMore, setSeeMore] = useState({ open: false, title: '', contents: [''] });
   const [emptyRows, setEmptyRows] = useState(
     rowsPerPage < filteredCount
       ? rowsPerPage - Math.min(rowsPerPage, filteredCount - page * rowsPerPage)
@@ -129,6 +161,79 @@ function LightTable({
     if (pageBQQuery) {
       pageBQQuery();
     }
+  };
+
+  const handleSeeMoreOpen = (values: Array<any>, title: string) => {
+    setSeeMore({
+      open: true,
+      title,
+      contents: values,
+    });
+  };
+
+  const handleSeeMoreClose = () => {
+    setSeeMore({
+      open: false,
+      title: '',
+      contents: [''],
+    });
+  };
+
+  const handleNullValue = () => <span className={classes.nullValue}>null</span>;
+
+  const handleRepeatedValues = (values: Array<string>, columnName: string) => {
+    const allValues = [];
+    const cleanValues = values.map((v) => (_.isNull(v) ? handleNullValue() : v));
+    const start = <span key="start">[</span>;
+    const end = <span key="end">]</span>;
+    for (let i = 0; i < cleanValues.length; i++) {
+      const thisValue = cleanValues[i];
+      if (i < cleanValues.length - 1) {
+        allValues.push(
+          <span key={`sep-${i}`}>
+            {thisValue},<br />
+          </span>,
+        );
+      } else {
+        allValues.push(thisValue);
+      }
+    }
+    const valuesToDisplay = [start, ...allValues, end];
+    if (allValues.length > MAX_REPEATED_VALUES) {
+      const ellipses = <span key="ellipses">...</span>;
+      const seeMoreLink = (
+        <span key="see-more">
+          <Link
+            className={classes.seeMoreLink}
+            onClick={() => handleSeeMoreOpen(valuesToDisplay, columnName)}
+          >
+            <br />
+            See all {allValues.length} values
+          </Link>
+        </span>
+      );
+      return [start, ...allValues.slice(0, MAX_REPEATED_VALUES), ellipses, end, seeMoreLink];
+    }
+
+    return valuesToDisplay;
+  };
+
+  const handleValues = (row: TableRowType, column: TableColumnType) => {
+    const value = row[column.name];
+    if (column.render) {
+      return column.render(row);
+    }
+    if (_.isArray(value)) {
+      if (column.arrayOf) {
+        return handleRepeatedValues(value, column.name);
+      }
+      const singleValue = value[0];
+      return _.isNull(singleValue) ? handleNullValue() : singleValue;
+    }
+    if (_.isNull(value)) {
+      return handleNullValue();
+    }
+    return value;
   };
 
   useEffect(() => {
@@ -169,7 +274,7 @@ function LightTable({
                           key={`${col.name}-${rowKeyVal}`}
                           style={{ wordBreak: 'break-word' }}
                         >
-                          {col.render ? col.render(row) : row[col.name]}
+                          {handleValues(row, col)}
                         </TableCell>
                       ))}
                     </TableRow>
@@ -218,6 +323,24 @@ function LightTable({
               }}
             />
           )}
+          <Dialog open={seeMore.open} scroll="paper">
+            <DialogTitle /* disableTypography={true} */ id="see-more-dialog-title">
+              <Typography variant="h4" style={{ float: 'left' }}>
+                {seeMore.title}
+              </Typography>
+              <IconButton size="small" style={{ float: 'right' }} onClick={handleSeeMoreClose}>
+                <Close />
+              </IconButton>
+            </DialogTitle>
+            <DialogContent dividers={true}>
+              <DialogContentText
+                className={classes.dialogContentText}
+                id="see-more-dialog-content-text"
+              >
+                {seeMore.contents}
+              </DialogContentText>
+            </DialogContent>
+          </Dialog>
         </Paper>
       )}
       {loading && <LoadingSpinner delay={false} delayMessage="" />}
