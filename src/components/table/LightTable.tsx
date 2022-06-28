@@ -27,7 +27,6 @@ import LoadingSpinner from '../common/LoadingSpinner';
 import { AppDispatch } from '../../store';
 import { TableColumnType, TableRowType, OrderDirectionOptions } from '../../reducers/query';
 import { TdrState } from '../../reducers';
-// import { ellipsis } from '../../libs/styles';
 import { TABLE_DEFAULT_ROWS_PER_PAGE_OPTIONS } from '../../constants';
 
 const styles = (theme: CustomTheme) => ({
@@ -64,7 +63,6 @@ const styles = (theme: CustomTheme) => ({
   },
   cell: {
     borderBottom: `1px solid ${theme.palette.lightTable.bottomColor}`,
-    // ...ellipsis,
   },
   lightRow: {
     backgroundColor: theme.palette.lightTable.callBackgroundLight,
@@ -75,7 +73,6 @@ const styles = (theme: CustomTheme) => ({
   paginationButton: {
     borderRadius: `${theme.shape.borderRadius}px`,
     margin: '0px 2px',
-    // transition: null,
     padding: '0.25rem',
     border: `1px solid ${theme.palette.lightTable.paginationBlue}`,
     color: theme.palette.lightTable.paginationBlue,
@@ -340,7 +337,7 @@ function LightTable({
             />
           )}
           <Dialog open={seeMore.open} scroll="paper">
-            <DialogTitle /* disableTypography={true} */ id="see-more-dialog-title">
+            <DialogTitle id="see-more-dialog-title">
               <Typography variant="h4" style={{ float: 'left' }}>
                 {seeMore.title}
               </Typography>

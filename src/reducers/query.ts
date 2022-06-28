@@ -23,11 +23,12 @@ export type TableRowType = {
 
 export type OrderDirectionOptions = 'asc' | 'desc' | undefined;
 
+// pageToken, projectId, and jobId are only needed for direct BQ Queries
 export type QueryParams = {
-  pageToken?: string; // only needed for direct BQ Queries
-  projectId?: string; // only needed for direct BQ Queries
-  jobId?: string; // only needed for direct BQ Queries
-  totalRows?: number;
+  pageToken?: string;
+  projectId?: string;
+  jobId?: string;
+  totalRows: number;
 };
 
 export interface QueryState {
@@ -51,6 +52,10 @@ export interface QueryState {
   rowsPerPage: number;
 }
 
+const defaultQueryParams = {
+  totalRows: 0,
+};
+
 export const initialQueryState: QueryState = {
   baseQuery: '',
   columns: [],
@@ -62,7 +67,7 @@ export const initialQueryState: QueryState = {
   joinStatement: '',
   pageSize: 0,
   projectId: '',
-  queryParams: {},
+  queryParams: defaultQueryParams,
   rows: [],
   orderProperty: '',
   orderDirection: undefined,
@@ -85,7 +90,7 @@ export default {
           pageToken: queryResults.pageToken,
           projectId: queryResults.jobReference.projectId,
           jobId: queryResults.jobReference.jobId,
-          totalRows: queryResults.totalRows,
+          totalRows: parseInt(queryResults.totalRows, 10),
         };
         return immutable(state, {
           queryParams: { $set: queryParams },
@@ -105,7 +110,7 @@ export default {
           allowSort: false,
         }));
         const queryParams = {
-          totalRows: action.payload.totalRowCount,
+          totalRows: parseInt(action.payload.totalRowCount, 10),
         };
 
         return immutable(state, {
@@ -139,7 +144,7 @@ export default {
       },
       [ActionTypes.RUN_QUERY]: (state) =>
         immutable(state, {
-          queryParams: { $set: {} },
+          queryParams: { $set: defaultQueryParams },
           polling: { $set: true },
         }),
       [ActionTypes.POLL_QUERY]: (state) =>
@@ -149,7 +154,7 @@ export default {
       [ActionTypes.PREVIEW_DATA]: (state) =>
         immutable(state, {
           error: { $set: false },
-          queryParams: { $set: {} },
+          queryParams: { $set: defaultQueryParams },
           polling: { $set: true },
         }),
       [ActionTypes.PREVIEW_DATA_FAILURE]: (state, action: any) =>
@@ -192,7 +197,7 @@ export default {
           filterData: { $set: {} },
           filterStatement: { $set: '' },
           joinStatement: { $set: '' },
-          queryParams: { $set: {} },
+          queryParams: { $set: defaultQueryParams },
           polling: { $set: false },
           page: { $set: 0 },
           orderProperty: { $set: '' },
@@ -203,7 +208,7 @@ export default {
           filterData: { $set: {} },
           filterStatement: { $set: '' },
           joinStatement: { $set: '' },
-          queryParams: { $set: {} },
+          queryParams: { $set: defaultQueryParams },
           polling: { $set: false },
           page: { $set: 0 },
           orderProperty: { $set: '' },

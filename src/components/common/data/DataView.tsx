@@ -47,7 +47,7 @@ type DataViewProps = {
   selectedTable: string;
   sidebarWidth: number;
   tableNames: Array<string>;
-  totalRows?: number;
+  totalRows: number;
 };
 
 function DataView({
@@ -118,7 +118,7 @@ function DataView({
               <div className={classes.scrollTable}>
                 <LightTable
                   columns={columns}
-                  filteredCount={totalRows ?? 0}
+                  filteredCount={totalRows}
                   loading={polling}
                   noRowsMessage="No rows exist in the table" // TODO - handle case where filtered
                   pageBQQuery={pageBQQuery}
@@ -126,7 +126,7 @@ function DataView({
                   rows={rows}
                   searchString={filterStatement}
                   summary={false}
-                  totalCount={totalRows ?? 0} // TODO - instead should display total rows regardless of filtering
+                  totalCount={totalRows} // TODO - instead should display total rows regardless of filtering
                 />
               </div>
             </Grid>
