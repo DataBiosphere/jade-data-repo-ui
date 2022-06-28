@@ -42,12 +42,12 @@ type DataViewProps = {
   resourceLoaded: boolean;
   resourceName: string;
   resourceType: string;
-  resultsCount: number;
   rows: Array<TableRowType>;
   selected: boolean;
   selectedTable: string;
   sidebarWidth: number;
   tableNames: Array<string>;
+  totalRows?: number;
 };
 
 function DataView({
@@ -64,12 +64,12 @@ function DataView({
   resourceLoaded,
   resourceName,
   resourceType,
-  resultsCount,
   rows,
   selected,
   selectedTable,
   sidebarWidth,
   tableNames,
+  totalRows,
 }: DataViewProps) {
   const rowKey = (row: TableRowType): string => {
     const drId = row.datarepo_row_id;
@@ -118,7 +118,7 @@ function DataView({
               <div className={classes.scrollTable}>
                 <LightTable
                   columns={columns}
-                  filteredCount={resultsCount}
+                  filteredCount={totalRows ?? 0}
                   loading={polling}
                   noRowsMessage="No rows exist in the table" // TODO - handle case where filtered
                   pageBQQuery={pageBQQuery}
@@ -126,7 +126,7 @@ function DataView({
                   rows={rows}
                   searchString={filterStatement}
                   summary={false}
-                  totalCount={resultsCount} //TODO - this is the filtered count
+                  totalCount={totalRows ?? 0} // TODO - instead should display total rows regardless of filtering
                 />
               </div>
             </Grid>
@@ -158,9 +158,9 @@ function mapStateToProps(state: TdrState) {
     orderDirection: state.query.orderDirection,
     page: state.query.page,
     polling: state.query.polling,
-    resultsCount: state.query.resultsCount,
     rows: state.query.rows,
     rowsPerPage: state.query.rowsPerPage,
+    totalRows: state.query.queryParams.totalRows,
   };
 }
 
