@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import { ClassNameMap, withStyles } from '@mui/styles';
-import { Button, Grid, Typography } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 import { CustomTheme } from '@mui/material/styles';
 import { connect } from 'react-redux';
 
@@ -22,9 +22,17 @@ const styles = (theme: CustomTheme) => ({
     padding: theme.spacing(4),
   },
   scrollTable: {
-    overflow: 'auto',
     height: '100%',
     paddingTop: theme.spacing(1),
+    maxWidth: '97%',
+  },
+  controls: {
+    display: 'flex',
+    justifyContent: 'flex-start',
+  },
+  dropdown: {
+    minWidth: '400px',
+    paddingRight: '1em',
   },
 });
 
@@ -95,42 +103,35 @@ function DataView({
           <Typography variant="h3" className={classes.pageTitle}>
             {resourceName}
           </Typography>
-          <Grid container spacing={1}>
-            <Grid item xs={3}>
+          <div className={classes.controls}>
+            <div className={classes.dropdown}>
               <DataViewDropdown options={tableNames} onSelectedItem={handleChangeTable} />
-            </Grid>
-            <Grid item xs={3}>
-              <Link to={`/${resourceType}s/${resourceId}`}>
-                <Button
-                  className={classes.viewDatasetButton}
-                  color="primary"
-                  variant="outlined"
-                  disableElevation
-                  size="large"
-                >
-                  Back to Overview
-                </Button>
-              </Link>
-            </Grid>
-          </Grid>
-          <Grid container spacing={0}>
-            <Grid item xs={11}>
-              <div className={classes.scrollTable}>
-                <LightTable
-                  columns={columns}
-                  filteredCount={totalRows}
-                  loading={polling}
-                  noRowsMessage="No rows exist in the table" // TODO - handle case where filtered
-                  pageBQQuery={pageBQQuery}
-                  rowKey={rowKey}
-                  rows={rows}
-                  searchString={filterStatement}
-                  summary={false}
-                  totalCount={totalRows} // TODO - instead should display total rows regardless of filtering
-                />
-              </div>
-            </Grid>
-          </Grid>
+            </div>
+            <Link to={`/${resourceType}s/${resourceId}`}>
+              <Button
+                className={classes.viewDatasetButton}
+                color="primary"
+                variant="outlined"
+                disableElevation
+                size="large"
+              >
+                Back to Overview
+              </Button>
+            </Link>
+          </div>
+          <div className={classes.scrollTable}>
+            <LightTable
+              columns={columns}
+              filteredCount={totalRows}
+              loading={polling}
+              noRowsMessage="No rows exist in the table" // TODO - handle case where filtered
+              pageBQQuery={pageBQQuery}
+              rowKey={rowKey}
+              rows={rows}
+              searchString={filterStatement}
+              totalCount={totalRows} // TODO - instead should display total rows regardless of filtering
+            />
+          </div>
           {panels.length > 0 && (
             <SidebarDrawer
               canLink={canLink}

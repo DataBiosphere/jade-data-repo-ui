@@ -22,7 +22,6 @@ class DatasetSnapshotsTable extends React.PureComponent {
     loading: PropTypes.bool.isRequired,
     snapshotCount: PropTypes.number,
     snapshots: PropTypes.array.isRequired,
-    summary: PropTypes.bool,
   };
 
   componentDidMount() {
@@ -36,7 +35,7 @@ class DatasetSnapshotsTable extends React.PureComponent {
   };
 
   render() {
-    const { classes, loading, snapshotCount, snapshots, summary } = this.props;
+    const { classes, loading, snapshotCount, snapshots } = this.props;
     const columns = [
       {
         label: 'Snapshot Name',
@@ -68,7 +67,6 @@ class DatasetSnapshotsTable extends React.PureComponent {
           filteredCount={snapshotCount}
           noRowsMessage="No snapshots have been created yet"
           rows={snapshots}
-          summary={summary}
           totalCount={snapshotCount}
           loading={loading}
         />

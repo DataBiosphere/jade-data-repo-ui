@@ -33,7 +33,6 @@ type LightTableHeadProps = {
   onRequestSort: (event: any, property: string) => void;
   orderDirection: OrderDirectionOptions;
   orderProperty: string;
-  summary: boolean;
 };
 
 function LightTableHead({
@@ -42,7 +41,6 @@ function LightTableHead({
   onRequestSort,
   orderDirection,
   orderProperty,
-  summary,
 }: LightTableHeadProps) {
   const createSortHandler = (property: string) => (event: any) => {
     onRequestSort(event, property);
@@ -63,7 +61,7 @@ function LightTableHead({
               sortDirection={sortDir}
               data-cy={`columnHeader-${col.name}`}
             >
-              {summary || !col.allowSort ? (
+              {!col.allowSort ? (
                 col.label ?? col.name
               ) : (
                 <div>

@@ -66,8 +66,8 @@ const styles = (theme) => ({
   },
   titleAndSearch: {
     display: 'flex',
-    'margin-top': '2em',
-    'margin-bottom': '2em',
+    'margin-top': '1.25em',
+    'margin-bottom': '1.25em',
   },
 });
 

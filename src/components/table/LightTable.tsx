@@ -35,10 +35,9 @@ const styles = (theme: CustomTheme) => ({
     borderRadius: `${theme.shape.borderRadius}px ${theme.shape.borderRadius}px 0 0`,
     boxShadow: 'none',
     maxHeight: '100%',
-    overflow: 'auto',
   },
   tableWrapper: {
-    height: 'calc(100vh - 300px)',
+    maxHeight: 'calc(100vh - 325px)',
     overflow: 'auto',
   },
   nullValue: {
@@ -79,7 +78,6 @@ const styles = (theme: CustomTheme) => ({
   },
 });
 
-const ROW_HEIGHT = 50;
 const MAX_REPEATED_VALUES = 5;
 
 type LightTableProps = {
@@ -105,7 +103,6 @@ type LightTableProps = {
   rows: Array<TableRowType>;
   rowsPerPage: number;
   searchString: string;
-  summary: boolean;
   totalCount: number;
 };
 
@@ -126,15 +123,9 @@ function LightTable({
   rows,
   rowsPerPage,
   searchString,
-  summary,
   totalCount,
 }: LightTableProps) {
   const [seeMore, setSeeMore] = useState({ open: false, title: '', contents: [''] });
-  const [emptyRows, setEmptyRows] = useState(
-    rowsPerPage < filteredCount
-      ? rowsPerPage - Math.min(rowsPerPage, filteredCount - page * rowsPerPage)
-      : 0,
-  );
 
   const handleRequestSort = (_event: any, sort: string) => {
     let newOrder = 'desc';
@@ -235,14 +226,6 @@ function LightTable({
   };
 
   useEffect(() => {
-    setEmptyRows(
-      rowsPerPage < filteredCount
-        ? rowsPerPage - Math.min(rowsPerPage, filteredCount - page * rowsPerPage)
-        : 0,
-    );
-  }, [setEmptyRows, rowsPerPage, filteredCount, page]);
-
-  useEffect(() => {
     if (handleEnumeration) {
       handleEnumeration(
         rowsPerPage,
@@ -260,11 +243,7 @@ function LightTable({
         <Paper className={classes.root}>
           <div className={classes.tableWrapper}>
             <Table className={classes.table}>
-              <LightTableHead
-                columns={columns}
-                onRequestSort={handleRequestSort}
-                summary={summary}
-              />
+              <LightTableHead columns={columns} onRequestSort={handleRequestSort} />
               <TableBody data-cy="tableBody">
                 {rows && rows.length > 0 ? (
                   rows.map((row, index) => {
@@ -297,15 +276,10 @@ function LightTable({
                     <TableCell colSpan={columns.length}>{noRowsMessage}</TableCell>
                   </TableRow>
                 )}
-                {rows && emptyRows > 0 && rows.length < rowsPerPage && (
-                  <TableRow style={{ height: ROW_HEIGHT * emptyRows }}>
-                    <TableCell colSpan={columns.length} />
-                  </TableRow>
-                )}
               </TableBody>
             </Table>
           </div>
-          {!summary && rows && (
+          {rows && rows.length > 0 && (
             <TablePagination
               rowsPerPageOptions={TABLE_DEFAULT_ROWS_PER_PAGE_OPTIONS}
               component="div"

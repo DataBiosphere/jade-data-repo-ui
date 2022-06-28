@@ -22,7 +22,6 @@ class DatasetTable extends React.PureComponent {
     handleFilterDatasets: PropTypes.func,
     loading: PropTypes.bool.isRequired,
     searchString: PropTypes.string,
-    summary: PropTypes.bool,
   };
 
   render() {
@@ -33,7 +32,6 @@ class DatasetTable extends React.PureComponent {
       filteredDatasetsCount,
       handleFilterDatasets,
       loading,
-      summary,
       searchString,
     } = this.props;
     // TODO add back modified_date column
@@ -85,7 +83,6 @@ class DatasetTable extends React.PureComponent {
             : 'No datasets have been created yet'
         }
         rows={datasets}
-        summary={summary}
         totalCount={datasetsCount}
         filteredCount={filteredDatasetsCount}
         searchString={searchString}
