@@ -33,7 +33,7 @@ describe('test query builder', () => {
 
     it('does show array values', () => {
       // Click the header to make sure we don't sort or trigger an error
-      cy.get('[data-cy=columnheader-consequence_terms]').click();
+      cy.get('[data-cy=columnHeader-consequence_terms]').click();
 
       for (let i = 0; i < 100; i++) {
         cy.get(`[data-cy=cellValue-consequence_terms-${i}]`).should(

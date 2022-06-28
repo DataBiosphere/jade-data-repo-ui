@@ -89,6 +89,7 @@ type LightTableProps = {
   classes: ClassNameMap;
   columns: Array<TableColumnType>;
   dispatch: AppDispatch;
+  delay: boolean;
   filteredCount: number;
   handleEnumeration?: (
     rowsPerPage: number,
@@ -114,6 +115,7 @@ type LightTableProps = {
 function LightTable({
   classes,
   columns,
+  delay,
   dispatch,
   filteredCount,
   handleEnumeration,
@@ -266,7 +268,7 @@ function LightTable({
                 onRequestSort={handleRequestSort}
                 summary={summary}
               />
-              <TableBody>
+              <TableBody data-cy="tableBody">
                 {rows && rows.length > 0 ? (
                   rows.map((row, index) => {
                     const darkRow = index % 2 !== 0;
@@ -285,6 +287,7 @@ function LightTable({
                             className={classes.cell}
                             key={`${col.name}-${rowKeyVal}`}
                             style={{ wordBreak: 'break-word' }}
+                            data-cy={`cellValue-${col.name}-${index}`}
                           >
                             {handleValues(row, col)}
                           </TableCell>
@@ -356,13 +359,19 @@ function LightTable({
           </Dialog>
         </Paper>
       )}
-      {loading && <LoadingSpinner delay={false} delayMessage="" />}
+      {loading && (
+        <LoadingSpinner
+          delay={delay}
+          delayMessage="For large datasets, it can take a few minutes to fetch results. Thank you for your patience."
+        />
+      )}
     </div>
   );
 }
 
 function mapStateToProps(state: TdrState) {
   return {
+    delay: state.query.delay,
     orderDirection: state.query.orderDirection,
     orderProperty: state.query.orderProperty,
     page: state.query.page,

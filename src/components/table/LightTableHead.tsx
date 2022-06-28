@@ -61,6 +61,7 @@ function LightTableHead({
               align="left"
               padding="normal"
               sortDirection={sortDir}
+              data-cy={`columnHeader-${col.name}`}
             >
               {summary || !col.allowSort ? (
                 col.label ?? col.name
