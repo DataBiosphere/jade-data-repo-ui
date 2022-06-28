@@ -4,6 +4,7 @@ import { createStyles, WithStyles, withStyles } from '@mui/styles';
 import moment from 'moment';
 import { CustomTheme } from '@mui/material/styles';
 import GoogleSheetExport from 'components/common/overview/GoogleSheetExport';
+import { Link } from 'react-router-dom';
 import { renderStorageResources } from '../../../libs/render-utils';
 import SnapshotAccess from '../SnapshotAccess';
 import TabPanel from '../../common/TabPanel';
@@ -37,6 +38,12 @@ const styles = (theme: CustomTheme) =>
     },
     tabPanel: {
       padding: '1em 1em 1em 28px',
+    },
+    datasetText: {
+      ...theme.mixins.ellipsis,
+    },
+    jadeLink: {
+      ...theme.mixins.jadeLink,
     },
   });
 
@@ -98,7 +105,13 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
           </Grid>
           <Grid item xs={4}>
             <Typography variant="h6">Root dataset:</Typography>
-            <Typography data-cy="snapshot-source-dataset">{sourceDataset.name}</Typography>
+            <Typography data-cy="snapshot-source-dataset" className={classes.datasetText}>
+              <Link to={`/datasets/${sourceDataset.id}`}>
+                <span className={classes.jadeLink} title={sourceDataset.name}>
+                  {sourceDataset.name}
+                </span>
+              </Link>
+            </Typography>
           </Grid>
           <Grid item xs={4}>
             <Typography variant="h6">Date Created:</Typography>

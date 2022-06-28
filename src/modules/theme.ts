@@ -190,6 +190,9 @@ const theme = createTheme({
     },
     MuiButton: {
       styleOverrides: {
+        root: {
+          borderRadius: '2px',
+        },
         containedPrimary: {
           backgroundColor: LINK,
           color: WHITE,
@@ -253,6 +256,12 @@ const theme = createTheme({
     },
     pageTitle: {
       marginBottom: '1rem',
+    },
+    ellipsis: {
+      wordWrap: 'break-word',
+      whiteSpace: 'nowrap',
+      textOverflow: 'ellipsis',
+      overflow: 'hidden',
     },
   },
   constants: {

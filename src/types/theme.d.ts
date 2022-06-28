@@ -70,6 +70,7 @@ declare module '@mui/material/styles' {
     containerWidth: CSSProperties;
     pageRoot: CSSProperties;
     pageTitle: CSSProperties;
+    ellipsis: CSSProperties;
   }
 
   interface JadeLink extends CSSProperties {
@@ -81,6 +82,7 @@ declare module '@mui/material/styles' {
     containerWidth?: CSSProperties;
     pageRoot?: CSSProperties;
     pageTitle?: CSSProperties;
+    ellipsis?: CSSProperties;
   }
 
   interface CustomConstants {

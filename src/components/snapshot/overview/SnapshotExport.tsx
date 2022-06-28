@@ -27,7 +27,6 @@ const styles = (theme: CustomTheme) =>
     exportButton: {
       marginTop: '0.5rem',
       height: '36px',
-      width: '100%',
     },
     centered: {
       textAlign: 'center',

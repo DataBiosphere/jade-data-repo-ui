@@ -24,7 +24,6 @@ const styles = (theme: CustomTheme) =>
     exportButton: {
       marginTop: '0.5rem',
       height: '36px',
-      width: '100%',
     },
     buttonText: {
       color: theme.palette.common.white,
