@@ -11,7 +11,7 @@ import DataViewDropdown from './DataViewDropdown';
 import SnapshotPopup from '../../snapshot/SnapshotPopup';
 import AppBreadcrumbs from '../../AppBreadcrumbs/AppBreadcrumbs';
 import { BreadcrumbType } from '../../../constants';
-import { OrderDirectionOptions, TableColumnType, TableRowType } from '../../../reducers/query';
+import { TableColumnType, TableRowType } from '../../../reducers/query';
 import { TdrState } from '../../../reducers';
 
 const styles = (theme: CustomTheme) => ({
@@ -71,27 +71,6 @@ function DataView({
   sidebarWidth,
   tableNames,
 }: DataViewProps) {
-  const handleFilter = (
-    rowsPerPage: number,
-    rowsForCurrentPage: number,
-    orderProperty: string,
-    orderDirection: OrderDirectionOptions,
-    searchString: string,
-  ) => {
-    console.log(
-      'TODO - handle filter' +
-        rowsPerPage +
-        ', ' +
-        rowsForCurrentPage +
-        ', ' +
-        orderProperty +
-        ', ' +
-        orderDirection +
-        ', ' +
-        searchString,
-    );
-  };
-
   const rowKey = (row: TableRowType): string => {
     const drId = row.datarepo_row_id;
     return drId ?? row.name;
@@ -140,7 +119,6 @@ function DataView({
                 <LightTable
                   columns={columns}
                   filteredCount={resultsCount}
-                  handleEnumeration={handleFilter}
                   loading={polling}
                   noRowsMessage="No rows exist in the table" // TODO - handle case where filtered
                   pageBQQuery={pageBQQuery}

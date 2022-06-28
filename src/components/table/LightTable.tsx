@@ -90,7 +90,7 @@ type LightTableProps = {
   columns: Array<TableColumnType>;
   dispatch: AppDispatch;
   filteredCount: number;
-  handleEnumeration: (
+  handleEnumeration?: (
     rowsPerPage: number,
     rowsForCurrentPage: number,
     orderProperty: string,
@@ -244,7 +244,15 @@ function LightTable({
   }, [setEmptyRows, rowsPerPage, filteredCount, page]);
 
   useEffect(() => {
-    handleEnumeration(rowsPerPage, page * rowsPerPage, orderProperty, orderDirection, searchString);
+    if (handleEnumeration) {
+      handleEnumeration(
+        rowsPerPage,
+        page * rowsPerPage,
+        orderProperty,
+        orderDirection,
+        searchString,
+      );
+    }
   }, [searchString, page, rowsPerPage, handleEnumeration, orderProperty, orderDirection]);
 
   return (
