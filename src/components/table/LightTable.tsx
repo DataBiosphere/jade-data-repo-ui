@@ -35,9 +35,8 @@ const styles = (theme: CustomTheme) => ({
     border: `1px solid ${theme.palette.lightTable.borderColor}`,
     borderRadius: `${theme.shape.borderRadius}px ${theme.shape.borderRadius}px 0 0`,
     boxShadow: 'none',
-    // overflowX: 'auto',
-    width: '100%',
-    // overflowWrap: 'break-word',
+    maxHeight: '100%',
+    overflow: 'auto',
   },
   tableWrapper: {
     height: 'calc(100vh - 300px)',
@@ -252,46 +251,52 @@ function LightTable({
     <div>
       {!loading && (
         <Paper className={classes.root}>
-          <Table className={classes.table}>
-            <LightTableHead columns={columns} onRequestSort={handleRequestSort} summary={summary} />
-            <TableBody>
-              {rows && rows.length > 0 ? (
-                rows.map((row, index) => {
-                  const darkRow = index % 2 !== 0;
-                  const rowKeyVal = rowKey ? rowKey(row) : row.name;
-                  return (
-                    <TableRow
-                      key={rowKeyVal}
-                      className={clsx({
-                        [classes.row]: true,
-                        [classes.darkRow]: darkRow,
-                        [classes.lightRow]: !darkRow,
-                      })}
-                    >
-                      {columns.map((col) => (
-                        <TableCell
-                          className={classes.cell}
-                          key={`${col.name}-${rowKeyVal}`}
-                          style={{ wordBreak: 'break-word' }}
-                        >
-                          {handleValues(row, col)}
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  );
-                })
-              ) : (
-                <TableRow className={classes.row}>
-                  <TableCell colSpan={columns.length}>{noRowsMessage}</TableCell>
-                </TableRow>
-              )}
-              {rows && emptyRows > 0 && rows.length < rowsPerPage && (
-                <TableRow style={{ height: ROW_HEIGHT * emptyRows }}>
-                  <TableCell colSpan={columns.length} />
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
+          <div className={classes.tableWrapper}>
+            <Table className={classes.table}>
+              <LightTableHead
+                columns={columns}
+                onRequestSort={handleRequestSort}
+                summary={summary}
+              />
+              <TableBody>
+                {rows && rows.length > 0 ? (
+                  rows.map((row, index) => {
+                    const darkRow = index % 2 !== 0;
+                    const rowKeyVal = rowKey ? rowKey(row) : row.name;
+                    return (
+                      <TableRow
+                        key={rowKeyVal}
+                        className={clsx({
+                          [classes.row]: true,
+                          [classes.darkRow]: darkRow,
+                          [classes.lightRow]: !darkRow,
+                        })}
+                      >
+                        {columns.map((col) => (
+                          <TableCell
+                            className={classes.cell}
+                            key={`${col.name}-${rowKeyVal}`}
+                            style={{ wordBreak: 'break-word' }}
+                          >
+                            {handleValues(row, col)}
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    );
+                  })
+                ) : (
+                  <TableRow className={classes.row}>
+                    <TableCell colSpan={columns.length}>{noRowsMessage}</TableCell>
+                  </TableRow>
+                )}
+                {rows && emptyRows > 0 && rows.length < rowsPerPage && (
+                  <TableRow style={{ height: ROW_HEIGHT * emptyRows }}>
+                    <TableCell colSpan={columns.length} />
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </div>
           {!summary && rows && (
             <TablePagination
               rowsPerPageOptions={TABLE_DEFAULT_ROWS_PER_PAGE_OPTIONS}

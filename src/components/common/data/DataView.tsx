@@ -22,8 +22,9 @@ const styles = (theme: CustomTheme) => ({
     padding: theme.spacing(4),
   },
   scrollTable: {
-    // overflowY: 'auto',
+    overflow: 'auto',
     height: '100%',
+    paddingTop: theme.spacing(1),
   },
 });
 
