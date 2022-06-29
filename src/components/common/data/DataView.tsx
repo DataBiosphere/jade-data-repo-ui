@@ -24,6 +24,11 @@ const styles = (theme: CustomTheme) => ({
   scrollTable: {
     height: '100%',
     paddingTop: theme.spacing(1),
+    maxWidth: '100%',
+  },
+  scrollTableWithPadding: {
+    height: '100%',
+    paddingTop: theme.spacing(1),
     maxWidth: '97%',
   },
   controls: {
@@ -84,6 +89,9 @@ function DataView({
     return drId ?? row.name;
   };
 
+  // Can be removed after DR-2483
+  const showPanels = panels.length > 0;
+
   return (
     //eslint-disable-next-line react/jsx-no-useless-fragment
     <Fragment>
@@ -119,7 +127,7 @@ function DataView({
               </Button>
             </Link>
           </div>
-          <div className={classes.scrollTable}>
+          <div className={showPanels ? classes.scrollTableWithPadding : classes.scrollTable}>
             <LightTable
               columns={columns}
               filteredCount={totalRows}
@@ -132,7 +140,7 @@ function DataView({
               totalCount={totalRows} // TODO - instead should display total rows regardless of filtering
             />
           </div>
-          {panels.length > 0 && (
+          {showPanels && (
             <SidebarDrawer
               canLink={canLink}
               panels={panels}
