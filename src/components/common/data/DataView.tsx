@@ -91,6 +91,8 @@ function DataView({
 
   // Can be removed after DR-2483
   const showPanels = panels.length > 0;
+  // Only used for Direct BQ Query
+  const isDatasetFiltered = filterStatement.length > 0;
 
   return (
     //eslint-disable-next-line react/jsx-no-useless-fragment
@@ -132,7 +134,9 @@ function DataView({
               columns={columns}
               filteredCount={totalRows}
               loading={polling}
-              noRowsMessage="No rows exist in the table" // TODO - handle case where filtered
+              noRowsMessage={
+                isDatasetFiltered ? 'No rows match your filter' : 'No rows exist in the table'
+              }
               pageBQQuery={pageBQQuery}
               rowKey={rowKey}
               rows={rows}
