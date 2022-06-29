@@ -141,7 +141,7 @@ function DataView({
               rowKey={rowKey}
               rows={rows}
               searchString={filterStatement}
-              totalCount={totalRows} // TODO - instead should display total rows regardless of filtering
+              totalCount={totalRows} // TODO - DR-2663 - instead should display total rows regardless of filtering
             />
           </div>
           {showPanels && (
