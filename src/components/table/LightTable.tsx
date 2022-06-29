@@ -251,6 +251,7 @@ function LightTable({
                     const rowKeyVal = rowKey ? rowKey(row) : row.name;
                     return (
                       <TableRow
+                        hover
                         key={rowKeyVal}
                         className={clsx({
                           [classes.row]: true,

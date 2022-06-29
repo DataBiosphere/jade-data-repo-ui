@@ -65,19 +65,15 @@ function LightTableHead({
                 col.label ?? col.name
               ) : (
                 <div>
-                  {col.label ?? col.name}
-                  <TerraTooltip
-                    title="Sort"
-                    placement={col.numeric ? 'bottom-end' : 'bottom-start'}
-                    enterDelay={300}
-                  >
+                  <TerraTooltip title="Sort" placement="bottom-end" enterDelay={300}>
                     <TableSortLabel
                       active={orderProperty === col.name}
                       direction={orderDirection}
                       onClick={createSortHandler(col.name)}
                       IconComponent={Sort}
-                      style={{ float: 'right' }}
-                    />
+                    >
+                      {col.label ?? col.name}
+                    </TableSortLabel>
                   </TerraTooltip>
                 </div>
               )}
