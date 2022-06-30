@@ -77,7 +77,6 @@ export class ServerErrorView extends React.PureComponent {
       },
     ];
 
-    const summary = 'Errors';
     return (
       <div className={classes.container}>
         <div className={classes.mainContent}>
@@ -90,7 +89,6 @@ export class ServerErrorView extends React.PureComponent {
               <LightTable
                 columns={columns}
                 rows={systemRows}
-                summary={summary}
                 totalCount={systemsCount}
                 loading={false}
               />

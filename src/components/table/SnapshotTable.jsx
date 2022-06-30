@@ -22,7 +22,6 @@ class SnapshotTable extends React.PureComponent {
     searchString: PropTypes.string,
     snapshotCount: PropTypes.number,
     snapshots: PropTypes.array.isRequired,
-    summary: PropTypes.bool,
   };
 
   render() {
@@ -33,7 +32,6 @@ class SnapshotTable extends React.PureComponent {
       filteredSnapshotCount,
       loading,
       snapshots,
-      summary,
       searchString,
     } = this.props;
     // TODO add back modified_date column
@@ -77,9 +75,12 @@ class SnapshotTable extends React.PureComponent {
         <LightTable
           columns={columns}
           handleEnumeration={handleFilterSnapshots}
-          itemType="snapshots"
+          noRowsMessage={
+            filteredSnapshotCount < snapshotCount
+              ? 'No snapshots match your filter'
+              : 'No snapshots have been created yet'
+          }
           rows={snapshots}
-          summary={summary}
           totalCount={snapshotCount}
           filteredCount={filteredSnapshotCount}
           searchString={searchString}
