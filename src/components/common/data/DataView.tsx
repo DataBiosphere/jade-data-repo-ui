@@ -48,6 +48,7 @@ type DataViewProps = {
   filterStatement: string;
   handleChangeTable: () => void;
   handleDrawerWidth: () => void;
+  handleEnumeration: () => void;
   pageBQQuery: () => void;
   panels: Array<object>;
   polling: boolean;
@@ -70,6 +71,7 @@ function DataView({
   filterStatement,
   handleChangeTable,
   handleDrawerWidth,
+  handleEnumeration,
   pageBQQuery,
   panels,
   polling,
@@ -133,6 +135,7 @@ function DataView({
             <LightTable
               columns={columns}
               filteredCount={totalRows}
+              handleEnumeration={handleEnumeration}
               loading={polling}
               noRowsMessage={
                 isDatasetFiltered ? 'No rows match your filter' : 'No rows exist in the table'
@@ -141,6 +144,7 @@ function DataView({
               rowKey={rowKey}
               rows={rows}
               searchString={filterStatement}
+              tableName={selectedTable}
               totalCount={totalRows} // TODO - DR-2663 - instead should display total rows regardless of filtering
             />
           </div>

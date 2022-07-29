@@ -107,7 +107,7 @@ export default {
           name: column.name,
           dataType: column.datatype,
           arrayOf: column.array_of,
-          allowSort: false,
+          allowSort: !column.array_of,
         }));
         const queryParams = {
           totalRows: parseInt(action.payload.totalRowCount, 10),
@@ -151,11 +151,13 @@ export default {
         immutable(state, {
           delay: { $set: true },
         }),
-      [ActionTypes.PREVIEW_DATA]: (state) =>
+      [ActionTypes.PREVIEW_DATA]: (state, action: any) =>
         immutable(state, {
           error: { $set: false },
           queryParams: { $set: defaultQueryParams },
           polling: { $set: true },
+          orderProperty: { $set: action.payload.orderProperty },
+          orderDirection: { $set: action.payload.orderDirection },
         }),
       [ActionTypes.PREVIEW_DATA_FAILURE]: (state, action: any) =>
         immutable(state, {

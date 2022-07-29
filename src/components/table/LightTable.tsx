@@ -103,6 +103,7 @@ type LightTableProps = {
   rows: Array<TableRowType>;
   rowsPerPage: number;
   searchString: string;
+  tableName?: string;
   totalCount: number;
 };
 
@@ -123,6 +124,7 @@ function LightTable({
   rows,
   rowsPerPage,
   searchString,
+  tableName,
   totalCount,
 }: LightTableProps) {
   const [seeMore, setSeeMore] = useState({ open: false, title: '', contents: [''] });
@@ -225,6 +227,7 @@ function LightTable({
     return value;
   };
 
+  // Not pulling including handleEnumeration in effect list since we don't want a change in the function to trigger a fetch
   useEffect(() => {
     if (handleEnumeration) {
       handleEnumeration(
@@ -235,7 +238,8 @@ function LightTable({
         searchString,
       );
     }
-  }, [searchString, page, rowsPerPage, handleEnumeration, orderProperty, orderDirection]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchString, page, rowsPerPage, orderProperty, orderDirection, tableName]);
 
   return (
     <div>
