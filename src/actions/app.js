@@ -177,7 +177,15 @@ export const { runQuery } = createActions({
 });
 
 export const { previewData } = createActions({
-  [ActionTypes.PREVIEW_DATA]: (resourceType, resourceId, table, columns, totalRowCount, orderDirection, orderProperty) => ({
+  [ActionTypes.PREVIEW_DATA]: (
+    resourceType,
+    resourceId,
+    table,
+    columns,
+    totalRowCount,
+    orderDirection,
+    orderProperty,
+  ) => ({
     resourceType,
     resourceId,
     table,
