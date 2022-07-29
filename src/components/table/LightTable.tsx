@@ -174,7 +174,7 @@ function LightTable({
 
   const handleRepeatedValues = (values: Array<string>, columnName: string) => {
     const allValues = [];
-    const cleanValues = values.map((v) => (_.isNull(v) ? handleNullValue() : v));
+    const cleanValues = values.map((v) => (_.isNil(v) ? handleNullValue() : `${v}`));
     const start = <span key="start">[</span>;
     const end = <span key="end">]</span>;
     for (let i = 0; i < cleanValues.length; i++) {
@@ -219,12 +219,12 @@ function LightTable({
         return handleRepeatedValues(value, column.name);
       }
       const singleValue = value[0];
-      return _.isNull(singleValue) ? handleNullValue() : singleValue;
+      return _.isNil(singleValue) ? handleNullValue() : `${singleValue}`;
     }
-    if (_.isNull(value)) {
+    if (_.isNil(value)) {
       return handleNullValue();
     }
-    return value;
+    return `${value}`;
   };
 
   // Not pulling including handleEnumeration in effect list since we don't want a change in the function to trigger a fetch
