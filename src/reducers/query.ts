@@ -191,6 +191,7 @@ export default {
       },
       [ActionTypes.APPLY_SORT]: (state, action: any) =>
         immutable(state, {
+          page: { $set: 0 },
           orderProperty: { $set: action.payload.property },
           orderDirection: { $set: action.payload.direction },
         }),
