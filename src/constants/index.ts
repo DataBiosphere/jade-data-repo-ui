@@ -185,3 +185,4 @@ export enum ResourceType {
 /** Shared Defaults */
 export const TABLE_DEFAULT_ROWS_PER_PAGE = 100;
 export const TABLE_DEFAULT_ROWS_PER_PAGE_OPTIONS = [25, 100, 250];
+export const TABLE_DEFAULT_SORT_ORDER = 'asc';

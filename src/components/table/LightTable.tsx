@@ -27,7 +27,7 @@ import LoadingSpinner from '../common/LoadingSpinner';
 import { AppDispatch } from '../../store';
 import { TableColumnType, TableRowType, OrderDirectionOptions } from '../../reducers/query';
 import { TdrState } from '../../reducers';
-import { TABLE_DEFAULT_ROWS_PER_PAGE_OPTIONS } from '../../constants';
+import { TABLE_DEFAULT_ROWS_PER_PAGE_OPTIONS, TABLE_DEFAULT_SORT_ORDER } from '../../constants';
 
 const styles = (theme: CustomTheme) => ({
   root: {
@@ -130,9 +130,9 @@ function LightTable({
   const [seeMore, setSeeMore] = useState({ open: false, title: '', contents: [''] });
 
   const handleRequestSort = (_event: any, sort: string) => {
-    let newOrder = 'desc';
-    if (orderProperty === sort && orderDirection === 'desc') {
-      newOrder = 'asc';
+    let newOrder = TABLE_DEFAULT_SORT_ORDER;
+    if (orderProperty === sort && orderDirection === 'asc') {
+      newOrder = 'desc';
     }
     dispatch(applySort(sort, newOrder));
   };
