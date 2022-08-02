@@ -540,7 +540,10 @@ export function* previewData({ payload }: any): any {
   const queryState = yield select(getQuery);
   const offset = queryState.page * queryState.rowsPerPage;
   const limit = queryState.rowsPerPage;
-  const query = `/api/repository/v1/${payload.resourceType}s/${payload.resourceId}/data/${payload.table}?offset=${offset}&limit=${limit}`;
+  const sort = queryState.orderProperty === undefined ? '' : `&sort=${queryState.orderProperty}`;
+  const sortDirection =
+    queryState.orderDirection === undefined ? '' : `&direction=${queryState.orderDirection}`;
+  const query = `/api/repository/v1/${payload.resourceType}s/${payload.resourceId}/data/${payload.table}?offset=${offset}&limit=${limit}${sort}${sortDirection}`;
   try {
     const response = yield call(authGet, query);
     yield put({

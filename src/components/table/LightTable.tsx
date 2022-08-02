@@ -27,7 +27,7 @@ import LoadingSpinner from '../common/LoadingSpinner';
 import { AppDispatch } from '../../store';
 import { TableColumnType, TableRowType, OrderDirectionOptions } from '../../reducers/query';
 import { TdrState } from '../../reducers';
-import { TABLE_DEFAULT_ROWS_PER_PAGE_OPTIONS } from '../../constants';
+import { TABLE_DEFAULT_ROWS_PER_PAGE_OPTIONS, TABLE_DEFAULT_SORT_ORDER } from '../../constants';
 
 const styles = (theme: CustomTheme) => ({
   root: {
@@ -103,6 +103,7 @@ type LightTableProps = {
   rows: Array<TableRowType>;
   rowsPerPage: number;
   searchString: string;
+  tableName?: string;
   totalCount: number;
 };
 
@@ -123,14 +124,15 @@ function LightTable({
   rows,
   rowsPerPage,
   searchString,
+  tableName,
   totalCount,
 }: LightTableProps) {
   const [seeMore, setSeeMore] = useState({ open: false, title: '', contents: [''] });
 
   const handleRequestSort = (_event: any, sort: string) => {
-    let newOrder = 'desc';
-    if (orderProperty === sort && orderDirection === 'desc') {
-      newOrder = 'asc';
+    let newOrder = TABLE_DEFAULT_SORT_ORDER;
+    if (orderProperty === sort && orderDirection === 'asc') {
+      newOrder = 'desc';
     }
     dispatch(applySort(sort, newOrder));
   };
@@ -172,7 +174,7 @@ function LightTable({
 
   const handleRepeatedValues = (values: Array<string>, columnName: string) => {
     const allValues = [];
-    const cleanValues = values.map((v) => (_.isNull(v) ? handleNullValue() : v));
+    const cleanValues = values.map((v) => (_.isNil(v) ? handleNullValue() : `${v}`));
     const start = <span key="start">[</span>;
     const end = <span key="end">]</span>;
     for (let i = 0; i < cleanValues.length; i++) {
@@ -217,14 +219,15 @@ function LightTable({
         return handleRepeatedValues(value, column.name);
       }
       const singleValue = value[0];
-      return _.isNull(singleValue) ? handleNullValue() : singleValue;
+      return _.isNil(singleValue) ? handleNullValue() : `${singleValue}`;
     }
-    if (_.isNull(value)) {
+    if (_.isNil(value)) {
       return handleNullValue();
     }
-    return value;
+    return `${value}`;
   };
 
+  // Not pulling including handleEnumeration in effect list since we don't want a change in the function to trigger a fetch
   useEffect(() => {
     if (handleEnumeration) {
       handleEnumeration(
@@ -235,7 +238,8 @@ function LightTable({
         searchString,
       );
     }
-  }, [searchString, page, rowsPerPage, handleEnumeration, orderProperty, orderDirection]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchString, page, rowsPerPage, orderProperty, orderDirection, tableName]);
 
   return (
     <div>

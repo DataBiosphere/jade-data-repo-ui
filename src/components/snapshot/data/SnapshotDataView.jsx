@@ -7,7 +7,7 @@ import { resetQuery, previewData, getSnapshotById } from 'actions/index';
 import DataView from 'components/common/data/DataView';
 import { ResourceType, SnapshotIncludeOptions } from '../../../constants';
 
-function SnapshotDataView({ dispatch, match, page, queryParams, rowsPerPage, snapshot }) {
+function SnapshotDataView({ dispatch, match, page, polling, queryParams, rowsPerPage, snapshot }) {
   const [selected, setSelected] = useState('');
   const [selectedTable, setSelectedTable] = useState(null);
   const [sidebarWidth, setSidebarWidth] = useState(0);
@@ -57,30 +57,6 @@ function SnapshotDataView({ dispatch, match, page, queryParams, rowsPerPage, sna
     }
   }, [snapshot, match]);
 
-  useEffect(() => {
-    const snapshotId = match.params.uuid;
-    if (snapshotLoaded && snapshotId === snapshot.id) {
-      dispatch(
-        previewData(
-          ResourceType.SNAPSHOT,
-          snapshot.id,
-          selected,
-          selectedTable.columns,
-          selectedTable.rowCount,
-        ),
-      );
-    }
-  }, [
-    snapshotLoaded,
-    snapshot.id,
-    match.params.uuid,
-    selected,
-    selectedTable,
-    page,
-    rowsPerPage,
-    dispatch,
-  ]);
-
   // TODO - this doesn't do anything until we add panels
   const handleDrawerWidth = (width) => {
     setSidebarWidth(width);
@@ -90,6 +66,23 @@ function SnapshotDataView({ dispatch, match, page, queryParams, rowsPerPage, sna
     dispatch(resetQuery());
     setSelected(value);
     setSelectedTable(snapshot.tables.find((t) => t.name === value));
+  };
+
+  const handleEnumeration = (limit, offset, sort, sortDirection, searchString) => {
+    const snapshotId = match.params.uuid;
+    if (snapshotLoaded && snapshotId === snapshot.id && !polling) {
+      dispatch(
+        previewData(
+          ResourceType.SNAPSHOT,
+          snapshot.id,
+          selected,
+          selectedTable.columns,
+          selectedTable.rowCount,
+          sortDirection,
+          sort,
+        ),
+      );
+    }
   };
 
   if (!snapshotLoaded) {
@@ -104,6 +97,7 @@ function SnapshotDataView({ dispatch, match, page, queryParams, rowsPerPage, sna
       resourceType={ResourceType.SNAPSHOT}
       tableNames={tableNames}
       handleChangeTable={handleChangeTable}
+      handleEnumeration={handleEnumeration}
       queryParams={queryParams}
       selected={selected}
       selectedTable={selectedTable}
@@ -119,6 +113,7 @@ SnapshotDataView.propTypes = {
   dispatch: PropTypes.func.isRequired,
   match: PropTypes.object,
   page: PropTypes.number,
+  polling: PropTypes.bool,
   queryParams: PropTypes.object,
   rowsPerPage: PropTypes.number,
   snapshot: PropTypes.object,
@@ -127,6 +122,7 @@ SnapshotDataView.propTypes = {
 function mapStateToProps(state) {
   return {
     page: state.query.page,
+    polling: state.query.polling,
     profile: state.profiles.profile,
     queryParams: state.query.queryParams,
     rowsPerPage: state.query.rowsPerPage,

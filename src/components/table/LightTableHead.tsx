@@ -9,6 +9,7 @@ import { ClassNameMap, withStyles } from '@mui/styles';
 import TerraTooltip from '../common/TerraTooltip';
 import { TableColumnType, OrderDirectionOptions } from '../../reducers/query';
 import { TdrState } from '../../reducers';
+import { TABLE_DEFAULT_SORT_ORDER } from '../../constants';
 
 const styles = (theme: CustomTheme) => ({
   head: {
@@ -68,7 +69,7 @@ function LightTableHead({
                   <TerraTooltip title="Sort" placement="bottom-end" enterDelay={300}>
                     <TableSortLabel
                       active={orderProperty === col.name}
-                      direction={orderDirection}
+                      direction={sortDir || TABLE_DEFAULT_SORT_ORDER}
                       onClick={createSortHandler(col.name)}
                       IconComponent={Sort}
                     >
