@@ -16,6 +16,7 @@ import { exportSnapshot, resetSnapshotExport } from '../../../actions';
 import { TdrState } from '../../../reducers';
 import { AppDispatch } from '../../../store';
 import { SnapshotExportResponseModel, SnapshotModel } from '../../../generated/tdr';
+import { SnapshotRoles } from '../../../constants';
 
 const styles = (theme: CustomTheme) =>
   createStyles({
@@ -47,6 +48,7 @@ type SnapshotExportProps = {
   isProcessing: boolean;
   of: SnapshotModel;
   terraUrl: string | undefined;
+  userRoles: Array<string>;
 };
 
 const formatExportUrl = (
@@ -59,7 +61,16 @@ const formatExportUrl = (
 
 function SnapshotExport(props: SnapshotExportProps) {
   const [exportGsPaths, setExportGsPaths] = React.useState(false);
-  const { classes, dispatch, exportResponse, isDone, isProcessing, of, terraUrl } = props;
+  const {
+    classes,
+    dispatch,
+    exportResponse,
+    isDone,
+    isProcessing,
+    of,
+    terraUrl,
+    userRoles,
+  } = props;
   const exportResponseManifest =
     exportResponse &&
     exportResponse.format &&
@@ -84,6 +95,12 @@ function SnapshotExport(props: SnapshotExportProps) {
     <Checkbox checked={exportGsPaths} disabled />
   );
 
+  const canExport = userRoles.includes(SnapshotRoles.STEWARD);
+  const tooltipMessage =
+    'Exporting a snapshot to a workspace means that all members of your workspace ' +
+    'will be able to have read only access to the tables and files in the snapshot';
+  const tooltipError = 'You must be a steward of this snapshot in order to export to Terra';
+
   return (
     <div>
       <Typography variant="h6" className={classes.section}>
@@ -105,16 +122,19 @@ function SnapshotExport(props: SnapshotExportProps) {
         </FormHelperText>
       </FormGroup>
       {!isProcessing && !isDone && (
-        <TerraTooltip title="Exporting a snapshot to a workspace means that all members of your workspace will be able to have read only access to the tables and files in the snapshot">
-          <Button
-            data-cy="export-snapshot-button"
-            onClick={exportToWorkspaceCopy}
-            className={classes.exportButton}
-            variant="outlined"
-            color="primary"
-          >
-            Export snapshot
-          </Button>
+        <TerraTooltip title={canExport ? tooltipMessage : tooltipError}>
+          <span>
+            <Button
+              data-cy="export-snapshot-button"
+              onClick={exportToWorkspaceCopy}
+              className={classes.exportButton}
+              variant="outlined"
+              color="primary"
+              disabled={!canExport}
+            >
+              Export snapshot
+            </Button>
+          </span>
         </TerraTooltip>
       )}
       {isProcessing && !isDone && (
@@ -155,6 +175,7 @@ function mapStateToProps(state: TdrState) {
     isDone: state.snapshots.exportIsDone,
     exportResponse: state.snapshots.exportResponse,
     terraUrl: state.configuration.configObject.terraUrl,
+    userRoles: state.snapshots.userRoles,
   };
 }
 
