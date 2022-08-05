@@ -31,6 +31,7 @@ describe('SnapshotExport', () => {
         exportIsProcessing: false,
         exportIsDone: false,
         exportResponse: {},
+        userRoles: ['steward'],
       },
       configuration,
     };
@@ -46,12 +47,36 @@ describe('SnapshotExport', () => {
     );
     cy.get('[data-cy="export-snapshot-button"]').should('contain.text', 'Export snapshot');
   });
+  it('Test has export button disabled', () => {
+    const initialState = {
+      snapshots: {
+        snapshot,
+        exportIsProcessing: false,
+        exportIsDone: false,
+        exportResponse: {},
+        userRoles: ['reader'],
+      },
+      configuration,
+    };
+    const store = mockStore(initialState);
+    mount(
+      <Router history={history}>
+        <Provider store={store}>
+          <ThemeProvider theme={globalTheme}>
+            <SnapshotExport of={snapshot} />
+          </ThemeProvider>
+        </Provider>
+      </Router>,
+    );
+    cy.get('[data-cy="export-snapshot-button"]').should('be.disabled');
+  });
   it('Test preparing snapshot', () => {
     const preparingSnapshotState = {
       snapshots: {
         exportIsProcessing: true,
         exportIsDone: false,
         exportResponse: {},
+        userRoles: ['steward'],
       },
       configuration,
     };
@@ -79,6 +104,7 @@ describe('SnapshotExport', () => {
             },
           },
         },
+        userRoles: ['steward'],
       },
       configuration,
     };
