@@ -132,10 +132,10 @@ export function* exportSnapshot({ payload }: any): any {
     yield put({
       type: ActionTypes.EXPORT_SNAPSHOT_START,
     });
-    const { snapshotId, exportGsPaths } = payload;
+    const { snapshotId, exportGsPaths, validatePrimaryKeyUniqueness } = payload;
     const response = yield call(
       authGet,
-      `/api/repository/v1/snapshots/${snapshotId}/export?exportGsPaths=${exportGsPaths}`,
+      `/api/repository/v1/snapshots/${snapshotId}/export?exportGsPaths=${exportGsPaths}&validatePrimaryKeyUniqueness=${validatePrimaryKeyUniqueness}`,
     );
     const jobId = response.data.id;
     yield put({

@@ -57,7 +57,9 @@ const formatExportUrl = (
   snapshot: SnapshotModel,
   manifest: string,
 ) =>
-  `${terraUrl}#import-data?url=${window}&snapshotId=${snapshot.id}&format=tdrexport&snapshotName=${snapshot.name}&tdrmanifest=${manifest}`;
+  `${terraUrl}#import-data?url=${window}&snapshotId=${snapshot.id}&format=tdrexport&snapshotName=${
+    snapshot.name
+  }&tdrmanifest=${encodeURIComponent(manifest)}`;
 
 function SnapshotExport(props: SnapshotExportProps) {
   const [exportGsPaths, setExportGsPaths] = React.useState(false);
@@ -82,7 +84,8 @@ function SnapshotExport(props: SnapshotExportProps) {
   };
 
   const exportToWorkspaceCopy = () => {
-    dispatch(exportSnapshot(of.id, exportGsPaths));
+    const validatePrimaryKeyUniqueness = of.cloudPlatform === 'gcp';
+    dispatch(exportSnapshot(of.id, exportGsPaths, validatePrimaryKeyUniqueness));
   };
 
   const resetExport = () => {
@@ -109,18 +112,20 @@ function SnapshotExport(props: SnapshotExportProps) {
       <Typography variant="body1" className={classes.section}>
         Export a copy of the snapshot metadata to an existing or new Terra workspace
       </Typography>
-      <FormGroup>
-        <FormControlLabel
-          data-cy="gs-paths-checkbox"
-          control={gsPathsCheckbox}
-          label="Convert DRS URLs to Google Cloud Storage Paths (gs://...)"
-        />
-        <FormHelperText>
-          <i>
-            <b>Note: </b> gs-paths can change over time
-          </i>
-        </FormHelperText>
-      </FormGroup>
+      {of.cloudPlatform === 'gcp' && (
+        <FormGroup>
+          <FormControlLabel
+            data-cy="gs-paths-checkbox"
+            control={gsPathsCheckbox}
+            label="Convert DRS URLs to Google Cloud Storage Paths (gs://...)"
+          />
+          <FormHelperText>
+            <i>
+              <b>Note: </b> gs-paths can change over time
+            </i>
+          </FormHelperText>
+        </FormGroup>
+      )}
       {!isProcessing && !isDone && (
         <TerraTooltip title={canExport ? tooltipMessage : tooltipError}>
           <span>

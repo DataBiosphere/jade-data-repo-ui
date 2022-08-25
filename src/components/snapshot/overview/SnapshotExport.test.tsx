@@ -7,10 +7,12 @@ import createMockStore from 'redux-mock-store';
 import history from '../../../modules/hist';
 import globalTheme from '../../../modules/theme';
 import SnapshotExport from './SnapshotExport';
+import { SnapshotModel } from '../../../generated/tdr';
 
-const snapshot = {
+const snapshot: SnapshotModel = {
   id: 'uuid',
   name: 'Snapshot',
+  cloudPlatform: 'gcp',
 };
 
 const configuration = {

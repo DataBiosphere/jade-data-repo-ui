@@ -63,7 +63,7 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
   const { classes, snapshot } = props;
   // @ts-ignore
   const sourceDataset = snapshot.source[0].dataset;
-  const linkToBq = snapshot.accessInformation?.bigQuery !== undefined;
+  const linkToBq = snapshot.cloudPlatform === 'gcp';
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
