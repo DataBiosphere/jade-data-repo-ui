@@ -121,7 +121,7 @@ function SnapshotExport(props: SnapshotExportProps) {
           />
           <FormHelperText>
             <i>
-              <b>Note: </b> gs-paths can change over time
+              <b>Note:</b> gs-paths can change over time
             </i>
           </FormHelperText>
         </FormGroup>
