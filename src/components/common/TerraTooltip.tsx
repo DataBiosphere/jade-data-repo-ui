@@ -1,8 +1,10 @@
 import React from 'react';
 import { makeStyles } from '@mui/styles';
 import Tooltip from '@mui/material/Tooltip';
+import { TooltipProps } from '@mui/material/Tooltip/Tooltip';
+import { CustomTheme } from '@mui/material/styles';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: CustomTheme) => ({
   arrow: {
     color: theme.palette.common.black,
   },
@@ -12,8 +14,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function TerraTooltip(props) {
+type TerraTooltipProps = TooltipProps & {
+  disabled?: boolean;
+};
+
+function TerraTooltip(props: TerraTooltipProps) {
   const classes = useStyles();
+  const { disabled, children } = props;
+  if (disabled) {
+    return children;
+  }
   return <Tooltip arrow classes={classes} {...props} />;
 }
 
