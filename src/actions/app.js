@@ -229,6 +229,13 @@ export const { applySort } = createActions({
   }),
 });
 
+export const { resizeColumn } = createActions({
+  [ActionTypes.RESIZE_COLUMN]: (property, width) => ({
+    property,
+    width,
+  }),
+});
+
 export const { resetQuery } = createActions({
   [ActionTypes.RESET_QUERY]: () => ({}),
 });

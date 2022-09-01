@@ -17,9 +17,10 @@ import {
   Typography,
 } from '@mui/material';
 import { Close } from '@mui/icons-material';
-import { applySort, changePage, changeRowsPerPage } from 'actions/index';
+import { applySort, resizeColumn, changePage, changeRowsPerPage } from 'actions/index';
 import { connect } from 'react-redux';
 import { CustomTheme } from '@mui/material/styles';
+import { Property } from 'csstype';
 
 import clsx from 'clsx';
 import LightTableHead from './LightTableHead';
@@ -39,6 +40,7 @@ const styles = (theme: CustomTheme) => ({
   tableWrapper: {
     maxHeight: 'calc(100vh - 325px)',
     overflow: 'auto',
+    backgroundColor: theme.palette.lightTable.cellBackgroundDark,
   },
   nullValue: {
     fontStyle: 'italic',
@@ -55,13 +57,18 @@ const styles = (theme: CustomTheme) => ({
   },
   table: {
     borderRadius: `${theme.shape.borderRadius}px ${theme.shape.borderRadius}px 0 0`,
-    minWidth: 700,
   },
   row: {
     borderRadius: `${theme.shape.borderRadius}px ${theme.shape.borderRadius}px 0 0`,
   },
   cell: {
     borderBottom: `1px solid ${theme.palette.lightTable.bottomColor}`,
+  },
+  cellContent: {
+    ...theme.mixins.ellipsis,
+  },
+  nonResizableCellContent: {
+    whiteSpace: 'initial' as Property.WhiteSpace,
   },
   lightRow: {
     backgroundColor: theme.palette.lightTable.callBackgroundLight,
@@ -99,7 +106,6 @@ type LightTableProps = {
   noRowsMessage: string;
   page: number;
   pageBQQuery?: () => void;
-  rowKey: (row: TableRowType) => string;
   rows: Array<TableRowType>;
   rowsPerPage: number;
   searchString: string;
@@ -120,7 +126,6 @@ function LightTable({
   orderProperty,
   page,
   pageBQQuery,
-  rowKey,
   rows,
   rowsPerPage,
   searchString,
@@ -135,6 +140,10 @@ function LightTable({
       newOrder = 'desc';
     }
     dispatch(applySort(sort, newOrder));
+  };
+
+  const handleResizeColumn = (_event: any, column: string, width: number) => {
+    dispatch(resizeColumn(column, width));
   };
 
   const handleChangeRowsPerPage = async (event: any) => {
@@ -241,38 +250,54 @@ function LightTable({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchString, page, rowsPerPage, orderProperty, orderDirection, tableName]);
 
+  const supportsResize = columns.some((col) => col.allowResize);
+  const tableWidth = columns.reduce((agg, column) => agg + (column.width || NaN), 0);
+  const effectiveTableWidth = _.isNaN(tableWidth) || !supportsResize ? '100%' : tableWidth;
   return (
     <div>
       {!loading && (
         <Paper className={classes.root}>
           <div className={classes.tableWrapper}>
-            <Table className={classes.table}>
-              <LightTableHead columns={columns} onRequestSort={handleRequestSort} />
+            <Table className={classes.table} sx={{ width: effectiveTableWidth }}>
+              <LightTableHead
+                columns={columns}
+                onRequestSort={handleRequestSort}
+                onResizeColumn={handleResizeColumn}
+              />
               <TableBody data-cy="tableBody">
                 {rows && rows.length > 0 ? (
                   rows.map((row, index) => {
                     const darkRow = index % 2 !== 0;
-                    const rowKeyVal = rowKey ? rowKey(row) : row.name;
                     return (
                       <TableRow
                         hover
-                        key={rowKeyVal}
+                        key={`${index}`}
                         className={clsx({
                           [classes.row]: true,
                           [classes.darkRow]: darkRow,
                           [classes.lightRow]: !darkRow,
                         })}
                       >
-                        {columns.map((col) => (
-                          <TableCell
-                            className={classes.cell}
-                            key={`${col.name}-${rowKeyVal}`}
-                            style={{ wordBreak: 'break-word' }}
-                            data-cy={`cellValue-${col.name}-${index}`}
-                          >
-                            {handleValues(row, col)}
-                          </TableCell>
-                        ))}
+                        {columns.map((col) => {
+                          const maxWidth = col.width !== undefined ? col.width : undefined;
+                          return (
+                            <TableCell
+                              className={classes.cell}
+                              key={`${col.name}-${index}`}
+                              style={{ wordBreak: 'break-word' }}
+                              data-cy={`cellValue-${col.name}-${index}`}
+                            >
+                              <div
+                                className={clsx(classes.cellContent, {
+                                  [classes.nonResizableCellContent]: !supportsResize,
+                                })}
+                                style={{ maxWidth }}
+                              >
+                                {handleValues(row, col)}
+                              </div>
+                            </TableCell>
+                          );
+                        })}
                       </TableRow>
                     );
                   })
