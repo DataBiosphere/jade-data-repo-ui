@@ -12,6 +12,7 @@ import {
   Table,
   TableBody,
   TableCell,
+  TableContainer,
   TablePagination,
   TableRow,
   Typography,
@@ -32,12 +33,11 @@ import { TABLE_DEFAULT_ROWS_PER_PAGE_OPTIONS, TABLE_DEFAULT_SORT_ORDER } from '.
 
 const styles = (theme: CustomTheme) => ({
   root: {
-    border: `1px solid ${theme.palette.lightTable.borderColor}`,
-    borderRadius: `${theme.shape.borderRadius}px ${theme.shape.borderRadius}px 0 0`,
     boxShadow: 'none',
     maxHeight: '100%',
   },
   tableWrapper: {
+    border: `1px solid ${theme.palette.lightTable.borderColor}`,
     maxHeight: 'calc(100vh - 325px)',
     overflow: 'auto',
     backgroundColor: theme.palette.lightTable.cellBackgroundDark,
@@ -60,9 +60,16 @@ const styles = (theme: CustomTheme) => ({
   },
   row: {
     borderRadius: `${theme.shape.borderRadius}px ${theme.shape.borderRadius}px 0 0`,
+    '&:last-child td': {
+      borderBottom: 'none',
+    },
   },
   cell: {
-    borderBottom: `1px solid ${theme.palette.lightTable.bottomColor}`,
+    borderRight: `1px solid ${theme.palette.lightTable.borderColor}`,
+    borderBottom: `1px solid ${theme.palette.lightTable.borderColor}`,
+    '&:last-child': {
+      borderRight: 'none',
+    },
   },
   cellContent: {
     ...theme.mixins.ellipsis,
@@ -75,6 +82,10 @@ const styles = (theme: CustomTheme) => ({
   },
   darkRow: {
     backgroundColor: theme.palette.lightTable.cellBackgroundDark,
+  },
+  paginationWrapper: {
+    border: `1px solid ${theme.palette.lightTable.borderColor}`,
+    borderTop: 'none',
   },
   paginationButton: {
     borderRadius: `${theme.shape.borderRadius}px`,
@@ -257,8 +268,8 @@ function LightTable({
     <div>
       {!loading && (
         <Paper className={classes.root}>
-          <div className={classes.tableWrapper}>
-            <Table className={classes.table} sx={{ width: effectiveTableWidth }}>
+          <TableContainer className={classes.tableWrapper} sx={{ maxHeight: 300 }}>
+            <Table className={classes.table} stickyHeader sx={{ width: effectiveTableWidth }}>
               <LightTableHead
                 columns={columns}
                 onRequestSort={handleRequestSort}
@@ -308,9 +319,10 @@ function LightTable({
                 )}
               </TableBody>
             </Table>
-          </div>
+          </TableContainer>
           {rows && rows.length > 0 && (
             <TablePagination
+              className={classes.paginationWrapper}
               rowsPerPageOptions={TABLE_DEFAULT_ROWS_PER_PAGE_OPTIONS}
               component="div"
               count={filteredCount}
