@@ -268,7 +268,7 @@ function LightTable({
     <div>
       {!loading && (
         <Paper className={classes.root}>
-          <TableContainer className={classes.tableWrapper} sx={{ maxHeight: 300 }}>
+          <TableContainer className={classes.tableWrapper}>
             <Table className={classes.table} stickyHeader sx={{ width: effectiveTableWidth }}>
               <LightTableHead
                 columns={columns}
