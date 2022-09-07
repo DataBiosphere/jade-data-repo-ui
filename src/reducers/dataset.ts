@@ -85,6 +85,10 @@ export default {
         immutable(state, {
           datasetPolicies: { $set: action.policy.data.policies },
         }),
+      [ActionTypes.PATCH_DATASET_DESCRIPTION_SUCCESS]: (state, action: any) =>
+        immutable(state, {
+          dataset: { description: { $set: action.description } },
+        }),
       [ActionTypes.ADD_DATASET_POLICY_MEMBER_SUCCESS]: (state, action: any) =>
         immutable(state, {
           datasetPolicies: { $apply: datasetMembershipResultApply(action) },
