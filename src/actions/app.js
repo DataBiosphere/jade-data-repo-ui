@@ -146,6 +146,13 @@ export const { addDatasetPolicyMember } = createActions({
   }),
 });
 
+export const { patchDatasetDescription } = createActions({
+  [ActionTypes.PATCH_DATASET_DESCRIPTION]: (datasetId, text) => ({
+    datasetId,
+    text,
+  }),
+});
+
 export const { removeDatasetPolicyMember } = createActions({
   [ActionTypes.REMOVE_DATASET_POLICY_MEMBER]: (datasetId, user, policy) => ({
     datasetId,

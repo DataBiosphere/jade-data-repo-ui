@@ -170,7 +170,7 @@ function LightTable({
     });
   };
 
-  const handleNullValue = () => <span className={classes.nullValue}>null</span>;
+  const handleNullValue = () => <span className={classes.nullValue}>(empty)</span>;
 
   const handleRepeatedValues = (values: Array<string>, columnName: string) => {
     const allValues = [];

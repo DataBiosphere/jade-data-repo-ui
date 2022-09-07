@@ -73,6 +73,19 @@ export function* authPost(url: string, params = {}, isDelegateToken = false) {
   throw timeoutMsg;
 }
 
+export function* authPatch(url: string, params = {}, isDelegateToken = false) {
+  const tokenIsValid: boolean = yield call(checkToken);
+  if (tokenIsValid) {
+    // check expiration time against now
+    const token: string = yield call(getTokenToUse, isDelegateToken);
+    const result: AxiosResponse = yield call(axios.patch, url, params, {
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    });
+    return result;
+  }
+  throw timeoutMsg;
+}
+
 export function* authDelete(url: string, isDelegateToken = false) {
   const tokenIsValid: boolean = yield call(checkToken);
   if (tokenIsValid) {
@@ -712,6 +725,21 @@ export function* getUserStatus(): any {
   }
 }
 
+export function* patchDatasetDescription({ payload }: any): any {
+  const { datasetId, text } = payload;
+  const data = { description: text };
+  const url = `/api/repository/v1/datasets/${datasetId}`;
+  try {
+    yield call(authPatch, url, data);
+    yield put({
+      type: ActionTypes.PATCH_DATASET_DESCRIPTION_SUCCESS,
+      description: text,
+    });
+  } catch (err) {
+    showNotification(err);
+  }
+}
+
 /**
  * App Sagas
  */
@@ -743,6 +771,7 @@ export default function* root() {
     takeLatest(ActionTypes.GET_USER_DATASET_ROLES, getUserDatasetRoles),
     takeLatest(ActionTypes.GET_USER_SNAPSHOT_ROLES, getUserSnapshotRoles),
     takeLatest(ActionTypes.GET_USER_STATUS, getUserStatus),
+    takeLatest(ActionTypes.PATCH_DATASET_DESCRIPTION, patchDatasetDescription),
     fork(watchGetDatasetByIdSuccess),
   ]);
 }
