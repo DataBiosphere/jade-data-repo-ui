@@ -74,7 +74,7 @@ class DescriptionView extends React.PureComponent {
               fullWidth={true}
               InputProps={{
                 startAdornment: (
-                  <InputAdornment position="start">
+                  <InputAdornment style={{ pointerEvents: 'none' }} position="start">
                     <Pencil titleAccess="Pencil icon indicating the description is editable." />
                   </InputAdornment>
                 ),
