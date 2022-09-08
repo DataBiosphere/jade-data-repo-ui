@@ -1,12 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { TextField, IconButton, Typography } from '@mui/material';
+import InputAdornment from '@mui/material/InputAdornment';
+import Pencil from '@mui/icons-material/Edit';
 import UndoIcon from '@mui/icons-material/Undo';
 import SaveIcon from '@mui/icons-material/Save';
 import { withStyles } from '@mui/styles';
 import { patchDatasetDescription } from 'actions';
 import { DatasetRoles } from '../constants';
 
+const styles = (theme) => ({
+  descriptionInput: {
+    '&.Mui-focused': {
+      backgroundColor: 'white',
+    },
+  },
+});
 class DescriptionView extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -18,6 +27,7 @@ class DescriptionView extends React.PureComponent {
   }
 
   static propTypes = {
+    classes: PropTypes.object.isRequired,
     datasetDescription: PropTypes.string,
     description: PropTypes.string,
     updateDescriptionFn: PropTypes.func.isRequired,
@@ -47,17 +57,29 @@ class DescriptionView extends React.PureComponent {
   }
 
   render() {
-    const { description, userRoles, datasetDescription } = this.props;
+    const { classes, description, userRoles, datasetDescription } = this.props;
     const { hasDescriptionChanged, descriptionValue } = this.state;
     const canEdit = userRoles.includes(DatasetRoles.STEWARD);
 
     return (
       <>
-        {!canEdit && <Typography>{description}</Typography>}
+        {!canEdit && (
+          <Typography style={{ whiteSpace: 'pre-line' }} paragraph={true}>
+            {description}
+          </Typography>
+        )}
         {canEdit && (
           <div>
             <TextField
               fullWidth={true}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Pencil titleAccess="Pencil icon indicating the description is editable." />
+                  </InputAdornment>
+                ),
+                className: classes.descriptionInput,
+              }}
               multiline={true}
               maxRows={5}
               minRows={2}
@@ -95,4 +117,4 @@ class DescriptionView extends React.PureComponent {
     );
   }
 }
-export default DescriptionView;
+export default withStyles(styles)(DescriptionView);
