@@ -195,7 +195,7 @@ class DescriptionView extends React.PureComponent {
                 <>
                   <Button
                     aria-label="Save description changes"
-                    className={classes.descriptionButtons}
+                    className={classes.saveDescriptionButton}
                     color="primary"
                     disabled={!hasDescriptionChanged}
                     onClick={() => this.onSaveClick(descriptionValue)}
