@@ -143,7 +143,7 @@ class DescriptionView extends React.PureComponent {
     const { classes, description, userRoles, datasetDescription } = this.props;
     const { hasDescriptionChanged, descriptionValue, isEditing } = this.state;
     const canEdit = userRoles.includes(DatasetRoles.STEWARD);
-    // const canEdit = false;
+
     return (
       <>
         {!canEdit && (
