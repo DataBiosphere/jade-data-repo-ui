@@ -81,11 +81,15 @@ class DescriptionView extends React.PureComponent {
 
   descriptionChanged(newDescription, originalDescription) {
     if (newDescription.length > 2047) {
-      showNotification(
-        JSON.parse(
-          '{"response":{"status":"Description too long","data":{"message":"","errorDetail":"Exceeds 2047 characters.  Please revise and save again."}}}',
-        ),
-      );
+      showNotification({
+        response: {
+          status: 'Description too long',
+          data: {
+            message: '',
+            errorDetail: 'Exceeds 2047 characters.  Please revise and save again.',
+          },
+        },
+      });
       this.setState({ descriptionValue: newDescription.substring(0, 2046) });
     } else {
       this.setState({ descriptionValue: newDescription });
