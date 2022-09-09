@@ -8,7 +8,6 @@ import { ClassNameMap, withStyles } from '@mui/styles';
 import Draggable, { DraggableEventHandler } from 'react-draggable';
 import { Property } from 'csstype';
 
-import TerraTooltip from '../common/TerraTooltip';
 import { TableColumnType, OrderDirectionOptions } from '../../reducers/query';
 import { TdrState } from '../../reducers';
 import { TABLE_DEFAULT_SORT_ORDER } from '../../constants';
@@ -82,7 +81,6 @@ function LightTableHead({
   orderProperty,
 }: LightTableHeadProps) {
   const [initialWidth, setInitialWidth] = React.useState<number | undefined>(undefined);
-  const [isDragging, setDragging] = React.useState(false);
   const [deltaX, setDeltaX] = React.useState(0);
   const [draggingCol, setDraggingCol] = React.useState<TableColumnType | undefined>(undefined);
 
@@ -101,7 +99,6 @@ function LightTableHead({
     }
     setDeltaX(0);
     setDraggingCol(column);
-    setDragging(true);
   };
 
   const createDragHandler: (column: TableColumnType) => DraggableEventHandler = (column) => (
@@ -118,7 +115,6 @@ function LightTableHead({
     event,
     data,
   ) => {
-    setDragging(false);
     if (initialWidth !== undefined) {
       onResizeColumn(event, column.name, initialWidth + data.x);
     }
@@ -166,22 +162,15 @@ function LightTableHead({
                   </div>
                 ) : (
                   <div>
-                    <TerraTooltip
-                      title="Sort"
-                      placement="bottom-end"
-                      enterDelay={300}
-                      disabled={isDragging}
+                    <TableSortLabel
+                      active={orderProperty === col.name}
+                      direction={sortDir || TABLE_DEFAULT_SORT_ORDER}
+                      onClick={createSortHandler(col.name)}
+                      IconComponent={Sort}
+                      style={{ width: maxWidth }}
                     >
-                      <TableSortLabel
-                        active={orderProperty === col.name}
-                        direction={sortDir || TABLE_DEFAULT_SORT_ORDER}
-                        onClick={createSortHandler(col.name)}
-                        IconComponent={Sort}
-                        style={{ width: maxWidth }}
-                      >
-                        <span className={classes.label}>{col.label ?? col.name}</span>
-                      </TableSortLabel>
-                    </TerraTooltip>
+                      <span className={classes.label}>{col.label ?? col.name}</span>
+                    </TableSortLabel>
                     {createDragHandle(col)}
                   </div>
                 )}
