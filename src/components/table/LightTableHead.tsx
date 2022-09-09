@@ -7,7 +7,6 @@ import { CustomTheme } from '@mui/material/styles';
 import { ClassNameMap, withStyles } from '@mui/styles';
 import Draggable, { DraggableEventHandler } from 'react-draggable';
 import { Property } from 'csstype';
-import clsx from 'clsx';
 
 import TerraTooltip from '../common/TerraTooltip';
 import { TableColumnType, OrderDirectionOptions } from '../../reducers/query';
@@ -55,11 +54,6 @@ const styles = (theme: CustomTheme) => ({
   // Typescript coaxing to combine the ellipsis mixin with other CSS properties
   // eslint-disable-next-line prefer-object-spread
   label: Object.assign({ flex: 1 }, theme.mixins.ellipsis),
-  forceHideSortIcon: {
-    '& .MuiTableSortLabel-icon': {
-      opacity: '0 !important',
-    },
-  },
   columnResizer: {
     height: theme.spacing(3),
     width: theme.spacing(3),
@@ -89,6 +83,8 @@ function LightTableHead({
 }: LightTableHeadProps) {
   const [initialWidth, setInitialWidth] = React.useState<number | undefined>(undefined);
   const [isDragging, setDragging] = React.useState(false);
+  const [deltaX, setDeltaX] = React.useState(0);
+  const [draggingCol, setDraggingCol] = React.useState<TableColumnType | undefined>(undefined);
 
   const createSortHandler = (property: string) => (event: any) => {
     onRequestSort(event, property);
@@ -103,7 +99,19 @@ function LightTableHead({
     } else {
       setInitialWidth(column.width);
     }
+    setDeltaX(0);
+    setDraggingCol(column);
     setDragging(true);
+  };
+
+  const createDragHandler: (column: TableColumnType) => DraggableEventHandler = (column) => (
+    event,
+    data,
+  ) => {
+    if (initialWidth !== undefined) {
+      onResizeColumn(event, column.name, initialWidth + data.x);
+    }
+    setDeltaX(data.x);
   };
 
   const createStopHandler: (column: TableColumnType) => DraggableEventHandler = (column) => (
@@ -114,6 +122,8 @@ function LightTableHead({
     if (initialWidth !== undefined) {
       onResizeColumn(event, column.name, initialWidth + data.x);
     }
+    setDeltaX(0);
+    setDraggingCol(undefined);
   };
 
   const createDragHandle = (col: TableColumnType) =>
@@ -121,8 +131,11 @@ function LightTableHead({
       <Draggable
         axis="x"
         onStart={createStartHandler(col)}
+        onDrag={createDragHandler(col)}
         onStop={createStopHandler(col)}
         position={{ x: 0, y: 0 }}
+        // Make sure that the drag handle stays where it should while dragging by negating the drag delta
+        positionOffset={{ x: draggingCol?.name === col.name ? -1 * deltaX : 0, y: 0 }}
       >
         <ColumnGrabberIcon className={classes.columnResizer} />
       </Draggable>
@@ -165,9 +178,6 @@ function LightTableHead({
                         onClick={createSortHandler(col.name)}
                         IconComponent={Sort}
                         style={{ width: maxWidth }}
-                        className={clsx({
-                          [classes.forceHideSortIcon]: isDragging,
-                        })}
                       >
                         <span className={classes.label}>{col.label ?? col.name}</span>
                       </TableSortLabel>
