@@ -23,28 +23,37 @@ const styles = (theme) => ({
   descriptionInput: {
     backgroundColor: 'white',
   },
-  descriptionButtons: {
-    margin: theme.spacing(1),
-  },
   editIconButton: {
+    backgroundColor: theme.palette.primary.main,
     border: `1px solid ${theme.palette.primary.main}`,
     borderRadius: '3px',
+    boxShadow: 'none',
     padding: '1px',
-    backgroundColor: theme.palette.primary.main,
     '&:hover': {
       backgroundColor: theme.palette.primary.hover,
+      boxShadow: 'none',
     },
   },
   editIconImage: {
-    fontSize: theme.typography.h6.fontSize,
     color: theme.palette.primary.light,
+    fontSize: theme.typography.h6.fontSize,
+  },
+  saveDescriptionButton: {
+    boxShadow: 'none',
+    margin: theme.spacing(1),
+    '&:hover': {
+      backgroundColor: theme.palette.primary.hover,
+      boxShadow: 'none',
+    },
   },
   undoButton: {
-    margin: theme.spacing(1),
     backgroundColor: theme.palette.primary.light,
+    boxShadow: 'none',
     color: theme.palette.grey[500],
+    margin: theme.spacing(1),
     '&:hover': {
       backgroundColor: theme.palette.primary.light,
+      boxShadow: 'none',
     },
   },
 });
@@ -155,11 +164,11 @@ class DescriptionView extends React.PureComponent {
           <div className={classes.root}>
             <div className={classes.iconDiv}>
               <IconButton
-                className={classes.editIconButton}
                 aria-label="Edit description"
-                onClick={(e) => this.onEditClick()}
+                className={classes.editIconButton}
                 disableFocusRipple={true}
                 disableRipple={true}
+                onClick={(e) => this.onEditClick()}
               >
                 <Edit fontStyle="small" className={classes.editIconImage} />
               </IconButton>
@@ -169,13 +178,13 @@ class DescriptionView extends React.PureComponent {
                 fullWidth={true}
                 inputRef={this.textFieldRef}
                 maxLength={2047}
-                multiline={true}
                 maxRows={5}
                 minRows={2}
-                onFocus={() => this.onDescriptionTextClick()}
+                multiline={true}
+                onBlur={(e) => this.onDescriptionTextBlur(e.target.value, description)}
                 onClick={() => this.onDescriptionTextClick()}
                 onChange={(e) => this.descriptionChanged(e.target.value, description)}
-                onBlur={(e) => this.onDescriptionTextBlur(e.target.value, description)}
+                onFocus={() => this.onDescriptionTextClick()}
                 placeholder="Add a description."
                 type="text"
                 value={descriptionValue}
@@ -189,8 +198,9 @@ class DescriptionView extends React.PureComponent {
                     className={classes.descriptionButtons}
                     color="primary"
                     disabled={!hasDescriptionChanged}
-                    variant="contained"
                     onClick={() => this.onSaveClick(descriptionValue)}
+                    type="button"
+                    variant="contained"
                   >
                     SAVE
                   </Button>
@@ -199,6 +209,7 @@ class DescriptionView extends React.PureComponent {
                     className={classes.undoButton}
                     disabled={!hasDescriptionChanged}
                     onClick={() => this.descriptionChanged(description, description)}
+                    type="button"
                     variant="contained"
                   >
                     UNDO
