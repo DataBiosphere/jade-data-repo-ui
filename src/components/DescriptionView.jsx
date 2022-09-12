@@ -166,6 +166,7 @@ class DescriptionView extends React.PureComponent {
               <IconButton
                 aria-label="Edit description"
                 className={classes.editIconButton}
+                data-cy="description-edit-button"
                 disableFocusRipple={true}
                 disableRipple={true}
                 onClick={(e) => this.onEditClick()}
@@ -175,6 +176,7 @@ class DescriptionView extends React.PureComponent {
             </div>
             <div className={classes.textInputDiv}>
               <TextField
+                data-cy="description-text-field"
                 fullWidth={true}
                 inputRef={this.textFieldRef}
                 maxLength={2047}
@@ -197,6 +199,7 @@ class DescriptionView extends React.PureComponent {
                     aria-label="Save description changes"
                     className={classes.saveDescriptionButton}
                     color="primary"
+                    data-cy="description-save-button"
                     disabled={!hasDescriptionChanged}
                     onClick={() => this.onSaveClick(descriptionValue)}
                     type="button"
@@ -207,6 +210,7 @@ class DescriptionView extends React.PureComponent {
                   <Button
                     aria-label="Undo description changes"
                     className={classes.undoButton}
+                    data-cy="description-undo-button"
                     disabled={!hasDescriptionChanged}
                     onClick={() => this.descriptionChanged(description, description)}
                     type="button"
