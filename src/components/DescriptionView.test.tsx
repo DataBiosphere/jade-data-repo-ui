@@ -16,10 +16,6 @@ const initialState = {
   },
 };
 
-const saveDescription = function (text: string) {
-  initialState.dataset.description = text;
-};
-
 beforeEach(() => {
   const mockStore = createMockStore([]);
   const store = mockStore(initialState);
@@ -31,7 +27,7 @@ beforeEach(() => {
           description={initialState.dataset.description}
           userRoles={userRoles}
           updateDescriptionFn={(text) => {
-            saveDescription(text);
+            initialState.dataset.description = text;
           }}
         />
       </ThemeProvider>
