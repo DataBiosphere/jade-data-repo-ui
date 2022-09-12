@@ -10,7 +10,7 @@ import { patchDatasetDescription } from 'actions';
 import { DatasetRoles } from '../constants';
 
 const styles = (theme) => ({
-  root: {
+  descriptionEditor: {
     width: '100%',
     display: 'flex',
   },
@@ -161,7 +161,7 @@ class DescriptionView extends React.PureComponent {
           </Typography>
         )}
         {canEdit && (
-          <div className={classes.root}>
+          <div className={classes.descriptionEditor}>
             <div className={classes.iconDiv}>
               <IconButton
                 aria-label="Edit description"
