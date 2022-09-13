@@ -35,6 +35,7 @@ const styles = (theme: CustomTheme) => ({
   root: {
     boxShadow: 'none',
     maxHeight: '100%',
+    position: 'relative' as Property.Position,
   },
   tableWrapper: {
     border: `1px solid ${theme.palette.lightTable.borderColor}`,
@@ -57,6 +58,18 @@ const styles = (theme: CustomTheme) => ({
   },
   table: {
     borderRadius: `${theme.shape.borderRadius}px ${theme.shape.borderRadius}px 0 0`,
+  },
+  overlaySpinner: {
+    opacity: 0.6,
+    position: 'absolute' as Property.Position,
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+    width: 'initial',
+    height: 'initial',
+    backgroundColor: theme.palette.common.white,
+    zIndex: 100,
   },
   row: {
     borderRadius: `${theme.shape.borderRadius}px ${theme.shape.borderRadius}px 0 0`,
@@ -266,8 +279,15 @@ function LightTable({
   const effectiveTableWidth = _.isNaN(tableWidth) || !supportsResize ? '100%' : tableWidth;
   return (
     <div>
-      {!loading && (
+      {!(loading && !rows?.length) && (
         <Paper className={classes.root}>
+          {loading && (
+            <LoadingSpinner
+              delay={delay}
+              delayMessage="For large datasets, it can take a few minutes to fetch results. Thank you for your patience."
+              className={classes.overlaySpinner}
+            />
+          )}
           <TableContainer className={classes.tableWrapper}>
             <Table className={classes.table} stickyHeader sx={{ width: effectiveTableWidth }}>
               <LightTableHead
@@ -372,7 +392,7 @@ function LightTable({
           </Dialog>
         </Paper>
       )}
-      {loading && (
+      {loading && !rows?.length && (
         <LoadingSpinner
           delay={delay}
           delayMessage="For large datasets, it can take a few minutes to fetch results. Thank you for your patience."

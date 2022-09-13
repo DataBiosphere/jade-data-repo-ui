@@ -129,6 +129,11 @@ export default {
           resultsCount: { $set: rows.length },
         });
       },
+      [ActionTypes.PAGE_QUERY]: (state) => {
+        return immutable(state, {
+          polling: { $set: true },
+        });
+      },
       [ActionTypes.PAGE_QUERY_SUCCESS]: (state, action: any) => {
         const bigquery = new BigQuery();
         const queryResults = action.results.data;
@@ -147,6 +152,8 @@ export default {
           queryParams: { $set: queryParams },
           columns: { $set: columns },
           rows: { $set: rows },
+          polling: { $set: false },
+          delay: { $set: false },
         });
       },
       [ActionTypes.RUN_QUERY]: (state) =>
@@ -237,6 +244,7 @@ export default {
         }),
       [LOCATION_CHANGE]: (state) =>
         immutable(state, {
+          rows: { $set: [] },
           filterData: { $set: {} },
           filterStatement: { $set: '' },
           joinStatement: { $set: '' },
