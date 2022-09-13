@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
+import _ from 'lodash';
 import { SortDirection, TableCell, TableHead, TableRow, TableSortLabel } from '@mui/material';
 import { CustomTheme } from '@mui/material/styles';
 import { ClassNameMap, withStyles } from '@mui/styles';
@@ -104,10 +105,10 @@ function LightTableHead({
   };
 
   const createStartHandler: (column: TableColumnType) => DraggableEventHandler = (column) => (
-    _,
+    _event,
     data,
   ) => {
-    if (column.width === undefined) {
+    if (!_.isNumber(column.width)) {
       setInitialWidth(data.node?.parentElement?.clientWidth);
     } else {
       setInitialWidth(column.width);
@@ -158,7 +159,7 @@ function LightTableHead({
         {columns.map((col: TableColumnType) => {
           const sortDir: SortDirection =
             orderProperty === col.name ? orderDirection ?? false : false;
-          const maxWidth = col.width !== undefined ? col.width : undefined;
+          const maxWidth = _.isNumber(col.width) ? col.width : undefined;
           return (
             <TableCell
               className={classes.cell}

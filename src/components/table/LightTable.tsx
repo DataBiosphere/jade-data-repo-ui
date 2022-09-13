@@ -64,6 +64,9 @@ const styles = (theme: CustomTheme) => ({
   table: {
     borderRadius: `${theme.shape.borderRadius}px ${theme.shape.borderRadius}px 0 0`,
   },
+  nonResizableTable: {
+    tableLayout: 'fixed' as Property.TableLayout,
+  },
   overlaySpinner: {
     opacity: 0.6,
     position: 'absolute' as Property.Position,
@@ -97,9 +100,6 @@ const styles = (theme: CustomTheme) => ({
   cellArrayContent: Object.assign({ flexGrow: 1 }, theme.mixins.ellipsis),
   cellContent: {
     ...theme.mixins.ellipsis,
-  },
-  nonResizableCellContent: {
-    whiteSpace: 'initial' as Property.WhiteSpace,
   },
   lightRow: {
     backgroundColor: theme.palette.lightTable.callBackgroundLight,
@@ -278,7 +278,10 @@ function LightTable({
   }, [searchString, page, rowsPerPage, orderProperty, orderDirection, tableName]);
 
   const supportsResize = columns.some((col) => col.allowResize);
-  const tableWidth: number = columns.reduce((agg, column) => agg + (column.width || NaN), 0);
+  const tableWidth: number = columns.reduce(
+    (agg, column) => agg + (_.isNumber(column.width) ? column.width : NaN),
+    0,
+  );
   const effectiveTableWidth = _.isNaN(tableWidth) || !supportsResize ? '100%' : tableWidth;
   return (
     <div>
@@ -292,7 +295,11 @@ function LightTable({
             />
           )}
           <TableContainer className={classes.tableWrapper}>
-            <Table className={classes.table} stickyHeader sx={{ width: effectiveTableWidth }}>
+            <Table
+              className={clsx(classes.table, { [classes.nonResizableTable]: !supportsResize })}
+              stickyHeader
+              sx={{ width: effectiveTableWidth }}
+            >
               <LightTableHead
                 columns={columns}
                 onRequestSort={handleRequestSort}
@@ -313,7 +320,7 @@ function LightTable({
                         })}
                       >
                         {columns.map((col) => {
-                          const maxWidth = col.width !== undefined ? col.width : undefined;
+                          const maxWidth = _.isNumber(col.width) ? col.width : undefined;
                           return (
                             <TableCell
                               className={classes.cell}
@@ -321,12 +328,7 @@ function LightTable({
                               style={{ wordBreak: 'break-word' }}
                               data-cy={`cellValue-${col.name}-${index}`}
                             >
-                              <div
-                                className={clsx(classes.cellContent, {
-                                  [classes.nonResizableCellContent]: !supportsResize,
-                                })}
-                                style={{ maxWidth }}
-                              >
+                              <div className={classes.cellContent} style={{ maxWidth }}>
                                 {handleValues(row, col)}
                               </div>
                             </TableCell>

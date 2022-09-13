@@ -16,7 +16,7 @@ export type TableColumnType = {
   label: string;
   numeric: boolean;
   render: (row: object) => string;
-  width?: number;
+  width?: number | string;
 };
 
 export type TableRowType = {
