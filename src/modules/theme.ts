@@ -242,6 +242,7 @@ const theme = createTheme({
   mixins: {
     jadeLink: {
       color: LINK,
+      fontWeight: 500,
       '&:hover': {
         color: LINK_HOVER,
       },

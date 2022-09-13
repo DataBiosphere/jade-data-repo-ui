@@ -49,12 +49,17 @@ const styles = (theme: CustomTheme) => ({
     color: theme.palette.primary.dark,
   },
   dialogContentText: {
-    width: 'max-content',
     maxWidth: '800px',
+    maxHeight: '80vh',
   },
   seeMoreLink: {
     ...theme.mixins.jadeLink,
     cursor: 'pointer',
+  },
+  valueDialogSeparator: {
+    border: `none`,
+    borderBottom: `1px solid ${theme.palette.primary.dark}`,
+    width: '100%',
   },
   table: {
     borderRadius: `${theme.shape.borderRadius}px ${theme.shape.borderRadius}px 0 0`,
@@ -84,6 +89,12 @@ const styles = (theme: CustomTheme) => ({
       borderRight: 'none',
     },
   },
+  cellArrayWrapper: {
+    display: 'flex',
+  },
+  // Typescript coaxing to combine the ellipsis mixin with other CSS properties
+  // eslint-disable-next-line prefer-object-spread
+  cellArrayContent: Object.assign({ flexGrow: 1 }, theme.mixins.ellipsis),
   cellContent: {
     ...theme.mixins.ellipsis,
   },
@@ -108,8 +119,6 @@ const styles = (theme: CustomTheme) => ({
     color: theme.palette.lightTable.paginationBlue,
   },
 });
-
-const MAX_REPEATED_VALUES = 5;
 
 type LightTableProps = {
   classes: ClassNameMap;
@@ -206,40 +215,34 @@ function LightTable({
   const handleNullValue = () => <span className={classes.nullValue}>null</span>;
 
   const handleRepeatedValues = (values: Array<string>, columnName: string) => {
-    const allValues = [];
-    const cleanValues = values.map((v) => (_.isNil(v) ? handleNullValue() : `${v}`));
-    const start = <span key="start">[</span>;
-    const end = <span key="end">]</span>;
-    for (let i = 0; i < cleanValues.length; i++) {
-      const thisValue = cleanValues[i];
-      if (i < cleanValues.length - 1) {
-        allValues.push(
-          <span key={`sep-${i}`}>
-            {thisValue},<br />
-          </span>,
-        );
-      } else {
-        allValues.push(thisValue);
-      }
-    }
-    const valuesToDisplay = [start, ...allValues, end];
-    if (allValues.length > MAX_REPEATED_VALUES) {
-      const ellipses = <span key="ellipses">...</span>;
-      const seeMoreLink = (
-        <span key="see-more">
-          <Link
-            className={classes.seeMoreLink}
-            onClick={() => handleSeeMoreOpen(valuesToDisplay, columnName)}
-          >
-            <br />
-            See all {allValues.length} values
-          </Link>
-        </span>
-      );
-      return [start, ...allValues.slice(0, MAX_REPEATED_VALUES), ellipses, end, seeMoreLink];
-    }
+    const cleanValues = values
+      .map((v) => (_.isNil(v) ? handleNullValue() : `${v}`))
+      .map((v, i) => <span key={`val-${i}`}>{v}</span>);
 
-    return valuesToDisplay;
+    const cellValues = cleanValues
+      .map((v, i) => [v, <span key={`sep-${i}`}>, </span>])
+      .flatMap((v) => v)
+      .slice(0, -1);
+
+    const dialogValues = cleanValues
+      .map((v, i) => [v, <hr key={`sep-${i}`} className={classes.valueDialogSeparator} />])
+      .flatMap((v) => v)
+      .slice(0, -1);
+
+    const seeMoreLink = (
+      <Link key="see-more" onClick={() => handleSeeMoreOpen(dialogValues, columnName)}>
+        <span className={classes.seeMoreLink}>
+          ({cleanValues.length} {cleanValues.length === 1 ? 'item' : 'items'})
+        </span>
+      </Link>
+    );
+
+    return (
+      <span className={classes.cellArrayWrapper}>
+        <span className={classes.cellArrayContent}>{cellValues}</span>
+        {seeMoreLink}
+      </span>
+    );
   };
 
   const handleValues = (row: TableRowType, column: TableColumnType) => {
@@ -275,7 +278,7 @@ function LightTable({
   }, [searchString, page, rowsPerPage, orderProperty, orderDirection, tableName]);
 
   const supportsResize = columns.some((col) => col.allowResize);
-  const tableWidth = columns.reduce((agg, column) => agg + (column.width || NaN), 0);
+  const tableWidth: number = columns.reduce((agg, column) => agg + (column.width || NaN), 0);
   const effectiveTableWidth = _.isNaN(tableWidth) || !supportsResize ? '100%' : tableWidth;
   return (
     <div>
@@ -384,6 +387,7 @@ function LightTable({
             <DialogContent dividers={true}>
               <DialogContentText
                 className={classes.dialogContentText}
+                component="div"
                 id="see-more-dialog-content-text"
               >
                 {seeMore.contents}
