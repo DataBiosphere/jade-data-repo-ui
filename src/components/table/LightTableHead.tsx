@@ -2,11 +2,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { SortDirection, TableCell, TableHead, TableRow, TableSortLabel } from '@mui/material';
-import { Sort } from '@mui/icons-material';
 import { CustomTheme } from '@mui/material/styles';
 import { ClassNameMap, withStyles } from '@mui/styles';
 import Draggable, { DraggableEventHandler } from 'react-draggable';
 import { Property } from 'csstype';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faLongArrowAltUp } from '@fortawesome/free-solid-svg-icons';
+import clsx from 'clsx';
 
 import { TableColumnType, OrderDirectionOptions } from '../../reducers/query';
 import { TdrState } from '../../reducers';
@@ -60,6 +62,19 @@ const styles = (theme: CustomTheme) => ({
     top: 13,
     right: 0,
     cursor: 'ew-resize',
+  },
+  cellInner: {
+    flex: 1,
+    display: 'flex',
+  },
+  sortIcon: {
+    color: `${theme.palette.primary.main} !important`,
+    width: 16,
+    height: 16,
+    marginRight: `-${theme.spacing(1)}`,
+  },
+  allowsResize: {
+    marginRight: theme.spacing(1),
   },
 });
 
@@ -156,18 +171,30 @@ function LightTableHead({
             >
               <div className={classes.cellContent} style={{ maxWidth }}>
                 {!col.allowSort ? (
-                  <div className={classes.nonSortableCell} style={{ width: maxWidth }}>
+                  <div
+                    className={clsx(classes.cellInner, classes.nonSortableCell)}
+                    style={{ width: maxWidth }}
+                  >
                     <span className={classes.label}>{col.label ?? col.name}</span>
                     {createDragHandle(col)}
                   </div>
                 ) : (
-                  <div>
+                  <div className={classes.cellInner}>
                     <TableSortLabel
                       active={orderProperty === col.name}
                       direction={sortDir || TABLE_DEFAULT_SORT_ORDER}
                       onClick={createSortHandler(col.name)}
-                      IconComponent={Sort}
-                      style={{ width: maxWidth }}
+                      IconComponent={({ className }) => {
+                        return (
+                          <FontAwesomeIcon
+                            className={clsx(className, classes.sortIcon, {
+                              [classes.allowsResize]: col.allowResize,
+                            })}
+                            icon={faLongArrowAltUp}
+                          />
+                        );
+                      }}
+                      style={{ width: maxWidth, flex: 1 }}
                     >
                       <span className={classes.label}>{col.label ?? col.name}</span>
                     </TableSortLabel>

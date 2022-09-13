@@ -280,7 +280,11 @@
     ],
     "import/no-anonymous-default-export": "off", // this rule doesn't make much sense to me
     "@typescript-eslint/ban-ts-comment": "off",
-    "@typescript-eslint/no-explicit-any": "off" // Leave off until we finish out initial conversion to TS
+    "@typescript-eslint/no-explicit-any": "off", // Leave off until we finish out initial conversion to TS
+    "react/no-unstable-nested-components": [
+      "warn",
+      { "allowAsProps": true }
+    ]
   },
   "settings": {
     "import/resolver": {
