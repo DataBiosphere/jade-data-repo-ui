@@ -4,7 +4,6 @@ import { Button, IconButton, TextField, Typography } from '@mui/material';
 import Edit from '@mui/icons-material/Edit';
 import { showNotification } from 'modules/notifications';
 import { withStyles } from '@mui/styles';
-import { DatasetRoles } from '../constants';
 
 const styles = (theme: CustomTheme) => ({
   descriptionEditor: {
@@ -68,10 +67,10 @@ const descriptionTooLongError = {
 };
 
 type DescriptionViewProps = {
+  canEdit: boolean;
   classes: ClassNameMap;
   description: string;
   updateDescriptionFn: any;
-  userRoles: Array<string>;
 };
 
 type DescriptionViewState = {
@@ -157,9 +156,8 @@ class DescriptionView extends React.PureComponent<DescriptionViewProps, Descript
   }
 
   render() {
-    const { classes, description, userRoles } = this.props;
+    const { canEdit, classes, description } = this.props;
     const { hasDescriptionChanged, descriptionValue, isEditing } = this.state;
-    const canEdit = userRoles.includes(DatasetRoles.STEWARD);
 
     return (
       <>

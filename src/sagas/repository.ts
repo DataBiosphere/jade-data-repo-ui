@@ -268,6 +268,21 @@ export function* getSnapshots({ payload }: any): any {
   }
 }
 
+export function* patchSnapshotDescription({ payload }: any): any {
+  const { snapshotId, text } = payload;
+  const data = { description: text };
+  const url = `/api/repository/v1/snapshots/${snapshotId}`;
+  try {
+    yield call(authPatch, url, data);
+    yield put({
+      type: ActionTypes.PATCH_SNAPSHOT_DESCRIPTION_SUCCESS,
+      description: text,
+    });
+  } catch (err) {
+    showNotification(err);
+  }
+}
+
 export function* getSnapshotById({ payload }: any): any {
   yield put({
     type: ActionTypes.CHANGE_PAGE,
@@ -772,6 +787,7 @@ export default function* root() {
     takeLatest(ActionTypes.GET_USER_SNAPSHOT_ROLES, getUserSnapshotRoles),
     takeLatest(ActionTypes.GET_USER_STATUS, getUserStatus),
     takeLatest(ActionTypes.PATCH_DATASET_DESCRIPTION, patchDatasetDescription),
+    takeLatest(ActionTypes.PATCH_SNAPSHOT_DESCRIPTION, patchSnapshotDescription),
     fork(watchGetDatasetByIdSuccess),
   ]);
 }
