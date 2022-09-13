@@ -38,7 +38,7 @@ describe('test query builder', () => {
       for (let i = 0; i < 100; i++) {
         cy.get(`[data-cy=cellValue-consequence_terms-${i}]`).should(
           'have.text',
-          '[regulatory_region_variant]',
+          'regulatory_region_variant(1 item)',
         );
       }
     });
