@@ -6,7 +6,6 @@ import { showNotification } from 'modules/notifications';
 import UndoIcon from '@mui/icons-material/Undo';
 import SaveIcon from '@mui/icons-material/Save';
 import { withStyles } from '@mui/styles';
-import { patchDatasetDescription } from 'actions';
 import { DatasetRoles } from '../constants';
 
 const styles = (theme) => ({
@@ -83,11 +82,10 @@ class DescriptionView extends React.PureComponent {
   }
 
   static propTypes = {
+    canEdit: PropTypes.bool.isRequired,
     classes: PropTypes.object.isRequired,
-    datasetDescription: PropTypes.string,
     description: PropTypes.string,
     updateDescriptionFn: PropTypes.func.isRequired,
-    userRoles: PropTypes.array.isRequired,
   };
 
   componentDidUpdate(prevState) {
@@ -149,9 +147,8 @@ class DescriptionView extends React.PureComponent {
   }
 
   render() {
-    const { classes, description, userRoles, datasetDescription } = this.props;
+    const { canEdit, classes, description } = this.props;
     const { hasDescriptionChanged, descriptionValue, isEditing } = this.state;
-    const canEdit = userRoles.includes(DatasetRoles.STEWARD);
 
     return (
       <>

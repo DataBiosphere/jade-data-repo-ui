@@ -222,6 +222,10 @@ export default {
           snapshotRequest: { $set: snapshotRequest },
         });
       },
+      [ActionTypes.PATCH_SNAPSHOT_DESCRIPTION_SUCCESS]: (state, action: any) =>
+        immutable(state, {
+          snapshot: { description: { $set: action.description } },
+        }),
       [LOCATION_CHANGE]: (state) =>
         immutable(state, {
           snapshotRequest: { $set: defaultSnapshotRequest },

@@ -5,11 +5,9 @@ import { ThemeProvider } from '@mui/styles';
 import createMockStore from 'redux-mock-store';
 import React from 'react';
 import DescriptionView from './DescriptionView';
-import { DatasetRoles } from '../constants';
 import globalTheme from '../modules/theme';
 import history from '../modules/hist';
 
-const userRoles = [DatasetRoles.STEWARD];
 const initialState = {
   dataset: {
     description: 'A dataset description',
@@ -25,7 +23,7 @@ beforeEach(() => {
       <ThemeProvider theme={globalTheme}>
         <DescriptionView
           description={initialState.dataset.description}
-          userRoles={userRoles}
+          canEdit={true}
           updateDescriptionFn={(text) => {
             initialState.dataset.description = text;
           }}

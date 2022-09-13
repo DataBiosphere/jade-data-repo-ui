@@ -153,6 +153,13 @@ export const { patchDatasetDescription } = createActions({
   }),
 });
 
+export const { patchSnapshotDescription } = createActions({
+  [ActionTypes.PATCH_SNAPSHOT_DESCRIPTION]: (snapshotId, text) => ({
+    snapshotId,
+    text,
+  }),
+});
+
 export const { removeDatasetPolicyMember } = createActions({
   [ActionTypes.REMOVE_DATASET_POLICY_MEMBER]: (datasetId, user, policy) => ({
     datasetId,
