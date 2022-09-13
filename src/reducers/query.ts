@@ -145,7 +145,7 @@ export default {
           pageToken: queryResults.pageToken,
           projectId: queryResults.jobReference.projectId,
           jobId: queryResults.jobReference.jobId,
-          totalRows: queryResults.totalRows,
+          totalRows: parseInt(queryResults.totalRows, 10),
         };
 
         return immutable(state, {
