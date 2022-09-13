@@ -129,11 +129,10 @@ export default {
           resultsCount: { $set: rows.length },
         });
       },
-      [ActionTypes.PAGE_QUERY]: (state) => {
-        return immutable(state, {
+      [ActionTypes.PAGE_QUERY]: (state) =>
+        immutable(state, {
           polling: { $set: true },
-        });
-      },
+        }),
       [ActionTypes.PAGE_QUERY_SUCCESS]: (state, action: any) => {
         const bigquery = new BigQuery();
         const queryResults = action.results.data;

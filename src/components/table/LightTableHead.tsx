@@ -185,16 +185,14 @@ function LightTableHead({
                       active={orderProperty === col.name}
                       direction={sortDir || TABLE_DEFAULT_SORT_ORDER}
                       onClick={createSortHandler(col.name)}
-                      IconComponent={({ className }) => {
-                        return (
-                          <FontAwesomeIcon
-                            className={clsx(className, classes.sortIcon, {
-                              [classes.allowsResize]: col.allowResize,
-                            })}
-                            icon={faLongArrowAltUp}
-                          />
-                        );
-                      }}
+                      IconComponent={({ className }) => (
+                        <FontAwesomeIcon
+                          className={clsx(className, classes.sortIcon, {
+                            [classes.allowsResize]: col.allowResize,
+                          })}
+                          icon={faLongArrowAltUp}
+                        />
+                      )}
                       style={{ width: maxWidth, flex: 1 }}
                     >
                       <span className={classes.label}>{col.label ?? col.name}</span>

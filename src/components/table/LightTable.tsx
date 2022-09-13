@@ -57,7 +57,7 @@ const styles = (theme: CustomTheme) => ({
     cursor: 'pointer',
   },
   valueDialogSeparator: {
-    border: `none`,
+    border: 'none',
     borderBottom: `1px solid ${theme.palette.primary.dark}`,
     width: '100%',
   },
