@@ -80,10 +80,10 @@ describe('test snapshot creation', () => {
     cy.get('div.MuiButtonBase-root:nth-child(2) > svg:nth-child(1)').click({ force: true });
     cy.get('[data-cy=createSnapshot]').click({ force: true });
     cy.get('[data-cy=textFieldName]').type('mock_snapshot');
-    cy.get('[data-cy=selectAsset]').click({ force: true });
-    cy.get('[data-cy=menuItem-Variant]').click({ force: true });
-    cy.get('[data-cy=next]').click({ force: true });
-    cy.get('[data-cy=releaseDataset]').click({ force: true });
+    cy.get('[data-cy=selectAsset]').click();
+    cy.get('[data-cy=menuItem-Variant]').click();
+    cy.get('[data-cy=next]').click();
+    cy.get('[data-cy=releaseDataset]').click();
 
     cy.get('[data-cy=snapshotName]').should('contain', 'mock_snapshot');
     cy.get('[data-cy=snapshotReaders]').should('contain', 'email@gmail.com');

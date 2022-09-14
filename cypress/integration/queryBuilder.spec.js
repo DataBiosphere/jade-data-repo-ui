@@ -196,12 +196,12 @@ describe('test query builder', () => {
       cy.get('[data-cy=next]').should('be.disabled');
 
       // select asset
-      cy.get('[data-cy=selectAsset]').click({ force: true });
-      cy.get('[data-cy=menuItem-Variant]').click({ force: true });
+      cy.get('[data-cy=selectAsset]').click();
+      cy.get('[data-cy=menuItem-Variant]').click();
       cy.get('[data-cy=next]').should('not.be.disabled');
 
       // 'next' button should bring user to share panel
-      cy.get('[data-cy=next]').click({ force: true });
+      cy.get('[data-cy=next]').click();
       cy.contains('Share Snapshot').should('be.visible');
       cy.window()
         .its('store')
