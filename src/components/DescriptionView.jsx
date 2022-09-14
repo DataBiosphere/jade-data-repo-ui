@@ -58,7 +58,7 @@ const styles = (theme) => ({
   },
 });
 
-const maxLength = 2047;
+const MAX_LENGTH = 2047;
 
 const descriptionTooLongError = {
   response: {
