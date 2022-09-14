@@ -110,7 +110,7 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
             <DescriptionView
               description={snapshot.description}
               canEdit={canEditDescription}
-              updateDescriptionFn={(text: string | null) =>
+              updateDescriptionFn={(text: string | undefined) =>
                 dispatch(patchSnapshotDescription(snapshot.id, text))
               }
             />
