@@ -69,7 +69,7 @@ describe('test query builder', () => {
       });
 
       it('creates snapshot query', () => {
-        cy.get('[data-cy=createSnapshot]').click();
+        cy.get('[data-cy=createSnapshot]').click({ force: true });
 
         cy.window()
           .its('store')
@@ -135,7 +135,7 @@ describe('test query builder', () => {
   describe('test share panel', () => {
     beforeEach(() => {
       // selects the share button in the sidebar
-      cy.get('div.MuiButtonBase-root:nth-child(3) > svg:nth-child(1)').click();
+      cy.get('div.MuiButtonBase-root:nth-child(3) > svg:nth-child(1)').click({ force: true });
     });
 
     it('adds/removes readers', () => {
@@ -186,7 +186,7 @@ describe('test query builder', () => {
       cy.get('div.MuiButtonBase-root:nth-child(2) > svg:nth-child(1)').click();
 
       // create snapshot button should open 'Add details' panel
-      cy.get('[data-cy=createSnapshot]').click();
+      cy.get('[data-cy=createSnapshot]').click({ force: true });
       // TODO: figure out why cypress gets mad about this
       // cy.contains('Add Details').should('be.visible');
       cy.get('[data-cy=next]').should('be.disabled');
@@ -196,12 +196,12 @@ describe('test query builder', () => {
       cy.get('[data-cy=next]').should('be.disabled');
 
       // select asset
-      cy.get('[data-cy=selectAsset]').click();
-      cy.get('[data-cy=menuItem-Variant]').click();
+      cy.get('[data-cy=selectAsset]').click({ force: true });
+      cy.get('[data-cy=menuItem-Variant]').click({ force: true });
       cy.get('[data-cy=next]').should('not.be.disabled');
 
       // 'next' button should bring user to share panel
-      cy.get('[data-cy=next]').click();
+      cy.get('[data-cy=next]').click({ force: true });
       cy.contains('Share Snapshot').should('be.visible');
       cy.window()
         .its('store')
