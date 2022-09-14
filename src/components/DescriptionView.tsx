@@ -1,15 +1,12 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { Button, Box, Grid, IconButton, TextField, Typography } from '@mui/material';
+import { ClassNameMap, CustomTheme } from '@mui/material/styles';
+import { Button, IconButton, TextField, Typography } from '@mui/material';
 import Edit from '@mui/icons-material/Edit';
 import { showNotification } from 'modules/notifications';
-import UndoIcon from '@mui/icons-material/Undo';
-import SaveIcon from '@mui/icons-material/Save';
 import { withStyles } from '@mui/styles';
-import { patchDatasetDescription } from 'actions';
 import { DatasetRoles } from '../constants';
 
-const styles = (theme) => ({
+const styles = (theme: CustomTheme) => ({
   descriptionEditor: {
     width: '100%',
     display: 'flex',
@@ -69,30 +66,39 @@ const descriptionTooLongError = {
     },
   },
 };
-class DescriptionView extends React.PureComponent {
-  constructor(props) {
+
+type DescriptionViewProps = {
+  classes: ClassNameMap;
+  description: string;
+  updateDescriptionFn: any;
+  userRoles: Array<string>;
+};
+
+type DescriptionViewState = {
+  hasDescriptionChanged: boolean;
+  descriptionValue: string | null;
+  isEditing: boolean;
+  isPendingSave: boolean;
+};
+
+const initialState: DescriptionViewState = {
+  hasDescriptionChanged: false,
+  descriptionValue: null,
+  isEditing: false,
+  isPendingSave: false,
+};
+
+class DescriptionView extends React.PureComponent<DescriptionViewProps, DescriptionViewState> {
+  constructor(props: DescriptionViewProps) {
     super(props);
-    const descriptionInitialValue = props.description;
-    this.state = {
-      hasDescriptionChanged: false,
-      descriptionValue: descriptionInitialValue,
-      isEditing: false,
-      isPendingSave: false,
-    };
+    initialState.descriptionValue = props.description;
+    this.state = initialState;
     this.textFieldRef = React.createRef();
   }
 
-  static propTypes = {
-    classes: PropTypes.object.isRequired,
-    datasetDescription: PropTypes.string,
-    description: PropTypes.string,
-    updateDescriptionFn: PropTypes.func.isRequired,
-    userRoles: PropTypes.array.isRequired,
-  };
-
-  componentDidUpdate(prevState) {
-    const { description } = this.props;
+  componentDidUpdate() {
     const { descriptionValue, isPendingSave } = this.state;
+    const { description } = this.props;
     if (isPendingSave && description === descriptionValue) {
       this.setState({ hasDescriptionChanged: false });
       this.setState({ isPendingSave: false });
@@ -100,8 +106,10 @@ class DescriptionView extends React.PureComponent {
     }
   }
 
-  descriptionChanged(newDescription, originalDescription) {
-    if (newDescription.length > MAX_LENGTH) {
+  textFieldRef: React.RefObject<any>;
+
+  descriptionChanged(newDescription: string | null, originalDescription: string | null) {
+    if (newDescription && newDescription.length > MAX_LENGTH) {
       showNotification(descriptionTooLongError);
       this.setState({ descriptionValue: newDescription.substring(0, 2046) });
     } else {
@@ -114,7 +122,7 @@ class DescriptionView extends React.PureComponent {
     }
   }
 
-  onDescriptionTextBlur(newDescription, originalDescription) {
+  onDescriptionTextBlur(newDescription: string | null, originalDescription: string | null) {
     this.descriptionChanged(newDescription, originalDescription);
     this.onExitEdit();
   }
@@ -136,20 +144,20 @@ class DescriptionView extends React.PureComponent {
 
   onExitEdit() {
     const { description } = this.props;
-    const { descriptionValue, isPendingSave } = this.state;
+    const { descriptionValue } = this.state;
     if (description === descriptionValue) {
       this.setState({ isEditing: false });
     }
   }
 
-  onSaveClick(descriptionText) {
+  onSaveClick(descriptionText: string | null) {
     const { updateDescriptionFn } = this.props;
     this.setState({ isPendingSave: true });
     updateDescriptionFn(descriptionText);
   }
 
   render() {
-    const { classes, description, userRoles, datasetDescription } = this.props;
+    const { classes, description, userRoles } = this.props;
     const { hasDescriptionChanged, descriptionValue, isEditing } = this.state;
     const canEdit = userRoles.includes(DatasetRoles.STEWARD);
 
@@ -169,7 +177,7 @@ class DescriptionView extends React.PureComponent {
                 data-cy="description-edit-button"
                 disableFocusRipple={true}
                 disableRipple={true}
-                onClick={(e) => this.onEditClick()}
+                onClick={() => this.onEditClick()}
               >
                 <Edit fontStyle="small" className={classes.editIconImage} />
               </IconButton>
@@ -179,7 +187,6 @@ class DescriptionView extends React.PureComponent {
                 data-cy="description-text-field"
                 fullWidth={true}
                 inputRef={this.textFieldRef}
-                maxLength={2047}
                 maxRows={5}
                 minRows={2}
                 multiline={true}
