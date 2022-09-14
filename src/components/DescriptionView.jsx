@@ -65,7 +65,7 @@ const descriptionTooLongError = {
     status: 'Description too long',
     data: {
       message: '',
-      errorDetail: `Exceeds ${maxLength} characters.  Please revise and save again.`,
+      errorDetail: `Exceeds ${MAX_LENGTH} characters.  Please revise and save again.`,
     },
   },
 };
@@ -101,7 +101,7 @@ class DescriptionView extends React.PureComponent {
   }
 
   descriptionChanged(newDescription, originalDescription) {
-    if (newDescription.length > maxLength) {
+    if (newDescription.length > MAX_LENGTH) {
       showNotification(descriptionTooLongError);
       this.setState({ descriptionValue: newDescription.substring(0, 2046) });
     } else {
