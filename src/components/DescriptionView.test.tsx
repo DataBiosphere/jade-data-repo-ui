@@ -26,7 +26,7 @@ beforeEach(() => {
         <DescriptionView
           description={initialState.dataset.description}
           userRoles={userRoles}
-          updateDescriptionFn={(text) => {
+          updateDescriptionFn={(text: any) => {
             initialState.dataset.description = text;
           }}
         />
