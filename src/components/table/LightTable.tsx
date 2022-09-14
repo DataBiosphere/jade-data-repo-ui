@@ -22,12 +22,12 @@ import { applySort, resizeColumn, changePage, changeRowsPerPage } from 'actions/
 import { connect } from 'react-redux';
 import { CustomTheme } from '@mui/material/styles';
 import { Property } from 'csstype';
-
 import clsx from 'clsx';
+
 import LightTableHead from './LightTableHead';
 import LoadingSpinner from '../common/LoadingSpinner';
 import { AppDispatch } from '../../store';
-import { TableColumnType, TableRowType, OrderDirectionOptions } from '../../reducers/query';
+import { TableColumnType, OrderDirectionOptions } from '../../reducers/query';
 import { TdrState } from '../../reducers';
 import { TABLE_DEFAULT_ROWS_PER_PAGE_OPTIONS, TABLE_DEFAULT_SORT_ORDER } from '../../constants';
 
@@ -120,7 +120,9 @@ const styles = (theme: CustomTheme) => ({
   },
 });
 
-type LightTableProps = {
+// type RowType = TableRowType | DatasetSummaryModel | SnapshotSummaryModel;
+
+type LightTableProps<RowType> = {
   classes: ClassNameMap;
   columns: Array<TableColumnType>;
   dispatch: AppDispatch;
@@ -139,7 +141,7 @@ type LightTableProps = {
   noRowsMessage: string;
   page: number;
   pageBQQuery?: () => void;
-  rows: Array<TableRowType>;
+  rows: Array<RowType>;
   rowsPerPage: number;
   searchString: string;
   tableName?: string;
@@ -164,7 +166,7 @@ function LightTable({
   searchString,
   tableName,
   totalCount,
-}: LightTableProps) {
+}: LightTableProps<object>) {
   const [seeMore, setSeeMore] = useState({ open: false, title: '', contents: [''] });
 
   const handleRequestSort = (_event: any, sort: string) => {
@@ -245,14 +247,14 @@ function LightTable({
     );
   };
 
-  const handleValues = (row: TableRowType, column: TableColumnType) => {
-    const value = row[column.name];
+  const handleValues = (row: object, column: TableColumnType) => {
+    const value = row[column.name as keyof object];
     if (column.render) {
       return column.render(row);
     }
     if (_.isArray(value)) {
       if (column.arrayOf) {
-        return handleRepeatedValues(value, column.name);
+        return handleRepeatedValues(value as Array<string>, column.name);
       }
       const singleValue = value[0];
       return _.isNil(singleValue) ? handleNullValue() : `${singleValue}`;

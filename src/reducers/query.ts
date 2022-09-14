@@ -9,13 +9,13 @@ import { ActionTypes, TABLE_DEFAULT_ROWS_PER_PAGE, TABLE_DEFAULT_COLUMN_WIDTH } 
 
 export type TableColumnType = {
   name: string;
-  dataType: string;
-  arrayOf: boolean;
-  allowResize: boolean;
-  allowSort: boolean;
+  dataType?: string;
+  arrayOf?: boolean;
+  allowResize?: boolean;
+  allowSort?: boolean;
   label: string;
-  numeric: boolean;
-  render: (row: object) => string;
+  numeric?: boolean;
+  render?: (row: object) => string | JSX.Element;
   width?: number | string;
 };
 
