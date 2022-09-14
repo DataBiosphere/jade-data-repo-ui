@@ -65,7 +65,7 @@ const descriptionTooLongError = {
     status: 'Description too long',
     data: {
       message: '',
-      errorDetail: 'Exceeds 2047 characters.  Please revise and save again.',
+      errorDetail: `Exceeds ${maxLength} characters.  Please revise and save again.`,
     },
   },
 };
