@@ -111,7 +111,7 @@ class DescriptionView extends React.PureComponent<DescriptionViewProps, Descript
   descriptionChanged(newDescription: string | null, originalDescription: string | null) {
     if (newDescription && newDescription.length > MAX_LENGTH) {
       showNotification(descriptionTooLongError);
-      this.setState({ descriptionValue: newDescription.substring(0, 2046) });
+      this.setState({ descriptionValue: newDescription.substring(0, MAX_LENGTH - 1) });
     } else {
       this.setState({ descriptionValue: newDescription });
     }
