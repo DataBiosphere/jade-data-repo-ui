@@ -1,19 +1,22 @@
 import { handleActions } from 'redux-actions';
+import _ from 'lodash';
 import immutable from 'immutability-helper';
 import { LOCATION_CHANGE } from 'connected-react-router';
 import BigQuery from 'modules/bigquery';
 import { ColumnModel } from 'generated/tdr';
 
-import { ActionTypes, TABLE_DEFAULT_ROWS_PER_PAGE } from '../constants';
+import { ActionTypes, TABLE_DEFAULT_ROWS_PER_PAGE, TABLE_DEFAULT_COLUMN_WIDTH } from '../constants';
 
 export type TableColumnType = {
   name: string;
   dataType: string;
   arrayOf: boolean;
+  allowResize: boolean;
   allowSort: boolean;
   label: string;
   numeric: boolean;
   render: (row: object) => string;
+  width?: number | string;
 };
 
 export type TableRowType = {
@@ -83,8 +86,8 @@ export default {
       [ActionTypes.RUN_QUERY_SUCCESS]: (state, action: any) => {
         const bigquery = new BigQuery();
         const queryResults = action.results.data;
-
-        const columns = bigquery.transformColumns(queryResults);
+        const columnsByName = _.keyBy(state.columns, 'name');
+        const columns = bigquery.transformColumns(queryResults, columnsByName);
         const rows = bigquery.transformRows(queryResults, columns);
         const queryParams = {
           pageToken: queryResults.pageToken,
@@ -103,11 +106,14 @@ export default {
       },
       [ActionTypes.PREVIEW_DATA_SUCCESS]: (state, action: any) => {
         const rows = action.payload.queryResults.data.result;
+        const columnsByName = _.keyBy(state.columns, 'name');
         const columns = action.payload.columns.map((column: ColumnModel) => ({
           name: column.name,
           dataType: column.datatype,
           arrayOf: column.array_of,
           allowSort: !column.array_of,
+          allowResize: true,
+          width: columnsByName[column.name]?.width || TABLE_DEFAULT_COLUMN_WIDTH,
         }));
         const queryParams = {
           totalRows: parseInt(action.payload.totalRowCount, 10),
@@ -123,23 +129,30 @@ export default {
           resultsCount: { $set: rows.length },
         });
       },
+      [ActionTypes.PAGE_QUERY]: (state) =>
+        immutable(state, {
+          polling: { $set: true },
+        }),
       [ActionTypes.PAGE_QUERY_SUCCESS]: (state, action: any) => {
         const bigquery = new BigQuery();
         const queryResults = action.results.data;
 
-        const columns = bigquery.transformColumns(queryResults);
+        const columnsByName = _.keyBy(state.columns, 'name');
+        const columns = bigquery.transformColumns(queryResults, columnsByName);
         const rows = bigquery.transformRows(queryResults, columns);
         const queryParams = {
           pageToken: queryResults.pageToken,
           projectId: queryResults.jobReference.projectId,
           jobId: queryResults.jobReference.jobId,
-          totalRows: queryResults.totalRows,
+          totalRows: parseInt(queryResults.totalRows, 10),
         };
 
         return immutable(state, {
           queryParams: { $set: queryParams },
           columns: { $set: columns },
           rows: { $set: rows },
+          polling: { $set: false },
+          delay: { $set: false },
         });
       },
       [ActionTypes.RUN_QUERY]: (state) =>
@@ -174,6 +187,27 @@ export default {
         immutable(state, {
           page: { $set: action.payload },
         }),
+      [ActionTypes.RESIZE_COLUMN]: (state, action: any) =>
+        immutable(state, {
+          columns: {
+            $set: state.columns.map((column) => {
+              if (column.name === action.payload.property) {
+                return {
+                  name: column.name,
+                  dataType: column.dataType,
+                  arrayOf: column.arrayOf,
+                  allowResize: column.allowResize,
+                  allowSort: column.allowSort,
+                  label: column.label,
+                  numeric: column.numeric,
+                  render: column.render,
+                  width: action.payload.width,
+                };
+              }
+              return column;
+            }),
+          },
+        }),
       [ActionTypes.APPLY_FILTERS]: (state, action: any) => {
         const bigquery = new BigQuery();
         const filterStatement = bigquery.buildFilterStatement(action.payload.filters);
@@ -197,6 +231,7 @@ export default {
         }),
       [ActionTypes.RESET_QUERY]: (state) =>
         immutable(state, {
+          columns: { $set: [] },
           filterData: { $set: {} },
           filterStatement: { $set: '' },
           joinStatement: { $set: '' },
@@ -208,6 +243,7 @@ export default {
         }),
       [LOCATION_CHANGE]: (state) =>
         immutable(state, {
+          rows: { $set: [] },
           filterData: { $set: {} },
           filterStatement: { $set: '' },
           joinStatement: { $set: '' },

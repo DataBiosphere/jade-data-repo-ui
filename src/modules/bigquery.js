@@ -2,19 +2,21 @@ import React from 'react';
 import axios from 'axios';
 import _ from 'lodash';
 import AwesomeDebouncePromise from 'awesome-debounce-promise';
-import { ColumnModes, DbColumns } from '../constants';
+import { ColumnModes, DbColumns, TABLE_DEFAULT_COLUMN_WIDTH } from '../constants';
 
 export default class BigQuery {
   constructor() {
     this.pageTokenMap = {};
   }
 
-  transformColumns = (queryResults) =>
+  transformColumns = (queryResults, columnsByName) =>
     _.get(queryResults, 'schema.fields', []).map((field) => ({
       name: field.name,
       dataType: field.type,
       arrayOf: field.mode === ColumnModes.REPEATED,
       allowSort: field.mode !== ColumnModes.REPEATED,
+      allowResize: true,
+      width: columnsByName[field.name]?.width || TABLE_DEFAULT_COLUMN_WIDTH,
     }));
 
   transformRows = (queryResults, columns) => {

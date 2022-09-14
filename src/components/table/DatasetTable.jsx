@@ -47,29 +47,34 @@ class DatasetTable extends React.PureComponent {
             </Link>
           </div>
         ),
+        width: '25%',
       },
       {
         label: 'Description',
         name: 'description',
         allowSort: true,
+        width: '35%',
       },
       {
         label: 'Date created',
         name: 'created_date',
         allowSort: true,
         render: (row) => moment(row.createdDate).fromNow(),
+        width: '10%',
       },
       {
         label: 'Storage Regions',
         name: 'storage',
         allowSort: false,
         render: (row) => Array.from(new Set(row.storage.map((s) => s.region))).join(', '),
+        width: '15%',
       },
       {
         label: 'Cloud Platform',
         name: 'platform',
         allowSort: false,
         render: renderCloudPlatforms,
+        width: '15%',
       },
     ];
     return (

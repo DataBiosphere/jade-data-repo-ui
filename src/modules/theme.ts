@@ -110,9 +110,10 @@ const theme = createTheme({
       selectedTextBackground: '#F1F4F8',
     },
     lightTable: {
-      cellBackgroundDark: 'rgba(233,236,239,0.4)',
+      cellBackgroundHeader: 'rgb(244, 246, 247)',
+      cellBackgroundDark: 'rgb(251, 251, 252)',
       callBackgroundLight: 'white',
-      borderColor: '#E8EAEB',
+      borderColor: 'rgb(214, 217, 220)',
       paginationBlue: baseColors.primary,
       bottomColor: '#E0E0E0',
     },
@@ -241,6 +242,7 @@ const theme = createTheme({
   mixins: {
     jadeLink: {
       color: LINK,
+      fontWeight: 500,
       '&:hover': {
         color: LINK_HOVER,
       },
