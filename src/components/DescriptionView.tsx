@@ -69,20 +69,20 @@ const descriptionTooLongError = {
 type DescriptionViewProps = {
   canEdit: boolean;
   classes: ClassNameMap;
-  description: string;
+  description: string | undefined;
   updateDescriptionFn: any;
 };
 
 type DescriptionViewState = {
   hasDescriptionChanged: boolean;
-  descriptionValue: string | null;
+  descriptionValue: string | undefined;
   isEditing: boolean;
   isPendingSave: boolean;
 };
 
 const initialState: DescriptionViewState = {
   hasDescriptionChanged: false,
-  descriptionValue: null,
+  descriptionValue: undefined,
   isEditing: false,
   isPendingSave: false,
 };
@@ -107,7 +107,7 @@ class DescriptionView extends React.PureComponent<DescriptionViewProps, Descript
 
   textFieldRef: React.RefObject<any>;
 
-  descriptionChanged(newDescription: string | null, originalDescription: string | null) {
+  descriptionChanged(newDescription: string | undefined, originalDescription: string | undefined) {
     if (newDescription && newDescription.length > MAX_LENGTH) {
       showNotification(descriptionTooLongError);
       this.setState({ descriptionValue: newDescription.substring(0, 2046) });
@@ -121,7 +121,10 @@ class DescriptionView extends React.PureComponent<DescriptionViewProps, Descript
     }
   }
 
-  onDescriptionTextBlur(newDescription: string | null, originalDescription: string | null) {
+  onDescriptionTextBlur(
+    newDescription: string | undefined,
+    originalDescription: string | undefined,
+  ) {
     this.descriptionChanged(newDescription, originalDescription);
     this.onExitEdit();
   }
@@ -149,7 +152,7 @@ class DescriptionView extends React.PureComponent<DescriptionViewProps, Descript
     }
   }
 
-  onSaveClick(descriptionText: string | null) {
+  onSaveClick(descriptionText: string | undefined) {
     const { updateDescriptionFn } = this.props;
     this.setState({ isPendingSave: true });
     updateDescriptionFn(descriptionText);
