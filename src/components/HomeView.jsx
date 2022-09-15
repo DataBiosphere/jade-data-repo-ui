@@ -45,25 +45,6 @@ const styles = (theme) => ({
     flex: '1 1 0',
     'padding-right': '2em',
   },
-  tabsRoot: {
-    color: '#333F52',
-    fontFamily: theme.typography.fontFamily,
-    height: 18,
-    fontSize: '1rem',
-    fontWeight: 600,
-    lineHeight: 18,
-    textAlign: 'center',
-    width: '100%',
-  },
-  tabSelected: {
-    fontWeight: 700,
-    color: theme.palette.secondary.dark,
-    bottomBar: '6px',
-  },
-  tabsIndicator: {
-    borderBottom: `6px solid ${theme.palette.terra.green}`,
-    transition: 'none',
-  },
   titleAndSearch: {
     display: 'flex',
     'margin-top': '1.25em',
@@ -95,26 +76,6 @@ function HomeView({ classes, location }) {
           clearSearchString={() => setSearchString('')}
         />
       </div>
-      <Tabs classes={{ root: classes.tabsRoot, indicator: classes.tabsIndicator }} value={tabValue}>
-        <Tab
-          label="Datasets"
-          component={Link}
-          value="/datasets"
-          to="/datasets"
-          classes={{ selected: classes.tabSelected }}
-          disableFocusRipple
-          disableRipple
-        />
-        <Tab
-          label="Snapshots"
-          component={Link}
-          value="/snapshots"
-          to="/snapshots"
-          classes={{ selected: classes.tabSelected }}
-          disableFocusRipple
-          disableRipple
-        />
-      </Tabs>
       {tableValue}
     </div>
   );
