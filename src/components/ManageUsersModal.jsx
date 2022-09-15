@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
-import { Edit } from '@mui/icons-material';
+import { Circle, Edit } from '@mui/icons-material';
 import ManageUsersView from './ManageUsersView';
 
 const styles = (theme) => ({
@@ -46,17 +46,25 @@ const styles = (theme) => ({
     width: '100%',
   },
   iconButton: {
-    border: `1px solid ${theme.palette.primary.main}`,
     borderRadius: '3px',
     padding: '1px',
-    backgroundColor: theme.palette.primary.main,
+    position: 'relative',
+    marginLeft: 5,
+  },
+  iconButtonBackground: {
+    color: theme.palette.primary.main,
+    fontSize: `calc(${theme.typography.h6.fontSize} * 1.9)`,
+    position: 'absolute',
     '&:hover': {
-      backgroundColor: theme.palette.primary.hover,
+      color: theme.palette.primary.hover,
+      boxShadow: 'none',
     },
+    zIndex: 1,
   },
   horizontalModalButton: {
     fontSize: theme.typography.h6.fontSize,
     color: theme.palette.primary.light,
+    zIndex: 2,
   },
 });
 
@@ -98,6 +106,7 @@ export class ManageUsersModal extends React.PureComponent {
         disableFocusRipple={true}
         disableRipple={true}
       >
+        <Circle fontStyle="large" className={classes.iconButtonBackground} />
         <Edit fontStyle="small" className={classes.horizontalModalButton} />
       </IconButton>
     ) : (

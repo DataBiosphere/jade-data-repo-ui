@@ -33,7 +33,7 @@ const styles = (theme: CustomTheme) =>
     },
     iconButtonBackground: {
       color: theme.palette.primary.main,
-      fontSize: theme.typography.h2.fontSize,
+      fontSize: `calc(${theme.typography.h6.fontSize} * 2.1)`,
       position: 'absolute',
       '&:hover': {
         color: theme.palette.primary.hover,
