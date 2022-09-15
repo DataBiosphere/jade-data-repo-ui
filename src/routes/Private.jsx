@@ -25,7 +25,6 @@ const styles = (theme) => ({
   },
   tabsIndicator: {
     borderBottom: '8px solid #74ae43',
-    transition: 'none',
   },
   tabsRoot: {
     borderBottom: `2px solid ${theme.palette.terra.green}`,
