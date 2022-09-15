@@ -1,13 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Grid, Tab, Tabs, Typography } from '@mui/material';
+import { Button, Grid, Tab, Tabs, TextField, Typography } from '@mui/material';
 import { withStyles } from '@mui/styles';
 import { connect } from 'react-redux';
 import moment from 'moment';
+import { patchDatasetDescription } from 'actions';
 import GoogleSheetExport from 'components/common/overview/GoogleSheetExport';
 import { renderCloudPlatforms, renderStorageResources } from '../../../libs/render-utils';
 import DatasetAccess from '../DatasetAccess';
 import DatasetSnapshotsTable from '../../table/DatasetSnapshotsTable';
+import DescriptionView from '../../DescriptionView';
 import TabPanel from '../../common/TabPanel';
 
 const styles = (theme) => ({
@@ -45,7 +47,7 @@ function a11yProps(index) {
 
 function DatasetOverviewPanel(props) {
   const [value, setValue] = React.useState(0);
-  const { classes, dataset } = props;
+  const { classes, dataset, dispatch, userRoles } = props;
   const linkToBq = dataset.accessInformation?.bigQuery !== undefined;
 
   const handleChange = (event, newValue) => {
@@ -91,7 +93,11 @@ function DatasetOverviewPanel(props) {
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <Typography variant="h6">Description:</Typography>
-            <Typography>{dataset.description}</Typography>
+            <DescriptionView
+              description={dataset.description}
+              userRoles={userRoles}
+              updateDescriptionFn={(text) => dispatch(patchDatasetDescription(dataset.id, text))}
+            />
           </Grid>
           <Grid item xs={4}>
             <Typography variant="h6">Created:</Typography>
@@ -130,11 +136,15 @@ function DatasetOverviewPanel(props) {
 DatasetOverviewPanel.propTypes = {
   classes: PropTypes.object,
   dataset: PropTypes.object,
+  dispatch: PropTypes.func.isRequired,
+  userRoles: PropTypes.array,
 };
 
 function mapStateToProps(state) {
   return {
     dataset: state.datasets.dataset,
+    dispatch: state.dispatch,
+    userRoles: state.datasets.userRoles,
   };
 }
 

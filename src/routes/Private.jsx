@@ -37,8 +37,10 @@ const styles = (theme) => ({
     lineHeight: 18,
     textAlign: 'center',
     width: '100%',
+    transition: '0.3s background-color ease-in-out',
   },
   tabSelected: {
+    transition: '0.3s background-color ease-in-out',
     backgroundColor: '#ddebd0',
     color: theme.palette.secondary.dark,
   },
@@ -60,6 +62,21 @@ const styles = (theme) => ({
   },
 });
 
+const tabsConfig = [
+  { label: 'Datasets', path: '/datasets' },
+  { label: 'Snapshots', path: '/snapshots' },
+  { label: 'Jobs', path: '/jobs' },
+  { label: 'Ingest Data', path: '/ingestdata' },
+];
+
+const routes = [
+  { path: '/datasets', component: HomeView },
+  { path: '/snapshots', component: HomeView },
+  { path: '/datasets/:uuid', component: DatasetOverview },
+  { path: '/datasets/:uuid/data', component: DatasetDataView },
+  { path: '/snapshots/:uuid', component: SnapshotOverview },
+  { path: '/snapshots/:uuid/data', component: SnapshotDataView },
+];
 class Private extends React.Component {
   static propTypes = {
     classes: PropTypes.object.isRequired,
@@ -71,7 +88,8 @@ class Private extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const dashboardTabValues = '/datasets' || '/snapshots';
+    const locationSplit = history.location.pathname.split('/');
+    const selectedTab = `/${locationSplit[1] || 'datasets'}`;
     return (
       <ConnectedRouter history={history}>
         <Router history={history}>
@@ -82,18 +100,26 @@ class Private extends React.Component {
                 <Fragment>
                   <div className={classes.tabWrapper}>
                     <Tabs
-                      value={dashboardTabValues}
+                      value={selectedTab}
                       classes={{ root: classes.tabsRoot, indicator: classes.tabsIndicator }}
                     >
-                      <Tab
-                        label="Dashboard"
-                        component={Link}
-                        value="/datasets"
-                        to="/datasets"
-                        classes={{ selected: classes.tabSelected }}
-                        disableFocusRipple
-                        disableRipple
-                      />
+                      {tabsConfig
+                        .filter(
+                          (config) =>
+                            routes.findIndex((route) => route.path === config.path) !== -1,
+                        )
+                        .map((config, i) => (
+                          <Tab
+                            key={`navbar-link-${i}`}
+                            label={config.label}
+                            component={Link}
+                            value={config.path}
+                            to={config.path}
+                            classes={{ selected: classes.tabSelected }}
+                            disableFocusRipple
+                            disableRipple
+                          />
+                        ))}
                     </Tabs>
                     <HelpContainer className={classes.helpIconDiv} />
                   </div>
@@ -102,12 +128,14 @@ class Private extends React.Component {
                       <Route exact path="/" component={HomeView}>
                         <Redirect to="/datasets" />
                       </Route>
-                      <Route exact path="/datasets" component={HomeView} />
-                      <Route exact path="/snapshots" component={HomeView} />
-                      <Route exact path="/datasets/:uuid" component={DatasetOverview} />
-                      <Route exact path="/datasets/:uuid/data" component={DatasetDataView} />
-                      <Route exact path="/snapshots/:uuid" component={SnapshotOverview} />
-                      <Route exact path="/snapshots/:uuid/data" component={SnapshotDataView} />
+                      {routes.map((route, i) => (
+                        <Route
+                          exact
+                          key={`route-${i}`}
+                          path={route.path}
+                          component={route.component}
+                        />
+                      ))}
                       <Route component={NotFound} />
                     </Switch>
                   </div>

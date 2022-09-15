@@ -2,7 +2,7 @@
   "name": "jade-data-repo-ui",
   "title": "jade-data-repo-ui",
   "description": "Data Repository UI",
-  "version": "0.143.0",
+  "version": "0.145.0",
   "author": "Jade Team <jadeteam@broadinstitute.org>",
   "engines": {
     "node": ">=12.22"
@@ -24,6 +24,9 @@
   "dependencies": {
     "@babel/runtime": "^7.17.8",
     "@emotion/styled": "^11.8.1",
+    "@fortawesome/fontawesome-svg-core": "^6.2.0",
+    "@fortawesome/free-solid-svg-icons": "^6.2.0",
+    "@fortawesome/react-fontawesome": "^0.2.0",
     "@mui/icons-material": "^5.4.1",
     "@mui/lab": "^5.0.0-alpha.75",
     "@mui/material": "^5.4.1",
@@ -39,6 +42,7 @@
     "@types/react": "^17.0.39",
     "@types/react-dom": "^17.0.11",
     "@types/react-jss": "^10.0.0",
+    "@types/react-virtualized": "^9.21.21",
     "animate.css": "^4.1.1",
     "awesome-debounce-promise": "^2.1.0",
     "axios": "^0.21.2",
@@ -62,6 +66,8 @@
     "oidc-client-ts": "^2.0.4",
     "prop-types": "^15.7.2",
     "react": "^17.0.2",
+    "react-draggable": "^4.4.5",
+    "react-fontawesome": "^1.7.1",
     "react-helmet": "^6.1.0",
     "react-notifications-component": "^3.4.1",
     "react-oidc-context": "^2.1.0",
