@@ -12,14 +12,16 @@ import {
   Table,
   TableBody,
   TableCell,
+  TableContainer,
   TablePagination,
   TableRow,
   Typography,
 } from '@mui/material';
 import { Close } from '@mui/icons-material';
-import { applySort, changePage, changeRowsPerPage } from 'actions/index';
+import { applySort, resizeColumn, changePage, changeRowsPerPage } from 'actions/index';
 import { connect } from 'react-redux';
 import { CustomTheme } from '@mui/material/styles';
+import { Property } from 'csstype';
 
 import clsx from 'clsx';
 import LightTableHead from './LightTableHead';
@@ -31,14 +33,15 @@ import { TABLE_DEFAULT_ROWS_PER_PAGE_OPTIONS, TABLE_DEFAULT_SORT_ORDER } from '.
 
 const styles = (theme: CustomTheme) => ({
   root: {
-    border: `1px solid ${theme.palette.lightTable.borderColor}`,
-    borderRadius: `${theme.shape.borderRadius}px ${theme.shape.borderRadius}px 0 0`,
     boxShadow: 'none',
     maxHeight: '100%',
+    position: 'relative' as Property.Position,
   },
   tableWrapper: {
+    border: `1px solid ${theme.palette.lightTable.borderColor}`,
     maxHeight: 'calc(100vh - 325px)',
     overflow: 'auto',
+    backgroundColor: theme.palette.lightTable.cellBackgroundDark,
   },
   nullValue: {
     fontStyle: 'italic',
@@ -46,28 +49,67 @@ const styles = (theme: CustomTheme) => ({
     color: theme.palette.primary.dark,
   },
   dialogContentText: {
-    width: 'max-content',
     maxWidth: '800px',
+    maxHeight: '80vh',
   },
   seeMoreLink: {
     ...theme.mixins.jadeLink,
     cursor: 'pointer',
   },
+  valueDialogSeparator: {
+    border: 'none',
+    borderBottom: `1px solid ${theme.palette.primary.dark}`,
+    width: '100%',
+  },
   table: {
     borderRadius: `${theme.shape.borderRadius}px ${theme.shape.borderRadius}px 0 0`,
-    minWidth: 700,
+  },
+  nonResizableTable: {
+    tableLayout: 'fixed' as Property.TableLayout,
+  },
+  overlaySpinner: {
+    opacity: 0.6,
+    position: 'absolute' as Property.Position,
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+    width: 'initial',
+    height: 'initial',
+    backgroundColor: theme.palette.common.white,
+    zIndex: 100,
   },
   row: {
     borderRadius: `${theme.shape.borderRadius}px ${theme.shape.borderRadius}px 0 0`,
+    '&:last-child td': {
+      borderBottom: 'none',
+    },
   },
   cell: {
-    borderBottom: `1px solid ${theme.palette.lightTable.bottomColor}`,
+    borderRight: `1px solid ${theme.palette.lightTable.borderColor}`,
+    borderBottom: `1px solid ${theme.palette.lightTable.borderColor}`,
+    '&:last-child': {
+      borderRight: 'none',
+    },
+  },
+  cellArrayWrapper: {
+    display: 'flex',
+  },
+  // Typescript coaxing to combine the ellipsis mixin with other CSS properties
+  // eslint-disable-next-line prefer-object-spread
+  cellArrayContent: Object.assign({ flexGrow: 1 }, theme.mixins.ellipsis),
+  cellContent: {
+    ...theme.mixins.ellipsis,
   },
   lightRow: {
     backgroundColor: theme.palette.lightTable.callBackgroundLight,
   },
   darkRow: {
     backgroundColor: theme.palette.lightTable.cellBackgroundDark,
+  },
+  paginationWrapper: {
+    border: `1px solid ${theme.palette.lightTable.borderColor}`,
+    borderTop: 'none',
   },
   paginationButton: {
     borderRadius: `${theme.shape.borderRadius}px`,
@@ -77,8 +119,6 @@ const styles = (theme: CustomTheme) => ({
     color: theme.palette.lightTable.paginationBlue,
   },
 });
-
-const MAX_REPEATED_VALUES = 5;
 
 type LightTableProps = {
   classes: ClassNameMap;
@@ -99,7 +139,6 @@ type LightTableProps = {
   noRowsMessage: string;
   page: number;
   pageBQQuery?: () => void;
-  rowKey: (row: TableRowType) => string;
   rows: Array<TableRowType>;
   rowsPerPage: number;
   searchString: string;
@@ -120,7 +159,6 @@ function LightTable({
   orderProperty,
   page,
   pageBQQuery,
-  rowKey,
   rows,
   rowsPerPage,
   searchString,
@@ -135,6 +173,10 @@ function LightTable({
       newOrder = 'desc';
     }
     dispatch(applySort(sort, newOrder));
+  };
+
+  const handleResizeColumn = (_event: any, column: string, width: number) => {
+    dispatch(resizeColumn(column, width));
   };
 
   const handleChangeRowsPerPage = async (event: any) => {
@@ -173,40 +215,34 @@ function LightTable({
   const handleNullValue = () => <span className={classes.nullValue}>(empty)</span>;
 
   const handleRepeatedValues = (values: Array<string>, columnName: string) => {
-    const allValues = [];
-    const cleanValues = values.map((v) => (_.isNil(v) ? handleNullValue() : `${v}`));
-    const start = <span key="start">[</span>;
-    const end = <span key="end">]</span>;
-    for (let i = 0; i < cleanValues.length; i++) {
-      const thisValue = cleanValues[i];
-      if (i < cleanValues.length - 1) {
-        allValues.push(
-          <span key={`sep-${i}`}>
-            {thisValue},<br />
-          </span>,
-        );
-      } else {
-        allValues.push(thisValue);
-      }
-    }
-    const valuesToDisplay = [start, ...allValues, end];
-    if (allValues.length > MAX_REPEATED_VALUES) {
-      const ellipses = <span key="ellipses">...</span>;
-      const seeMoreLink = (
-        <span key="see-more">
-          <Link
-            className={classes.seeMoreLink}
-            onClick={() => handleSeeMoreOpen(valuesToDisplay, columnName)}
-          >
-            <br />
-            See all {allValues.length} values
-          </Link>
-        </span>
-      );
-      return [start, ...allValues.slice(0, MAX_REPEATED_VALUES), ellipses, end, seeMoreLink];
-    }
+    const cleanValues = values
+      .map((v) => (_.isNil(v) ? handleNullValue() : `${v}`))
+      .map((v, i) => <span key={`val-${i}`}>{v}</span>);
 
-    return valuesToDisplay;
+    const cellValues = cleanValues
+      .map((v, i) => [v, <span key={`sep-${i}`}>, </span>])
+      .flatMap((v) => v)
+      .slice(0, -1);
+
+    const dialogValues = cleanValues
+      .map((v, i) => [v, <hr key={`sep-${i}`} className={classes.valueDialogSeparator} />])
+      .flatMap((v) => v)
+      .slice(0, -1);
+
+    const seeMoreLink = (
+      <Link key="see-more" onClick={() => handleSeeMoreOpen(dialogValues, columnName)}>
+        <span className={classes.seeMoreLink}>
+          ({cleanValues.length} {cleanValues.length === 1 ? 'item' : 'items'})
+        </span>
+      </Link>
+    );
+
+    return (
+      <span className={classes.cellArrayWrapper}>
+        <span className={classes.cellArrayContent}>{cellValues}</span>
+        {seeMoreLink}
+      </span>
+    );
   };
 
   const handleValues = (row: TableRowType, column: TableColumnType) => {
@@ -241,38 +277,63 @@ function LightTable({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchString, page, rowsPerPage, orderProperty, orderDirection, tableName]);
 
+  const supportsResize = columns.some((col) => col.allowResize);
+  const tableWidth: number = columns.reduce(
+    (agg, column) => agg + (_.isNumber(column.width) ? column.width : NaN),
+    0,
+  );
+  const effectiveTableWidth = _.isNaN(tableWidth) || !supportsResize ? '100%' : tableWidth;
   return (
     <div>
-      {!loading && (
+      {!(loading && !rows?.length) && (
         <Paper className={classes.root}>
-          <div className={classes.tableWrapper}>
-            <Table className={classes.table}>
-              <LightTableHead columns={columns} onRequestSort={handleRequestSort} />
+          {loading && (
+            <LoadingSpinner
+              delay={delay}
+              delayMessage="For large datasets, it can take a few minutes to fetch results. Thank you for your patience."
+              className={classes.overlaySpinner}
+            />
+          )}
+          <TableContainer className={classes.tableWrapper}>
+            <Table
+              className={clsx(classes.table, { [classes.nonResizableTable]: !supportsResize })}
+              stickyHeader
+              sx={{ width: effectiveTableWidth }}
+            >
+              <LightTableHead
+                columns={columns}
+                onRequestSort={handleRequestSort}
+                onResizeColumn={handleResizeColumn}
+              />
               <TableBody data-cy="tableBody">
                 {rows && rows.length > 0 ? (
                   rows.map((row, index) => {
                     const darkRow = index % 2 !== 0;
-                    const rowKeyVal = rowKey ? rowKey(row) : row.name;
                     return (
                       <TableRow
                         hover
-                        key={rowKeyVal}
+                        key={`${index}`}
                         className={clsx({
                           [classes.row]: true,
                           [classes.darkRow]: darkRow,
                           [classes.lightRow]: !darkRow,
                         })}
                       >
-                        {columns.map((col) => (
-                          <TableCell
-                            className={classes.cell}
-                            key={`${col.name}-${rowKeyVal}`}
-                            style={{ wordBreak: 'break-word' }}
-                            data-cy={`cellValue-${col.name}-${index}`}
-                          >
-                            {handleValues(row, col)}
-                          </TableCell>
-                        ))}
+                        {columns.map((col) => {
+                          const maxWidth = _.isNumber(col.width) ? col.width : undefined;
+                          return (
+                            <TableCell
+                              className={classes.cell}
+                              key={`${col.name}-${index}`}
+                              style={{ wordBreak: 'break-word' }}
+                              data-cy={`cellValue-${col.name}-${index}`}
+                            >
+                              <div className={classes.cellContent} style={{ maxWidth }}>
+                                {handleValues(row, col)}
+                              </div>
+                            </TableCell>
+                          );
+                        })}
                       </TableRow>
                     );
                   })
@@ -283,9 +344,10 @@ function LightTable({
                 )}
               </TableBody>
             </Table>
-          </div>
+          </TableContainer>
           {rows && rows.length > 0 && (
             <TablePagination
+              className={classes.paginationWrapper}
               rowsPerPageOptions={TABLE_DEFAULT_ROWS_PER_PAGE_OPTIONS}
               component="div"
               count={filteredCount}
@@ -327,6 +389,7 @@ function LightTable({
             <DialogContent dividers={true}>
               <DialogContentText
                 className={classes.dialogContentText}
+                component="div"
                 id="see-more-dialog-content-text"
               >
                 {seeMore.contents}
@@ -335,7 +398,7 @@ function LightTable({
           </Dialog>
         </Paper>
       )}
-      {loading && (
+      {loading && !rows?.length && (
         <LoadingSpinner
           delay={delay}
           delayMessage="For large datasets, it can take a few minutes to fetch results. Thank you for your patience."

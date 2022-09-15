@@ -1,7 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@mui/styles';
 import { CircularProgress } from '@mui/material';
-import PropTypes from 'prop-types';
+import clsx from 'clsx';
 
 const useStyles = makeStyles(() => ({
   spinWrapper: {
@@ -16,19 +16,20 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-function LoadingSpinner({ delay, delayMessage }) {
+type LoadingSpinnerProps = {
+  className?: string;
+  delay: boolean;
+  delayMessage: string;
+};
+
+function LoadingSpinner({ className, delay, delayMessage }: LoadingSpinnerProps) {
   const classes = useStyles();
   return (
-    <div className={classes.spinWrapper}>
+    <div className={clsx(className, classes.spinWrapper)}>
       <CircularProgress className={classes.spinner} />
       {delay && delayMessage}
     </div>
   );
 }
-
-LoadingSpinner.propTypes = {
-  delay: PropTypes.bool,
-  delayMessage: PropTypes.string,
-};
 
 export default LoadingSpinner;

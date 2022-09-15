@@ -19,6 +19,7 @@ declare module '@mui/material/styles' {
   }
 
   interface CustomPaletteColors extends PaletteColor {
+    cellBackgroundHeader?: string;
     cellBackgroundDark?: string;
     callBackgroundLight?: string;
     borderColor?: string;

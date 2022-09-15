@@ -38,7 +38,7 @@ describe('test query builder', () => {
       for (let i = 0; i < 100; i++) {
         cy.get(`[data-cy=cellValue-consequence_terms-${i}]`).should(
           'have.text',
-          '[regulatory_region_variant]',
+          'regulatory_region_variant(1 item)',
         );
       }
     });
@@ -69,7 +69,7 @@ describe('test query builder', () => {
       });
 
       it('creates snapshot query', () => {
-        cy.get('[data-cy=createSnapshot]').click();
+        cy.get('[data-cy=createSnapshot]').click({ force: true });
 
         cy.window()
           .its('store')
@@ -135,7 +135,7 @@ describe('test query builder', () => {
   describe('test share panel', () => {
     beforeEach(() => {
       // selects the share button in the sidebar
-      cy.get('div.MuiButtonBase-root:nth-child(3) > svg:nth-child(1)').click();
+      cy.get('div.MuiButtonBase-root:nth-child(3) > svg:nth-child(1)').click({ force: true });
     });
 
     it('adds/removes readers', () => {
@@ -186,7 +186,7 @@ describe('test query builder', () => {
       cy.get('div.MuiButtonBase-root:nth-child(2) > svg:nth-child(1)').click();
 
       // create snapshot button should open 'Add details' panel
-      cy.get('[data-cy=createSnapshot]').click();
+      cy.get('[data-cy=createSnapshot]').click({ force: true });
       // TODO: figure out why cypress gets mad about this
       // cy.contains('Add Details').should('be.visible');
       cy.get('[data-cy=next]').should('be.disabled');

@@ -86,11 +86,6 @@ function DataView({
   tableNames,
   totalRows,
 }: DataViewProps) {
-  const rowKey = (row: TableRowType): string => {
-    const drId = row.datarepo_row_id;
-    return drId ?? row.name;
-  };
-
   // Can be removed after DR-2483
   const showPanels = panels.length > 0;
   // Only used for Direct BQ Query
@@ -141,7 +136,6 @@ function DataView({
                 isDatasetFiltered ? 'No rows match your filter' : 'No rows exist in the table'
               }
               pageBQQuery={pageBQQuery}
-              rowKey={rowKey}
               rows={rows}
               searchString={filterStatement}
               tableName={selectedTable}
