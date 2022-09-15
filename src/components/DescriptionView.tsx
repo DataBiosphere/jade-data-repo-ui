@@ -1,59 +1,64 @@
 import React from 'react';
 import { ClassNameMap, CustomTheme } from '@mui/material/styles';
 import { Button, IconButton, TextField, Typography } from '@mui/material';
-import Edit from '@mui/icons-material/Edit';
+import { Circle, Edit } from '@mui/icons-material';
 import { showNotification } from 'modules/notifications';
 import { withStyles } from '@mui/styles';
 import { DatasetRoles } from '../constants';
 
-const styles = (theme: CustomTheme) => ({
-  descriptionEditor: {
-    width: '100%',
-    display: 'flex',
-  },
-  iconDiv: {
-    width: '2%',
-  },
-  textInputDiv: {
-    width: '100%',
-  },
-  descriptionInput: {
-    backgroundColor: 'white',
-  },
-  editIconButton: {
-    backgroundColor: theme.palette.primary.main,
-    border: `1px solid ${theme.palette.primary.main}`,
-    borderRadius: '3px',
-    boxShadow: 'none',
-    padding: '1px',
-    '&:hover': {
-      backgroundColor: theme.palette.primary.hover,
-      boxShadow: 'none',
+const styles = (theme: CustomTheme) =>
+  ({
+    descriptionEditor: {
+      width: '100%',
+      display: 'flex',
     },
-  },
-  editIconImage: {
-    color: theme.palette.primary.light,
-    fontSize: theme.typography.h6.fontSize,
-  },
-  saveDescriptionButton: {
-    boxShadow: 'none',
-    margin: theme.spacing(1),
-    '&:hover': {
-      backgroundColor: theme.palette.primary.hover,
-      boxShadow: 'none',
+    textInputDiv: {
+      width: '100%',
     },
-  },
-  undoButton: {
-    backgroundColor: theme.palette.primary.light,
-    boxShadow: 'none',
-    color: theme.palette.grey[500],
-    margin: theme.spacing(1),
-    '&:hover': {
+    descriptionInput: {
+      backgroundColor: 'white',
+    },
+    editIconButton: {
+      boxShadow: 'none',
+      position: 'relative',
+      zIndex: 1,
+      '&:hover': {
+        boxShadow: 'none',
+      },
+    },
+    editIconImage: {
+      color: theme.palette.primary.light,
+      fontSize: theme.typography.h6.fontSize,
+      zIndex: 2,
+    },
+    iconButtonBackground: {
+      color: theme.palette.primary.main,
+      fontSize: theme.typography.h2.fontSize,
+      position: 'absolute',
+      '&:hover': {
+        color: theme.palette.primary.hover,
+        boxShadow: 'none',
+      },
+    },
+    saveDescriptionButton: {
+      boxShadow: 'none',
+      margin: theme.spacing(1),
+      '&:hover': {
+        backgroundColor: theme.palette.primary.hover,
+        boxShadow: 'none',
+      },
+    },
+    undoButton: {
       backgroundColor: theme.palette.primary.light,
       boxShadow: 'none',
+      color: theme.palette.grey[500],
+      margin: theme.spacing(1),
+      '&:hover': {
+        backgroundColor: theme.palette.primary.light,
+        boxShadow: 'none',
+      },
     },
-  },
-});
+  } as const);
 
 const MAX_LENGTH = 2047;
 
@@ -179,6 +184,7 @@ class DescriptionView extends React.PureComponent<DescriptionViewProps, Descript
                 disableRipple={true}
                 onClick={() => this.onEditClick()}
               >
+                <Circle fontStyle="large" className={classes.iconButtonBackground} />
                 <Edit fontStyle="small" className={classes.editIconImage} />
               </IconButton>
             </div>
