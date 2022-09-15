@@ -1,5 +1,5 @@
-import React, { Fragment, useState } from 'react';
-import { Link, Redirect, Route, Router, Switch, useLocation } from 'react-router-dom';
+import React, { Fragment } from 'react';
+import { Link, Redirect, Route, Router, Switch } from 'react-router-dom';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import { withStyles } from '@mui/styles';
@@ -90,7 +90,7 @@ class Private extends React.Component {
   render() {
     const { classes } = this.props;
     const locationSplit = history.location.pathname.split('/');
-    const selectedTab = `/${locationSplit[1] || '/datasets'}`;
+    const selectedTab = `/${locationSplit[1] || 'datasets'}`;
     return (
       <ConnectedRouter history={history}>
         <Router history={history}>
