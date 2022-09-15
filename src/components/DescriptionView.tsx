@@ -4,7 +4,6 @@ import { Button, IconButton, TextField, Typography } from '@mui/material';
 import Edit from '@mui/icons-material/Edit';
 import { showNotification } from 'modules/notifications';
 import { withStyles } from '@mui/styles';
-import { DatasetRoles } from '../constants';
 
 const styles = (theme: CustomTheme) => ({
   descriptionEditor: {
@@ -68,22 +67,22 @@ const descriptionTooLongError = {
 };
 
 type DescriptionViewProps = {
+  canEdit: boolean;
   classes: ClassNameMap;
-  description: string;
+  description: string | undefined;
   updateDescriptionFn: any;
-  userRoles: Array<string>;
 };
 
 type DescriptionViewState = {
   hasDescriptionChanged: boolean;
-  descriptionValue: string | null;
+  descriptionValue: string | undefined;
   isEditing: boolean;
   isPendingSave: boolean;
 };
 
 const initialState: DescriptionViewState = {
   hasDescriptionChanged: false,
-  descriptionValue: null,
+  descriptionValue: undefined,
   isEditing: false,
   isPendingSave: false,
 };
@@ -108,7 +107,7 @@ class DescriptionView extends React.PureComponent<DescriptionViewProps, Descript
 
   textFieldRef: React.RefObject<any>;
 
-  descriptionChanged(newDescription: string | null, originalDescription: string | null) {
+  descriptionChanged(newDescription: string | undefined, originalDescription: string | undefined) {
     if (newDescription && newDescription.length > MAX_LENGTH) {
       showNotification(descriptionTooLongError);
       this.setState({ descriptionValue: newDescription.substring(0, MAX_LENGTH - 1) });
@@ -122,7 +121,10 @@ class DescriptionView extends React.PureComponent<DescriptionViewProps, Descript
     }
   }
 
-  onDescriptionTextBlur(newDescription: string | null, originalDescription: string | null) {
+  onDescriptionTextBlur(
+    newDescription: string | undefined,
+    originalDescription: string | undefined,
+  ) {
     this.descriptionChanged(newDescription, originalDescription);
     this.onExitEdit();
   }
@@ -150,16 +152,15 @@ class DescriptionView extends React.PureComponent<DescriptionViewProps, Descript
     }
   }
 
-  onSaveClick(descriptionText: string | null) {
+  onSaveClick(descriptionText: string | undefined) {
     const { updateDescriptionFn } = this.props;
     this.setState({ isPendingSave: true });
     updateDescriptionFn(descriptionText);
   }
 
   render() {
-    const { classes, description, userRoles } = this.props;
+    const { canEdit, classes, description } = this.props;
     const { hasDescriptionChanged, descriptionValue, isEditing } = this.state;
-    const canEdit = userRoles.includes(DatasetRoles.STEWARD);
 
     return (
       <>

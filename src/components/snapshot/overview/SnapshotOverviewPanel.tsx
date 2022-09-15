@@ -3,6 +3,8 @@ import { Grid, Tab, Tabs, Typography } from '@mui/material';
 import { createStyles, WithStyles, withStyles } from '@mui/styles';
 import moment from 'moment';
 import { CustomTheme } from '@mui/material/styles';
+import { patchSnapshotDescription } from 'actions';
+import DescriptionView from 'components/DescriptionView';
 import GoogleSheetExport from 'components/common/overview/GoogleSheetExport';
 import { Link } from 'react-router-dom';
 import { renderStorageResources } from '../../../libs/render-utils';
@@ -10,6 +12,8 @@ import SnapshotAccess from '../SnapshotAccess';
 import TabPanel from '../../common/TabPanel';
 import SnapshotExport from './SnapshotExport';
 import { SnapshotModel } from '../../../generated/tdr';
+import { SnapshotRoles } from '../../../constants';
+import { AppDispatch } from '../../../store';
 
 const styles = (theme: CustomTheme) =>
   createStyles({
@@ -55,12 +59,15 @@ function a11yProps(index: number) {
 }
 
 interface SnapshotOverviewPanelProps extends WithStyles<typeof styles> {
+  dispatch: AppDispatch;
   snapshot: SnapshotModel;
+  userRoles: Array<string>;
 }
 
 function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
   const [value, setValue] = React.useState(0);
-  const { classes, snapshot } = props;
+  const { classes, dispatch, snapshot, userRoles } = props;
+  const canEditDescription = userRoles.includes(SnapshotRoles.STEWARD);
   // @ts-ignore
   const sourceDataset = snapshot.source[0].dataset;
   const linkToBq = snapshot.cloudPlatform === 'gcp';
@@ -100,8 +107,13 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
       <TabPanel value={value} index={0}>
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <Typography variant="h6">Description:</Typography>
-            <Typography data-cy="snapshot-description">{snapshot.description}</Typography>
+            <DescriptionView
+              description={snapshot.description}
+              canEdit={canEditDescription}
+              updateDescriptionFn={(text: string | undefined) =>
+                dispatch(patchSnapshotDescription(snapshot.id, text))
+              }
+            />
           </Grid>
           <Grid item xs={4}>
             <Typography variant="h6">Root dataset:</Typography>
