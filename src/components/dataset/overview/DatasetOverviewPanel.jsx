@@ -11,6 +11,7 @@ import DatasetAccess from '../DatasetAccess';
 import DatasetSnapshotsTable from '../../table/DatasetSnapshotsTable';
 import DescriptionView from '../../DescriptionView';
 import TabPanel from '../../common/TabPanel';
+import { DatasetRoles } from '../../../constants';
 
 const styles = (theme) => ({
   root: {
@@ -95,7 +96,7 @@ function DatasetOverviewPanel(props) {
             <Typography variant="h6">Description:</Typography>
             <DescriptionView
               description={dataset.description}
-              userRoles={userRoles}
+              canEdit={userRoles.includes(DatasetRoles.STEWARD)}
               updateDescriptionFn={(text) => dispatch(patchDatasetDescription(dataset.id, text))}
             />
           </Grid>
