@@ -53,6 +53,7 @@ export interface QueryState {
   resultsCount: number;
   page: number;
   rowsPerPage: number;
+  refreshCnt: number;
 }
 
 const defaultQueryParams = {
@@ -78,6 +79,7 @@ export const initialQueryState: QueryState = {
   resultsCount: 0,
   page: 0,
   rowsPerPage: TABLE_DEFAULT_ROWS_PER_PAGE,
+  refreshCnt: 0,
 };
 
 export default {
@@ -163,6 +165,10 @@ export default {
       [ActionTypes.POLL_QUERY]: (state) =>
         immutable(state, {
           delay: { $set: true },
+        }),
+      [ActionTypes.REFRESH_QUERY]: (state) =>
+        immutable(state, {
+          refreshCnt: { $set: state.refreshCnt + 1 },
         }),
       [ActionTypes.PREVIEW_DATA]: (state, action: any) =>
         immutable(state, {
