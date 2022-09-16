@@ -62,6 +62,7 @@ type DataViewProps = {
   sidebarWidth: number;
   tableNames: Array<string>;
   totalRows: number;
+  refreshCnt: number;
 };
 
 function DataView({
@@ -85,6 +86,7 @@ function DataView({
   sidebarWidth,
   tableNames,
   totalRows,
+  refreshCnt,
 }: DataViewProps) {
   // Can be removed after DR-2483
   const showPanels = panels.length > 0;
@@ -140,6 +142,7 @@ function DataView({
               searchString={filterStatement}
               tableName={selectedTable}
               totalCount={totalRows} // TODO - DR-2663 - instead should display total rows regardless of filtering
+              refreshCnt={refreshCnt}
             />
           </div>
           {showPanels && (
@@ -172,6 +175,7 @@ function mapStateToProps(state: TdrState) {
     rows: state.query.rows,
     rowsPerPage: state.query.rowsPerPage,
     totalRows: state.query.queryParams.totalRows,
+    refreshCnt: state.query.refreshCnt,
   };
 }
 
