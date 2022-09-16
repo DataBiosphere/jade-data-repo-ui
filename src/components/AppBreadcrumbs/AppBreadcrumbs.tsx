@@ -31,7 +31,6 @@ function AppBreadcrumbs({ context, childBreadcrumbs }: AppBreadcrumbsProps) {
         const disabled = i === breadcrumbs.length - 1;
         hierarchy.push(to);
         const link = `/${hierarchy.join('/')}`;
-        console.log(hierarchy, link);
         return (
           <BreadcrumbLink key={text.toLowerCase()} to={link} disabled={disabled}>
             {text}
