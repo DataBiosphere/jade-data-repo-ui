@@ -11,7 +11,8 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
-import { Circle, Edit } from '@mui/icons-material';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircle, faPen } from '@fortawesome/free-solid-svg-icons';
 import ManageUsersView from './ManageUsersView';
 
 const styles = (theme) => ({
@@ -53,7 +54,7 @@ const styles = (theme) => ({
   },
   iconButtonBackground: {
     color: theme.palette.primary.main,
-    fontSize: `calc(${theme.typography.h6.fontSize} * 1.9)`,
+    fontSize: '1.2rem',
     position: 'absolute',
     '&:hover': {
       color: theme.palette.primary.hover,
@@ -62,7 +63,7 @@ const styles = (theme) => ({
     zIndex: 1,
   },
   horizontalModalButton: {
-    fontSize: theme.typography.h6.fontSize,
+    fontSize: '0.6rem',
     color: theme.palette.primary.light,
     zIndex: 2,
   },
@@ -106,8 +107,8 @@ export class ManageUsersModal extends React.PureComponent {
         disableFocusRipple={true}
         disableRipple={true}
       >
-        <Circle fontStyle="large" className={classes.iconButtonBackground} />
-        <Edit fontStyle="small" className={classes.horizontalModalButton} />
+        <FontAwesomeIcon className={classes.iconButtonBackground} icon={faCircle} />
+        <FontAwesomeIcon className={classes.horizontalModalButton} icon={faPen} />
       </IconButton>
     ) : (
       <Button

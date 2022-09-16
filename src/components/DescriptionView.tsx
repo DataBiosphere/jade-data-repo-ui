@@ -1,7 +1,8 @@
 import React from 'react';
 import { ClassNameMap, CustomTheme } from '@mui/material/styles';
 import { Button, IconButton, TextField, Typography } from '@mui/material';
-import { Circle, Edit } from '@mui/icons-material';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircle, faPen } from '@fortawesome/free-solid-svg-icons';
 import { showNotification } from 'modules/notifications';
 import { withStyles } from '@mui/styles';
 import { DatasetRoles } from '../constants';
@@ -184,8 +185,8 @@ class DescriptionView extends React.PureComponent<DescriptionViewProps, Descript
                 disableRipple={true}
                 onClick={() => this.onEditClick()}
               >
-                <Circle fontStyle="large" className={classes.iconButtonBackground} />
-                <Edit fontStyle="small" className={classes.editIconImage} />
+                <FontAwesomeIcon className={classes.iconButtonBackground} icon={faCircle} />
+                <FontAwesomeIcon className={classes.editIconImage} icon={faPen} />
               </IconButton>
             </div>
             <div className={classes.textInputDiv}>
