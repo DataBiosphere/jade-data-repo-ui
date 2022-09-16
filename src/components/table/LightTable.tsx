@@ -134,6 +134,7 @@ type LightTableProps<RowType> = {
     orderProperty: string,
     orderDirection: OrderDirectionOptions,
     searchString: string,
+    refreshCnt: number,
   ) => void;
   loading: boolean;
   orderDirection: OrderDirectionOptions;
@@ -146,6 +147,7 @@ type LightTableProps<RowType> = {
   searchString: string;
   tableName?: string;
   totalCount: number;
+  refreshCnt: number;
 };
 
 function LightTable({
@@ -166,6 +168,7 @@ function LightTable({
   searchString,
   tableName,
   totalCount,
+  refreshCnt,
 }: LightTableProps<object>) {
   const [seeMore, setSeeMore] = useState({ open: false, title: '', contents: [''] });
 
@@ -265,7 +268,7 @@ function LightTable({
     return `${value}`;
   };
 
-  // Not pulling including handleEnumeration in effect list since we don't want a change in the function to trigger a fetch
+  // Not including handleEnumeration in effect list since we don't want a change in the function to trigger a fetch
   useEffect(() => {
     if (handleEnumeration) {
       handleEnumeration(
@@ -274,10 +277,11 @@ function LightTable({
         orderProperty,
         orderDirection,
         searchString,
+        refreshCnt,
       );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchString, page, rowsPerPage, orderProperty, orderDirection, tableName]);
+  }, [searchString, page, rowsPerPage, orderProperty, orderDirection, tableName, refreshCnt]);
 
   const supportsResize = columns.some((col) => col.allowResize);
   const tableWidth: number = columns.reduce(
