@@ -1,11 +1,11 @@
 import React from 'react';
 import { ClassNameMap, CustomTheme } from '@mui/material/styles';
 import { Button, IconButton, TextField, Typography } from '@mui/material';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircle, faPen } from '@fortawesome/free-solid-svg-icons';
+import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { showNotification } from 'modules/notifications';
 import { withStyles } from '@mui/styles';
 import { DatasetRoles } from '../constants';
+import StackedIcon from './icons/StackedIcon';
 
 const styles = (theme: CustomTheme) =>
   ({
@@ -21,25 +21,7 @@ const styles = (theme: CustomTheme) =>
     },
     editIconButton: {
       boxShadow: 'none',
-      position: 'relative',
-      zIndex: 1,
-      '&:hover': {
-        boxShadow: 'none',
-      },
-    },
-    editIconImage: {
-      color: theme.palette.primary.light,
-      fontSize: theme.typography.h6.fontSize,
-      zIndex: 2,
-    },
-    iconButtonBackground: {
-      color: theme.palette.primary.main,
-      fontSize: `calc(${theme.typography.h6.fontSize} * 2.1)`,
-      position: 'absolute',
-      '&:hover': {
-        color: theme.palette.primary.hover,
-        boxShadow: 'none',
-      },
+      marginRight: 5,
     },
     saveDescriptionButton: {
       boxShadow: 'none',
@@ -185,8 +167,7 @@ class DescriptionView extends React.PureComponent<DescriptionViewProps, Descript
                 disableRipple={true}
                 onClick={() => this.onEditClick()}
               >
-                <FontAwesomeIcon className={classes.iconButtonBackground} icon={faCircle} />
-                <FontAwesomeIcon className={classes.editIconImage} icon={faPen} />
+                <StackedIcon icon={faPen} />
               </IconButton>
             </div>
             <div className={classes.textInputDiv}>

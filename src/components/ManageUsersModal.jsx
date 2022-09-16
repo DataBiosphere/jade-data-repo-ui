@@ -10,9 +10,9 @@ import {
   IconButton,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircle, faPen } from '@fortawesome/free-solid-svg-icons';
+import { faPen } from '@fortawesome/free-solid-svg-icons';
+import StackedIcon from './icons/StackedIcon';
 import ManageUsersView from './ManageUsersView';
 
 const styles = (theme) => ({
@@ -47,25 +47,8 @@ const styles = (theme) => ({
     width: '100%',
   },
   iconButton: {
-    borderRadius: '3px',
     padding: '1px',
-    position: 'relative',
     marginLeft: 5,
-  },
-  iconButtonBackground: {
-    color: theme.palette.primary.main,
-    fontSize: '1.2rem',
-    position: 'absolute',
-    '&:hover': {
-      color: theme.palette.primary.hover,
-      boxShadow: 'none',
-    },
-    zIndex: 1,
-  },
-  horizontalModalButton: {
-    fontSize: '0.6rem',
-    color: theme.palette.primary.light,
-    zIndex: 2,
   },
 });
 
@@ -107,8 +90,7 @@ export class ManageUsersModal extends React.PureComponent {
         disableFocusRipple={true}
         disableRipple={true}
       >
-        <FontAwesomeIcon className={classes.iconButtonBackground} icon={faCircle} />
-        <FontAwesomeIcon className={classes.horizontalModalButton} icon={faPen} />
+        <StackedIcon icon={faPen} size="0.65rem" />
       </IconButton>
     ) : (
       <Button
