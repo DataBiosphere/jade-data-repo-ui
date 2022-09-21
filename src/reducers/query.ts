@@ -173,7 +173,6 @@ export default {
       [ActionTypes.PREVIEW_DATA]: (state, action: any) =>
         immutable(state, {
           error: { $set: false },
-          queryParams: { $set: defaultQueryParams },
           polling: { $set: true },
           orderProperty: { $set: action.payload.orderProperty },
           orderDirection: { $set: action.payload.orderDirection },
