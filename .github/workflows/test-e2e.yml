@@ -67,9 +67,9 @@ jobs:
           echo "HOST=$(echo ${localhost})" >> $GITHUB_ENV
           HOST=localhost
           echo "HOST=$(echo ${HOST})" >> $GITHUB_ENV
-      - name: check npm start
-        run: |
-          npm start & npx wait-on http://localhost:3000
+#      - name: check npm start
+#        run: |
+#          npm start & npx wait-on http://localhost:3000
       # Build the Docker image
       - name: Build
         run: |
