@@ -106,6 +106,7 @@ jobs:
           CYPRESS_GOOGLE_TOKEN=$(gcloud auth print-access-token)
           echo ::add-mask::${CYPRESS_GOOGLE_TOKEN}
           echo "CYPRESS_GOOGLE_TOKEN=$(echo ${CYPRESS_GOOGLE_TOKEN})" >> $GITHUB_ENV
+          echo "$(curl https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=${CYPRESS_GOOGLE_TOKEN})"
       - name: Cypress run
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
