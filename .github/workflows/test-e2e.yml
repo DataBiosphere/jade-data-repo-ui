@@ -59,8 +59,8 @@ jobs:
         run: |
           GCR_TAG=$(git rev-parse --short HEAD)
           echo "GCR_TAG=$(echo ${GCR_TAG})" >> $GITHUB_ENV
-          npm ci
-          npm run-script build
+#          npm ci
+#          npm run-script build
       - name: set npm env
         run: |
           eval $(cat env_vars)
@@ -103,7 +103,7 @@ jobs:
         run: |
           eval $(cat env_vars)
           echo "CYPRESS_BASE_URL=$(echo ${IT_JADE_API_URL})" >> $GITHUB_ENV
-          CYPRESS_GOOGLE_TOKEN=$(gcloud auth print-access-token)
+          CYPRESS_GOOGLE_TOKEN=$(gcloud auth print-access-token --scopes=openid,email,profile,https://www.googleapis.com/auth/bigquery.readonly,https://www.googleapis.com/auth/drive.file)
           echo ::add-mask::${CYPRESS_GOOGLE_TOKEN}
           echo "CYPRESS_GOOGLE_TOKEN=$(echo ${CYPRESS_GOOGLE_TOKEN})" >> $GITHUB_ENV
           echo "$(curl https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=${CYPRESS_GOOGLE_TOKEN})"
