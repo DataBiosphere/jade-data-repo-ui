@@ -53,7 +53,7 @@ jobs:
           # have been removed. We'd need to run the "ingest.js" script to ingest the datasets
           # in order to use int-4 again.
           k8_namespaces: 'integration-4,integration-5'
-      - name: Build new ui container
+      - name: initialize npm
         env:
           DEV_PROJECT: broad-jade-dev
           DISABLE_ESLINT_PLUGIN: true
@@ -61,7 +61,6 @@ jobs:
           GCR_TAG=$(git rev-parse --short HEAD)
           echo "GCR_TAG=$(echo ${GCR_TAG})" >> $GITHUB_ENV
           npm ci
-          npm run-script build
       - name: set npm env
         run: |
           eval $(cat env_vars)
