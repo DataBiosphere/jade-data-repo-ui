@@ -77,7 +77,7 @@ jobs:
       - name: Build
         run: |
           rm -rf jade-dev-account.pem
-          docker build -f Dockerfile.direct -t gcr.io/broad-jade-dev/jade-data-repo-ui:${GCR_TAG} .
+          docker build -f Dockerfile.direct -t gcr.io/broad-jade-dev/jade-data-repo-ui:${GCR_TAG} --build-arg CACHEBUST=$(date +%s) .
       # Push the Docker image to Google Container Registry
       - name: Publish
         run: |

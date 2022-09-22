@@ -1,9 +1,25 @@
-FROM node:14.0-buster
+# Change the value to ensure that the code generation is rerun
+ARG CACHEBUST=1
+# The location - relative to inside of the docker image - of the TDR OpenApi Yaml to use
+ARG TDR_OPEN_API_YAML_LOCATION=https://jade.datarepo-dev.broadinstitute.org/data-repository-openapi.yaml
 
+## Step 1. Run code generation
+FROM openapitools/openapi-generator-cli as codegen
+ARG CACHEBUST
+ARG TDR_OPEN_API_YAML_LOCATION
+RUN /usr/local/bin/docker-entrypoint.sh generate -g typescript-axios -i $TDR_OPEN_API_YAML_LOCATION -o /local/src/generated/tdr --skip-validate-spec
+
+## Step 2. Build the deployable UI artifacts
+FROM node:14.0-buster as build
+# Copy the local code
 COPY . /
+# Copy the generated code
+COPY --from=codegen /local /
+# Run the build
+RUN export DISABLE_ESLINT_PLUGIN=true && \
+  npm ci && \
+  npm run build-no-code-gen --production
 
-RUN npm ci && \
-  npm run build --production
-
+## Step 3. Copy the static UI artifacts into an nginx image to host
 FROM nginxinc/nginx-unprivileged:stable-alpine
-COPY --from=0 /build /usr/share/nginx/html
+COPY --from=build /build /usr/share/nginx/html
