@@ -38,5 +38,8 @@ jobs:
         run: npm run codegen
       - name: Cypress Run Component Tests
         uses: cypress-io/github-action@v2
+        env:
+          DISABLE_ESLINT_PLUGIN: true
         with:
-          command: npx cypress run-ct
+          command: |
+            npx cypress run-ct

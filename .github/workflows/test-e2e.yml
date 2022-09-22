@@ -56,6 +56,7 @@ jobs:
       - name: Build new ui container
         env:
           DEV_PROJECT: broad-jade-dev
+          DISABLE_ESLINT_PLUGIN: true
         run: |
           GCR_TAG=$(git rev-parse --short HEAD)
           echo "GCR_TAG=$(echo ${GCR_TAG})" >> $GITHUB_ENV
@@ -68,6 +69,8 @@ jobs:
           HOST=localhost
           echo "HOST=$(echo ${HOST})" >> $GITHUB_ENV
       - name: check npm start
+        env:
+          DISABLE_ESLINT_PLUGIN: true
         run: |
           npm start & npx wait-on http://localhost:3000
       # Build the Docker image
@@ -106,10 +109,10 @@ jobs:
           CYPRESS_GOOGLE_TOKEN=$(gcloud auth print-access-token)
           echo ::add-mask::${CYPRESS_GOOGLE_TOKEN}
           echo "CYPRESS_GOOGLE_TOKEN=$(echo ${CYPRESS_GOOGLE_TOKEN})" >> $GITHUB_ENV
-          echo "$(curl https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=${CYPRESS_GOOGLE_TOKEN})"
       - name: Cypress run
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          DISABLE_ESLINT_PLUGIN: true
         run: |
           npx cypress run --record
       - name: 'Clean state lock from used Namespace on API deploy'
