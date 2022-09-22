@@ -59,17 +59,17 @@ jobs:
         run: |
           GCR_TAG=$(git rev-parse --short HEAD)
           echo "GCR_TAG=$(echo ${GCR_TAG})" >> $GITHUB_ENV
-#          npm ci
-#          npm run-script build
+          npm ci
+          npm run-script build
       - name: set npm env
         run: |
           eval $(cat env_vars)
           echo "HOST=$(echo ${localhost})" >> $GITHUB_ENV
           HOST=localhost
           echo "HOST=$(echo ${HOST})" >> $GITHUB_ENV
-#      - name: check npm start
-#        run: |
-#          npm start & npx wait-on http://localhost:3000
+      - name: check npm start
+        run: |
+          npm start & npx wait-on http://localhost:3000
       # Build the Docker image
       - name: Build
         run: |
