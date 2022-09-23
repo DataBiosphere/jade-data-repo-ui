@@ -38,7 +38,7 @@ interface IProps extends WithStyles<typeof styles> {
   loading: boolean;
   searchString: string;
   refreshCnt: number;
-  user: string;
+  userEmail: string;
 }
 
 const SnapshotView = withStyles(styles)(
@@ -52,7 +52,7 @@ const SnapshotView = withStyles(styles)(
     loading,
     searchString,
     refreshCnt,
-    user,
+    userEmail,
   }: IProps) => {
     const handleFilterSnapshots = (
       limit: number,
@@ -67,7 +67,7 @@ const SnapshotView = withStyles(styles)(
     };
 
     const handleMakeSteward = (snapshotID: string) => {
-      dispatch(addSnapshotPolicyMember(snapshotID, user, SnapshotRoles.STEWARD));
+      dispatch(addSnapshotPolicyMember(snapshotID, userEmail, SnapshotRoles.STEWARD));
     };
 
     return (
@@ -100,7 +100,7 @@ function mapStateToProps(state: TdrState) {
     snapshotCount: state.snapshots.snapshotCount,
     filteredSnapshotCount: state.snapshots.filteredSnapshotCount,
     loading: state.snapshots.loading,
-    user: state.user.email,
+    userEmail: state.user.email,
     refreshCnt: state.snapshots.refreshCnt,
   };
 }

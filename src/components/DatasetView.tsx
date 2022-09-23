@@ -37,7 +37,7 @@ interface IProps extends WithStyles<typeof styles> {
   loading: boolean;
   searchString: string;
   refreshCnt: number;
-  user: string;
+  userEmail: string;
 }
 
 const DatasetView = withStyles(styles)(
@@ -51,7 +51,7 @@ const DatasetView = withStyles(styles)(
     loading,
     searchString,
     refreshCnt,
-    user,
+    userEmail,
   }: IProps) => {
     const handleFilterDatasets = (
       limit: number,
@@ -64,7 +64,7 @@ const DatasetView = withStyles(styles)(
     };
 
     const handleMakeSteward = (datasetId: string) => {
-      dispatch(addDatasetPolicyMember(datasetId, user, DatasetRoles.STEWARD));
+      dispatch(addDatasetPolicyMember(datasetId, userEmail, DatasetRoles.STEWARD));
     };
 
     return (
@@ -99,7 +99,7 @@ function mapStateToProps(state: TdrState) {
     filteredDatasetsCount: state.datasets.filteredDatasetsCount,
     features: state.user.features,
     loading: state.datasets.loading,
-    user: state.user.email,
+    userEmail: state.user.email,
     refreshCnt: state.datasets.refreshCnt,
   };
 }
