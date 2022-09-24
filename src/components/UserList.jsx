@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@mui/styles';
+import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material';
+import { ExpandMore } from '@mui/icons-material';
 import Typography from '@mui/material/Typography';
 import ManageUsersModal from './ManageUsersModal';
 
@@ -9,6 +11,10 @@ const styles = (theme) => ({
     fontSize: '14px',
     lineHeight: '22px',
     fontWeight: '600',
+    color: theme.palette.primary.main,
+  },
+  expandIcon: {
+    color: theme.palette.primary.main,
   },
   manageUsersHorizontalModal: {},
   values: {
@@ -25,6 +31,13 @@ const styles = (theme) => ({
 });
 
 class UserList extends React.PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isAccordionExpanded: false,
+    };
+  }
+
   static propTypes = {
     addUser: PropTypes.func,
     canManageUsers: PropTypes.bool,
@@ -33,6 +46,13 @@ class UserList extends React.PureComponent {
     removeUser: PropTypes.func,
     typeOfUsers: PropTypes.string,
     users: PropTypes.arrayOf(PropTypes.string).isRequired,
+  };
+
+  toggleAccordion = () => {
+    const { isAccordionExpanded } = this.state;
+    this.setState({
+      isAccordionExpanded: !isAccordionExpanded,
+    });
   };
 
   render() {
@@ -46,37 +66,36 @@ class UserList extends React.PureComponent {
       users,
     } = this.props;
 
+    const { isAccordionExpanded } = this.state;
+
     return (
-      <div className={classes.root}>
-        <div className={classes.header}>
+      <Accordion expanded={isAccordionExpanded} onChange={this.toggleAccordion}>
+        <AccordionSummary
+          aria-controls=""
+          expandIcon={<ExpandMore className={classes.expandIcon} />}
+          className={classes.header}
+        >
           {typeOfUsers}:{' '}
-          {horizontal && canManageUsers && (
+        </AccordionSummary>
+        <AccordionDetails>
+          {canManageUsers && (
             <ManageUsersModal
               addUser={addUser}
               removeUser={removeUser}
               modalText={`Manage ${typeOfUsers}`}
               users={users}
               horizontal={horizontal}
+              mode="link"
             />
           )}
-        </div>
-        <div data-cy="user-email" className={classes.values}>
           {users.length === 0 && <Typography className={classes.noUsers}>(None)</Typography>}
           {users.map((user) => (
             <Typography noWrap key={user}>
               {user}
             </Typography>
           ))}
-        </div>
-        {!horizontal && canManageUsers && (
-          <ManageUsersModal
-            addUser={addUser}
-            removeUser={removeUser}
-            modalText={`Manage ${typeOfUsers}`}
-            users={users}
-          />
-        )}
-      </div>
+        </AccordionDetails>
+      </Accordion>
     );
   }
 }

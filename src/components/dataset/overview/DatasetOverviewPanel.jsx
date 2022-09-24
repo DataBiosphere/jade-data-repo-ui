@@ -89,6 +89,13 @@ function DatasetOverviewPanel(props) {
             {...a11yProps(2)}
           />
         )}
+        <Tab
+          label="Roles & memberships"
+          classes={{ selected: classes.tabSelected }}
+          disableFocusRipple
+          disableRipple
+          {...a11yProps(1)}
+        />
       </Tabs>
       <TabPanel value={value} index={0}>
         <Grid container spacing={2}>
@@ -113,7 +120,6 @@ function DatasetOverviewPanel(props) {
             {renderCloudPlatforms(dataset)}
           </Grid>
         </Grid>
-        <DatasetAccess horizontal={true} />
       </TabPanel>
       <TabPanel value={value} index={1}>
         <DatasetSnapshotsTable />
@@ -130,6 +136,13 @@ function DatasetOverviewPanel(props) {
           </Grid>
         </TabPanel>
       )}
+      <TabPanel value={value} index={3}>
+        <Grid container spacing={2}>
+          <Grid item xs={9}>
+            <DatasetAccess horizontal={false} showHelp={true} />
+          </Grid>
+        </Grid>
+      </TabPanel>
     </div>
   );
 }

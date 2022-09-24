@@ -2,10 +2,21 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Grid } from '@mui/material';
+import { withStyles } from '@mui/styles';
 import UserList from '../UserList';
 import { DatasetRoles } from '../../constants';
 import { getRoleMembersFromPolicies } from '../../libs/utils';
 import { addDatasetPolicyMember, removeDatasetPolicyMember } from '../../actions';
+
+const styles = (theme) => ({
+  helpContainer: {
+    padding: '30px 0 10px',
+  },
+  genericLink: {
+    color: theme.palette.primary.main,
+    textDecoration: 'underline',
+  },
+});
 
 function DatasetAccess(props) {
   const addUser = (role) => {
@@ -20,7 +31,7 @@ function DatasetAccess(props) {
       dispatch(removeDatasetPolicyMember(dataset.id, removableEmail, role));
     };
   };
-  const { horizontal, policies, userRoles } = props;
+  const { horizontal, policies, userRoles, showHelp, classes } = props;
   const stewards = getRoleMembersFromPolicies(policies, DatasetRoles.STEWARD);
   const custodians = getRoleMembersFromPolicies(policies, DatasetRoles.CUSTODIAN);
   const snapshotCreators = getRoleMembersFromPolicies(policies, DatasetRoles.SNAPSHOT_CREATOR);
@@ -30,6 +41,14 @@ function DatasetAccess(props) {
 
   return (
     <Grid container spacing={1}>
+      {showHelp ? (
+        <div className={classes.helpContainer}>
+          <a href="#" className={classes.genericLink}>
+            Learn more
+          </a>{' '}
+          about roles and memberships
+        </div>
+      ) : null}
       <Grid item xs={gridItemXs}>
         <UserList
           users={stewards}
@@ -65,10 +84,12 @@ function DatasetAccess(props) {
 }
 
 DatasetAccess.propTypes = {
+  classes: PropTypes.object,
   dataset: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
   horizontal: PropTypes.bool,
   policies: PropTypes.arrayOf(PropTypes.object).isRequired,
+  showHelp: PropTypes.bool,
   userRoles: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
@@ -80,4 +101,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(DatasetAccess);
+export default connect(mapStateToProps)(withStyles(styles)(DatasetAccess));

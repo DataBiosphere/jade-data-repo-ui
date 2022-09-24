@@ -10,7 +10,6 @@ import {
   IconButton,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-
 import { Edit } from '@mui/icons-material';
 import ManageUsersView from './ManageUsersView';
 
@@ -44,6 +43,17 @@ const styles = (theme) => ({
   },
   openButton: {
     width: '100%',
+    border: 0,
+    justifyContent: 'left',
+    textTransform: 'none',
+    padding: 0,
+    '&:hover': {
+      border: 0,
+    },
+    marginTop: -25,
+  },
+  openButtonIcon: {
+    marginRight: 5,
   },
   iconButton: {
     border: `1px solid ${theme.palette.primary.main}`,
@@ -107,7 +117,7 @@ export class ManageUsersModal extends React.PureComponent {
         variant="outlined"
         onClick={this.handleClickOpen}
       >
-        {modalText}
+        <Edit fontStyle="small" className={classes.openButtonIcon} /> {modalText}
       </Button>
     );
 
