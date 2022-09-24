@@ -49,6 +49,11 @@ const styles = (theme) => ({
   iconButton: {
     padding: '1px',
     marginLeft: 5,
+    boxShadow: 'none',
+    color: theme.palette.primary.main,
+    '&:hover': {
+      color: theme.palette.primary.hover,
+    },
   },
 });
 
@@ -90,7 +95,7 @@ export class ManageUsersModal extends React.PureComponent {
         disableFocusRipple={true}
         disableRipple={true}
       >
-        <StackedIcon icon={faPen} size="0.65rem" />
+        <i className="fa-solid fa-pen-circle" />
       </IconButton>
     ) : (
       <Button
