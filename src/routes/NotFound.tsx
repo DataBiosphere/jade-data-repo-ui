@@ -62,7 +62,7 @@ function NotFound(props: { classes: ClassNameMap }) {
           size="large"
           to="/"
         >
-          <span className={classes.buttonText}>Return to Dashboard</span>
+          <span className={classes.buttonText}>Return to Datasets</span>
         </Button>
       </Grid>
       <Grid item xs={6}>

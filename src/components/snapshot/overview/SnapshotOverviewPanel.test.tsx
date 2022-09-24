@@ -66,7 +66,11 @@ describe('Snapshot overview panel', () => {
       <Router history={history}>
         <Provider store={store}>
           <ThemeProvider theme={globalTheme}>
-            <SnapshotOverviewPanel snapshot={snapshot} />
+            <SnapshotOverviewPanel
+              dispatch={store.dispatch}
+              snapshot={snapshot}
+              userRoles={initialState.snapshots.userRoles}
+            />
           </ThemeProvider>
         </Provider>
       </Router>,
@@ -76,7 +80,7 @@ describe('Snapshot overview panel', () => {
     cy.get('[data-cy="snapshot-summary-tab"]')
       .should('contain.text', 'Snapshot Summary')
       .should('have.attr', 'aria-selected', 'true');
-    cy.get('[data-cy="snapshot-description"]').should('contain.text', snapshot.description);
+    cy.get('[data-cy="description-text-field"]').should('contain.text', snapshot.description);
     cy.get('[data-cy="snapshot-source-dataset"]').should(
       'contain.text',
       snapshot.source[0].dataset.name,

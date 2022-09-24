@@ -59,7 +59,7 @@ type AllSnapshotProps = SnapshotProps &
   WithStyles<typeof styles>;
 
 function SnapshotOverview(props: AllSnapshotProps) {
-  const { classes, dispatch, match, snapshot, snapshotPolicies } = props;
+  const { classes, dispatch, match, snapshot, snapshotPolicies, userRoles } = props;
   const snapshotId = match.params.uuid;
   useOnMount(() => {
     dispatch(
@@ -102,7 +102,7 @@ function SnapshotOverview(props: AllSnapshotProps) {
           </div>
         </div>
         <div className={classes.mainColumn}>
-          <SnapshotOverviewPanel snapshot={snapshot} />
+          <SnapshotOverviewPanel dispatch={dispatch} snapshot={snapshot} userRoles={userRoles} />
         </div>
       </div>
     </div>
@@ -114,12 +114,14 @@ function SnapshotOverview(props: AllSnapshotProps) {
 type StateProps = {
   snapshot: SnapshotModel;
   snapshotPolicies: PolicyModel[];
+  userRoles: Array<string>;
 };
 
 function mapStateToProps(state: TdrState) {
   return {
     snapshot: state.snapshots.snapshot,
     snapshotPolicies: state.snapshots.snapshotPolicies,
+    userRoles: state.snapshots.userRoles,
   };
 }
 

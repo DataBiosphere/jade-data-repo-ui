@@ -21,13 +21,10 @@ describe('AppBreadcrumbs', () => {
     );
 
     cy.get('.MuiBreadcrumbs-ol > :nth-child(1) > a')
-      .should('contain.text', 'Dashboard')
-      .should('have.attr', 'href', '/');
-    cy.get('.MuiBreadcrumbs-ol > :nth-child(3) > a')
       .should('contain.text', 'Datasets')
       .should('have.attr', 'href', '/datasets');
 
-    cy.get('.MuiBreadcrumbs-ol > :nth-child(5) > a')
+    cy.get('.MuiBreadcrumbs-ol > :nth-child(3) > a')
       .should('contain.text', 'testDataset')
       .should('have.attr', 'href', '/datasets/foo-bar');
 
@@ -42,11 +39,11 @@ describe('AppBreadcrumbs', () => {
       </Router>,
     );
 
-    cy.get('.MuiBreadcrumbs-ol > :nth-child(5) > a')
+    cy.get('.MuiBreadcrumbs-ol > :nth-child(3) > a')
       .should('contain.text', 'testDataset')
       .should('have.attr', 'href', '/datasets/foo-bar');
 
-    cy.get('.MuiBreadcrumbs-ol > :nth-child(7) > a')
+    cy.get('.MuiBreadcrumbs-ol > :nth-child(5) > a')
       .should('contain.text', 'Data')
       .should('have.attr', 'href', '/datasets/foo-bar/data');
   });
@@ -67,13 +64,10 @@ describe('AppBreadcrumbs', () => {
       </Router>,
     );
     cy.get('.MuiBreadcrumbs-ol > :nth-child(1) > a')
-      .should('contain.text', 'Dashboard')
-      .should('have.attr', 'href', '/');
-    cy.get('.MuiBreadcrumbs-ol > :nth-child(3) > a')
       .should('contain.text', 'Snapshots')
       .should('have.attr', 'href', '/snapshots');
 
-    cy.get('.MuiBreadcrumbs-ol > :nth-child(5) > a')
+    cy.get('.MuiBreadcrumbs-ol > :nth-child(3) > a')
       .should('contain.text', 'testSnapshot')
       .should('have.attr', 'href', '/snapshots/foo-bar-snapshot');
   });
@@ -89,8 +83,8 @@ describe('AppBreadcrumbs', () => {
         </ThemeProvider>
       </Router>,
     );
-    cy.get('.MuiBreadcrumbs-ol > :nth-child(3) > a > span').should('have.css', 'cursor', 'pointer');
-    cy.get('.MuiBreadcrumbs-ol > :nth-child(5) > a > span ').should(
+    cy.get('.MuiBreadcrumbs-ol > :nth-child(1) > a > span').should('have.css', 'cursor', 'pointer');
+    cy.get('.MuiBreadcrumbs-ol > :nth-child(3) > a > span ').should(
       'have.css',
       'cursor',
       'default',
@@ -107,7 +101,7 @@ describe('AppBreadcrumbs', () => {
       </Router>,
     );
 
-    cy.get('.MuiBreadcrumbs-ol > :nth-child(5) > a > span').should('have.css', 'cursor', 'pointer');
-    cy.get('.MuiBreadcrumbs-ol > :nth-child(7) > a > span').should('have.css', 'cursor', 'default');
+    cy.get('.MuiBreadcrumbs-ol > :nth-child(3) > a > span').should('have.css', 'cursor', 'pointer');
+    cy.get('.MuiBreadcrumbs-ol > :nth-child(5) > a > span').should('have.css', 'cursor', 'default');
   });
 });
