@@ -85,7 +85,6 @@ class UserList extends React.PureComponent {
               modalText={`Manage ${typeOfUsers}`}
               users={users}
               horizontal={horizontal}
-              mode="link"
             />
           )}
           {users.length === 0 && <Typography className={classes.noUsers}>(None)</Typography>}

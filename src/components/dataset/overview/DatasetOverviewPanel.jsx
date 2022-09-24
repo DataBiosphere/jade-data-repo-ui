@@ -94,7 +94,7 @@ function DatasetOverviewPanel(props) {
           classes={{ selected: classes.tabSelected }}
           disableFocusRipple
           disableRipple
-          {...a11yProps(1)}
+          {...a11yProps(3)}
         />
       </Tabs>
       <TabPanel value={value} index={0}>

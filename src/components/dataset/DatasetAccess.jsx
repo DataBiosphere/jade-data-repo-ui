@@ -42,12 +42,12 @@ function DatasetAccess(props) {
   return (
     <Grid container spacing={1}>
       {showHelp ? (
-        <div className={classes.helpContainer}>
+        <Grid item xs={gridItemXs} className={classes.helpContainer}>
           <a href="#" className={classes.genericLink}>
             Learn more
           </a>{' '}
           about roles and memberships
-        </div>
+        </Grid>
       ) : null}
       <Grid item xs={gridItemXs}>
         <UserList
