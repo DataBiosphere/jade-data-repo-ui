@@ -11,8 +11,6 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPen } from '@fortawesome/free-solid-svg-icons';
-import StackedIcon from './icons/StackedIcon';
 import ManageUsersView from './ManageUsersView';
 
 const styles = (theme) => ({
