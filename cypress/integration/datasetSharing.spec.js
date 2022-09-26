@@ -22,8 +22,9 @@ describe('test dataset sharing', () => {
     cy.get('a > .MuiButtonBase-root').click();
 
     cy.wait(['@getDataset', '@getDatasetPolicies', '@getBillingProfileById']);
-    cy.get('.MuiList-root > :nth-child(1)').click();
-    cy.get('#memberships-header').click();
+    cy.get('#simple-tabs-3').contains('Roles & memberships');
+    cy.get('#simple-tabs-3').click();
+    cy.get('.MuiGrid-root :nth-child(2) .MuiAccordionSummary-root').click();
     cy.get('.MuiAccordionDetails-root button')
       .should('be.visible')
       .should('contain.text', 'Manage Stewards')
