@@ -11,7 +11,7 @@ const styles = (theme: CustomTheme) => ({
     display: 'flex',
   },
   iconDiv: {
-    width: '2%',
+    width: 24,
   },
   textInputDiv: {
     width: '100%',

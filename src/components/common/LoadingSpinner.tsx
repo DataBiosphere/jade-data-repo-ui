@@ -18,8 +18,8 @@ const useStyles = makeStyles(() => ({
 
 type LoadingSpinnerProps = {
   className?: string;
-  delay: boolean;
-  delayMessage: string;
+  delay?: boolean;
+  delayMessage?: string;
 };
 
 function LoadingSpinner({ className, delay, delayMessage }: LoadingSpinnerProps) {

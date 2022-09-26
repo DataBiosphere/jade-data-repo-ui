@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
+import React, { useState, useEffect, Dispatch } from 'react';
 import { connect } from 'react-redux';
 
 import {
@@ -12,9 +11,14 @@ import {
   pageQuery,
 } from 'actions/index';
 import { FilterList, Info, People } from '@mui/icons-material';
-
 import DataView from 'components/common/data/DataView';
 import LoadingSpinner from 'components/common/LoadingSpinner';
+import { BillingProfileModel, DatasetModel, TableModel } from 'generated/tdr';
+import { Action } from 'redux';
+import { OrderDirectionOptions, QueryParams } from 'reducers/query';
+import { RouteComponentProps } from 'react-router-dom';
+import { TdrState } from 'reducers';
+
 import DataViewSidebar from './sidebar/DataViewSidebar';
 import InfoView from './sidebar/panels/InfoView';
 import ShareSnapshot from './sidebar/panels/ShareSnapshot';
@@ -27,6 +31,17 @@ import {
 
 const QUERY_LIMIT = 1000;
 
+type IProps = {
+  dataset: DatasetModel;
+  dispatch: Dispatch<Action>;
+  filterStatement: string;
+  joinStatement: string;
+  orderDirection: OrderDirectionOptions;
+  orderProperty: string;
+  profile: BillingProfileModel;
+  queryParams: QueryParams;
+} & RouteComponentProps<{ uuid?: string }>;
+
 function DatasetDataView({
   dataset,
   dispatch,
@@ -37,14 +52,14 @@ function DatasetDataView({
   orderProperty,
   profile,
   queryParams,
-}) {
+}: IProps) {
   const [selected, setSelected] = useState('');
-  const [selectedTable, setSelectedTable] = useState(null);
+  const [selectedTable, setSelectedTable] = useState<TableModel | undefined>(undefined);
   const [sidebarWidth, setSidebarWidth] = useState(0);
   const [canLink, setCanLink] = useState(false);
   const [datasetLoaded, setDatasetLoaded] = useState(false);
-  const [tableNames, setTableNames] = useState([]);
-  const [panels, setPanels] = useState([]);
+  const [tableNames, setTableNames] = useState<string[]>([]);
+  const [panels, setPanels] = useState<object[]>([]);
 
   useEffect(() => {
     const datasetId = match.params.uuid;
@@ -69,10 +84,10 @@ function DatasetDataView({
     const datasetId = match.params.uuid;
     const loaded = dataset && dataset.schema && dataset.id === datasetId;
     if (loaded) {
-      const names = dataset.schema.tables.map((t) => t.name);
+      const names = dataset.schema?.tables.map((t) => t.name) || [];
       setTableNames(names);
       setSelected(names[0]);
-      setSelectedTable(dataset.schema.tables.find((t) => t.name === names[0]));
+      setSelectedTable(dataset.schema?.tables.find((t) => t.name === names[0]));
       setDatasetLoaded(true);
     }
   }, [dataset, match]);
@@ -125,7 +140,7 @@ function DatasetDataView({
           dataset.dataProject,
           `#standardSQL
           SELECT ${DbColumns.ROW_ID},
-            ${selectedTable.columns.map((column) => column.name).join(', ')} ${fromClause}
+            ${selectedTable?.columns?.map((column) => column.name).join(', ')} ${fromClause}
             ${orderProperty ? `ORDER BY ${orderProperty} ${orderDirection}` : ''}
           LIMIT ${QUERY_LIMIT}`,
         ),
@@ -150,37 +165,38 @@ function DatasetDataView({
     selectedTable,
   ]);
 
-  const handleDrawerWidth = (width) => {
+  const handleDrawerWidth = (width: number) => {
     setSidebarWidth(width);
   };
 
-  const handleChangeTable = (value) => {
+  const handleChangeTable = (value: string) => {
     dispatch(resetQuery());
     setSelected(value);
-    setSelectedTable(dataset.schema.tables.find((t) => t.name === value));
+    setSelectedTable(dataset.schema?.tables?.find((t) => t.name === value));
   };
 
   const pageBQQuery = () => {
-    const bqStorage = dataset.storage.find((s) => s.cloudResource === GoogleCloudResource.BIGQUERY);
+    const bqStorage = dataset.storage?.find(
+      (s) => s.cloudResource === GoogleCloudResource.BIGQUERY,
+    );
     const location = bqStorage?.region;
 
     dispatch(pageQuery(queryParams.pageToken, queryParams.projectId, queryParams.jobId, location));
   };
 
-  if (!datasetLoaded) {
+  if (!datasetLoaded || !dataset || !selectedTable) {
     return <LoadingSpinner />;
   }
 
   return (
     <DataView
-      resourceId={dataset.id}
+      resourceId={dataset.id || ''}
       resourceLoaded={datasetLoaded}
-      resourceName={dataset.name}
+      resourceName={dataset.name || ''}
       resourceType={ResourceType.DATASET}
       tableNames={tableNames}
       handleChangeTable={handleChangeTable}
       pageBQQuery={pageBQQuery}
-      queryParams={queryParams}
       selected={selected}
       selectedTable={selectedTable}
       canLink={canLink}
@@ -191,19 +207,7 @@ function DatasetDataView({
   );
 }
 
-DatasetDataView.propTypes = {
-  dataset: PropTypes.object,
-  dispatch: PropTypes.func.isRequired,
-  filterStatement: PropTypes.string.isRequired,
-  joinStatement: PropTypes.string.isRequired,
-  match: PropTypes.object,
-  orderDirection: PropTypes.string,
-  orderProperty: PropTypes.string,
-  profile: PropTypes.object,
-  queryParams: PropTypes.object,
-};
-
-function mapStateToProps(state) {
+function mapStateToProps(state: TdrState) {
   return {
     dataset: state.datasets.dataset,
     filterStatement: state.query.filterStatement,
