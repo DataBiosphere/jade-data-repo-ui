@@ -25,7 +25,6 @@ describe('test dataset sharing', () => {
     cy.get('.dataset-access-container :nth-child(2) .MuiAccordionSummary-root').click();
     cy.get('.dataset-access-container :nth-child(2) .MuiAccordionDetails-root button')
       .eq(1)
-      .should('be.visible')
       .should('contain.text', 'Manage Stewards')
       .click();
 
@@ -34,14 +33,16 @@ describe('test dataset sharing', () => {
       .should('contain.text', 'Manage Stewards');
 
     cy.get('.dataset-access-container :nth-child(2) .MuiAccordionSummary-root').click();
-    cy.get('.dataset-access-container :nth-child(2) .MuiAccordionDetails-root button')
-      .should('be.visible')
-      .should('contain.text', 'Manage Custodians');
+    cy.get('.dataset-access-container :nth-child(2) .MuiAccordionDetails-root button').should(
+      'contain.text',
+      'Manage Custodians',
+    );
 
     cy.get('.dataset-access-container :nth-child(3) .MuiAccordionSummary-root').click();
-    cy.get('.dataset-access-container :nth-child(3) .MuiAccordionDetails-root button')
-      .should('be.visible')
-      .should('contain.text', 'Manage Snapshot Creators');
+    cy.get('.dataset-access-container :nth-child(3) .MuiAccordionDetails-root button').should(
+      'contain.text',
+      'Manage Snapshot Creators',
+    );
   });
 
   it('does not have manage users buttons when the user is not a steward', () => {
