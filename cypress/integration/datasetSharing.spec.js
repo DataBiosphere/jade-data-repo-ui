@@ -32,13 +32,13 @@ describe('test dataset sharing', () => {
       .should('be.visible')
       .should('contain.text', 'Manage Stewards');
 
-    cy.get('.dataset-access-container :nth-child(2) .MuiAccordionSummary-root').eq(1).click();
-    cy.get('.dataset-access-container :nth-child(2) .MuiAccordionDetails-root button')
+    cy.get('.dataset-access-container :nth-child(1) .MuiAccordionSummary-root').eq(1).click();
+    cy.get('.dataset-access-container :nth-child(1) .MuiAccordionDetails-root button')
       .eq(1)
       .should('contain.text', 'Manage Custodians');
 
-    cy.get('.dataset-access-container :nth-child(3) .MuiAccordionSummary-root').eq(2).click();
-    cy.get('.dataset-access-container :nth-child(3) .MuiAccordionDetails-root button')
+    cy.get('.dataset-access-container :nth-child(1) .MuiAccordionSummary-root').eq(2).click();
+    cy.get('.dataset-access-container :nth-child(1) .MuiAccordionDetails-root button')
       .eq(2)
       .should('contain.text', 'Manage Snapshot Creators');
   });
