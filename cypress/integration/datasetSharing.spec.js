@@ -22,7 +22,8 @@ describe('test dataset sharing', () => {
     cy.get('a > .MuiButtonBase-root').click();
 
     cy.wait(['@getDataset', '@getDatasetPolicies', '@getBillingProfileById']);
-    cy.get('#simple-tab-3').click();
+    cy.get('[data-cy="roles-tab"]').should('be.visible');
+    cy.get('[data-cy="roles-tab"]').click();
     cy.get('.dataset-access-container :nth-child(2) .MuiAccordionSummary-root').click();
     cy.get('.dataset-access-container :nth-child(2) .MuiAccordionDetails-root button')
       .should('be.visible')

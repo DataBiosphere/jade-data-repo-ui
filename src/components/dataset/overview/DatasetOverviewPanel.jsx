@@ -94,6 +94,7 @@ function DatasetOverviewPanel(props) {
         )}
         {canManageUsers && (
           <Tab
+            data-cy="roles-tab"
             label="Roles & memberships"
             classes={{ selected: classes.tabSelected }}
             disableFocusRipple
