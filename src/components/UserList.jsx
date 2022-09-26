@@ -75,7 +75,7 @@ class UserList extends React.PureComponent {
           expandIcon={<ExpandMore className={classes.expandIcon} />}
           className={classes.header}
         >
-          {typeOfUsers}:{' '}
+          {typeOfUsers}
         </AccordionSummary>
         <AccordionDetails>
           {canManageUsers && (

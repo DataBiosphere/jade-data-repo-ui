@@ -51,6 +51,9 @@ function DatasetOverviewPanel(props) {
   const { classes, dataset, dispatch, userRoles } = props;
   const linkToBq = dataset.accessInformation?.bigQuery !== undefined;
 
+  const canManageUsers =
+    userRoles.includes(DatasetRoles.STEWARD) || userRoles.includes(DatasetRoles.CUSTODIAN);
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -89,13 +92,15 @@ function DatasetOverviewPanel(props) {
             {...a11yProps(2)}
           />
         )}
-        <Tab
-          label="Roles & memberships"
-          classes={{ selected: classes.tabSelected }}
-          disableFocusRipple
-          disableRipple
-          {...a11yProps(3)}
-        />
+        {canManageUsers && (
+          <Tab
+            label="Roles & memberships"
+            classes={{ selected: classes.tabSelected }}
+            disableFocusRipple
+            disableRipple
+            {...a11yProps(3)}
+          />
+        )}
       </Tabs>
       <TabPanel value={value} index={0}>
         <Grid container spacing={2}>

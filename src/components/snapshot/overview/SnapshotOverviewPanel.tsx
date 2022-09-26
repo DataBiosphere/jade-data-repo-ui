@@ -68,6 +68,7 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
   const [value, setValue] = React.useState(0);
   const { classes, dispatch, snapshot, userRoles } = props;
   const canEditDescription = userRoles.includes(SnapshotRoles.STEWARD);
+  const canManageUsers = userRoles.includes(SnapshotRoles.STEWARD);
   // @ts-ignore
   const sourceDataset = snapshot.source[0].dataset;
   const linkToBq = snapshot.cloudPlatform === 'gcp';
@@ -103,13 +104,15 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
           disableRipple
           {...a11yProps(1)}
         />
-        <Tab
-          label="Roles & memberships"
-          classes={{ selected: classes.tabSelected }}
-          disableFocusRipple
-          disableRipple
-          {...a11yProps(2)}
-        />
+        {canManageUsers && (
+          <Tab
+            label="Roles & memberships"
+            classes={{ selected: classes.tabSelected }}
+            disableFocusRipple
+            disableRipple
+            {...a11yProps(2)}
+          />
+        )}
       </Tabs>
       <TabPanel value={value} index={0}>
         <Grid container spacing={2}>
