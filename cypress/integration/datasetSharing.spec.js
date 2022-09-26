@@ -22,7 +22,7 @@ describe('test dataset sharing', () => {
     cy.get('a > .MuiButtonBase-root').click();
 
     cy.wait(['@getDataset', '@getDatasetPolicies', '@getBillingProfileById']);
-    cy.get('#simple-tabs-3').click();
+    cy.get('#simple-tab-3').click();
     cy.get('.dataset-access-container :nth-child(2) .MuiAccordionSummary-root').click();
     cy.get('.dataset-access-container :nth-child(2) .MuiAccordionDetails-root button')
       .should('be.visible')
@@ -54,8 +54,6 @@ describe('test dataset sharing', () => {
 
     cy.get('.MuiList-root > :nth-child(1)').click();
     cy.get('#memberships-header').click();
-    cy.get('.MuiAccordionDetails-root :nth-child(2) > > :nth-child(3) > button').should(
-      'not.exist',
-    );
+    cy.get('#simple-tab-3').should('not.exist');
   });
 });
