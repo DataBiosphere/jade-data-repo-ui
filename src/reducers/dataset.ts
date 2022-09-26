@@ -11,6 +11,7 @@ import {
 
 export interface DatasetState {
   datasets: Array<DatasetSummaryModel>;
+  datasetRoleMaps: { [key: string]: Array<string> };
   dataset: DatasetModel;
   datasetPreview: Record<string, Array<Record<string, any>>>;
   datasetsCount: number;
@@ -20,10 +21,12 @@ export interface DatasetState {
   datasetSnapshots: Array<SnapshotSummaryModel>;
   datasetSnapshotsCount: number;
   loading: boolean;
+  refreshCnt: number;
 }
 
 export const initialDatasetState: DatasetState = {
   datasets: [],
+  datasetRoleMaps: {},
   dataset: {},
   datasetPreview: {},
   datasetsCount: 0,
@@ -33,6 +36,7 @@ export const initialDatasetState: DatasetState = {
   datasetSnapshots: [],
   datasetSnapshotsCount: 0,
   loading: false,
+  refreshCnt: 0,
 };
 
 // We need this method to apply the response from add/remove snapshot members since the API only returns the affected group
@@ -61,9 +65,14 @@ export default {
       [ActionTypes.GET_DATASETS_SUCCESS]: (state, action: any): any =>
         immutable(state, {
           datasets: { $set: action.datasets.data.data.items },
+          datasetRoleMaps: { $set: action.datasets.data.data.roleMap },
           datasetsCount: { $set: action.datasets.data.data.total },
           filteredDatasetsCount: { $set: action.datasets.data.data.filteredTotal },
           loading: { $set: false },
+        }),
+      [ActionTypes.REFRESH_DATASETS]: (state) =>
+        immutable(state, {
+          refreshCnt: { $set: state.refreshCnt + 1 },
         }),
       [ActionTypes.GET_DATASET_BY_ID]: (state) =>
         immutable(state, {

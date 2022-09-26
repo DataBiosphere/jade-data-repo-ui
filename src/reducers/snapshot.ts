@@ -25,6 +25,7 @@ export interface SnapshotRequest {
 export interface SnapshotState {
   snapshot: SnapshotModel;
   snapshots: Array<SnapshotSummaryModel>;
+  snapshotRoleMaps: { [key: string]: Array<string> };
   snapshotPolicies: Array<PolicyModel>;
   canReadPolicies: boolean;
   dataset: DatasetModel;
@@ -39,6 +40,7 @@ export interface SnapshotState {
   exportIsProcessing: boolean;
   exportIsDone: boolean;
   exportResponse: SnapshotExportResponseModel;
+  refreshCnt: number;
 }
 
 const defaultSnapshotRequest: SnapshotRequest = {
@@ -53,6 +55,7 @@ const defaultSnapshotRequest: SnapshotRequest = {
 export const initialSnapshotState: SnapshotState = {
   snapshot: {},
   snapshots: [],
+  snapshotRoleMaps: {},
   snapshotPolicies: [],
   canReadPolicies: false,
   dataset: {},
@@ -67,6 +70,7 @@ export const initialSnapshotState: SnapshotState = {
   exportIsProcessing: false,
   exportIsDone: false,
   exportResponse: {},
+  refreshCnt: 0,
 };
 
 // We need this method to apply the response from add/remove snapshot members since the API only returns the affected group
@@ -97,9 +101,14 @@ export default {
       [ActionTypes.GET_SNAPSHOTS_SUCCESS]: (state, action: any) =>
         immutable(state, {
           snapshots: { $set: action.snapshots.data.data.items },
+          snapshotRoleMaps: { $set: action.snapshots.data.data.roleMap },
           snapshotCount: { $set: action.snapshots.data.data.total },
           filteredSnapshotCount: { $set: action.snapshots.data.data.filteredTotal },
           loading: { $set: false },
+        }),
+      [ActionTypes.REFRESH_SNAPSHOTS]: (state) =>
+        immutable(state, {
+          refreshCnt: { $set: state.refreshCnt + 1 },
         }),
       [ActionTypes.CREATE_SNAPSHOT_JOB]: (state) =>
         immutable(state, {

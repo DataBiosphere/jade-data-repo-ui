@@ -35,6 +35,9 @@ npm install
   - `export PROXY_URL=https://jade.datarepo-dev.broadinstitute.org`
   - `export CYPRESS_BASE_URL=http://localhost:3000`
 
+- For performance gains, you should disable linting (don't worry, it gets checked in GitHub actions) by setting the following environment variable:
+  - `export DISABLE_ESLINT_PLUGIN=true`
+
 - Before running e2e tests, make sure you grab your access token by running `gcloud auth print-access-token`, and then
   export it:
 

@@ -9,13 +9,13 @@ import { ActionTypes, TABLE_DEFAULT_ROWS_PER_PAGE, TABLE_DEFAULT_COLUMN_WIDTH } 
 
 export type TableColumnType = {
   name: string;
-  dataType: string;
-  arrayOf: boolean;
-  allowResize: boolean;
-  allowSort: boolean;
+  dataType?: string;
+  arrayOf?: boolean;
+  allowResize?: boolean;
+  allowSort?: boolean;
   label: string;
-  numeric: boolean;
-  render: (row: object) => string;
+  numeric?: boolean;
+  render?: (row: object) => string | JSX.Element;
   width?: number | string;
 };
 
@@ -53,6 +53,7 @@ export interface QueryState {
   resultsCount: number;
   page: number;
   rowsPerPage: number;
+  refreshCnt: number;
 }
 
 const defaultQueryParams = {
@@ -78,6 +79,7 @@ export const initialQueryState: QueryState = {
   resultsCount: 0,
   page: 0,
   rowsPerPage: TABLE_DEFAULT_ROWS_PER_PAGE,
+  refreshCnt: 0,
 };
 
 export default {
@@ -164,10 +166,13 @@ export default {
         immutable(state, {
           delay: { $set: true },
         }),
+      [ActionTypes.REFRESH_QUERY]: (state) =>
+        immutable(state, {
+          refreshCnt: { $set: state.refreshCnt + 1 },
+        }),
       [ActionTypes.PREVIEW_DATA]: (state, action: any) =>
         immutable(state, {
           error: { $set: false },
-          queryParams: { $set: defaultQueryParams },
           polling: { $set: true },
           orderProperty: { $set: action.payload.orderProperty },
           orderDirection: { $set: action.payload.orderDirection },

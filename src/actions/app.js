@@ -54,6 +54,10 @@ export const { getSnapshots } = createActions({
   }),
 });
 
+export const { refreshSnapshots } = createActions({
+  [ActionTypes.REFRESH_SNAPSHOTS]: () => ({}),
+});
+
 export const { getDatasetSnapshots } = createActions({
   [ActionTypes.GET_DATASET_SNAPSHOTS_SUCCESS]: (snapshots) => snapshots,
   [ActionTypes.GET_DATASET_SNAPSHOTS]: (limit, offset, sort, direction, datasetIds) => ({
@@ -107,6 +111,10 @@ export const { getDatasets } = createActions({
     direction,
     searchString,
   }),
+});
+
+export const { refreshDatasets } = createActions({
+  [ActionTypes.REFRESH_DATASETS]: () => ({}),
 });
 
 export const { getDatasetById } = createActions({
@@ -192,6 +200,10 @@ export const { runQuery } = createActions({
     projectId,
     query,
   }),
+});
+
+export const { refreshQuery } = createActions({
+  [ActionTypes.REFRESH_QUERY]: () => ({}),
 });
 
 export const { previewData } = createActions({

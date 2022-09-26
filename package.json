@@ -2,7 +2,7 @@
   "name": "jade-data-repo-ui",
   "title": "jade-data-repo-ui",
   "description": "Data Repository UI",
-  "version": "0.149.0",
+  "version": "0.150.0",
   "author": "Jade Team <jadeteam@broadinstitute.org>",
   "engines": {
     "node": ">=12.22"
@@ -94,7 +94,6 @@
     "@cypress/react": "^5.12.4",
     "@cypress/webpack-dev-server": "^1.8.4",
     "@hot-loader/react-dom": "^17.0.2",
-    "@openapitools/openapi-generator-cli": "^2.4.26",
     "@svgr/webpack": "^6.3.1",
     "@types/lodash": "^4.14.180",
     "@types/react-redux": "^7.1.23",
@@ -132,11 +131,12 @@
   "scripts": {
     "start": "npm run codegen && EXTEND_ESLINT=true react-app-rewired start",
     "build": "npm run codegen && react-app-rewired build",
+    "build-no-code-gen": "react-app-rewired build",
     "lint": "npm run codegen && eslint  --ext .js --ext .jsx --ext .ts --ext .tsx src cypress tools",
     "test": "npm run codegen && react-app-rewired test",
     "eject": "react-app-rewired eject",
     "ingest": "node --inspect tools/ingest ingest",
-    "codegen": "openapi-generator-cli generate -g typescript-axios -i ${TDR_OPEN_API_YAML_LOCATION:=https://jade.datarepo-dev.broadinstitute.org/data-repository-openapi.yaml} -o ./src/generated/tdr --skip-validate-spec",
+    "codegen": "docker run --rm -v \"${PWD}:/local\" openapitools/openapi-generator-cli generate -g typescript-axios -i ${TDR_OPEN_API_YAML_LOCATION:=https://jade.datarepo-dev.broadinstitute.org/data-repository-openapi.yaml} -o /local/src/generated/tdr --skip-validate-spec",
     "clean": "rm -fr build src/generated/*"
   },
   "husky": {
