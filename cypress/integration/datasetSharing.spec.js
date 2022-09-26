@@ -24,8 +24,8 @@ describe('test dataset sharing', () => {
     cy.wait(['@getDataset', '@getDatasetPolicies', '@getBillingProfileById']);
     cy.get('#simple-tabs-3').contains('Roles & memberships');
     cy.get('#simple-tabs-3').click();
-    cy.get('.MuiGrid-root :nth-child(2) .MuiAccordionSummary-root').click();
-    cy.get('.MuiAccordionDetails-root button')
+    cy.get('.dataset-access-container :nth-child(2) .MuiAccordionSummary-root').click();
+    cy.get('.dataset-access-container :nth-child(2) .MuiAccordionDetails-root button')
       .should('be.visible')
       .should('contain.text', 'Manage Stewards')
       .click();
@@ -34,12 +34,15 @@ describe('test dataset sharing', () => {
       .should('be.visible')
       .should('contain.text', 'Manage Stewards');
 
-    // cy.get('.MuiAccordionDetails-root :nth-child(2) > > :nth-child(3) > button')
-    //   .should('be.visible')
-    //   .should('contain.text', 'Manage Custodians');
-    // cy.get('.MuiAccordionDetails-root :nth-child(3) > > :nth-child(3) > button')
-    //   .should('be.visible')
-    //   .should('contain.text', 'Manage Snapshot Creators');
+    cy.get('.dataset-access-container :nth-child(2) .MuiAccordionSummary-root').click();
+    cy.get('.dataset-access-container :nth-child(2) .MuiAccordionDetails-root button')
+      .should('be.visible')
+      .should('contain.text', 'Manage Custodians');
+
+    cy.get('.dataset-access-container :nth-child(3) .MuiAccordionSummary-root').click();
+    cy.get('.dataset-access-container :nth-child(3) .MuiAccordionDetails-root button')
+      .should('be.visible')
+      .should('contain.text', 'Manage Snapshot Creators');
   });
 
   it('does not have manage users buttons when the user is not a steward', () => {

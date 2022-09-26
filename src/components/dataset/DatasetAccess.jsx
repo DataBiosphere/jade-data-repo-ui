@@ -41,7 +41,7 @@ function DatasetAccess(props) {
   const gridItemXs = horizontal ? 4 : 12;
 
   return (
-    <Grid container spacing={1}>
+    <Grid container spacing={1} className="dataset-access-container">
       {showHelp ? (
         <Grid item xs={gridItemXs} className={classes.helpContainer}>
           <a href="#" className={classes.genericLink}>

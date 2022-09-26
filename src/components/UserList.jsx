@@ -71,13 +71,12 @@ class UserList extends React.PureComponent {
     return (
       <Accordion expanded={isAccordionExpanded} onChange={this.toggleAccordion}>
         <AccordionSummary
-          aria-controls=""
           expandIcon={<ExpandMore className={classes.expandIcon} />}
           className={classes.header}
         >
           {typeOfUsers}
         </AccordionSummary>
-        <AccordionDetails>
+        <AccordionDetails data-cy="user-email">
           {canManageUsers && (
             <ManageUsersModal
               addUser={addUser}
