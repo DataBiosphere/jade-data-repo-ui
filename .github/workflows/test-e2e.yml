@@ -53,14 +53,14 @@ jobs:
           # have been removed. We'd need to run the "ingest.js" script to ingest the datasets
           # in order to use int-4 again.
           k8_namespaces: 'integration-4,integration-5'
-      - name: Build new ui container
+      - name: initialize npm
         env:
           DEV_PROJECT: broad-jade-dev
+          DISABLE_ESLINT_PLUGIN: true
         run: |
           GCR_TAG=$(git rev-parse --short HEAD)
           echo "GCR_TAG=$(echo ${GCR_TAG})" >> $GITHUB_ENV
           npm ci
-          npm run-script build
       - name: set npm env
         run: |
           eval $(cat env_vars)
@@ -68,13 +68,15 @@ jobs:
           HOST=localhost
           echo "HOST=$(echo ${HOST})" >> $GITHUB_ENV
       - name: check npm start
+        env:
+          DISABLE_ESLINT_PLUGIN: true
         run: |
           npm start & npx wait-on http://localhost:3000
       # Build the Docker image
       - name: Build
         run: |
           rm -rf jade-dev-account.pem
-          docker build -f Dockerfile.direct -t gcr.io/broad-jade-dev/jade-data-repo-ui:${GCR_TAG} .
+          docker build -f Dockerfile.direct -t gcr.io/broad-jade-dev/jade-data-repo-ui:${GCR_TAG} --build-arg CACHEBUST=$(date +%s) .
       # Push the Docker image to Google Container Registry
       - name: Publish
         run: |
@@ -90,8 +92,8 @@ jobs:
         with:
           actions_subcommand: 'helmdeploy'
           helm_create_secret_manager_secret_version: '0.0.6'
-          helm_datarepo_api_chart_version: 0.0.411
-          helm_datarepo_ui_chart_version: 0.0.172
+          helm_datarepo_api_chart_version: 0.0.413
+          helm_datarepo_ui_chart_version: 0.0.173
           helm_gcloud_sqlproxy_chart_version: 0.19.8
           helm_oidc_proxy_chart_version: 0.0.38
           helm_imagetag_update: 'ui'
@@ -109,6 +111,7 @@ jobs:
       - name: Cypress run
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          DISABLE_ESLINT_PLUGIN: true
         run: |
           npx cypress run --record
       - name: 'Clean state lock from used Namespace on API deploy'

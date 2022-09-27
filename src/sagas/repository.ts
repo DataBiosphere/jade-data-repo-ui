@@ -7,6 +7,7 @@ import { delay } from 'redux-saga';
 import axios, { AxiosResponse } from 'axios';
 import moment from 'moment';
 import _ from 'lodash';
+import { RouterRootState } from 'connected-react-router';
 
 import { showNotification } from 'modules/notifications';
 import { ActionTypes, Status, DbColumns, TABLE_DEFAULT_ROWS_PER_PAGE } from '../constants';
@@ -27,7 +28,7 @@ export const getSnapshotState = (state: TdrState) => state.snapshots;
 export const getQuery = (state: TdrState) => state.query;
 export const getDataset = (state: TdrState) => state.datasets.dataset;
 export const getSamUrl = (state: TdrState) => state.configuration.configObject.samUrl;
-
+export const getLocation = (state: TdrState & RouterRootState) => state.router.location;
 export const timeoutMsg = 'Your session has timed out. Please refresh the page.';
 
 export function* checkToken() {
@@ -323,6 +324,7 @@ export function* getSnapshotPolicy({ payload }: any): any {
 export function* addSnapshotPolicyMember({ payload }: any): any {
   const { snapshotId, user, policy } = payload;
   const userObject = { email: user };
+  const location = yield select(getLocation);
   try {
     const response = yield call(
       authPost,
@@ -334,6 +336,12 @@ export function* addSnapshotPolicyMember({ payload }: any): any {
       snapshot: { data: response },
       policy,
     });
+    // Reload snapshots to get latest state
+    if (location.pathname === '/snapshots') {
+      yield put({
+        type: ActionTypes.REFRESH_SNAPSHOTS,
+      });
+    }
   } catch (err) {
     showNotification(err);
   }
@@ -448,6 +456,7 @@ export function* getUserSnapshotRoles({ payload }: any): any {
 export function* addDatasetPolicyMember({ payload }: any): any {
   const { datasetId, user, policy } = payload;
   const userObject = { email: user };
+  const location = yield select(getLocation);
   try {
     const response = yield call(
       authPost,
@@ -459,6 +468,12 @@ export function* addDatasetPolicyMember({ payload }: any): any {
       dataset: { data: response },
       policy,
     });
+    // Reload datasets to get latest state
+    if (location.pathname === '/datasets') {
+      yield put({
+        type: ActionTypes.REFRESH_DATASETS,
+      });
+    }
   } catch (err) {
     showNotification(err);
   }

@@ -56,17 +56,13 @@ const styles = (theme) => ({
     marginRight: 5,
   },
   iconButton: {
-    border: `1px solid ${theme.palette.primary.main}`,
-    borderRadius: '3px',
     padding: '1px',
-    backgroundColor: theme.palette.primary.main,
+    marginLeft: 5,
+    boxShadow: 'none',
+    color: theme.palette.primary.main,
     '&:hover': {
-      backgroundColor: theme.palette.primary.hover,
+      color: theme.palette.primary.hover,
     },
-  },
-  horizontalModalButton: {
-    fontSize: theme.typography.h6.fontSize,
-    color: theme.palette.primary.light,
   },
 });
 
@@ -108,7 +104,7 @@ export class ManageUsersModal extends React.PureComponent {
         disableFocusRipple={true}
         disableRipple={true}
       >
-        <Edit fontStyle="small" className={classes.horizontalModalButton} />
+        <i className="fa-solid fa-pen-circle" />
       </IconButton>
     ) : (
       <Button
@@ -117,7 +113,8 @@ export class ManageUsersModal extends React.PureComponent {
         variant="outlined"
         onClick={this.handleClickOpen}
       >
-        <Edit fontStyle="small" className={classes.openButtonIcon} /> {modalText}
+        {/* <Edit fontStyle="small" className={classes.openButtonIcon} /> {modalText} */}
+        <i className={`${classes.openButtonIcon} fa-solid fa-pen-circle`} /> {modalText}
       </Button>
     );
 

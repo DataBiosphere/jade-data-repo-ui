@@ -14,8 +14,8 @@ on:
       - 'config-overrides.js'
       - '.github/workflows/dev-image-update.yaml'
 env:
-  gcr_google_project: "broad-jade-dev"
-  google_sdk_version: "290.0.1"
+  gcr_google_project: 'broad-jade-dev'
+  google_sdk_version: '290.0.1'
   DEV_PROJECT: broad-jade-dev
   # This must be defined for the bash redirection
   GOOGLE_APPLICATION_CREDENTIALS: 'jade-dev-account.json'
@@ -36,34 +36,34 @@ jobs:
           fetch-depth: 0
           ref: develop
           token: ${{ secrets.BROADBOT_TOKEN }}
-      - name: "Checkout datarepo-helm-definitions repo"
+      - name: 'Checkout datarepo-helm-definitions repo'
         uses: actions/checkout@v2
         with:
-          repository: "broadinstitute/datarepo-helm-definitions"
+          repository: 'broadinstitute/datarepo-helm-definitions'
           token: ${{ secrets.BROADBOT_TOKEN }}
           path: datarepo-helm-definitions
-      - name: "Bump the tag to a new version"
+      - name: 'Bump the tag to a new version'
         uses: broadinstitute/datarepo-actions/actions/main@0.59.0
         with:
-          actions_subcommand: "bumper"
+          actions_subcommand: 'bumper'
           role_id: ${{ secrets.ROLE_ID }}
           secret_id: ${{ secrets.SECRET_ID }}
           version_file_path: package.json
           version_variable_name: version
           GITHUB_TOKEN: ${{ secrets.BROADBOT_TOKEN }}
-      - name: "Get gcp credentials"
+      - name: 'Get gcp credentials'
         uses: broadinstitute/datarepo-actions/actions/main@0.59.0
         with:
-          actions_subcommand: "skip"
+          actions_subcommand: 'skip'
           role_id: ${{ secrets.ROLE_ID }}
           secret_id: ${{ secrets.SECRET_ID }}
-      - name: "Pull down new tags"
+      - name: 'Pull down new tags'
         run: git fetch --all --tags
       - name: 'Get Previous tag'
         id: uiprevioustag
-        uses: "broadinstitute/github-action-get-previous-tag@master"
+        uses: 'broadinstitute/github-action-get-previous-tag@master'
         env:
-          GITHUB_TOKEN: "${{ secrets.BROADBOT_TOKEN }}"
+          GITHUB_TOKEN: '${{ secrets.BROADBOT_TOKEN }}'
       - name: Build nmp build for new ui container
         run: |
           git pull
@@ -71,9 +71,11 @@ jobs:
           echo "GCR_TAG=$(echo ${GCR_TAG})" >> $GITHUB_ENV
       # Build the Docker image
       - name: Build docker container
+        env:
+          DISABLE_ESLINT_PLUGIN: true
         run: |
           rm -rf jade-dev-account.pem
-          docker build -t gcr.io/${{ env.gcr_google_project }}/jade-data-repo-ui:${GCR_TAG} .
+          docker build -t gcr.io/${{ env.gcr_google_project }}/jade-data-repo-ui:${GCR_TAG} --build-arg CACHEBUST=$(date +%s) .
       # Push the Docker image to Google Container Registry
       - name: Publish and tag new docker container to GCR
         run: |
@@ -84,10 +86,10 @@ jobs:
           add-tag \
           gcr.io/${{ env.gcr_google_project }}/jade-data-repo-ui:"${GCR_TAG}" \
           gcr.io/${{ env.gcr_google_project }}/jade-data-repo-ui:"${{ steps.uiprevioustag.outputs.tag }}" --quiet
-      - name: "Check and edit Helm definition for dev"
+      - name: 'Check and edit Helm definition for dev'
         uses: broadinstitute/datarepo-actions/actions/main@0.59.0
         with:
-          actions_subcommand: "deploytagupdate"
+          actions_subcommand: 'deploytagupdate'
           helm_env_prefix: dev
           helm_imagetag_update: ui
       - name: Trigger action to update helm tag
