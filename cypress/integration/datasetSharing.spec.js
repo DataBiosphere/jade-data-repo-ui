@@ -31,16 +31,6 @@ describe('test dataset sharing', () => {
     cy.get('#customized-dialog-title')
       .should('be.visible')
       .should('contain.text', 'Manage Stewards');
-
-    cy.get('.dataset-access-container :nth-child(1) .MuiAccordionSummary-root').eq(1).click();
-    cy.get('.dataset-access-container :nth-child(1) .MuiAccordionDetails-root button')
-      .eq(1)
-      .should('contain.text', 'Manage Custodians');
-
-    cy.get('.dataset-access-container :nth-child(1) .MuiAccordionSummary-root').eq(2).click();
-    cy.get('.dataset-access-container :nth-child(1) .MuiAccordionDetails-root button')
-      .eq(2)
-      .should('contain.text', 'Manage Snapshot Creators');
   });
 
   it('does not have manage users buttons when the user is not a steward', () => {
