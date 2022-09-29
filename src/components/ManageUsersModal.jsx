@@ -113,7 +113,6 @@ export class ManageUsersModal extends React.PureComponent {
         variant="outlined"
         onClick={this.handleClickOpen}
       >
-        
         <i className={`${classes.openButtonIcon} fa-solid fa-pen-circle`} /> {modalText}
       </Button>
     );
