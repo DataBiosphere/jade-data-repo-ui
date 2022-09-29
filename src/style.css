@@ -39,6 +39,11 @@ body.tdr table {
   border-collapse: collapse;
 }
 
+body.tdr a {
+  color: unset;
+  text-decoration: unset;
+}
+
 #root {
   overflow: auto;
   height: 100%;
