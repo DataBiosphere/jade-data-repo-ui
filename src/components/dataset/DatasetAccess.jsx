@@ -36,6 +36,7 @@ function DatasetAccess(props) {
   const custodians = getRoleMembersFromPolicies(policies, DatasetRoles.CUSTODIAN);
   const snapshotCreators = getRoleMembersFromPolicies(policies, DatasetRoles.SNAPSHOT_CREATOR);
 
+  const canManageStewards = userRoles.includes(DatasetRoles.STEWARD);
   const canManageUsers =
     userRoles.includes(DatasetRoles.STEWARD) || userRoles.includes(DatasetRoles.CUSTODIAN);
   const gridItemXs = horizontal ? 4 : 12;
@@ -54,7 +55,7 @@ function DatasetAccess(props) {
         <UserList
           users={stewards}
           typeOfUsers="Stewards"
-          canManageUsers={canManageUsers}
+          canManageUsers={canManageStewards}
           addUser={addUser(DatasetRoles.STEWARD)}
           removeUser={removeUser(DatasetRoles.STEWARD)}
           horizontal={horizontal}
