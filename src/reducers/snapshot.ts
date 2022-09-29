@@ -6,10 +6,12 @@ import { LOCATION_CHANGE } from 'connected-react-router';
 import { ActionTypes } from '../constants';
 import {
   DatasetModel,
+  InaccessibleWorkspacePolicyModel,
   PolicyModel,
   SnapshotExportResponseModel,
   SnapshotModel,
   SnapshotSummaryModel,
+  WorkspacePolicyModel,
 } from '../generated/tdr';
 
 // TODO: convert to autogenned SnapshotRequestModel
@@ -27,12 +29,15 @@ export interface SnapshotState {
   snapshots: Array<SnapshotSummaryModel>;
   snapshotRoleMaps: { [key: string]: Array<string> };
   snapshotPolicies: Array<PolicyModel>;
+  snapshotWorkspaces: Array<WorkspacePolicyModel>;
+  snapshotInaccessibleWorkspaces: Array<InaccessibleWorkspacePolicyModel>;
   canReadPolicies: boolean;
   dataset: DatasetModel;
   snapshotCount: number;
   filteredSnapshotCount: number;
   dialogIsOpen: boolean;
   loading: boolean;
+  snapshotWorkspaceManagerEditInProgress: boolean;
   // for snapshot creation
   snapshotRequest: SnapshotRequest;
   userRoles: Array<string>;
@@ -57,12 +62,15 @@ export const initialSnapshotState: SnapshotState = {
   snapshots: [],
   snapshotRoleMaps: {},
   snapshotPolicies: [],
+  snapshotWorkspaces: [],
+  snapshotInaccessibleWorkspaces: [],
   canReadPolicies: false,
   dataset: {},
   snapshotCount: 0,
   filteredSnapshotCount: 0,
   dialogIsOpen: false,
   loading: false,
+  snapshotWorkspaceManagerEditInProgress: false,
   // for snapshot creation
   snapshotRequest: defaultSnapshotRequest,
   userRoles: [],
@@ -167,21 +175,41 @@ export default {
       [ActionTypes.GET_SNAPSHOT_POLICY_SUCCESS]: (state, action: any) =>
         immutable(state, {
           snapshotPolicies: { $set: action.snapshot.data.data.policies },
+          snapshotWorkspaces: { $set: action.snapshot.data.data.workspaces },
+          snapshotInaccessibleWorkspaces: {
+            $set: action.snapshot.data.data.inaccessibleWorkspaces,
+          },
+          snapshotWorkspaceManagerEditInProgress: { $set: false },
           canReadPolicies: { $set: true },
         }),
       [ActionTypes.GET_SNAPSHOT_POLICY_FAILURE]: (state) =>
         immutable(state, {
           snapshotPolicies: { $set: [] },
+          snapshotWorkspaces: { $set: [] },
+          snapshotInaccessibleWorkspaces: { $set: [] },
+          snapshotWorkspaceManagerEditInProgress: { $set: false },
           canReadPolicies: { $set: false },
         }),
       [ActionTypes.ADD_SNAPSHOT_POLICY_MEMBER_SUCCESS]: (state, action: any) =>
         immutable(state, {
           snapshotPolicies: { $apply: snapshotMembershipResultApply(action) },
+          snapshotWorkspaces: { $set: action.snapshot.data.data.workspaces },
+          snapshotInaccessibleWorkspaces: {
+            $set: action.snapshot.data.data.inaccessibleWorkspaces,
+          },
         }),
       [ActionTypes.REMOVE_SNAPSHOT_POLICY_MEMBER_SUCCESS]: (state, action: any) =>
         immutable(state, {
           snapshotPolicies: { $apply: snapshotMembershipResultApply(action) },
+          snapshotWorkspaces: { $set: action.snapshot.data.data.workspaces },
+          snapshotInaccessibleWorkspaces: {
+            $set: action.snapshot.data.data.inaccessibleWorkspaces,
+          },
         }),
+      [ActionTypes.REMOVE_SNAPSHOT_POLICY_MEMBERS]: (state) =>
+        immutable(state, { snapshotWorkspaceManagerEditInProgress: { $set: true } }),
+      [ActionTypes.REMOVE_SNAPSHOT_POLICY_MEMBERS_EXCEPTION]: (state) =>
+        immutable(state, { snapshotWorkspaceManagerEditInProgress: { $set: false } }),
       [ActionTypes.GET_USER_SNAPSHOT_ROLES]: (state) =>
         immutable(state, {
           userRoles: { $set: [] },

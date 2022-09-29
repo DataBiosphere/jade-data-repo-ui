@@ -362,6 +362,29 @@ export function* removeSnapshotPolicyMember({ payload }: any): any {
   }
 }
 
+export function* removeSnapshotPolicyMembers({ payload }: any): any {
+  const { snapshotId, users, policy } = payload;
+  const urls = users.map(
+    (user: string) =>
+      `/api/repository/v1/snapshots/${snapshotId}/policies/${policy}/members/${user}`,
+  );
+  try {
+    yield all(urls.map((url: string) => call(authDelete, url)));
+    yield put({
+      type: ActionTypes.REMOVE_SNAPSHOT_POLICY_MEMBERS_SUCCESS,
+    });
+    yield put({
+      type: ActionTypes.GET_SNAPSHOT_POLICY,
+      payload: snapshotId,
+    });
+  } catch (err) {
+    showNotification('An error occurred.  Please try removing the workspace again.');
+    yield put({
+      type: ActionTypes.REMOVE_SNAPSHOT_POLICY_MEMBERS_EXCEPTION,
+    });
+  }
+}
+
 /**
  * Datasets.
  */
@@ -783,6 +806,7 @@ export default function* root() {
     takeLatest(ActionTypes.GET_SNAPSHOT_POLICY, getSnapshotPolicy),
     takeLatest(ActionTypes.ADD_SNAPSHOT_POLICY_MEMBER, addSnapshotPolicyMember),
     takeLatest(ActionTypes.REMOVE_SNAPSHOT_POLICY_MEMBER, removeSnapshotPolicyMember),
+    takeLatest(ActionTypes.REMOVE_SNAPSHOT_POLICY_MEMBERS, removeSnapshotPolicyMembers),
     takeLatest(ActionTypes.GET_DATASETS, getDatasets),
     takeLatest(ActionTypes.GET_DATASET_SNAPSHOTS, getSnapshots),
     takeLatest(ActionTypes.GET_DATASET_BY_ID, getDatasetById),
