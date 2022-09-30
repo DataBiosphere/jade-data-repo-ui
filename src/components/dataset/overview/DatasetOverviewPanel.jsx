@@ -1,13 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Grid, Tab, Tabs, TextField, Typography } from '@mui/material';
+import { Button, Drawer, Grid, Tab, Tabs, TextField, Typography } from '@mui/material';
 import { withStyles } from '@mui/styles';
+import { Close, Info } from '@mui/icons-material';
+import IconButton from '@mui/material/IconButton';
 import { connect } from 'react-redux';
 import moment from 'moment';
+import clsx from 'clsx';
 import { patchDatasetDescription } from 'actions';
 import GoogleSheetExport from 'components/common/overview/GoogleSheetExport';
 import { renderCloudPlatforms, renderStorageResources } from '../../../libs/render-utils';
-import DatasetAccess from '../DatasetAccess';
+import InfoViewDatasetAccess from '../data/sidebar/panels/InfoViewDatasetAccess';
 import DatasetSnapshotsTable from '../../table/DatasetSnapshotsTable';
 import DescriptionView from '../../DescriptionView';
 import TabPanel from '../../common/TabPanel';
@@ -37,6 +40,43 @@ const styles = (theme) => ({
     borderBottom: `6px solid ${theme.palette.terra.green}`,
     transition: 'none',
   },
+  helpOverlayCloseButton: {
+    color: theme.palette.common.link,
+  },
+  drawer: {
+    top: '112px',
+    bottom: '0px',
+    flexShrink: 0,
+    height: 'initial',
+    zIndex: 10,
+    minWidth: 300,
+    width: '40%',
+  },
+  helpText: {
+    padding: 30,
+  },
+  drawerPosition: {
+    position: 'absolute',
+  },
+  drawerOpen: (props) => ({
+    width: props.width,
+    transition: theme.transitions.create('width', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+  }),
+  drawerClose: {
+    transition: theme.transitions.create('width', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    overflowX: 'hidden',
+    width: 0,
+    minWidth: 0,
+    [theme.breakpoints.up('sm')]: {
+      width: 0,
+    },
+  },
 });
 
 function a11yProps(index) {
@@ -48,6 +88,9 @@ function a11yProps(index) {
 
 function DatasetOverviewPanel(props) {
   const [value, setValue] = React.useState(0);
+  const [isHelpVisible, setIsHelpVisible] = React.useState(false);
+  const [helpTitle, setHelpTitle] = React.useState();
+  const [helpContent, setHelpContent] = React.useState();
   const { classes, dataset, dispatch, userRoles } = props;
   const linkToBq = dataset.accessInformation?.bigQuery !== undefined;
 
@@ -56,6 +99,16 @@ function DatasetOverviewPanel(props) {
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
+  };
+
+  const closeHelpOverlay = () => {
+    setIsHelpVisible(false);
+  };
+
+  const toggleHelpOverlay = (title, content) => {
+    setIsHelpVisible(!isHelpVisible);
+    setHelpTitle(title);
+    setHelpContent(content);
   };
 
   return (
@@ -145,10 +198,41 @@ function DatasetOverviewPanel(props) {
       <TabPanel value={value} index={3}>
         <Grid container spacing={2}>
           <Grid item xs={9}>
-            <DatasetAccess horizontal={false} showHelp={true} />
+            <InfoViewDatasetAccess helpOverlayToggle={toggleHelpOverlay} />
           </Grid>
         </Grid>
       </TabPanel>
+      {true && (
+        <Drawer
+          variant="permanent"
+          anchor="right"
+          className={clsx(classes.drawer, {
+            [classes.drawerOpen]: isHelpVisible,
+            [classes.drawerClose]: !isHelpVisible,
+          })}
+          classes={{
+            paper: clsx(classes.drawer, classes.drawerPosition, {
+              [classes.drawerOpen]: isHelpVisible,
+              [classes.drawerClose]: !isHelpVisible,
+            }),
+          }}
+          open={isHelpVisible}
+        >
+          <Grid key="help-drawer" container spacing={1} className={classes.helpText}>
+            <Grid item xs={11}>
+              {helpTitle}
+            </Grid>
+            <Grid item xs={1}>
+              <IconButton className={classes.helpOverlayCloseButton} onClick={closeHelpOverlay}>
+                <Close />
+              </IconButton>
+            </Grid>
+            <Grid item xs={11}>
+              {helpContent}
+            </Grid>
+          </Grid>
+        </Drawer>
+      )}
     </div>
   );
 }

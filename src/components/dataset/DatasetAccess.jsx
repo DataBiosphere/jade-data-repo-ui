@@ -31,7 +31,7 @@ function DatasetAccess(props) {
       dispatch(removeDatasetPolicyMember(dataset.id, removableEmail, role));
     };
   };
-  const { horizontal, policies, userRoles, showHelp, classes } = props;
+  const { horizontal, policies, userRoles, classes } = props;
   const stewards = getRoleMembersFromPolicies(policies, DatasetRoles.STEWARD);
   const custodians = getRoleMembersFromPolicies(policies, DatasetRoles.CUSTODIAN);
   const snapshotCreators = getRoleMembersFromPolicies(policies, DatasetRoles.SNAPSHOT_CREATOR);
@@ -43,14 +43,6 @@ function DatasetAccess(props) {
 
   return (
     <Grid container spacing={1} className="dataset-access-container">
-      {showHelp ? (
-        <Grid item xs={gridItemXs} className={classes.helpContainer}>
-          <a href="#" className={classes.genericLink}>
-            Learn more
-          </a>{' '}
-          about roles and memberships
-        </Grid>
-      ) : null}
       <Grid item xs={gridItemXs}>
         <UserList
           users={stewards}
@@ -91,7 +83,6 @@ DatasetAccess.propTypes = {
   dispatch: PropTypes.func.isRequired,
   horizontal: PropTypes.bool,
   policies: PropTypes.arrayOf(PropTypes.object).isRequired,
-  showHelp: PropTypes.bool,
   userRoles: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
