@@ -36,13 +36,13 @@ npm install
   - `export CYPRESS_BASE_URL=http://localhost:3000`
 
 - For performance gains, you should disable linting (don't worry, it gets checked in GitHub actions) by setting the following environment variable:
+
   - `export DISABLE_ESLINT_PLUGIN=true`
 
-- Before running e2e tests, make sure you grab your access token by running `gcloud auth print-access-token`, and then
-  export it:
+- Before running e2e tests, set CYPRESS_GOOGLE_TOKEN to your access token
 
 ```
-export CYPRESS_GOOGLE_TOKEN=<YOUR-TOKEN-HERE>
+export CYPRESS_GOOGLE_TOKEN=$(gcloud auth print-access-token)
 ```
 
 ### Provides
@@ -91,9 +91,23 @@ To render your own local skaffold.yaml run the following with your initials
 sed -e 's/TEMP/<initials>/g' skaffold.yaml.template > skaffold.yaml
 ```
 
-Run a deployment you must set env var `IMAGE_TAG`
+To deploy UI work to your personal environment, run the following commands
 
 ```
 npm run build --production
 skaffold run
+```
+
+To deploy the UI used in the Github e2e action, find the image tag in the output of the job and then substitute it for the <TAG> in the command below:
+
+```
+skaffold deploy --images=gcr.io/broad-jade-dev/jade-data-repo-ui:<TAG>
+```
+
+for example, if the e2e "Echo tagged image" in your action log output was:
+Pushed docker image gcr.io/broad-jade-dev/jade-data-repo-ui:abcdefg
+
+You would run:
+```
+skaffold deploy --images=gcr.io/broad-jade-dev/jade-data-repo-ui:abcdefg
 ```
