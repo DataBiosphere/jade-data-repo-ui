@@ -22,7 +22,6 @@ describe('test dataset sharing', () => {
 
     cy.wait(['@getDataset', '@getDatasetPolicies', '@getBillingProfileById']);
     cy.get('[data-cy="roles-tab"]').click();
-    cy.get('.dataset-access-container :nth-child(1) .MuiAccordionSummary-root').eq(0).click();
     cy.get('.dataset-access-container :nth-child(1) .MuiAccordionDetails-root button')
       .eq(0)
       .should('contain.text', 'Manage Stewards')
