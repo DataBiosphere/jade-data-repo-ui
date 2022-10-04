@@ -31,13 +31,6 @@ const styles = (theme) => ({
 });
 
 class UserList extends React.PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isAccordionExpanded: props.defaultOpen,
-    };
-  }
-
   static propTypes = {
     addUser: PropTypes.func,
     canManageUsers: PropTypes.bool,
@@ -49,28 +42,20 @@ class UserList extends React.PureComponent {
     users: PropTypes.arrayOf(PropTypes.string).isRequired,
   };
 
-  toggleAccordion = () => {
-    const { isAccordionExpanded } = this.state;
-    this.setState({
-      isAccordionExpanded: !isAccordionExpanded,
-    });
-  };
-
   render() {
     const {
       addUser,
       canManageUsers,
       classes,
+      defaultOpen,
       horizontal,
       removeUser,
       typeOfUsers,
       users,
     } = this.props;
 
-    const { isAccordionExpanded } = this.state;
-
     return (
-      <Accordion expanded={isAccordionExpanded} onChange={this.toggleAccordion}>
+      <Accordion defaultExpanded={defaultOpen}>
         <AccordionSummary
           expandIcon={<ExpandMore className={classes.expandIcon} />}
           className={classes.header}
