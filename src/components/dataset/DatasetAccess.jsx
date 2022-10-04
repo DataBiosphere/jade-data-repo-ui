@@ -50,6 +50,7 @@ function DatasetAccess(props) {
           canManageUsers={canManageStewards}
           addUser={addUser(DatasetRoles.STEWARD)}
           removeUser={removeUser(DatasetRoles.STEWARD)}
+          defaultOpen={true}
           horizontal={horizontal}
         />
       </Grid>

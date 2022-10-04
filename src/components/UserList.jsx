@@ -34,7 +34,7 @@ class UserList extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      isAccordionExpanded: false,
+      isAccordionExpanded: props.defaultOpen,
     };
   }
 
@@ -42,6 +42,7 @@ class UserList extends React.PureComponent {
     addUser: PropTypes.func,
     canManageUsers: PropTypes.bool,
     classes: PropTypes.object.isRequired,
+    defaultOpen: PropTypes.bool,
     horizontal: PropTypes.bool,
     removeUser: PropTypes.func,
     typeOfUsers: PropTypes.string,
