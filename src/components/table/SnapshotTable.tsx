@@ -9,6 +9,7 @@ import LightTable from './LightTable';
 import { renderCloudPlatforms } from '../../libs/render-utils';
 import { ResourceType } from '../../constants';
 import ResourceName from './ResourceName';
+import MarkdownContent from 'components/common/MarkdownContent';
 
 const styles = (theme: CustomTheme) => ({
   textWrapper: {
@@ -67,6 +68,9 @@ const SnapshotTable = withStyles(styles)(
         label: 'Description',
         name: 'description',
         allowSort: true,
+        render: (row: SnapshotSummaryModel) => (
+          <MarkdownContent markdownText={row.description} stripMarkdown />
+        ),
         width: '35%',
       },
       {

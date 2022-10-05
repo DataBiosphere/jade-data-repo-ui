@@ -9,6 +9,7 @@ import { renderCloudPlatforms } from '../../libs/render-utils';
 import LightTable from './LightTable';
 import ResourceName from './ResourceName';
 import { ResourceType } from '../../constants';
+import MarkdownContent from 'components/common/MarkdownContent';
 
 const styles = (theme: CustomTheme) => ({
   textWrapper: {
@@ -68,6 +69,9 @@ const DatasetTable = withStyles(styles)(
         label: 'Description',
         name: 'description',
         allowSort: true,
+        render: (row: DatasetSummaryModel) => (
+          <MarkdownContent markdownText={row.description} stripMarkdown />
+        ),
         width: '35%',
       },
       {
