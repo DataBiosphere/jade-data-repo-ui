@@ -144,6 +144,7 @@ type LightTableProps<RowType> = {
   pageBQQuery?: () => void;
   rows: Array<RowType>;
   rowsPerPage: number;
+  rowKey?: string;
   searchString: string;
   tableName?: string;
   totalCount: number;
@@ -165,6 +166,7 @@ function LightTable({
   pageBQQuery,
   rows,
   rowsPerPage,
+  rowKey,
   searchString,
   tableName,
   totalCount,
@@ -313,12 +315,12 @@ function LightTable({
               />
               <TableBody data-cy="tableBody">
                 {rows && rows.length > 0 ? (
-                  rows.map((row, index) => {
+                  rows.map((row: any, index) => {
                     const darkRow = index % 2 !== 0;
                     return (
                       <TableRow
                         hover
-                        key={`${index}`}
+                        key={`${index}-${row[rowKey || 'id']}}`}
                         className={clsx({
                           [classes.row]: true,
                           [classes.darkRow]: darkRow,
