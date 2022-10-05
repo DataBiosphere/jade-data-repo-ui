@@ -1,0 +1,120 @@
+import React from 'react';
+import clsx from 'clsx';
+import { WithStyles, withStyles } from '@mui/styles';
+import moment from 'moment';
+import { JobModel } from 'generated/tdr';
+import { OrderDirectionOptions, TableColumnType } from 'reducers/query';
+import { CustomTheme } from '@mui/material/styles';
+
+import LightTable from './LightTable';
+
+const styles = (theme: CustomTheme) => ({
+  textWrapper: {
+    ...theme.mixins.ellipsis,
+  },
+  statusContainer: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  statusIcon: {
+    fontSize: '1rem',
+    marginRight: 10,
+  },
+  statusIconSuccess: {
+    color: theme.palette.success.light,
+  },
+  statusIconFailed: {
+    color: theme.palette.error.light,
+  },
+});
+
+interface IProps extends WithStyles<typeof styles> {
+  jobs: Array<JobModel>;
+  jobRoleMaps: { [key: string]: Array<string> };
+  jobsCount: number;
+  filteredJobsCount: number;
+  handleFilterJobs?: (
+    rowsPerPage: number,
+    rowsForCurrentPage: number,
+    orderProperty: string,
+    orderDirection: OrderDirectionOptions,
+    searchString: string,
+    refreshCnt: number,
+  ) => void;
+  handleMakeSteward?: (jobId: string) => void;
+  loading: boolean;
+  searchString: string;
+  refreshCnt: number;
+}
+
+const JobTable = withStyles(styles)(
+  ({
+    classes,
+    jobs,
+    jobsCount,
+    filteredJobsCount,
+    handleFilterJobs,
+    loading,
+    searchString,
+    refreshCnt,
+  }: IProps) => {
+    const statusMap: any = {
+      succeeded: { icon: `fa fa-circle-check ${classes.statusIconSuccess}`, label: 'Completed' },
+      running: { icon: `fa fa-rotate fa-spin ${classes.statusIconSuccess}`, label: 'In Progress' },
+      failed: { icon: `fa fa-circle-xmark ${classes.statusIconFailed}`, label: 'Failed' },
+    };
+
+    const columns: Array<TableColumnType> = [
+      {
+        label: 'Job ID',
+        name: 'id',
+        allowSort: true,
+        width: '25%',
+      },
+      {
+        label: 'Description',
+        name: 'description',
+        allowSort: true,
+        width: '35%',
+      },
+      {
+        label: 'Date',
+        name: 'submitted',
+        allowSort: true,
+        render: (row: any) => moment(row.submitted).fromNow(),
+        width: '10%',
+      },
+      {
+        label: 'Status',
+        name: 'job_status',
+        allowSort: true,
+        width: '10%',
+        render: (row: any) => (
+          <span className={classes.statusContainer}>
+            <i className={clsx(classes.statusIcon, statusMap[row.job_status].icon)} />
+            {statusMap[row.job_status].label}
+          </span>
+        ),
+      },
+    ];
+    return (
+      <LightTable
+        columns={columns}
+        handleEnumeration={handleFilterJobs}
+        noRowsMessage={
+          filteredJobsCount < jobsCount
+            ? 'No jobs match your filter'
+            : 'No jobs have been created yet'
+        }
+        rows={jobs}
+        totalCount={jobsCount}
+        filteredCount={filteredJobsCount}
+        searchString={searchString}
+        loading={loading}
+        refreshCnt={refreshCnt}
+      />
+    );
+  },
+);
+
+export default JobTable;

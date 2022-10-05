@@ -1,5 +1,6 @@
 import { handleActions } from 'redux-actions';
 import immutable from 'immutability-helper';
+import { JobModel } from 'generated/tdr';
 
 import { ActionTypes, Status } from '../constants';
 
@@ -8,6 +9,11 @@ export interface JobState {
   jobId: string;
   jobStatus: Status;
   jobResultObjectId: string;
+  jobs: Array<JobModel>;
+  jobsCount: number;
+  filteredJobsCount: number;
+  refreshCnt: number;
+  loading: boolean;
 }
 
 export const initialJobState: JobState = {
@@ -15,6 +21,11 @@ export const initialJobState: JobState = {
   jobId: '',
   jobStatus: Status.IDLE,
   jobResultObjectId: '',
+  jobs: [],
+  jobsCount: 0,
+  filteredJobsCount: 0,
+  refreshCnt: 0,
+  loading: false,
 };
 
 interface ResponseOptions {
@@ -32,6 +43,21 @@ interface JobAction {
 export default {
   jobs: handleActions(
     {
+      [ActionTypes.GET_JOBS]: (state) =>
+        immutable(state, {
+          loading: { $set: true },
+        }),
+      [ActionTypes.GET_JOBS_FAILURE]: (state) =>
+        immutable(state, {
+          loading: { $set: false },
+        }),
+      [ActionTypes.GET_JOBS_SUCCESS]: (state, action: any) =>
+        immutable(state, {
+          jobs: { $set: action.jobs.data.data },
+          jobsCount: { $set: action.jobs.data.data.length },
+          filteredJobsCount: { $set: action.jobs.data.data.length },
+          loading: { $set: false },
+        }),
       [ActionTypes.GET_JOB_BY_ID_SUCCESS]: (state, action: JobAction) =>
         immutable(state, {
           jobStatus: { $set: action.payload.status },
