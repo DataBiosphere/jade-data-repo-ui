@@ -1,5 +1,5 @@
 import React from 'react';
-import { ClassNameMap, createStyles, withStyles } from '@mui/styles';
+import { createStyles, WithStyles, withStyles } from '@mui/styles';
 import { SnapshotWorkspaceEntry } from 'models/workspaceentry';
 import { Chip, CustomTheme } from '@mui/material';
 
@@ -16,11 +16,10 @@ const styles = (theme: CustomTheme) =>
     },
   });
 
-type ManageWorkspaceViewProps = {
-  classes: ClassNameMap;
+interface ManageWorkspaceViewProps extends WithStyles<typeof styles> {
   entries: SnapshotWorkspaceEntry[];
   removeWorkspace: any;
-};
+}
 
 export class ManageWorkspacesView extends React.PureComponent<ManageWorkspaceViewProps> {
   render() {
