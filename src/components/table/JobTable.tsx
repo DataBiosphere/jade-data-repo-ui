@@ -112,6 +112,7 @@ const JobTable = withStyles(styles)(
         searchString={searchString}
         loading={loading}
         refreshCnt={refreshCnt}
+        rowKey="id"
       />
     );
   },
