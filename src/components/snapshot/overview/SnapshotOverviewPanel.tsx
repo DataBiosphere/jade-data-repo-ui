@@ -9,6 +9,7 @@ import GoogleSheetExport from 'components/common/overview/GoogleSheetExport';
 import { Link } from 'react-router-dom';
 import { renderStorageResources } from '../../../libs/render-utils';
 import SnapshotAccess from '../SnapshotAccess';
+import SnapshotWorkspace from './SnapshotWorkspace';
 import TabPanel from '../../common/TabPanel';
 import SnapshotExport from './SnapshotExport';
 import { SnapshotModel } from '../../../generated/tdr';
@@ -19,6 +20,10 @@ const styles = (theme: CustomTheme) =>
   createStyles({
     root: {
       flexGrow: 1,
+    },
+    accordionWorkspaces: {
+      padding: theme.spacing(2),
+      paddingLeft: '0px',
     },
     tabsRoot: {
       fontFamily: theme.typography.fontFamily,
@@ -67,8 +72,7 @@ interface SnapshotOverviewPanelProps extends WithStyles<typeof styles> {
 function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
   const [value, setValue] = React.useState(0);
   const { classes, dispatch, snapshot, userRoles } = props;
-  const canEditDescription = userRoles.includes(SnapshotRoles.STEWARD);
-  const canManageUsers = userRoles.includes(SnapshotRoles.STEWARD);
+  const isSteward = userRoles.includes(SnapshotRoles.STEWARD);
   // @ts-ignore
   const sourceDataset = snapshot.source[0].dataset;
   const linkToBq = snapshot.cloudPlatform === 'gcp';
@@ -104,7 +108,7 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
           disableRipple
           {...a11yProps(1)}
         />
-        {canManageUsers && (
+        {isSteward && (
           <Tab
             label="Roles & memberships"
             classes={{ selected: classes.tabSelected }}
@@ -119,7 +123,7 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
           <Grid item xs={12}>
             <DescriptionView
               description={snapshot.description}
-              canEdit={canEditDescription}
+              canEdit={isSteward}
               updateDescriptionFn={(text: string | undefined) =>
                 dispatch(patchSnapshotDescription(snapshot.id, text))
               }
@@ -161,6 +165,11 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
             </Grid>
           )}
         </Grid>
+        {isSteward && (
+          <Grid item xs={12} className={classes.accordionWorkspaces}>
+            <SnapshotWorkspace />
+          </Grid>
+        )}
       </TabPanel>
       <TabPanel value={value} index={2}>
         <Grid container spacing={2}>

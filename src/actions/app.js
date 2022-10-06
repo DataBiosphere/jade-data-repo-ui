@@ -97,6 +97,14 @@ export const { removeSnapshotPolicyMember } = createActions({
   }),
 });
 
+export const { removeSnapshotPolicyMembers } = createActions({
+  [ActionTypes.REMOVE_SNAPSHOT_POLICY_MEMBERS]: (snapshotId, users, policy) => ({
+    snapshotId,
+    users,
+    policy,
+  }),
+});
+
 export const { getUserSnapshotRoles } = createActions({
   [ActionTypes.GET_USER_SNAPSHOT_ROLES]: (snapshotId) => snapshotId,
   [ActionTypes.GET_USER_SNAPSHOT_ROLES_SUCCESS]: (roles) => roles,
