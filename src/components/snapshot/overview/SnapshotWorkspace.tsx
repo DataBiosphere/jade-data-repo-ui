@@ -3,21 +3,29 @@ import { TdrState } from 'reducers';
 import { connect } from 'react-redux';
 import { PolicyModel, SnapshotModel } from 'generated/tdr';
 import { createStyles, WithStyles, withStyles } from '@mui/styles';
-import { Accordion, AccordionDetails, AccordionSummary, Typography } from '@mui/material';
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  CustomTheme,
+  Typography,
+} from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Action, Dispatch } from 'redux';
 import { SnapshotRoles } from '../../../constants';
 import { removeSnapshotPolicyMembers } from '../../../actions';
 import SnapshotWorkspaceAccordionView from './SnapshotWorkspaceAccordionView';
 
-function styles() {
+function styles(theme: CustomTheme) {
   return createStyles({
     snapshotAccordion: {
       width: '75%',
     },
     snapshotAccordionSummary: {
-      color: 'rgb(77, 114, 170)',
-      fontWeight: 500,
+      fontSize: '14px',
+      lineHeight: '22px',
+      fontWeight: '600',
+      color: theme.palette.primary.main,
     },
     snapshotAccordionTitle: {
       fontWeight: 500,

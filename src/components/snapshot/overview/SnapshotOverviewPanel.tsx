@@ -108,6 +108,15 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
           disableRipple
           {...a11yProps(1)}
         />
+        {isSteward && (
+          <Tab
+            label="Roles & memberships"
+            classes={{ selected: classes.tabSelected }}
+            disableFocusRipple
+            disableRipple
+            {...a11yProps(2)}
+          />
+        )}
       </Tabs>
       <TabPanel value={value} index={0}>
         <Grid container spacing={2}>
@@ -141,9 +150,6 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
             {renderStorageResources(sourceDataset)}
           </Grid>
         </Grid>
-        <Typography variant="h6"> Roles and memberships: </Typography>
-        <Typography> Learn more about roles and memberships </Typography>
-        <SnapshotAccess horizontal={true} />
       </TabPanel>
       <TabPanel value={value} index={1}>
         <Grid container spacing={6}>
@@ -164,6 +170,13 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
             <SnapshotWorkspace />
           </Grid>
         )}
+      </TabPanel>
+      <TabPanel value={value} index={2}>
+        <Grid container spacing={2}>
+          <Grid item xs={9}>
+            <SnapshotAccess horizontal={false} showHelp={true} />
+          </Grid>
+        </Grid>
       </TabPanel>
     </div>
   );

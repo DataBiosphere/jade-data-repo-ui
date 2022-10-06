@@ -101,9 +101,6 @@ function SnapshotWorkspaceAccordionView(props: SnapshotWorkspaceViewProps) {
                   entries={entries}
                   removeWorkspace={removeWorkspace}
                 />
-                <Typography className={classes.buttonDescription}>
-                  Manage snapshot access to workspace readers.
-                </Typography>
               </ListSubheader>
             </>
           }

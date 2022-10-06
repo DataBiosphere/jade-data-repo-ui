@@ -12,7 +12,6 @@ import {
   Typography,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { Property } from 'csstype';
 import LoadingSpinner from 'components/common/LoadingSpinner';
 import { TdrState } from 'reducers';
 import { connect } from 'react-redux';
@@ -30,7 +29,7 @@ const styles = (theme: CustomTheme) =>
       padding: theme.spacing(2),
     },
     closeButton: {
-      position: 'absolute' as Property.Position,
+      position: 'absolute',
       right: theme.spacing(1),
       top: theme.spacing(1),
       color: theme.palette.grey[500],
@@ -48,21 +47,20 @@ const styles = (theme: CustomTheme) =>
       margin: 0,
       padding: theme.spacing(1),
     },
-    chip: {
-      margin: theme.spacing(1),
-    },
     openButton: {
       width: '100%',
-      padding: theme.spacing(1),
-    },
-    iconButton: {
-      padding: '1px',
-      marginRight: 5,
-      boxShadow: 'none',
-      color: theme.palette.primary.main,
+      border: 0,
+      justifyContent: 'left',
+      textTransform: 'none',
+      paddingTop: theme.spacing(1),
+      paddingBottom: theme.spacing(1),
       '&:hover': {
-        color: theme.palette.primary.hover,
+        border: 0,
       },
+    },
+    openButtonIcon: {
+      marginRight: 5,
+      top: theme.spacing(1),
     },
     horizontalModalButton: {
       fontSize: theme.typography.h6.fontSize,
@@ -70,7 +68,7 @@ const styles = (theme: CustomTheme) =>
     },
     overlaySpinner: {
       opacity: 0.9,
-      position: 'absolute' as Property.Position,
+      position: 'absolute',
       right: 0,
       bottom: 0,
       left: 0,
@@ -121,15 +119,16 @@ export class ManageWorkspacesModal extends React.PureComponent<
     const { classes, modalText, entries, removeWorkspace, isLoading } = this.props;
     const { open } = this.state;
     const button = (
-      <IconButton
-        className={classes.iconButton}
+      <Button
+        className={classes.openButton}
         aria-label={modalText}
         onClick={this.handleClickOpen}
         disableFocusRipple={true}
         disableRipple={true}
       >
-        <i className="fa-solid fa-pen-circle" />
-      </IconButton>
+        <i className={`${classes.openButtonIcon} fa-solid fa-pen-circle`} />
+        {modalText}
+      </Button>
     );
 
     return (
