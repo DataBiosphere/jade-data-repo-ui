@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { ClassNameMap, withStyles } from '@mui/styles';
-import { CustomTheme, Grid } from '@mui/material';
+import { Grid } from '@mui/material';
 import UserList from '../UserList';
 import { SnapshotRoles } from '../../constants';
 import { getRoleMembersFromPolicies } from '../../libs/utils';
@@ -10,13 +10,9 @@ import { PolicyModel, SnapshotModel } from '../../generated/tdr';
 import { TdrState } from '../../reducers';
 import { AppDispatch } from '../../store';
 
-const styles = (theme: CustomTheme) => ({
+const styles = () => ({
   helpContainer: {
     padding: '30px 0 10px',
-  },
-  genericLink: {
-    color: theme.palette.primary.main,
-    textDecoration: 'underline',
   },
 });
 
@@ -43,7 +39,7 @@ function SnapshotAccess(props: SnapshotAccessProps) {
       dispatch(removeSnapshotPolicyMember(snapshot.id, removableEmail, role));
     };
   };
-  const { horizontal, policies, userRoles, showHelp, classes } = props;
+  const { horizontal, policies, userRoles } = props;
   const stewards = getRoleMembersFromPolicies(policies, SnapshotRoles.STEWARD);
   const readers = getRoleMembersFromPolicies(policies, SnapshotRoles.READER);
   const discoverers = getRoleMembersFromPolicies(policies, SnapshotRoles.DISCOVERER);
@@ -53,14 +49,6 @@ function SnapshotAccess(props: SnapshotAccessProps) {
 
   return (
     <Grid container spacing={1}>
-      {showHelp ? (
-        <Grid item xs={gridItemXs} className={classes.helpContainer}>
-          <a href="#" className={classes.genericLink}>
-            Learn more
-          </a>{' '}
-          about roles and memberships
-        </Grid>
-      ) : null}
       <Grid item xs={gridItemXs} data-cy="snapshot-stewards">
         <UserList
           users={stewards}
@@ -68,6 +56,7 @@ function SnapshotAccess(props: SnapshotAccessProps) {
           canManageUsers={canManageUsers}
           addUser={addUser(SnapshotRoles.STEWARD)}
           removeUser={removeUser(SnapshotRoles.STEWARD)}
+          defaultOpen={true}
           horizontal={horizontal}
         />
       </Grid>
