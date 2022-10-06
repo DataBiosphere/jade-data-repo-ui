@@ -15,6 +15,9 @@ const styles = (theme) => ({
     cursor: 'pointer',
     textDecorationLine: 'underline',
   },
+  learnMoreContainer: {
+    marginBottom: 15,
+  },
 });
 
 const helpTitle = (
@@ -67,7 +70,7 @@ function InfoViewDatasetAccess(props) {
     <div className={classes.root}>
       <Grid container spacing={1}>
         <Grid item xs={12}>
-          <div>
+          <div className={classes.learnMoreContainer}>
             <Link className={classes.learnMore} onClick={helpOverlayToggleWithContent}>
               Learn more
             </Link>
