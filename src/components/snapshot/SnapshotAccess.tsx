@@ -17,11 +17,9 @@ const styles = () => ({
 });
 
 type SnapshotAccessProps = {
-  classes: ClassNameMap;
   dispatch: AppDispatch;
   horizontal: boolean;
   policies: Array<PolicyModel>;
-  showHelp?: boolean;
   snapshot: SnapshotModel;
   userRoles: Array<string>;
 };
