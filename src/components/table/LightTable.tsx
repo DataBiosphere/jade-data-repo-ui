@@ -136,6 +136,7 @@ type LightTableProps<RowType> = {
     searchString: string,
     refreshCnt: number,
   ) => void;
+  infinitePaging?: boolean;
   loading: boolean;
   orderDirection: OrderDirectionOptions;
   orderProperty: string;
@@ -147,7 +148,7 @@ type LightTableProps<RowType> = {
   rowKey?: string;
   searchString: string;
   tableName?: string;
-  totalCount: number;
+  totalCount?: number;
   refreshCnt: number;
 };
 
@@ -158,6 +159,7 @@ function LightTable({
   dispatch,
   filteredCount,
   handleEnumeration,
+  infinitePaging,
   loading,
   noRowsMessage,
   orderDirection,
@@ -378,6 +380,9 @@ function LightTable({
                 className: classes.paginationButton,
               }}
               labelDisplayedRows={({ from, to, count }) => {
+                if (infinitePaging) {
+                  return `${from}-${to} of (unknown)`;
+                }
                 if (count === totalCount) {
                   return `${from}-${to} of ${count}`;
                 }

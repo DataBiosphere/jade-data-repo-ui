@@ -31,8 +31,8 @@ const styles = (theme: CustomTheme) => ({
 interface IProps extends WithStyles<typeof styles> {
   jobs: Array<JobModel>;
   jobRoleMaps: { [key: string]: Array<string> };
-  jobsCount: number;
-  filteredJobsCount: number;
+  jobsCount?: number;
+  filteredJobsCount?: number;
   handleFilterJobs?: (
     rowsPerPage: number,
     rowsForCurrentPage: number,
@@ -48,16 +48,7 @@ interface IProps extends WithStyles<typeof styles> {
 }
 
 const JobTable = withStyles(styles)(
-  ({
-    classes,
-    jobs,
-    jobsCount,
-    filteredJobsCount,
-    handleFilterJobs,
-    loading,
-    searchString,
-    refreshCnt,
-  }: IProps) => {
+  ({ classes, jobs, handleFilterJobs, loading, searchString, refreshCnt }: IProps) => {
     const statusMap: any = {
       succeeded: { icon: `fa fa-circle-check ${classes.statusIconSuccess}`, label: 'Completed' },
       running: { icon: `fa fa-rotate fa-spin ${classes.statusIconSuccess}`, label: 'In Progress' },
@@ -101,14 +92,10 @@ const JobTable = withStyles(styles)(
       <LightTable
         columns={columns}
         handleEnumeration={handleFilterJobs}
-        noRowsMessage={
-          filteredJobsCount < jobsCount
-            ? 'No jobs match your filter'
-            : 'No jobs have been created yet'
-        }
+        noRowsMessage="No jobs have been created yet"
+        infinitePaging={true}
+        filteredCount={Number.MAX_SAFE_INTEGER}
         rows={jobs}
-        totalCount={jobsCount}
-        filteredCount={filteredJobsCount}
         searchString={searchString}
         loading={loading}
         refreshCnt={refreshCnt}

@@ -29,9 +29,7 @@ const styles = (theme: CustomTheme) => ({
 interface IProps extends WithStyles<typeof styles> {
   jobs: Array<JobModel>;
   jobRoleMaps: { [key: string]: Array<string> };
-  jobsCount: number;
   dispatch: Dispatch<Action>;
-  filteredJobsCount: number;
   loading: boolean;
   searchString: string;
   refreshCnt: number;
@@ -39,17 +37,7 @@ interface IProps extends WithStyles<typeof styles> {
 }
 
 const JobView = withStyles(styles)(
-  ({
-    classes,
-    jobs,
-    jobRoleMaps,
-    jobsCount,
-    dispatch,
-    filteredJobsCount,
-    loading,
-    searchString,
-    refreshCnt,
-  }: IProps) => {
+  ({ classes, jobs, jobRoleMaps, dispatch, loading, searchString, refreshCnt }: IProps) => {
     const handleFilterJobs = (
       limit: number,
       offset: number,
@@ -68,9 +56,7 @@ const JobView = withStyles(styles)(
               <JobTable
                 jobs={jobs}
                 jobRoleMaps={jobRoleMaps}
-                jobsCount={jobsCount}
                 handleFilterJobs={handleFilterJobs}
-                filteredJobsCount={filteredJobsCount}
                 searchString={searchString}
                 loading={loading}
                 refreshCnt={refreshCnt}
@@ -86,8 +72,6 @@ const JobView = withStyles(styles)(
 function mapStateToProps(state: TdrState) {
   return {
     jobs: state.jobs.jobs,
-    jobsCount: state.jobs.jobsCount,
-    filteredJobsCount: state.jobs.filteredJobsCount,
     loading: state.jobs.loading,
     userEmail: state.user.email,
     refreshCnt: state.jobs.refreshCnt,
