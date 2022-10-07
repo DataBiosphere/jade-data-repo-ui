@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { ClassNameMap, withStyles } from '@mui/styles';
+import { withStyles } from '@mui/styles';
 import { Grid } from '@mui/material';
 import UserList from '../UserList';
 import { SnapshotRoles } from '../../constants';
