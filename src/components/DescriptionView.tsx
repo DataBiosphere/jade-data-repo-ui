@@ -95,6 +95,7 @@ function DescriptionView({
           <WithoutStylesMarkdownContent markdownText={markdownText} />,
         );
       },
+      status: false,
     } as SimpleMDE.Options;
   }, []);
 
