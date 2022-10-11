@@ -293,6 +293,8 @@ function LightTable({
     0,
   );
   const effectiveTableWidth = _.isNaN(tableWidth) || !supportsResize ? '100%' : tableWidth;
+  const showPagination = (rows && rows.length > 0) || infinitePaging;
+
   return (
     <div>
       {!(loading && !rows?.length) && (
@@ -355,7 +357,7 @@ function LightTable({
               </TableBody>
             </Table>
           </TableContainer>
-          {rows && rows.length > 0 && (
+          {showPagination && (
             <TablePagination
               className={classes.paginationWrapper}
               rowsPerPageOptions={TABLE_DEFAULT_ROWS_PER_PAGE_OPTIONS}
