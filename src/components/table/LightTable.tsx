@@ -381,7 +381,7 @@ function LightTable({
               }}
               labelDisplayedRows={({ from, to, count }) => {
                 if (infinitePaging) {
-                  return `${from}-${to} of (unknown)`;
+                  return `${from}-${to}`;
                 }
                 if (count === totalCount) {
                   return `${from}-${to} of ${count}`;
