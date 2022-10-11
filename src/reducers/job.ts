@@ -12,6 +12,8 @@ export interface JobState {
   jobs: Array<JobModel>;
   refreshCnt: number;
   loading: boolean;
+  jobResultErrorMessage?: string;
+  jobResultErrorDetail?: string[];
 }
 
 export const initialJobState: JobState = {
@@ -22,6 +24,8 @@ export const initialJobState: JobState = {
   jobs: [],
   refreshCnt: 0,
   loading: false,
+  jobResultErrorMessage: '',
+  jobResultErrorDetail: [],
 };
 
 interface ResponseOptions {
@@ -29,6 +33,8 @@ interface ResponseOptions {
   jobId: string;
   data: {
     id: string;
+    errMessage?: string;
+    errDetail?: string[];
   };
 }
 
@@ -59,6 +65,11 @@ export default {
       [ActionTypes.GET_JOB_RESULT_SUCCESS]: (state, action: JobAction) =>
         immutable(state, {
           jobResultObjectId: { $set: action.payload.data.id },
+        }),
+      [ActionTypes.GET_JOB_RESULT_FAILURE]: (state, action: JobAction) =>
+        immutable(state, {
+          jobResultErrorMessage: { $set: action.payload.data.errMessage },
+          jobResultErrorDetail: { $set: action.payload.data.errDetail },
         }),
       [ActionTypes.CREATE_SNAPSHOT_JOB]: (state, action: JobAction) =>
         immutable(state, {

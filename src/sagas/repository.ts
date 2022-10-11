@@ -569,6 +569,53 @@ export function* getJobs({ payload }: any): any {
 }
 
 /**
+ * Get a single result
+ */
+export function* getJobResult({ payload }: any): any {
+  const { id } = payload;
+  try {
+    const response = yield call(authGet, `/api/repository/v1/jobs/${id}`);
+    const jobStatus = response.data.job_status;
+    if (jobStatus !== Status.RUNNING) {
+      let resultResponse;
+      try {
+        resultResponse = yield call(authGet, `/api/repository/v1/jobs/${id}/result`);
+        yield put({
+          type: ActionTypes.GET_JOB_RESULT_SUCCESS,
+          payload: { id, jobResult: resultResponse.data },
+        });
+      } catch (err: any) {
+        if (err.response) {
+          console.log('done loading, then putting it into the yield');
+          yield put({
+            type: ActionTypes.GET_JOB_RESULT_FAILURE,
+            payload: {
+              data: {
+                errMessage:
+                  _.get(err.response, 'data.message') ?? _.get(err.response, 'data.error.message'),
+                errDetail: _.get(err.response, 'data.errorDetail'),
+              },
+            },
+          });
+        } else {
+          throw err;
+        }
+      }
+    } else {
+      yield put({
+        type: ActionTypes.GET_JOB_BY_ID_SUCCESS,
+        payload: { status: response.data.job_status },
+      });
+    }
+  } catch (err) {
+    showNotification(err);
+    yield put({
+      type: ActionTypes.GET_JOB_RESULT_FAILURE,
+    });
+  }
+}
+
+/**
  * billing profile
  */
 export function* getBillingProfileById({ payload }: any): any {
@@ -816,6 +863,7 @@ export default function* root() {
     takeLatest(ActionTypes.REMOVE_DATASET_POLICY_MEMBER, removeDatasetPolicyMember),
     takeLatest(ActionTypes.GET_DATASET_TABLE_PREVIEW, getDatasetTablePreview),
     takeLatest(ActionTypes.GET_JOBS, getJobs),
+    takeLatest(ActionTypes.GET_JOB_RESULT, getJobResult),
     takeLatest(ActionTypes.RUN_QUERY, runQuery),
     takeLatest(ActionTypes.PREVIEW_DATA, previewData),
     takeLatest(ActionTypes.PAGE_QUERY, pageQuery),

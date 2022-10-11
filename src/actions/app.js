@@ -201,6 +201,10 @@ export const { clearJobId } = createActions({
   [ActionTypes.CLEAR_JOB_ID]: (job) => job,
 });
 
+export const { getJobResult } = createActions({
+  [ActionTypes.GET_JOB_RESULT]: (id) => id,
+});
+
 export const { hideAlert } = createActions({
   [ActionTypes.HIDE_ALERT]: (index) => index,
 });
