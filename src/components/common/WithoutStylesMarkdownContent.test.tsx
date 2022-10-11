@@ -44,16 +44,15 @@ describe('WithoutStylesMarkdownContent', () => {
     cy.get('div#__cy_root > div > p').children().should('have.length', 0);
   });
   it('should contain no text', () => {
-    const markdownText = undefined;
     mount(
       <Router history={history}>
         <Provider store={store}>
           <ThemeProvider theme={globalTheme}>
-            <WithoutStylesMarkdownContent markdownText={markdownText} />
+            <WithoutStylesMarkdownContent markdownText={undefined} />
           </ThemeProvider>
         </Provider>
       </Router>,
     );
-    cy.get('div#__cy_root').children().should('have.length', 0);
+    cy.get('[data-cy="withoutstyles-markdown-text"]').children().should('have.length', 0);
   });
 });

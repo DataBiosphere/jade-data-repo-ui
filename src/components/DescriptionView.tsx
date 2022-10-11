@@ -86,18 +86,20 @@ function DescriptionView({
       setIsPendingSave(false);
       setIsEditing(false);
     }
-  });
+  }, [isPendingSave, description, descriptionValue]);
 
-  const editorOptions = useMemo(() => {
-    return {
-      previewRender(markdownText) {
-        return ReactDOMServer.renderToString(
-          <WithoutStylesMarkdownContent markdownText={markdownText} />,
-        );
-      },
-      status: false,
-    } as SimpleMDE.Options;
-  }, []);
+  const editorOptions = useMemo(
+    () =>
+      ({
+        previewRender(markdownText) {
+          return ReactDOMServer.renderToString(
+            <WithoutStylesMarkdownContent markdownText={markdownText} />,
+          );
+        },
+        status: false,
+      } as SimpleMDE.Options),
+    [],
+  );
 
   const onEditClick = useCallback(() => {
     setIsEditing(true);
@@ -106,16 +108,14 @@ function DescriptionView({
   const onSaveClick = useCallback(() => {
     setIsPendingSave(true);
     updateDescriptionFn(descriptionValue);
-  }, [descriptionValue]);
+  }, [updateDescriptionFn, descriptionValue]);
 
   const onChange = useCallback(
     (value: string) => {
       if (description !== value) {
-        console.log(descriptionValue, value);
         setDescriptionValue(value);
         setHasDescriptionChanged(true);
       } else {
-        console.log('original descriptiopn');
         setHasDescriptionChanged(false);
       }
     },

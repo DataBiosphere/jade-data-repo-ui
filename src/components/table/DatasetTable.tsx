@@ -5,11 +5,11 @@ import { DatasetSummaryModel } from 'generated/tdr';
 import { OrderDirectionOptions, TableColumnType } from 'reducers/query';
 import { CustomTheme } from '@mui/material/styles';
 
+import MarkdownContent from 'components/common/MarkdownContent';
 import { renderCloudPlatforms } from '../../libs/render-utils';
 import LightTable from './LightTable';
 import ResourceName from './ResourceName';
 import { ResourceType } from '../../constants';
-import MarkdownContent from 'components/common/MarkdownContent';
 
 const styles = (theme: CustomTheme) => ({
   textWrapper: {

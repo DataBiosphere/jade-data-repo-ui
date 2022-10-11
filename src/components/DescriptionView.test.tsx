@@ -63,7 +63,7 @@ describe('DescriptionView', () => {
         cy.get('[data-cy=description-save-button]').should('be.enabled');
         cy.get('.CodeMirror-line > span').should(($s) => {
           expect($s).to.have.length(1);
-          expect($s.first()).to.contain('change ' + initialState.dataset.description);
+          expect($s.first()).to.contain(`change ${initialState.dataset.description}`);
         });
       });
   });

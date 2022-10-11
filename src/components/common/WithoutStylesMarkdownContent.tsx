@@ -6,31 +6,23 @@ interface WithoutStylesMarkdownContentProps {
   markdownText: string | undefined;
 }
 
-interface HtmlATagProps {
-  children?: [];
-  href?: string;
-  title?: string;
-}
-
-const HTMLCOMPONENTS = {
-  a: ({ children, href, title }: HtmlATagProps) => {
-    return (
-      <Link href={href} target="_blank">
-        <span title={title}>{children}</span>
-      </Link>
-    );
-  },
-} as any;
-
 function WithoutStylesMarkdownContent({ markdownText }: WithoutStylesMarkdownContentProps) {
   return (
-    <>
+    <div data-cy="withoutstyles-markdown-text">
       {markdownText && (
-        <div>
-          <ReactMarkdown children={markdownText} components={HTMLCOMPONENTS} />
-        </div>
+        <ReactMarkdown
+          components={{
+            a: ({ children, href, title }) => (
+              <Link href={href} target="_blank">
+                <span title={title}>{children}</span>
+              </Link>
+            ),
+          }}
+        >
+          {markdownText}
+        </ReactMarkdown>
       )}
-    </>
+    </div>
   );
 }
 

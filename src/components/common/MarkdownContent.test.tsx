@@ -9,10 +9,13 @@ import history from '../../modules/hist';
 import globalTheme from '../../modules/theme';
 import MarkdownContent from './MarkdownContent';
 
+const markdownText = '# Lorem Ipsum \n\n[Link](https://broadinstitute.org)';
+
+const htmlText = '<a href="www.badsite.com">A bad day</a>';
+
 describe('WithoutStylesMarkdownContent', () => {
   const mockStore = createMockStore([]);
   const store = mockStore({});
-  const markdownText = '# Lorem Ipsum \n\n[Link](https://broadinstitute.org)';
   it('should render markdown', () => {
     mount(
       <Router history={history}>
@@ -29,7 +32,6 @@ describe('WithoutStylesMarkdownContent', () => {
     cy.get('div#__cy_root > div > p > a').should('have.attr', 'href').and('include', 'broad');
   });
   it('should render as text', () => {
-    const htmlText = '<a href="www.badsite.com">A bad day</a>';
     mount(
       <Router history={history}>
         <Provider store={store}>
@@ -44,12 +46,11 @@ describe('WithoutStylesMarkdownContent', () => {
     cy.get('div#__cy_root > div > p').children().should('have.length', 0);
   });
   it('should contain empty text', () => {
-    const markdownText = undefined;
     mount(
       <Router history={history}>
         <Provider store={store}>
           <ThemeProvider theme={globalTheme}>
-            <MarkdownContent markdownText={markdownText} />
+            <MarkdownContent markdownText={undefined} />
           </ThemeProvider>
         </Provider>
       </Router>,
@@ -58,12 +59,11 @@ describe('WithoutStylesMarkdownContent', () => {
     cy.get('div#__cy_root').children().should('have.text', '(empty)');
   });
   it('should contain custom empty text', () => {
-    const markdownText = undefined;
     mount(
       <Router history={history}>
         <Provider store={store}>
           <ThemeProvider theme={globalTheme}>
-            <MarkdownContent markdownText={markdownText} emptyText="custom" />
+            <MarkdownContent markdownText={undefined} emptyText="custom" />
           </ThemeProvider>
         </Provider>
       </Router>,
@@ -73,7 +73,6 @@ describe('WithoutStylesMarkdownContent', () => {
   });
 
   it('should strip markdown', () => {
-    const markdownText = '# Lorem Ipsum \n\n[Link](https://broadinstitute.org)';
     mount(
       <Router history={history}>
         <Provider store={store}>
