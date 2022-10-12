@@ -201,7 +201,7 @@ const theme = createTheme({
             backgroundColor: LINK_HOVER,
           },
         },
-        outlined:{
+        outlined: {
           backgroundColor: WHITE,
         },
       },
