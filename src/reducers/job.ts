@@ -12,8 +12,17 @@ export interface JobState {
   jobs: Array<JobModel>;
   refreshCnt: number;
   loading: boolean;
-  jobResultErrorMessage?: string;
-  jobResultErrorDetail?: string[];
+  jobResult?: JobResult;
+  jobResultLoading: boolean;
+}
+
+export interface JobResult {
+  resultType?: 'success' | 'error';
+  result?: JobResultError | any;
+}
+export interface JobResultError {
+  message?: string;
+  detail?: string[];
 }
 
 export const initialJobState: JobState = {
@@ -24,8 +33,8 @@ export const initialJobState: JobState = {
   jobs: [],
   refreshCnt: 0,
   loading: false,
-  jobResultErrorMessage: '',
-  jobResultErrorDetail: [],
+  jobResult: {},
+  jobResultLoading: false,
 };
 
 interface ResponseOptions {
@@ -33,8 +42,7 @@ interface ResponseOptions {
   jobId: string;
   data: {
     id: string;
-    errMessage?: string;
-    errDetail?: string[];
+    jobResult?: JobResult;
   };
 }
 
@@ -58,18 +66,25 @@ export default {
           jobs: { $set: action.jobs.data.data },
           loading: { $set: false },
         }),
+      [ActionTypes.GET_JOB_RESULT]: (state) =>
+        immutable(state, {
+          jobResultLoading: { $set: true },
+          jobResult: { $set: undefined },
+        }),
       [ActionTypes.GET_JOB_BY_ID_SUCCESS]: (state, action: JobAction) =>
         immutable(state, {
           jobStatus: { $set: action.payload.status },
         }),
       [ActionTypes.GET_JOB_RESULT_SUCCESS]: (state, action: JobAction) =>
         immutable(state, {
+          jobResult: { $set: action.payload.data.jobResult },
           jobResultObjectId: { $set: action.payload.data.id },
+          jobResultLoading: { $set: false },
         }),
       [ActionTypes.GET_JOB_RESULT_FAILURE]: (state, action: JobAction) =>
         immutable(state, {
-          jobResultErrorMessage: { $set: action.payload.data.errMessage },
-          jobResultErrorDetail: { $set: action.payload.data.errDetail },
+          jobResult: { $set: action.payload.data.jobResult },
+          jobResultLoading: { $set: false },
         }),
       [ActionTypes.CREATE_SNAPSHOT_JOB]: (state, action: JobAction) =>
         immutable(state, {

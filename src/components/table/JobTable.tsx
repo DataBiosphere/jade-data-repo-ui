@@ -7,7 +7,7 @@ import { OrderDirectionOptions, TableColumnType } from 'reducers/query';
 import { CustomTheme } from '@mui/material/styles';
 
 import LightTable from './LightTable';
-import JobStatusModal from '../job/JobStatusModal';
+import JobResultModal from '../job/JobResultModal';
 
 const styles = (theme: CustomTheme) => ({
   textWrapper: {
@@ -61,7 +61,10 @@ const JobTable = withStyles(styles)(
         label: 'Job ID',
         name: 'id',
         allowSort: true,
-        width: '25%',
+        width: '17%',
+        render: (row: any) => (
+          <JobResultModal id={row.id} description={row.description} linkDisplay={row.id} />
+        ),
       },
       {
         label: 'Description',
@@ -87,7 +90,6 @@ const JobTable = withStyles(styles)(
               <i className={clsx(classes.statusIcon, statusMap[row.job_status].icon)} />
               {statusMap[row.job_status].label}
             </span>
-            {row.job_status === 'failed' && <JobStatusModal id={row.id} />}
           </div>
         ),
       },

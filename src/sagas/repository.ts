@@ -582,18 +582,31 @@ export function* getJobResult({ payload }: any): any {
         resultResponse = yield call(authGet, `/api/repository/v1/jobs/${id}/result`);
         yield put({
           type: ActionTypes.GET_JOB_RESULT_SUCCESS,
-          payload: { id, jobResult: resultResponse.data },
+          payload: {
+            data: {
+              id,
+              jobResult: {
+                resultType: 'success',
+                result: resultResponse.data,
+              },
+            },
+          },
         });
       } catch (err: any) {
         if (err.response) {
-          console.log('done loading, then putting it into the yield');
           yield put({
             type: ActionTypes.GET_JOB_RESULT_FAILURE,
             payload: {
               data: {
-                errMessage:
-                  _.get(err.response, 'data.message') ?? _.get(err.response, 'data.error.message'),
-                errDetail: _.get(err.response, 'data.errorDetail'),
+                jobResult: {
+                  resultType: 'error',
+                  result: {
+                    message:
+                      _.get(err.response, 'data.message') ??
+                      _.get(err.response, 'data.error.message'),
+                    detail: _.get(err.response, 'data.errorDetail'),
+                  },
+                },
               },
             },
           });
