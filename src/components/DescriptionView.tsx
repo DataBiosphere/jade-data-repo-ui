@@ -47,9 +47,6 @@ const styles = (theme: CustomTheme) =>
       display: 'inline',
       textAlign: 'center',
     },
-    cancelButton: {
-      backgroundColor: theme.palette.common.white,
-    },
   } as const);
 
 const UNSET_DESCRIPTION_TEXT = '(No description added)';
@@ -177,7 +174,6 @@ function DescriptionView({
                 </Button>
                 <Button
                   aria-label="Cancel description changes"
-                  className={classes.cancelButton}
                   data-cy="description-cancel-button"
                   onClick={onCancel}
                   color="primary"
