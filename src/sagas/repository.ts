@@ -595,7 +595,7 @@ export function* getJobResult({ payload }: any): any {
       } catch (err: any) {
         if (err.response) {
           yield put({
-            type: ActionTypes.GET_JOB_RESULT_FAILURE,
+            type: ActionTypes.GET_JOB_RESULT_SUCCESS,
             payload: {
               data: {
                 jobResult: {

@@ -81,9 +81,9 @@ export default {
           jobResultObjectId: { $set: action.payload.data.id },
           jobResultLoading: { $set: false },
         }),
-      [ActionTypes.GET_JOB_RESULT_FAILURE]: (state, action: JobAction) =>
+      [ActionTypes.GET_JOB_RESULT_FAILURE]: (state) =>
         immutable(state, {
-          jobResult: { $set: action.payload.data.jobResult },
+          jobResult: { $set: undefined },
           jobResultLoading: { $set: false },
         }),
       [ActionTypes.CREATE_SNAPSHOT_JOB]: (state, action: JobAction) =>
