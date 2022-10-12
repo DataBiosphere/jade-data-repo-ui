@@ -47,15 +47,8 @@ const styles = (theme: CustomTheme) =>
       display: 'inline',
       textAlign: 'center',
     },
-    undoButton: {
-      backgroundColor: theme.palette.primary.light,
-      boxShadow: 'none',
-      color: theme.palette.grey[500],
-      margin: theme.spacing(1),
-      '&:hover': {
-        backgroundColor: theme.palette.primary.light,
-        boxShadow: 'none',
-      },
+    cancelButton: {
+      backgroundColor: theme.palette.common.white,
     },
   } as const);
 
@@ -184,11 +177,13 @@ function DescriptionView({
                 </Button>
                 <Button
                   aria-label="Cancel description changes"
-                  className={classes.undoButton}
+                  className={classes.cancelButton}
                   data-cy="description-cancel-button"
                   onClick={onCancel}
+                  color="primary"
                   type="button"
-                  variant="contained"
+                  variant="outlined"
+                  disableElevation
                 >
                   CANCEL
                 </Button>
