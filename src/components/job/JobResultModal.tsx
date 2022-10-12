@@ -67,8 +67,6 @@ type JobResultModalProps = {
   description?: string;
   loading: boolean;
   jobResult?: JobResult;
-  errMessage?: string;
-  errDetail?: string[];
   linkDisplay?: any;
 };
 
