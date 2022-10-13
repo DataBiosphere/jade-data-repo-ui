@@ -59,13 +59,13 @@ const JobTable = withStyles(styles)(
       {
         label: 'Job ID',
         name: 'id',
-        allowSort: true,
-        width: '25%',
+        allowSort: false,
+        width: '15%',
       },
       {
         label: 'Description',
         name: 'description',
-        allowSort: true,
+        allowSort: false,
         width: '35%',
       },
       {
@@ -78,7 +78,7 @@ const JobTable = withStyles(styles)(
       {
         label: 'Status',
         name: 'job_status',
-        allowSort: true,
+        allowSort: false,
         width: '10%',
         render: (row: any) => (
           <span className={classes.statusContainer}>
