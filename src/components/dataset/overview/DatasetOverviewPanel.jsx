@@ -159,10 +159,10 @@ function DatasetOverviewPanel(props) {
       <TabPanel value={value} index={0}>
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <Typography variant="h6">Description:</Typography>
             <DescriptionView
               description={dataset.description}
               canEdit={userRoles.includes(DatasetRoles.STEWARD)}
+              title="Description"
               updateDescriptionFn={(text) => dispatch(patchDatasetDescription(dataset.id, text))}
             />
           </Grid>
