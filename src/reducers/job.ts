@@ -59,6 +59,7 @@ export default {
         }),
       [ActionTypes.GET_JOBS_FAILURE]: (state) =>
         immutable(state, {
+          jobs: { $set: [] },
           loading: { $set: false },
         }),
       [ActionTypes.GET_JOBS_SUCCESS]: (state, action: any) =>

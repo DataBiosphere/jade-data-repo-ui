@@ -60,8 +60,8 @@ const JobTable = withStyles(styles)(
       {
         label: 'Job ID',
         name: 'id',
-        allowSort: true,
-        width: '17%',
+        allowSort: false,
+        width: '20%',
         render: (row: any) => (
           <JobResultModal id={row.id} description={row.description} linkDisplay={row.id} />
         ),
@@ -69,21 +69,21 @@ const JobTable = withStyles(styles)(
       {
         label: 'Description',
         name: 'description',
-        allowSort: true,
-        width: '35%',
+        allowSort: false,
+        width: '50%',
       },
       {
         label: 'Date',
         name: 'submitted',
         allowSort: true,
         render: (row: any) => moment(row.submitted).fromNow(),
-        width: '10%',
+        width: '15%',
       },
       {
         label: 'Status',
         name: 'job_status',
-        allowSort: true,
-        width: '10%',
+        allowSort: false,
+        width: '15%',
         render: (row: any) => (
           <div>
             <span className={classes.statusContainer}>
