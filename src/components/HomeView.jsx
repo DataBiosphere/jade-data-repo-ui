@@ -62,8 +62,10 @@ function HomeView({ classes, location }) {
   let searchable = true;
 
   if (tabValue === '/datasets') {
+    pageTitle = 'Datasets';
     tableValue = <DatasetView searchString={searchString} />;
   } else if (tabValue === '/snapshots') {
+    pageTitle = 'Snapshots';
     tableValue = <SnapshotView searchString={searchString} />;
   } else if (tabValue === '/activity') {
     pageTitle = 'Activity';
