@@ -36,9 +36,16 @@ const styles = (theme: CustomTheme) => ({
       color: theme.palette.primary.hover,
     },
   },
+  dialog: {
+    minHeight: '80vh',
+    maxHeight: '80vh',
+    width: '80%',
+    maxWidth: 'unset',
+  },
   dialogTitle: {
     margin: 0,
     marginTop: '5px',
+    fontSize: '1.2rem',
   },
   dialogInfo: {
     display: 'flex',
@@ -49,6 +56,9 @@ const styles = (theme: CustomTheme) => ({
     minWidth: 100,
     'text-align': 'right',
     marginRight: 15,
+  },
+  dialogContent: {
+    'word-break': 'break-all',
   },
   detailRow: {
     padding: '20px 0',
@@ -110,7 +120,13 @@ function JobResultModal({
         {linkDisplay}
       </button>
       <Paper className={classes.root}>
-        <Dialog open={seeMore.open} scroll="paper" fullWidth={true}>
+        <Dialog
+          open={seeMore.open}
+          scroll="paper"
+          fullWidth={true}
+          classes={{ paper: classes.dialog }}
+          onBackdropClick={handleSeeMoreClose}
+        >
           <DialogTitle id="see-more-dialog-title">
             <div className={classes.dialogTitle} style={{ float: 'left' }}>
               Job Details
@@ -176,11 +192,7 @@ function JobResultModal({
                     <div className={classes.dialogInfo}>
                       <div className={classes.dialogLabel}>Content</div>
                       <div className={classes.dialogContent}>
-                        {_.isString(jobSuccess) ? (
-                          <div>{jobSuccess}</div>
-                        ) : (
-                          <ReactJson src={jobSuccess} />
-                        )}
+                        {_.isString(jobSuccess) ? jobSuccess : <ReactJson src={jobSuccess} />}
                       </div>
                     </div>
                   )}
