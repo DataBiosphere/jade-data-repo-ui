@@ -2,6 +2,7 @@ import React from 'react';
 import clsx from 'clsx';
 import { WithStyles, withStyles } from '@mui/styles';
 import moment from 'moment';
+import _ from 'lodash';
 import { JobModel } from 'generated/tdr';
 import { OrderDirectionOptions, TableColumnType } from 'reducers/query';
 import { CustomTheme } from '@mui/material/styles';
@@ -63,23 +64,30 @@ const JobTable = withStyles(styles)(
         width: '20%',
       },
       {
+        label: 'Class',
+        name: 'class_name',
+        allowSort: false,
+        width: '15%',
+        render: (row: any) => <div>{_.last(row.class_name.split('.'))}</div>,
+      },
+      {
         label: 'Description',
         name: 'description',
         allowSort: false,
-        width: '50%',
+        width: '45%',
       },
       {
         label: 'Date',
         name: 'submitted',
         allowSort: true,
         render: (row: any) => moment(row.submitted).fromNow(),
-        width: '15%',
+        width: '10%',
       },
       {
         label: 'Status',
         name: 'job_status',
         allowSort: false,
-        width: '15%',
+        width: '10%',
         render: (row: any) => (
           <span className={classes.statusContainer}>
             <i className={clsx(classes.statusIcon, statusMap[row.job_status].icon)} />
