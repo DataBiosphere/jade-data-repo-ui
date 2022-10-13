@@ -40,7 +40,7 @@ const styles = (theme: CustomTheme) => ({
     minHeight: '80vh',
     maxHeight: '80vh',
     width: '80%',
-    maxWidth: 'unset',
+    maxWidth: 800,
   },
   dialogTitle: {
     margin: 0,
