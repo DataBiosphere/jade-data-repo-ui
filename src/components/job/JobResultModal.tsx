@@ -131,10 +131,12 @@ function JobResultModal({
                     <div className={classes.dialogContent}>{id}</div>
                   </div>
 
-                  <div className={classes.dialogInfo}>
-                    <div className={classes.dialogLabel}>Description</div>
-                    <div className={classes.dialogContent}>{description}</div>
-                  </div>
+                  {description && (
+                    <div className={classes.dialogInfo}>
+                      <div className={classes.dialogLabel}>Description</div>
+                      <div className={classes.dialogContent}>{description}</div>
+                    </div>
+                  )}
 
                   {jobError && (
                     <>
@@ -167,7 +169,11 @@ function JobResultModal({
                     <div className={classes.dialogInfo}>
                       <div className={classes.dialogLabel}>Content</div>
                       <div className={classes.dialogContent}>
-                        <ReactJson src={jobSuccess} />
+                        {_.isString(jobSuccess) ? (
+                          <div>{jobSuccess}</div>
+                        ) : (
+                          <ReactJson src={jobSuccess} />
+                        )}
                       </div>
                     </div>
                   )}
