@@ -60,26 +60,26 @@ const JobTable = withStyles(styles)(
         label: 'Job ID',
         name: 'id',
         allowSort: false,
-        width: '15%',
+        width: '20%',
       },
       {
         label: 'Description',
         name: 'description',
         allowSort: false,
-        width: '35%',
+        width: '50%',
       },
       {
         label: 'Date',
         name: 'submitted',
         allowSort: true,
         render: (row: any) => moment(row.submitted).fromNow(),
-        width: '10%',
+        width: '15%',
       },
       {
         label: 'Status',
         name: 'job_status',
         allowSort: false,
-        width: '10%',
+        width: '15%',
         render: (row: any) => (
           <span className={classes.statusContainer}>
             <i className={clsx(classes.statusIcon, statusMap[row.job_status].icon)} />
