@@ -80,7 +80,7 @@ describe('Snapshot overview panel', () => {
     cy.get('[data-cy="snapshot-summary-tab"]')
       .should('contain.text', 'Snapshot Summary')
       .should('have.attr', 'aria-selected', 'true');
-    cy.get('[data-cy="description-text-field"]').should('contain.text', snapshot.description);
+    cy.get('[data-cy="react-markdown-text"]').should('contain.text', snapshot.description);
     cy.get('[data-cy="snapshot-source-dataset"]').should(
       'contain.text',
       snapshot.source[0].dataset.name,

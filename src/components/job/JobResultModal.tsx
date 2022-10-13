@@ -14,7 +14,7 @@ import { Close } from '@mui/icons-material';
 import clsx from 'clsx';
 import { Action } from 'redux';
 import { connect } from 'react-redux';
-import { ReactJson } from 'react-json-view';
+import ReactJson from 'react-json-view';
 import { Property } from 'csstype';
 import { getJobResult } from 'actions';
 import { TdrState } from 'reducers';
@@ -102,8 +102,6 @@ function JobResultModal({
   const jobSuccess =
     jobResult && jobResult.resultType === 'success' ? (jobResult.result as any) : null;
 
-  console.log('types', typeof jobResult?.result);
-
   return (
     <div>
       <button type="button" onClick={handleSeeMoreOpen} className={classes.seeMoreLink}>
@@ -166,16 +164,12 @@ function JobResultModal({
                   )}
 
                   {jobSuccess && (
-                    <>
-                      {_.keys(jobSuccess).map((key) => (
-                        <div className={classes.dialogInfo} key={`${id}-details-${key}`}>
-                          <div className={classes.dialogLabel}>{key}</div>
-                          <div className={classes.dialogContent}>
-                            {JSON.stringify(jobSuccess[key])}
-                          </div>
-                        </div>
-                      ))}
-                    </>
+                    <div className={classes.dialogInfo}>
+                      <div className={classes.dialogLabel}>Content</div>
+                      <div className={classes.dialogContent}>
+                        <ReactJson src={jobSuccess} />
+                      </div>
+                    </div>
                   )}
                 </div>
               )}

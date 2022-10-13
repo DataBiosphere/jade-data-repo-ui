@@ -2,10 +2,21 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Grid } from '@mui/material';
+import { withStyles } from '@mui/styles';
 import UserList from '../UserList';
 import { DatasetRoles } from '../../constants';
 import { getRoleMembersFromPolicies } from '../../libs/utils';
 import { addDatasetPolicyMember, removeDatasetPolicyMember } from '../../actions';
+
+const styles = (theme) => ({
+  helpContainer: {
+    padding: '30px 0 10px',
+  },
+  genericLink: {
+    color: theme.palette.primary.main,
+    textDecoration: 'underline',
+  },
+});
 
 function DatasetAccess(props) {
   const addUser = (role) => {
@@ -20,23 +31,26 @@ function DatasetAccess(props) {
       dispatch(removeDatasetPolicyMember(dataset.id, removableEmail, role));
     };
   };
-  const { horizontal, policies, userRoles } = props;
+  const { horizontal, policies, userRoles, classes } = props;
   const stewards = getRoleMembersFromPolicies(policies, DatasetRoles.STEWARD);
   const custodians = getRoleMembersFromPolicies(policies, DatasetRoles.CUSTODIAN);
   const snapshotCreators = getRoleMembersFromPolicies(policies, DatasetRoles.SNAPSHOT_CREATOR);
 
-  const canManageUsers = userRoles.includes(DatasetRoles.STEWARD);
+  const canManageStewards = userRoles.includes(DatasetRoles.STEWARD);
+  const canManageUsers =
+    userRoles.includes(DatasetRoles.STEWARD) || userRoles.includes(DatasetRoles.CUSTODIAN);
   const gridItemXs = horizontal ? 4 : 12;
 
   return (
-    <Grid container spacing={1}>
+    <Grid container spacing={1} className="dataset-access-container">
       <Grid item xs={gridItemXs}>
         <UserList
           users={stewards}
           typeOfUsers="Stewards"
-          canManageUsers={canManageUsers}
+          canManageUsers={canManageStewards}
           addUser={addUser(DatasetRoles.STEWARD)}
           removeUser={removeUser(DatasetRoles.STEWARD)}
+          defaultOpen={true}
           horizontal={horizontal}
         />
       </Grid>
@@ -65,6 +79,7 @@ function DatasetAccess(props) {
 }
 
 DatasetAccess.propTypes = {
+  classes: PropTypes.object,
   dataset: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
   horizontal: PropTypes.bool,
@@ -80,4 +95,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(DatasetAccess);
+export default connect(mapStateToProps)(withStyles(styles)(DatasetAccess));
