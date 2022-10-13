@@ -64,7 +64,12 @@ const JobTable = withStyles(styles)(
         allowSort: false,
         width: '20%',
         render: (row: any) => (
-          <JobResultModal id={row.id} description={row.description} linkDisplay={row.id} />
+          <JobResultModal
+            id={row.id}
+            description={row.description}
+            linkDisplay={row.id}
+            jobClass={row.class_name}
+          />
         ),
       },
       {

@@ -66,6 +66,7 @@ type JobResultModalProps = {
   dispatch: Dispatch<Action>;
   id: string;
   description?: string;
+  jobClass?: string;
   loading: boolean;
   jobResult?: JobResult;
   linkDisplay?: any;
@@ -76,6 +77,7 @@ function JobResultModal({
   dispatch,
   id,
   description,
+  jobClass,
   loading,
   jobResult,
   linkDisplay = 'See More',
@@ -129,6 +131,11 @@ function JobResultModal({
                   <div className={classes.dialogInfo}>
                     <div className={classes.dialogLabel}>ID</div>
                     <div className={classes.dialogContent}>{id}</div>
+                  </div>
+
+                  <div className={classes.dialogInfo}>
+                    <div className={classes.dialogLabel}>Class Name</div>
+                    <div className={classes.dialogContent}>{jobClass}</div>
                   </div>
 
                   {description && (
