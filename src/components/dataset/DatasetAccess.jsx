@@ -31,7 +31,7 @@ function DatasetAccess(props) {
       dispatch(removeDatasetPolicyMember(dataset.id, removableEmail, role));
     };
   };
-  const { horizontal, policies, userRoles, classes } = props;
+  const { horizontal, policies, userRoles, classes, isAddingOrRemovingUser } = props;
   const stewards = getRoleMembersFromPolicies(policies, DatasetRoles.STEWARD);
   const custodians = getRoleMembersFromPolicies(policies, DatasetRoles.CUSTODIAN);
   const snapshotCreators = getRoleMembersFromPolicies(policies, DatasetRoles.SNAPSHOT_CREATOR);
@@ -49,6 +49,7 @@ function DatasetAccess(props) {
           typeOfUsers="Stewards"
           canManageUsers={canManageStewards}
           addUser={addUser(DatasetRoles.STEWARD)}
+          isAddingOrRemovingUser={isAddingOrRemovingUser}
           removeUser={removeUser(DatasetRoles.STEWARD)}
           defaultOpen={true}
           horizontal={horizontal}
@@ -60,6 +61,7 @@ function DatasetAccess(props) {
           typeOfUsers="Custodians"
           canManageUsers={canManageUsers}
           addUser={addUser(DatasetRoles.CUSTODIAN)}
+          isAddingOrRemovingUser={isAddingOrRemovingUser}
           removeUser={removeUser(DatasetRoles.CUSTODIAN)}
           horizontal={horizontal}
         />
@@ -70,6 +72,7 @@ function DatasetAccess(props) {
           typeOfUsers="Snapshot Creators"
           canManageUsers={canManageUsers}
           addUser={addUser(DatasetRoles.SNAPSHOT_CREATOR)}
+          isAddingOrRemovingUser={isAddingOrRemovingUser}
           removeUser={removeUser(DatasetRoles.SNAPSHOT_CREATOR)}
           horizontal={horizontal}
         />
@@ -83,6 +86,7 @@ DatasetAccess.propTypes = {
   dataset: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
   horizontal: PropTypes.bool,
+  isAddingOrRemovingUser: PropTypes.bool,
   policies: PropTypes.arrayOf(PropTypes.object).isRequired,
   userRoles: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
@@ -90,6 +94,7 @@ DatasetAccess.propTypes = {
 function mapStateToProps(state) {
   return {
     dataset: state.datasets.dataset,
+    isAddingOrRemovingUser: state.datasets.isAddingOrRemovingUser,
     policies: state.datasets.datasetPolicies,
     userRoles: state.datasets.userRoles,
   };

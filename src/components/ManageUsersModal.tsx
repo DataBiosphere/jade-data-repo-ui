@@ -1,5 +1,4 @@
 import React from 'react';
-import { SnapshotWorkspaceEntry } from 'models/workspaceentry';
 import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import {
   Button,
@@ -9,13 +8,10 @@ import {
   DialogContent,
   IconButton,
   CustomTheme,
-  Typography,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import LoadingSpinner from 'components/common/LoadingSpinner';
-import { TdrState } from 'reducers';
-import { connect } from 'react-redux';
-import ManageWorkspacesView from './ManageWorkspacesView';
+import ManageUsersView from './ManageUsersView';
+import LoadingSpinner from './common/LoadingSpinner';
 
 const styles = (theme: CustomTheme) =>
   createStyles({
@@ -38,33 +34,36 @@ const styles = (theme: CustomTheme) =>
       margin: 0,
       padding: `${theme.spacing(2)} !important`,
     },
-    dialogInstructions: {
-      margin: 0,
-      padding: `${theme.spacing(2)} !important`,
-    },
     dialogActions: {
       borderTop: `1px solid ${theme.palette.divider}`,
       margin: 0,
       padding: theme.spacing(1),
+    },
+    chip: {
+      margin: theme.spacing(1),
     },
     openButton: {
       width: '100%',
       border: 0,
       justifyContent: 'left',
       textTransform: 'none',
-      paddingTop: theme.spacing(1),
-      paddingBottom: theme.spacing(1),
+      padding: 0,
       '&:hover': {
         border: 0,
       },
+      marginTop: -25,
     },
     openButtonIcon: {
       marginRight: 5,
-      top: theme.spacing(1),
     },
-    horizontalModalButton: {
-      fontSize: theme.typography.h6.fontSize,
-      color: theme.palette.primary.light,
+    iconButton: {
+      padding: '1px',
+      marginLeft: 5,
+      boxShadow: 'none',
+      color: theme.palette.primary.main,
+      '&:hover': {
+        color: theme.palette.primary.hover,
+      },
     },
     overlaySpinner: {
       opacity: 0.9,
@@ -79,26 +78,28 @@ const styles = (theme: CustomTheme) =>
     },
   });
 
-interface ManageWorkspaceModalProps extends WithStyles<typeof styles> {
-  entries: SnapshotWorkspaceEntry[];
+interface ManageUserModalProps extends WithStyles<typeof styles> {
+  addUser: any;
+  horizontal: boolean;
   modalText: string;
-  removeWorkspace: any;
+  removeUser: any;
+  users: Array<string>;
   isLoading: boolean;
 }
 
-type ManageWorkspaceModalState = {
+type ManageUserModalState = {
   open: boolean;
 };
 
-const initialState: ManageWorkspaceModalState = {
+const initialState: ManageUserModalState = {
   open: false,
 };
 
-export class ManageWorkspacesModal extends React.PureComponent<
-  ManageWorkspaceModalProps,
-  ManageWorkspaceModalState
+export class ManageUsersModal extends React.PureComponent<
+  ManageUserModalProps,
+  ManageUserModalState
 > {
-  constructor(props: ManageWorkspaceModalProps) {
+  constructor(props: ManageUserModalProps) {
     super(props);
     this.state = initialState;
   }
@@ -114,31 +115,33 @@ export class ManageWorkspacesModal extends React.PureComponent<
   };
 
   render() {
-    const { classes, modalText, entries, removeWorkspace, isLoading } = this.props;
+    const { addUser, classes, horizontal, modalText, users, removeUser, isLoading } = this.props;
     const { open } = this.state;
-    const button = (
-      <Button
-        className={classes.openButton}
+    const button = horizontal ? (
+      <IconButton
+        className={classes.iconButton}
         aria-label={modalText}
         onClick={this.handleClickOpen}
         disableFocusRipple={true}
         disableRipple={true}
       >
-        <i className={`${classes.openButtonIcon} fa-solid fa-pen-circle`} />
-        {modalText}
+        <i className="fa-solid fa-pen-circle" />
+      </IconButton>
+    ) : (
+      <Button
+        className={classes.openButton}
+        color="primary"
+        variant="outlined"
+        onClick={this.handleClickOpen}
+      >
+        <i className={`${classes.openButtonIcon} fa-solid fa-pen-circle`} /> {modalText}
       </Button>
     );
 
     return (
       <span>
         {button}
-        <Dialog
-          fullWidth
-          maxWidth="md"
-          onClose={this.handleClose}
-          aria-labelledby="customized-dialog-title"
-          open={open}
-        >
+        <Dialog onClose={this.handleClose} aria-labelledby="customized-dialog-title" open={open}>
           <DialogTitle className={classes.dialogTitle} id="customized-dialog-title">
             {modalText}
             <IconButton
@@ -149,17 +152,6 @@ export class ManageWorkspacesModal extends React.PureComponent<
               <CloseIcon />
             </IconButton>
           </DialogTitle>
-          <Typography className={classes.dialogInstructions}>
-            Removing workspace readers will remove access to data for{' '}
-            <strong>
-              <em>Project-owners, Owners, Writers, Readers</em>
-            </strong>
-            . To add workspace readers use the{' '}
-            <strong>
-              <em>Export Snapshot to Terra Workspace</em>
-            </strong>{' '}
-            button.
-          </Typography>
           <DialogContent className={classes.dialogContent}>
             {isLoading && (
               <LoadingSpinner
@@ -168,7 +160,12 @@ export class ManageWorkspacesModal extends React.PureComponent<
                 className={classes.overlaySpinner}
               />
             )}
-            <ManageWorkspacesView entries={entries} removeWorkspace={removeWorkspace} />
+            <ManageUsersView
+              addUser={(newEmail: any) => addUser(newEmail)}
+              defaultValue="Add email addresses"
+              removeUser={(removeableEmail: any) => removeUser(removeableEmail)}
+              users={users}
+            />
           </DialogContent>
           <DialogActions className={classes.dialogActions}>
             <Button onClick={this.handleClose} color="primary">
@@ -181,10 +178,4 @@ export class ManageWorkspacesModal extends React.PureComponent<
   }
 }
 
-function mapStateToProps(state: TdrState) {
-  return {
-    isLoading: state.snapshots.snapshotWorkspaceManagerEditInProgress,
-  };
-}
-
-export default connect(mapStateToProps)(withStyles(styles)(ManageWorkspacesModal));
+export default withStyles(styles)(ManageUsersModal);

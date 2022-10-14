@@ -37,6 +37,7 @@ class UserList extends React.PureComponent {
     classes: PropTypes.object.isRequired,
     defaultOpen: PropTypes.bool,
     horizontal: PropTypes.bool,
+    isAddingOrRemovingUser: PropTypes.bool,
     removeUser: PropTypes.func,
     typeOfUsers: PropTypes.string,
     users: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -52,6 +53,7 @@ class UserList extends React.PureComponent {
       removeUser,
       typeOfUsers,
       users,
+      isAddingOrRemovingUser,
     } = this.props;
 
     return (
@@ -66,6 +68,7 @@ class UserList extends React.PureComponent {
           {canManageUsers && (
             <ManageUsersModal
               addUser={addUser}
+              isLoading={isAddingOrRemovingUser}
               removeUser={removeUser}
               modalText={`Manage ${typeOfUsers}`}
               users={users}

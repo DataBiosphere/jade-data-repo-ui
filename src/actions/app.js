@@ -140,20 +140,6 @@ export const { getDatasetTablePreview } = createActions({
   [ActionTypes.GET_DATASET_TABLE_PREVIEW_SUCCESS]: (_) => _,
 });
 
-export const { addCustodianToDataset } = createActions({
-  [ActionTypes.ADD_CUSTODIAN_TO_DATASET]: (datasetId, users) => ({
-    datasetId,
-    users,
-  }),
-});
-
-export const { removeCustodianFromDataset } = createActions({
-  [ActionTypes.REMOVE_CUSTODIAN_FROM_DATASET]: (datasetId, user) => ({
-    datasetId,
-    user,
-  }),
-});
-
 export const { addDatasetPolicyMember } = createActions({
   [ActionTypes.ADD_DATASET_POLICY_MEMBER]: (datasetId, user, policy) => ({
     datasetId,

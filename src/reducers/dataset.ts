@@ -21,6 +21,7 @@ export interface DatasetState {
   datasetSnapshots: Array<SnapshotSummaryModel>;
   datasetSnapshotsCount: number;
   loading: boolean;
+  isAddingOrRemovingUser: boolean;
   refreshCnt: number;
 }
 
@@ -36,6 +37,7 @@ export const initialDatasetState: DatasetState = {
   datasetSnapshots: [],
   datasetSnapshotsCount: 0,
   loading: false,
+  isAddingOrRemovingUser: false,
   refreshCnt: 0,
 };
 
@@ -86,25 +88,35 @@ export default {
         immutable(state, {
           datasetPolicies: { $set: action.policy.data.policies },
         }),
-      [ActionTypes.ADD_CUSTODIAN_TO_DATASET_SUCCESS]: (state, action: any) =>
-        immutable(state, {
-          datasetPolicies: { $set: action.policy.data.policies },
-        }),
-      [ActionTypes.REMOVE_CUSTODIAN_FROM_DATASET_SUCCESS]: (state, action: any) =>
-        immutable(state, {
-          datasetPolicies: { $set: action.policy.data.policies },
-        }),
       [ActionTypes.PATCH_DATASET_DESCRIPTION_SUCCESS]: (state, action: any) =>
         immutable(state, {
           dataset: { description: { $set: action.description } },
         }),
+      [ActionTypes.ADD_DATASET_POLICY_MEMBER]: (state) =>
+        immutable(state, {
+          isAddingOrRemovingUser: { $set: true },
+        }),
+      [ActionTypes.ADD_DATASET_POLICY_MEMBER_FAILURE]: (state) =>
+        immutable(state, {
+          isAddingOrRemovingUser: { $set: false },
+        }),
       [ActionTypes.ADD_DATASET_POLICY_MEMBER_SUCCESS]: (state, action: any) =>
         immutable(state, {
           datasetPolicies: { $apply: datasetMembershipResultApply(action) },
+          isAddingOrRemovingUser: { $set: false },
+        }),
+      [ActionTypes.REMOVE_DATASET_POLICY_MEMBER]: (state) =>
+        immutable(state, {
+          isAddingOrRemovingUser: { $set: true },
+        }),
+      [ActionTypes.REMOVE_DATASET_POLICY_MEMBER_FAILURE]: (state) =>
+        immutable(state, {
+          isAddingOrRemovingUser: { $set: false },
         }),
       [ActionTypes.REMOVE_DATASET_POLICY_MEMBER_SUCCESS]: (state, action: any) =>
         immutable(state, {
           datasetPolicies: { $apply: datasetMembershipResultApply(action) },
+          isAddingOrRemovingUser: { $set: false },
         }),
       [ActionTypes.GET_USER_DATASET_ROLES]: (state) =>
         immutable(state, {
