@@ -47,6 +47,8 @@ export class Toast extends React.PureComponent {
     let errString;
     if (status && errorMsg) {
       errString = `Error ${status}: ${errorMsg}`;
+    } else if (errorMsg) {
+      errString = errorMsg;
     } else {
       errString = 'An error occurred, please try again or submit a bug report';
     }
