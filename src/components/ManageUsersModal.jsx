@@ -10,7 +10,7 @@ import {
   IconButton,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Edit } from '@mui/icons-material';
 import ManageUsersView from './ManageUsersView';
 
 const styles = (theme) => ({
@@ -43,6 +43,17 @@ const styles = (theme) => ({
   },
   openButton: {
     width: '100%',
+    border: 0,
+    justifyContent: 'left',
+    textTransform: 'none',
+    padding: 0,
+    '&:hover': {
+      border: 0,
+    },
+    marginTop: -25,
+  },
+  openButtonIcon: {
+    marginRight: 5,
   },
   iconButton: {
     padding: '1px',
@@ -102,7 +113,7 @@ export class ManageUsersModal extends React.PureComponent {
         variant="outlined"
         onClick={this.handleClickOpen}
       >
-        {modalText}
+        <i className={`${classes.openButtonIcon} fa-solid fa-pen-circle`} /> {modalText}
       </Button>
     );
 

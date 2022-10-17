@@ -1,24 +1,35 @@
-import React from 'react';
-import { ClassNameMap, CustomTheme } from '@mui/material/styles';
-import { Button, IconButton, TextField, Typography } from '@mui/material';
-import { showNotification } from 'modules/notifications';
-import { withStyles } from '@mui/styles';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import ReactDOMServer from 'react-dom/server';
+import { CustomTheme } from '@mui/material/styles';
+import { Button, IconButton, Typography } from '@mui/material';
+import { SimpleMdeReact } from 'react-simplemde-editor';
+import SimpleMDE from 'easymde';
+import 'easymde/dist/easymde.min.css';
+import { createStyles, WithStyles, withStyles } from '@mui/styles';
+import MarkdownContent from './common/MarkdownContent';
+import WithoutStylesMarkdownContent from './common/WithoutStylesMarkdownContent';
 
 const styles = (theme: CustomTheme) =>
-  ({
+  createStyles({
     descriptionEditor: {
       width: '100%',
       display: 'flex',
+      alignItems: 'top',
+    },
+    markdownPreview: {
+      width: '100%',
+      display: 'flex',
+      textAlign: 'left',
     },
     textInputDiv: {
       width: '100%',
+      zIndex: '9998',
     },
     descriptionInput: {
       backgroundColor: 'white',
     },
     editIconButton: {
       boxShadow: 'none',
-      marginRight: 5,
       color: theme.palette.primary.main,
       '&:hover': {
         color: theme.palette.primary.hover,
@@ -32,197 +43,152 @@ const styles = (theme: CustomTheme) =>
         boxShadow: 'none',
       },
     },
-    undoButton: {
-      backgroundColor: theme.palette.primary.light,
-      boxShadow: 'none',
-      color: theme.palette.grey[500],
-      margin: theme.spacing(1),
-      '&:hover': {
-        backgroundColor: theme.palette.primary.light,
-        boxShadow: 'none',
-      },
+    title: {
+      display: 'inline',
+      textAlign: 'center',
     },
   } as const);
 
-const MAX_LENGTH = 2047;
+const UNSET_DESCRIPTION_TEXT = '(No description added)';
 
-const descriptionTooLongError = {
-  response: {
-    status: 'Description too long',
-    data: {
-      message: '',
-      errorDetail: `Exceeds ${MAX_LENGTH} characters.  Please revise and save again.`,
-    },
-  },
-};
-
-type DescriptionViewProps = {
+interface DescriptionViewProps extends WithStyles<typeof styles> {
   canEdit: boolean;
-  classes: ClassNameMap;
   description: string | undefined;
+  title: string;
   updateDescriptionFn: any;
-};
+}
 
-type DescriptionViewState = {
-  hasDescriptionChanged: boolean;
-  descriptionValue: string | undefined;
-  isEditing: boolean;
-  isPendingSave: boolean;
-};
+function DescriptionView({
+  canEdit,
+  classes,
+  description,
+  title,
+  updateDescriptionFn,
+}: DescriptionViewProps) {
+  const [hasDescriptionChanged, setHasDescriptionChanged] = useState(false);
+  const [descriptionValue, setDescriptionValue] = useState(description);
+  const [isEditing, setIsEditing] = useState(false);
+  const [isPendingSave, setIsPendingSave] = useState(false);
 
-const initialState: DescriptionViewState = {
-  hasDescriptionChanged: false,
-  descriptionValue: undefined,
-  isEditing: false,
-  isPendingSave: false,
-};
-
-class DescriptionView extends React.PureComponent<DescriptionViewProps, DescriptionViewState> {
-  constructor(props: DescriptionViewProps) {
-    super(props);
-    initialState.descriptionValue = props.description;
-    this.state = initialState;
-    this.textFieldRef = React.createRef();
-  }
-
-  componentDidUpdate() {
-    const { descriptionValue, isPendingSave } = this.state;
-    const { description } = this.props;
+  useEffect(() => {
     if (isPendingSave && description === descriptionValue) {
-      this.setState({ hasDescriptionChanged: false });
-      this.setState({ isPendingSave: false });
-      this.onExitEdit();
+      setHasDescriptionChanged(false);
+      setIsPendingSave(false);
+      setIsEditing(false);
     }
-  }
+  }, [isPendingSave, description, descriptionValue]);
 
-  textFieldRef: React.RefObject<any>;
+  const editorOptions = useMemo(
+    () =>
+      ({
+        previewRender(markdownText) {
+          return ReactDOMServer.renderToString(
+            <WithoutStylesMarkdownContent markdownText={markdownText} />,
+          );
+        },
+        status: false,
+      } as SimpleMDE.Options),
+    [],
+  );
 
-  descriptionChanged(newDescription: string | undefined, originalDescription: string | undefined) {
-    if (newDescription && newDescription.length > MAX_LENGTH) {
-      showNotification(descriptionTooLongError);
-      this.setState({ descriptionValue: newDescription.substring(0, MAX_LENGTH - 1) });
-    } else {
-      this.setState({ descriptionValue: newDescription });
-    }
-    if (newDescription !== originalDescription) {
-      this.setState({ hasDescriptionChanged: true });
-    } else {
-      this.setState({ hasDescriptionChanged: false });
-    }
-  }
+  const onEditClick = useCallback(() => {
+    setIsEditing(true);
+  }, []);
 
-  onDescriptionTextBlur(
-    newDescription: string | undefined,
-    originalDescription: string | undefined,
-  ) {
-    this.descriptionChanged(newDescription, originalDescription);
-    this.onExitEdit();
-  }
+  const onSaveClick = useCallback(() => {
+    setIsPendingSave(true);
+    updateDescriptionFn(descriptionValue);
+  }, [updateDescriptionFn, descriptionValue]);
 
-  onDescriptionTextClick() {
-    const { isEditing } = this.state;
-    if (!isEditing) {
-      this.setState({ isEditing: true });
-    }
-  }
+  const onChange = useCallback(
+    (value: string) => {
+      if (description !== value) {
+        setDescriptionValue(value);
+        setHasDescriptionChanged(true);
+      } else {
+        setHasDescriptionChanged(false);
+      }
+    },
+    [description],
+  );
 
-  onEditClick() {
-    const { isEditing } = this.state;
-    if (!isEditing) {
-      this.textFieldRef.current.focus();
-      this.setState({ isEditing: true });
-    }
-  }
+  const onCancel = useCallback(() => {
+    setDescriptionValue(description);
+    setHasDescriptionChanged(false);
+    setIsEditing(false);
+  }, [description]);
 
-  onExitEdit() {
-    const { description } = this.props;
-    const { descriptionValue } = this.state;
-    if (description === descriptionValue) {
-      this.setState({ isEditing: false });
-    }
-  }
-
-  onSaveClick(descriptionText: string | undefined) {
-    const { updateDescriptionFn } = this.props;
-    this.setState({ isPendingSave: true });
-    updateDescriptionFn(descriptionText);
-  }
-
-  render() {
-    const { canEdit, classes, description } = this.props;
-    const { hasDescriptionChanged, descriptionValue, isEditing } = this.state;
-
-    return (
-      <>
-        {!canEdit && (
-          <Typography style={{ whiteSpace: 'pre-line' }} paragraph={true}>
-            {description}
-          </Typography>
-        )}
-        {canEdit && (
-          <div className={classes.descriptionEditor}>
-            <div className={classes.iconDiv}>
-              <IconButton
-                aria-label="Edit description"
-                className={classes.editIconButton}
-                data-cy="description-edit-button"
-                disableFocusRipple={true}
-                disableRipple={true}
-                onClick={() => this.onEditClick()}
-              >
-                <i className="fa-solid fa-pen-circle" />
-              </IconButton>
-            </div>
-            <div className={classes.textInputDiv}>
-              <TextField
-                data-cy="description-text-field"
-                fullWidth={true}
-                inputRef={this.textFieldRef}
-                maxRows={5}
-                minRows={2}
-                multiline={true}
-                onBlur={(e) => this.onDescriptionTextBlur(e.target.value, description)}
-                onClick={() => this.onDescriptionTextClick()}
-                onChange={(e) => this.descriptionChanged(e.target.value, description)}
-                onFocus={() => this.onDescriptionTextClick()}
-                placeholder="Add a description."
-                type="text"
-                value={descriptionValue}
-                variant="outlined"
-                InputProps={isEditing ? { className: classes.descriptionInput } : {}}
-              />
-              {isEditing && (
-                <>
-                  <Button
-                    aria-label="Save description changes"
-                    className={classes.saveDescriptionButton}
-                    color="primary"
-                    data-cy="description-save-button"
-                    disabled={!hasDescriptionChanged}
-                    onClick={() => this.onSaveClick(descriptionValue)}
-                    type="button"
-                    variant="contained"
-                  >
-                    SAVE
-                  </Button>
-                  <Button
-                    aria-label="Undo description changes"
-                    className={classes.undoButton}
-                    data-cy="description-undo-button"
-                    disabled={!hasDescriptionChanged}
-                    onClick={() => this.descriptionChanged(description, description)}
-                    type="button"
-                    variant="contained"
-                  >
-                    UNDO
-                  </Button>
-                </>
-              )}
-            </div>
+  return (
+    <>
+      <div>
+        <Typography className={classes.title} variant="h6">
+          {`${title}:`}
+          {canEdit && (
+            <IconButton
+              aria-label={`Edit ${title}`}
+              className={classes.editIconButton}
+              data-cy="description-edit-button"
+              disableFocusRipple={true}
+              disableRipple={true}
+              onClick={onEditClick}
+            >
+              <i className="fa-solid fa-pen-circle" />
+            </IconButton>
+          )}
+        </Typography>
+      </div>
+      {!canEdit && (
+        <span className={classes.markdownPreview}>
+          <MarkdownContent markdownText={descriptionValue} emptyText={UNSET_DESCRIPTION_TEXT} />
+        </span>
+      )}
+      {canEdit && (
+        <div className={classes.descriptionEditor}>
+          <div className={classes.textInputDiv}>
+            {!isEditing && (
+              <span className={classes.markdownPreview}>
+                <MarkdownContent
+                  markdownText={descriptionValue}
+                  emptyText={UNSET_DESCRIPTION_TEXT}
+                />
+              </span>
+            )}
+            {isEditing && (
+              <>
+                <SimpleMdeReact
+                  onChange={onChange}
+                  options={editorOptions}
+                  value={descriptionValue}
+                />
+                <Button
+                  aria-label="Save description changes"
+                  className={classes.saveDescriptionButton}
+                  color="primary"
+                  data-cy="description-save-button"
+                  disabled={!hasDescriptionChanged}
+                  onClick={onSaveClick}
+                  type="button"
+                  variant="contained"
+                >
+                  SAVE
+                </Button>
+                <Button
+                  aria-label="Cancel description changes"
+                  data-cy="description-cancel-button"
+                  onClick={onCancel}
+                  color="primary"
+                  type="button"
+                  variant="outlined"
+                  disableElevation
+                >
+                  CANCEL
+                </Button>
+              </>
+            )}
           </div>
-        )}
-      </>
-    );
-  }
+        </div>
+      )}
+    </>
+  );
 }
 export default withStyles(styles)(DescriptionView);

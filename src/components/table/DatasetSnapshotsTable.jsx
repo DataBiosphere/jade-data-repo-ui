@@ -1,5 +1,7 @@
 import React from 'react';
+import ReactMarkdown from 'react-markdown';
 import { Link } from 'react-router-dom';
+import MarkdownContent from 'components/common/MarkdownContent';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import { withStyles } from '@mui/styles';
@@ -51,6 +53,7 @@ class DatasetSnapshotsTable extends React.PureComponent {
         label: 'Description',
         name: 'description',
         allowSort: true,
+        render: (row) => <MarkdownContent markdownText={row.description} stripMarkdown />,
       },
       {
         label: 'Date created',

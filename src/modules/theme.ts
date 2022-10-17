@@ -201,6 +201,9 @@ const theme = createTheme({
             backgroundColor: LINK_HOVER,
           },
         },
+        outlined: {
+          backgroundColor: WHITE,
+        },
       },
     },
     MuiOutlinedInput: {

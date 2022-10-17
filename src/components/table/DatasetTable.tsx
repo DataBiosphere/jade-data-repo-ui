@@ -5,6 +5,7 @@ import { DatasetSummaryModel } from 'generated/tdr';
 import { OrderDirectionOptions, TableColumnType } from 'reducers/query';
 import { CustomTheme } from '@mui/material/styles';
 
+import MarkdownContent from 'components/common/MarkdownContent';
 import { renderCloudPlatforms } from '../../libs/render-utils';
 import LightTable from './LightTable';
 import ResourceName from './ResourceName';
@@ -68,6 +69,9 @@ const DatasetTable = withStyles(styles)(
         label: 'Description',
         name: 'description',
         allowSort: true,
+        render: (row: DatasetSummaryModel) => (
+          <MarkdownContent markdownText={row.description} stripMarkdown />
+        ),
         width: '35%',
       },
       {

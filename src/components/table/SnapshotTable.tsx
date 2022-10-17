@@ -5,6 +5,7 @@ import { OrderDirectionOptions } from 'reducers/query';
 import { DatasetSummaryModel, SnapshotSummaryModel } from 'generated/tdr/api';
 import { CustomTheme } from '@mui/material/styles';
 
+import MarkdownContent from 'components/common/MarkdownContent';
 import LightTable from './LightTable';
 import { renderCloudPlatforms } from '../../libs/render-utils';
 import { ResourceType } from '../../constants';
@@ -67,6 +68,9 @@ const SnapshotTable = withStyles(styles)(
         label: 'Description',
         name: 'description',
         allowSort: true,
+        render: (row: SnapshotSummaryModel) => (
+          <MarkdownContent markdownText={row.description} stripMarkdown />
+        ),
         width: '35%',
       },
       {

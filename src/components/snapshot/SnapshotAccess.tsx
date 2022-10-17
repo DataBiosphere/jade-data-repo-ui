@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { withStyles } from '@mui/styles';
 import { Grid } from '@mui/material';
 import UserList from '../UserList';
 import { SnapshotRoles } from '../../constants';
@@ -8,6 +9,12 @@ import { addSnapshotPolicyMember, removeSnapshotPolicyMember } from '../../actio
 import { PolicyModel, SnapshotModel } from '../../generated/tdr';
 import { TdrState } from '../../reducers';
 import { AppDispatch } from '../../store';
+
+const styles = () => ({
+  helpContainer: {
+    padding: '30px 0 10px',
+  },
+});
 
 type SnapshotAccessProps = {
   dispatch: AppDispatch;
@@ -47,6 +54,7 @@ function SnapshotAccess(props: SnapshotAccessProps) {
           canManageUsers={canManageUsers}
           addUser={addUser(SnapshotRoles.STEWARD)}
           removeUser={removeUser(SnapshotRoles.STEWARD)}
+          defaultOpen={true}
           horizontal={horizontal}
         />
       </Grid>
@@ -82,4 +90,4 @@ function mapStateToProps(state: TdrState) {
   };
 }
 
-export default connect(mapStateToProps)(SnapshotAccess);
+export default connect(mapStateToProps)(withStyles(styles)(SnapshotAccess));
