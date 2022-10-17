@@ -80,7 +80,7 @@ const styles = (theme: CustomTheme) =>
 
 interface ManageUserModalProps extends WithStyles<typeof styles> {
   addUser: any;
-  horizontal: boolean;
+  horizontal?: boolean;
   modalText: string;
   removeUser: any;
   users: Array<string>;
