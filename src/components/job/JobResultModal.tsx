@@ -14,18 +14,12 @@ import { Close } from '@mui/icons-material';
 import { Action } from 'redux';
 import { connect } from 'react-redux';
 import ReactJson from 'react-json-view';
-import { Property } from 'csstype';
 import { getJobResult } from 'actions';
 import { TdrState } from 'reducers';
-import { JobResult, JobResultError } from 'reducers/job';
+import { JobResult, JobResultError, JobResultType } from 'reducers/job';
 import LoadingSpinner from '../common/LoadingSpinner';
 
 const styles = (theme: CustomTheme) => ({
-  root: {
-    boxShadow: 'none',
-    maxHeight: '100%',
-    position: 'relative' as Property.Position,
-  },
   seeMoreLink: {
     cursor: 'pointer',
     border: 'none',
@@ -99,17 +93,19 @@ function JobResultModal({
   };
 
   const jobError =
-    jobResult && jobResult.resultType === 'error' ? (jobResult.result as JobResultError) : null;
+    jobResult && jobResult.resultType === JobResultType.ERROR
+      ? (jobResult.result as JobResultError)
+      : null;
 
   const jobSuccess =
-    jobResult && jobResult.resultType === 'success' ? (jobResult.result as any) : null;
+    jobResult && jobResult.resultType === JobResultType.SUCCESS ? (jobResult.result as any) : null;
 
   return (
     <div>
       <button type="button" onClick={handleSeeMoreOpen} className={classes.seeMoreLink}>
         {linkDisplay}
       </button>
-      <Paper className={classes.root}>
+      <Paper>
         <Dialog
           open={seeMore.open}
           scroll="paper"

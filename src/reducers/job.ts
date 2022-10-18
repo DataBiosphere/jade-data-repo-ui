@@ -16,8 +16,13 @@ export interface JobState {
   jobResultLoading: boolean;
 }
 
+export enum JobResultType {
+  SUCCESS = 'success',
+  ERROR = 'error',
+}
+
 export interface JobResult {
-  resultType?: 'success' | 'error';
+  resultType?: JobResultType;
   result?: JobResultError | any;
 }
 export interface JobResultError {
