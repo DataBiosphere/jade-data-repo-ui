@@ -45,7 +45,16 @@ const JobView = withStyles(styles)(
       sortDirection: OrderDirectionOptions,
       search: string,
     ) => {
-      dispatch(getJobs(limit, offset, sort, sortDirection, search));
+      dispatch(
+        getJobs({
+          limit,
+          offset,
+          sort,
+          direction: sortDirection,
+          search,
+          errMessage: 'An error occured loading jobs. Please reload the page to try again.',
+        }),
+      );
     };
 
     return (

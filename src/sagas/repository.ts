@@ -584,7 +584,8 @@ export function* getJobs({ payload }: any): any {
       jobs: { data: response },
     });
   } catch (err) {
-    showNotification(err);
+    const { errMessage } = payload;
+    showNotification(errMessage || err);
     yield put({
       type: ActionTypes.GET_JOBS_FAILURE,
     });
