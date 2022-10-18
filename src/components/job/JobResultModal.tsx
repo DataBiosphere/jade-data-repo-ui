@@ -11,7 +11,6 @@ import {
   Paper,
 } from '@mui/material';
 import { Close } from '@mui/icons-material';
-import clsx from 'clsx';
 import { Action } from 'redux';
 import { connect } from 'react-redux';
 import ReactJson from 'react-json-view';
@@ -59,15 +58,6 @@ const styles = (theme: CustomTheme) => ({
   },
   dialogContent: {
     'word-break': 'break-all',
-  },
-  detailRow: {
-    padding: '20px 0',
-    borderTop: '1px solid rgba(0,0,0,0.2)',
-    'word-break': 'break-all',
-  },
-  detailRowFirst: {
-    borderTop: 0,
-    paddingTop: 0,
   },
 });
 
@@ -172,16 +162,7 @@ function JobResultModal({
                         <div className={classes.dialogInfo}>
                           <div className={classes.dialogLabel}>Details</div>
                           <div className={classes.dialogContent}>
-                            {jobError.detail.map((detail, i) => (
-                              <div
-                                className={clsx(classes.detailRow, {
-                                  [classes.detailRowFirst]: i === 0,
-                                })}
-                                key={`${id}-details-${i}`}
-                              >
-                                {detail}
-                              </div>
-                            ))}
+                            {jobError.detail && <ReactJson src={jobError.detail} />}
                           </div>
                         </div>
                       )}
