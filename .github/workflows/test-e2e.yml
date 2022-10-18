@@ -10,6 +10,8 @@ on:
   pull_request:
     branches:
       - develop
+    branches-ignore:
+      - 'dependabot/**'
     paths:
       - '!*'
       - 'src/**'
