@@ -189,6 +189,18 @@ export const { getUserDatasetRoles } = createActions({
   [ActionTypes.GET_USER_DATASET_ROLES_SUCCESS]: (roles) => roles,
 });
 
+export const { getJobs } = createActions({
+  [ActionTypes.GET_JOBS_SUCCESS]: (jobs) => jobs,
+  [ActionTypes.GET_JOBS]: ({ limit, offset, sort, direction, searchString, errMessage }) => ({
+    limit,
+    offset,
+    sort,
+    direction,
+    searchString,
+    errMessage,
+  }),
+});
+
 export const { getJobById } = createActions({
   [ActionTypes.GET_JOB_BY_ID]: (job) => job,
   [ActionTypes.GET_JOB_BY_ID_SUCCESS]: (job) => job,

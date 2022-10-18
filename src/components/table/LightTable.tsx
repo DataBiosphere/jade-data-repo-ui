@@ -136,6 +136,7 @@ type LightTableProps<RowType> = {
     searchString: string,
     refreshCnt: number,
   ) => void;
+  infinitePaging?: boolean;
   loading: boolean;
   orderDirection: OrderDirectionOptions;
   orderProperty: string;
@@ -144,9 +145,10 @@ type LightTableProps<RowType> = {
   pageBQQuery?: () => void;
   rows: Array<RowType>;
   rowsPerPage: number;
+  rowKey?: string;
   searchString: string;
   tableName?: string;
-  totalCount: number;
+  totalCount?: number;
   refreshCnt: number;
 };
 
@@ -157,6 +159,7 @@ function LightTable({
   dispatch,
   filteredCount,
   handleEnumeration,
+  infinitePaging,
   loading,
   noRowsMessage,
   orderDirection,
@@ -165,6 +168,7 @@ function LightTable({
   pageBQQuery,
   rows,
   rowsPerPage,
+  rowKey,
   searchString,
   tableName,
   totalCount,
@@ -289,6 +293,8 @@ function LightTable({
     0,
   );
   const effectiveTableWidth = _.isNaN(tableWidth) || !supportsResize ? '100%' : tableWidth;
+  const showPagination = (rows && rows.length > 0) || infinitePaging;
+
   return (
     <div>
       {!(loading && !rows?.length) && (
@@ -313,12 +319,12 @@ function LightTable({
               />
               <TableBody data-cy="tableBody">
                 {rows && rows.length > 0 ? (
-                  rows.map((row, index) => {
+                  rows.map((row: any, index) => {
                     const darkRow = index % 2 !== 0;
                     return (
                       <TableRow
                         hover
-                        key={`${index}`}
+                        key={`${index}-${row[rowKey || 'id']}}`}
                         className={clsx({
                           [classes.row]: true,
                           [classes.darkRow]: darkRow,
@@ -351,7 +357,7 @@ function LightTable({
               </TableBody>
             </Table>
           </TableContainer>
-          {rows && rows.length > 0 && (
+          {showPagination && (
             <TablePagination
               className={classes.paginationWrapper}
               rowsPerPageOptions={TABLE_DEFAULT_ROWS_PER_PAGE_OPTIONS}
@@ -376,6 +382,9 @@ function LightTable({
                 className: classes.paginationButton,
               }}
               labelDisplayedRows={({ from, to, count }) => {
+                if (infinitePaging) {
+                  return `${from}-${to}`;
+                }
                 if (count === totalCount) {
                   return `${from}-${to} of ${count}`;
                 }

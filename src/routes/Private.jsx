@@ -65,7 +65,7 @@ const styles = (theme) => ({
 const tabsConfig = [
   { label: 'Datasets', path: '/datasets' },
   { label: 'Snapshots', path: '/snapshots' },
-  { label: 'Jobs', path: '/jobs' },
+  { label: 'Activity', path: '/activity' },
   { label: 'Ingest Data', path: '/ingestdata' },
 ];
 
@@ -76,6 +76,7 @@ const routes = [
   { path: '/datasets/:uuid/data', component: DatasetDataView },
   { path: '/snapshots/:uuid', component: SnapshotOverview },
   { path: '/snapshots/:uuid/data', component: SnapshotDataView },
+  { path: '/activity', component: HomeView },
 ];
 class Private extends React.Component {
   static propTypes = {

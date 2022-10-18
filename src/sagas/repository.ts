@@ -569,6 +569,30 @@ export function* getDatasetTablePreview({ payload }: any): any {
 }
 
 /**
+ * Jobs.
+ */
+
+export function* getJobs({ payload }: any): any {
+  const { limit, offset, sort, direction, searchString } = payload;
+  try {
+    const response = yield call(
+      authGet,
+      `/api/repository/v1/jobs?offset=${offset}&limit=${limit}&sort=${sort}&direction=${direction}&filter=${searchString}`,
+    );
+    yield put({
+      type: ActionTypes.GET_JOBS_SUCCESS,
+      jobs: { data: response },
+    });
+  } catch (err) {
+    const { errMessage } = payload;
+    showNotification(errMessage || err);
+    yield put({
+      type: ActionTypes.GET_JOBS_FAILURE,
+    });
+  }
+}
+
+/**
  * billing profile
  */
 export function* getBillingProfileById({ payload }: any): any {
@@ -816,6 +840,7 @@ export default function* root() {
     takeLatest(ActionTypes.ADD_DATASET_POLICY_MEMBER, addDatasetPolicyMember),
     takeLatest(ActionTypes.REMOVE_DATASET_POLICY_MEMBER, removeDatasetPolicyMember),
     takeLatest(ActionTypes.GET_DATASET_TABLE_PREVIEW, getDatasetTablePreview),
+    takeLatest(ActionTypes.GET_JOBS, getJobs),
     takeLatest(ActionTypes.RUN_QUERY, runQuery),
     takeLatest(ActionTypes.PREVIEW_DATA, previewData),
     takeLatest(ActionTypes.PAGE_QUERY, pageQuery),
