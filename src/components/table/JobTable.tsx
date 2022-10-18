@@ -97,12 +97,10 @@ const JobTable = withStyles(styles)(
         allowSort: false,
         width: '10%',
         render: (row: any) => (
-          <div>
-            <span className={classes.statusContainer}>
-              <i className={clsx(classes.statusIcon, statusMap[row.job_status].icon)} />
-              {statusMap[row.job_status].label}
-            </span>
-          </div>
+          <span className={classes.statusContainer}>
+            <i className={clsx(classes.statusIcon, statusMap[row.job_status].icon)} />
+            {statusMap[row.job_status].label}
+          </span>
         ),
       },
     ];
