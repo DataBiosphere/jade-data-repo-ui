@@ -153,13 +153,7 @@ export class ManageUsersModal extends React.PureComponent<
             </IconButton>
           </DialogTitle>
           <DialogContent className={classes.dialogContent}>
-            {isLoading && (
-              <LoadingSpinner
-                delay={true}
-                delayMessage="Thank you for your patience."
-                className={classes.overlaySpinner}
-              />
-            )}
+            {isLoading && <LoadingSpinner className={classes.overlaySpinner} />}
             <ManageUsersView
               addUser={(newEmail: any) => addUser(newEmail)}
               defaultValue="Add email addresses"
