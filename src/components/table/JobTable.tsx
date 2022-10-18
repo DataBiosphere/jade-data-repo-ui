@@ -31,7 +31,6 @@ const styles = (theme: CustomTheme) => ({
 
 interface IProps extends WithStyles<typeof styles> {
   jobs: Array<JobModel>;
-  jobRoleMaps: { [key: string]: Array<string> };
   jobsCount?: number;
   filteredJobsCount?: number;
   handleFilterJobs?: (
