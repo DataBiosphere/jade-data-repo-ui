@@ -11,6 +11,7 @@ import history from '../modules/hist';
 import { initialJobState } from 'reducers/job';
 import { initialUserState } from 'reducers/user';
 import { initialQueryState } from 'reducers/query';
+import { JobModelJobStatusEnum } from 'generated/tdr';
 
 const initialState = {
   searchString: '',
@@ -45,4 +46,19 @@ describe('JobView', () => {
     cy.get('th[data-cy="columnHeader-submitted"]').should('exist');
     cy.get('th[data-cy="columnHeader-job_status"]').should('exist');
   });
+
+  it('should make a request for jobs', () => {
+
+  });
+
+  it('should show the jobs', () => {
+    initialState.jobs.jobs = [
+      {
+        id: 'testingId',
+        job_status: JobModelJobStatusEnum.Succeeded,
+        status_code: 200,
+      }
+    ];
+  });
+
 });

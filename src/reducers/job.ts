@@ -1,6 +1,6 @@
 import { handleActions } from 'redux-actions';
 import immutable from 'immutability-helper';
-import { JobModel } from 'generated/tdr';
+import { JobModel, JobModelJobStatusEnum } from 'generated/tdr';
 
 import { ActionTypes, Status } from '../constants';
 
@@ -17,7 +17,7 @@ export interface JobState {
 }
 
 export interface JobResult {
-  resultType?: 'success' | 'error';
+  resultType?: JobModelJobStatusEnum;
   result?: JobResultError | any;
 }
 export interface JobResultError {
