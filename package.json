@@ -70,6 +70,7 @@
     "react-draggable": "^4.4.5",
     "react-fontawesome": "^1.7.1",
     "react-helmet": "^6.1.0",
+    "react-json-view": "^1.21.3",
     "react-markdown": "^8.0.3",
     "react-notifications-component": "^3.4.1",
     "react-oidc-context": "^2.1.0",

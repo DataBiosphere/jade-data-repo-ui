@@ -8,6 +8,7 @@ import { OrderDirectionOptions, TableColumnType } from 'reducers/query';
 import { CustomTheme } from '@mui/material/styles';
 
 import LightTable from './LightTable';
+import JobResultModal from '../job/JobResultModal';
 
 const styles = (theme: CustomTheme) => ({
   textWrapper: {
@@ -61,6 +62,14 @@ const JobTable = withStyles(styles)(
         name: 'id',
         allowSort: false,
         width: '20%',
+        render: (row: any) => (
+          <JobResultModal
+            id={row.id}
+            description={row.description}
+            linkDisplay={row.id}
+            jobClass={row.class_name}
+          />
+        ),
       },
       {
         label: 'Class',
