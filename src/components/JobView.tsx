@@ -28,7 +28,6 @@ const styles = (theme: CustomTheme) => ({
 
 interface IProps extends WithStyles<typeof styles> {
   jobs: Array<JobModel>;
-  jobRoleMaps: { [key: string]: Array<string> };
   dispatch: Dispatch<Action>;
   loading: boolean;
   searchString: string;
@@ -37,7 +36,7 @@ interface IProps extends WithStyles<typeof styles> {
 }
 
 const JobView = withStyles(styles)(
-  ({ classes, jobs, jobRoleMaps, dispatch, loading, searchString, refreshCnt }: IProps) => {
+  ({ classes, jobs, dispatch, loading, searchString, refreshCnt }: IProps) => {
     const handleFilterJobs = (
       limit: number,
       offset: number,
@@ -64,7 +63,6 @@ const JobView = withStyles(styles)(
             {jobs && (
               <JobTable
                 jobs={jobs}
-                jobRoleMaps={jobRoleMaps}
                 handleFilterJobs={handleFilterJobs}
                 searchString={searchString}
                 loading={loading}
