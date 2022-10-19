@@ -46,6 +46,7 @@ export interface SnapshotState {
   exportIsDone: boolean;
   exportResponse: SnapshotExportResponseModel;
   refreshCnt: number;
+  isAddingOrRemovingUser: boolean;
 }
 
 const defaultSnapshotRequest: SnapshotRequest = {
@@ -79,6 +80,7 @@ export const initialSnapshotState: SnapshotState = {
   exportIsDone: false,
   exportResponse: {},
   refreshCnt: 0,
+  isAddingOrRemovingUser: false,
 };
 
 // We need this method to apply the response from add/remove snapshot members since the API only returns the affected group
@@ -197,6 +199,23 @@ export default {
           snapshotInaccessibleWorkspaces: {
             $set: action.snapshot.data.data.inaccessibleWorkspaces,
           },
+          isAddingOrRemovingUser: { $set: false },
+        }),
+      [ActionTypes.ADD_SNAPSHOT_POLICY_MEMBER]: (state) =>
+        immutable(state, {
+          isAddingOrRemovingUser: { $set: true },
+        }),
+      [ActionTypes.REMOVE_SNAPSHOT_POLICY_MEMBER]: (state) =>
+        immutable(state, {
+          isAddingOrRemovingUser: { $set: true },
+        }),
+      [ActionTypes.ADD_SNAPSHOT_POLICY_MEMBER_FAILURE]: (state) =>
+        immutable(state, {
+          isAddingOrRemovingUser: { $set: false },
+        }),
+      [ActionTypes.REMOVE_SNAPSHOT_POLICY_MEMBER_FAILURE]: (state) =>
+        immutable(state, {
+          isAddingOrRemovingUser: { $set: false },
         }),
       [ActionTypes.REMOVE_SNAPSHOT_POLICY_MEMBER_SUCCESS]: (state, action: any) =>
         immutable(state, {
@@ -205,6 +224,7 @@ export default {
           snapshotInaccessibleWorkspaces: {
             $set: action.snapshot.data.data.inaccessibleWorkspaces,
           },
+          isAddingOrRemovingUser: { $set: false },
         }),
       [ActionTypes.REMOVE_SNAPSHOT_POLICY_MEMBERS]: (state) =>
         immutable(state, { snapshotWorkspaceManagerEditInProgress: { $set: true } }),

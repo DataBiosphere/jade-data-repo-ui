@@ -1,47 +1,47 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from '@mui/styles';
-import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material';
+import { createStyles, WithStyles, withStyles } from '@mui/styles';
+import { Accordion, AccordionDetails, AccordionSummary, CustomTheme } from '@mui/material';
 import { ExpandMore } from '@mui/icons-material';
 import Typography from '@mui/material/Typography';
 import ManageUsersModal from './ManageUsersModal';
 
-const styles = (theme) => ({
-  header: {
-    fontSize: '14px',
-    lineHeight: '22px',
-    fontWeight: '600',
-    color: theme.palette.primary.main,
-  },
-  expandIcon: {
-    color: theme.palette.primary.main,
-  },
-  manageUsersHorizontalModal: {},
-  values: {
-    paddingBottom: theme.spacing(1),
-  },
-  root: {
-    marginTop: theme.spacing(3),
-  },
-  noUsers: {
-    fontStyle: 'italic',
-    colorPrimary: theme.palette.error.contrastText,
-    color: theme.palette.error.contrastText,
-  },
-});
+const styles = (theme: CustomTheme) =>
+  createStyles({
+    header: {
+      fontSize: '14px',
+      lineHeight: '22px',
+      fontWeight: '600',
+      color: theme.palette.primary.main,
+    },
+    expandIcon: {
+      color: theme.palette.primary.main,
+    },
+    manageUsersHorizontalModal: {},
+    values: {
+      paddingBottom: theme.spacing(1),
+    },
+    root: {
+      marginTop: theme.spacing(3),
+    },
+    noUsers: {
+      fontStyle: 'italic',
+      colorPrimary: theme.palette.error.contrastText,
+      color: theme.palette.error.contrastText,
+    },
+  });
 
-class UserList extends React.PureComponent {
-  static propTypes = {
-    addUser: PropTypes.func,
-    canManageUsers: PropTypes.bool,
-    classes: PropTypes.object.isRequired,
-    defaultOpen: PropTypes.bool,
-    horizontal: PropTypes.bool,
-    removeUser: PropTypes.func,
-    typeOfUsers: PropTypes.string,
-    users: PropTypes.arrayOf(PropTypes.string).isRequired,
-  };
+interface UserListProps extends WithStyles<typeof styles> {
+  addUser: any;
+  canManageUsers: boolean;
+  defaultOpen?: boolean;
+  horizontal?: boolean;
+  isAddingOrRemovingUser: boolean;
+  removeUser: any;
+  typeOfUsers: string;
+  users: Array<string>;
+}
 
+class UserList extends React.PureComponent<UserListProps> {
   render() {
     const {
       addUser,
@@ -52,6 +52,7 @@ class UserList extends React.PureComponent {
       removeUser,
       typeOfUsers,
       users,
+      isAddingOrRemovingUser,
     } = this.props;
 
     return (
@@ -66,6 +67,7 @@ class UserList extends React.PureComponent {
           {canManageUsers && (
             <ManageUsersModal
               addUser={addUser}
+              isLoading={isAddingOrRemovingUser}
               removeUser={removeUser}
               modalText={`Manage ${typeOfUsers}`}
               users={users}

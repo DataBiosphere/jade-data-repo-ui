@@ -19,6 +19,7 @@ const styles = () => ({
 type SnapshotAccessProps = {
   dispatch: AppDispatch;
   horizontal: boolean;
+  isAddingOrRemovingUser: boolean;
   policies: Array<PolicyModel>;
   snapshot: SnapshotModel;
   userRoles: Array<string>;
@@ -37,7 +38,7 @@ function SnapshotAccess(props: SnapshotAccessProps) {
       dispatch(removeSnapshotPolicyMember(snapshot.id, removableEmail, role));
     };
   };
-  const { horizontal, policies, userRoles } = props;
+  const { horizontal, policies, userRoles, isAddingOrRemovingUser } = props;
   const stewards = getRoleMembersFromPolicies(policies, SnapshotRoles.STEWARD);
   const readers = getRoleMembersFromPolicies(policies, SnapshotRoles.READER);
   const discoverers = getRoleMembersFromPolicies(policies, SnapshotRoles.DISCOVERER);
@@ -53,6 +54,7 @@ function SnapshotAccess(props: SnapshotAccessProps) {
           typeOfUsers="Stewards"
           canManageUsers={canManageUsers}
           addUser={addUser(SnapshotRoles.STEWARD)}
+          isAddingOrRemovingUser={isAddingOrRemovingUser}
           removeUser={removeUser(SnapshotRoles.STEWARD)}
           defaultOpen={true}
           horizontal={horizontal}
@@ -64,6 +66,7 @@ function SnapshotAccess(props: SnapshotAccessProps) {
           typeOfUsers="Readers"
           canManageUsers={canManageUsers}
           addUser={addUser(SnapshotRoles.READER)}
+          isAddingOrRemovingUser={isAddingOrRemovingUser}
           removeUser={removeUser(SnapshotRoles.READER)}
           horizontal={horizontal}
         />
@@ -74,6 +77,7 @@ function SnapshotAccess(props: SnapshotAccessProps) {
           typeOfUsers="Discoverers"
           canManageUsers={canManageUsers}
           addUser={addUser(SnapshotRoles.DISCOVERER)}
+          isAddingOrRemovingUser={isAddingOrRemovingUser}
           removeUser={removeUser(SnapshotRoles.DISCOVERER)}
           horizontal={horizontal}
         />
@@ -85,6 +89,7 @@ function SnapshotAccess(props: SnapshotAccessProps) {
 function mapStateToProps(state: TdrState) {
   return {
     policies: state.snapshots.snapshotPolicies,
+    isAddingOrRemovingUser: state.snapshots.isAddingOrRemovingUser,
     snapshot: state.snapshots.snapshot,
     userRoles: state.snapshots.userRoles,
   };

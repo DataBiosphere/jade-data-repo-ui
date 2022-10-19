@@ -345,6 +345,9 @@ export function* addSnapshotPolicyMember({ payload }: any): any {
     }
   } catch (err) {
     showNotification(err);
+    yield put({
+      type: ActionTypes.ADD_SNAPSHOT_POLICY_MEMBER_FAILURE,
+    });
   }
 }
 
@@ -360,6 +363,9 @@ export function* removeSnapshotPolicyMember({ payload }: any): any {
     });
   } catch (err) {
     showNotification(err);
+    yield put({
+      type: ActionTypes.ADD_SNAPSHOT_POLICY_MEMBER_FAILURE,
+    });
   }
 }
 
@@ -500,6 +506,9 @@ export function* addDatasetPolicyMember({ payload }: any): any {
     }
   } catch (err) {
     showNotification(err);
+    yield put({
+      type: ActionTypes.ADD_DATASET_POLICY_MEMBER_FAILURE,
+    });
   }
 }
 
@@ -515,40 +524,9 @@ export function* removeDatasetPolicyMember({ payload }: any): any {
     });
   } catch (err) {
     showNotification(err);
-  }
-}
-
-export function* addCustodianToDataset({ payload }: any): any {
-  const { datasetId } = payload;
-  const custodian = payload.users[0];
-  const custodianObject = { email: custodian };
-  try {
-    const response = yield call(
-      authPost,
-      `/api/repository/v1/datasets/${datasetId}/policies/custodian/members`, // TODO what is this?
-      custodianObject,
-    );
     yield put({
-      type: ActionTypes.ADD_CUSTODIAN_TO_DATASET_SUCCESS,
-      policy: response,
+      type: ActionTypes.REMOVE_DATASET_POLICY_MEMBER_FAILURE,
     });
-  } catch (err) {
-    showNotification(err);
-  }
-}
-
-export function* removeCustodianFromDataset({ payload }: any): any {
-  const { datasetId } = payload;
-  const custodian = payload.user;
-  const url = `/api/repository/v1/datasets/${datasetId}/policies/custodian/members/${custodian}`;
-  try {
-    const response = yield call(authDelete, url);
-    yield put({
-      type: ActionTypes.REMOVE_CUSTODIAN_FROM_DATASET_SUCCESS,
-      policy: response,
-    });
-  } catch (err) {
-    showNotification(err);
   }
 }
 
@@ -896,8 +874,6 @@ export default function* root() {
     takeLatest(ActionTypes.GET_DATASET_SNAPSHOTS, getSnapshots),
     takeLatest(ActionTypes.GET_DATASET_BY_ID, getDatasetById),
     takeLatest(ActionTypes.GET_DATASET_POLICY, getDatasetPolicy),
-    takeLatest(ActionTypes.ADD_CUSTODIAN_TO_DATASET, addCustodianToDataset),
-    takeLatest(ActionTypes.REMOVE_CUSTODIAN_FROM_DATASET, removeCustodianFromDataset),
     takeLatest(ActionTypes.ADD_DATASET_POLICY_MEMBER, addDatasetPolicyMember),
     takeLatest(ActionTypes.REMOVE_DATASET_POLICY_MEMBER, removeDatasetPolicyMember),
     takeLatest(ActionTypes.GET_DATASET_TABLE_PREVIEW, getDatasetTablePreview),

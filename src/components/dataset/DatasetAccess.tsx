@@ -1,37 +1,49 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Grid } from '@mui/material';
-import { withStyles } from '@mui/styles';
+import { CustomTheme, Grid } from '@mui/material';
+import { createStyles, WithStyles, withStyles } from '@mui/styles';
+import { TdrState } from 'reducers';
+import { DatasetModel, PolicyModel } from 'generated/tdr';
+import { Action, Dispatch } from 'redux';
 import UserList from '../UserList';
 import { DatasetRoles } from '../../constants';
 import { getRoleMembersFromPolicies } from '../../libs/utils';
 import { addDatasetPolicyMember, removeDatasetPolicyMember } from '../../actions';
 
-const styles = (theme) => ({
-  helpContainer: {
-    padding: '30px 0 10px',
-  },
-  genericLink: {
-    color: theme.palette.primary.main,
-    textDecoration: 'underline',
-  },
-});
+const styles = (theme: CustomTheme) =>
+  createStyles({
+    helpContainer: {
+      padding: '30px 0 10px',
+    },
+    genericLink: {
+      color: theme.palette.primary.main,
+      textDecoration: 'underline',
+    },
+  });
 
-function DatasetAccess(props) {
-  const addUser = (role) => {
+interface DatasetAccessProps extends WithStyles<typeof styles> {
+  dataset: DatasetModel;
+  dispatch: Dispatch<Action>;
+  horizontal?: boolean;
+  isAddingOrRemovingUser: boolean;
+  policies: Array<PolicyModel>;
+  userRoles: Array<string>;
+}
+
+function DatasetAccess(props: DatasetAccessProps) {
+  const addUser = (role: string) => {
     const { dataset, dispatch } = props;
-    return (newEmail) => {
+    return (newEmail: string) => {
       dispatch(addDatasetPolicyMember(dataset.id, newEmail, role));
     };
   };
-  const removeUser = (role) => {
+  const removeUser = (role: string) => {
     const { dataset, dispatch } = props;
-    return (removableEmail) => {
+    return (removableEmail: string) => {
       dispatch(removeDatasetPolicyMember(dataset.id, removableEmail, role));
     };
   };
-  const { horizontal, policies, userRoles, classes } = props;
+  const { horizontal, policies, userRoles, isAddingOrRemovingUser } = props;
   const stewards = getRoleMembersFromPolicies(policies, DatasetRoles.STEWARD);
   const custodians = getRoleMembersFromPolicies(policies, DatasetRoles.CUSTODIAN);
   const snapshotCreators = getRoleMembersFromPolicies(policies, DatasetRoles.SNAPSHOT_CREATOR);
@@ -49,6 +61,7 @@ function DatasetAccess(props) {
           typeOfUsers="Stewards"
           canManageUsers={canManageStewards}
           addUser={addUser(DatasetRoles.STEWARD)}
+          isAddingOrRemovingUser={isAddingOrRemovingUser}
           removeUser={removeUser(DatasetRoles.STEWARD)}
           defaultOpen={true}
           horizontal={horizontal}
@@ -60,6 +73,7 @@ function DatasetAccess(props) {
           typeOfUsers="Custodians"
           canManageUsers={canManageUsers}
           addUser={addUser(DatasetRoles.CUSTODIAN)}
+          isAddingOrRemovingUser={isAddingOrRemovingUser}
           removeUser={removeUser(DatasetRoles.CUSTODIAN)}
           horizontal={horizontal}
         />
@@ -70,6 +84,7 @@ function DatasetAccess(props) {
           typeOfUsers="Snapshot Creators"
           canManageUsers={canManageUsers}
           addUser={addUser(DatasetRoles.SNAPSHOT_CREATOR)}
+          isAddingOrRemovingUser={isAddingOrRemovingUser}
           removeUser={removeUser(DatasetRoles.SNAPSHOT_CREATOR)}
           horizontal={horizontal}
         />
@@ -78,18 +93,10 @@ function DatasetAccess(props) {
   );
 }
 
-DatasetAccess.propTypes = {
-  classes: PropTypes.object,
-  dataset: PropTypes.object.isRequired,
-  dispatch: PropTypes.func.isRequired,
-  horizontal: PropTypes.bool,
-  policies: PropTypes.arrayOf(PropTypes.object).isRequired,
-  userRoles: PropTypes.arrayOf(PropTypes.string).isRequired,
-};
-
-function mapStateToProps(state) {
+function mapStateToProps(state: TdrState) {
   return {
     dataset: state.datasets.dataset,
+    isAddingOrRemovingUser: state.datasets.isAddingOrRemovingUser,
     policies: state.datasets.datasetPolicies,
     userRoles: state.datasets.userRoles,
   };
