@@ -19,4 +19,4 @@ on:
 jobs:
   e2e_test:
     if: ${{ github.actor != 'dependabot[bot]' }}
-    uses: 'DataBiosphere/jade-data-repo-ui/.github/workflows/reusable-e2e-test.yml@f5f2ae03299fb6bc12fa79fd9012715f949809b0'
+    uses: 'DataBiosphere/jade-data-repo-ui/.github/workflows/reusable-e2e-test.yml@sh-dr-2786-branch'
