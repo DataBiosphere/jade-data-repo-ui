@@ -14,12 +14,6 @@ on:
       - 'config-overrides.js'
       - '.github/workflows/test-e2e.yml'
 jobs:
-  dependabot-check:
-    runs-on: ubuntu-latest
-    if: ${{ github.actor == 'dependabot[bot]' }}
-    steps:
-      - uses: actions/checkout
   e2e_test:
     if: ${{ github.actor == 'dependabot[bot]' }}
-    needs: dependabot-check
     uses: 'DataBiosphere/jade-data-repo-ui/.github/workflows/reusable-e2e-test.yml@sh-dr-2786-branch'
