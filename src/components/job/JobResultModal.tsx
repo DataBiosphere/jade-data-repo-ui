@@ -99,9 +99,7 @@ function JobResultModal({
       : null;
 
   const jobSuccess =
-    jobResult &&
-    (jobResult.resultType === JobModelJobStatusEnum.Succeeded ||
-      jobResult.resultType === JobModelJobStatusEnum.Running)
+    jobResult && jobResult.resultType === JobModelJobStatusEnum.Succeeded
       ? (jobResult.result as any)
       : null;
 
