@@ -1,0 +1,25 @@
+name: Dependabot E2E Tests
+on:
+  pull_request:
+    branches:
+      - develop
+    paths:
+      - '!*'
+      - 'src/**'
+      - 'package.json'
+      - 'cypress.json'
+      - 'cypress/**'
+      - 'Dockerfile'
+      - 'Dockerfile.direct'
+      - 'config-overrides.js'
+      - '.github/workflows/test-e2e.yml'
+jobs:
+  dependabot-check:
+    runs-on: ubuntu-latest
+    if: ${{ github.actor == 'dependabot[bot]' }}
+    steps:
+      - uses: actions/checkout
+  e2e_test:
+    if: ${{ github.actor == 'dependabot[bot]' }}
+    needs: dependabot-check
+    uses: './reusable-e2e-test.yml'
