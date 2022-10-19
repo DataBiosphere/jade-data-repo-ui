@@ -63,6 +63,7 @@ beforeEach(() => {
 describe('JobView', () => {
   it('should have the bones of the basic table', () => {
     cy.get('table').should('exist');
+    cy.get('tbody tr').should('have.length', initialState.jobs.jobs.length);
   });
 
   it('should expose table columns for data', () => {
@@ -71,11 +72,6 @@ describe('JobView', () => {
     cy.get('th[data-cy="columnHeader-description"]').should('exist');
     cy.get('th[data-cy="columnHeader-submitted"]').should('exist');
     cy.get('th[data-cy="columnHeader-job_status"]').should('exist');
-  });
-
-  it('should make a request for jobs', () => {
-    // IT DOES NOT DO THIS AT ALL
-    cy.get('tbody tr').should('have.length', initialState.jobs.jobs.length);
   });
 
   it('should show successful jobs', () => {
