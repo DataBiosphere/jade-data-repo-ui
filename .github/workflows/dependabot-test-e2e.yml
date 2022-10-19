@@ -14,12 +14,11 @@ on:
       - 'config-overrides.js'
       - '.github/workflows/test-e2e.yml'
 jobs:
-  dependabot-check:
+  check_dependabot:
+    if: ${{ github.actor == 'dependabot[bot]' }}
     runs-on: ubuntu-latest
-    if: ${{ github.actor == 'dependabot[bot]' }}
     steps:
-      - uses: actions/checkout
+      - run: echo "Dependabot PR"
   e2e_test:
-    if: ${{ github.actor == 'dependabot[bot]' }}
-    needs: dependabot-check
+    needs: check_dependabot
     uses: 'DataBiosphere/jade-data-repo-ui/.github/workflows/reusable-e2e-test.yml@sh-dr-2786-branch'

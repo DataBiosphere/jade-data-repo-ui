@@ -17,6 +17,11 @@ on:
   schedule:
     - cron: '0 4 * * *' # run at 4 AM UTC, 12PM EST.
 jobs:
-  e2e_test:
+  check_dependabot:
     if: ${{ github.actor != 'dependabot[bot]' }}
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Not a dependabot PR"
+  e2e_test:
+    needs: check_dependabot
     uses: 'DataBiosphere/jade-data-repo-ui/.github/workflows/reusable-e2e-test.yml@sh-dr-2786-branch'

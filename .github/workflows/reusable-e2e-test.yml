@@ -7,10 +7,10 @@ env:
   GOOGLE_SA_CERT: 'jade-dev-account.pem'
 on:
   workflow_call: {}
-permissions: write-all
 jobs:
   e2e_test:
     name: Cypress End-to-end Tests
+    permissions: read-all
     timeout-minutes: 180
     strategy:
       matrix:
