@@ -22,4 +22,4 @@ jobs:
   e2e_test:
     if: ${{ github.actor == 'dependabot[bot]' }}
     needs: dependabot-check
-    uses: './reusable-e2e-test.yml'
+    uses: 'DataBiosphere/jade-data-repo-ui/.github/workflows/reusable-e2e-test.yml@sh-dr-2786-dependabot-secret'
