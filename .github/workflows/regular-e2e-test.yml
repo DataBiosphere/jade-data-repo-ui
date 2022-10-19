@@ -1,5 +1,6 @@
-name: Dependabot E2E Tests
+name: Regular E2E Tests
 on:
+  workflow_dispatch: {}
   pull_request:
     branches:
       - develop
@@ -13,9 +14,11 @@ on:
       - 'Dockerfile.direct'
       - 'config-overrides.js'
       - '.github/workflows/test-e2e.yml'
+  schedule:
+    - cron: '0 4 * * *' # run at 4 AM UTC, 12PM EST.
 jobs:
   dependabot-check:
     runs-on: ubuntu-latest
-    if: ${{ github.actor == 'dependabot[bot]' }}
+    if: ${{ github.actor != 'dependabot[bot]' }}
     steps:
-      - run: echo "PR created by Dependabot"
+      - run: echo "PR NOT created by Dependabot"
