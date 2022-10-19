@@ -6,7 +6,8 @@ env:
   # This must be defined for the bash redirection
   GOOGLE_SA_CERT: 'jade-dev-account.pem'
 on:
-  workflow_call: {}
+  workflow_call:
+    secrets: inherit
 jobs:
   e2e_test:
     name: Cypress End-to-end Tests
