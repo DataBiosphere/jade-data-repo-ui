@@ -1,0 +1,11 @@
+name: Test Workflow Run
+on:
+  workflow_run:
+    workflows: ["Regular E2E Tests"]
+    types: 
+      - completed
+jobs:
+  do-stuff:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Successful Trigger via workflow_run"

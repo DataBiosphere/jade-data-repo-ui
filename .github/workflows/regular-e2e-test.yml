@@ -21,4 +21,4 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.actor != 'dependabot[bot]' }}
     steps:
-      - run: echo "PR created by Dependabot"
+      - run: echo "PR NOT created by Dependabot"
