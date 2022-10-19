@@ -2,7 +2,7 @@
 ### As of 2300 UTC on 11 March, this workflow has secrets and a read-write token
 name: Dependabot Workflow
 on:
-  pull_request_target
+  pull_request_target: {}
   
 jobs:
   do-stuff:
