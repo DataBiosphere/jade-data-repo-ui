@@ -10,8 +10,8 @@ import _ from 'lodash';
 import { RouterRootState } from 'connected-react-router';
 
 import { showNotification } from 'modules/notifications';
+import { JobModelJobStatusEnum } from 'generated/tdr';
 import { ActionTypes, Status, DbColumns, TABLE_DEFAULT_ROWS_PER_PAGE } from '../constants';
-import { JobResultType } from '../reducers/job';
 import { TdrState } from '../reducers';
 
 /**
@@ -589,7 +589,7 @@ export function* getJobResult({ payload }: any): any {
             data: {
               id,
               jobResult: {
-                resultType: JobResultType.SUCCESS,
+                resultType: JobModelJobStatusEnum.Succeeded,
                 result: resultResponse.data,
               },
             },
@@ -602,7 +602,7 @@ export function* getJobResult({ payload }: any): any {
             payload: {
               data: {
                 jobResult: {
-                  resultType: JobResultType.ERROR,
+                  resultType: JobModelJobStatusEnum.Failed,
                   result: {
                     message:
                       _.get(err.response, 'data.message') ??

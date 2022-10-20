@@ -16,7 +16,8 @@ import { connect } from 'react-redux';
 import ReactJson from 'react-json-view';
 import { getJobResult } from 'actions';
 import { TdrState } from 'reducers';
-import { JobResult, JobResultError, JobResultType } from 'reducers/job';
+import { JobModelJobStatusEnum } from 'generated/tdr';
+import { JobResult, JobResultError } from 'reducers/job';
 import LoadingSpinner from '../common/LoadingSpinner';
 
 const styles = (theme: CustomTheme) => ({
@@ -93,19 +94,21 @@ function JobResultModal({
   };
 
   const jobError =
-    jobResult && jobResult.resultType === JobResultType.ERROR
+    jobResult && jobResult.resultType === JobModelJobStatusEnum.Failed
       ? (jobResult.result as JobResultError)
       : null;
 
   const jobSuccess =
-    jobResult && jobResult.resultType === JobResultType.SUCCESS ? (jobResult.result as any) : null;
+    jobResult && jobResult.resultType === JobModelJobStatusEnum.Succeeded
+      ? (jobResult.result as any)
+      : null;
 
   return (
     <div>
       <button type="button" onClick={handleSeeMoreOpen} className={classes.seeMoreLink}>
         {linkDisplay}
       </button>
-      <Paper>
+      <Paper className={classes.root}>
         <Dialog
           open={seeMore.open}
           scroll="paper"
