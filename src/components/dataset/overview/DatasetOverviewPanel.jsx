@@ -77,6 +77,20 @@ const styles = (theme) => ({
       width: 0,
     },
   },
+  header: {
+    fontSize: '14px',
+    lineHeight: '22px',
+    fontWeight: '600',
+    color: theme.palette.primary.main,
+  },
+  expandIcon: {
+    color: theme.palette.primary.main,
+  },
+  noRelationships: {
+    fontStyle: 'italic',
+    colorPrimary: theme.palette.error.contrastText,
+    color: theme.palette.error.contrastText,
+  },
 });
 
 function a11yProps(index) {
@@ -178,6 +192,60 @@ function DatasetOverviewPanel(props) {
             <Typography variant="h6">Cloud Platforms:</Typography>
             {renderCloudPlatforms(dataset)}
           </Grid>
+          <Grid item xs={4}>
+            <Typography variant="h6">Dataset Id:</Typography>
+            <Typography>{dataset.id}</Typography>
+          </Grid>
+          <Grid item xs={4}>
+            <Typography variant="h6">Default Billing Profile Id:</Typography>
+            {dataset.defaultProfileId}
+          </Grid>
+          {dataset.dataProject && (
+            <Grid item xs={4}>
+              <Typography variant="h6">Google Data Project:</Typography>
+              {dataset.dataProject}
+            </Grid>
+          )}
+          {dataset.ingestServiceAccount && (
+            <Grid item xs={4}>
+              <Typography variant="h6">Ingest Service Account:</Typography>
+              <Typography>{dataset.ingestServiceAccount}</Typography>
+            </Grid>
+          )}
+          <Grid item xs={4}>
+            <Typography variant="h6">Secure Monitoring Enabled?</Typography>
+            {dataset.secureMonitoringEnabled ? 'Yes' : 'No'}
+          </Grid>
+          <Grid item xs={4}>
+            <Typography variant="h6">Self Hosted?</Typography>
+            {dataset.selfHosted ? 'Yes' : 'No'}
+          </Grid>
+          {dataset.phsId && (
+            <Grid item xs={4}>
+              <Typography variant="h6">PHS ID:</Typography>
+              <Typography>{dataset.phsId}</Typography>
+            </Grid>
+          )}
+          {dataset.relationships.length > 0 && (
+              <Grid item xs={8}>
+                <Accordion defaultExpanded={false}>
+                        <AccordionSummary
+                          expandIcon={<ExpandMore className={classes.expandIcon} />}
+                          className={classes.header}
+                        >
+                          Relationships ({dataset.relationships.length})
+                        </AccordionSummary>
+                        <AccordionDetails data-cy="relationship">
+                          {dataset.relationships.length === 0 && <Typography className={classes.noRelationships}>(None)</Typography>}
+                          {dataset.relationships.map((rel) => (
+                            <Typography noWrap key={rel.name}>
+                              {rel.name}
+                            </Typography>
+                          ))}
+                        </AccordionDetails>
+                      </Accordion>
+              </Grid>
+          )}
         </Grid>
       </TabPanel>
       <TabPanel value={value} index={1}>

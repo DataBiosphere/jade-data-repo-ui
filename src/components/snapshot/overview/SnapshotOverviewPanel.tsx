@@ -150,6 +150,32 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
             <Typography variant="h6">Storage:</Typography>
             {renderStorageResources(sourceDataset)}
           </Grid>
+          {sourceDataset.phsId && (
+            <Grid item xs={4}>
+              <Typography variant="h6">PHS ID:</Typography>
+              {sourceDataset.phsId}
+            </Grid>
+          )}
+          {snapshot.consentCode && (
+            <Grid item xs={4}>
+              <Typography variant="h6">Consent Code:</Typography>
+              {snapshot.consentCode}
+            </Grid>
+          )}
+          <Grid item xs={4}>
+            <Typography variant="h6">Billing Profile Id:</Typography>
+            {snapshot.profileId}
+          </Grid>
+          {snapshot.dataProject && (
+            <Grid item xs={4}>
+              <Typography variant="h6">Google Data Project:</Typography>
+              {snapshot.dataProject}
+            </Grid>
+          )}
+          <Grid item xs={4}>
+            <Typography variant="h6">Creation Information:</Typography>
+            {snapshot.creationInformation?.mode}
+          </Grid>
         </Grid>
       </TabPanel>
       <TabPanel value={value} index={1}>
