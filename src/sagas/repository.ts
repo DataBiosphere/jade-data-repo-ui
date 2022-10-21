@@ -2,8 +2,17 @@
  * @module Sagas/App
  * @desc App
  */
-import { actionChannel, all, fork, put, call, select, take, takeLatest } from 'redux-saga/effects';
-import { delay } from 'redux-saga';
+import {
+  actionChannel,
+  all,
+  fork,
+  put,
+  call,
+  select,
+  take,
+  takeLatest,
+  delay,
+} from 'redux-saga/effects';
 import axios, { AxiosResponse } from 'axios';
 import moment from 'moment';
 import _ from 'lodash';
