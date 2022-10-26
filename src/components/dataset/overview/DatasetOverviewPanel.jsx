@@ -1,13 +1,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Drawer, Grid, Tab, Tabs, TextField, Typography } from '@mui/material';
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Button,
+  Divider,
+  Drawer,
+  Grid,
+  Tab,
+  Tabs,
+  TextField,
+  Typography,
+} from '@mui/material';
 import { withStyles } from '@mui/styles';
-import { Close, Info } from '@mui/icons-material';
+import { ExpandMore, Close, Info } from '@mui/icons-material';
 import IconButton from '@mui/material/IconButton';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import clsx from 'clsx';
-import { patchDatasetDescription } from 'actions';
+import { patchDatasetDescription, patchPhsId } from 'actions';
 import GoogleSheetExport from 'components/common/overview/GoogleSheetExport';
 import { renderCloudPlatforms, renderStorageResources } from '../../../libs/render-utils';
 import InfoViewDatasetAccess from '../data/sidebar/panels/InfoViewDatasetAccess';
@@ -90,6 +102,10 @@ const styles = (theme) => ({
     fontStyle: 'italic',
     colorPrimary: theme.palette.error.contrastText,
     color: theme.palette.error.contrastText,
+  },
+  divider: {
+    marginTop: '14px',
+    marginBottom: '14px',
   },
 });
 
@@ -178,6 +194,7 @@ function DatasetOverviewPanel(props) {
               canEdit={userRoles.includes(DatasetRoles.STEWARD)}
               title="Description"
               updateDescriptionFn={(text) => dispatch(patchDatasetDescription(dataset.id, text))}
+              useMarkdown={true}
             />
           </Grid>
           <Grid item xs={4}>
@@ -220,31 +237,49 @@ function DatasetOverviewPanel(props) {
             <Typography variant="h6">Self Hosted?</Typography>
             {dataset.selfHosted ? 'Yes' : 'No'}
           </Grid>
-          {dataset.phsId && (
-            <Grid item xs={4}>
-              <Typography variant="h6">PHS ID:</Typography>
-              <Typography>{dataset.phsId}</Typography>
+          <Grid item xs={4}>
+            <DescriptionView
+              description={dataset.phsId}
+              canEdit={userRoles.includes(DatasetRoles.STEWARD)}
+              title="PHS Id"
+              updateDescriptionFn={(text) => dispatch(patchPhsId(dataset.id, text))}
+              useMarkdown={false}
+            />
+          </Grid>
+          {dataset.schema.relationships.length > 0 && (
+            <Grid item xs={8}>
+              <Accordion defaultExpanded={false}>
+                <AccordionSummary
+                  expandIcon={<ExpandMore className={classes.expandIcon} />}
+                  className={classes.header}
+                >
+                  Relationships ({dataset.schema.relationships.length ?? 0})
+                </AccordionSummary>
+                <AccordionDetails data-cy="relationship">
+                  {dataset.schema.relationships.length === 0 && (
+                    <Typography className={classes.noRelationships}>(None)</Typography>
+                  )}
+                  {dataset.schema.relationships.map((rel, i) => (
+                    <Typography noWrap key={rel.name}>
+                      <Typography variant="h6">{rel.name}</Typography>
+                      <Typography variant="h6">From</Typography>
+                      Table: {rel.from.table}
+                      <br />
+                      Column: {rel.from.column}
+                      <br />
+                      <Typography variant="h6">To</Typography>
+                      Table: {rel.to.table}
+                      <br />
+                      Column: {rel.to.column}
+                      <br />
+                      {i < dataset.schema.relationships.length - 1 && (
+                        <Divider className={classes.divider} />
+                      )}
+                    </Typography>
+                  ))}
+                </AccordionDetails>
+              </Accordion>
             </Grid>
-          )}
-          {dataset.relationships.length > 0 && (
-              <Grid item xs={8}>
-                <Accordion defaultExpanded={false}>
-                        <AccordionSummary
-                          expandIcon={<ExpandMore className={classes.expandIcon} />}
-                          className={classes.header}
-                        >
-                          Relationships ({dataset.relationships.length})
-                        </AccordionSummary>
-                        <AccordionDetails data-cy="relationship">
-                          {dataset.relationships.length === 0 && <Typography className={classes.noRelationships}>(None)</Typography>}
-                          {dataset.relationships.map((rel) => (
-                            <Typography noWrap key={rel.name}>
-                              {rel.name}
-                            </Typography>
-                          ))}
-                        </AccordionDetails>
-                      </Accordion>
-              </Grid>
           )}
         </Grid>
       </TabPanel>

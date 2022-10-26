@@ -92,6 +92,10 @@ export default {
         immutable(state, {
           dataset: { description: { $set: action.description } },
         }),
+      [ActionTypes.PATCH_PHS_ID_SUCCESS]: (state, action: any) =>
+        immutable(state, {
+          dataset: { phsId: { $set: action.phsId } },
+        }),
       [ActionTypes.ADD_DATASET_POLICY_MEMBER]: (state) =>
         immutable(state, {
           isAddingOrRemovingUser: { $set: true },

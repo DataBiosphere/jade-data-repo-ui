@@ -3,7 +3,7 @@ import { Grid, Tab, Tabs, Typography } from '@mui/material';
 import { createStyles, WithStyles, withStyles } from '@mui/styles';
 import moment from 'moment';
 import { CustomTheme } from '@mui/material/styles';
-import { patchSnapshotDescription } from 'actions';
+import { patchSnapshotDescription, patchConsentCode } from 'actions';
 import DescriptionView from 'components/DescriptionView';
 import GoogleSheetExport from 'components/common/overview/GoogleSheetExport';
 import { Link } from 'react-router-dom';
@@ -128,6 +128,7 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
               updateDescriptionFn={(text: string | undefined) =>
                 dispatch(patchSnapshotDescription(snapshot.id, text))
               }
+              useMarkdown={true}
             />
           </Grid>
           <Grid item xs={4}>
@@ -156,12 +157,17 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
               {sourceDataset.phsId}
             </Grid>
           )}
-          {snapshot.consentCode && (
-            <Grid item xs={4}>
-              <Typography variant="h6">Consent Code:</Typography>
-              {snapshot.consentCode}
-            </Grid>
-          )}
+          <Grid item xs={4}>
+            <DescriptionView
+              description={snapshot.consentCode}
+              canEdit={isSteward}
+              title="Consent Code"
+              updateDescriptionFn={(text: string | undefined) => {
+                dispatch(patchConsentCode(snapshot.id, text));
+              }}
+              useMarkdown={false}
+            />
+          </Grid>
           <Grid item xs={4}>
             <Typography variant="h6">Billing Profile Id:</Typography>
             {snapshot.profileId}

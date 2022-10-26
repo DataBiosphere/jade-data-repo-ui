@@ -28,6 +28,7 @@ beforeEach(() => {
           updateDescriptionFn={(text: any) => {
             initialState.dataset.description = text;
           }}
+          useMarkdown={true}
         />
       </ThemeProvider>
     </Router>,

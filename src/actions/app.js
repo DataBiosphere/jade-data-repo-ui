@@ -162,6 +162,22 @@ export const { patchSnapshotDescription } = createActions({
   }),
 });
 
+export const { patchPhsId } = createActions({
+  [ActionTypes.PATCH_PHS_ID]: (datasetId, phsId) => ({
+    datasetId,
+    phsId,
+  }),
+  [ActionTypes.PATCH_PHS_ID_SUCCESS]: (phsId) => ({ phsId }),
+});
+
+export const { patchConsentCode } = createActions({
+  [ActionTypes.PATCH_CONSENT_CODE]: (snapshotId, consentCode) => ({
+    snapshotId,
+    consentCode,
+  }),
+  [ActionTypes.PATCH_CONSENT_CODE_SUCCESS]: (consentCode) => ({ consentCode }),
+});
+
 export const { removeDatasetPolicyMember } = createActions({
   [ActionTypes.REMOVE_DATASET_POLICY_MEMBER]: (datasetId, user, policy) => ({
     datasetId,

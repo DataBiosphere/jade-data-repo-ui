@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import ReactDOMServer from 'react-dom/server';
 import { CustomTheme } from '@mui/material/styles';
-import { Button, IconButton, Typography } from '@mui/material';
+import { Button, IconButton, TextField, Typography } from '@mui/material';
 import { SimpleMdeReact } from 'react-simplemde-editor';
 import SimpleMDE from 'easymde';
 import 'easymde/dist/easymde.min.css';
@@ -24,6 +24,9 @@ const styles = (theme: CustomTheme) =>
     textInputDiv: {
       width: '100%',
       zIndex: '9998',
+    },
+    textInput: {
+      width: '100%'
     },
     descriptionInput: {
       backgroundColor: 'white',
@@ -49,13 +52,14 @@ const styles = (theme: CustomTheme) =>
     },
   } as const);
 
-const UNSET_DESCRIPTION_TEXT = '(No description added)';
+const UNSET_DESCRIPTION_TEXT = '(Empty)';
 
 interface DescriptionViewProps extends WithStyles<typeof styles> {
   canEdit: boolean;
   description: string | undefined;
   title: string;
   updateDescriptionFn: any;
+  useMarkdown: boolean;
 }
 
 function DescriptionView({
@@ -64,6 +68,7 @@ function DescriptionView({
   description,
   title,
   updateDescriptionFn,
+  useMarkdown,
 }: DescriptionViewProps) {
   const [hasDescriptionChanged, setHasDescriptionChanged] = useState(false);
   const [descriptionValue, setDescriptionValue] = useState(description);
@@ -112,6 +117,10 @@ function DescriptionView({
     [description],
   );
 
+  const onChangeEvent = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    onChange(event.target.value);
+  }, [description]);
+
   const onCancel = useCallback(() => {
     setDescriptionValue(description);
     setHasDescriptionChanged(false);
@@ -155,11 +164,22 @@ function DescriptionView({
             )}
             {isEditing && (
               <>
-                <SimpleMdeReact
-                  onChange={onChange}
-                  options={editorOptions}
-                  value={descriptionValue}
-                />
+                {useMarkdown && (
+                  <SimpleMdeReact
+                    onChange={onChange}
+                    options={editorOptions}
+                    value={descriptionValue}
+                  />
+                )}
+                {!useMarkdown && (
+                  <TextField
+                    id="outlined-basic"
+                    className={classes.textInput}
+                    variant="outlined"
+                    defaultValue={descriptionValue}
+                    onChange={onChangeEvent}
+                  />
+                )}
                 <Button
                   aria-label="Save description changes"
                   className={classes.saveDescriptionButton}

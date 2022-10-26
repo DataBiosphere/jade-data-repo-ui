@@ -291,6 +291,10 @@ export default {
         immutable(state, {
           snapshot: { description: { $set: action.description } },
         }),
+      [ActionTypes.PATCH_CONSENT_CODE_SUCCESS]: (state, action: any) =>
+        immutable(state, {
+          snapshot: { consentCode: { $set: action.consentCode } },
+        }),
       [LOCATION_CHANGE]: (state) =>
         immutable(state, {
           snapshotRequest: { $set: defaultSnapshotRequest },
