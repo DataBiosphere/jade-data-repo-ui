@@ -18,6 +18,7 @@ import {
 import { MoreVert } from '@mui/icons-material';
 import { isEmail } from 'validator';
 import { addReadersToSnapshot, createSnapshot } from 'actions/index';
+import SnapshotAccess from 'components/snapshot/SnapshotAccess';
 
 const drawerWidth = 600;
 const sidebarWidth = 56;
@@ -201,24 +202,6 @@ export class ShareSnapshot extends React.PureComponent {
     }
   }
 
-  /**
-   * TODO: once discoverers can be added, change this to take in the policy as a parameter
-   */
-  removeReader(removeableEmail) {
-    this.closeUserMenu();
-    const { dispatch, readers } = this.props;
-    const newUsers = _.without(readers, removeableEmail);
-    dispatch(addReadersToSnapshot(newUsers));
-  }
-
-  openUserMenu = (event) => {
-    this.setState({ anchor: event.currentTarget });
-  };
-
-  closeUserMenu = () => {
-    this.setState({ anchor: null });
-  };
-
   saveSnapshot = () => {
     const { dispatch } = this.props;
     dispatch(createSnapshot());
@@ -299,40 +282,7 @@ export class ShareSnapshot extends React.PureComponent {
             </Button>
           </div>
         </div>
-        <Divider />
-        <div className={classes.section} data-cy="readers">
-          {readers.map((reader) => (
-            <div
-              key={reader}
-              className={clsx(classes.listItem, classes.withIcon)}
-              data-cy="specificReader"
-            >
-              <div>{reader}</div>
-              <div className={classes.withIcon} id={reader} onClick={this.openUserMenu}>
-                can read
-                <IconButton size="small" data-cy="moreButton">
-                  <MoreVert />
-                </IconButton>
-              </div>
-            </div>
-          ))}
-          <Menu anchorEl={anchor} onClose={this.closeUserMenu} open={anchor !== null}>
-            {permissions.map((permission) => (
-              <MenuItem
-                onClick={this.closeUserMenu}
-                disabled={permission === 'can discover'}
-                key={permission}
-                dense
-              >
-                {permission}
-              </MenuItem>
-            ))}
-            <Divider />
-            <MenuItem onClick={() => this.removeReader(anchor.id)} dense data-cy="removeItem">
-              remove
-            </MenuItem>
-          </Menu>
-        </div>
+        <SnapshotAccess />
         {!isModal && (
           <div className={classes.bottom}>
             <Divider />

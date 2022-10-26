@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import _ from 'lodash';
 import { withStyles } from '@mui/styles';
 import { Grid } from '@mui/material';
 import UserList from '../UserList';
@@ -9,6 +10,7 @@ import { addSnapshotPolicyMember, removeSnapshotPolicyMember } from '../../actio
 import { PolicyModel, SnapshotModel } from '../../generated/tdr';
 import { TdrState } from '../../reducers';
 import { AppDispatch } from '../../store';
+import AddUserAccess, { AccessPermission } from '../common/AddUserAccess';
 
 const styles = () => ({
   helpContainer: {
@@ -18,19 +20,17 @@ const styles = () => ({
 
 type SnapshotAccessProps = {
   dispatch: AppDispatch;
-  horizontal: boolean;
-  isAddingOrRemovingUser: boolean;
   policies: Array<PolicyModel>;
   snapshot: SnapshotModel;
   userRoles: Array<string>;
 };
 
 function SnapshotAccess(props: SnapshotAccessProps) {
-  const addUser = (role: string) => {
+  const addUsers = (role: string, usersToAdd: string[]) => {
     const { snapshot, dispatch } = props;
-    return (newEmail: string) => {
-      dispatch(addSnapshotPolicyMember(snapshot.id, newEmail, role));
-    };
+    usersToAdd.forEach((user) => {
+      dispatch(addSnapshotPolicyMember(snapshot.id, user, role));
+    });
   };
   const removeUser = (role: string) => {
     const { snapshot, dispatch } = props;
@@ -38,48 +38,49 @@ function SnapshotAccess(props: SnapshotAccessProps) {
       dispatch(removeSnapshotPolicyMember(snapshot.id, removableEmail, role));
     };
   };
-  const { horizontal, policies, userRoles, isAddingOrRemovingUser } = props;
+
+  const { policies, userRoles } = props;
   const stewards = getRoleMembersFromPolicies(policies, SnapshotRoles.STEWARD);
   const readers = getRoleMembersFromPolicies(policies, SnapshotRoles.READER);
   const discoverers = getRoleMembersFromPolicies(policies, SnapshotRoles.DISCOVERER);
 
   const canManageUsers = userRoles.includes(SnapshotRoles.STEWARD);
-  const gridItemXs = horizontal ? 4 : 12;
+  const permissions: AccessPermission[] = [
+    { policy: 'steward', disabled: !canManageUsers },
+    { policy: 'reader', disabled: !canManageUsers },
+    { policy: 'discoverer', disabled: !canManageUsers },
+  ];
 
   return (
     <Grid container spacing={1}>
-      <Grid item xs={gridItemXs} data-cy="snapshot-stewards">
+      {canManageUsers && (
+        <Grid item xs={12}>
+          <AddUserAccess permissions={permissions} onAdd={addUsers} />
+        </Grid>
+      )}
+      <Grid item xs={12} data-cy="snapshot-stewards">
         <UserList
           users={stewards}
           typeOfUsers="Stewards"
           canManageUsers={canManageUsers}
-          addUser={addUser(SnapshotRoles.STEWARD)}
-          isAddingOrRemovingUser={isAddingOrRemovingUser}
           removeUser={removeUser(SnapshotRoles.STEWARD)}
           defaultOpen={true}
-          horizontal={horizontal}
         />
       </Grid>
-      <Grid item xs={gridItemXs} data-cy="snapshot-readers">
+      <Grid item xs={12} data-cy="snapshot-readers">
         <UserList
           users={readers}
           typeOfUsers="Readers"
           canManageUsers={canManageUsers}
-          addUser={addUser(SnapshotRoles.READER)}
-          isAddingOrRemovingUser={isAddingOrRemovingUser}
           removeUser={removeUser(SnapshotRoles.READER)}
-          horizontal={horizontal}
         />
       </Grid>
-      <Grid item xs={gridItemXs} data-cy="snapshot-discoverers">
+      <Grid item xs={12} data-cy="snapshot-discoverers">
         <UserList
           users={discoverers}
           typeOfUsers="Discoverers"
           canManageUsers={canManageUsers}
-          addUser={addUser(SnapshotRoles.DISCOVERER)}
-          isAddingOrRemovingUser={isAddingOrRemovingUser}
           removeUser={removeUser(SnapshotRoles.DISCOVERER)}
-          horizontal={horizontal}
         />
       </Grid>
     </Grid>
