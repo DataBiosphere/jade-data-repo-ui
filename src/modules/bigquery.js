@@ -118,7 +118,7 @@ export default class BigQuery {
                 if (checkboxValues.length > 0) {
                   checkboxClauses.push(`${property} IN (${checkboxValues.join(',')})`);
                 }
-                statementClauses.push(checkboxClauses.join(' OR '));
+                statementClauses.push(`(${checkboxClauses.join(' OR ')})`);
               }
             } else {
               const values = keyValue.split(',').map((val) => `${key}='${val}'`);
