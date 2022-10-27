@@ -96,8 +96,15 @@ export default class BigQuery {
               if (isRange) {
                 statementClauses.push(`${property} BETWEEN ${keyValue[0]} AND ${keyValue[1]}`);
               } else if (_.isString(keyValue[0])) {
-                const selections = keyValue.map((selection) => `"${selection}"`).join(',');
-                statementClauses.push(`${property} ${notClause} IN (${selections})`);
+                const selections = [];
+                keyValue.forEach((selection) => {
+                  if (selection === 'null') {
+                    statementClauses.push(`${property} IS ${notClause} NULL`);
+                  } else {
+                    selections.push(`"${selection}"`);
+                  }
+                  statementClauses.push(`${property} ${notClause} IN (${selections.join(',')})`);
+                });
               } else {
                 statementClauses.push(
                   `${property} = '${keyValue[0]}' OR ${property} = '${keyValue[1]}'`,
@@ -106,10 +113,17 @@ export default class BigQuery {
             } else if (_.isObject(keyValue)) {
               const checkboxes = _.keys(keyValue);
               if (checkboxes.length > 0) {
-                const checkboxValues = checkboxes
-                  .map((checkboxValue) => `"${checkboxValue}"`)
-                  .join(',');
-                statementClauses.push(`${property} IN (${checkboxValues})`);
+                const checkboxValues = [];
+                checkboxes.forEach((checkboxValue) => {
+                  if (checkboxValue === 'null') {
+                    statementClauses.push(`${property} IS ${notClause} NULL`);
+                  } else {
+                    checkboxValues.push(`"${checkboxValue}"`);
+                  }
+                });
+                if (checkboxValues.length > 0) {
+                  statementClauses.push(`${property} IN (${checkboxValues.join(',')})`);
+                }
               }
             } else {
               const values = keyValue.split(',').map((val) => `${key}='${val}'`);
