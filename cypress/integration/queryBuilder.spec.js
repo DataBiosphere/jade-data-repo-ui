@@ -145,13 +145,13 @@ describe('test query builder', () => {
       cy.get('[data-cy=filterItem]').contains('id').click();
       cy.get('#autocomplete-id').type('1:65196986:A:G\n1:231395857:A:G\n');
       cy.get('[data-cy="filter-id-button"]').click();
-      
+
       // select the "reference" field
       cy.get('[data-cy=filterItem]').contains('reference').click();
 
       // select the "null" checkbox
       cy.get('[data-cy=categoryFilterCheckbox-null]').click();
-      
+
       // Apply filtering
       cy.get('[data-cy="filter-reference-button"]').click();
 
@@ -167,8 +167,8 @@ describe('test query builder', () => {
       // now both the null row and the row associated with "A" should be visible
       cy.get('[data-cy=tableBody]').should('contain', '1:65196986:A:G');
       cy.get('[data-cy=tableBody]').should('contain', '1:231395857:A:G');
-    })
-  })
+    });
+  });
 
   describe('test share panel', () => {
     beforeEach(() => {
