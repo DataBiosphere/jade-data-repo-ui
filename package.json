@@ -111,7 +111,7 @@
     "ajv": "^6.12.6",
     "ajv-legacy": "npm:ajv@^6.12.6",
     "customize-cra": "^1.0.0",
-    "eslint": "^8.12.0",
+    "eslint": "^8.26.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-cypress": "^0.28.0",
     "eslint-config-prettier": "^6.15.0",
