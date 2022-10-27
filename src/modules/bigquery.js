@@ -110,7 +110,7 @@ export default class BigQuery {
                 const checkboxClauses = [];
                 checkboxes.forEach((checkboxValue) => {
                   if (checkboxValue === 'null') {
-                    checkboxClauses.push(`${property} IS ${notClause} NULL`);
+                    checkboxClauses.push(`${property} IS NULL`);
                   } else {
                     checkboxValues.push(`"${checkboxValue}"`);
                   }
