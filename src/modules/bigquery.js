@@ -96,15 +96,8 @@ export default class BigQuery {
               if (isRange) {
                 statementClauses.push(`${property} BETWEEN ${keyValue[0]} AND ${keyValue[1]}`);
               } else if (_.isString(keyValue[0])) {
-                const selections = [];
-                keyValue.forEach((selection) => {
-                  if (selection === 'null') {
-                    statementClauses.push(`${property} IS ${notClause} NULL`);
-                  } else {
-                    selections.push(`"${selection}"`);
-                  }
-                  statementClauses.push(`${property} ${notClause} IN (${selections.join(',')})`);
-                });
+                const selections = keyValue.map((selection) => `"${selection}"`).join(',');
+                statementClauses.push(`${property} ${notClause} IN (${selections})`);
               } else {
                 statementClauses.push(
                   `${property} = '${keyValue[0]}' OR ${property} = '${keyValue[1]}'`,
@@ -114,16 +107,18 @@ export default class BigQuery {
               const checkboxes = _.keys(keyValue);
               if (checkboxes.length > 0) {
                 const checkboxValues = [];
+                const checkboxClauses = [];
                 checkboxes.forEach((checkboxValue) => {
                   if (checkboxValue === 'null') {
-                    statementClauses.push(`${property} IS ${notClause} NULL`);
+                    checkboxClauses.push(`${property} IS ${notClause} NULL`);
                   } else {
                     checkboxValues.push(`"${checkboxValue}"`);
                   }
                 });
                 if (checkboxValues.length > 0) {
-                  statementClauses.push(`${property} IN (${checkboxValues.join(',')})`);
+                  checkboxClauses.push(`${property} IN (${checkboxValues.join(',')})`);
                 }
+                statementClauses.push(checkboxClauses.join(' OR '));
               }
             } else {
               const values = keyValue.split(',').map((val) => `${key}='${val}'`);
