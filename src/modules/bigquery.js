@@ -106,10 +106,19 @@ export default class BigQuery {
             } else if (_.isObject(keyValue)) {
               const checkboxes = _.keys(keyValue);
               if (checkboxes.length > 0) {
-                const checkboxValues = checkboxes
-                  .map((checkboxValue) => `"${checkboxValue}"`)
-                  .join(',');
-                statementClauses.push(`${property} IN (${checkboxValues})`);
+                const checkboxValues = [];
+                const checkboxClauses = [];
+                checkboxes.forEach((checkboxValue) => {
+                  if (checkboxValue === 'null') {
+                    checkboxClauses.push(`${property} IS NULL`);
+                  } else {
+                    checkboxValues.push(`"${checkboxValue}"`);
+                  }
+                });
+                if (checkboxValues.length > 0) {
+                  checkboxClauses.push(`${property} IN (${checkboxValues.join(',')})`);
+                }
+                statementClauses.push(`(${checkboxClauses.join(' OR ')})`);
               }
             } else {
               const values = keyValue.split(',').map((val) => `${key}='${val}'`);
