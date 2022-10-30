@@ -25,6 +25,7 @@ const sidebarWidth = 56;
 const styles = (theme) => ({
   root: {
     padding: theme.spacing(2),
+    width: drawerWidth,
   },
   section: {
     margin: `${theme.spacing(1)} 0px`,
