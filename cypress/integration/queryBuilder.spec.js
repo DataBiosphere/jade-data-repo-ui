@@ -170,27 +170,6 @@ describe('test query builder', () => {
     });
   });
 
-  describe('test share panel', () => {
-    beforeEach(() => {
-      // selects the share button in the sidebar
-      cy.get('div.MuiButtonBase-root:nth-child(3) > svg:nth-child(1)').click({ force: true });
-    });
-
-    it('adds/removes readers', () => {
-      cy.get('[data-cy=enterEmailBox]').type(
-        'mkerwin@broadinstitute.org,myessail@broadinstitute.org',
-      );
-      cy.get('[data-cy=inviteButton]').click();
-      cy.get('[data-cy=readers]').contains('mkerwin@broadinstitute.org').should('be.visible');
-      cy.get('[data-cy=readers]').contains('myessail@broadinstitute.org').should('be.visible');
-
-      cy.get('[data-cy=specificReader]').contains('mkerwin@broadinstitute.org').siblings().click();
-      cy.get('[data-cy=removeItem]').click();
-
-      cy.get('[data-cy=readers]').should('not.contain', 'mkerwin@broadinstitute.org');
-      cy.get('[data-cy=readers]').contains('myessail@broadinstitute.org').should('be.visible');
-    });
-
     it('checks invalid email addresses', () => {
       // type invalid email
       cy.get('[data-cy=enterEmailBox]').type('maggenzi,');
