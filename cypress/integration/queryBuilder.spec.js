@@ -132,6 +132,44 @@ describe('test query builder', () => {
     });
   });
 
+  describe('filtering on null checkbox value', () => {
+    it('filters on null', () => {
+      // Switch to variant table
+      cy.get('[data-cy=selectTable]').click();
+      cy.get('[data-cy=menuItem-variant]').click();
+
+      // selects the filter button in the sidebar
+      cy.get('div.MuiButtonBase-root:nth-child(2) > svg:nth-child(1)').click();
+      // first, let's filter down to a reasonble number of entries
+      // type variant ids into filter box
+      cy.get('[data-cy=filterItem]').contains('id').click();
+      cy.get('#autocomplete-id').type('1:65196986:A:G\n1:231395857:A:G\n');
+      cy.get('[data-cy="filter-id-button"]').click();
+
+      // select the "reference" field
+      cy.get('[data-cy=filterItem]').contains('reference').click();
+
+      // select the "null" checkbox
+      cy.get('[data-cy=categoryFilterCheckbox-null]').click();
+
+      // Apply filtering
+      cy.get('[data-cy="filter-reference-button"]').click();
+
+      // null row should be visible, but non-null row should be hidden
+      cy.get('[data-cy=tableBody]').should('contain', '1:65196986:A:G');
+      cy.get('[data-cy=tableBody]').should('not.contain', '1:231395857:A:G');
+
+      // Go back and select other checkbox for reference field: "A"
+      cy.get('[data-cy=categoryFilterCheckbox-A]').click();
+      // apply new filtering
+      cy.get('[data-cy="filter-reference-button"]').click();
+
+      // now both the null row and the row associated with "A" should be visible
+      cy.get('[data-cy=tableBody]').should('contain', '1:65196986:A:G');
+      cy.get('[data-cy=tableBody]').should('contain', '1:231395857:A:G');
+    });
+  });
+
   describe('test share panel', () => {
     beforeEach(() => {
       // selects the share button in the sidebar
