@@ -32,7 +32,6 @@ describe('test dataset sharing', () => {
     cy.get('a > .MuiButtonBase-root').click();
 
     cy.wait(['@getDataset', '@getDatasetPolicies', '@getBillingProfileById']);
-    cy.get('[data-cy="roles-tab"]').click();
     cy.get('[data-cy="manageAccessContainer"]').should('not.exist');
   });
 });
