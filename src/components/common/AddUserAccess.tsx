@@ -123,7 +123,7 @@ function AddUserAccess({ classes, permissions, onAdd }: AddUserAccessProps) {
 
   return (
     <>
-      <div className={classes.sharingArea}>
+      <div className={classes.sharingArea} data-cy="manageAccessContainer">
         <div className={classes.sharingCol}>
           <Typography variant="subtitle2">People</Typography>
           <Autocomplete
