@@ -4,7 +4,7 @@ import { createStyles, WithStyles, withStyles } from '@mui/styles';
 import moment from 'moment';
 import { CustomTheme } from '@mui/material/styles';
 import { patchSnapshotDescription, patchConsentCode } from 'actions';
-import DescriptionView from 'components/DescriptionView';
+import EditableFieldView from 'components/EditableFieldView';
 import GoogleSheetExport from 'components/common/overview/GoogleSheetExport';
 import { Link } from 'react-router-dom';
 import { renderStorageResources } from '../../../libs/render-utils';
@@ -121,11 +121,11 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
       <TabPanel value={value} index={0}>
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <DescriptionView
-              description={snapshot.description}
+            <EditableFieldView
+              fieldValue={snapshot.description}
+              fieldName="Description"
               canEdit={isSteward}
-              title="Description"
-              updateDescriptionFn={(text: string | undefined) =>
+              updateFieldValueFn={(text: string | undefined) =>
                 dispatch(patchSnapshotDescription(snapshot.id, text))
               }
               useMarkdown={true}
@@ -158,11 +158,11 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
             </Grid>
           )}
           <Grid item xs={4}>
-            <DescriptionView
-              description={snapshot.consentCode}
+            <EditableFieldView
+              fieldValue={snapshot.consentCode}
+              fieldName="Consent Code"
               canEdit={isSteward}
-              title="Consent Code"
-              updateDescriptionFn={(text: string | undefined) => {
+              updateFieldValueFn={(text: string | undefined) => {
                 dispatch(patchConsentCode(snapshot.id, text));
               }}
               useMarkdown={false}

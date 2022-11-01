@@ -24,7 +24,7 @@ import GoogleSheetExport from 'components/common/overview/GoogleSheetExport';
 import { renderCloudPlatforms, renderStorageResources } from '../../../libs/render-utils';
 import InfoViewDatasetAccess from '../data/sidebar/panels/InfoViewDatasetAccess';
 import DatasetSnapshotsTable from '../../table/DatasetSnapshotsTable';
-import DescriptionView from '../../DescriptionView';
+import EditableFieldView from '../../EditableFieldView';
 import TabPanel from '../../common/TabPanel';
 import { DatasetRoles } from '../../../constants';
 
@@ -189,11 +189,11 @@ function DatasetOverviewPanel(props) {
       <TabPanel value={value} index={0}>
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <DescriptionView
-              description={dataset.description}
+            <EditableFieldView
+              fieldValue={dataset.description}
+              fieldName="Description"
               canEdit={userRoles.includes(DatasetRoles.STEWARD)}
-              title="Description"
-              updateDescriptionFn={(text) => dispatch(patchDatasetDescription(dataset.id, text))}
+              updateFieldValueFn={(text) => dispatch(patchDatasetDescription(dataset.id, text))}
               useMarkdown={true}
             />
           </Grid>
@@ -238,11 +238,11 @@ function DatasetOverviewPanel(props) {
             {dataset.selfHosted ? 'Yes' : 'No'}
           </Grid>
           <Grid item xs={4}>
-            <DescriptionView
-              description={dataset.phsId}
+            <EditableFieldView
+              fieldValue={dataset.phsId}
+              fieldName="PHS Id"
               canEdit={userRoles.includes(DatasetRoles.STEWARD)}
-              title="PHS Id"
-              updateDescriptionFn={(text) => dispatch(patchPhsId(dataset.id, text))}
+              updateFieldValueFn={(text) => dispatch(patchPhsId(dataset.id, text))}
               useMarkdown={false}
             />
           </Grid>

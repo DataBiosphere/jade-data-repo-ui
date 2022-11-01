@@ -11,7 +11,7 @@ import WithoutStylesMarkdownContent from './common/WithoutStylesMarkdownContent'
 
 const styles = (theme: CustomTheme) =>
   createStyles({
-    descriptionEditor: {
+    editor: {
       width: '100%',
       display: 'flex',
       alignItems: 'top',
@@ -26,10 +26,7 @@ const styles = (theme: CustomTheme) =>
       zIndex: '9998',
     },
     textInput: {
-      width: '100%'
-    },
-    descriptionInput: {
-      backgroundColor: 'white',
+      width: '100%',
     },
     editIconButton: {
       boxShadow: 'none',
@@ -38,7 +35,7 @@ const styles = (theme: CustomTheme) =>
         color: theme.palette.primary.hover,
       },
     },
-    saveDescriptionButton: {
+    saveButton: {
       boxShadow: 'none',
       margin: theme.spacing(1),
       '&:hover': {
@@ -52,36 +49,36 @@ const styles = (theme: CustomTheme) =>
     },
   } as const);
 
-const UNSET_DESCRIPTION_TEXT = '(Empty)';
+const UNSET_FIELD_TEXT = '(Empty)';
 
-interface DescriptionViewProps extends WithStyles<typeof styles> {
+interface EditableFieldViewProps extends WithStyles<typeof styles> {
   canEdit: boolean;
-  description: string | undefined;
-  title: string;
-  updateDescriptionFn: any;
+  fieldValue: string | undefined;
+  fieldName: string;
+  updateFieldValueFn: any;
   useMarkdown: boolean;
 }
 
-function DescriptionView({
+function EditableFieldView({
   canEdit,
   classes,
-  description,
-  title,
-  updateDescriptionFn,
+  fieldValue,
+  fieldName,
+  updateFieldValueFn,
   useMarkdown,
-}: DescriptionViewProps) {
-  const [hasDescriptionChanged, setHasDescriptionChanged] = useState(false);
-  const [descriptionValue, setDescriptionValue] = useState(description);
+}: EditableFieldViewProps) {
+  const [hasFieldValueChanged, setHasFieldValueChanged] = useState(false);
+  const [updatedFieldValue, setUpdatedFieldValue] = useState(fieldValue);
   const [isEditing, setIsEditing] = useState(false);
   const [isPendingSave, setIsPendingSave] = useState(false);
 
   useEffect(() => {
-    if (isPendingSave && description === descriptionValue) {
-      setHasDescriptionChanged(false);
+    if (isPendingSave && fieldValue === updatedFieldValue) {
+      setHasFieldValueChanged(false);
       setIsPendingSave(false);
       setIsEditing(false);
     }
-  }, [isPendingSave, description, descriptionValue]);
+  }, [isPendingSave, fieldValue, updatedFieldValue]);
 
   const editorOptions = useMemo(
     () =>
@@ -102,41 +99,44 @@ function DescriptionView({
 
   const onSaveClick = useCallback(() => {
     setIsPendingSave(true);
-    updateDescriptionFn(descriptionValue);
-  }, [updateDescriptionFn, descriptionValue]);
+    updateFieldValueFn(updatedFieldValue);
+  }, [updateFieldValueFn, updatedFieldValue]);
 
   const onChange = useCallback(
     (value: string) => {
-      if (description !== value) {
-        setDescriptionValue(value);
-        setHasDescriptionChanged(true);
+      if (fieldValue !== value) {
+        setUpdatedFieldValue(value);
+        setHasFieldValueChanged(true);
       } else {
-        setHasDescriptionChanged(false);
+        setHasFieldValueChanged(false);
       }
     },
-    [description],
+    [fieldValue],
   );
 
-  const onChangeEvent = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    onChange(event.target.value);
-  }, [description]);
+  const onChangeEvent = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      onChange(event.target.value);
+    },
+    [fieldValue],
+  );
 
   const onCancel = useCallback(() => {
-    setDescriptionValue(description);
-    setHasDescriptionChanged(false);
+    setUpdatedFieldValue(fieldValue);
+    setHasFieldValueChanged(false);
     setIsEditing(false);
-  }, [description]);
+  }, [fieldValue]);
 
   return (
     <>
       <div>
         <Typography className={classes.title} variant="h6">
-          {`${title}:`}
+          {`${fieldName}:`}
           {canEdit && (
             <IconButton
-              aria-label={`Edit ${title}`}
+              aria-label={`Edit ${fieldName}`}
               className={classes.editIconButton}
-              data-cy="description-edit-button"
+              data-cy="editable-field-edit-button"
               disableFocusRipple={true}
               disableRipple={true}
               onClick={onEditClick}
@@ -148,18 +148,15 @@ function DescriptionView({
       </div>
       {!canEdit && (
         <span className={classes.markdownPreview}>
-          <MarkdownContent markdownText={descriptionValue} emptyText={UNSET_DESCRIPTION_TEXT} />
+          <MarkdownContent markdownText={updatedFieldValue} emptyText={UNSET_FIELD_TEXT} />
         </span>
       )}
       {canEdit && (
-        <div className={classes.descriptionEditor}>
+        <div className={classes.editor}>
           <div className={classes.textInputDiv}>
             {!isEditing && (
               <span className={classes.markdownPreview}>
-                <MarkdownContent
-                  markdownText={descriptionValue}
-                  emptyText={UNSET_DESCRIPTION_TEXT}
-                />
+                <MarkdownContent markdownText={updatedFieldValue} emptyText={UNSET_FIELD_TEXT} />
               </span>
             )}
             {isEditing && (
@@ -168,7 +165,7 @@ function DescriptionView({
                   <SimpleMdeReact
                     onChange={onChange}
                     options={editorOptions}
-                    value={descriptionValue}
+                    value={updatedFieldValue}
                   />
                 )}
                 {!useMarkdown && (
@@ -176,16 +173,16 @@ function DescriptionView({
                     id="outlined-basic"
                     className={classes.textInput}
                     variant="outlined"
-                    defaultValue={descriptionValue}
+                    defaultValue={updatedFieldValue}
                     onChange={onChangeEvent}
                   />
                 )}
                 <Button
-                  aria-label="Save description changes"
-                  className={classes.saveDescriptionButton}
+                  aria-label={`Save ${fieldName} changes`}
+                  className={classes.saveButton}
                   color="primary"
-                  data-cy="description-save-button"
-                  disabled={!hasDescriptionChanged}
+                  data-cy="editable-field-save-button"
+                  disabled={!hasFieldValueChanged}
                   onClick={onSaveClick}
                   type="button"
                   variant="contained"
@@ -193,8 +190,8 @@ function DescriptionView({
                   SAVE
                 </Button>
                 <Button
-                  aria-label="Cancel description changes"
-                  data-cy="description-cancel-button"
+                  aria-label={`Cancel ${fieldName} changes`}
+                  data-cy="editable-field-cancel-button"
                   onClick={onCancel}
                   color="primary"
                   type="button"
@@ -211,4 +208,4 @@ function DescriptionView({
     </>
   );
 }
-export default withStyles(styles)(DescriptionView);
+export default withStyles(styles)(EditableFieldView);
