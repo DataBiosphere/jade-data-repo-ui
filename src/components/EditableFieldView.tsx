@@ -71,6 +71,8 @@ function EditableFieldView({
   const [updatedFieldValue, setUpdatedFieldValue] = useState(fieldValue);
   const [isEditing, setIsEditing] = useState(false);
   const [isPendingSave, setIsPendingSave] = useState(false);
+  
+  const cypressFieldNameFormatted = fieldName.replace(" ", "-").toLowerCase();
 
   useEffect(() => {
     if (isPendingSave && fieldValue === updatedFieldValue) {
@@ -130,13 +132,13 @@ function EditableFieldView({
   return (
     <>
       <div>
-        <Typography className={classes.title} variant="h6">
+        <Typography className={classes.title} data-cy={`${cypressFieldNameFormatted}-field-name`} variant="h6">
           {`${fieldName}:`}
           {canEdit && (
             <IconButton
               aria-label={`Edit ${fieldName}`}
               className={classes.editIconButton}
-              data-cy="editable-field-edit-button"
+              data-cy={`${cypressFieldNameFormatted}-edit-button`}
               disableFocusRipple={true}
               disableRipple={true}
               onClick={onEditClick}
@@ -172,6 +174,7 @@ function EditableFieldView({
                   <TextField
                     id="outlined-basic"
                     className={classes.textInput}
+                    data-cy={`${cypressFieldNameFormatted}-text-field`}
                     variant="outlined"
                     defaultValue={updatedFieldValue}
                     onChange={onChangeEvent}
@@ -181,7 +184,7 @@ function EditableFieldView({
                   aria-label={`Save ${fieldName} changes`}
                   className={classes.saveButton}
                   color="primary"
-                  data-cy="editable-field-save-button"
+                  data-cy={`${cypressFieldNameFormatted}-save-button`}
                   disabled={!hasFieldValueChanged}
                   onClick={onSaveClick}
                   type="button"
@@ -191,7 +194,7 @@ function EditableFieldView({
                 </Button>
                 <Button
                   aria-label={`Cancel ${fieldName} changes`}
-                  data-cy="editable-field-cancel-button"
+                  data-cy={`${cypressFieldNameFormatted}-cancel-button`}
                   onClick={onCancel}
                   color="primary"
                   type="button"
