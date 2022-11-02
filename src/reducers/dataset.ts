@@ -88,14 +88,16 @@ export default {
         immutable(state, {
           datasetPolicies: { $set: action.policy.data.policies },
         }),
-      [ActionTypes.PATCH_DATASET_DESCRIPTION_SUCCESS]: (state, action: any) =>
-        immutable(state, {
-          dataset: { description: { $set: action.description } },
-        }),
-      [ActionTypes.PATCH_PHS_ID_SUCCESS]: (state, action: any) =>
-        immutable(state, {
-          dataset: { phsId: { $set: action.phsId } },
-        }),
+      [ActionTypes.PATCH_DATASET_SUCCESS]: (state, action: any) => {
+        var datasetObj: any = { dataset: {} };
+        if (action.data.phsId != undefined) {
+          datasetObj.dataset.phsId = { $set: action.data.phsId };
+        }
+        if (action.data.description != undefined) {
+          datasetObj.dataset.description = { $set: action.data.description };
+        }
+        return immutable(state, datasetObj);
+      },
       [ActionTypes.ADD_DATASET_POLICY_MEMBER]: (state) =>
         immutable(state, {
           isAddingOrRemovingUser: { $set: true },

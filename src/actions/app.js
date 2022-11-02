@@ -148,34 +148,18 @@ export const { addDatasetPolicyMember } = createActions({
   }),
 });
 
-export const { patchDatasetDescription } = createActions({
-  [ActionTypes.PATCH_DATASET_DESCRIPTION]: (datasetId, text) => ({
+export const { patchDataset } = createActions({
+  [ActionTypes.PATCH_DATASET]: (datasetId, data) => ({
     datasetId,
-    text,
+    data,
   }),
 });
 
-export const { patchSnapshotDescription } = createActions({
-  [ActionTypes.PATCH_SNAPSHOT_DESCRIPTION]: (snapshotId, text) => ({
+export const { patchSnapshot } = createActions({
+  [ActionTypes.PATCH_SNAPSHOT]: (snapshotId, data) => ({
     snapshotId,
-    text,
+    data,
   }),
-});
-
-export const { patchPhsId } = createActions({
-  [ActionTypes.PATCH_PHS_ID]: (datasetId, phsId) => ({
-    datasetId,
-    phsId,
-  }),
-  [ActionTypes.PATCH_PHS_ID_SUCCESS]: (phsId) => ({ phsId }),
-});
-
-export const { patchConsentCode } = createActions({
-  [ActionTypes.PATCH_CONSENT_CODE]: (snapshotId, consentCode) => ({
-    snapshotId,
-    consentCode,
-  }),
-  [ActionTypes.PATCH_CONSENT_CODE_SUCCESS]: (consentCode) => ({ consentCode }),
 });
 
 export const { removeDatasetPolicyMember } = createActions({

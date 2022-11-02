@@ -287,14 +287,16 @@ export default {
           snapshotRequest: { $set: snapshotRequest },
         });
       },
-      [ActionTypes.PATCH_SNAPSHOT_DESCRIPTION_SUCCESS]: (state, action: any) =>
-        immutable(state, {
-          snapshot: { description: { $set: action.description } },
-        }),
-      [ActionTypes.PATCH_CONSENT_CODE_SUCCESS]: (state, action: any) =>
-        immutable(state, {
-          snapshot: { consentCode: { $set: action.consentCode } },
-        }),
+      [ActionTypes.PATCH_SNAPSHOT_SUCCESS]: (state, action: any) => {
+        var snapshotObj: any = { snapshot: {} };
+        if (action.data.consentCode != undefined) {
+          snapshotObj.snapshot.consentCode = { $set: action.data.consentCode };
+        }
+        if (action.data.description != undefined) {
+          snapshotObj.snapshot.description = { $set: action.data.description };
+        }
+        return immutable(state, snapshotObj);
+      },
       [LOCATION_CHANGE]: (state) =>
         immutable(state, {
           snapshotRequest: { $set: defaultSnapshotRequest },

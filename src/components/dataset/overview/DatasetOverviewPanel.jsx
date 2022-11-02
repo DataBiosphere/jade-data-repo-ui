@@ -19,7 +19,7 @@ import IconButton from '@mui/material/IconButton';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import clsx from 'clsx';
-import { patchDatasetDescription, patchPhsId } from 'actions';
+import { patchDataset } from 'actions';
 import GoogleSheetExport from 'components/common/overview/GoogleSheetExport';
 import { renderCloudPlatforms, renderStorageResources } from '../../../libs/render-utils';
 import InfoViewDatasetAccess from '../data/sidebar/panels/InfoViewDatasetAccess';
@@ -193,7 +193,7 @@ function DatasetOverviewPanel(props) {
               fieldValue={dataset.description}
               fieldName="Description"
               canEdit={userRoles.includes(DatasetRoles.STEWARD)}
-              updateFieldValueFn={(text) => dispatch(patchDatasetDescription(dataset.id, text))}
+              updateFieldValueFn={(text) => dispatch(patchDataset(dataset.id, {description: text}))}
               useMarkdown={true}
             />
           </Grid>
@@ -242,7 +242,7 @@ function DatasetOverviewPanel(props) {
               fieldValue={dataset.phsId}
               fieldName="PHS Id"
               canEdit={userRoles.includes(DatasetRoles.STEWARD)}
-              updateFieldValueFn={(text) => dispatch(patchPhsId(dataset.id, text))}
+              updateFieldValueFn={(text) => dispatch(patchDataset(dataset.id, {phsId: text}))}
               useMarkdown={false}
             />
           </Grid>

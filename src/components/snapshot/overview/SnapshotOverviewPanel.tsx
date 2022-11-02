@@ -3,7 +3,7 @@ import { Grid, Tab, Tabs, Typography } from '@mui/material';
 import { createStyles, WithStyles, withStyles } from '@mui/styles';
 import moment from 'moment';
 import { CustomTheme } from '@mui/material/styles';
-import { patchSnapshotDescription, patchConsentCode } from 'actions';
+import { patchSnapshot } from 'actions';
 import EditableFieldView from 'components/EditableFieldView';
 import GoogleSheetExport from 'components/common/overview/GoogleSheetExport';
 import { Link } from 'react-router-dom';
@@ -126,7 +126,7 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
               fieldName="Description"
               canEdit={isSteward}
               updateFieldValueFn={(text: string | undefined) =>
-                dispatch(patchSnapshotDescription(snapshot.id, text))
+                dispatch(patchSnapshot(snapshot.id, {description: text}))
               }
               useMarkdown={true}
             />
@@ -163,7 +163,7 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
               fieldName="Consent Code"
               canEdit={isSteward}
               updateFieldValueFn={(text: string | undefined) => {
-                dispatch(patchConsentCode(snapshot.id, text));
+                dispatch(patchSnapshot(snapshot.id, { consentCode: text }));
               }}
               useMarkdown={false}
             />
