@@ -262,7 +262,7 @@ function DatasetOverviewPanel(props) {
                     <Typography className={classes.noRelationships}>(None)</Typography>
                   )}
                   {dataset.schema.relationships.map((rel, i) => (
-                    <Typography noWrap key={rel.name}>
+                    <div key={rel.name}>
                       <Typography variant="h6">{rel.name}</Typography>
                       <Typography variant="h6">From</Typography>
                       Table: {rel.from.table}
@@ -277,7 +277,7 @@ function DatasetOverviewPanel(props) {
                       {i < dataset.schema.relationships.length - 1 && (
                         <Divider className={classes.divider} />
                       )}
-                    </Typography>
+                    </div>
                   ))}
                 </AccordionDetails>
               </Accordion>
