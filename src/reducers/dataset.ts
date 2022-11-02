@@ -89,11 +89,11 @@ export default {
           datasetPolicies: { $set: action.policy.data.policies },
         }),
       [ActionTypes.PATCH_DATASET_SUCCESS]: (state, action: any) => {
-        var datasetObj: any = { dataset: {} };
-        if (action.data.phsId != undefined) {
+        const datasetObj: any = { dataset: {} };
+        if (action.data.phsId !== undefined) {
           datasetObj.dataset.phsId = { $set: action.data.phsId };
         }
-        if (action.data.description != undefined) {
+        if (action.data.description !== undefined) {
           datasetObj.dataset.description = { $set: action.data.description };
         }
         return immutable(state, datasetObj);

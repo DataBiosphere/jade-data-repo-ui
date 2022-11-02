@@ -193,7 +193,9 @@ function DatasetOverviewPanel(props) {
               fieldValue={dataset.description}
               fieldName="Description"
               canEdit={userRoles.includes(DatasetRoles.STEWARD)}
-              updateFieldValueFn={(text) => dispatch(patchDataset(dataset.id, {description: text}))}
+              updateFieldValueFn={(text) =>
+                dispatch(patchDataset(dataset.id, { description: text }))
+              }
               useMarkdown={true}
             />
           </Grid>
@@ -242,7 +244,7 @@ function DatasetOverviewPanel(props) {
               fieldValue={dataset.phsId}
               fieldName="PHS Id"
               canEdit={userRoles.includes(DatasetRoles.STEWARD)}
-              updateFieldValueFn={(text) => dispatch(patchDataset(dataset.id, {phsId: text}))}
+              updateFieldValueFn={(text) => dispatch(patchDataset(dataset.id, { phsId: text }))}
               useMarkdown={false}
             />
           </Grid>

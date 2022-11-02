@@ -126,7 +126,7 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
               fieldName="Description"
               canEdit={isSteward}
               updateFieldValueFn={(text: string | undefined) =>
-                dispatch(patchSnapshot(snapshot.id, {description: text}))
+                dispatch(patchSnapshot(snapshot.id, { description: text }))
               }
               useMarkdown={true}
             />

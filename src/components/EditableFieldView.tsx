@@ -71,8 +71,8 @@ function EditableFieldView({
   const [updatedFieldValue, setUpdatedFieldValue] = useState(fieldValue);
   const [isEditing, setIsEditing] = useState(false);
   const [isPendingSave, setIsPendingSave] = useState(false);
-  
-  const cypressFieldNameFormatted = fieldName.replace(" ", "-").toLowerCase();
+
+  const cypressFieldNameFormatted = fieldName.replace(' ', '-').toLowerCase();
 
   useEffect(() => {
     if (isPendingSave && fieldValue === updatedFieldValue) {
@@ -120,7 +120,7 @@ function EditableFieldView({
     (event: React.ChangeEvent<HTMLInputElement>) => {
       onChange(event.target.value);
     },
-    [fieldValue],
+    [onChange],
   );
 
   const onCancel = useCallback(() => {
@@ -132,7 +132,11 @@ function EditableFieldView({
   return (
     <>
       <div>
-        <Typography className={classes.title} data-cy={`${cypressFieldNameFormatted}-field-name`} variant="h6">
+        <Typography
+          className={classes.title}
+          data-cy={`${cypressFieldNameFormatted}-field-name`}
+          variant="h6"
+        >
           {`${fieldName}:`}
           {canEdit && (
             <IconButton

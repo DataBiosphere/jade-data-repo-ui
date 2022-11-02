@@ -288,11 +288,11 @@ export default {
         });
       },
       [ActionTypes.PATCH_SNAPSHOT_SUCCESS]: (state, action: any) => {
-        var snapshotObj: any = { snapshot: {} };
-        if (action.data.consentCode != undefined) {
+        const snapshotObj: any = { snapshot: {} };
+        if (action.data.consentCode !== undefined) {
           snapshotObj.snapshot.consentCode = { $set: action.data.consentCode };
         }
-        if (action.data.description != undefined) {
+        if (action.data.description !== undefined) {
           snapshotObj.snapshot.description = { $set: action.data.description };
         }
         return immutable(state, snapshotObj);

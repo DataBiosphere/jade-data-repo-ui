@@ -11,7 +11,7 @@ import history from '../modules/hist';
 const initialState = {
   dataset: {
     description: 'A dataset description',
-    phsId: '12345'
+    phsId: '12345',
   },
 };
 
@@ -128,7 +128,7 @@ describe('Plain text field in EditableFieldView', () => {
     cy.get('button[data-cy=phs-id-edit-button]')
       .click({ force: true })
       .then(() => {
-        cy.get('[id="outlined-basic"').should('contain.value',initialState.dataset.phsId);
+        cy.get('[id="outlined-basic"').should('contain.value', initialState.dataset.phsId);
         cy.get('[data-cy=phs-id-cancel-button]').should('be.enabled');
         cy.get('[data-cy=phs-id-save-button]').should('be.disabled');
       });
@@ -138,7 +138,10 @@ describe('Plain text field in EditableFieldView', () => {
       .then(() => {
         cy.get('[data-cy=phs-id-cancel-button]').should('be.enabled');
         cy.get('[data-cy=phs-id-save-button]').should('be.enabled');
-        cy.get('[id="outlined-basic"').should('contain.value',`${initialState.dataset.phsId}change`);
+        cy.get('[id="outlined-basic"').should(
+          'contain.value',
+          `${initialState.dataset.phsId}change`,
+        );
       });
   });
 });
