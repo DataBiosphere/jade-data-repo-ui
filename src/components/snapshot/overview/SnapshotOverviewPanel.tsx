@@ -178,10 +178,6 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
               {snapshot.dataProject}
             </Grid>
           )}
-          <Grid item xs={4}>
-            <Typography variant="h6">Creation Information:</Typography>
-            {snapshot.creationInformation?.mode}
-          </Grid>
         </Grid>
       </TabPanel>
       <TabPanel value={value} index={1}>
