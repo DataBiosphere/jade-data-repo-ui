@@ -84,18 +84,18 @@ export const initialSnapshotState: SnapshotState = {
 };
 
 // We need this method to apply the response from add/remove snapshot members since the API only returns the affected group
-const snapshotMembershipResultApply = (action: any) => (
-  snapshotPolicies: Array<PolicyModel>,
-): Array<PolicyModel> =>
-  snapshotPolicies.map((p) => {
-    if (p.name === action.policy) {
-      const policy = action.snapshot.data.data.policies.find(
-        (ap: any) => ap.name === action.policy,
-      );
-      return policy || p;
-    }
-    return p;
-  });
+const snapshotMembershipResultApply =
+  (action: any) =>
+  (snapshotPolicies: Array<PolicyModel>): Array<PolicyModel> =>
+    snapshotPolicies.map((p) => {
+      if (p.name === action.policy) {
+        const policy = action.snapshot.data.data.policies.find(
+          (ap: any) => ap.name === action.policy,
+        );
+        return policy || p;
+      }
+      return p;
+    });
 
 export default {
   snapshots: handleActions(

@@ -42,16 +42,18 @@ export const initialDatasetState: DatasetState = {
 };
 
 // We need this method to apply the response from add/remove snapshot members since the API only returns the affected group
-const datasetMembershipResultApply = (action: any) => (
-  datasetPolicies: Array<PolicyModel>,
-): Array<PolicyModel> =>
-  datasetPolicies.map((p) => {
-    if (p.name === action.policy) {
-      const policy = action.dataset.data.data.policies.find((ap: any) => ap.name === action.policy);
-      return policy || p;
-    }
-    return p;
-  });
+const datasetMembershipResultApply =
+  (action: any) =>
+  (datasetPolicies: Array<PolicyModel>): Array<PolicyModel> =>
+    datasetPolicies.map((p) => {
+      if (p.name === action.policy) {
+        const policy = action.dataset.data.data.policies.find(
+          (ap: any) => ap.name === action.policy,
+        );
+        return policy || p;
+      }
+      return p;
+    });
 
 export default {
   datasets: handleActions(

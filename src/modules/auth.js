@@ -36,15 +36,7 @@ function describeUser(user) {
 }
 
 function dispatchCurrentUser(user) {
-  const {
-    name,
-    imageUrl,
-    email,
-    accessToken,
-    isSignedIn,
-    accessTokenExpiration,
-    id,
-  } = describeUser(user);
+  const { name, imageUrl, email, accessToken, isSignedIn, accessTokenExpiration, id } = describeUser(user);
   if (isSignedIn) {
     store.dispatch(logIn(name, imageUrl, email, accessToken, accessTokenExpiration, id));
     store.dispatch(getFeatures());

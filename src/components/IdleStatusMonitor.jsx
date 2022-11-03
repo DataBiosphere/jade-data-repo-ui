@@ -26,10 +26,10 @@ const styles = (theme) => ({
 // Helpers
 const displayRemainingTime = (remainingSeconds) => {
   const duration = moment.duration(remainingSeconds, 'seconds');
-  return `${duration
-    .minutes()
+  return `${duration.minutes().toString().padStart(2, '0')}:${duration
+    .seconds()
     .toString()
-    .padStart(2, '0')}:${duration.seconds().toString().padStart(2, '0')}`;
+    .padStart(2, '0')}`;
 };
 
 // The lastActiveTimeStore syncs with localstorage and stores the time of the last known activity

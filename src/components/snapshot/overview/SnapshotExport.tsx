@@ -63,16 +63,8 @@ const formatExportUrl = (
 
 function SnapshotExport(props: SnapshotExportProps) {
   const [exportGsPaths, setExportGsPaths] = React.useState(false);
-  const {
-    classes,
-    dispatch,
-    exportResponse,
-    isDone,
-    isProcessing,
-    of,
-    terraUrl,
-    userRoles,
-  } = props;
+  const { classes, dispatch, exportResponse, isDone, isProcessing, of, terraUrl, userRoles } =
+    props;
   const exportResponseManifest =
     exportResponse &&
     exportResponse.format &&

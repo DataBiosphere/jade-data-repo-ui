@@ -80,15 +80,8 @@ export class DataViewSidebarItem extends React.PureComponent {
   };
 
   render() {
-    const {
-      classes,
-      column,
-      dataset,
-      filterStatement,
-      joinStatement,
-      tableName,
-      token,
-    } = this.props;
+    const { classes, column, dataset, filterStatement, joinStatement, tableName, token } =
+      this.props;
     const { disableButton, filterMap } = this.state;
     const item = ((datatype) => {
       switch (_.toLower(datatype)) {

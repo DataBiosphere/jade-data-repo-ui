@@ -201,14 +201,8 @@ export function* resetSnapshotExport() {
 export function* createSnapshot(): any {
   const snapshots = yield select(getSnapshotState);
   const dataset = yield select(getDataset);
-  const {
-    name,
-    description,
-    assetName,
-    filterStatement,
-    joinStatement,
-    readers,
-  } = snapshots.snapshotRequest;
+  const { name, description, assetName, filterStatement, joinStatement, readers } =
+    snapshots.snapshotRequest;
 
   const datasetName = dataset.name;
   const mode = 'byQuery';

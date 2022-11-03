@@ -104,39 +104,33 @@ function LightTableHead({
     onRequestSort(event, property);
   };
 
-  const createStartHandler: (column: TableColumnType) => DraggableEventHandler = (column) => (
-    _event,
-    data,
-  ) => {
-    if (!_.isNumber(column.width)) {
-      setInitialWidth(data.node?.parentElement?.clientWidth);
-    } else {
-      setInitialWidth(column.width);
-    }
-    setDeltaX(0);
-    setDraggingCol(column);
-  };
+  const createStartHandler: (column: TableColumnType) => DraggableEventHandler =
+    (column) => (_event, data) => {
+      if (!_.isNumber(column.width)) {
+        setInitialWidth(data.node?.parentElement?.clientWidth);
+      } else {
+        setInitialWidth(column.width);
+      }
+      setDeltaX(0);
+      setDraggingCol(column);
+    };
 
-  const createDragHandler: (column: TableColumnType) => DraggableEventHandler = (column) => (
-    event,
-    data,
-  ) => {
-    if (initialWidth !== undefined) {
-      onResizeColumn(event, column.name, initialWidth + data.x);
-    }
-    setDeltaX(data.x);
-  };
+  const createDragHandler: (column: TableColumnType) => DraggableEventHandler =
+    (column) => (event, data) => {
+      if (initialWidth !== undefined) {
+        onResizeColumn(event, column.name, initialWidth + data.x);
+      }
+      setDeltaX(data.x);
+    };
 
-  const createStopHandler: (column: TableColumnType) => DraggableEventHandler = (column) => (
-    event,
-    data,
-  ) => {
-    if (initialWidth !== undefined) {
-      onResizeColumn(event, column.name, initialWidth + data.x);
-    }
-    setDeltaX(0);
-    setDraggingCol(undefined);
-  };
+  const createStopHandler: (column: TableColumnType) => DraggableEventHandler =
+    (column) => (event, data) => {
+      if (initialWidth !== undefined) {
+        onResizeColumn(event, column.name, initialWidth + data.x);
+      }
+      setDeltaX(0);
+      setDraggingCol(undefined);
+    };
 
   const createDragHandle = (col: TableColumnType) =>
     col.allowResize && (
