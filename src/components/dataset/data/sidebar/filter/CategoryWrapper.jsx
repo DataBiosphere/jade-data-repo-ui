@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import FreetextFilter from './FreetextFilter';
 import CategoryFilterGroup from './CategoryFilterGroup';
 
-const CHECKBOX_THRESHOLD = 10;
+const CHECKBOX_THRESHOLD = 30;
 
 export class CategoryWrapper extends React.PureComponent {
   constructor(props) {
