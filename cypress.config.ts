@@ -19,9 +19,6 @@ export default defineConfig({
   component: {
     setupNodeEvents(on, config) {},
     specPattern: "src/**/*test.{js,jsx,ts,tsx}",
-  },
-
-  component: {
     devServer: {
       framework: "create-react-app",
       bundler: "webpack",
