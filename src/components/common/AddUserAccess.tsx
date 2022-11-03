@@ -176,7 +176,7 @@ function AddUserAccess({ classes, permissions, onAdd }: AddUserAccessProps) {
             onClick={invite}
             data-cy="inviteButton"
           >
-            Invite
+            Add
           </Button>
         </div>
       </div>
