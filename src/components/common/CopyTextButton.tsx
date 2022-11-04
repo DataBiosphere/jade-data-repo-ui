@@ -4,7 +4,7 @@ import TerraTooltip from './TerraTooltip';
 
 type CopyTextButtonProps = {
   valueToCopy: string;
-  nameOfValue: string;
+  nameOfValue: string | undefined;
 };
 
 function CopyTextButton({ valueToCopy, nameOfValue }: CopyTextButtonProps) {
@@ -12,7 +12,7 @@ function CopyTextButton({ valueToCopy, nameOfValue }: CopyTextButtonProps) {
 
   const copyText = () => {
     navigator.clipboard.writeText(valueToCopy);
-    setToolTipText(`Copied: ${nameOfValue}`);
+    setToolTipText(`${nameOfValue ?? "Value"} Copied!`);
   };
 
   return (
@@ -25,7 +25,7 @@ function CopyTextButton({ valueToCopy, nameOfValue }: CopyTextButtonProps) {
         onClick={copyText}
         size="small"
       >
-        <i className="fa-light fa-copy" />
+        <i className="fa-regular fa-clipboard" />
       </IconButton>
     </TerraTooltip>
   );

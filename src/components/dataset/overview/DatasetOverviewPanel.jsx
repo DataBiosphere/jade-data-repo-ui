@@ -21,7 +21,11 @@ import moment from 'moment';
 import clsx from 'clsx';
 import { patchDataset } from 'actions';
 import GoogleSheetExport from 'components/common/overview/GoogleSheetExport';
-import { renderCloudPlatforms, renderStorageResources } from '../../../libs/render-utils';
+import {
+  renderCloudPlatforms,
+  renderStorageResources,
+  renderTextFieldValue,
+} from '../../../libs/render-utils';
 import InfoViewDatasetAccess from '../data/sidebar/panels/InfoViewDatasetAccess';
 import DatasetSnapshotsTable from '../../table/DatasetSnapshotsTable';
 import EditableFieldView from '../../EditableFieldView';
@@ -201,6 +205,12 @@ function DatasetOverviewPanel(props) {
             />
           </Grid>
           <Grid item xs={4}>
+            {renderTextFieldValue('Dataset ID', dataset.id)}
+          </Grid>
+          <Grid item xs={4}>
+            {renderTextFieldValue('Default Billing Profile ID', dataset.defaultBillingProfile)}
+          </Grid>
+          <Grid item xs={4}>
             <Typography variant="h6">Created:</Typography>
             <Typography>{moment(dataset.createdDate).fromNow()}</Typography>
           </Grid>
@@ -213,35 +223,11 @@ function DatasetOverviewPanel(props) {
             {renderCloudPlatforms(dataset)}
           </Grid>
           <Grid item xs={4}>
-            <Typography variant="h6">Dataset ID:</Typography>
-            <Typography>{dataset.id}</Typography>
-            <CopyTextButton valueToCopy={dataset.id} nameOfValue="Dataset ID" />
+            {renderTextFieldValue('Google Data Project', dataset.dataProject)}
           </Grid>
           <Grid item xs={4}>
-            <Typography variant="h6">Default Billing Profile Id:</Typography>
-            {dataset.defaultProfileId}
-            <CopyTextButton
-              valueToCopy={dataset.defaultProfileId}
-              nameOfValue="Billing Profile ID"
-            />
+            {renderTextFieldValue('Ingest Service Account', dataset.ingestServiceAccount)}
           </Grid>
-          {dataset.dataProject && (
-            <Grid item xs={4}>
-              <Typography variant="h6">Google Data Project:</Typography>
-              {dataset.dataProject}
-              <CopyTextButton valueToCopy={dataset.dataProject} nameOfValue="Google Data Project" />
-            </Grid>
-          )}
-          {dataset.ingestServiceAccount && (
-            <Grid item xs={4}>
-              <Typography variant="h6">Ingest Service Account:</Typography>
-              <Typography>{dataset.ingestServiceAccount}</Typography>
-              <CopyTextButton
-                valueToCopy={dataset.ingestServiceAccount}
-                nameOfValue="Ingest Service Account"
-              />
-            </Grid>
-          )}
           <Grid item xs={4}>
             <Typography variant="h6">Secure Monitoring Enabled?</Typography>
             {dataset.secureMonitoringEnabled ? 'Yes' : 'No'}
@@ -253,7 +239,7 @@ function DatasetOverviewPanel(props) {
           <Grid item xs={4}>
             <EditableFieldView
               fieldValue={dataset.phsId}
-              fieldName="PHS Id"
+              fieldName="PHS ID"
               canEdit={userRoles.includes(DatasetRoles.STEWARD)}
               updateFieldValueFn={(text) => dispatch(patchDataset(dataset.id, { phsId: text }))}
               useMarkdown={false}

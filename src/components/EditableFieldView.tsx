@@ -6,7 +6,7 @@ import { SimpleMdeReact } from 'react-simplemde-editor';
 import SimpleMDE from 'easymde';
 import 'easymde/dist/easymde.min.css';
 import { createStyles, WithStyles, withStyles } from '@mui/styles';
-import MarkdownContent from './common/MarkdownContent';
+import TextContent from './common/TextContent';
 import WithoutStylesMarkdownContent from './common/WithoutStylesMarkdownContent';
 
 const styles = (theme: CustomTheme) =>
@@ -154,7 +154,7 @@ function EditableFieldView({
       </div>
       {!canEdit && (
         <span className={classes.markdownPreview}>
-          <MarkdownContent markdownText={updatedFieldValue} emptyText={UNSET_FIELD_TEXT} />
+          <TextContent text={updatedFieldValue} emptyText={UNSET_FIELD_TEXT} markdown={true} />
         </span>
       )}
       {canEdit && (
@@ -162,7 +162,7 @@ function EditableFieldView({
           <div className={classes.textInputDiv}>
             {!isEditing && (
               <span className={classes.markdownPreview}>
-                <MarkdownContent markdownText={updatedFieldValue} emptyText={UNSET_FIELD_TEXT} />
+                <TextContent text={updatedFieldValue} emptyText={UNSET_FIELD_TEXT} markdown={true} />
               </span>
             )}
             {isEditing && (

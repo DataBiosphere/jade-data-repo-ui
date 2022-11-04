@@ -1,4 +1,4 @@
-import React, { Fragment, useState, SyntheticEvent } from 'react';
+import React, { useState, SyntheticEvent } from 'react';
 import { Grid, Tab, Tabs, Typography } from '@mui/material';
 import { createStyles, WithStyles, withStyles } from '@mui/styles';
 import moment from 'moment';
@@ -6,9 +6,8 @@ import { CustomTheme } from '@mui/material/styles';
 import { patchSnapshot } from 'actions';
 import EditableFieldView from 'components/EditableFieldView';
 import GoogleSheetExport from 'components/common/overview/GoogleSheetExport';
-import CopyTextButton from 'components/common/CopyTextButton';
 import { Link } from 'react-router-dom';
-import { renderStorageResources } from '../../../libs/render-utils';
+import { renderStorageResources, renderTextFieldValue } from '../../../libs/render-utils';
 import SnapshotAccess from '../SnapshotAccess';
 import SnapshotWorkspace from './SnapshotWorkspace';
 import TabPanel from '../../common/TabPanel';
@@ -16,6 +15,7 @@ import SnapshotExport from './SnapshotExport';
 import { SnapshotModel } from '../../../generated/tdr';
 import { SnapshotRoles } from '../../../constants';
 import { AppDispatch } from '../../../store';
+import TextContent from 'components/common/TextContent';
 
 const styles = (theme: CustomTheme) =>
   createStyles({
@@ -137,17 +137,13 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
             <Typography data-cy="snapshot-source-dataset" className={classes.datasetText}>
               <Link to={`/datasets/${sourceDataset.id}`}>
                 <span className={classes.jadeLink} title={sourceDataset.name}>
-                  {sourceDataset.name}
+                  <TextContent text={sourceDataset.name} />
                 </span>
               </Link>
             </Typography>
           </Grid>
           <Grid item xs={4}>
-            <Typography variant="h6">Snapshot ID:</Typography>
-            <Typography data-cy="snapshot-id">
-              {snapshot.id}
-              <CopyTextButton valueToCopy={snapshot.id ?? ''} nameOfValue="Snapshot ID" />
-            </Typography>
+            {renderTextFieldValue('Snapshot ID', snapshot.id)}
           </Grid>
           <Grid item xs={4}>
             <Typography variant="h6">Date Created:</Typography>
@@ -159,41 +155,26 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
             <Typography variant="h6">Storage:</Typography>
             {renderStorageResources(sourceDataset)}
           </Grid>
-          {sourceDataset.phsId && (
-            <Fragment>
-              <Grid item xs={4}>
-                <Typography variant="h6">PHS ID:</Typography>
-                {sourceDataset.phsId}
-              </Grid>
-              <Grid item xs={4}>
-                <EditableFieldView
-                  fieldValue={snapshot.consentCode}
-                  fieldName="Consent Code"
-                  canEdit={isSteward}
-                  updateFieldValueFn={(text: string | undefined) => {
-                    dispatch(patchSnapshot(snapshot.id, { consentCode: text }));
-                  }}
-                  useMarkdown={false}
-                />
-              </Grid>
-            </Fragment>
-          )}
           <Grid item xs={4}>
-            <Typography variant="h6">Billing Profile Id:</Typography>
-            {snapshot.profileId}
-            <CopyTextButton
-              valueToCopy={snapshot.profileId ?? ''}
-              nameOfValue="Billing Profile ID"
+            {renderTextFieldValue('PHS ID', sourceDataset.phsId)}
+          </Grid>
+          <Grid item xs={4}>
+            <EditableFieldView
+              fieldValue={snapshot.consentCode}
+              fieldName="Consent Code"
+              canEdit={isSteward}
+              updateFieldValueFn={(text: string | undefined) => {
+                dispatch(patchSnapshot(snapshot.id, { consentCode: text }));
+              }}
+              useMarkdown={false}
             />
+          </Grid>
+          <Grid item xs={4}>
+            {renderTextFieldValue('Billing Profile Id', snapshot.profileId)}
           </Grid>
           {snapshot.dataProject && (
             <Grid item xs={4}>
-              <Typography variant="h6">Google Data Project:</Typography>
-              {snapshot.dataProject}
-              <CopyTextButton
-                valueToCopy={snapshot.dataProject}
-                nameOfValue="Google Data Project"
-              />
+              {renderTextFieldValue('Google Data Project', snapshot.dataProject)}
             </Grid>
           )}
         </Grid>

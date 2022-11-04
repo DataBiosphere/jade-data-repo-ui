@@ -7,7 +7,7 @@ import createMockStore from 'redux-mock-store';
 
 import history from '../../modules/hist';
 import globalTheme from '../../modules/theme';
-import MarkdownContent from './MarkdownContent';
+import TextContent from './TextContent';
 
 const markdownText = '# Lorem Ipsum \n\n[Link](https://broadinstitute.org)';
 
@@ -21,7 +21,7 @@ describe('WithoutStylesMarkdownContent', () => {
       <Router history={history}>
         <Provider store={store}>
           <ThemeProvider theme={globalTheme}>
-            <MarkdownContent markdownText={markdownText} />
+            <TextContent text={markdownText} markdown={true} />
           </ThemeProvider>
         </Provider>
       </Router>,
@@ -36,7 +36,7 @@ describe('WithoutStylesMarkdownContent', () => {
       <Router history={history}>
         <Provider store={store}>
           <ThemeProvider theme={globalTheme}>
-            <MarkdownContent markdownText={htmlText} />
+            <TextContent text={htmlText} markdown={true}/>
           </ThemeProvider>
         </Provider>
       </Router>,
@@ -50,7 +50,7 @@ describe('WithoutStylesMarkdownContent', () => {
       <Router history={history}>
         <Provider store={store}>
           <ThemeProvider theme={globalTheme}>
-            <MarkdownContent markdownText={undefined} />
+            <TextContent text={undefined} markdown={true} />
           </ThemeProvider>
         </Provider>
       </Router>,
@@ -63,7 +63,7 @@ describe('WithoutStylesMarkdownContent', () => {
       <Router history={history}>
         <Provider store={store}>
           <ThemeProvider theme={globalTheme}>
-            <MarkdownContent markdownText={undefined} emptyText="custom" />
+            <TextContent text={undefined} emptyText="custom" markdown={true}/>
           </ThemeProvider>
         </Provider>
       </Router>,
@@ -77,7 +77,7 @@ describe('WithoutStylesMarkdownContent', () => {
       <Router history={history}>
         <Provider store={store}>
           <ThemeProvider theme={globalTheme}>
-            <MarkdownContent markdownText={markdownText} stripMarkdown={true} />
+            <TextContent text={markdownText} stripMarkdown={true} markdown={true} />
           </ThemeProvider>
         </Provider>
       </Router>,
