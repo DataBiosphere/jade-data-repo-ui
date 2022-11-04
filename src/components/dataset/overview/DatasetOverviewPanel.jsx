@@ -27,6 +27,7 @@ import DatasetSnapshotsTable from '../../table/DatasetSnapshotsTable';
 import EditableFieldView from '../../EditableFieldView';
 import TabPanel from '../../common/TabPanel';
 import { DatasetRoles } from '../../../constants';
+import CopyTextButton from '../../common/CopyTextButton';
 
 const styles = (theme) => ({
   root: {
@@ -212,23 +213,39 @@ function DatasetOverviewPanel(props) {
             {renderCloudPlatforms(dataset)}
           </Grid>
           <Grid item xs={4}>
-            <Typography variant="h6">Dataset Id:</Typography>
+            <Typography variant="h6">Dataset ID:</Typography>
             <Typography>{dataset.id}</Typography>
+            <CopyTextButton
+                valueToCopy={dataset.id}
+                nameOfValue="Dataset ID"
+              />
           </Grid>
           <Grid item xs={4}>
             <Typography variant="h6">Default Billing Profile Id:</Typography>
             {dataset.defaultProfileId}
+            <CopyTextButton
+                valueToCopy={dataset.defaultProfileId}
+                nameOfValue="Billing Profile ID"
+              />
           </Grid>
           {dataset.dataProject && (
             <Grid item xs={4}>
               <Typography variant="h6">Google Data Project:</Typography>
               {dataset.dataProject}
+              <CopyTextButton
+                valueToCopy={dataset.dataProject}
+                nameOfValue="Google Data Project"
+              />
             </Grid>
           )}
           {dataset.ingestServiceAccount && (
             <Grid item xs={4}>
               <Typography variant="h6">Ingest Service Account:</Typography>
               <Typography>{dataset.ingestServiceAccount}</Typography>
+              <CopyTextButton
+                valueToCopy={dataset.ingestServiceAccount}
+                nameOfValue="Ingest Service Account"
+              />
             </Grid>
           )}
           <Grid item xs={4}>

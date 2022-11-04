@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment, useState, SyntheticEvent } from 'react';
 import { Grid, Tab, Tabs, Typography } from '@mui/material';
 import { createStyles, WithStyles, withStyles } from '@mui/styles';
 import moment from 'moment';
@@ -6,6 +6,7 @@ import { CustomTheme } from '@mui/material/styles';
 import { patchSnapshot } from 'actions';
 import EditableFieldView from 'components/EditableFieldView';
 import GoogleSheetExport from 'components/common/overview/GoogleSheetExport';
+import CopyTextButton from 'components/common/CopyTextButton';
 import { Link } from 'react-router-dom';
 import { renderStorageResources } from '../../../libs/render-utils';
 import SnapshotAccess from '../SnapshotAccess';
@@ -70,14 +71,14 @@ interface SnapshotOverviewPanelProps extends WithStyles<typeof styles> {
 }
 
 function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = useState(0);
   const { classes, dispatch, snapshot, userRoles } = props;
   const isSteward = userRoles.includes(SnapshotRoles.STEWARD);
   // @ts-ignore
   const sourceDataset = snapshot.source[0].dataset;
   const linkToBq = snapshot.cloudPlatform === 'gcp';
 
-  const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
+  const handleChange = (_event: SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 
@@ -142,6 +143,13 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
             </Typography>
           </Grid>
           <Grid item xs={4}>
+            <Typography variant="h6">Snapshot ID:</Typography>
+            <Typography data-cy="snapshot-id">
+              {snapshot.id}
+              <CopyTextButton valueToCopy={snapshot.id ?? ''} nameOfValue="Snapshot ID" />
+            </Typography>
+          </Grid>
+          <Grid item xs={4}>
             <Typography variant="h6">Date Created:</Typography>
             <Typography data-cy="snapshot-date-created">
               {moment(snapshot.createdDate).fromNow()}
@@ -152,30 +160,37 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
             {renderStorageResources(sourceDataset)}
           </Grid>
           {sourceDataset.phsId && (
-            <Grid item xs={4}>
-              <Typography variant="h6">PHS ID:</Typography>
-              {sourceDataset.phsId}
-            </Grid>
+            <Fragment>
+              <Grid item xs={4}>
+                <Typography variant="h6">PHS ID:</Typography>
+                {sourceDataset.phsId}
+              </Grid>
+              <Grid item xs={4}>
+                <EditableFieldView
+                  fieldValue={snapshot.consentCode}
+                  fieldName="Consent Code"
+                  canEdit={isSteward}
+                  updateFieldValueFn={(text: string | undefined) => {
+                    dispatch(patchSnapshot(snapshot.id, { consentCode: text }));
+                  }}
+                  useMarkdown={false}
+                />
+              </Grid>
+            </Fragment>
           )}
-          <Grid item xs={4}>
-            <EditableFieldView
-              fieldValue={snapshot.consentCode}
-              fieldName="Consent Code"
-              canEdit={isSteward}
-              updateFieldValueFn={(text: string | undefined) => {
-                dispatch(patchSnapshot(snapshot.id, { consentCode: text }));
-              }}
-              useMarkdown={false}
-            />
-          </Grid>
           <Grid item xs={4}>
             <Typography variant="h6">Billing Profile Id:</Typography>
             {snapshot.profileId}
+            <CopyTextButton valueToCopy={snapshot.profileId ?? ''} nameOfValue="Billing Profile ID" />
           </Grid>
           {snapshot.dataProject && (
             <Grid item xs={4}>
               <Typography variant="h6">Google Data Project:</Typography>
               {snapshot.dataProject}
+              <CopyTextButton
+                valueToCopy={snapshot.dataProject}
+                nameOfValue="Google Data Project"
+              />
             </Grid>
           )}
         </Grid>
