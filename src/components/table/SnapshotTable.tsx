@@ -69,7 +69,7 @@ const SnapshotTable = withStyles(styles)(
         name: 'description',
         allowSort: true,
         render: (row: SnapshotSummaryModel) => (
-          <TextContent text={row.description} stripMarkdown markdown={true}/>
+          <TextContent text={row.description} stripMarkdown markdown={true} />
         ),
         width: '35%',
       },

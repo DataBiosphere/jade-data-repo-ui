@@ -33,7 +33,7 @@ function TextContent({
 }: TextContentProps) {
   return (
     <>
-      {text && !markdown && <>{text}</>}
+      {text && !markdown && <div>{text}</div>}
       {text && markdown && !stripMarkdown && (
         <div data-cy="react-markdown-text">
           <ReactMarkdown

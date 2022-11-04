@@ -162,7 +162,11 @@ function EditableFieldView({
           <div className={classes.textInputDiv}>
             {!isEditing && (
               <span className={classes.markdownPreview}>
-                <TextContent text={updatedFieldValue} emptyText={UNSET_FIELD_TEXT} markdown={true} />
+                <TextContent
+                  text={updatedFieldValue}
+                  emptyText={UNSET_FIELD_TEXT}
+                  markdown={true}
+                />
               </span>
             )}
             {isEditing && (

@@ -12,7 +12,7 @@ function CopyTextButton({ valueToCopy, nameOfValue }: CopyTextButtonProps) {
 
   const copyText = () => {
     navigator.clipboard.writeText(valueToCopy);
-    setToolTipText(`${nameOfValue ?? "Value"} Copied!`);
+    setToolTipText(`${nameOfValue ?? 'Value'} Copied!`);
   };
 
   return (
@@ -24,6 +24,13 @@ function CopyTextButton({ valueToCopy, nameOfValue }: CopyTextButtonProps) {
         disableRipple={true}
         onClick={copyText}
         size="small"
+        sx={{
+          boxShadow: 'none',
+          color: 'primary.main',
+          '&:hover': {
+            color: 'primary.hover',
+          },
+        }}
       >
         <i className="fa-regular fa-clipboard" />
       </IconButton>

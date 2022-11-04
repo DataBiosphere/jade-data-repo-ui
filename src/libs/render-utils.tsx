@@ -1,8 +1,8 @@
 import React from 'react';
-import { Typography } from '@mui/material';
-import { DatasetSummaryModel, SnapshotSummaryModel } from '../generated/tdr';
+import { Box, Typography } from '@mui/material';
 import TextContent from 'components/common/TextContent';
 import CopyTextButton from 'components/common/CopyTextButton';
+import { DatasetSummaryModel, SnapshotSummaryModel } from '../generated/tdr';
 
 const cloudPlatforms = { gcp: 'Google Cloud Platform', azure: 'Microsoft Azure' };
 /**
@@ -42,7 +42,30 @@ export const renderStorageResources = (resource: DatasetSummaryModel | SnapshotS
 export const renderTextFieldValue = (fieldName: string, fieldValue: string | undefined) => (
   <>
     <Typography variant="h6">{fieldName}:</Typography>
-    <TextContent text={fieldValue} />
-    {fieldValue && <CopyTextButton valueToCopy={fieldValue} nameOfValue={fieldName} />}
+    <Box
+      sx={{
+        position: 'relative',
+        display: 'inline-block',
+        '&:hover .copyButton': {
+          visibility: 'visible',
+        },
+      }}
+    >
+      <TextContent text={fieldValue} />
+      <Box
+        className="copyButton"
+        sx={{
+          position: 'absolute',
+          top: '-10px',
+          right: '-20px',
+          visibility: 'hidden',
+          '&:hover': {
+            visibility: 'visible',
+          },
+        }}
+      >
+        {fieldValue && <CopyTextButton valueToCopy={fieldValue} nameOfValue={fieldName} />}
+      </Box>
+    </Box>
   </>
 );

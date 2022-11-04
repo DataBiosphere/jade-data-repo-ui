@@ -7,6 +7,7 @@ import { patchSnapshot } from 'actions';
 import EditableFieldView from 'components/EditableFieldView';
 import GoogleSheetExport from 'components/common/overview/GoogleSheetExport';
 import { Link } from 'react-router-dom';
+import TextContent from 'components/common/TextContent';
 import { renderStorageResources, renderTextFieldValue } from '../../../libs/render-utils';
 import SnapshotAccess from '../SnapshotAccess';
 import SnapshotWorkspace from './SnapshotWorkspace';
@@ -15,7 +16,6 @@ import SnapshotExport from './SnapshotExport';
 import { SnapshotModel } from '../../../generated/tdr';
 import { SnapshotRoles } from '../../../constants';
 import { AppDispatch } from '../../../store';
-import TextContent from 'components/common/TextContent';
 
 const styles = (theme: CustomTheme) =>
   createStyles({

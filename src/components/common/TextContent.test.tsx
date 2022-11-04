@@ -36,7 +36,7 @@ describe('WithoutStylesMarkdownContent', () => {
       <Router history={history}>
         <Provider store={store}>
           <ThemeProvider theme={globalTheme}>
-            <TextContent text={htmlText} markdown={true}/>
+            <TextContent text={htmlText} markdown={true} />
           </ThemeProvider>
         </Provider>
       </Router>,
@@ -63,7 +63,7 @@ describe('WithoutStylesMarkdownContent', () => {
       <Router history={history}>
         <Provider store={store}>
           <ThemeProvider theme={globalTheme}>
-            <TextContent text={undefined} emptyText="custom" markdown={true}/>
+            <TextContent text={undefined} emptyText="custom" markdown={true} />
           </ThemeProvider>
         </Provider>
       </Router>,
