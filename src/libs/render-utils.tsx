@@ -36,14 +36,13 @@ export const renderStorageResources = (resource: DatasetSummaryModel | SnapshotS
     </Typography>
   ));
 
-
 /**
  * Render text value in grid, handling the case that the value is null and add copy button
  */
 export const renderTextFieldValue = (fieldName: string, fieldValue: string | undefined) => (
-<>
-<Typography variant="h6">{fieldName}:</Typography>
-<TextContent text={fieldValue} />
-{fieldValue && <CopyTextButton valueToCopy={fieldValue} nameOfValue={fieldName} />}
-</>
+  <>
+    <Typography variant="h6">{fieldName}:</Typography>
+    <TextContent text={fieldValue} />
+    {fieldValue && <CopyTextButton valueToCopy={fieldValue} nameOfValue={fieldName} />}
+  </>
 );
