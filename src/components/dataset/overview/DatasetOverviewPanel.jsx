@@ -215,27 +215,21 @@ function DatasetOverviewPanel(props) {
           <Grid item xs={4}>
             <Typography variant="h6">Dataset ID:</Typography>
             <Typography>{dataset.id}</Typography>
-            <CopyTextButton
-                valueToCopy={dataset.id}
-                nameOfValue="Dataset ID"
-              />
+            <CopyTextButton valueToCopy={dataset.id} nameOfValue="Dataset ID" />
           </Grid>
           <Grid item xs={4}>
             <Typography variant="h6">Default Billing Profile Id:</Typography>
             {dataset.defaultProfileId}
             <CopyTextButton
-                valueToCopy={dataset.defaultProfileId}
-                nameOfValue="Billing Profile ID"
-              />
+              valueToCopy={dataset.defaultProfileId}
+              nameOfValue="Billing Profile ID"
+            />
           </Grid>
           {dataset.dataProject && (
             <Grid item xs={4}>
               <Typography variant="h6">Google Data Project:</Typography>
               {dataset.dataProject}
-              <CopyTextButton
-                valueToCopy={dataset.dataProject}
-                nameOfValue="Google Data Project"
-              />
+              <CopyTextButton valueToCopy={dataset.dataProject} nameOfValue="Google Data Project" />
             </Grid>
           )}
           {dataset.ingestServiceAccount && (

@@ -181,7 +181,10 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
           <Grid item xs={4}>
             <Typography variant="h6">Billing Profile Id:</Typography>
             {snapshot.profileId}
-            <CopyTextButton valueToCopy={snapshot.profileId ?? ''} nameOfValue="Billing Profile ID" />
+            <CopyTextButton
+              valueToCopy={snapshot.profileId ?? ''}
+              nameOfValue="Billing Profile ID"
+            />
           </Grid>
           {snapshot.dataProject && (
             <Grid item xs={4}>
