@@ -77,7 +77,12 @@ export CYPRESS_GOOGLE_TOKEN=$(gcloud auth print-access-token)
 
 ### Testing
 
-- cypress 9.x
+- cypress 10.x
+
+- Make sure you have the following environment variables set:
+
+  - `export PROXY_URL=https://jade.datarepo-dev.broadinstitute.org`
+  - `export CYPRESS_BASE_URL=http://localhost:3000`
 
 To run end-to-end tests: `npx cypress run` or `npx cypress open` (interactive mode)
 

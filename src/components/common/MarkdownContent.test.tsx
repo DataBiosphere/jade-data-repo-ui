@@ -26,10 +26,10 @@ describe('WithoutStylesMarkdownContent', () => {
         </Provider>
       </Router>,
     );
-    cy.get('div#__cy_root > div').children().should('have.length', 2);
-    cy.get('div#__cy_root > div > h1').should('contain.text', 'Lorem Ipsum');
-    cy.get('div#__cy_root > div > p').children().should('have.length', 1);
-    cy.get('div#__cy_root > div > p > a').should('have.attr', 'href').and('include', 'broad');
+    cy.get('div[data-cy-root] > div').children().should('have.length', 2);
+    cy.get('div[data-cy-root] > div > h1').should('contain.text', 'Lorem Ipsum');
+    cy.get('div[data-cy-root] > div > p').children().should('have.length', 1);
+    cy.get('div[data-cy-root] > div > p > a').should('have.attr', 'href').and('include', 'broad');
   });
   it('should render as text', () => {
     mount(
@@ -41,9 +41,9 @@ describe('WithoutStylesMarkdownContent', () => {
         </Provider>
       </Router>,
     );
-    cy.get('div#__cy_root > div').children().should('have.length', 1);
-    cy.get('div#__cy_root > div > p').should('contain.text', 'A bad day');
-    cy.get('div#__cy_root > div > p').children().should('have.length', 0);
+    cy.get('div[data-cy-root] > div').children().should('have.length', 1);
+    cy.get('div[data-cy-root] > div > p').should('contain.text', 'A bad day');
+    cy.get('div[data-cy-root] > div > p').children().should('have.length', 0);
   });
   it('should contain empty text', () => {
     mount(
@@ -55,8 +55,8 @@ describe('WithoutStylesMarkdownContent', () => {
         </Provider>
       </Router>,
     );
-    cy.get('div#__cy_root').children().should('have.length', 1);
-    cy.get('div#__cy_root').children().should('have.text', '(empty)');
+    cy.get('div[data-cy-root]').children().should('have.length', 1);
+    cy.get('div[data-cy-root]').children().should('have.text', '(empty)');
   });
   it('should contain custom empty text', () => {
     mount(
@@ -68,8 +68,8 @@ describe('WithoutStylesMarkdownContent', () => {
         </Provider>
       </Router>,
     );
-    cy.get('div#__cy_root').children().should('have.length', 1);
-    cy.get('div#__cy_root').children().should('have.text', 'custom');
+    cy.get('div[data-cy-root]').children().should('have.length', 1);
+    cy.get('div[data-cy-root]').children().should('have.text', 'custom');
   });
 
   it('should strip markdown', () => {
@@ -82,7 +82,7 @@ describe('WithoutStylesMarkdownContent', () => {
         </Provider>
       </Router>,
     );
-    cy.get('div#__cy_root').children().should('have.length', 0);
-    cy.get('div#__cy_root').should('have.text', 'Lorem Ipsum\nLink');
+    cy.get('div[data-cy-root]').children().should('have.length', 0);
+    cy.get('div[data-cy-root]').should('have.text', 'Lorem Ipsum\nLink');
   });
 });
