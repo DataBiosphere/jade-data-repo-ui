@@ -51,7 +51,7 @@ export const renderTextFieldValue = (fieldName: string, fieldValue: string | und
     <Box
       sx={{
         position: 'relative',
-        display: 'inline-block'
+        display: 'inline-block',
       }}
     >
       <TextContent text={fieldValue} />
@@ -61,7 +61,7 @@ export const renderTextFieldValue = (fieldName: string, fieldValue: string | und
           position: 'absolute',
           top: '-10px',
           right: '-20px',
-          visibility: 'hidden'
+          visibility: 'hidden',
         }}
       >
         {fieldValue && <CopyTextButton valueToCopy={fieldValue} nameOfValue={fieldName} />}
