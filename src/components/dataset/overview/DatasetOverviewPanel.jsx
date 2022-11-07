@@ -261,16 +261,27 @@ function DatasetOverviewPanel(props) {
                   {dataset.schema.relationships.map((rel, i) => (
                     <div key={rel.name}>
                       <Typography variant="h6">{rel.name}</Typography>
-                      <Typography variant="h6">From</Typography>
-                      Table: {rel.from.table}
-                      <br />
-                      Column: {rel.from.column}
-                      <br />
-                      <Typography variant="h6">To</Typography>
-                      Table: {rel.to.table}
-                      <br />
-                      Column: {rel.to.column}
-                      <br />
+                      <dl>
+                        <dt>
+                          <Typography variant="h6">From</Typography>
+                          <dd>
+                            <label>Table:</label> {rel.from.table}
+                          </dd>
+                          <dd>
+                            <label>Column:</label> {rel.from.column}
+                          </dd>
+                        </dt>
+                        <dt>
+                          <Typography variant="h6">To</Typography>
+                          <dd>
+                            <label>Table:</label>
+                            {rel.to.table}
+                          </dd>
+                          <dd>
+                            <label>Column:</label> {rel.to.column}
+                          </dd>
+                        </dt>
+                      </dl>
                       {i < dataset.schema.relationships.length - 1 && (
                         <Divider className={classes.divider} />
                       )}
