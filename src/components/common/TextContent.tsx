@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from '@mui/material';
+import { Link, Box } from '@mui/material';
 import { CustomTheme } from '@mui/material/styles';
 import { createStyles, WithStyles, withStyles } from '@mui/styles';
 import ReactMarkdown from 'react-markdown';
@@ -33,7 +33,11 @@ function TextContent({
 }: TextContentProps) {
   return (
     <>
-      {text && !markdown && <div>{text}</div>}
+      {text && !markdown && (
+        <Box component="div" sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
+          {text}
+        </Box>
+      )}
       {text && markdown && !stripMarkdown && (
         <div data-cy="react-markdown-text">
           <ReactMarkdown

@@ -20,6 +20,7 @@ function InfoHoverButton({ infoText, fieldName }: InfoHoverButtonProps) {
           boxShadow: 'none',
           color: 'primary.main',
           float: 'right',
+          marginRight: '5px',
           '&:hover': {
             color: 'primary.hover',
             cursor: 'default',

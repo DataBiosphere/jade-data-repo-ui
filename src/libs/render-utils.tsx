@@ -60,6 +60,8 @@ export const renderTextFieldValue = (
       sx={{
         position: 'relative',
         display: 'inline-block',
+        whiteSpace: 'nowrap',
+        maxWidth: '90%',
       }}
     >
       <TextContent text={fieldValue} />
@@ -67,7 +69,7 @@ export const renderTextFieldValue = (
         className="copyButton"
         sx={{
           position: 'absolute',
-          top: '-10px',
+          top: '-5px',
           right: '-20px',
           visibility: 'hidden',
         }}

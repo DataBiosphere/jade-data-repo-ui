@@ -31,7 +31,6 @@ import DatasetSnapshotsTable from '../../table/DatasetSnapshotsTable';
 import EditableFieldView from '../../EditableFieldView';
 import TabPanel from '../../common/TabPanel';
 import { DatasetRoles } from '../../../constants';
-import CopyTextButton from '../../common/CopyTextButton';
 
 const styles = (theme) => ({
   root: {
