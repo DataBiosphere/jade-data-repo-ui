@@ -2,6 +2,7 @@ import React from 'react';
 import { Box, Typography } from '@mui/material';
 import TextContent from 'components/common/TextContent';
 import CopyTextButton from 'components/common/CopyTextButton';
+import InfoHoverButton from 'components/common/InfoHoverButton';
 import { DatasetSummaryModel, SnapshotSummaryModel } from '../generated/tdr';
 
 const cloudPlatforms = { gcp: 'Google Cloud Platform', azure: 'Microsoft Azure' };
@@ -39,7 +40,11 @@ export const renderStorageResources = (resource: DatasetSummaryModel | SnapshotS
 /**
  * Render text value in grid, handling the case that the value is null and add copy button
  */
-export const renderTextFieldValue = (fieldName: string, fieldValue: string | undefined) => (
+export const renderTextFieldValue = (
+  fieldName: string,
+  fieldValue: string | undefined,
+  infoButtonText?: string,
+) => (
   <Box
     sx={{
       '&:hover .copyButton': {
@@ -47,7 +52,10 @@ export const renderTextFieldValue = (fieldName: string, fieldValue: string | und
       },
     }}
   >
-    <Typography variant="h6">{fieldName}:</Typography>
+    <Typography variant="h6">
+      {fieldName}:
+      {infoButtonText && <InfoHoverButton infoText={infoButtonText} fieldName={fieldName} />}
+    </Typography>
     <Box
       sx={{
         position: 'relative',

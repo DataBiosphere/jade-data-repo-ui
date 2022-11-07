@@ -156,13 +156,18 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
             {renderStorageResources(sourceDataset)}
           </Grid>
           <Grid item xs={4}>
-            {renderTextFieldValue('PHS ID', sourceDataset.phsId)}
+            {renderTextFieldValue(
+              'PHS ID',
+              sourceDataset.phsId,
+              'PHS ID is editable on the parent dataset.',
+            )}
           </Grid>
           <Grid item xs={4}>
             <EditableFieldView
               fieldValue={snapshot.consentCode}
               fieldName="Consent Code"
               canEdit={isSteward}
+              infoButtonText="The Consent Code is used in conjunction with the PHS ID to determined if a user is authorized to view a snapshot based on their RAS Passport."
               updateFieldValueFn={(text: string | undefined) => {
                 dispatch(patchSnapshot(snapshot.id, { consentCode: text }));
               }}

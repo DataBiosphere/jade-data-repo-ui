@@ -18,8 +18,8 @@ function CopyTextButton({ valueToCopy, nameOfValue }: CopyTextButtonProps) {
   return (
     <TerraTooltip title={toolTipText}>
       <IconButton
-        aria-label="Copy Snapshot ID"
-        data-cy="copy-byttin"
+        aria-label={`Copy ${nameOfValue}`}
+        data-cy="copy-text-button"
         disableFocusRipple={true}
         disableRipple={true}
         onClick={copyText}

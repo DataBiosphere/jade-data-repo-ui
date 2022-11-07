@@ -8,6 +8,7 @@ import 'easymde/dist/easymde.min.css';
 import { createStyles, WithStyles, withStyles } from '@mui/styles';
 import TextContent from './common/TextContent';
 import WithoutStylesMarkdownContent from './common/WithoutStylesMarkdownContent';
+import InfoHoverButton from './common/InfoHoverButton';
 
 const styles = (theme: CustomTheme) =>
   createStyles({
@@ -55,6 +56,7 @@ interface EditableFieldViewProps extends WithStyles<typeof styles> {
   canEdit: boolean;
   fieldValue: string | undefined;
   fieldName: string;
+  infoButtonText?: string;
   updateFieldValueFn: any;
   useMarkdown: boolean;
 }
@@ -64,6 +66,7 @@ function EditableFieldView({
   classes,
   fieldValue,
   fieldName,
+  infoButtonText,
   updateFieldValueFn,
   useMarkdown,
 }: EditableFieldViewProps) {
@@ -150,6 +153,7 @@ function EditableFieldView({
               <i className="fa-solid fa-pen-circle" />
             </IconButton>
           )}
+          {infoButtonText && <InfoHoverButton infoText={infoButtonText} fieldName={fieldName} />}
         </Typography>
       </div>
       {!canEdit && (

@@ -241,6 +241,7 @@ function DatasetOverviewPanel(props) {
               fieldValue={dataset.phsId}
               fieldName="PHS ID"
               canEdit={userRoles.includes(DatasetRoles.STEWARD)}
+              infoButtonText="PHS IDs are set for the dataset and are inherited by all child snapshots. The PHS ID is used in conjunction with a consent code, which is set at a snapshot level, to determined if a user is authorized to view a snapshot based on their RAS Passport."
               updateFieldValueFn={(text) => dispatch(patchDataset(dataset.id, { phsId: text }))}
               useMarkdown={false}
             />
