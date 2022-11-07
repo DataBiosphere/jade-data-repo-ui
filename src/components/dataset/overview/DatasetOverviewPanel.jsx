@@ -264,22 +264,16 @@ function DatasetOverviewPanel(props) {
                       <dl>
                         <dt>
                           <Typography variant="h6">From</Typography>
-                          <dd>
-                            <label>Table:</label> {rel.from.table}
-                          </dd>
-                          <dd>
-                            <label>Column:</label> {rel.from.column}
-                          </dd>
+                          <dd>Table: {rel.from.table}</dd>
+                          <dd>Column:{rel.from.column}</dd>
                         </dt>
                         <dt>
                           <Typography variant="h6">To</Typography>
                           <dd>
-                            <label>Table:</label>
+                            Table:
                             {rel.to.table}
                           </dd>
-                          <dd>
-                            <label>Column:</label> {rel.to.column}
-                          </dd>
+                          <dd>Column: {rel.to.column}</dd>
                         </dt>
                       </dl>
                       {i < dataset.schema.relationships.length - 1 && (
