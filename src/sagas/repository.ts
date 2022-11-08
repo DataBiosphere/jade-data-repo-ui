@@ -280,15 +280,14 @@ export function* getSnapshots({ payload }: any): any {
   }
 }
 
-export function* patchSnapshotDescription({ payload }: any): any {
-  const { snapshotId, text } = payload;
-  const data = { description: text };
+export function* patchSnapshot({ payload }: any): any {
+  const { snapshotId, data } = payload;
   const url = `/api/repository/v1/snapshots/${snapshotId}`;
   try {
     yield call(authPatch, url, data);
     yield put({
-      type: ActionTypes.PATCH_SNAPSHOT_DESCRIPTION_SUCCESS,
-      description: text,
+      type: ActionTypes.PATCH_SNAPSHOT_SUCCESS,
+      data,
     });
   } catch (err) {
     showNotification(err);
@@ -851,15 +850,14 @@ export function* getUserStatus(): any {
   }
 }
 
-export function* patchDatasetDescription({ payload }: any): any {
-  const { datasetId, text } = payload;
-  const data = { description: text };
+export function* patchDataset({ payload }: any): any {
+  const { datasetId, data } = payload;
   const url = `/api/repository/v1/datasets/${datasetId}`;
   try {
     yield call(authPatch, url, data);
     yield put({
-      type: ActionTypes.PATCH_DATASET_DESCRIPTION_SUCCESS,
-      description: text,
+      type: ActionTypes.PATCH_DATASET_SUCCESS,
+      data,
     });
   } catch (err) {
     showNotification(err);
@@ -898,8 +896,8 @@ export default function* root() {
     takeLatest(ActionTypes.GET_USER_DATASET_ROLES, getUserDatasetRoles),
     takeLatest(ActionTypes.GET_USER_SNAPSHOT_ROLES, getUserSnapshotRoles),
     takeLatest(ActionTypes.GET_USER_STATUS, getUserStatus),
-    takeLatest(ActionTypes.PATCH_DATASET_DESCRIPTION, patchDatasetDescription),
-    takeLatest(ActionTypes.PATCH_SNAPSHOT_DESCRIPTION, patchSnapshotDescription),
+    takeLatest(ActionTypes.PATCH_DATASET, patchDataset),
+    takeLatest(ActionTypes.PATCH_SNAPSHOT, patchSnapshot),
     fork(watchGetDatasetByIdSuccess),
   ]);
 }

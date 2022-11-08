@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { useState, SyntheticEvent } from 'react';
 import { Grid, Tab, Tabs, Typography } from '@mui/material';
 import { createStyles, WithStyles, withStyles } from '@mui/styles';
 import moment from 'moment';
 import { CustomTheme } from '@mui/material/styles';
-import { patchSnapshotDescription } from 'actions';
-import DescriptionView from 'components/DescriptionView';
+import { patchSnapshot } from 'actions';
+import EditableFieldView from 'components/EditableFieldView';
 import GoogleSheetExport from 'components/common/overview/GoogleSheetExport';
 import { Link } from 'react-router-dom';
-import { renderStorageResources } from '../../../libs/render-utils';
+import TextContent from 'components/common/TextContent';
+import { renderStorageResources, renderTextFieldValue } from '../../../libs/render-utils';
 import SnapshotAccess from '../SnapshotAccess';
 import SnapshotWorkspace from './SnapshotWorkspace';
 import TabPanel from '../../common/TabPanel';
@@ -70,14 +71,14 @@ interface SnapshotOverviewPanelProps extends WithStyles<typeof styles> {
 }
 
 function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = useState(0);
   const { classes, dispatch, snapshot, userRoles } = props;
   const isSteward = userRoles.includes(SnapshotRoles.STEWARD);
   // @ts-ignore
   const sourceDataset = snapshot.source[0].dataset;
   const linkToBq = snapshot.cloudPlatform === 'gcp';
 
-  const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
+  const handleChange = (_event: SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 
@@ -121,13 +122,14 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
       <TabPanel value={value} index={0}>
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <DescriptionView
-              description={snapshot.description}
+            <EditableFieldView
+              fieldValue={snapshot.description}
+              fieldName="Description"
               canEdit={isSteward}
-              title="Description"
-              updateDescriptionFn={(text: string | undefined) =>
-                dispatch(patchSnapshotDescription(snapshot.id, text))
+              updateFieldValueFn={(text: string | undefined) =>
+                dispatch(patchSnapshot(snapshot.id, { description: text }))
               }
+              useMarkdown={true}
             />
           </Grid>
           <Grid item xs={4}>
@@ -135,10 +137,13 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
             <Typography data-cy="snapshot-source-dataset" className={classes.datasetText}>
               <Link to={`/datasets/${sourceDataset.id}`}>
                 <span className={classes.jadeLink} title={sourceDataset.name}>
-                  {sourceDataset.name}
+                  <TextContent text={sourceDataset.name} />
                 </span>
               </Link>
             </Typography>
+          </Grid>
+          <Grid item xs={4}>
+            {renderTextFieldValue('Snapshot ID', snapshot.id)}
           </Grid>
           <Grid item xs={4}>
             <Typography variant="h6">Date Created:</Typography>
@@ -150,6 +155,33 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
             <Typography variant="h6">Storage:</Typography>
             {renderStorageResources(sourceDataset)}
           </Grid>
+          <Grid item xs={4}>
+            {renderTextFieldValue(
+              'PHS ID',
+              sourceDataset.phsId,
+              'PHS ID is editable on the parent dataset.',
+            )}
+          </Grid>
+          <Grid item xs={4}>
+            <EditableFieldView
+              fieldValue={snapshot.consentCode}
+              fieldName="Consent Code"
+              canEdit={isSteward}
+              infoButtonText="The Consent Code is used in conjunction with the PHS ID to determined if a user is authorized to view a snapshot based on their RAS Passport."
+              updateFieldValueFn={(text: string | undefined) => {
+                dispatch(patchSnapshot(snapshot.id, { consentCode: text }));
+              }}
+              useMarkdown={false}
+            />
+          </Grid>
+          <Grid item xs={4}>
+            {renderTextFieldValue('Billing Profile Id', snapshot.profileId)}
+          </Grid>
+          {snapshot.dataProject && (
+            <Grid item xs={4}>
+              {renderTextFieldValue('Google Data Project', snapshot.dataProject)}
+            </Grid>
+          )}
         </Grid>
       </TabPanel>
       <TabPanel value={value} index={1}>

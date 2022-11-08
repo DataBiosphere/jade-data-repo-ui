@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from '@mui/material';
+import { Link, Box } from '@mui/material';
 import { CustomTheme } from '@mui/material/styles';
 import { createStyles, WithStyles, withStyles } from '@mui/styles';
 import ReactMarkdown from 'react-markdown';
@@ -17,21 +17,28 @@ const styles = (theme: CustomTheme) =>
     },
   });
 
-interface MarkdownContentProps extends WithStyles<typeof styles> {
-  markdownText: string | undefined;
+interface TextContentProps extends WithStyles<typeof styles> {
+  text: string | undefined;
+  markdown?: boolean;
   stripMarkdown?: boolean;
   emptyText?: string;
 }
 
-function MarkdownContent({
+function TextContent({
   classes,
   emptyText = '(empty)',
-  markdownText,
+  markdown = false,
   stripMarkdown = false,
-}: MarkdownContentProps) {
+  text,
+}: TextContentProps) {
   return (
     <>
-      {markdownText && !stripMarkdown && (
+      {text && !markdown && (
+        <Box component="div" sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
+          {text}
+        </Box>
+      )}
+      {text && markdown && !stripMarkdown && (
         <div data-cy="react-markdown-text">
           <ReactMarkdown
             components={{
@@ -44,11 +51,11 @@ function MarkdownContent({
               ),
             }}
           >
-            {markdownText}
+            {text}
           </ReactMarkdown>
         </div>
       )}
-      {markdownText && stripMarkdown && (
+      {text && markdown && stripMarkdown && (
         <ReactMarkdown
           remarkPlugins={[strip]}
           components={{
@@ -61,12 +68,12 @@ function MarkdownContent({
             },
           }}
         >
-          {markdownText}
+          {text}
         </ReactMarkdown>
       )}
-      {!markdownText && <span className={classes.nullValue}>{emptyText}</span>}
+      {!text && <span className={classes.nullValue}>{emptyText}</span>}
     </>
   );
 }
 
-export default withStyles(styles)(MarkdownContent);
+export default withStyles(styles)(TextContent);
