@@ -67,10 +67,6 @@ const styles = (theme) => ({
     alignItems: 'center',
   },
   bottom: {
-    position: 'fixed',
-    bottom: '0',
-    right: `${sidebarWidth}px`,
-    width: `${drawerWidth}px`,
     padding: `0 ${theme.spacing(1)}`,
     textAlign: 'end',
   },
