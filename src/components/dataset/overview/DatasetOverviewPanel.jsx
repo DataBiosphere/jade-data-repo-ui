@@ -13,6 +13,7 @@ import { renderCloudPlatforms, renderStorageResources } from '../../../libs/rend
 import InfoViewDatasetAccess from '../data/sidebar/panels/InfoViewDatasetAccess';
 import DatasetSnapshotsTable from '../../table/DatasetSnapshotsTable';
 import DescriptionView from '../../DescriptionView';
+import JournalView from '../../JournalView';
 import TabPanel from '../../common/TabPanel';
 import { DatasetRoles } from '../../../constants';
 
@@ -94,6 +95,8 @@ function DatasetOverviewPanel(props) {
   const { classes, dataset, dispatch, userRoles } = props;
   const linkToBq = dataset.accessInformation?.bigQuery !== undefined;
 
+  const canViewActivity =
+    userRoles.includes(DatasetRoles.STEWARD) || userRoles.includes(DatasetRoles.CUSTODIAN);
   const canManageUsers =
     userRoles.includes(DatasetRoles.STEWARD) || userRoles.includes(DatasetRoles.CUSTODIAN);
 
@@ -145,6 +148,16 @@ function DatasetOverviewPanel(props) {
             {...a11yProps(2)}
           />
         )}
+        {canViewActivity && (
+          <Tab
+            data-cy="activity-tab"
+            label="Dataset activity"
+            classes={{ selected: classes.tabSelected }}
+            disableFocusRipple
+            disableRipple
+            {...a11yProps(3)}
+          />
+        )}
         {canManageUsers && (
           <Tab
             data-cy="roles-tab"
@@ -152,7 +165,7 @@ function DatasetOverviewPanel(props) {
             classes={{ selected: classes.tabSelected }}
             disableFocusRipple
             disableRipple
-            {...a11yProps(3)}
+            {...a11yProps(4)}
           />
         )}
       </Tabs>
@@ -196,6 +209,14 @@ function DatasetOverviewPanel(props) {
         </TabPanel>
       )}
       <TabPanel value={value} index={3}>
+        <Grid container spacing={2}>
+          <Grid item xs={9}>
+            hello!
+            <JournalView />
+          </Grid>
+        </Grid>
+      </TabPanel>
+      <TabPanel value={value} index={4}>
         <Grid container spacing={2}>
           <Grid item xs={9}>
             <InfoViewDatasetAccess helpOverlayToggle={toggleHelpOverlay} />

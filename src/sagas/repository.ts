@@ -642,6 +642,30 @@ export function* getJobResult({ payload }: any): any {
 }
 
 /**
+ * Journals.
+ */
+
+export function* getJournals({ payload }: any): any {
+  const { resourceKey, resourceType, limit, offset } = payload;
+  try {
+    const response = yield call(
+      authGet,
+      `/api/repository/v1/journals/${resourceKey}?offset=${offset}&limit=${limit}&resourceType=${resourceType}`,
+    );
+    yield put({
+      type: ActionTypes.GET_JOURNALS_SUCCESS,
+      jobs: { data: response },
+    });
+  } catch (err) {
+    const { errMessage } = payload;
+    showNotification(errMessage || err);
+    yield put({
+      type: ActionTypes.GET_JOURNALS_FAILURE,
+    });
+  }
+}
+
+/**
  * billing profile
  */
 export function* getBillingProfileById({ payload }: any): any {
