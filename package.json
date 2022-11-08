@@ -123,7 +123,7 @@
     "eslint-plugin-react": "^7.29.4",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-redux-saga": "^1.2.1",
-    "husky": "^7.0.2",
+    "husky": "^8.0.2",
     "inquirer": "^8.1.2",
     "prettier": "^2.2.1",
     "react-app-rewire-hot-loader": "^2.0.1",
