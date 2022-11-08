@@ -306,6 +306,9 @@ export const { snapshotCreateDetails } = createActions({
   }),
 });
 
-export const { addReadersToSnapshot } = createActions({
-  [ActionTypes.ADD_READERS_TO_SNAPSHOT]: (readers) => readers,
+export const { changePolicyUsersToSnapshotRequest } = createActions({
+  [ActionTypes.CHANGE_POLICY_USERS_TO_SNAPSHOT_REQUEST]: (policy, users) => ({
+    policy,
+    users,
+  }),
 });

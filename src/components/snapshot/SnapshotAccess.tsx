@@ -1,14 +1,21 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import _ from 'lodash';
 import { withStyles } from '@mui/styles';
 import { Grid } from '@mui/material';
 import UserList from '../UserList';
 import { SnapshotRoles } from '../../constants';
 import { getRoleMembersFromPolicies } from '../../libs/utils';
-import { addSnapshotPolicyMember, removeSnapshotPolicyMember } from '../../actions';
+import {
+  addSnapshotPolicyMember,
+  removeSnapshotPolicyMember,
+  changePolicyUsersToSnapshotRequest,
+} from '../../actions';
 import { PolicyModel, SnapshotModel } from '../../generated/tdr';
 import { TdrState } from '../../reducers';
+import { SnapshotRequest } from '../../reducers/snapshot';
 import { AppDispatch } from '../../store';
+import AddUserAccess, { AccessPermission } from '../common/AddUserAccess';
 
 const styles = () => ({
   helpContainer: {
@@ -18,68 +25,100 @@ const styles = () => ({
 
 type SnapshotAccessProps = {
   dispatch: AppDispatch;
-  horizontal: boolean;
-  isAddingOrRemovingUser: boolean;
   policies: Array<PolicyModel>;
   snapshot: SnapshotModel;
+  snapshotRequest: SnapshotRequest;
   userRoles: Array<string>;
+  createMode?: boolean;
 };
 
 function SnapshotAccess(props: SnapshotAccessProps) {
-  const addUser = (role: string) => {
-    const { snapshot, dispatch } = props;
-    return (newEmail: string) => {
-      dispatch(addSnapshotPolicyMember(snapshot.id, newEmail, role));
-    };
+  const addUsers = (role: string, usersToAdd: string[]) => {
+    const { snapshot, snapshotRequest, dispatch } = props;
+
+    if (createMode) {
+      const existingEmails = _.get(snapshotRequest, ['policies', `${role}s`], []);
+      const uniqEmails = _.uniq([...existingEmails, ...usersToAdd]);
+
+      // needs this manual conversion because the permissions are different for
+      // editing existing snapshot policies vs creating a new snapshot
+      if (role === 'steward' || role === 'reader' || role === 'discoverer') {
+        dispatch(changePolicyUsersToSnapshotRequest(`${role}s`, uniqEmails));
+      }
+    } else {
+      usersToAdd.forEach((user) => {
+        dispatch(addSnapshotPolicyMember(snapshot.id, user, role));
+      });
+    }
   };
+
   const removeUser = (role: string) => {
-    const { snapshot, dispatch } = props;
+    const { snapshot, snapshotRequest, dispatch } = props;
+
+    if (createMode) {
+      return (removeableEmail: string) => {
+        const existingEmails = _.get(snapshotRequest, ['policies', `${role}s`], []);
+        const filteredEmails = _.filter(existingEmails, (user: string) => user !== removeableEmail);
+        dispatch(changePolicyUsersToSnapshotRequest(`${role}s`, filteredEmails));
+      };
+    }
+
     return (removableEmail: string) => {
       dispatch(removeSnapshotPolicyMember(snapshot.id, removableEmail, role));
     };
   };
-  const { horizontal, policies, userRoles, isAddingOrRemovingUser } = props;
-  const stewards = getRoleMembersFromPolicies(policies, SnapshotRoles.STEWARD);
-  const readers = getRoleMembersFromPolicies(policies, SnapshotRoles.READER);
-  const discoverers = getRoleMembersFromPolicies(policies, SnapshotRoles.DISCOVERER);
 
-  const canManageUsers = userRoles.includes(SnapshotRoles.STEWARD);
-  const gridItemXs = horizontal ? 4 : 12;
+  const getUsers = (role: string): string[] => {
+    const pluralizedRole = `${role}s`;
+    return createMode
+      ? (snapshotRequest.policies as any)[pluralizedRole] || []
+      : getRoleMembersFromPolicies(policies, role);
+  };
+
+  const { policies, snapshotRequest, userRoles, createMode } = props;
+  const stewards = getUsers(SnapshotRoles.STEWARD);
+  const readers = getUsers(SnapshotRoles.READER);
+  const discoverers = getUsers(SnapshotRoles.DISCOVERER);
+
+  const canManageUsers = userRoles.includes(SnapshotRoles.STEWARD) || !!createMode;
+  const permissions: AccessPermission[] = [
+    { policy: 'steward', disabled: !canManageUsers },
+    { policy: 'reader', disabled: !canManageUsers },
+    { policy: 'discoverer', disabled: !canManageUsers },
+  ];
 
   return (
     <Grid container spacing={1}>
-      <Grid item xs={gridItemXs} data-cy="snapshot-stewards">
+      {canManageUsers && (
+        <Grid item xs={12}>
+          <AddUserAccess permissions={permissions} onAdd={addUsers} />
+        </Grid>
+      )}
+      <Grid item xs={12} data-cy="snapshot-stewards">
         <UserList
           users={stewards}
           typeOfUsers="Stewards"
           canManageUsers={canManageUsers}
-          addUser={addUser(SnapshotRoles.STEWARD)}
-          isAddingOrRemovingUser={isAddingOrRemovingUser}
           removeUser={removeUser(SnapshotRoles.STEWARD)}
           defaultOpen={true}
-          horizontal={horizontal}
         />
       </Grid>
-      <Grid item xs={gridItemXs} data-cy="snapshot-readers">
+      <Grid item xs={12} data-cy="snapshot-readers">
         <UserList
           users={readers}
           typeOfUsers="Readers"
           canManageUsers={canManageUsers}
-          addUser={addUser(SnapshotRoles.READER)}
-          isAddingOrRemovingUser={isAddingOrRemovingUser}
           removeUser={removeUser(SnapshotRoles.READER)}
-          horizontal={horizontal}
+          defaultOpen={createMode}
         />
       </Grid>
-      <Grid item xs={gridItemXs} data-cy="snapshot-discoverers">
+      <Grid item xs={12} data-cy="snapshot-discoverers">
         <UserList
           users={discoverers}
           typeOfUsers="Discoverers"
           canManageUsers={canManageUsers}
-          addUser={addUser(SnapshotRoles.DISCOVERER)}
-          isAddingOrRemovingUser={isAddingOrRemovingUser}
           removeUser={removeUser(SnapshotRoles.DISCOVERER)}
-          horizontal={horizontal}
+          defaultOpen={createMode}
         />
       </Grid>
     </Grid>
@@ -89,8 +128,8 @@ function SnapshotAccess(props: SnapshotAccessProps) {
 function mapStateToProps(state: TdrState) {
   return {
     policies: state.snapshots.snapshotPolicies,
-    isAddingOrRemovingUser: state.snapshots.isAddingOrRemovingUser,
     snapshot: state.snapshots.snapshot,
+    snapshotRequest: state.snapshots.snapshotRequest,
     userRoles: state.snapshots.userRoles,
   };
 }

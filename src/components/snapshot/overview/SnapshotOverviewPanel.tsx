@@ -175,7 +175,7 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
       <TabPanel value={value} index={2}>
         <Grid container spacing={2}>
           <Grid item xs={9}>
-            <SnapshotAccess horizontal={false} />
+            <SnapshotAccess />
           </Grid>
         </Grid>
       </TabPanel>

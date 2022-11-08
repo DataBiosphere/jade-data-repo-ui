@@ -207,19 +207,20 @@ export function* createSnapshot(): any {
     assetName,
     filterStatement,
     joinStatement,
-    readers,
+    policies,
   } = snapshots.snapshotRequest;
 
   const datasetName = dataset.name;
   const mode = 'byQuery';
   const selectedAsset = _.find(dataset.schema.assets, (asset) => asset.name === assetName);
+
   const { rootTable } = selectedAsset;
 
   const snapshotRequest = {
     name,
     profileId: dataset.defaultProfileId,
     description,
-    readers,
+    policies,
     contents: [
       {
         datasetName,
