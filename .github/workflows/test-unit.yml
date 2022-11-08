@@ -42,4 +42,4 @@ jobs:
           DISABLE_ESLINT_PLUGIN: true
         with:
           command: |
-            npx cypress run-ct
+            npx cypress run --component
