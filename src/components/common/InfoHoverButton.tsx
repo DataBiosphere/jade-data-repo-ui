@@ -19,7 +19,7 @@ function InfoHoverButton({ infoText, fieldName }: InfoHoverButtonProps) {
         sx={{
           boxShadow: 'none',
           color: 'primary.main',
-          float: 'right',
+          paddingLeft: '16px',
           marginRight: '5px',
           '&:hover': {
             color: 'primary.hover',
