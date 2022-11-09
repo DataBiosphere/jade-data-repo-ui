@@ -95,7 +95,7 @@ function DatasetOverviewPanel(props) {
   const { classes, dataset, dispatch, userRoles } = props;
   const linkToBq = dataset.accessInformation?.bigQuery !== undefined;
 
-  const canViewActivity =
+  const canViewJournalEntries =
     userRoles.includes(DatasetRoles.STEWARD) || userRoles.includes(DatasetRoles.CUSTODIAN);
   const canManageUsers =
     userRoles.includes(DatasetRoles.STEWARD) || userRoles.includes(DatasetRoles.CUSTODIAN);
@@ -148,7 +148,7 @@ function DatasetOverviewPanel(props) {
             {...a11yProps(2)}
           />
         )}
-        {canViewActivity && (
+        {canViewJournalEntries && (
           <Tab
             data-cy="activity-tab"
             label="Dataset activity"
@@ -208,13 +208,15 @@ function DatasetOverviewPanel(props) {
           </Grid>
         </TabPanel>
       )}
-      <TabPanel value={value} index={3}>
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <JournalEntriesView id={dataset.id} resourceType="DATASET" />
+      {canViewJournalEntries && (
+        <TabPanel value={value} index={3}>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <JournalEntriesView id={dataset.id} resourceType="DATASET" />
+            </Grid>
           </Grid>
-        </Grid>
-      </TabPanel>
+        </TabPanel>
+      )}
       <TabPanel value={value} index={4}>
         <Grid container spacing={2}>
           <Grid item xs={9}>

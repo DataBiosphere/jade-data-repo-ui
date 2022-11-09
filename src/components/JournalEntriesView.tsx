@@ -15,7 +15,7 @@ const styles = () =>
   } as const);
 
 interface JournalEntriesViewProps extends WithStyles<typeof styles> {
-  id: string;
+  id?: string;
   resourceType: IamResourceTypeEnum;
   journalEntries: JournalEntryModel[];
   loading: boolean;

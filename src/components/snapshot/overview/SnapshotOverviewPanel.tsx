@@ -15,6 +15,7 @@ import SnapshotExport from './SnapshotExport';
 import { SnapshotModel } from '../../../generated/tdr';
 import { SnapshotRoles } from '../../../constants';
 import { AppDispatch } from '../../../store';
+import JournalEntriesView from '../../JournalEntriesView';
 
 const styles = (theme: CustomTheme) =>
   createStyles({
@@ -73,6 +74,7 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
   const [value, setValue] = React.useState(0);
   const { classes, dispatch, snapshot, userRoles } = props;
   const isSteward = userRoles.includes(SnapshotRoles.STEWARD);
+  const canViewJournalEntries = userRoles.includes(SnapshotRoles.STEWARD);
   // @ts-ignore
   const sourceDataset = snapshot.source[0].dataset;
   const linkToBq = snapshot.cloudPlatform === 'gcp';
@@ -108,13 +110,22 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
           disableRipple
           {...a11yProps(1)}
         />
+        {canViewJournalEntries && (
+          <Tab
+            label="Snapshot activity"
+            classes={{ selected: classes.tabSelected }}
+            disableFocusRipple
+            disableRipple
+            {...a11yProps(2)}
+          />
+        )}
         {isSteward && (
           <Tab
             label="Roles & memberships"
             classes={{ selected: classes.tabSelected }}
             disableFocusRipple
             disableRipple
-            {...a11yProps(2)}
+            {...a11yProps(3)}
           />
         )}
       </Tabs>
@@ -172,7 +183,16 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
           </Grid>
         )}
       </TabPanel>
-      <TabPanel value={value} index={2}>
+      {canViewJournalEntries && (
+        <TabPanel value={value} index={2}>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <JournalEntriesView id={snapshot.id} resourceType="DATASNAPSHOT" />
+            </Grid>
+          </Grid>
+        </TabPanel>
+      )}
+      <TabPanel value={value} index={3}>
         <Grid container spacing={2}>
           <Grid item xs={9}>
             <SnapshotAccess />
