@@ -10,6 +10,7 @@ import {
   PolicyModel,
   SnapshotExportResponseModel,
   SnapshotModel,
+  SnapshotRequestModelPolicies,
   SnapshotSummaryModel,
   WorkspacePolicyModel,
 } from '../generated/tdr';
@@ -21,7 +22,7 @@ export interface SnapshotRequest {
   assetName: string;
   filterStatement: string;
   joinStatement: string;
-  readers: Array<string>;
+  policies: SnapshotRequestModelPolicies;
 }
 
 export interface SnapshotState {
@@ -55,7 +56,7 @@ const defaultSnapshotRequest: SnapshotRequest = {
   assetName: '',
   filterStatement: '',
   joinStatement: '',
-  readers: [],
+  policies: {},
 };
 
 export const initialSnapshotState: SnapshotState = {
@@ -273,16 +274,29 @@ export default {
           snapshotRequest: { $set: snapshotRequest },
         });
       },
-      [ActionTypes.ADD_READERS_TO_SNAPSHOT]: (state, action: any) => {
-        const snapshotRequest = { ...state.snapshotRequest, readers: action.payload };
+      [ActionTypes.CHANGE_POLICY_USERS_TO_SNAPSHOT_REQUEST]: (state, action: any) => {
+        const { policy, users } = action.payload;
+        const snapshotRequest = {
+          ...state.snapshotRequest,
+          policies: {
+            ...state.snapshotRequest.policies,
+            [policy]: users,
+          },
+        };
         return immutable(state, {
           snapshotRequest: { $set: snapshotRequest },
         });
       },
-      [ActionTypes.PATCH_SNAPSHOT_DESCRIPTION_SUCCESS]: (state, action: any) =>
-        immutable(state, {
-          snapshot: { description: { $set: action.description } },
-        }),
+      [ActionTypes.PATCH_SNAPSHOT_SUCCESS]: (state, action: any) => {
+        const snapshotObj: any = { snapshot: {} };
+        if (action.data.consentCode !== undefined) {
+          snapshotObj.snapshot.consentCode = { $set: action.data.consentCode };
+        }
+        if (action.data.description !== undefined) {
+          snapshotObj.snapshot.description = { $set: action.data.description };
+        }
+        return immutable(state, snapshotObj);
+      },
       [LOCATION_CHANGE]: (state) =>
         immutable(state, {
           snapshotRequest: { $set: defaultSnapshotRequest },

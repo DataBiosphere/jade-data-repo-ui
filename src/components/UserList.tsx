@@ -1,9 +1,10 @@
 import React from 'react';
+import clsx from 'clsx';
 import { createStyles, WithStyles, withStyles } from '@mui/styles';
 import { Accordion, AccordionDetails, AccordionSummary, CustomTheme } from '@mui/material';
 import { ExpandMore } from '@mui/icons-material';
 import Typography from '@mui/material/Typography';
-import ManageUsersModal from './ManageUsersModal';
+import ManageUsersView from './ManageUsersView';
 
 const styles = (theme: CustomTheme) =>
   createStyles({
@@ -16,7 +17,9 @@ const styles = (theme: CustomTheme) =>
     expandIcon: {
       color: theme.palette.primary.main,
     },
-    manageUsersHorizontalModal: {},
+    canManageUsers: {
+      paddingTop: 0,
+    },
     values: {
       paddingBottom: theme.spacing(1),
     },
@@ -27,15 +30,13 @@ const styles = (theme: CustomTheme) =>
       fontStyle: 'italic',
       colorPrimary: theme.palette.error.contrastText,
       color: theme.palette.error.contrastText,
+      paddingBottom: theme.spacing(1),
     },
   });
 
 interface UserListProps extends WithStyles<typeof styles> {
-  addUser: any;
   canManageUsers: boolean;
   defaultOpen?: boolean;
-  horizontal?: boolean;
-  isAddingOrRemovingUser: boolean;
   removeUser: any;
   typeOfUsers: string;
   users: Array<string>;
@@ -43,17 +44,7 @@ interface UserListProps extends WithStyles<typeof styles> {
 
 class UserList extends React.PureComponent<UserListProps> {
   render() {
-    const {
-      addUser,
-      canManageUsers,
-      classes,
-      defaultOpen,
-      horizontal,
-      removeUser,
-      typeOfUsers,
-      users,
-      isAddingOrRemovingUser,
-    } = this.props;
+    const { canManageUsers, classes, defaultOpen, removeUser, typeOfUsers, users } = this.props;
 
     return (
       <Accordion defaultExpanded={defaultOpen}>
@@ -63,23 +54,20 @@ class UserList extends React.PureComponent<UserListProps> {
         >
           {typeOfUsers}
         </AccordionSummary>
-        <AccordionDetails data-cy="user-email">
-          {canManageUsers && (
-            <ManageUsersModal
-              addUser={addUser}
-              isLoading={isAddingOrRemovingUser}
-              removeUser={removeUser}
-              modalText={`Manage ${typeOfUsers}`}
-              users={users}
-              horizontal={horizontal}
-            />
-          )}
+        <AccordionDetails
+          data-cy="user-email"
+          className={clsx({
+            [classes.canManageUsers]: canManageUsers,
+          })}
+        >
+          {canManageUsers && <ManageUsersView removeUser={removeUser} users={users} />}
           {users.length === 0 && <Typography className={classes.noUsers}>(None)</Typography>}
-          {users.map((user) => (
-            <Typography noWrap key={user}>
-              {user}
-            </Typography>
-          ))}
+          {!canManageUsers &&
+            users.map((user) => (
+              <Typography noWrap key={user}>
+                {user}
+              </Typography>
+            ))}
         </AccordionDetails>
       </Accordion>
     );

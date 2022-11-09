@@ -10,6 +10,7 @@ import Grid from '@mui/material/Grid';
 import { Close, ExpandMore, HelpOutline, Launch } from '@mui/icons-material';
 import IconButton from '@mui/material/IconButton';
 import TerraTooltip from 'components/common/TerraTooltip';
+import TextContent from 'components/common/TextContent';
 import { renderStorageResources } from '../../../../../libs/render-utils';
 import InfoViewDatasetAccess from './InfoViewDatasetAccess';
 
@@ -160,7 +161,11 @@ export class InfoView extends React.PureComponent {
             )}
             <Grid item xs={12}>
               <Typography variant="h6">About this dataset</Typography>
-              <Typography>{dataset.description}</Typography>
+              <TextContent
+                text={dataset.description}
+                emptyText="(No description available)"
+                markdown={true}
+              />
             </Grid>
             <Grid item xs={6}>
               <Typography variant="h6">Storage</Typography>

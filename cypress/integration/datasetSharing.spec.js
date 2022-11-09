@@ -15,21 +15,14 @@ describe('test dataset sharing', () => {
     cy.get('#e2eLoginButton').click();
   });
 
-  it('has the manage users buttons when user is a steward', () => {
+  it('has the manage users input when user is a steward', () => {
     cy.get('[placeholder="Search keyword or description"]').type('V2F_GWAS');
     cy.contains(/V2F_GWAS_Summary_Stats|V2F_GWAS_Summary_Statistics/g).should('be.visible');
     cy.contains(/V2F_GWAS_Summary_Stats|V2F_GWAS_Summary_Statistics/g).click();
 
     cy.wait(['@getDataset', '@getDatasetPolicies', '@getBillingProfileById']);
     cy.get('[data-cy="roles-tab"]').click();
-    cy.get('.dataset-access-container :nth-child(1) .MuiAccordionDetails-root button')
-      .eq(0)
-      .should('contain.text', 'Manage Stewards')
-      .click();
-
-    cy.get('#customized-dialog-title')
-      .should('be.visible')
-      .should('contain.text', 'Manage Stewards');
+    cy.get('[data-cy="manageAccessContainer"]').should('be.visible');
   });
 
   it('does not have manage users buttons when the user is not a steward', () => {
@@ -39,9 +32,6 @@ describe('test dataset sharing', () => {
     cy.get('a > .MuiButtonBase-root').click();
 
     cy.wait(['@getDataset', '@getDatasetPolicies', '@getBillingProfileById']);
-
-    cy.get('.MuiList-root > :nth-child(1)').click();
-    cy.get('#memberships-header').click();
-    cy.get('#simple-tab-3').should('not.exist');
+    cy.get('[data-cy="manageAccessContainer"]').should('not.exist');
   });
 });

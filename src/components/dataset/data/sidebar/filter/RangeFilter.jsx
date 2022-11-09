@@ -75,38 +75,42 @@ export class RangeFilter extends React.PureComponent {
     const value = _.get(filterMap, 'value', [minVal, maxVal]);
     return (
       <div>
-        <Grid container={true} spacing={2}>
-          <Grid item xs={5}>
-            <RangeInput
-              labelName="min"
-              value={value[0]}
-              handleChange={this.handleMinLabelValue}
-              handleFilters={handleFilters}
-            />
-          </Grid>
-          <Grid item xs={2}>
-            <Typography>-</Typography>
-          </Grid>
-          <Grid item xs={5}>
-            <RangeInput
-              labelName="max"
-              value={value[1]}
-              handleChange={this.handleMaxLabelValue}
-              handleFilters={handleFilters}
-            />
-          </Grid>
-        </Grid>
-        <Grid container={true}>
-          <Slider
-            value={value.map(parseFloat)}
-            onChange={this.handleSliderValue}
-            valueLabelDisplay="off"
-            aria-labelledby="range-slider"
-            min={parseFloat(minVal)}
-            max={parseFloat(maxVal)}
-            step={step}
-          />
-        </Grid>
+        {maxVal !== null && minVal !== null && (
+          <>
+            <Grid container={true} spacing={2}>
+              <Grid item xs={5}>
+                <RangeInput
+                  labelName="min"
+                  value={value[0]}
+                  handleChange={this.handleMinLabelValue}
+                  handleFilters={handleFilters}
+                />
+              </Grid>
+              <Grid item xs={2}>
+                <Typography>-</Typography>
+              </Grid>
+              <Grid item xs={5}>
+                <RangeInput
+                  labelName="max"
+                  value={value[1]}
+                  handleChange={this.handleMaxLabelValue}
+                  handleFilters={handleFilters}
+                />
+              </Grid>
+            </Grid>
+            <Grid container={true}>
+              <Slider
+                value={value.map(parseFloat)}
+                onChange={this.handleSliderValue}
+                valueLabelDisplay="off"
+                aria-labelledby="range-slider"
+                min={parseFloat(minVal)}
+                max={parseFloat(maxVal)}
+                step={step}
+              />
+            </Grid>
+          </>
+        )}
       </div>
     );
   }

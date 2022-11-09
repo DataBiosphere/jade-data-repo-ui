@@ -4,13 +4,14 @@ import { Provider } from 'react-redux';
 import { ThemeProvider } from '@mui/styles';
 import createMockStore from 'redux-mock-store';
 import React from 'react';
-import DescriptionView from './DescriptionView';
+import EditableFieldView from './EditableFieldView';
 import globalTheme from '../modules/theme';
 import history from '../modules/hist';
 
 const initialState = {
   dataset: {
     description: 'A dataset description',
+    phsId: '12345',
   },
 };
 
@@ -21,24 +22,34 @@ beforeEach(() => {
     <Router history={history}>
       <Provider store={store} />
       <ThemeProvider theme={globalTheme}>
-        <DescriptionView
-          description={initialState.dataset.description}
+        <EditableFieldView
+          fieldValue={initialState.dataset.description}
+          fieldName="Description"
           canEdit={true}
-          title="Description"
-          updateDescriptionFn={(text: any) => {
+          updateFieldValueFn={(text: any) => {
             initialState.dataset.description = text;
           }}
+          useMarkdown={true}
+        />
+        <EditableFieldView
+          fieldValue={initialState.dataset.phsId}
+          fieldName="PHS Id"
+          canEdit={true}
+          updateFieldValueFn={(text: any) => {
+            initialState.dataset.phsId = text;
+          }}
+          useMarkdown={false}
         />
       </ThemeProvider>
     </Router>,
   );
 });
 
-describe('DescriptionView', () => {
+describe('Description in Markdown EditableFieldView', () => {
   it('should have loaded a description', () => {
     cy.get('[data-cy=description-edit-button]').should('not.be.disabled');
     cy.get('p').should(($p) => {
-      expect($p).to.have.length(1);
+      expect($p).to.have.length(2);
       expect($p.first()).to.contain(initialState.dataset.description);
     });
     cy.get('[data-cy=description-cancel-button]').should('not.exist');
@@ -79,7 +90,7 @@ describe('DescriptionView', () => {
               .click({ force: true })
               .then(() => {
                 cy.get('p').should(($p) => {
-                  expect($p).to.have.length(1);
+                  expect($p).to.have.length(2);
                   expect($p.first()).to.contain(initialState.dataset.description);
                 });
                 cy.get('[data-cy=description-cancel-button]').should('not.exist');
@@ -96,6 +107,41 @@ describe('DescriptionView', () => {
         cy.get('.CodeMirror textarea').first({ timeout: 5 }).blur({ force: true });
         cy.get('[data-cy=description-cancel-button]').should('be.enabled');
         cy.get('[data-cy=description-save-button]').should('be.enabled');
+      });
+  });
+});
+
+describe('Plain text field in EditableFieldView', () => {
+  it('should have loaded a phs id', () => {
+    cy.get('[data-cy=phs-id-edit-button]').should('not.be.disabled');
+    cy.get('[data-cy=phs-id-field-name]').should(($p) => {
+      expect($p.first()).to.contain('PHS Id');
+    });
+    cy.get('p').should(($p) => {
+      expect($p).to.have.length(2);
+      expect($p[1]).to.contain(initialState.dataset.phsId);
+    });
+    cy.get('[data-cy=phs-id-cancel-button]').should('not.exist');
+    cy.get('[data-cy=phs-id-save-button]').should('not.exist');
+  });
+  it('save and undo appear when clicking edit button.', () => {
+    cy.get('button[data-cy=phs-id-edit-button]')
+      .click({ force: true })
+      .then(() => {
+        cy.get('[id="outlined-basic"').should('contain.value', initialState.dataset.phsId);
+        cy.get('[data-cy=phs-id-cancel-button]').should('be.enabled');
+        cy.get('[data-cy=phs-id-save-button]').should('be.disabled');
+      });
+    cy.get('[id="outlined-basic"')
+      .first({ timeout: 5 })
+      .type('change', { force: true })
+      .then(() => {
+        cy.get('[data-cy=phs-id-cancel-button]').should('be.enabled');
+        cy.get('[data-cy=phs-id-save-button]').should('be.enabled');
+        cy.get('[id="outlined-basic"').should(
+          'contain.value',
+          `${initialState.dataset.phsId}change`,
+        );
       });
   });
 });

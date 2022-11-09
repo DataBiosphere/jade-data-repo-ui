@@ -317,7 +317,7 @@ export class FilterPanel extends React.PureComponent {
                 onClick={() => handleCreateSnapshot(true)}
                 data-cy="createSnapshot"
               >
-                Create Snapshot
+                Next
               </Button>
             </span>
           </TerraTooltip>

@@ -18,6 +18,7 @@ import { Action } from 'redux';
 import { OrderDirectionOptions, QueryParams } from 'reducers/query';
 import { RouteComponentProps } from 'react-router-dom';
 import { TdrState } from 'reducers';
+import { SnapshotRequest } from 'reducers/snapshot';
 
 import DataViewSidebar from './sidebar/DataViewSidebar';
 import InfoView from './sidebar/panels/InfoView';
@@ -40,6 +41,7 @@ type IProps = {
   orderProperty: string;
   profile: BillingProfileModel;
   queryParams: QueryParams;
+  snapshotRequest: SnapshotRequest;
 } & RouteComponentProps<{ uuid?: string }>;
 
 function DatasetDataView({
@@ -52,6 +54,7 @@ function DatasetDataView({
   orderProperty,
   profile,
   queryParams,
+  snapshotRequest,
 }: IProps) {
   const [selected, setSelected] = useState('');
   const [selectedTable, setSelectedTable] = useState<TableModel | undefined>(undefined);
@@ -110,7 +113,7 @@ function DatasetDataView({
           dataset,
         },
       ];
-      if (canLink) {
+      if (canLink && snapshotRequest.assetName) {
         currentPanels.push({
           icon: People,
           width: 600,
@@ -121,7 +124,7 @@ function DatasetDataView({
       }
       setPanels(currentPanels);
     }
-  }, [datasetLoaded, dataset, selectedTable, canLink]);
+  }, [datasetLoaded, dataset, selectedTable, canLink, snapshotRequest.assetName]);
 
   useEffect(() => {
     if (profile.id) {
@@ -216,6 +219,7 @@ function mapStateToProps(state: TdrState) {
     orderDirection: state.query.orderDirection,
     orderProperty: state.query.orderProperty,
     profile: state.profiles.profile,
+    snapshotRequest: state.snapshots.snapshotRequest,
   };
 }
 

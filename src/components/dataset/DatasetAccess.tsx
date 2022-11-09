@@ -9,6 +9,7 @@ import UserList from '../UserList';
 import { DatasetRoles } from '../../constants';
 import { getRoleMembersFromPolicies } from '../../libs/utils';
 import { addDatasetPolicyMember, removeDatasetPolicyMember } from '../../actions';
+import AddUserAccess, { AccessPermission } from '../common/AddUserAccess';
 
 const styles = (theme: CustomTheme) =>
   createStyles({
@@ -24,18 +25,16 @@ const styles = (theme: CustomTheme) =>
 interface DatasetAccessProps extends WithStyles<typeof styles> {
   dataset: DatasetModel;
   dispatch: Dispatch<Action>;
-  horizontal?: boolean;
-  isAddingOrRemovingUser: boolean;
   policies: Array<PolicyModel>;
   userRoles: Array<string>;
 }
 
 function DatasetAccess(props: DatasetAccessProps) {
-  const addUser = (role: string) => {
+  const addUsers = (role: string, usersToAdd: string[]) => {
     const { dataset, dispatch } = props;
-    return (newEmail: string) => {
-      dispatch(addDatasetPolicyMember(dataset.id, newEmail, role));
-    };
+    usersToAdd.forEach((user) => {
+      dispatch(addDatasetPolicyMember(dataset.id, user, role));
+    });
   };
   const removeUser = (role: string) => {
     const { dataset, dispatch } = props;
@@ -43,7 +42,7 @@ function DatasetAccess(props: DatasetAccessProps) {
       dispatch(removeDatasetPolicyMember(dataset.id, removableEmail, role));
     };
   };
-  const { horizontal, policies, userRoles, isAddingOrRemovingUser } = props;
+  const { policies, userRoles } = props;
   const stewards = getRoleMembersFromPolicies(policies, DatasetRoles.STEWARD);
   const custodians = getRoleMembersFromPolicies(policies, DatasetRoles.CUSTODIAN);
   const snapshotCreators = getRoleMembersFromPolicies(policies, DatasetRoles.SNAPSHOT_CREATOR);
@@ -51,42 +50,43 @@ function DatasetAccess(props: DatasetAccessProps) {
   const canManageStewards = userRoles.includes(DatasetRoles.STEWARD);
   const canManageUsers =
     userRoles.includes(DatasetRoles.STEWARD) || userRoles.includes(DatasetRoles.CUSTODIAN);
-  const gridItemXs = horizontal ? 4 : 12;
+
+  const permissions: AccessPermission[] = [
+    { policy: 'custodian', disabled: !canManageUsers },
+    { policy: 'snapshot_creator', disabled: !canManageUsers },
+    { policy: 'steward', disabled: !canManageStewards },
+  ];
 
   return (
     <Grid container spacing={1} className="dataset-access-container">
-      <Grid item xs={gridItemXs}>
+      {canManageUsers && (
+        <Grid item xs={12}>
+          <AddUserAccess permissions={permissions} onAdd={addUsers} />
+        </Grid>
+      )}
+      <Grid item xs={12}>
         <UserList
           users={stewards}
           typeOfUsers="Stewards"
           canManageUsers={canManageStewards}
-          addUser={addUser(DatasetRoles.STEWARD)}
-          isAddingOrRemovingUser={isAddingOrRemovingUser}
           removeUser={removeUser(DatasetRoles.STEWARD)}
           defaultOpen={true}
-          horizontal={horizontal}
         />
       </Grid>
-      <Grid item xs={gridItemXs}>
+      <Grid item xs={12}>
         <UserList
           users={custodians}
           typeOfUsers="Custodians"
           canManageUsers={canManageUsers}
-          addUser={addUser(DatasetRoles.CUSTODIAN)}
-          isAddingOrRemovingUser={isAddingOrRemovingUser}
           removeUser={removeUser(DatasetRoles.CUSTODIAN)}
-          horizontal={horizontal}
         />
       </Grid>
-      <Grid item xs={gridItemXs}>
+      <Grid item xs={12}>
         <UserList
           users={snapshotCreators}
           typeOfUsers="Snapshot Creators"
           canManageUsers={canManageUsers}
-          addUser={addUser(DatasetRoles.SNAPSHOT_CREATOR)}
-          isAddingOrRemovingUser={isAddingOrRemovingUser}
           removeUser={removeUser(DatasetRoles.SNAPSHOT_CREATOR)}
-          horizontal={horizontal}
         />
       </Grid>
     </Grid>
