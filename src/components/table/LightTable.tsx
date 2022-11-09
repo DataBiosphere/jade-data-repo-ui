@@ -340,7 +340,10 @@ function LightTable({
                               style={{ wordBreak: 'break-word' }}
                               data-cy={`cellValue-${col.name}-${index}`}
                             >
-                              <div className={classes.cellContent} style={{ maxWidth }}>
+                              <div
+                                className={classes.cellContent}
+                                style={{ maxWidth, ...col.cellStyles }}
+                              >
                                 {handleValues(row, col)}
                               </div>
                             </TableCell>

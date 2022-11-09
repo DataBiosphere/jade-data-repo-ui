@@ -17,6 +17,7 @@ export type TableColumnType = {
   numeric?: boolean;
   render?: (row: object) => string | JSX.Element;
   width?: number | string;
+  cellStyles?: any;
 };
 
 export type TableRowType = {

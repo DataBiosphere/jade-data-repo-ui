@@ -5,36 +5,37 @@ import { JournalEntryModel } from 'generated/tdr';
 import { ActionTypes } from '../constants';
 
 export interface JournalState {
-  journals: Array<JournalEntryModel>;
-  journalsLoading: boolean;
-}
-
-export interface JournalResultError {
-  message?: string;
-  detail?: string[];
+  journalEntries: Array<JournalEntryModel>;
+  journalEntriesLoading: boolean;
+  journalEntriesRefreshCnt: number;
 }
 
 export const initialJournalState: JournalState = {
-  journals: [],
-  journalsLoading: false,
+  journalEntries: [],
+  journalEntriesLoading: false,
+  journalEntriesRefreshCnt: 0,
 };
 
 export default {
   journals: handleActions(
     {
-      [ActionTypes.GET_JOURNALS]: (state) =>
+      [ActionTypes.GET_JOURNAL_ENTRIES]: (state) =>
         immutable(state, {
-          journalsLoading: { $set: true },
+          journalEntriesLoading: { $set: true },
         }),
-      [ActionTypes.GET_JOURNALS_FAILURE]: (state) =>
+      [ActionTypes.GET_JOURNAL_ENTRIES_FAILURE]: (state) =>
         immutable(state, {
-          journals: { $set: [] },
-          journalsLoading: { $set: false },
+          journalEntries: { $set: [] },
+          journalEntriesLoading: { $set: false },
         }),
-      [ActionTypes.GET_JOURNALS_SUCCESS]: (state, action: any) =>
+      [ActionTypes.GET_JOURNAL_ENTRIES_SUCCESS]: (state, action: any) =>
         immutable(state, {
-          journals: { $set: action.journals.data.data },
-          journalsLoading: { $set: false },
+          journalEntries: { $set: action.journalEntries.data.data },
+          journalEntriesLoading: { $set: false },
+        }),
+      [ActionTypes.REFRESH_JOURNAL_ENTRIES]: (state) =>
+        immutable(state, {
+          journalEntriesRefreshCnt: { $set: state.journalEntriesRefreshCnt + 1 },
         }),
       [ActionTypes.USER_LOGOUT_SUCCESS]: () => initialJournalState,
     },

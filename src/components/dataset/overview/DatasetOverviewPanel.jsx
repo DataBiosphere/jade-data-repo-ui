@@ -13,9 +13,9 @@ import { renderCloudPlatforms, renderStorageResources } from '../../../libs/rend
 import InfoViewDatasetAccess from '../data/sidebar/panels/InfoViewDatasetAccess';
 import DatasetSnapshotsTable from '../../table/DatasetSnapshotsTable';
 import DescriptionView from '../../DescriptionView';
-import JournalView from '../../JournalView';
 import TabPanel from '../../common/TabPanel';
 import { DatasetRoles } from '../../../constants';
+import JournalEntriesView from '../../JournalEntriesView';
 
 const styles = (theme) => ({
   root: {
@@ -210,9 +210,8 @@ function DatasetOverviewPanel(props) {
       )}
       <TabPanel value={value} index={3}>
         <Grid container spacing={2}>
-          <Grid item xs={9}>
-            hello!
-            <JournalView />
+          <Grid item xs={12}>
+            <JournalEntriesView id={dataset.id} resourceType="DATASET" />
           </Grid>
         </Grid>
       </TabPanel>

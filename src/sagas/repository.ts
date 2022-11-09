@@ -645,22 +645,22 @@ export function* getJobResult({ payload }: any): any {
  * Journals.
  */
 
-export function* getJournals({ payload }: any): any {
-  const { resourceKey, resourceType, limit, offset } = payload;
+export function* getJournalEntries({ payload }: any): any {
+  const { id, resourceType, limit, offset } = payload;
   try {
     const response = yield call(
       authGet,
-      `/api/repository/v1/journals/${resourceKey}?offset=${offset}&limit=${limit}&resourceType=${resourceType}`,
+      `/api/repository/v1/journal/${id}?offset=${offset}&limit=${limit}&resourceType=${resourceType}`,
     );
     yield put({
-      type: ActionTypes.GET_JOURNALS_SUCCESS,
-      jobs: { data: response },
+      type: ActionTypes.GET_JOURNAL_ENTRIES_SUCCESS,
+      journalEntries: { data: response },
     });
   } catch (err) {
     const { errMessage } = payload;
     showNotification(errMessage || err);
     yield put({
-      type: ActionTypes.GET_JOURNALS_FAILURE,
+      type: ActionTypes.GET_JOURNAL_ENTRIES_FAILURE,
     });
   }
 }
@@ -913,6 +913,7 @@ export default function* root() {
     takeLatest(ActionTypes.GET_DATASET_TABLE_PREVIEW, getDatasetTablePreview),
     takeLatest(ActionTypes.GET_JOBS, getJobs),
     takeLatest(ActionTypes.GET_JOB_RESULT, getJobResult),
+    takeLatest(ActionTypes.GET_JOURNAL_ENTRIES, getJournalEntries),
     takeLatest(ActionTypes.RUN_QUERY, runQuery),
     takeLatest(ActionTypes.PREVIEW_DATA, previewData),
     takeLatest(ActionTypes.PAGE_QUERY, pageQuery),
