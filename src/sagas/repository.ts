@@ -539,23 +539,6 @@ export function* removeDatasetPolicyMember({ payload }: any): any {
   }
 }
 
-export function* getDatasetTablePreview({ payload }: any): any {
-  const { dataset, tableName } = payload;
-  const datasetProject = dataset.dataProject;
-  const datasetBqSnapshotName = `datarepo_${dataset.name}`;
-  const url = `/bigquery/v2/projects/${datasetProject}/datasets/${datasetBqSnapshotName}/tables/${tableName}/data`;
-  try {
-    const response = yield call(authGet, `${url}?maxResults=100`, true);
-    yield put({
-      type: ActionTypes.GET_DATASET_TABLE_PREVIEW_SUCCESS,
-      preview: response,
-      tableName,
-    });
-  } catch (err) {
-    showNotification(err);
-  }
-}
-
 /**
  * Jobs.
  */
@@ -884,7 +867,6 @@ export default function* root() {
     takeLatest(ActionTypes.GET_DATASET_POLICY, getDatasetPolicy),
     takeLatest(ActionTypes.ADD_DATASET_POLICY_MEMBER, addDatasetPolicyMember),
     takeLatest(ActionTypes.REMOVE_DATASET_POLICY_MEMBER, removeDatasetPolicyMember),
-    takeLatest(ActionTypes.GET_DATASET_TABLE_PREVIEW, getDatasetTablePreview),
     takeLatest(ActionTypes.GET_JOBS, getJobs),
     takeLatest(ActionTypes.GET_JOB_RESULT, getJobResult),
     takeLatest(ActionTypes.RUN_QUERY, runQuery),

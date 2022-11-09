@@ -30,8 +30,6 @@ import {
   ResourceType,
 } from '../../../constants';
 
-const QUERY_LIMIT = 1000;
-
 type IProps = {
   dataset: DatasetModel;
   dispatch: Dispatch<Action>;
@@ -144,8 +142,7 @@ function DatasetDataView({
           `#standardSQL
           SELECT ${DbColumns.ROW_ID},
             ${selectedTable?.columns?.map((column) => column.name).join(', ')} ${fromClause}
-            ${orderProperty ? `ORDER BY ${orderProperty} ${orderDirection}` : ''}
-          LIMIT ${QUERY_LIMIT}`,
+            ${orderProperty ? `ORDER BY ${orderProperty} ${orderDirection}` : ''}`,
         ),
       );
       dispatch(

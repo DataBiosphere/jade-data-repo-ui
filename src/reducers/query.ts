@@ -128,7 +128,7 @@ export default {
           rows: { $set: rows },
           polling: { $set: false },
           delay: { $set: false },
-          resultsCount: { $set: rows.length },
+          resultsCount: { $set: parseInt(action.payload.totalRowCount, 10) },
         });
       },
       [ActionTypes.PAGE_QUERY]: (state) =>
