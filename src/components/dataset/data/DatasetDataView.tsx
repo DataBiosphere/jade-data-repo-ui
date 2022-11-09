@@ -37,7 +37,6 @@ type IProps = {
   joinStatement: string;
   orderDirection: OrderDirectionOptions;
   orderProperty: string;
-  rowsPerPage: number;
   profile: BillingProfileModel;
   queryParams: QueryParams;
   snapshotRequest: SnapshotRequest;
@@ -51,7 +50,6 @@ function DatasetDataView({
   match,
   orderDirection,
   orderProperty,
-  rowsPerPage,
   profile,
   queryParams,
   snapshotRequest,
@@ -144,8 +142,7 @@ function DatasetDataView({
           `#standardSQL
           SELECT ${DbColumns.ROW_ID},
             ${selectedTable?.columns?.map((column) => column.name).join(', ')} ${fromClause}
-            ${orderProperty ? `ORDER BY ${orderProperty} ${orderDirection}` : ''}
-          LIMIT ${rowsPerPage}`,
+            ${orderProperty ? `ORDER BY ${orderProperty} ${orderDirection}` : ''}`,
         ),
       );
       dispatch(
@@ -164,7 +161,6 @@ function DatasetDataView({
     joinStatement,
     orderDirection,
     orderProperty,
-    rowsPerPage,
     selected,
     selectedTable,
   ]);
@@ -217,7 +213,6 @@ function mapStateToProps(state: TdrState) {
     filterStatement: state.query.filterStatement,
     joinStatement: state.query.joinStatement,
     queryParams: state.query.queryParams,
-    rowsPerPage: state.query.rowsPerPage,
     orderDirection: state.query.orderDirection,
     orderProperty: state.query.orderProperty,
     profile: state.profiles.profile,
