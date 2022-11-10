@@ -27,5 +27,13 @@
   "include": [
     "src",
     "src/types/custom.d.ts"
-  ]
+  ],
+  "overrides": [
+    {
+      "files": ["src/generated/tdr/*.ts"],
+      "rules": {
+        "require-jsdoc": "off"
+      }
+    },
+  ],
 }
