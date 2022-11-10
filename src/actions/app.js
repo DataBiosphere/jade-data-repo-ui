@@ -148,17 +148,17 @@ export const { addDatasetPolicyMember } = createActions({
   }),
 });
 
-export const { patchDatasetDescription } = createActions({
-  [ActionTypes.PATCH_DATASET_DESCRIPTION]: (datasetId, text) => ({
+export const { patchDataset } = createActions({
+  [ActionTypes.PATCH_DATASET]: (datasetId, data) => ({
     datasetId,
-    text,
+    data,
   }),
 });
 
-export const { patchSnapshotDescription } = createActions({
-  [ActionTypes.PATCH_SNAPSHOT_DESCRIPTION]: (snapshotId, text) => ({
+export const { patchSnapshot } = createActions({
+  [ActionTypes.PATCH_SNAPSHOT]: (snapshotId, data) => ({
     snapshotId,
-    text,
+    data,
   }),
 });
 

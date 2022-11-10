@@ -280,15 +280,14 @@ export function* getSnapshots({ payload }: any): any {
   }
 }
 
-export function* patchSnapshotDescription({ payload }: any): any {
-  const { snapshotId, text } = payload;
-  const data = { description: text };
+export function* patchSnapshot({ payload }: any): any {
+  const { snapshotId, data } = payload;
   const url = `/api/repository/v1/snapshots/${snapshotId}`;
   try {
     yield call(authPatch, url, data);
     yield put({
-      type: ActionTypes.PATCH_SNAPSHOT_DESCRIPTION_SUCCESS,
-      description: text,
+      type: ActionTypes.PATCH_SNAPSHOT_SUCCESS,
+      data,
     });
   } catch (err) {
     showNotification(err);
@@ -537,23 +536,6 @@ export function* removeDatasetPolicyMember({ payload }: any): any {
     yield put({
       type: ActionTypes.REMOVE_DATASET_POLICY_MEMBER_FAILURE,
     });
-  }
-}
-
-export function* getDatasetTablePreview({ payload }: any): any {
-  const { dataset, tableName } = payload;
-  const datasetProject = dataset.dataProject;
-  const datasetBqSnapshotName = `datarepo_${dataset.name}`;
-  const url = `/bigquery/v2/projects/${datasetProject}/datasets/${datasetBqSnapshotName}/tables/${tableName}/data`;
-  try {
-    const response = yield call(authGet, `${url}?maxResults=100`, true);
-    yield put({
-      type: ActionTypes.GET_DATASET_TABLE_PREVIEW_SUCCESS,
-      preview: response,
-      tableName,
-    });
-  } catch (err) {
-    showNotification(err);
   }
 }
 
@@ -875,15 +857,14 @@ export function* getUserStatus(): any {
   }
 }
 
-export function* patchDatasetDescription({ payload }: any): any {
-  const { datasetId, text } = payload;
-  const data = { description: text };
+export function* patchDataset({ payload }: any): any {
+  const { datasetId, data } = payload;
   const url = `/api/repository/v1/datasets/${datasetId}`;
   try {
     yield call(authPatch, url, data);
     yield put({
-      type: ActionTypes.PATCH_DATASET_DESCRIPTION_SUCCESS,
-      description: text,
+      type: ActionTypes.PATCH_DATASET_SUCCESS,
+      data,
     });
   } catch (err) {
     showNotification(err);
@@ -910,7 +891,6 @@ export default function* root() {
     takeLatest(ActionTypes.GET_DATASET_POLICY, getDatasetPolicy),
     takeLatest(ActionTypes.ADD_DATASET_POLICY_MEMBER, addDatasetPolicyMember),
     takeLatest(ActionTypes.REMOVE_DATASET_POLICY_MEMBER, removeDatasetPolicyMember),
-    takeLatest(ActionTypes.GET_DATASET_TABLE_PREVIEW, getDatasetTablePreview),
     takeLatest(ActionTypes.GET_JOBS, getJobs),
     takeLatest(ActionTypes.GET_JOB_RESULT, getJobResult),
     takeLatest(ActionTypes.GET_JOURNAL_ENTRIES, getJournalEntries),
@@ -923,8 +903,8 @@ export default function* root() {
     takeLatest(ActionTypes.GET_USER_DATASET_ROLES, getUserDatasetRoles),
     takeLatest(ActionTypes.GET_USER_SNAPSHOT_ROLES, getUserSnapshotRoles),
     takeLatest(ActionTypes.GET_USER_STATUS, getUserStatus),
-    takeLatest(ActionTypes.PATCH_DATASET_DESCRIPTION, patchDatasetDescription),
-    takeLatest(ActionTypes.PATCH_SNAPSHOT_DESCRIPTION, patchSnapshotDescription),
+    takeLatest(ActionTypes.PATCH_DATASET, patchDataset),
+    takeLatest(ActionTypes.PATCH_SNAPSHOT, patchSnapshot),
     fork(watchGetDatasetByIdSuccess),
   ]);
 }

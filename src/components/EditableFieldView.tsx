@@ -1,17 +1,18 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import ReactDOMServer from 'react-dom/server';
 import { CustomTheme } from '@mui/material/styles';
-import { Button, IconButton, Typography } from '@mui/material';
+import { Button, IconButton, TextField, Typography } from '@mui/material';
 import { SimpleMdeReact } from 'react-simplemde-editor';
 import SimpleMDE from 'easymde';
 import 'easymde/dist/easymde.min.css';
 import { createStyles, WithStyles, withStyles } from '@mui/styles';
-import MarkdownContent from './common/MarkdownContent';
+import TextContent from './common/TextContent';
 import WithoutStylesMarkdownContent from './common/WithoutStylesMarkdownContent';
+import InfoHoverButton from './common/InfoHoverButton';
 
 const styles = (theme: CustomTheme) =>
   createStyles({
-    descriptionEditor: {
+    editor: {
       width: '100%',
       display: 'flex',
       alignItems: 'top',
@@ -25,8 +26,8 @@ const styles = (theme: CustomTheme) =>
       width: '100%',
       zIndex: '9998',
     },
-    descriptionInput: {
-      backgroundColor: 'white',
+    textInput: {
+      width: '100%',
     },
     editIconButton: {
       boxShadow: 'none',
@@ -35,7 +36,7 @@ const styles = (theme: CustomTheme) =>
         color: theme.palette.primary.hover,
       },
     },
-    saveDescriptionButton: {
+    saveButton: {
       boxShadow: 'none',
       margin: theme.spacing(1),
       '&:hover': {
@@ -49,34 +50,40 @@ const styles = (theme: CustomTheme) =>
     },
   } as const);
 
-const UNSET_DESCRIPTION_TEXT = '(No description added)';
+const UNSET_FIELD_TEXT = '(Empty)';
 
-interface DescriptionViewProps extends WithStyles<typeof styles> {
+interface EditableFieldViewProps extends WithStyles<typeof styles> {
   canEdit: boolean;
-  description: string | undefined;
-  title: string;
-  updateDescriptionFn: any;
+  fieldValue: string | undefined;
+  fieldName: string;
+  infoButtonText?: string;
+  updateFieldValueFn: any;
+  useMarkdown: boolean;
 }
 
-function DescriptionView({
+function EditableFieldView({
   canEdit,
   classes,
-  description,
-  title,
-  updateDescriptionFn,
-}: DescriptionViewProps) {
-  const [hasDescriptionChanged, setHasDescriptionChanged] = useState(false);
-  const [descriptionValue, setDescriptionValue] = useState(description);
+  fieldValue,
+  fieldName,
+  infoButtonText,
+  updateFieldValueFn,
+  useMarkdown,
+}: EditableFieldViewProps) {
+  const [hasFieldValueChanged, setHasFieldValueChanged] = useState(false);
+  const [updatedFieldValue, setUpdatedFieldValue] = useState(fieldValue);
   const [isEditing, setIsEditing] = useState(false);
   const [isPendingSave, setIsPendingSave] = useState(false);
 
+  const cypressFieldNameFormatted = fieldName.replace(' ', '-').toLowerCase();
+
   useEffect(() => {
-    if (isPendingSave && description === descriptionValue) {
-      setHasDescriptionChanged(false);
+    if (isPendingSave && fieldValue === updatedFieldValue) {
+      setHasFieldValueChanged(false);
       setIsPendingSave(false);
       setIsEditing(false);
     }
-  }, [isPendingSave, description, descriptionValue]);
+  }, [isPendingSave, fieldValue, updatedFieldValue]);
 
   const editorOptions = useMemo(
     () =>
@@ -97,37 +104,48 @@ function DescriptionView({
 
   const onSaveClick = useCallback(() => {
     setIsPendingSave(true);
-    updateDescriptionFn(descriptionValue);
-  }, [updateDescriptionFn, descriptionValue]);
+    updateFieldValueFn(updatedFieldValue);
+  }, [updateFieldValueFn, updatedFieldValue]);
 
   const onChange = useCallback(
     (value: string) => {
-      if (description !== value) {
-        setDescriptionValue(value);
-        setHasDescriptionChanged(true);
+      if (fieldValue !== value) {
+        setUpdatedFieldValue(value);
+        setHasFieldValueChanged(true);
       } else {
-        setHasDescriptionChanged(false);
+        setHasFieldValueChanged(false);
       }
     },
-    [description],
+    [fieldValue],
+  );
+
+  const onChangeEvent = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      onChange(event.target.value);
+    },
+    [onChange],
   );
 
   const onCancel = useCallback(() => {
-    setDescriptionValue(description);
-    setHasDescriptionChanged(false);
+    setUpdatedFieldValue(fieldValue);
+    setHasFieldValueChanged(false);
     setIsEditing(false);
-  }, [description]);
+  }, [fieldValue]);
 
   return (
     <>
       <div>
-        <Typography className={classes.title} variant="h6">
-          {`${title}:`}
+        <Typography
+          className={classes.title}
+          data-cy={`${cypressFieldNameFormatted}-field-name`}
+          variant="h6"
+        >
+          {`${fieldName}:`}
           {canEdit && (
             <IconButton
-              aria-label={`Edit ${title}`}
+              aria-label={`Edit ${fieldName}`}
               className={classes.editIconButton}
-              data-cy="description-edit-button"
+              data-cy={`${cypressFieldNameFormatted}-edit-button`}
               disableFocusRipple={true}
               disableRipple={true}
               onClick={onEditClick}
@@ -135,37 +153,51 @@ function DescriptionView({
               <i className="fa-solid fa-pen-circle" />
             </IconButton>
           )}
+          {infoButtonText && <InfoHoverButton infoText={infoButtonText} fieldName={fieldName} />}
         </Typography>
       </div>
       {!canEdit && (
         <span className={classes.markdownPreview}>
-          <MarkdownContent markdownText={descriptionValue} emptyText={UNSET_DESCRIPTION_TEXT} />
+          <TextContent text={updatedFieldValue} emptyText={UNSET_FIELD_TEXT} markdown={true} />
         </span>
       )}
       {canEdit && (
-        <div className={classes.descriptionEditor}>
+        <div className={classes.editor}>
           <div className={classes.textInputDiv}>
             {!isEditing && (
               <span className={classes.markdownPreview}>
-                <MarkdownContent
-                  markdownText={descriptionValue}
-                  emptyText={UNSET_DESCRIPTION_TEXT}
+                <TextContent
+                  text={updatedFieldValue}
+                  emptyText={UNSET_FIELD_TEXT}
+                  markdown={true}
                 />
               </span>
             )}
             {isEditing && (
               <>
-                <SimpleMdeReact
-                  onChange={onChange}
-                  options={editorOptions}
-                  value={descriptionValue}
-                />
+                {useMarkdown && (
+                  <SimpleMdeReact
+                    onChange={onChange}
+                    options={editorOptions}
+                    value={updatedFieldValue}
+                  />
+                )}
+                {!useMarkdown && (
+                  <TextField
+                    id="outlined-basic"
+                    className={classes.textInput}
+                    data-cy={`${cypressFieldNameFormatted}-text-field`}
+                    variant="outlined"
+                    defaultValue={updatedFieldValue}
+                    onChange={onChangeEvent}
+                  />
+                )}
                 <Button
-                  aria-label="Save description changes"
-                  className={classes.saveDescriptionButton}
+                  aria-label={`Save ${fieldName} changes`}
+                  className={classes.saveButton}
                   color="primary"
-                  data-cy="description-save-button"
-                  disabled={!hasDescriptionChanged}
+                  data-cy={`${cypressFieldNameFormatted}-save-button`}
+                  disabled={!hasFieldValueChanged}
                   onClick={onSaveClick}
                   type="button"
                   variant="contained"
@@ -173,8 +205,8 @@ function DescriptionView({
                   SAVE
                 </Button>
                 <Button
-                  aria-label="Cancel description changes"
-                  data-cy="description-cancel-button"
+                  aria-label={`Cancel ${fieldName} changes`}
+                  data-cy={`${cypressFieldNameFormatted}-cancel-button`}
                   onClick={onCancel}
                   color="primary"
                   type="button"
@@ -191,4 +223,4 @@ function DescriptionView({
     </>
   );
 }
-export default withStyles(styles)(DescriptionView);
+export default withStyles(styles)(EditableFieldView);

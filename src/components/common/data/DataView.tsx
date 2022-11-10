@@ -198,7 +198,7 @@ function mapStateToProps(state: TdrState) {
     polling: state.query.polling,
     rows: state.query.rows,
     rowsPerPage: state.query.rowsPerPage,
-    totalRows: state.query.queryParams.totalRows,
+    totalRows: state.query.resultsCount,
     refreshCnt: state.query.refreshCnt,
   };
 }
