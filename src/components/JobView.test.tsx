@@ -85,7 +85,6 @@ describe('JobView', () => {
       .should('have.text', initialState.jobs.jobs[0].description);
     cy.get('tbody tr').eq(0).children().eq(3).should('have.text', 'a few seconds ago');
     cy.get('tbody tr').eq(0).children().eq(4).should('have.text', 'Failed');
-    cy.get('tbody tr').eq(0).children().eq(0).click();
   });
 
   it('should show failed jobs', () => {
@@ -97,7 +96,7 @@ describe('JobView', () => {
       .children()
       .eq(2)
       .should('have.text', initialState.jobs.jobs[1].description);
-    cy.get('tbody tr').eq(1).children().eq(3).should('have.text', '2 minutes ago');
+    cy.get('tbody tr').eq(1).children().eq(3).should('have.text', 'minutes ago');
     cy.get('tbody tr').eq(1).children().eq(4).should('have.text', 'Completed');
   });
 
@@ -106,7 +105,7 @@ describe('JobView', () => {
     cy.get('tbody tr').eq(2).children().eq(0).should('have.text', initialState.jobs.jobs[2].id);
     cy.get('tbody tr').eq(2).children().eq(1).should('have.text', 'class2');
     cy.get('tbody tr').eq(2).children().eq(2).should('have.text', '(empty)');
-    cy.get('tbody tr').eq(2).children().eq(3).should('have.text', '4 minutes ago');
+    cy.get('tbody tr').eq(2).children().eq(3).should('have.text', 'minutes ago');
     cy.get('tbody tr').eq(2).children().eq(4).should('have.text', 'In Progress');
   });
 
