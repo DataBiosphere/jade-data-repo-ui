@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import { withStyles } from '@mui/styles';
 import PropTypes from 'prop-types';
 import {
-  Autocomplete,
   Box,
   Typography,
   Button,
@@ -14,13 +13,11 @@ import {
   ListItem,
   Collapse,
   Divider,
-  TextField,
 } from '@mui/material';
-import { ExpandMore, ExpandLess } from '@mui/icons-material';
+import { ExpandMore, ExpandLess, Search } from '@mui/icons-material';
 import TerraTooltip from 'components/common/TerraTooltip';
 import DataViewSidebarItem from '../DataViewSidebarItem';
 import DataSidebarPanel from '../DataSidebarPanel';
-import FreetextFilter from '../filter/FreetextFilter';
 
 import { applyFilters } from '../../../../../actions';
 
@@ -64,14 +61,11 @@ const styles = (theme) => ({
     borderRadius: theme.shape.borderRadius,
   },
   inputBase: {
-    width: '100%',
+    paddingLeft: theme.spacing(0.5),
   },
   filterListItem: {
     justifyContent: 'space-between',
     fontWeight: '500',
-    '&:hover': {
-      backgroundColor: 'transparent',
-    },
   },
   highlighted: {
     backgroundColor: theme.palette.primary.focus,
@@ -92,8 +86,7 @@ export class FilterPanel extends React.PureComponent {
     super(props);
     this.state = {
       filterMap: {},
-      searchInput: '',
-      searchStrings: [],
+      searchString: '',
       openFilter: '',
     };
   }
@@ -156,32 +149,8 @@ export class FilterPanel extends React.PureComponent {
     dispatch(applyFilters(filterMap, tableName, dataset));
   };
 
-  onPaste = (event) => {
-    event.preventDefault();
-    const { searchStrings } = this.state;
-    const text = event.clipboardData.getData('text');
-    const selections = text.split(/[ ,\n]+/);
-    const nonEmpty = selections.filter((s) => s !== '');
-    const updatedValueArray = searchStrings.concat(nonEmpty);
-    this.setState({ searchStrings: updatedValueArray });
-  };
-
   handleSearchString = (event) => {
-    this.setState({ searchInput: event.target.value });
-  };
-
-  handleReturn = (event) => {
-    const { searchStrings, searchInput } = this.state;
-    if (event.key === 'Enter' && searchInput) {
-      this.setState({
-        searchInput: '',
-        searchStrings: [...searchStrings, searchInput],
-      });
-    }
-  };
-
-  handleSearchFilter = (event, value) => {
-    this.setState({ searchStrings: value, searchInput: '' });
+    this.setState({ searchString: event.target.value });
   };
 
   handleOpenFilter = (filter) => {
@@ -207,15 +176,9 @@ export class FilterPanel extends React.PureComponent {
       handleCreateSnapshot,
       canLink,
     } = this.props;
-    const { searchStrings, searchInput, openFilter } = this.state;
+    const { searchString, openFilter } = this.state;
     const filteredColumns = table.columns
-      .filter((column) => {
-        const stringsToCheck = [...searchStrings, searchInput]
-          .filter((str) => !!str)
-          .map((searchStr) => column.name.includes(searchStr))
-          .filter((hasMatch) => hasMatch);
-        return stringsToCheck.length > 0 || (searchStrings.length === 0 && !searchInput);
-      })
+      .filter((column) => column.name.includes(searchString))
       .map((column) => ({
         dataType: column.datatype,
         arrayOf: column.array_of,
@@ -240,28 +203,14 @@ export class FilterPanel extends React.PureComponent {
           <div className={clsx(classes.filterPanel, { [classes.hide]: !open })}>
             <DataSidebarPanel selected={selected} data-cy="snapshotCard" />
           </div>
-          <Autocomplete
-            className={classes.inputBase}
-            multiple
-            freeSolo
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                variant="outlined"
-                fullWidth
-                className={classes.input}
-                placeholder="Search filters"
-                onChange={this.handleSearchString}
-                onKeyDown={this.handleReturn}
-                onPaste={this.onPaste}
-                data-cy="enterEmailBox"
-              />
-            )}
-            onChange={this.handleSearchFilter}
-            value={searchStrings}
-            inputValue={searchInput}
-            options={[]}
-          />
+          <ListItem button className={clsx(classes.searchBar, classes.panelContent)}>
+            <Search color="primary" fontSize="small" />
+            <InputBase
+              placeholder="Search filters"
+              className={classes.inputBase}
+              onChange={this.handleSearchString}
+            />
+          </ListItem>
           {table &&
             table.name &&
             filteredColumns.map((c) => (
