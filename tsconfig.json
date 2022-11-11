@@ -29,6 +29,6 @@
     "src/types/custom.d.ts"
   ],
   "exclude": [
-    "src/generated/tdr"
+    "src/generated/tdr/base.ts"
   ]
 }
