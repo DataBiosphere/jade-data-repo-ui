@@ -96,7 +96,7 @@ describe('JobView', () => {
       .children()
       .eq(2)
       .should('have.text', initialState.jobs.jobs[1].description);
-    cy.get('tbody tr').eq(1).children().eq(3).should('have.text', '2 minutes ago');
+    cy.get('tbody tr').eq(1).children().eq(3).contains('minutes ago');
     cy.get('tbody tr').eq(1).children().eq(4).should('have.text', 'Completed');
   });
 
@@ -105,7 +105,7 @@ describe('JobView', () => {
     cy.get('tbody tr').eq(2).children().eq(0).should('have.text', initialState.jobs.jobs[2].id);
     cy.get('tbody tr').eq(2).children().eq(1).should('have.text', 'class2');
     cy.get('tbody tr').eq(2).children().eq(2).should('have.text', '(empty)');
-    cy.get('tbody tr').eq(2).children().eq(3).should('have.text', '5 minutes ago');
+    cy.get('tbody tr').eq(2).children().eq(3).contains('minutes ago');
     cy.get('tbody tr').eq(2).children().eq(4).should('have.text', 'In Progress');
   });
 

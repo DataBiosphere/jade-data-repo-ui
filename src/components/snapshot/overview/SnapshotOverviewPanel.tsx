@@ -220,7 +220,10 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
         <TabPanel value={value} index={2}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <JournalEntriesView id={snapshot.id} resourceType={IamResourceTypeEnum.Datasnapshot} />
+              <JournalEntriesView
+                id={snapshot.id}
+                resourceType={IamResourceTypeEnum.Datasnapshot}
+              />
             </Grid>
           </Grid>
         </TabPanel>
