@@ -142,7 +142,7 @@
     "test": "npm run codegen && react-app-rewired test",
     "eject": "react-app-rewired eject",
     "ingest": "node --inspect tools/ingest ingest",
-    "codegen": "docker run --rm -v \"${PWD}:/local\" openapitools/openapi-generator-cli generate -g typescript-axios -i ${TDR_OPEN_API_YAML_LOCATION:=https://jade.datarepo-dev.broadinstitute.org/data-repository-openapi.yaml} -o /local/src/generated/tdr --skip-validate-spec",
+    "codegen": "docker run --rm -v \"${PWD}:/local\" openapitools/openapi-generator-cli:v6.2.1 generate -g typescript-axios -i ${TDR_OPEN_API_YAML_LOCATION:=https://jade.datarepo-dev.broadinstitute.org/data-repository-openapi.yaml} -o /local/src/generated/tdr --skip-validate-spec",
     "clean": "rm -fr build src/generated/*"
   },
   "husky": {
