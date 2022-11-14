@@ -8,6 +8,7 @@ import EditableFieldView from 'components/EditableFieldView';
 import GoogleSheetExport from 'components/common/overview/GoogleSheetExport';
 import { Link } from 'react-router-dom';
 import TextContent from 'components/common/TextContent';
+import { IamResourceTypeEnum } from 'generated/tdr';
 import { renderStorageResources, renderTextFieldValue } from '../../../libs/render-utils';
 import SnapshotAccess from '../SnapshotAccess';
 import SnapshotWorkspace from './SnapshotWorkspace';
@@ -219,7 +220,7 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
         <TabPanel value={value} index={2}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <JournalEntriesView id={snapshot.id} resourceType="DATASNAPSHOT" />
+              <JournalEntriesView id={snapshot.id} resourceType={IamResourceTypeEnum.Datasnapshot} />
             </Grid>
           </Grid>
         </TabPanel>

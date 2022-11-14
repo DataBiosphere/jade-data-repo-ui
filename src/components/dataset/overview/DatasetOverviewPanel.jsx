@@ -21,6 +21,7 @@ import moment from 'moment';
 import clsx from 'clsx';
 import { patchDataset } from 'actions';
 import GoogleSheetExport from 'components/common/overview/GoogleSheetExport';
+import { IamResourceTypeEnum } from 'generated/tdr';
 import {
   renderCloudPlatforms,
   renderStorageResources,
@@ -319,7 +320,7 @@ function DatasetOverviewPanel(props) {
         <TabPanel value={value} index={3}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <JournalEntriesView id={dataset.id} resourceType="DATASET" />
+              <JournalEntriesView id={dataset.id} resourceType={IamResourceTypeEnum.Dataset} />
             </Grid>
           </Grid>
         </TabPanel>
