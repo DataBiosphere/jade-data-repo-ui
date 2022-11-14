@@ -27,5 +27,8 @@
   "include": [
     "src",
     "src/types/custom.d.ts"
+  ],
+  "exclude": [
+    "src/generated/*"
   ]
 }
