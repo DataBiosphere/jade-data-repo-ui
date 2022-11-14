@@ -4,7 +4,7 @@ ARG CACHEBUST=1
 ARG TDR_OPEN_API_YAML_LOCATION=https://jade.datarepo-dev.broadinstitute.org/data-repository-openapi.yaml
 
 ## Step 1. Run code generation
-FROM openapitools/openapi-generator-cli as codegen
+FROM openapitools/openapi-generator-cli:v6.2.1 as codegen
 ARG CACHEBUST
 ARG TDR_OPEN_API_YAML_LOCATION
 RUN /usr/local/bin/docker-entrypoint.sh generate -g typescript-axios -i $TDR_OPEN_API_YAML_LOCATION -o /local/src/generated/tdr --skip-validate-spec
