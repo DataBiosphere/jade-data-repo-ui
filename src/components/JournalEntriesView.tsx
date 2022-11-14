@@ -1,20 +1,12 @@
 import React, { Dispatch } from 'react';
 import { connect } from 'react-redux';
 import { Action } from 'redux';
-import { createStyles, WithStyles, withStyles } from '@mui/styles';
 import { TdrState } from 'reducers';
 import { JournalEntryModel, IamResourceTypeEnum } from 'generated/tdr';
 import { getJournalEntries } from 'actions/index';
 import JournalEntryTable from './table/JournalEntryTable';
 
-const styles = () =>
-  createStyles({
-    className: {
-      color: 'red',
-    },
-  } as const);
-
-interface JournalEntriesViewProps extends WithStyles<typeof styles> {
+interface JournalEntriesViewProps {
   id?: string;
   resourceType?: IamResourceTypeEnum;
   journalEntries: JournalEntryModel[];
@@ -53,4 +45,4 @@ function mapStateToProps(state: TdrState) {
   };
 }
 
-export default connect(mapStateToProps)(withStyles(styles)(JournalEntriesView));
+export default connect(mapStateToProps)(JournalEntriesView);
