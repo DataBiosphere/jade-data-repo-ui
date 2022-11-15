@@ -384,7 +384,7 @@ function LightTable({
                 disableRipple: true,
                 disabled: infinitePaging
                   ? rows.length < rowsPerPage
-                  : (page * rowsPerPage) + rows.length >= filteredCount,
+                  : page * rowsPerPage + rows.length >= filteredCount,
                 className: classes.paginationButton,
               }}
               labelDisplayedRows={({ from, to, count }) => {

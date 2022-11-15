@@ -33,10 +33,7 @@ interface IProps extends WithStyles<typeof styles> {
   journalEntries: Array<JournalEntryModel>;
   journalEntriesCount?: number;
   filteredJournalEntriesCount?: number;
-  handleFilterJournalEntries?: (
-    rowsPerPage: number,
-    rowsForCurrentPage: number,
-  ) => void;
+  handleFilterJournalEntries?: (rowsPerPage: number, rowsForCurrentPage: number) => void;
   loading: boolean;
   refreshCnt: number;
 }
