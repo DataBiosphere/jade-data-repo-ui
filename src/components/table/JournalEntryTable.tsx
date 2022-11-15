@@ -83,11 +83,11 @@ const JournalEntryTable = withStyles(styles)(
           const request = _.get(row, ['mutation', 'request.json'], '{}');
           const parsedReq = JSON.parse(request);
 
-          let note = row.note;
+          let { note } = row;
 
           const details = [];
           if (row.entryType === JournalEntryModelEntryTypeEnum.Create) {
-            note =  _.get(parsedReq, '1.description') || _.get(row, 'mutation.description');
+            note = _.get(parsedReq, '1.description') || _.get(row, 'mutation.description');
           } else if (parsedReq[0] === 'bio.terra.model.IngestRequestModel') {
             const strategy = parsedReq[1].updateStrategy;
             const casedStrategy = `${strategy[0].toUpperCase()}${strategy.substring(1)}`;
@@ -97,7 +97,12 @@ const JournalEntryTable = withStyles(styles)(
           return (
             <>
               <div>{note}</div>
-              {details.map((detail, i) => <div key={`${row.id}-${i}`} className={classes.detail}>{detail}</div>)}
+              {details.map((detail, i) => (
+                  <div key={`${row.id}-${i}`} className={classes.detail}>
+                    {detail}
+                  </div>
+                )
+              )}
             </>
           );
         }
