@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { WithStyles, withStyles } from '@mui/styles';
 import moment from 'moment';
 import _ from 'lodash';
-import { JournalEntryModel } from 'generated/tdr';
+import { JournalEntryModel, JournalEntryModelEntryTypeEnum } from 'generated/tdr';
 import { TableColumnType } from 'reducers/query';
 import { CustomTheme } from '@mui/material/styles';
 
@@ -26,6 +26,9 @@ const styles = (theme: CustomTheme) => ({
   },
   statusIconFailed: {
     color: theme.palette.error.light,
+  },
+  detail: {
+    marginTop: 15,
   },
 });
 
@@ -76,6 +79,28 @@ const JournalEntryTable = withStyles(styles)(
         cellStyles: {
           whiteSpace: 'normal',
         },
+        render: (row: any) => {
+          const request = _.get(row, ['mutation', 'request.json'], '{}');
+          const parsedReq = JSON.parse(request);
+
+          let note = row.note;
+
+          const details = [];
+          if (row.entryType === JournalEntryModelEntryTypeEnum.Create) {
+            note =  _.get(parsedReq, '1.description') || _.get(row, 'mutation.description');
+          } else if (parsedReq[0] === 'bio.terra.model.IngestRequestModel') {
+            const strategy = parsedReq[1].updateStrategy;
+            const casedStrategy = `${strategy[0].toUpperCase()}${strategy.substring(1)}`;
+            details.push(`${casedStrategy} with ${parsedReq[1].path}`);
+          }
+
+          return (
+            <>
+              <div>{note}</div>
+              {details.map((detail, i) => <div key={`${row.id}-${i}`} className={classes.detail}>{detail}</div>)}
+            </>
+          );
+        }
       },
       {
         label: 'Date',
