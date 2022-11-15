@@ -36,7 +36,6 @@ interface IProps extends WithStyles<typeof styles> {
   handleFilterJournalEntries?: (
     rowsPerPage: number,
     rowsForCurrentPage: number,
-    searchString: string,
   ) => void;
   loading: boolean;
   refreshCnt: number;
@@ -109,7 +108,6 @@ const JournalEntryTable = withStyles(styles)(
         infinitePaging={true}
         filteredCount={Number.MAX_SAFE_INTEGER}
         rows={journalEntries}
-        searchString=""
         loading={loading}
         refreshCnt={refreshCnt}
         rowKey="id"

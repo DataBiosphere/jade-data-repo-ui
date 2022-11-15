@@ -146,7 +146,7 @@ type LightTableProps<RowType> = {
   rows: Array<RowType>;
   rowsPerPage: number;
   rowKey?: string;
-  searchString: string;
+  searchString?: string;
   tableName?: string;
   totalCount?: number;
   refreshCnt: number;
@@ -280,7 +280,7 @@ function LightTable({
         page * rowsPerPage,
         orderProperty,
         orderDirection,
-        searchString,
+        searchString || '',
         refreshCnt,
       );
     }
