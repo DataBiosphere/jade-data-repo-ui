@@ -100,8 +100,8 @@ const JournalEntryTable = withStyles(styles)(
               {details.map((detail, i) => (
                 <div key={`${row.id}-${i}`} className={classes.detail}>
                   {detail}
-                </div>)
-              )}
+                </div>
+              ))}
             </>
           );
         },
