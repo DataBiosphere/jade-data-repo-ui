@@ -98,14 +98,13 @@ const JournalEntryTable = withStyles(styles)(
             <>
               <div>{note}</div>
               {details.map((detail, i) => (
-                  <div key={`${row.id}-${i}`} className={classes.detail}>
-                    {detail}
-                  </div>
-                )
+                <div key={`${row.id}-${i}`} className={classes.detail}>
+                  {detail}
+                </div>)
               )}
             </>
           );
-        }
+        },
       },
       {
         label: 'Date',
