@@ -382,11 +382,14 @@ function LightTable({
                 disableTouchRipple: true,
                 disableFocusRipple: true,
                 disableRipple: true,
+                disabled: infinitePaging
+                  ? rows.length < rowsPerPage
+                  : (page * rowsPerPage) + rows.length >= filteredCount,
                 className: classes.paginationButton,
               }}
               labelDisplayedRows={({ from, to, count }) => {
                 if (infinitePaging) {
-                  return `${from}-${to}`;
+                  return `${from}-${Math.min(from + rows.length, to)}`;
                 }
                 if (count === totalCount) {
                   return `${from}-${to} of ${count}`;
