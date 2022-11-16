@@ -10,6 +10,7 @@ import DatasetView from './DatasetView';
 import SnapshotView from './SnapshotView';
 import JobView from './JobView';
 import SearchTable from './table/SearchTable';
+import Features from './common/Features';
 
 const styles = (theme) => ({
   pageRoot: {
@@ -80,15 +81,17 @@ function HomeView({ classes, location }) {
       <div className={classes.title}>
         <div>{pageTitle}</div>
         <Link to="datasets/new" data-cy="create-dataset-link">
-          <Button
-            className={classes.headerButton}
-            color="primary"
-            variant="outlined"
-            disableElevation
-            size="medium"
-          >
-            <AddCircle className={classes.buttonIcon} /> Create Dataset
-          </Button>
+          {Features.isEnabled('datasetSchemaCreation') && (
+            <Button
+              className={classes.headerButton}
+              color="primary"
+              variant="outlined"
+              disableElevation
+              size="medium"
+            >
+              <AddCircle className={classes.buttonIcon} /> Create Dataset
+            </Button>
+          )}
         </Link>
       </div>
     );
