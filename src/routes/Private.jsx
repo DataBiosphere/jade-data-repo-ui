@@ -11,6 +11,7 @@ import HelpContainer from 'components/help/HelpContainer';
 import HomeView from '../components/HomeView';
 import DatasetDataView from '../components/dataset/data/DatasetDataView';
 import DatasetOverview from '../components/dataset/overview/DatasetOverview';
+import DatasetSchemaCreationView from '../components/dataset/schemaCreation/DatasetSchemaCreationView';
 import SnapshotDataView from '../components/snapshot/data/SnapshotDataView';
 import SnapshotOverview from '../components/snapshot/overview/SnapshotOverview';
 import NotFound from './NotFound';
@@ -72,6 +73,7 @@ const tabsConfig = [
 const routes = [
   { path: '/datasets', component: HomeView },
   { path: '/snapshots', component: HomeView },
+  { path: '/datasets/new', component: DatasetSchemaCreationView },
   { path: '/datasets/:uuid', component: DatasetOverview },
   { path: '/datasets/:uuid/data', component: DatasetDataView },
   { path: '/snapshots/:uuid', component: SnapshotOverview },

@@ -231,12 +231,31 @@ const theme = createTheme({
         },
       },
     },
+    MuiTabs: {
+      styleOverrides: {
+        root: {
+          height: 18,
+          fontSize: '1rem',
+          fontWeight: 600,
+          lineHeight: 18,
+          textAlign: 'center',
+          width: '100%',
+          borderBottom: `1px solid ${baseColors.success}`,
+          paddingLeft: '28px',
+        },
+        indicator: {
+          borderBottom: `6px solid ${baseColors.success}`,
+        }
+      },
+    },
     MuiTab: {
       styleOverrides: {
         root: {
           minWidth: 160,
           '&.Mui-selected': {
             color: baseColors.dark,
+            bottomBar: '6px',
+            fontWeight: 700,
           },
         },
       },

@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { Tab, Tabs } from '@mui/material';
+import { Tab, Tabs, Button } from '@mui/material';
+import { AddCircle, TextsmsTwoTone } from '@mui/icons-material';
 import { withStyles } from '@mui/styles';
 import DatasetView from './DatasetView';
 import SnapshotView from './SnapshotView';
@@ -45,11 +46,21 @@ const styles = (theme) => ({
     fontWeight: 700,
     flex: '1 1 0',
     'padding-right': '2em',
+    display: 'flex',
   },
   titleAndSearch: {
     display: 'flex',
     'margin-top': '1.25em',
     'margin-bottom': '1.25em',
+  },
+  headerButton: {
+    padding: 10,
+    marginLeft: 30,
+    textTransform: 'none',
+  },
+  buttonIcon: {
+    marginRight: 6,
+    fontSize: '1.5rem',
   },
 });
 
@@ -60,10 +71,27 @@ function HomeView({ classes, location }) {
   let tableValue;
   let pageTitle = 'Terra Data Respository';
   let searchable = true;
+  let pageHeader = <div className={classes.title}>{pageTitle}</div>;
 
   if (tabValue === '/datasets') {
     pageTitle = 'Datasets';
     tableValue = <DatasetView searchString={searchString} />;
+    pageHeader = (
+      <div className={classes.title}>
+        <div>{pageTitle}</div>
+        <Link to="datasets/new" data-cy="create-dataset-link">
+          <Button
+            className={classes.headerButton}
+            color="primary"
+            variant="outlined"
+            disableElevation
+            size="medium"
+          >
+            <AddCircle className={classes.buttonIcon} /> Create Dataset
+          </Button>
+        </Link>
+      </div>
+    );
   } else if (tabValue === '/snapshots') {
     pageTitle = 'Snapshots';
     tableValue = <SnapshotView searchString={searchString} />;
@@ -78,7 +106,7 @@ function HomeView({ classes, location }) {
   return (
     <div className={classes.pageRoot}>
       <div className={classes.titleAndSearch}>
-        <div className={classes.title}>{pageTitle}</div>
+        {pageHeader}
         {searchable && (
           <SearchTable
             searchString={searchString}
