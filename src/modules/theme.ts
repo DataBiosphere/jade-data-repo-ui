@@ -245,7 +245,7 @@ const theme = createTheme({
         },
         indicator: {
           borderBottom: `6px solid ${baseColors.success}`,
-        }
+        },
       },
     },
     MuiTab: {

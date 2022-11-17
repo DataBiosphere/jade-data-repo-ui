@@ -67,11 +67,7 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
 
   return (
     <div className={classes.root}>
-      <Tabs
-        value={value}
-        onChange={handleChange}
-        aria-label="simple tabs example"
-      >
+      <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
         <Tab
           data-cy="snapshot-summary-tab"
           label="Snapshot Summary"
@@ -87,20 +83,10 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
           {...a11yProps(1)}
         />
         {canViewJournalEntries && (
-          <Tab
-            label="Snapshot activity"
-            disableFocusRipple
-            disableRipple
-            {...a11yProps(2)}
-          />
+          <Tab label="Snapshot activity" disableFocusRipple disableRipple {...a11yProps(2)} />
         )}
         {isSteward && (
-          <Tab
-            label="Roles & memberships"
-            disableFocusRipple
-            disableRipple
-            {...a11yProps(3)}
-          />
+          <Tab label="Roles & memberships" disableFocusRipple disableRipple {...a11yProps(3)} />
         )}
       </Tabs>
       <TabPanel value={value} index={0}>

@@ -76,7 +76,7 @@ const routes = [
   { path: '/snapshots', component: HomeView },
   Features.isEnabled('datasetSchemaCreation') && {
     path: '/datasets/new',
-    component: DatasetSchemaCreationView
+    component: DatasetSchemaCreationView,
   },
   { path: '/datasets/:uuid', component: DatasetOverview },
   { path: '/datasets/:uuid/data', component: DatasetDataView },
