@@ -80,21 +80,22 @@ const JournalEntryTable = withStyles(styles)(
           whiteSpace: 'normal',
         },
         render: (row: any) => {
-          // row = {"id":"24d6d7aa-0041-4dc4-8a66-76865f959ddd","resourceKey":"04059c65-eab0-4c3b-a6ac-b6ee1583157e","user":"nmalfroy.dev@gmail.com","resourceType":"DATASET","className":"bio.terra.service.dataset.DatasetDao","methodName":"patch","entryType":"UPDATE","when":"2022-11-15T13:22:39.665115Z","mutation":{"id":"04059c65-eab0-4c3b-a6ac-b6ee1583157e","description":"Public dataset 1000 Genomes. 7a982014 on 2022-11-03 `Muscles wuz here`"},"note":"Patched dataset."};
           const request = _.get(row, ['mutation', 'request.json'], '{}');
           const parsedReq = JSON.parse(request);
 
           let { note } = row;
 
+          let description = _.get(parsedReq, '1.description') || _.get(row, 'mutation.description');
+
           const details = [];
           if (row.entryType === JournalEntryModelEntryTypeEnum.Create) {
-            note = _.get(parsedReq, '1.description') || _.get(row, 'mutation.description');
+            note = description;
           } else if (parsedReq[0] === 'bio.terra.model.IngestRequestModel') {
             const strategy = parsedReq[1].updateStrategy;
             const casedStrategy = `${strategy[0].toUpperCase()}${strategy.substring(1)}`;
             details.push(`${casedStrategy} with ${parsedReq[1].path}`);
-          } else {
-            details.push(_.get(row, 'mutation.description'));
+          } else if (description && description !== note) {
+            details.push(description);
           }
 
           return (
