@@ -58,7 +58,7 @@ const JournalEntryTable = withStyles(styles)(
       if (row.entryType === 'UPDATE' && row.note?.includes('Ingested')) {
         return 'Ingested';
       }
-      return row.entryType;
+      return _.startCase(row.entryType.toLowerCase());
     };
 
     const columns: Array<TableColumnType> = [
