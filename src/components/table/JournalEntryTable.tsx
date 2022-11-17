@@ -58,7 +58,7 @@ const JournalEntryTable = withStyles(styles)(
       if (row.entryType === 'UPDATE' && row.note?.includes('Ingested')) {
         return 'Ingested';
       }
-      return row.entryType;
+      return _.startCase(row.entryType.toLowerCase());
     };
 
     const columns: Array<TableColumnType> = [
@@ -85,13 +85,17 @@ const JournalEntryTable = withStyles(styles)(
 
           let { note } = row;
 
+          let description = _.get(parsedReq, '1.description') || _.get(row, 'mutation.description');
+
           const details = [];
           if (row.entryType === JournalEntryModelEntryTypeEnum.Create) {
-            note = _.get(parsedReq, '1.description') || _.get(row, 'mutation.description');
+            note = description;
           } else if (parsedReq[0] === 'bio.terra.model.IngestRequestModel') {
             const strategy = parsedReq[1].updateStrategy;
             const casedStrategy = `${strategy[0].toUpperCase()}${strategy.substring(1)}`;
             details.push(`${casedStrategy} with ${parsedReq[1].path}`);
+          } else if (description && description !== note) {
+            details.push(description);
           }
 
           return (
