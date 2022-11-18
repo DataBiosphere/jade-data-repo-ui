@@ -33,6 +33,7 @@ const styles = (theme: CustomTheme) => ({
   },
   mainContent: {
     marginRight: 30,
+    marginTop: '1.25em',
   },
   tabsRoot: {
     height: 80,
@@ -45,7 +46,7 @@ const styles = (theme: CustomTheme) => ({
     fontWeight: 'normal',
   },
   detailsColumn: {
-    marginTop: '1rem',
+    marginTop: '2rem',
   },
   detailsCard: {
     marginTop: '1.5rem',
