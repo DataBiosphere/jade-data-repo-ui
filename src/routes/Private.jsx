@@ -9,8 +9,10 @@ import history from 'modules/hist';
 
 import HelpContainer from 'components/help/HelpContainer';
 import HomeView from '../components/HomeView';
+import Features from '../components/common/Features';
 import DatasetDataView from '../components/dataset/data/DatasetDataView';
 import DatasetOverview from '../components/dataset/overview/DatasetOverview';
+import DatasetSchemaCreationView from '../components/dataset/schemaCreation/DatasetSchemaCreationView';
 import SnapshotDataView from '../components/snapshot/data/SnapshotDataView';
 import SnapshotOverview from '../components/snapshot/overview/SnapshotOverview';
 import NotFound from './NotFound';
@@ -43,6 +45,7 @@ const styles = (theme) => ({
     transition: '0.3s background-color ease-in-out',
     backgroundColor: '#ddebd0',
     color: theme.palette.secondary.dark,
+    fontWeight: '700 !important',
   },
   component: {
     overflow: 'auto',
@@ -72,12 +75,17 @@ const tabsConfig = [
 const routes = [
   { path: '/datasets', component: HomeView },
   { path: '/snapshots', component: HomeView },
+  Features.isEnabled('datasetSchemaCreation') && {
+    path: '/datasets/new',
+    component: DatasetSchemaCreationView,
+  },
   { path: '/datasets/:uuid', component: DatasetOverview },
   { path: '/datasets/:uuid/data', component: DatasetDataView },
   { path: '/snapshots/:uuid', component: SnapshotOverview },
   { path: '/snapshots/:uuid/data', component: SnapshotDataView },
   { path: '/activity', component: HomeView },
 ];
+
 class Private extends React.Component {
   static propTypes = {
     classes: PropTypes.object.isRequired,
@@ -91,6 +99,7 @@ class Private extends React.Component {
     const { classes } = this.props;
     const locationSplit = history.location.pathname.split('/');
     const selectedTab = `/${locationSplit[1] || 'datasets'}`;
+    Features.initFeatures();
     return (
       <ConnectedRouter history={history}>
         <Router history={history}>

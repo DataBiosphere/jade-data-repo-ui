@@ -28,26 +28,6 @@ const styles = (theme: CustomTheme) =>
       padding: theme.spacing(2),
       paddingLeft: '0px',
     },
-    tabsRoot: {
-      fontFamily: theme.typography.fontFamily,
-      height: 18,
-      fontSize: '1rem',
-      fontWeight: 600,
-      lineHeight: 18,
-      textAlign: 'center',
-      width: '100%',
-      borderBottom: `1px solid ${theme.palette.terra.green}`,
-      paddingLeft: '28px',
-    },
-    tabSelected: {
-      fontWeight: 700,
-      color: theme.palette.secondary.dark,
-      bottomBar: '6px',
-    },
-    tabsIndicator: {
-      borderBottom: `6px solid ${theme.palette.terra.green}`,
-      transition: 'none',
-    },
     tabPanel: {
       padding: '1em 1em 1em 28px',
     },
@@ -87,19 +67,10 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
 
   return (
     <div className={classes.root}>
-      <Tabs
-        classes={{
-          root: classes.tabsRoot,
-          indicator: classes.tabsIndicator,
-        }}
-        value={value}
-        onChange={handleChange}
-        aria-label="simple tabs example"
-      >
+      <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
         <Tab
           data-cy="snapshot-summary-tab"
           label="Snapshot Summary"
-          classes={{ selected: classes.tabSelected }}
           disableFocusRipple
           disableRipple
           {...a11yProps(0)}
@@ -107,28 +78,15 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
         <Tab
           data-cy="snapshot-export-tab"
           label="Export Snapshot"
-          classes={{ selected: classes.tabSelected }}
           disableFocusRipple
           disableRipple
           {...a11yProps(1)}
         />
         {canViewJournalEntries && (
-          <Tab
-            label="Snapshot activity"
-            classes={{ selected: classes.tabSelected }}
-            disableFocusRipple
-            disableRipple
-            {...a11yProps(2)}
-          />
+          <Tab label="Snapshot activity" disableFocusRipple disableRipple {...a11yProps(2)} />
         )}
         {isSteward && (
-          <Tab
-            label="Roles & memberships"
-            classes={{ selected: classes.tabSelected }}
-            disableFocusRipple
-            disableRipple
-            {...a11yProps(3)}
-          />
+          <Tab label="Roles & memberships" disableFocusRipple disableRipple {...a11yProps(3)} />
         )}
       </Tabs>
       <TabPanel value={value} index={0}>

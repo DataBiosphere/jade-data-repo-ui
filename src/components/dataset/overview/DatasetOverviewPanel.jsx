@@ -38,26 +38,6 @@ const styles = (theme) => ({
   root: {
     flexGrow: 1,
   },
-  tabsRoot: {
-    fontFamily: theme.typography.fontFamily,
-    height: 18,
-    fontSize: '1rem',
-    fontWeight: 600,
-    lineHeight: 18,
-    textAlign: 'center',
-    width: '100%',
-    borderBottom: `1px solid ${theme.palette.terra.green}`,
-    paddingLeft: '28px',
-  },
-  tabSelected: {
-    fontWeight: 700,
-    color: theme.palette.secondary.dark,
-    bottomBar: '6px',
-  },
-  tabsIndicator: {
-    borderBottom: `6px solid ${theme.palette.terra.green}`,
-    transition: 'none',
-  },
   helpOverlayCloseButton: {
     color: theme.palette.common.link,
   },
@@ -151,36 +131,19 @@ function DatasetOverviewPanel(props) {
 
   return (
     <div className={classes.root}>
-      <Tabs
-        classes={{
-          root: classes.tabsRoot,
-          indicator: classes.tabsIndicator,
-        }}
-        value={value}
-        onChange={handleChange}
-        aria-label="simple tabs example"
-      >
-        <Tab
-          label="Dataset Summary"
-          classes={{ selected: classes.tabSelected }}
-          disableFocusRipple
-          disableRipple
-          {...a11yProps(0)}
-        />
-        <Tab
-          label="Snapshots"
-          classes={{ selected: classes.tabSelected }}
-          disableFocusRipple
-          disableRipple
-          {...a11yProps(1)}
-        />
+      <Tabs value={value} onChange={handleChange}>
+        <Tab label="Dataset Summary" disableFocusRipple disableRipple {...a11yProps(0)} />
+        <Tab label="Snapshots" disableFocusRipple disableRipple {...a11yProps(1)} />
         {linkToBq && (
+          <Tab label="Export Dataset" disableFocusRipple disableRipple {...a11yProps(2)} />
+        )}
+        {canViewJournalEntries && (
           <Tab
-            label="Export Dataset"
-            classes={{ selected: classes.tabSelected }}
+            data-cy="activity-tab"
+            label="Dataset activity"
             disableFocusRipple
             disableRipple
-            {...a11yProps(2)}
+            {...a11yProps(3)}
           />
         )}
         {canViewJournalEntries && (
@@ -197,7 +160,6 @@ function DatasetOverviewPanel(props) {
           <Tab
             data-cy="roles-tab"
             label="Roles & memberships"
-            classes={{ selected: classes.tabSelected }}
             disableFocusRipple
             disableRipple
             {...a11yProps(4)}
