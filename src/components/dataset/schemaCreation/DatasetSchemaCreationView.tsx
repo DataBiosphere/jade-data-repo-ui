@@ -2,10 +2,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 import clsx from 'clsx';
 import { WithStyles, withStyles } from '@mui/styles';
-import { Typography, CustomTheme, Tabs, Tab } from '@mui/material';
+import { Button, Typography, CustomTheme, Tabs, Tab } from '@mui/material';
 import { OpenInNew } from '@mui/icons-material';
 import { TdrState } from 'reducers';
-import TabPanel from '../../common/TabPanel';
+import DatasetSchemaInformationView from './DatasetSchemaInformationView';
 
 const styles = (theme: CustomTheme) => ({
   pageRoot: { ...theme.mixins.pageRoot },
@@ -63,6 +63,19 @@ const styles = (theme: CustomTheme) => ({
   helpListLink: {
     marginTop: 5,
   },
+  tabButton: {
+    'text-transform': 'none',
+    marginTop: 30,
+  },
+  formLabel: {
+    display: 'block',
+    fontWeight: 'bold',
+    marginTop: 20,
+    marginBottom: 10,
+  },
+  formLabelError: {
+    color: theme.palette.error.main,
+  },
 });
 
 interface IProps extends WithStyles<typeof styles> {
@@ -75,15 +88,13 @@ interface TabConfig {
 }
 
 const DatasetSchemaCreationView = withStyles(styles)(({ classes }: IProps) => {
-  const [value, setValue] = React.useState(0);
-  const handleChange = (_event: any, newValue: any) => {
-    setValue(newValue);
-  };
+  const [currentTab, setCurrentTab] = React.useState(0);
+  const changeTab = (_event: any, newCurrentTab: any) => setCurrentTab(newCurrentTab);
 
   const tabs: TabConfig[] = [
     {
       description: 'Provide dataset information',
-      content: <div>Step 1!</div>,
+      content: <DatasetSchemaInformationView />,
     },
     {
       description: 'Build a schema and create dataset',
@@ -105,7 +116,7 @@ const DatasetSchemaCreationView = withStyles(styles)(({ classes }: IProps) => {
           tables, if multiple tables contain the same data category (for instance, if you have a
           "subject" table and a "sample" table, and both tables contain a column of the same subject
           IDs).
-          <Tabs classes={{ root: classes.tabsRoot }} value={value} onChange={handleChange}>
+          <Tabs classes={{ root: classes.tabsRoot }} value={currentTab} onChange={changeTab}>
             {tabs.map((tabConfig: TabConfig, i: number) => (
               <Tab
                 key={`dataset-schema-creation-tab-${i}`}
@@ -122,9 +133,32 @@ const DatasetSchemaCreationView = withStyles(styles)(({ classes }: IProps) => {
             ))}
           </Tabs>
           {tabs.map((tabConfig: TabConfig, i: number) => (
-            <TabPanel value={value} index={i} key={`dataset-schema-creation-tabpanel-${i}`}>
+            <div key={`dataset-schema-creation-tabpanel-${i}`} hidden={currentTab !== i}>
               {tabConfig.content}
-            </TabPanel>
+
+              {i < tabs.length - 1 ? (
+                <Button
+                  color="primary"
+                  variant="contained"
+                  disableElevation
+                  type="button"
+                  className={classes.tabButton}
+                  onClick={() => setCurrentTab(i + 1)}
+                >
+                  Go to Step {i + 2}
+                </Button>
+              ) : (
+                <Button
+                  color="primary"
+                  disableElevation
+                  variant="contained"
+                  type="submit"
+                  className={classes.tabButton}
+                >
+                  Submit
+                </Button>
+              )}
+            </div>
           ))}
         </div>
 

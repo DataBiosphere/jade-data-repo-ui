@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 /**
  * @namespace Constants
  * @desc App constants
@@ -206,3 +208,117 @@ export const TABLE_DEFAULT_ROWS_PER_PAGE = 100;
 export const TABLE_DEFAULT_ROWS_PER_PAGE_OPTIONS = [25, 100, 250];
 export const TABLE_DEFAULT_SORT_ORDER = 'asc';
 export const TABLE_DEFAULT_COLUMN_WIDTH = 300;
+
+export const AZURE_REGIONS = [
+  { label: 'East US', name: 'eastus' },
+  { label: 'East US 2', name: 'eastus2' },
+  { label: 'South Central US', name: 'southcentralus' },
+  { label: 'West US 2', name: 'westus2' },
+  { label: 'West US 3', name: 'westus3' },
+  { label: 'Australia East', name: 'australiaeast' },
+  { label: 'Southeast Asia', name: 'southeastasia' },
+  { label: 'North Europe', name: 'northeurope' },
+  { label: 'Sweden Central', name: 'swedencentral' },
+  { label: 'UK South', name: 'uksouth' },
+  { label: 'West Europe', name: 'westeurope' },
+  { label: 'Central US', name: 'centralus' },
+  { label: 'South Africa North', name: 'southafricanorth' },
+  { label: 'Central India', name: 'centralindia' },
+  { label: 'East Asia', name: 'eastasia' },
+  { label: 'Japan East', name: 'japaneast' },
+  { label: 'Korea Central', name: 'koreacentral' },
+  { label: 'Canada Central', name: 'canadacentral' },
+  { label: 'France Central', name: 'francecentral' },
+  { label: 'Germany West Central', name: 'germanywestcentral' },
+  { label: 'Norway East', name: 'norwayeast' },
+  { label: 'Switzerland North', name: 'switzerlandnorth' },
+  { label: 'UAE North', name: 'uaenorth' },
+  { label: 'Brazil South', name: 'brazilsouth' },
+  { label: 'East US 2 EUAP', name: 'eastus2euap' },
+  { label: 'Qatar Central', name: 'qatarcentral' },
+  { label: 'Central US (Stage)', name: 'centralusstage' },
+  { label: 'East US (Stage)', name: 'eastusstage' },
+  { label: 'East US 2 (Stage)', name: 'eastus2stage' },
+  { label: 'North Central US (Stage)', name: 'northcentralusstage' },
+  { label: 'South Central US (Stage)', name: 'southcentralusstage' },
+  { label: 'West US (Stage)', name: 'westusstage' },
+  { label: 'West US 2 (Stage)', name: 'westus2stage' },
+  { label: 'Asia', name: 'asia' },
+  { label: 'Asia Pacific', name: 'asiapacific' },
+  { label: 'Australia', name: 'australia' },
+  { label: 'Brazil', name: 'brazil' },
+  { label: 'Canada', name: 'canada' },
+  { label: 'Europe', name: 'europe' },
+  { label: 'France', name: 'france' },
+  { label: 'Germany', name: 'germany' },
+  { label: 'Global', name: 'global' },
+  { label: 'India', name: 'india' },
+  { label: 'Japan', name: 'japan' },
+  { label: 'Korea', name: 'korea' },
+  { label: 'Norway', name: 'norway' },
+  { label: 'Singapore', name: 'singapore' },
+  { label: 'South Africa', name: 'southafrica' },
+  { label: 'Switzerland', name: 'switzerland' },
+  { label: 'United Arab Emirates', name: 'uae' },
+  { label: 'United Kingdom', name: 'uk' },
+  { label: 'United States', name: 'unitedstates' },
+  { label: 'United States EUAP', name: 'unitedstateseuap' },
+  { label: 'East Asia (Stage)', name: 'eastasiastage' },
+  { label: 'Southeast Asia (Stage)', name: 'southeastasiastage' },
+  { label: 'East US STG', name: 'eastusstg' },
+  { label: 'South Central US STG', name: 'southcentralusstg' },
+  { label: 'North Central US', name: 'northcentralus' },
+  { label: 'West US', name: 'westus' },
+  { label: 'Jio India West', name: 'jioindiawest' },
+  { label: 'Central US EUAP', name: 'centraluseuap' },
+  { label: 'West Central US', name: 'westcentralus' },
+  { label: 'South Africa West', name: 'southafricawest' },
+  { label: 'Australia Central', name: 'australiacentral' },
+  { label: 'Australia Central 2', name: 'australiacentral2' },
+  { label: 'Australia Southeast', name: 'australiasoutheast' },
+  { label: 'Japan West', name: 'japanwest' },
+  { label: 'Jio India Central', name: 'jioindiacentral' },
+  { label: 'Korea South', name: 'koreasouth' },
+  { label: 'South India', name: 'southindia' },
+  { label: 'West India', name: 'westindia' },
+  { label: 'Canada East', name: 'canadaeast' },
+  { label: 'France South', name: 'francesouth' },
+  { label: 'Germany North', name: 'germanynorth' },
+  { label: 'Norway West', name: 'norwaywest' },
+  { label: 'Switzerland West', name: 'switzerlandwest' },
+  { label: 'UK West', name: 'ukwest' },
+  { label: 'UAE Central', name: 'uaecentral' },
+  { label: 'Brazil Southeast', name: 'brazilsoutheast' },
+];
+
+const generateGCPRegions: any = () => {
+  const servers = [
+    { name: 'asia-east', count: [1, 2], letters: ['a', 'b', 'c']},
+    { name: 'asia-northeast', count: [1, 2, 3], letters: ['a', 'b', 'c']},
+    { name: 'asia-south', count: [1, 2], letters: ['a', 'b', 'c']},
+    { name: 'asia-southeast', count: [1, 2], letters: ['a', 'b', 'c']},
+    { name: 'australia-southeast', count: [1, 2], letters: ['a', 'b', 'c']},
+    { name: 'europe-central', count: [1, 2], letters: ['a', 'b', 'c']},
+    { name: 'europe-north', count: [1], letters: ['a', 'b', 'c']},
+    { name: 'europe-southwest', count: [1], letters: ['a', 'b', 'c']},
+    { name: 'europe-west', count: [1], letters: ['b', 'c', 'd']},
+    { name: 'europe-west', count: [2, 3, 4, 6, 8, 9], letters: ['a', 'b', 'c']},
+    { name: 'me-west', count: [1], letters: ['a', 'b', 'c']},
+    { name: 'northamerica-northeast', count: [1, 2], letters: ['a', 'b', 'c']},
+    { name: 'southamerica-east', count: [1], letters: ['a', 'b', 'c']},
+    { name: 'southamerica-west', count: [1], letters: ['a', 'b', 'c']},
+    { name: 'us-central', count: [1], letters: ['a', 'b', 'c', 'f']},
+    { name: 'us-east', count: [1], letters: ['b', 'c', 'd']},
+    { name: 'us-east', count: [4, 5], letters: ['a', 'b', 'c', 'd']},
+    { name: 'us-south', count: [1], letters: ['a', 'b', 'c']},
+    { name: 'us-west', count: [1, 2, 3, 4], letters: ['a', 'b', 'c']},
+  ];
+
+  return _.flatMap(servers, (serverSettings: any) => {
+    return _.flatMap(_.map(serverSettings.count, (count: number) => {
+      return _.map(serverSettings.letters, (letter: string) => `${serverSettings.name}${count}-${letter}`);
+    }));
+  });
+};
+
+export const GCP_REGIONS = generateGCPRegions();
