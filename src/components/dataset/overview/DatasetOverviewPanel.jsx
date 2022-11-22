@@ -146,6 +146,16 @@ function DatasetOverviewPanel(props) {
             {...a11yProps(3)}
           />
         )}
+        {canViewJournalEntries && (
+          <Tab
+            data-cy="activity-tab"
+            label="Dataset activity"
+            classes={{ selected: classes.tabSelected }}
+            disableFocusRipple
+            disableRipple
+            {...a11yProps(3)}
+          />
+        )}
         {canManageUsers && (
           <Tab
             data-cy="roles-tab"
