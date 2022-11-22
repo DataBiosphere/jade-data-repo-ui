@@ -315,9 +315,14 @@ const generateGCPRegions: any = () => {
   ];
 
   return _.flatMap(servers, (serverSettings: any) =>
-    _.flatMap(_.map(serverSettings.count, (count: number) =>
-      _.map(serverSettings.letters, (letter: string) => `${serverSettings.name}${count}-${letter}`)
-    ))
+    _.flatMap(
+      _.map(serverSettings.count, (count: number) =>
+        _.map(
+          serverSettings.letters,
+          (letter: string) => `${serverSettings.name}${count}-${letter}`,
+        ),
+      ),
+    ),
   );
 };
 

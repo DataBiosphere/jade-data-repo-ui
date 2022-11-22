@@ -3,14 +3,22 @@ import ReactDOMServer from 'react-dom/server';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import { WithStyles, withStyles } from '@mui/styles';
-import { Typography, TextField, CustomTheme, Grid, Select, MenuItem, Autocomplete } from '@mui/material';
+import {
+  Typography,
+  TextField,
+  CustomTheme,
+  Grid,
+  Select,
+  MenuItem,
+  Autocomplete,
+} from '@mui/material';
 import { clsx } from 'clsx';
 import { TdrState } from 'reducers';
-import { useForm, Controller} from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import SimpleMDE from 'easymde';
 import { SimpleMdeReact } from 'react-simplemde-editor';
-import WithoutStylesMarkdownContent from '../../common/WithoutStylesMarkdownContent';
 import { GCP_REGIONS, AZURE_REGIONS } from 'constants/index';
+import WithoutStylesMarkdownContent from '../../common/WithoutStylesMarkdownContent';
 import AddUserAccess, { AccessPermission } from '../../common/AddUserAccess';
 
 const styles = (theme: CustomTheme) => ({
@@ -136,21 +144,18 @@ const DatasetSchemaInformationView = withStyles(styles)(({ classes }: IProps) =>
           >
             Dataset description*
           </label>
-          <Controller 
+          <Controller
             name="description"
             control={control}
             rules={{ required: 'description is required' }}
-            render={({ field }) => {
-              return (
-                <>
-                  <SimpleMdeReact
-                    options={editorOptions}
-                    {...field}
-                  />
-                  {errors.description && <span className={classes.formInputError}>{errors.description.message}</span>}
-                </>
-              );
-            }}
+            render={({ field }) => (
+              <>
+                <SimpleMdeReact options={editorOptions} {...field} />
+                {errors.description && (
+                  <span className={classes.formInputError}>{errors.description.message}</span>
+                )}
+              </>
+            )}
           />
         </Grid>
 
@@ -161,74 +166,57 @@ const DatasetSchemaInformationView = withStyles(styles)(({ classes }: IProps) =>
           >
             Terra project*
           </label>
-          <Controller 
+          <Controller
             name="terraProject"
             control={control}
-            render={({ field }) => {
-              return (
-                <>
-                  <Select id="dataset-terraProject"
-                    className={classes.formInput}
-                    {...field}
-                  >
-                    <MenuItem value={'yes'}>Yes</MenuItem>
-                    <MenuItem value={'no'}>No</MenuItem>
-                  </Select>
-                </>
-              );
-            }}
+            render={({ field }) => (
+              <Select id="dataset-terraProject" className={classes.formInput} {...field}>
+                <MenuItem value="yes">Yes</MenuItem>
+                <MenuItem value="no">No</MenuItem>
+              </Select>
+            )}
           />
         </Grid>
 
         <Grid item xs={6}>
-          <label htmlFor="dataset-secureMonitoring" className={classes.formLabel} >
+          <label htmlFor="dataset-secureMonitoring" className={classes.formLabel}>
             Secure monitoring
           </label>
-          <Controller 
+          <Controller
             name="secureMonitoring"
             control={control}
-            render={({ field }) => {
-              return (
-                <>
-                  <Select id="dataset-secureMonitoring"
-                    className={classes.formInput}
-                    {...field}
-                  >
-                    <MenuItem value={'yes'}>Yes</MenuItem>
-                    <MenuItem value={'no'}>No</MenuItem>
-                  </Select>
-                </>
-              );
-            }}
+            render={({ field }) => (
+              <Select id="dataset-secureMonitoring" className={classes.formInput} {...field}>
+                <MenuItem value="yes">Yes</MenuItem>
+                <MenuItem value="no">No</MenuItem>
+              </Select>
+            )}
           />
         </Grid>
 
         <Grid item xs={6}>
-          <label htmlFor="dataset-cloudPlatform" className={classes.formLabel} >
+          <label htmlFor="dataset-cloudPlatform" className={classes.formLabel}>
             Cloud Platform*
           </label>
-          <Controller 
+          <Controller
             name="cloudPlatform"
             control={control}
             rules={{ required: true }}
-            render={({ field }) => {
-              return (
-                <>
-                  <Select id="dataset-cloudPlatform"
-                    className={classes.formInput}
-                    {...field}
-                    onChange={(event: any, change: any) => {
-                      const cloudPlatform = event.target.value;
-                      setRegionOptions(cloudPlatform === 'gcp' ? GCP_REGIONS : AZURE_REGIONS);
-                      field.onChange(event, change);
-                    }}
-                  >
-                    <MenuItem value={'gcp'}>Google Cloud Platform (GCP)</MenuItem>
-                    <MenuItem value={'azure'}>Azure</MenuItem>
-                  </Select>
-                </>
-              );
-            }}
+            render={({ field }) => (
+              <Select
+                id="dataset-cloudPlatform"
+                className={classes.formInput}
+                {...field}
+                onChange={(event: any, change: any) => {
+                  const cloudPlatform = event.target.value;
+                  setRegionOptions(cloudPlatform === 'gcp' ? GCP_REGIONS : AZURE_REGIONS);
+                  field.onChange(event, change);
+                }}
+              >
+                <MenuItem value="gcp">Google Cloud Platform (GCP)</MenuItem>
+                <MenuItem value="azure">Azure</MenuItem>
+              </Select>
+            )}
           />
         </Grid>
 
@@ -239,33 +227,34 @@ const DatasetSchemaInformationView = withStyles(styles)(({ classes }: IProps) =>
           >
             Region*
           </label>
-          <Controller 
+          <Controller
             name="region"
             control={control}
             rules={{ required: 'region is required' }}
-            render={({ field }) => {
-              return (
-                <>
-                  <Autocomplete id="dataset-region"
-                    freeSolo
-                    options={regionOptions}
-                    className={classes.formInput}
-                    renderInput={(params: any) => 
-                      <TextField
-                        {...params}
-                        error={!!errors.region}
-                        helperText={errors.region ? errors.region.message : ''}
-                      />
-                    }
-                    {...field}
-                    onChange={(_event: any, change: any) => {
-                      field.onChange(change);
-                    }}
-                  />
-                  {errors.description && <span className={classes.formInputError}>{errors.description.message}</span>}
-                </>
-              );
-            }}
+            render={({ field }) => (
+              <>
+                <Autocomplete
+                  id="dataset-region"
+                  freeSolo
+                  options={regionOptions}
+                  className={classes.formInput}
+                  renderInput={(params: any) => (
+                    <TextField
+                      {...params}
+                      error={!!errors.region}
+                      helperText={errors.region ? errors.region.message : ''}
+                    />
+                  )}
+                  {...field}
+                  onChange={(_event: any, change: any) => {
+                    field.onChange(change);
+                  }}
+                />
+                {errors.description && (
+                  <span className={classes.formInputError}>{errors.description.message}</span>
+                )}
+              </>
+            )}
           />
         </Grid>
       </Grid>
