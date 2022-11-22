@@ -45,6 +45,7 @@ const styles = (theme) => ({
     transition: '0.3s background-color ease-in-out',
     backgroundColor: '#ddebd0',
     color: theme.palette.secondary.dark,
+    fontWeight: '700 !important',
   },
   component: {
     overflow: 'auto',
