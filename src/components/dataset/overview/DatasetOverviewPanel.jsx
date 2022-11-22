@@ -21,6 +21,7 @@ import moment from 'moment';
 import clsx from 'clsx';
 import { patchDataset } from 'actions';
 import GoogleSheetExport from 'components/common/overview/GoogleSheetExport';
+import { IamResourceTypeEnum } from 'generated/tdr';
 import {
   renderCloudPlatforms,
   renderStorageResources,
@@ -31,6 +32,7 @@ import DatasetSnapshotsTable from '../../table/DatasetSnapshotsTable';
 import EditableFieldView from '../../EditableFieldView';
 import TabPanel from '../../common/TabPanel';
 import { DatasetRoles } from '../../../constants';
+import JournalEntriesView from '../../JournalEntriesView';
 
 const styles = (theme) => ({
   root: {
@@ -128,6 +130,8 @@ function DatasetOverviewPanel(props) {
   const { classes, dataset, dispatch, userRoles } = props;
   const linkToBq = dataset.accessInformation?.bigQuery !== undefined;
 
+  const canViewJournalEntries =
+    userRoles.includes(DatasetRoles.STEWARD) || userRoles.includes(DatasetRoles.CUSTODIAN);
   const canManageUsers =
     userRoles.includes(DatasetRoles.STEWARD) || userRoles.includes(DatasetRoles.CUSTODIAN);
 
@@ -179,6 +183,16 @@ function DatasetOverviewPanel(props) {
             {...a11yProps(2)}
           />
         )}
+        {canViewJournalEntries && (
+          <Tab
+            data-cy="activity-tab"
+            label="Dataset activity"
+            classes={{ selected: classes.tabSelected }}
+            disableFocusRipple
+            disableRipple
+            {...a11yProps(3)}
+          />
+        )}
         {canManageUsers && (
           <Tab
             data-cy="roles-tab"
@@ -186,7 +200,7 @@ function DatasetOverviewPanel(props) {
             classes={{ selected: classes.tabSelected }}
             disableFocusRipple
             disableRipple
-            {...a11yProps(3)}
+            {...a11yProps(4)}
           />
         )}
       </Tabs>
@@ -302,7 +316,16 @@ function DatasetOverviewPanel(props) {
           </Grid>
         </TabPanel>
       )}
-      <TabPanel value={value} index={3}>
+      {canViewJournalEntries && (
+        <TabPanel value={value} index={3}>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <JournalEntriesView id={dataset.id} resourceType={IamResourceTypeEnum.Dataset} />
+            </Grid>
+          </Grid>
+        </TabPanel>
+      )}
+      <TabPanel value={value} index={4}>
         <Grid container spacing={2}>
           <Grid item xs={9}>
             <InfoViewDatasetAccess helpOverlayToggle={toggleHelpOverlay} />

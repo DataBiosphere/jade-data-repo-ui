@@ -9,12 +9,14 @@ import configurationReducer, {
 import queryReducer, { QueryState, initialQueryState } from './query';
 import statusReducer, { StatusState, initialStatusState } from './status';
 import profileReducer, { ProfileState, initialProfileState } from './profile';
+import journalReducer, { initialJournalState, JournalState } from './journal';
 
 export interface TdrState {
   user: UserState;
   snapshots: SnapshotState;
   datasets: DatasetState;
   jobs: JobState;
+  journals: JournalState;
   configuration: ConfigurationState;
   query: QueryState;
   status: StatusState;
@@ -29,6 +31,7 @@ export const initialTdrState: TdrState = {
   snapshots: initialSnapshotState,
   datasets: initialDatasetState,
   jobs: initialJobState,
+  journals: initialJournalState,
   configuration: initialConfigurationState,
   query: initialQueryState,
   status: initialStatusState,
@@ -40,6 +43,7 @@ export default {
   ...snapshotReducer,
   ...datasetReducer,
   ...jobReducer,
+  ...journalReducer,
   ...configurationReducer,
   ...queryReducer,
   ...statusReducer,

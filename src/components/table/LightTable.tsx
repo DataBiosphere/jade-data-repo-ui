@@ -146,7 +146,7 @@ type LightTableProps<RowType> = {
   rows: Array<RowType>;
   rowsPerPage: number;
   rowKey?: string;
-  searchString: string;
+  searchString?: string;
   tableName?: string;
   totalCount?: number;
   refreshCnt: number;
@@ -280,7 +280,7 @@ function LightTable({
         page * rowsPerPage,
         orderProperty,
         orderDirection,
-        searchString,
+        searchString || '',
         refreshCnt,
       );
     }
@@ -340,7 +340,10 @@ function LightTable({
                               style={{ wordBreak: 'break-word' }}
                               data-cy={`cellValue-${col.name}-${index}`}
                             >
-                              <div className={classes.cellContent} style={{ maxWidth }}>
+                              <div
+                                className={classes.cellContent}
+                                style={{ maxWidth, ...col.cellStyles }}
+                              >
                                 {handleValues(row, col)}
                               </div>
                             </TableCell>
@@ -379,11 +382,14 @@ function LightTable({
                 disableTouchRipple: true,
                 disableFocusRipple: true,
                 disableRipple: true,
+                disabled: infinitePaging
+                  ? rows.length < rowsPerPage
+                  : page * rowsPerPage + rows.length >= filteredCount,
                 className: classes.paginationButton,
               }}
               labelDisplayedRows={({ from, to, count }) => {
                 if (infinitePaging) {
-                  return `${from}-${to}`;
+                  return `${from}-${Math.min(from + rows.length, to)}`;
                 }
                 if (count === totalCount) {
                   return `${from}-${to} of ${count}`;

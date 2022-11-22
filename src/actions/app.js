@@ -200,6 +200,15 @@ export const { getJobResult } = createActions({
   [ActionTypes.GET_JOB_RESULT]: (id) => id,
 });
 
+export const { getJournalEntries } = createActions({
+  [ActionTypes.GET_JOURNAL_ENTRIES]: ({ limit, offset, id, resourceType }) => ({
+    limit,
+    offset,
+    id,
+    resourceType,
+  }),
+});
+
 export const { hideAlert } = createActions({
   [ActionTypes.HIDE_ALERT]: (index) => index,
 });
