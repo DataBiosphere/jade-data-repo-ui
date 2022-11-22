@@ -11,6 +11,7 @@ import SimpleMDE from 'easymde';
 import { SimpleMdeReact } from 'react-simplemde-editor';
 import WithoutStylesMarkdownContent from '../../common/WithoutStylesMarkdownContent';
 import { GCP_REGIONS, AZURE_REGIONS } from 'constants/index';
+import AddUserAccess, { AccessPermission } from '../../common/AddUserAccess';
 
 const styles = (theme: CustomTheme) => ({
   contentContainer: {
@@ -78,6 +79,16 @@ const DatasetSchemaInformationView = withStyles(styles)(({ classes }: IProps) =>
       } as SimpleMDE.Options),
     [],
   );
+
+  const permissions: AccessPermission[] = [
+    { policy: 'custodian', disabled: false },
+    { policy: 'snapshot_creator', disabled: false },
+    { policy: 'steward', disabled: false },
+  ];
+
+  const addUsers = (role: string, usersToAdd: string[]) => {
+    console.log('users', role, usersToAdd);
+  };
 
   const onSubmit = (data: any) => {
     console.log('data', data);
@@ -257,6 +268,9 @@ const DatasetSchemaInformationView = withStyles(styles)(({ classes }: IProps) =>
             }}
           />
         </Grid>
+      </Grid>
+      <Grid xs={12}>
+        <AddUserAccess permissions={permissions} onAdd={addUsers} />
       </Grid>
     </form>
   );

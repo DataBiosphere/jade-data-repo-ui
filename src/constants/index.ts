@@ -293,32 +293,32 @@ export const AZURE_REGIONS = [
 
 const generateGCPRegions: any = () => {
   const servers = [
-    { name: 'asia-east', count: [1, 2], letters: ['a', 'b', 'c']},
-    { name: 'asia-northeast', count: [1, 2, 3], letters: ['a', 'b', 'c']},
-    { name: 'asia-south', count: [1, 2], letters: ['a', 'b', 'c']},
-    { name: 'asia-southeast', count: [1, 2], letters: ['a', 'b', 'c']},
-    { name: 'australia-southeast', count: [1, 2], letters: ['a', 'b', 'c']},
-    { name: 'europe-central', count: [1, 2], letters: ['a', 'b', 'c']},
-    { name: 'europe-north', count: [1], letters: ['a', 'b', 'c']},
-    { name: 'europe-southwest', count: [1], letters: ['a', 'b', 'c']},
-    { name: 'europe-west', count: [1], letters: ['b', 'c', 'd']},
-    { name: 'europe-west', count: [2, 3, 4, 6, 8, 9], letters: ['a', 'b', 'c']},
-    { name: 'me-west', count: [1], letters: ['a', 'b', 'c']},
-    { name: 'northamerica-northeast', count: [1, 2], letters: ['a', 'b', 'c']},
-    { name: 'southamerica-east', count: [1], letters: ['a', 'b', 'c']},
-    { name: 'southamerica-west', count: [1], letters: ['a', 'b', 'c']},
-    { name: 'us-central', count: [1], letters: ['a', 'b', 'c', 'f']},
-    { name: 'us-east', count: [1], letters: ['b', 'c', 'd']},
-    { name: 'us-east', count: [4, 5], letters: ['a', 'b', 'c', 'd']},
-    { name: 'us-south', count: [1], letters: ['a', 'b', 'c']},
-    { name: 'us-west', count: [1, 2, 3, 4], letters: ['a', 'b', 'c']},
+    { name: 'asia-east', count: [1, 2], letters: ['a', 'b', 'c'] },
+    { name: 'asia-northeast', count: [1, 2, 3], letters: ['a', 'b', 'c'] },
+    { name: 'asia-south', count: [1, 2], letters: ['a', 'b', 'c'] },
+    { name: 'asia-southeast', count: [1, 2], letters: ['a', 'b', 'c'] },
+    { name: 'australia-southeast', count: [1, 2], letters: ['a', 'b', 'c'] },
+    { name: 'europe-central', count: [1, 2], letters: ['a', 'b', 'c'] },
+    { name: 'europe-north', count: [1], letters: ['a', 'b', 'c'] },
+    { name: 'europe-southwest', count: [1], letters: ['a', 'b', 'c'] },
+    { name: 'europe-west', count: [1], letters: ['b', 'c', 'd'] },
+    { name: 'europe-west', count: [2, 3, 4, 6, 8, 9], letters: ['a', 'b', 'c'] },
+    { name: 'me-west', count: [1], letters: ['a', 'b', 'c'] },
+    { name: 'northamerica-northeast', count: [1, 2], letters: ['a', 'b', 'c'] },
+    { name: 'southamerica-east', count: [1], letters: ['a', 'b', 'c'] },
+    { name: 'southamerica-west', count: [1], letters: ['a', 'b', 'c'] },
+    { name: 'us-central', count: [1], letters: ['a', 'b', 'c', 'f'] },
+    { name: 'us-east', count: [1], letters: ['b', 'c', 'd'] },
+    { name: 'us-east', count: [4, 5], letters: ['a', 'b', 'c', 'd'] },
+    { name: 'us-south', count: [1], letters: ['a', 'b', 'c'] },
+    { name: 'us-west', count: [1, 2, 3, 4], letters: ['a', 'b', 'c'] },
   ];
 
-  return _.flatMap(servers, (serverSettings: any) => {
-    return _.flatMap(_.map(serverSettings.count, (count: number) => {
-      return _.map(serverSettings.letters, (letter: string) => `${serverSettings.name}${count}-${letter}`);
-    }));
-  });
+  return _.flatMap(servers, (serverSettings: any) =>
+    _.flatMap(_.map(serverSettings.count, (count: number) =>
+      _.map(serverSettings.letters, (letter: string) => `${serverSettings.name}${count}-${letter}`)
+    ))
+  );
 };
 
 export const GCP_REGIONS = generateGCPRegions();
