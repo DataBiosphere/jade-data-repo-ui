@@ -72,7 +72,7 @@ const DatasetSchemaInformationView = withStyles(styles)(({ classes }: IProps) =>
       name: '',
       description: '',
       terraProject: '',
-      secureMonitoring: 'yes',
+      enableSecureMonitoring: 'true',
       cloudPlatform: 'gcp',
       region: '',
       stewards: [],
@@ -172,16 +172,16 @@ const DatasetSchemaInformationView = withStyles(styles)(({ classes }: IProps) =>
         </Grid>
 
         <Grid item xs={6}>
-          <label htmlFor="dataset-secureMonitoring" className={classes.formLabel}>
+          <label htmlFor="dataset-enableSecureMonitoring" className={classes.formLabel}>
             Secure monitoring
           </label>
           <Controller
-            name="secureMonitoring"
+            name="enableSecureMonitoring"
             control={control}
             render={({ field }) => (
-              <Select id="dataset-secureMonitoring" className={classes.formInput} {...field}>
-                <MenuItem value="yes">Yes</MenuItem>
-                <MenuItem value="no">No</MenuItem>
+              <Select id="dataset-enableSecureMonitoring" className={classes.formInput} {...field}>
+                <MenuItem value="true">Yes</MenuItem>
+                <MenuItem value="false">No</MenuItem>
               </Select>
             )}
           />
