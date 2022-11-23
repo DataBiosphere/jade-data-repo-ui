@@ -60,7 +60,11 @@ interface IProps extends WithStyles<typeof styles> {
 
 const DatasetSchemaInformationView = withStyles(styles)(({ classes }: IProps) => {
   const [regionOptions, setRegionOptions] = useState(GCP_REGIONS);
-  const { register, control, formState: { errors } } = useFormContext();
+  const {
+    register,
+    control,
+    formState: { errors },
+  } = useFormContext();
 
   const editorOptions = useMemo(
     () =>
@@ -231,9 +235,9 @@ const DatasetSchemaInformationView = withStyles(styles)(({ classes }: IProps) =>
           Stewards
         </label>
         <div className={classes.formFieldDescription}>
-          A Steward, or Data Owner, is the person who created the dataset. While they are
-          ultimately liable for the data, they can assign the hands-on data management to another
-          person by assigning the Custodian role.
+          A Steward, or Data Owner, is the person who created the dataset. While they are ultimately
+          liable for the data, they can assign the hands-on data management to another person by
+          assigning the Custodian role.
         </div>
         <Controller
           name="stewards"
@@ -242,9 +246,7 @@ const DatasetSchemaInformationView = withStyles(styles)(({ classes }: IProps) =>
             validate: {
               isEmail: (values: string[]) => {
                 const emailErrors = _.filter(values, (v: string) => !isEmail(v));
-                return (
-                  emailErrors.length === 0 || `Invalid emails: "${emailErrors.join('", "')}"`
-                );
+                return emailErrors.length === 0 || `Invalid emails: "${emailErrors.join('", "')}"`;
               },
             },
           }}
@@ -290,11 +292,10 @@ const DatasetSchemaInformationView = withStyles(styles)(({ classes }: IProps) =>
             validate: {
               isEmail: (values: string[]) => {
                 const emailErrors = _.filter(values, (v: string) => !isEmail(v));
-                return (
-                  emailErrors.length === 0 || `Invalid emails: "${emailErrors.join('", "')}"`
-                );
+                return emailErrors.length === 0 || `Invalid emails: "${emailErrors.join('", "')}"`;
               },
-              minLength: (values: string[]) => values.length > 0 || `Must include at least one email`,
+              minLength: (values: string[]) =>
+                values.length > 0 || 'Must include at least one email',
             },
           }}
           render={({ field }) => (

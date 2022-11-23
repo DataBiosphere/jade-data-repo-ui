@@ -121,7 +121,10 @@ const DatasetSchemaCreationView = withStyles(styles)(({ classes }: IProps) => {
     },
   ];
 
-  const onSubmit = (data: any) => console.log(data);
+  const onSubmit = (data: any) => {
+    // eslint-disable-next-line
+    console.log(data);
+  };
 
   return (
     <div className={classes.pageRoot}>
@@ -136,8 +139,8 @@ const DatasetSchemaCreationView = withStyles(styles)(({ classes }: IProps) => {
             you'll ingest later. You'll specify the number and names of the data categories - the
             tables and columns within the tables - and any associations between columns in separate
             tables, if multiple tables contain the same data category (for instance, if you have a
-            "subject" table and a "sample" table, and both tables contain a column of the same subject
-            IDs).
+            "subject" table and a "sample" table, and both tables contain a column of the same
+            subject IDs).
             <Tabs classes={{ root: classes.tabsRoot }} value={currentTab} onChange={changeTab}>
               {tabs.map((tabConfig: TabConfig, i: number) => (
                 <Tab
@@ -206,7 +209,8 @@ const DatasetSchemaCreationView = withStyles(styles)(({ classes }: IProps) => {
                     href="#"
                     target="_blank"
                   >
-                    How to create dataset assets in TDR <OpenInNew className={classes.jadeLinkIcon} />
+                    How to create dataset assets in TDR
+                    <OpenInNew className={classes.jadeLinkIcon} />
                   </a>
                 </li>
               </ul>
