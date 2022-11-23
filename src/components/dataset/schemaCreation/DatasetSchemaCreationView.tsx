@@ -7,6 +7,7 @@ import { OpenInNew } from '@mui/icons-material';
 import { TdrState } from 'reducers';
 import { FormProvider, useForm } from 'react-hook-form';
 import DatasetSchemaInformationView from './DatasetSchemaInformationView';
+import DatasetSchemaBuilderView from './DatasetSchemaBuilderView';
 
 const styles = (theme: CustomTheme) => ({
   pageRoot: { ...theme.mixins.pageRoot },
@@ -117,7 +118,7 @@ const DatasetSchemaCreationView = withStyles(styles)(({ classes }: IProps) => {
     },
     {
       description: 'Build a schema and create dataset',
-      content: <div>Step 2!</div>,
+      content: <DatasetSchemaBuilderView />,
     },
   ];
 

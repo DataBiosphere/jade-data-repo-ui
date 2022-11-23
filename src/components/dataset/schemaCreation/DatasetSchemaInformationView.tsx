@@ -26,9 +26,6 @@ const styles = (theme: CustomTheme) => ({
     marginTop: '1rem',
     maxWidth: 1000,
   },
-  form: {
-    width: '100%',
-  },
   formFieldContainer: {
     minHeight: 135,
   },
