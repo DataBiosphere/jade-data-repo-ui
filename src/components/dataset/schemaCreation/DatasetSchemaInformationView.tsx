@@ -63,7 +63,6 @@ const DatasetSchemaInformationView = withStyles(styles)(({ classes }: IProps) =>
   const {
     control,
     register,
-    handleSubmit,
     formState: { errors },
   } = useForm({
     mode: 'onTouched',
@@ -93,12 +92,8 @@ const DatasetSchemaInformationView = withStyles(styles)(({ classes }: IProps) =>
     [],
   );
 
-  const onSubmit = (data: any) => {
-    console.log('data', data);
-  };
-
   return (
-    <form className={classes.form} onSubmit={handleSubmit(onSubmit)}>
+    <form className={classes.form}>
       <Grid container rowSpacing={2} columnSpacing={5} className={classes.contentContainer}>
         <Grid item xs={12}>
           <Typography variant="h3">Dataset information</Typography>
