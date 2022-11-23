@@ -75,10 +75,7 @@ const tabsConfig = [
 const routes = [
   { path: '/datasets', component: HomeView },
   { path: '/snapshots', component: HomeView },
-  Features.isEnabled('datasetSchemaCreation') && {
-    path: '/datasets/new',
-    component: DatasetSchemaCreationView,
-  },
+  { path: '/datasets/new', component: DatasetSchemaCreationView },
   { path: '/datasets/:uuid', component: DatasetOverview },
   { path: '/datasets/:uuid/data', component: DatasetDataView },
   { path: '/snapshots/:uuid', component: SnapshotOverview },
