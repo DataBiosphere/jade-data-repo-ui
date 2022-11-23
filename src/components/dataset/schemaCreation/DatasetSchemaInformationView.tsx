@@ -18,8 +18,8 @@ import { useForm, Controller } from 'react-hook-form';
 import SimpleMDE from 'easymde';
 import { SimpleMdeReact } from 'react-simplemde-editor';
 import { GCP_REGIONS, AZURE_REGIONS } from 'constants/index';
+import isEmail from 'validator/lib/isEmail';
 import WithoutStylesMarkdownContent from '../../common/WithoutStylesMarkdownContent';
-import AddUserAccess, { AccessPermission } from '../../common/AddUserAccess';
 
 const styles = (theme: CustomTheme) => ({
   contentContainer: {
@@ -30,6 +30,9 @@ const styles = (theme: CustomTheme) => ({
   },
   formFieldContainer: {
     minHeight: 135,
+  },
+  formFieldDescription: {
+    marginBottom: 10,
   },
   formLabel: {
     display: 'block',
@@ -72,6 +75,8 @@ const DatasetSchemaInformationView = withStyles(styles)(({ classes }: IProps) =>
       secureMonitoring: 'yes',
       cloudPlatform: 'gcp',
       region: '',
+      stewards: [],
+      custodians: [],
     },
   });
 
@@ -88,21 +93,9 @@ const DatasetSchemaInformationView = withStyles(styles)(({ classes }: IProps) =>
     [],
   );
 
-  const permissions: AccessPermission[] = [
-    { policy: 'custodian', disabled: false },
-    { policy: 'snapshot_creator', disabled: false },
-    { policy: 'steward', disabled: false },
-  ];
-
-  const addUsers = (role: string, usersToAdd: string[]) => {
-    console.log('users', role, usersToAdd);
-  };
-
   const onSubmit = (data: any) => {
     console.log('data', data);
   };
-
-  console.log('errors', errors);
 
   return (
     <form className={classes.form} onSubmit={handleSubmit(onSubmit)}>
@@ -232,34 +225,126 @@ const DatasetSchemaInformationView = withStyles(styles)(({ classes }: IProps) =>
             control={control}
             rules={{ required: 'region is required' }}
             render={({ field }) => (
-              <>
-                <Autocomplete
-                  id="dataset-region"
-                  freeSolo
-                  options={regionOptions}
-                  className={classes.formInput}
-                  renderInput={(params: any) => (
-                    <TextField
-                      {...params}
-                      error={!!errors.region}
-                      helperText={errors.region ? errors.region.message : ''}
-                    />
-                  )}
-                  {...field}
-                  onChange={(_event: any, change: any) => {
-                    field.onChange(change);
-                  }}
-                />
-                {errors.description && (
-                  <span className={classes.formInputError}>{errors.description.message}</span>
+              <Autocomplete
+                id="dataset-region"
+                freeSolo
+                options={regionOptions}
+                className={classes.formInput}
+                renderInput={(params: any) => (
+                  <TextField
+                    {...params}
+                    error={!!errors.region}
+                    helperText={errors.region ? errors.region.message : ''}
+                  />
                 )}
-              </>
+                {...field}
+                onChange={(_event: any, change: any) => {
+                  field.onChange(change);
+                }}
+              />
             )}
           />
         </Grid>
-      </Grid>
-      <Grid xs={12}>
-        <AddUserAccess permissions={permissions} onAdd={addUsers} />
+
+        <Grid item xs={12} className={classes.formFieldContainer}>
+          <label
+            htmlFor="dataset-stewards"
+            className={clsx(classes.formLabel, { [classes.formLabelError]: errors.stewards })}
+          >
+            Stewards
+          </label>
+          <div className={classes.formFieldDescription}>
+            A Steward, or Data Owner, is the person who created the dataset. While they are
+            ultimately liable for the data, they can assign the hands-on data management to another
+            person by assigning the Custodian role.
+          </div>
+          <Controller
+            name="stewards"
+            control={control}
+            rules={{
+              validate: {
+                isEmail: (values: string[]) => {
+                  const emailErrors = _.filter(values, (v: string) => !isEmail(v));
+                  return (
+                    emailErrors.length === 0 || `Invalid emails: "${emailErrors.join('", "')}"`
+                  );
+                },
+              },
+            }}
+            render={({ field }) => (
+              <Autocomplete
+                id="dataset-stewards"
+                freeSolo
+                multiple
+                options={[]}
+                className={classes.formInput}
+                renderInput={(params: any) => (
+                  <TextField
+                    {...params}
+                    error={!!errors.stewards}
+                    helperText={errors.stewards ? errors.stewards.message : ''}
+                  />
+                )}
+                {...field}
+                onChange={(_event: any, change: any) => {
+                  field.onChange(change);
+                }}
+              />
+            )}
+          />
+        </Grid>
+
+        <Grid item xs={12} className={classes.formFieldContainer}>
+          <label
+            htmlFor="dataset-custodians"
+            className={clsx(classes.formLabel, { [classes.formLabelError]: errors.custodians })}
+          >
+            Custodians*
+          </label>
+          <div className={classes.formFieldDescription}>
+            The Custodian role is defined on a dataset. Someone may be the Custodian for one or more
+            studies. A Custodian is responsible for creating data snapshots over datasets and
+            controlling access to those snapshots.
+          </div>
+          <Controller
+            name="custodians"
+            control={control}
+            rules={{
+              minLength: {
+                value: 1,
+                message: 'Must include at least one email',
+              },
+              validate: {
+                isEmail: (values: string[]) => {
+                  const emailErrors = _.filter(values, (v: string) => !isEmail(v));
+                  return (
+                    emailErrors.length === 0 || `Invalid emails: "${emailErrors.join('", "')}"`
+                  );
+                },
+              },
+            }}
+            render={({ field }) => (
+              <Autocomplete
+                id="dataset-custodians"
+                freeSolo
+                multiple
+                options={[]}
+                className={classes.formInput}
+                renderInput={(params: any) => (
+                  <TextField
+                    {...params}
+                    error={!!errors.custodians}
+                    helperText={errors.custodians ? errors.custodians.message : ''}
+                  />
+                )}
+                {...field}
+                onChange={(_event: any, change: any) => {
+                  field.onChange(change);
+                }}
+              />
+            )}
+          />
+        </Grid>
       </Grid>
     </form>
   );
