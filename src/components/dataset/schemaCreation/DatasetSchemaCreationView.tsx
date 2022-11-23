@@ -66,6 +66,7 @@ const styles = (theme: CustomTheme) => ({
   tabButton: {
     'text-transform': 'none',
     marginTop: 30,
+    marginBottom: 30,
   },
   formLabel: {
     display: 'block',

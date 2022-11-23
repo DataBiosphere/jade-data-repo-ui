@@ -310,10 +310,6 @@ const DatasetSchemaInformationView = withStyles(styles)(({ classes }: IProps) =>
             name="custodians"
             control={control}
             rules={{
-              minLength: {
-                value: 1,
-                message: 'Must include at least one email',
-              },
               validate: {
                 isEmail: (values: string[]) => {
                   const emailErrors = _.filter(values, (v: string) => !isEmail(v));
@@ -321,6 +317,7 @@ const DatasetSchemaInformationView = withStyles(styles)(({ classes }: IProps) =>
                     emailErrors.length === 0 || `Invalid emails: "${emailErrors.join('", "')}"`
                   );
                 },
+                minLength: (values: string[]) => values.length > 0 || `Must include at least one email`,
               },
             }}
             render={({ field }) => (
