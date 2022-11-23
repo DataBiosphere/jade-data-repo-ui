@@ -72,9 +72,10 @@ const tabsConfig = [
   { label: 'Ingest Data', path: '/ingestdata' },
 ];
 
-let routes = [
+const routes = [
   { path: '/datasets', component: HomeView },
   { path: '/snapshots', component: HomeView },
+  { path: '/datasets/new', component: DatasetSchemaCreationView },
   { path: '/datasets/:uuid', component: DatasetOverview },
   { path: '/datasets/:uuid/data', component: DatasetDataView },
   { path: '/snapshots/:uuid', component: SnapshotOverview },
@@ -82,15 +83,6 @@ let routes = [
   { path: '/activity', component: HomeView },
 ];
 
-if (Features.isEnabled('datasetSchemaCreation')) {
-  routes = [
-    {
-      path: '/datasets/new',
-      component: DatasetSchemaCreationView,
-    },
-    ...routes,
-  ];
-}
 class Private extends React.Component {
   static propTypes = {
     classes: PropTypes.object.isRequired,
