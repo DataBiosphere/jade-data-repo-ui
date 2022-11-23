@@ -24,6 +24,7 @@ import WithoutStylesMarkdownContent from '../../common/WithoutStylesMarkdownCont
 const styles = (theme: CustomTheme) => ({
   contentContainer: {
     marginTop: '1rem',
+    maxWidth: 1000,
   },
   form: {
     width: '100%',
