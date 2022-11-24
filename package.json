@@ -43,6 +43,7 @@
     "@types/react-dom": "^18.0.8",
     "@types/react-jss": "^10.0.0",
     "@types/react-virtualized": "^9.21.21",
+    "@uiw/react-codemirror": "^4.15.1",
     "animate.css": "^4.1.1",
     "awesome-debounce-promise": "^2.1.0",
     "axios": "^0.21.2",
