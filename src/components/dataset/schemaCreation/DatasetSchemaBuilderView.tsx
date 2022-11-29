@@ -30,148 +30,148 @@ import { javascript } from '@codemirror/lang-javascript';
 import { ColumnModel, TableDataType, DatasetSpecificationModel, TableModel } from 'generated/tdr';
 import clsx from 'clsx';
 
-
-const styles = (theme: CustomTheme) => ({
-  contentContainer: {
-    marginTop: '1rem',
-    maxWidth: 1000,
-  },
-  schemaSectionHeader: {
-    marginTop: 40,
-    paddingBottom: 5,
-    borderBottom: `2px solid ${theme.palette.terra.green}`,
-    display: 'flex',
-    alignItems: 'center',
-    fontSize: '1.5rem',
-  },
-  schemaSectionHeaderDesc: {
-    marginLeft: 10,
-  },
-  section: {
-    margin: '20px 0 10px',
-  },
-  schemaBuilderContainer: {
-    backgroundColor: theme.palette.primary.focus,
-    padding: 20,
-    marginTop: 20,
-    borderRadius: theme.shape.borderRadius,
-    marginRight: -430,
-  },
-  schemaBuilderMain: {
-    display: 'flex',
-    alignItems: 'flex-start',
-    justifyContent: 'space-between',
-  },
-  schemaBuilderStructureView: {
-    width: '55%',
-    flexShrink: 0,
-  },
-  schemaBuilderStructureViewControls: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginTop: 5,
-  },
-  schemaBuilderStructureViewContent: {
-    backgroundColor: theme.palette.background.default,
-    borderRadius: 10,
-    height: 400,
-    'overflow-y': 'scroll',
-    marginTop: 15,
-    padding: 15,
-    border: `1px solid rgba(0, 0, 0, .2)`,
-  },
-  schemaBuilderStructureViewContentTableName: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  schemaBuilderStructureViewContentTableName_text: {
-    padding: '0px 6px',
-    borderRadius: theme.shape.borderRadius,
-    'text-transform': 'none',
-    fontWeight: 'bold',
-    color: 'black',
-    minWidth: 'unset',
-  },
-  schemaBuilderStructureViewContentTableName_selected: {
-    backgroundColor: 'rgba(77, 114, 170, .2)',
-    '&:hover': {
-      backgroundColor: 'rgba(77, 114, 170, .4)',
+const styles = (theme: CustomTheme) =>
+  ({
+    contentContainer: {
+      marginTop: '1rem',
+      maxWidth: 1000,
     },
-  },
-  schemaBuilderStructureViewColumnContainer_wrapper: {
-    position: 'relative',
-  },
-  schemaBuilderStructureViewColumnContainer: {
-    marginLeft: 20,
-    marginTop: -13,
-    marginBottom: -10,
-    paddingLeft: 20,
-    paddingTop: 5,
-    borderLeft: `1px dashed ${theme.palette.primary.main}`,
-  },
-  schemaBuilderStructureColumnContainer_expanded: {
-    marginBottom: 20,
-  },
-  schemaBuilderStructureViewContentColumn_dotContainer: {
-    position: 'absolute',
-    bottom: -1,
-    color: theme.palette.primary.main,
-    padding: '0 15px',
-    background: 'linear-gradient(0, white 50%, transparent 50%)',
-  },
-  schemaBuilderStructureViewContentColumn_dot: {
-    fontSize: 11,
-  },
-  schemaBuilderStructureViewContentColumn: {
-    display: 'block',
-    marginTop: 4,
-    fontWeight: 'normal',
-  },
-  schemaControlButton: {
-    'text-transform': 'none',
-    padding: '10px 14px 10px 11px',
-    marginRight: 15
-  },
-  iconInButton: {
-    marginRight: 6,
-  },
-  iconButton: {
-    backgroundColor: 'rgba(77, 114, 170, .2)',
-    height: '2.6rem',
-    width: '2.6rem',
-    borderRadius: '100%', 
-    marginRight: 6,
-    fontSize: '1.4rem',
-  },
-  schemaBuilderDetailView: {
-    width: '100%',
-    padding: 10,
-    marginLeft: 10,
-    marginTop: 50,
-  },
-  formLabel: {
-    display: 'block',
-    fontWeight: 'bold',
-    marginTop: 10,
-    marginBottom: 10,
-  },
-  formLabelError: {
-    color: theme.palette.error.main,
-  },
-  formInput: {
-    width: '100%',
-    backgroundColor: 'white',
-  },
-  formInputDatatype: {
-    maxWidth: 200,
-  },
-  jsonWrapper: {
-    backgroundColor: '#272822',
-    borderRadius: 10,
-    padding: 20,
-  },
-}) as any;
+    schemaSectionHeader: {
+      marginTop: 40,
+      paddingBottom: 5,
+      borderBottom: `2px solid ${theme.palette.terra.green}`,
+      display: 'flex',
+      alignItems: 'center',
+      fontSize: '1.5rem',
+    },
+    schemaSectionHeaderDesc: {
+      marginLeft: 10,
+    },
+    section: {
+      margin: '20px 0 10px',
+    },
+    schemaBuilderContainer: {
+      backgroundColor: theme.palette.primary.focus,
+      padding: 20,
+      marginTop: 20,
+      borderRadius: theme.shape.borderRadius,
+      marginRight: -430,
+    },
+    schemaBuilderMain: {
+      display: 'flex',
+      alignItems: 'flex-start',
+      justifyContent: 'space-between',
+    },
+    schemaBuilderStructureView: {
+      width: '55%',
+      flexShrink: 0,
+    },
+    schemaBuilderStructureViewControls: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      marginTop: 5,
+    },
+    schemaBuilderStructureViewContent: {
+      backgroundColor: theme.palette.background.default,
+      borderRadius: 10,
+      height: 400,
+      'overflow-y': 'scroll',
+      marginTop: 15,
+      padding: 15,
+      border: '1px solid rgba(0, 0, 0, .2)',
+    },
+    schemaBuilderStructureViewContentTableName: {
+      display: 'flex',
+      alignItems: 'center',
+    },
+    schemaBuilderStructureViewContentTableName_text: {
+      padding: '0px 6px',
+      borderRadius: theme.shape.borderRadius,
+      'text-transform': 'none',
+      fontWeight: 'bold',
+      color: 'black',
+      minWidth: 'unset',
+    },
+    schemaBuilderStructureViewContentTableName_selected: {
+      backgroundColor: 'rgba(77, 114, 170, .2)',
+      '&:hover': {
+        backgroundColor: 'rgba(77, 114, 170, .4)',
+      },
+    },
+    schemaBuilderStructureViewColumnContainer_wrapper: {
+      position: 'relative',
+    },
+    schemaBuilderStructureViewColumnContainer: {
+      marginLeft: 20,
+      marginTop: -13,
+      marginBottom: -10,
+      paddingLeft: 20,
+      paddingTop: 5,
+      borderLeft: `1px dashed ${theme.palette.primary.main}`,
+    },
+    schemaBuilderStructureColumnContainer_expanded: {
+      marginBottom: 20,
+    },
+    schemaBuilderStructureViewContentColumn_dotContainer: {
+      position: 'absolute',
+      bottom: -1,
+      color: theme.palette.primary.main,
+      padding: '0 15px',
+      background: 'linear-gradient(0, white 50%, transparent 50%)',
+    },
+    schemaBuilderStructureViewContentColumn_dot: {
+      fontSize: 11,
+    },
+    schemaBuilderStructureViewContentColumn: {
+      display: 'block',
+      marginTop: 4,
+      fontWeight: 'normal',
+    },
+    schemaControlButton: {
+      'text-transform': 'none',
+      padding: '10px 14px 10px 11px',
+      marginRight: 15,
+    },
+    iconInButton: {
+      marginRight: 6,
+    },
+    iconButton: {
+      backgroundColor: 'rgba(77, 114, 170, .2)',
+      height: '2.6rem',
+      width: '2.6rem',
+      borderRadius: '100%',
+      marginRight: 6,
+      fontSize: '1.4rem',
+    },
+    schemaBuilderDetailView: {
+      width: '100%',
+      padding: 10,
+      marginLeft: 10,
+      marginTop: 50,
+    },
+    formLabel: {
+      display: 'block',
+      fontWeight: 'bold',
+      marginTop: 10,
+      marginBottom: 10,
+    },
+    formLabelError: {
+      color: theme.palette.error.main,
+    },
+    formInput: {
+      width: '100%',
+      backgroundColor: 'white',
+    },
+    formInputDatatype: {
+      maxWidth: 200,
+    },
+    jsonWrapper: {
+      backgroundColor: '#272822',
+      borderRadius: 10,
+      padding: 20,
+    },
+  } as any);
 
 interface IProps extends WithStyles<typeof styles> {
   userEmail: string;
@@ -201,8 +201,8 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: IProps) => {
       // it isnt copy-pastable as ready json.
       const potentialSchema = JSON.parse(value.replace(/([\w+]+):/g, '"$1":'));
       setDatasetSchema(potentialSchema);
-    } catch(e) {
-      console.log('error', e);
+    } catch (e) {
+      // do nothing
     }
   }, []);
 
@@ -222,9 +222,10 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: IProps) => {
       ],
     });
     setSelectedTable(newIndex);
+    setSelectedColumn(-1);
     setExpandedTables({
       ...expandedTables,
-      [newIndex]: true
+      [newIndex]: true,
     });
   };
 
@@ -235,6 +236,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: IProps) => {
     });
     handleCloseDetailsMenu();
     setSelectedTable(-1);
+    setSelectedColumn(-1);
   };
 
   const duplicateTable = () => {
@@ -258,7 +260,9 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: IProps) => {
 
   const deleteColumn = () => {
     const newSchema = _.cloneDeep(datasetSchema);
-    newSchema.tables[selectedTable].columns = newSchema.tables[selectedTable].columns.filter((_value, index: number) => index !== selectedColumn);
+    newSchema.tables[selectedTable].columns = newSchema.tables[selectedTable].columns.filter(
+      (_value, index: number) => index !== selectedColumn,
+    );
     setDatasetSchema(newSchema);
     handleCloseDetailsMenu();
     setSelectedColumn(-1);
@@ -269,6 +273,10 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: IProps) => {
     datasetSchema.tables.splice(selectedTable + 1, 0, copyTable);
     setDatasetSchema({ ...datasetSchema });
     handleCloseDetailsMenu();
+  };
+
+  const swapArrayLocs = (arr: Array<any>, index1: number, index2: number) => {
+    [arr[index1], arr[index2]] = [arr[index2], arr[index1]];
   };
 
   return (
@@ -282,7 +290,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: IProps) => {
 
       <div className={classes.schemaSectionHeader}>
         <Typography variant="h3">Schema for:</Typography>
-        <div className={classes.schemaSectionHeaderDesc}>{ getValues('name') }</div>
+        <div className={classes.schemaSectionHeaderDesc}>{getValues('name')}</div>
       </div>
 
       <div className={classes.schemaBuilderContainer}>
@@ -322,8 +330,21 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: IProps) => {
                   size="small"
                   color="primary"
                   className={classes.iconButton}
+                  disabled={selectedTable === -1}
                   onClick={() => {
-                    console.log('hello');
+                    const schemaCopy = _.cloneDeep(datasetSchema);
+                    if (selectedColumn > 0) {
+                      swapArrayLocs(
+                        schemaCopy.tables[selectedTable].columns,
+                        selectedColumn,
+                        selectedColumn - 1,
+                      );
+                      setSelectedColumn(selectedColumn - 1);
+                    } else if (selectedColumn === -1 && selectedTable > 0) {
+                      swapArrayLocs(schemaCopy.tables, selectedTable, selectedTable - 1);
+                      setSelectedTable(selectedTable - 1);
+                    }
+                    setDatasetSchema(schemaCopy);
                   }}
                 >
                   <i className="fa fa-angle-up" />
@@ -333,8 +354,27 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: IProps) => {
                   size="small"
                   color="primary"
                   className={classes.iconButton}
+                  disabled={selectedTable === -1}
                   onClick={() => {
-                    console.log('hello');
+                    const schemaCopy = _.cloneDeep(datasetSchema);
+                    if (
+                      selectedColumn !== -1 &&
+                      selectedColumn < schemaCopy.tables[selectedTable].columns.length - 1
+                    ) {
+                      swapArrayLocs(
+                        schemaCopy.tables[selectedTable].columns,
+                        selectedColumn,
+                        selectedColumn + 1,
+                      );
+                      setSelectedColumn(selectedColumn + 1);
+                    } else if (
+                      selectedTable !== -1 &&
+                      selectedTable < schemaCopy.tables.length - 1
+                    ) {
+                      swapArrayLocs(schemaCopy.tables, selectedTable, selectedTable + 1);
+                      setSelectedTable(selectedTable + 1);
+                    }
+                    setDatasetSchema(schemaCopy);
                   }}
                 >
                   <i className="fa fa-angle-down" />
@@ -345,9 +385,6 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: IProps) => {
                   color="primary"
                   className={classes.iconButton}
                   style={{ marginLeft: 50 }}
-                  onClick={() => {
-                    console.log('hello');
-                  }}
                 >
                   <i className="fa fa-link-horizontal" />
                 </IconButton>
@@ -359,12 +396,14 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: IProps) => {
                   <div className={classes.schemaBuilderStructureViewContentTableName}>
                     <IconButton
                       color="primary"
-                      onClick={() => setExpandedTables({
-                        ...expandedTables,
-                        [i]: !expandedTables[i],
-                      })}
+                      onClick={() =>
+                        setExpandedTables({
+                          ...expandedTables,
+                          [i]: !expandedTables[i],
+                        })
+                      }
                     >
-                      { expandedTables[i] ? <IndeterminateCheckBoxOutlined /> : <AddBoxOutlined /> }
+                      {expandedTables[i] ? <IndeterminateCheckBoxOutlined /> : <AddBoxOutlined />}
                     </IconButton>
                     <Button
                       onClick={() => {
@@ -377,7 +416,8 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: IProps) => {
                         }
                       }}
                       className={clsx(classes.schemaBuilderStructureViewContentTableName_text, {
-                        [classes.schemaBuilderStructureViewContentTableName_selected]: selectedTable === i && selectedColumn === -1,
+                        [classes.schemaBuilderStructureViewContentTableName_selected]:
+                          selectedTable === i && selectedColumn === -1,
                       })}
                       disableFocusRipple
                       disableRipple
@@ -386,176 +426,275 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: IProps) => {
                     </Button>
                   </div>
 
-                  {table.columns.length > 0 && expandedTables[i] && <div className={classes.schemaBuilderStructureViewColumnContainer_wrapper}>
-                    <div className={classes.schemaBuilderStructureViewContentColumn_dotContainer}>
-                      <Circle className={classes.schemaBuilderStructureViewContentColumn_dot}/>
+                  {table.columns.length > 0 && expandedTables[i] && (
+                    <div className={classes.schemaBuilderStructureViewColumnContainer_wrapper}>
+                      <div className={classes.schemaBuilderStructureViewContentColumn_dotContainer}>
+                        <Circle className={classes.schemaBuilderStructureViewContentColumn_dot} />
+                      </div>
+                      <div
+                        className={clsx(classes.schemaBuilderStructureViewColumnContainer, {
+                          [classes.schemaBuilderStructureColumnContainer_expanded]:
+                            expandedTables[i],
+                        })}
+                      >
+                        {table.columns.map((column: ColumnModel, j: number) => (
+                          <Button
+                            key={`datasetSchema-table-${i}-column-${j}`}
+                            onClick={() => {
+                              if (selectedTable === i && selectedColumn === j) {
+                                setSelectedTable(-1);
+                                setSelectedColumn(-1);
+                              } else {
+                                setSelectedTable(i);
+                                setSelectedColumn(j);
+                              }
+                            }}
+                            className={clsx(
+                              classes.schemaBuilderStructureViewContentTableName_text,
+                              classes.schemaBuilderStructureViewContentColumn,
+                              {
+                                [classes.schemaBuilderStructureViewContentTableName_selected]:
+                                  selectedTable === i && selectedColumn === j,
+                              },
+                            )}
+                            disableFocusRipple
+                            disableRipple
+                          >
+                            {column.name}
+                          </Button>
+                        ))}
+                      </div>
                     </div>
-                    <div className={clsx(classes.schemaBuilderStructureViewColumnContainer, {[classes.schemaBuilderStructureColumnContainer_expanded]: expandedTables[i]})}>
-                      { table.columns.map((column: ColumnModel, j: number) => (
-                        <Button
-                          key={`datasetSchema-table-${i}-column-${j}`}
-                          onClick={() => {
-                            if (selectedTable === i && selectedColumn === j) {
-                              setSelectedTable(-1);
-                              setSelectedColumn(-1);
-                            } else {
-                              setSelectedTable(i);
-                              setSelectedColumn(j);
-                            }
-                          }}
-                          className={clsx(
-                            classes.schemaBuilderStructureViewContentTableName_text,
-                            classes.schemaBuilderStructureViewContentColumn,
-                            {
-                              [classes.schemaBuilderStructureViewContentTableName_selected]: selectedTable === i && selectedColumn === j,
-                            }
-                          )}
-                          disableFocusRipple
-                          disableRipple
-                        >
-                          {column.name}
-                        </Button>
-                      ))}
-                    </div>
-                  </div>}
+                  )}
                 </div>
               ))}
             </div>
           </div>
-          { selectedTable !== -1 && selectedColumn === -1 && <div className={classes.schemaBuilderDetailView}>
-            <div className={classes.schemaBuilderStructureViewControls}>
-              <Typography variant="h4">Table attributes</Typography>
-              <IconButton
-                id="details-menu-button"
-                size="small"
-                color="primary"
-                className={classes.iconButton}
-                onClick={handleClickDetailsMenu}
-                aria-controls={openDetailsMenu ? 'details-menu' : undefined}
-                aria-haspopup="true"
-                aria-expanded={openDetailsMenu ? 'true' : undefined}
-              >
-                <MoreVert />
-              </IconButton>
-              <Menu
-                id="details-menu"
-                anchorEl={anchorElDetailsMenu}
-                open={openDetailsMenu}
-                onClose={handleCloseDetailsMenu}
-                MenuListProps={{
-                  'aria-labelledby': 'details-menu-button',
-                }}
-              >
-                <MenuItem onClick={() => duplicateTable()}>Duplicate table</MenuItem>
-                <Divider />
-                <MenuItem onClick={() => deleteTable()}>Delete table</MenuItem>
-              </Menu>
-            </div>
-            <div>
-              <label htmlFor="table-name" className={classes.formLabel}>Table name</label>
-              <TextField
-                id="table-name"
-                placeholder="table name"
-                className={classes.formInput}
-                defaultValue={datasetSchema.tables[selectedTable].name}
-                onChange={(event: any) => {
-                  const schemaCopy = _.cloneDeep(datasetSchema);
-                  schemaCopy.tables[selectedTable].name = event.target.value;
-                  setDatasetSchema(schemaCopy);
-                }}
-              />
-            </div>
-          </div> }
-          { selectedTable !== -1 && selectedColumn !== -1 && <div className={classes.schemaBuilderDetailView}>
-            <div className={classes.schemaBuilderStructureViewControls}>
-              <Typography variant="h4">Column attributes</Typography>
-              <IconButton
-                id="details-menu-button"
-                size="small"
-                color="primary"
-                className={classes.iconButton}
-                onClick={handleClickDetailsMenu}
-                aria-controls={openDetailsMenu ? 'details-menu' : undefined}
-                aria-haspopup="true"
-                aria-expanded={openDetailsMenu ? 'true' : undefined}
-              >
-                <MoreVert />
-              </IconButton>
-              <Menu
-                id="details-menu"
-                anchorEl={anchorElDetailsMenu}
-                open={openDetailsMenu}
-                onClose={handleCloseDetailsMenu}
-                MenuListProps={{
-                  'aria-labelledby': 'details-menu-button',
-                }}
-              >
-                <MenuItem onClick={() => {}}>Create relationship</MenuItem>
-                <MenuItem onClick={() => {}}>Remove relationship</MenuItem>
-                <Divider />
-                <MenuItem onClick={() => duplicateColumn()}>Duplicate column</MenuItem>
-                <Divider />
-                <MenuItem onClick={() => deleteColumn()}>Delete column</MenuItem>
-              </Menu>
-            </div>
-            <div>
-              <label htmlFor="column-name" className={classes.formLabel}>Column name</label>
-              <TextField
-                id="column-name"
-                placeholder="column name"
-                className={classes.formInput}
-                defaultValue={datasetSchema.tables[selectedTable].columns[selectedColumn].name}
-                onChange={(event: any) => {
-                  const schemaCopy = _.cloneDeep(datasetSchema);
-                  schemaCopy.tables[selectedTable].columns[selectedColumn].name = event.target.value;
-                  setDatasetSchema(schemaCopy);
-                }}
-              />
-            </div>
-            <div>
-              <label htmlFor="column-datatype" className={classes.formLabel}>Data type</label>
-              <Autocomplete
-                id="column-datatype"
-                options={columnDatatypeOptions}
-                className={clsx(classes.formInput, classes.formInputDatatype)}
-                renderInput={(params: any) => (
-                  <TextField {...params} />
-                )}
-                onChange={(_event: any, change: any) => {
-                  if (TableDataType.hasOwnProperty(change)) {
+          {selectedTable !== -1 && selectedColumn === -1 && (
+            <div className={classes.schemaBuilderDetailView}>
+              <div className={classes.schemaBuilderStructureViewControls}>
+                <Typography variant="h4">Table attributes</Typography>
+                <IconButton
+                  id="details-menu-button"
+                  size="small"
+                  color="primary"
+                  className={classes.iconButton}
+                  onClick={handleClickDetailsMenu}
+                  aria-controls={openDetailsMenu ? 'details-menu' : undefined}
+                  aria-haspopup="true"
+                  aria-expanded={openDetailsMenu ? 'true' : undefined}
+                >
+                  <MoreVert />
+                </IconButton>
+                <Menu
+                  id="details-menu"
+                  anchorEl={anchorElDetailsMenu}
+                  open={openDetailsMenu}
+                  onClose={handleCloseDetailsMenu}
+                  MenuListProps={{
+                    'aria-labelledby': 'details-menu-button',
+                  }}
+                >
+                  <MenuItem onClick={() => duplicateTable()}>Duplicate table</MenuItem>
+                  <Divider />
+                  <MenuItem onClick={() => deleteTable()}>Delete table</MenuItem>
+                </Menu>
+              </div>
+              <div>
+                <label htmlFor="table-name" className={classes.formLabel}>
+                  Table name
+                </label>
+                <TextField
+                  id="table-name"
+                  placeholder="table name"
+                  className={classes.formInput}
+                  value={datasetSchema.tables[selectedTable].name}
+                  onChange={(event: any) => {
                     const schemaCopy = _.cloneDeep(datasetSchema);
-                    schemaCopy.tables[selectedTable].columns[selectedColumn].datatype = _.get(TableDataType, change, '');
+                    schemaCopy.tables[selectedTable].name = event.target.value;
                     setDatasetSchema(schemaCopy);
-                  }
-                }}
-              />
+                  }}
+                />
+              </div>
             </div>
-            <div style={{ marginTop: 10 }}>
-              <FormControlLabel
-                control={<Checkbox />}
-                label="Required"
-                onChange={(_event: any, change: boolean) => {
-                  const schemaCopy = _.cloneDeep(datasetSchema);
-                  schemaCopy.tables[selectedTable].columns[selectedColumn].required = change;
-                  setDatasetSchema(schemaCopy);
-                }}
-              />
+          )}
+          {selectedTable !== -1 && selectedColumn !== -1 && (
+            <div className={classes.schemaBuilderDetailView}>
+              <div className={classes.schemaBuilderStructureViewControls}>
+                <Typography variant="h4">Column attributes</Typography>
+                <IconButton
+                  id="details-menu-button"
+                  size="small"
+                  color="primary"
+                  className={classes.iconButton}
+                  onClick={handleClickDetailsMenu}
+                  aria-controls={openDetailsMenu ? 'details-menu' : undefined}
+                  aria-haspopup="true"
+                  aria-expanded={openDetailsMenu ? 'true' : undefined}
+                >
+                  <MoreVert />
+                </IconButton>
+                <Menu
+                  id="details-menu"
+                  anchorEl={anchorElDetailsMenu}
+                  open={openDetailsMenu}
+                  onClose={handleCloseDetailsMenu}
+                  MenuListProps={{
+                    'aria-labelledby': 'details-menu-button',
+                  }}
+                >
+                  <MenuItem>Create relationship</MenuItem>
+                  <MenuItem>Remove relationship</MenuItem>
+                  <Divider />
+                  <MenuItem onClick={() => duplicateColumn()}>Duplicate column</MenuItem>
+                  <Divider />
+                  <MenuItem onClick={() => deleteColumn()}>Delete column</MenuItem>
+                </Menu>
+              </div>
+              <div>
+                <label htmlFor="column-name" className={classes.formLabel}>
+                  Column name
+                </label>
+                <TextField
+                  id="column-name"
+                  placeholder="column name"
+                  className={classes.formInput}
+                  value={datasetSchema.tables[selectedTable].columns[selectedColumn].name}
+                  onChange={(event: any) => {
+                    const schemaCopy = _.cloneDeep(datasetSchema);
+                    schemaCopy.tables[selectedTable].columns[selectedColumn].name =
+                      event.target.value;
 
-              <FormControlLabel
-                control={<Checkbox />}
-                label="Array"
-                onChange={(_event: any, change: boolean) => {
-                  const schemaCopy = _.cloneDeep(datasetSchema);
-                  schemaCopy.tables[selectedTable].columns[selectedColumn].array_of = change;
-                  setDatasetSchema(schemaCopy);
-                }}
-              />
+                    // Update the primary key name if this is a primary key column.
+                    if (schemaCopy.tables[selectedTable].primaryKey) {
+                      const origName =
+                        datasetSchema.tables[selectedTable].columns[selectedColumn].name;
+                      const primaryKeyArr = _.get(
+                        schemaCopy.tables[selectedTable],
+                        'primaryKey',
+                        [] as string[],
+                      );
+                      const indexOfPrimaryKey = primaryKeyArr.indexOf(origName);
+                      primaryKeyArr[indexOfPrimaryKey] = event.target.value;
+                    }
+                    setDatasetSchema(schemaCopy);
+                  }}
+                />
+              </div>
+              <div>
+                <label htmlFor="column-datatype" className={classes.formLabel}>
+                  Data type
+                </label>
+                <Autocomplete
+                  id="column-datatype"
+                  options={columnDatatypeOptions}
+                  className={clsx(classes.formInput, classes.formInputDatatype)}
+                  renderInput={(params: any) => <TextField {...params} />}
+                  value={datasetSchema.tables[selectedTable].columns[selectedColumn].datatype}
+                  onChange={(_event: any, change: any) => {
+                    if (_.has(TableDataType, change)) {
+                      const schemaCopy = _.cloneDeep(datasetSchema);
+                      schemaCopy.tables[selectedTable].columns[selectedColumn].datatype = _.get(
+                        TableDataType,
+                        change,
+                        '',
+                      );
+                      setDatasetSchema(schemaCopy);
+                    }
+                  }}
+                />
+              </div>
+              <div style={{ marginTop: 10 }}>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={
+                        datasetSchema.tables[selectedTable].primaryKey &&
+                        (datasetSchema.tables[selectedTable].primaryKey as string[]).indexOf(
+                          datasetSchema.tables[selectedTable].columns[selectedColumn].name,
+                        ) !== -1
+                      }
+                      disabled={
+                        datasetSchema.tables[selectedTable].columns[selectedColumn].array_of
+                      }
+                    />
+                  }
+                  label="Primary"
+                  onChange={(_event: any, change: boolean) => {
+                    const schemaCopy = _.cloneDeep(datasetSchema);
+                    const columnName =
+                      schemaCopy.tables[selectedTable].columns[selectedColumn].name;
+                    const primaryKeyArr: string[] = _.get(
+                      schemaCopy.tables[selectedTable],
+                      'primaryKey',
+                      [],
+                    );
+                    const primaryKeyIndex: number = primaryKeyArr.indexOf(columnName);
+                    if (change && primaryKeyIndex === -1) {
+                      primaryKeyArr.push(columnName);
+                      schemaCopy.tables[selectedTable].columns[selectedColumn].required = true;
+                      schemaCopy.tables[selectedTable].columns[selectedColumn].array_of = false;
+                    } else if (!change && primaryKeyIndex !== -1) {
+                      primaryKeyArr.splice(primaryKeyIndex, 1);
+                    }
+
+                    if (primaryKeyArr.length > 0) {
+                      schemaCopy.tables[selectedTable].primaryKey = primaryKeyArr;
+                    } else {
+                      delete schemaCopy.tables[selectedTable].primaryKey;
+                    }
+                    setDatasetSchema(schemaCopy);
+                  }}
+                />
+
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={datasetSchema.tables[selectedTable].columns[selectedColumn].required}
+                      disabled={
+                        datasetSchema.tables[selectedTable].primaryKey &&
+                        (datasetSchema.tables[selectedTable].primaryKey as string[]).indexOf(
+                          datasetSchema.tables[selectedTable].columns[selectedColumn].name,
+                        ) !== -1
+                      }
+                    />
+                  }
+                  label="Required"
+                  onChange={(_event: any, change: boolean) => {
+                    const schemaCopy = _.cloneDeep(datasetSchema);
+                    schemaCopy.tables[selectedTable].columns[selectedColumn].required = change;
+                    setDatasetSchema(schemaCopy);
+                  }}
+                />
+
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={datasetSchema.tables[selectedTable].columns[selectedColumn].array_of}
+                      disabled={
+                        datasetSchema.tables[selectedTable].primaryKey &&
+                        (datasetSchema.tables[selectedTable].primaryKey as string[]).indexOf(
+                          datasetSchema.tables[selectedTable].columns[selectedColumn].name,
+                        ) !== -1
+                      }
+                    />
+                  }
+                  label="Array"
+                  onChange={(_event: any, change: boolean) => {
+                    const schemaCopy = _.cloneDeep(datasetSchema);
+                    schemaCopy.tables[selectedTable].columns[selectedColumn].array_of = change;
+                    setDatasetSchema(schemaCopy);
+                  }}
+                />
+              </div>
             </div>
-          </div> }
+          )}
         </div>
 
         <div>
-          <Typography variant="h4" className={classes.section}>JSON view</Typography>
+          <Typography variant="h4" className={classes.section}>
+            JSON view
+          </Typography>
           <CodeMirror
             value={JSON.stringify(datasetSchema, null, 2).replace(/"(\w+)"\s*:/g, '$1:')}
             height="400px"
