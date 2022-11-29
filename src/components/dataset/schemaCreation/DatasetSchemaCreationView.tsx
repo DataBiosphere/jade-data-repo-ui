@@ -54,7 +54,7 @@ const styles = (theme: CustomTheme) => ({
     marginTop: '1.5rem',
     backgroundColor: theme.palette.primary.focus,
     padding: 25,
-    minWidth: 400,
+    width: 400,
     borderRadius: theme.shape.borderRadius,
   },
   helpList: {
