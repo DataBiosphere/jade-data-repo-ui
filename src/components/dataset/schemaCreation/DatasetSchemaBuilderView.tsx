@@ -178,7 +178,7 @@ interface IProps extends WithStyles<typeof styles> {
 }
 
 const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: IProps) => {
-  const { getValues } = useFormContext();
+  const { getValues, setValue } = useFormContext();
   const [datasetSchema, setDatasetSchema] = useState({} as DatasetSpecificationModel);
   const [selectedTable, setSelectedTable] = useState(-1);
   const [selectedColumn, setSelectedColumn] = useState(-1);
@@ -194,17 +194,21 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: IProps) => {
   };
   const handleCloseDetailsMenu = () => setAnchorElDetailsMenu(null);
 
-  const onJsonViewerChange = React.useCallback((value: string) => {
-    try {
-      // using these regexes to add / remove quotation marks just because the viewer will then color code
-      // the keys and values differently. It's easier to read for modifying, but the downside is that
-      // it isnt copy-pastable as ready json.
-      const potentialSchema = JSON.parse(value.replace(/([\w+]+):/g, '"$1":'));
-      setDatasetSchema(potentialSchema);
-    } catch (e) {
-      // do nothing
-    }
-  }, []);
+  const onJsonViewerChange = React.useCallback(
+    (value: string) => {
+      try {
+        // using these regexes to add / remove quotation marks just because the viewer will then color code
+        // the keys and values differently. It's easier to read for modifying, but the downside is that
+        // it isnt copy-pastable as ready json.
+        const potentialSchema = JSON.parse(value.replace(/([\w+]+):/g, '"$1":'));
+        setDatasetSchema(potentialSchema);
+        setValue('schema', potentialSchema);
+      } catch (e) {
+        // do nothing
+      }
+    },
+    [setValue],
+  );
 
   const createTable = () => {
     if (!datasetSchema.tables) {
