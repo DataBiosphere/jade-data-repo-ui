@@ -591,6 +591,9 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: IProps) => {
                   className={clsx(classes.formInput, classes.formInputDatatype)}
                   renderInput={(params: any) => <TextField {...params} />}
                   value={datasetSchema.tables[selectedTable].columns[selectedColumn].datatype}
+                  isOptionEqualToValue={(option: string, value: string) =>
+                    _.get(TableDataType, option) === value
+                  }
                   onChange={(_event: any, change: any) => {
                     if (_.has(TableDataType, change)) {
                       const schemaCopy = _.cloneDeep(datasetSchema);

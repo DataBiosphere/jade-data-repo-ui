@@ -1,9 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import _ from 'lodash';
 import clsx from 'clsx';
 import { WithStyles, withStyles } from '@mui/styles';
 import { Button, Typography, CustomTheme, Tabs, Tab } from '@mui/material';
-import { OpenInNew } from '@mui/icons-material';
+import { OpenInNew, Error } from '@mui/icons-material';
 import { TdrState } from 'reducers';
 import { FormProvider, useForm } from 'react-hook-form';
 import DatasetSchemaInformationView from './DatasetSchemaInformationView';
@@ -36,6 +37,7 @@ const styles = (theme: CustomTheme) => ({
   mainContent: {
     marginRight: 30,
     marginTop: '1.25em',
+    marginBottom: 30,
   },
   tabsRoot: {
     height: 80,
@@ -68,7 +70,7 @@ const styles = (theme: CustomTheme) => ({
   tabButton: {
     'text-transform': 'none',
     marginTop: 30,
-    marginBottom: 30,
+    marginBottom: 5,
   },
   formLabel: {
     display: 'block',
@@ -78,6 +80,14 @@ const styles = (theme: CustomTheme) => ({
   },
   formLabelError: {
     color: theme.palette.error.main,
+  },
+  leftMargin: {
+    marginLeft: 20,
+  },
+  flexRow: {
+    display: 'flex',
+    alignItems: 'center',
+    marginTop: 10,
   },
 });
 
@@ -109,7 +119,10 @@ const DatasetSchemaCreationView = withStyles(styles)(({ classes }: IProps) => {
     },
   });
 
-  const { handleSubmit } = formMethods;
+  const {
+    handleSubmit,
+    formState: { errors },
+  } = formMethods;
 
   const tabs: TabConfig[] = [
     {
@@ -181,8 +194,37 @@ const DatasetSchemaCreationView = withStyles(styles)(({ classes }: IProps) => {
                     type="submit"
                     className={classes.tabButton}
                   >
-                    Submit
+                    Create dataset
                   </Button>
+                )}
+                {i > 0 && (
+                  <Button
+                    className={clsx(classes.tabButton, classes.leftMargin)}
+                    color="primary"
+                    variant="outlined"
+                    disableElevation
+                    type="button"
+                    size="medium"
+                    onClick={() => setCurrentTab(i - 1)}
+                  >
+                    Go back to Step {i}
+                  </Button>
+                )}
+
+                {_.keys(errors).length > 0 && (
+                  <>
+                    <div className={clsx(classes.formLabelError, classes.flexRow)}>
+                      <Error style={{ marginRight: 5 }} />
+                      There are errors with your form. Please fix these fields to continue:
+                    </div>
+                    <div className={classes.formLabelError}>
+                      <ul>
+                        {_.keys(errors).map((error: string) => (
+                          <li key={error}>{error}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </>
                 )}
               </div>
             ))}
