@@ -426,7 +426,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: IProps) => {
                     </Button>
                   </div>
 
-                  {table.columns.length > 0 && expandedTables[i] && (
+                  {table.columns?.length > 0 && expandedTables[i] && (
                     <div className={classes.schemaBuilderStructureViewColumnContainer_wrapper}>
                       <div className={classes.schemaBuilderStructureViewContentColumn_dotContainer}>
                         <Circle className={classes.schemaBuilderStructureViewContentColumn_dot} />
