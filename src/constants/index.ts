@@ -38,6 +38,9 @@ export enum ActionTypes {
   EXPORT_SNAPSHOT_FAILURE = 'EXPORT_SNAPSHOT_FAILURE',
   RESET_SNAPSHOT_EXPORT = 'RESET_SNAPSHOT_EXPORT',
   RESET_SNAPSHOT_EXPORT_DATA = 'RESET_SNAPSHOT_EXPORT_DATA',
+  CREATE_DATASET = 'CREATE_DATASET',
+  CREATE_DATASET_SUCCESS = 'CREATE_DATASET_SUCCESS',
+  CREATE_DATASET_ERROR = 'CREATE_DATASET_ERROR',
   REFRESH_DATASETS = 'REFRESH_DATASETS',
   GET_DATASETS = 'GET_DATASETS',
   GET_DATASETS_SUCCESS = 'GET_DATASETS_SUCCESS',
@@ -293,36 +296,29 @@ export const AZURE_REGIONS = [
 
 const generateGCPRegions: any = () => {
   const servers = [
-    { name: 'asia-east', count: [1, 2], letters: ['a', 'b', 'c'] },
-    { name: 'asia-northeast', count: [1, 2, 3], letters: ['a', 'b', 'c'] },
-    { name: 'asia-south', count: [1, 2], letters: ['a', 'b', 'c'] },
-    { name: 'asia-southeast', count: [1, 2], letters: ['a', 'b', 'c'] },
-    { name: 'australia-southeast', count: [1, 2], letters: ['a', 'b', 'c'] },
-    { name: 'europe-central', count: [1, 2], letters: ['a', 'b', 'c'] },
-    { name: 'europe-north', count: [1], letters: ['a', 'b', 'c'] },
-    { name: 'europe-southwest', count: [1], letters: ['a', 'b', 'c'] },
-    { name: 'europe-west', count: [1], letters: ['b', 'c', 'd'] },
-    { name: 'europe-west', count: [2, 3, 4, 6, 8, 9], letters: ['a', 'b', 'c'] },
-    { name: 'me-west', count: [1], letters: ['a', 'b', 'c'] },
-    { name: 'northamerica-northeast', count: [1, 2], letters: ['a', 'b', 'c'] },
-    { name: 'southamerica-east', count: [1], letters: ['a', 'b', 'c'] },
-    { name: 'southamerica-west', count: [1], letters: ['a', 'b', 'c'] },
-    { name: 'us-central', count: [1], letters: ['a', 'b', 'c', 'f'] },
-    { name: 'us-east', count: [1], letters: ['b', 'c', 'd'] },
-    { name: 'us-east', count: [4, 5], letters: ['a', 'b', 'c', 'd'] },
-    { name: 'us-south', count: [1], letters: ['a', 'b', 'c'] },
-    { name: 'us-west', count: [1, 2, 3, 4], letters: ['a', 'b', 'c'] },
+    { name: 'asia-east', count: [1, 2] },
+    { name: 'asia-northeast', count: [1, 2, 3] },
+    { name: 'asia-south', count: [1, 2] },
+    { name: 'asia-southeast', count: [1, 2] },
+    { name: 'australia-southeast', count: [1, 2] },
+    { name: 'europe-central', count: [1, 2] },
+    { name: 'europe-north', count: [1] },
+    { name: 'europe-southwest', count: [1] },
+    { name: 'europe-west', count: [1] },
+    { name: 'europe-west', count: [2, 3, 4, 6, 8, 9] },
+    { name: 'me-west', count: [1] },
+    { name: 'northamerica-northeast', count: [1, 2] },
+    { name: 'southamerica-east', count: [1] },
+    { name: 'southamerica-west', count: [1] },
+    { name: 'us-central', count: [1] },
+    { name: 'us-east', count: [1] },
+    { name: 'us-east', count: [4, 5] },
+    { name: 'us-south', count: [1] },
+    { name: 'us-west', count: [1, 2, 3, 4] },
   ];
 
   return _.flatMap(servers, (serverSettings: any) =>
-    _.flatMap(
-      _.map(serverSettings.count, (count: number) =>
-        _.map(
-          serverSettings.letters,
-          (letter: string) => `${serverSettings.name}${count}-${letter}`,
-        ),
-      ),
-    ),
+    _.flatMap(_.map(serverSettings.count, (count: number) => `${serverSettings.name}${count}`)),
   );
 };
 

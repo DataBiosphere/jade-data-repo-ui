@@ -142,7 +142,7 @@ const DatasetSchemaInformationView = withStyles(styles)(({ classes }: IProps) =>
           name="terraProject"
           control={control}
           render={({ field }) => (
-            <Select id="dataset-terraProject" className={classes.formInput} {...field}>
+            <Select id="dataset-terraProject" className={classes.formInput} {...field} disabled>
               <MenuItem value="yes">Yes</MenuItem>
               <MenuItem value="no">No</MenuItem>
             </Select>

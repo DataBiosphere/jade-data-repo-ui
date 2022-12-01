@@ -58,6 +58,12 @@ export const { refreshSnapshots } = createActions({
   [ActionTypes.REFRESH_SNAPSHOTS]: () => ({}),
 });
 
+export const { createDataset } = createActions({
+  [ActionTypes.CREATE_DATASET]: (payload) => payload,
+  [ActionTypes.CREATE_DATASET_SUCCESS]: (dataset) => dataset,
+  [ActionTypes.CREATE_DATASET_FAILURE]: (dataset) => dataset,
+});
+
 export const { getDatasetSnapshots } = createActions({
   [ActionTypes.GET_DATASET_SNAPSHOTS_SUCCESS]: (snapshots) => snapshots,
   [ActionTypes.GET_DATASET_SNAPSHOTS]: (limit, offset, sort, direction, datasetIds) => ({

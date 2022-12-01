@@ -404,6 +404,20 @@ export function* removeSnapshotPolicyMembers({ payload }: any): any {
 /**
  * Datasets.
  */
+export function* createDataset({ payload }: any): any {
+  try {
+    const response = yield call(authPost, `/api/repository/v1/datasets`, payload);
+    yield put({
+      type: ActionTypes.CREATE_DATASET_SUCCESS,
+      response: { data: response },
+    });
+  } catch (err) {
+    showNotification(err);
+    yield put({
+      type: ActionTypes.CREATE_DATASET_ERROR,
+    });
+  }
+}
 
 export function* getDatasets({ payload }: any): any {
   const { limit, offset, sort, direction, searchString } = payload;
@@ -891,6 +905,7 @@ export default function* root() {
     takeLatest(ActionTypes.GET_DATASET_POLICY, getDatasetPolicy),
     takeLatest(ActionTypes.ADD_DATASET_POLICY_MEMBER, addDatasetPolicyMember),
     takeLatest(ActionTypes.REMOVE_DATASET_POLICY_MEMBER, removeDatasetPolicyMember),
+    takeLatest(ActionTypes.CREATE_DATASET, createDataset),
     takeLatest(ActionTypes.GET_JOBS, getJobs),
     takeLatest(ActionTypes.GET_JOB_RESULT, getJobResult),
     takeLatest(ActionTypes.GET_JOURNAL_ENTRIES, getJournalEntries),

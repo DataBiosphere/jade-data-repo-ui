@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { Dispatch } from 'react';
 import { connect } from 'react-redux';
+import { Action } from 'redux';
 import _ from 'lodash';
 import clsx from 'clsx';
 import { WithStyles, withStyles } from '@mui/styles';
@@ -7,6 +8,7 @@ import { Button, Typography, CustomTheme, Tabs, Tab } from '@mui/material';
 import { OpenInNew, Error } from '@mui/icons-material';
 import { TdrState } from 'reducers';
 import { FormProvider, useForm } from 'react-hook-form';
+import { createDataset } from 'actions/index';
 import DatasetSchemaInformationView from './DatasetSchemaInformationView';
 import DatasetSchemaBuilderView from './DatasetSchemaBuilderView';
 
@@ -93,6 +95,7 @@ const styles = (theme: CustomTheme) => ({
 
 interface IProps extends WithStyles<typeof styles> {
   userEmail: string;
+  dispatch: Dispatch<Action>;
 }
 
 interface TabConfig {
@@ -100,7 +103,7 @@ interface TabConfig {
   content: any;
 }
 
-const DatasetSchemaCreationView = withStyles(styles)(({ classes }: IProps) => {
+const DatasetSchemaCreationView = withStyles(styles)(({ classes, dispatch }: IProps) => {
   const [currentTab, setCurrentTab] = React.useState(0);
   const changeTab = (_event: any, newCurrentTab: any) => setCurrentTab(newCurrentTab);
 
@@ -116,6 +119,7 @@ const DatasetSchemaCreationView = withStyles(styles)(({ classes }: IProps) => {
       region: '',
       stewards: [],
       custodians: [],
+      schema: {},
     },
   });
 
@@ -136,8 +140,18 @@ const DatasetSchemaCreationView = withStyles(styles)(({ classes }: IProps) => {
   ];
 
   const onSubmit = (data: any) => {
-    // eslint-disable-next-line
-    console.log(data);
+    const normalizedData = {
+      ...data,
+      policies: {
+        stewards: data.stewards,
+        custodians: data.custodians,
+      },
+    };
+    delete normalizedData.terraProject;
+    delete normalizedData.stewards;
+    delete normalizedData.custodians;
+
+    dispatch(createDataset(normalizedData));
   };
 
   return (
