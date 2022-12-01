@@ -1,4 +1,4 @@
-import React, { Dispatch } from 'react';
+import React, { Dispatch, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Action } from 'redux';
 import _ from 'lodash';
@@ -8,7 +8,8 @@ import { Button, Typography, CustomTheme, Tabs, Tab } from '@mui/material';
 import { OpenInNew, Error } from '@mui/icons-material';
 import { TdrState } from 'reducers';
 import { FormProvider, useForm } from 'react-hook-form';
-import { createDataset } from 'actions/index';
+import { createDataset, getBillingProfiles } from 'actions/index';
+import { BillingProfileModel } from '../../../generated/tdr';
 import DatasetSchemaInformationView from './DatasetSchemaInformationView';
 import DatasetSchemaBuilderView from './DatasetSchemaBuilderView';
 
@@ -95,6 +96,7 @@ const styles = (theme: CustomTheme) => ({
 
 interface IProps extends WithStyles<typeof styles> {
   userEmail: string;
+  profiles: Array<BillingProfileModel>;
   dispatch: Dispatch<Action>;
 }
 
@@ -103,7 +105,7 @@ interface TabConfig {
   content: any;
 }
 
-const DatasetSchemaCreationView = withStyles(styles)(({ classes, dispatch }: IProps) => {
+const DatasetSchemaCreationView = withStyles(styles)(({ classes, dispatch, profiles }: IProps) => {
   const [currentTab, setCurrentTab] = React.useState(0);
   const changeTab = (_event: any, newCurrentTab: any) => setCurrentTab(newCurrentTab);
 
@@ -116,6 +118,7 @@ const DatasetSchemaCreationView = withStyles(styles)(({ classes, dispatch }: IPr
       terraProject: '',
       enableSecureMonitoring: 'true',
       cloudPlatform: 'gcp',
+      defaultProfile: '',
       region: '',
       stewards: [],
       custodians: [],
@@ -131,7 +134,7 @@ const DatasetSchemaCreationView = withStyles(styles)(({ classes, dispatch }: IPr
   const tabs: TabConfig[] = [
     {
       description: 'Provide dataset information',
-      content: <DatasetSchemaInformationView />,
+      content: <DatasetSchemaInformationView profiles={profiles} />,
     },
     {
       description: 'Build a schema and create dataset',
@@ -140,19 +143,29 @@ const DatasetSchemaCreationView = withStyles(styles)(({ classes, dispatch }: IPr
   ];
 
   const onSubmit = (data: any) => {
+    const defaultProfile = _.find(
+      profiles,
+      (x: BillingProfileModel) => x.profileName === data.defaultProfile,
+    );
     const normalizedData = {
       ...data,
       policies: {
         stewards: data.stewards,
         custodians: data.custodians,
       },
+      defaultProfileId: defaultProfile ? defaultProfile.id : data.defaultProfile,
     };
     delete normalizedData.terraProject;
     delete normalizedData.stewards;
     delete normalizedData.custodians;
+    delete normalizedData.defaultProfile;
 
     dispatch(createDataset(normalizedData));
   };
+
+  useEffect(() => {
+    dispatch(getBillingProfiles());
+  }, [dispatch]);
 
   return (
     <div className={classes.pageRoot}>
@@ -287,6 +300,7 @@ const DatasetSchemaCreationView = withStyles(styles)(({ classes, dispatch }: IPr
 function mapStateToProps(state: TdrState) {
   return {
     userEmail: state.user.email,
+    profiles: state.profiles.profiles,
   };
 }
 

@@ -8,6 +8,12 @@ import { createActions } from 'redux-actions';
 
 import { ActionTypes } from 'constants/index';
 
+export const { getBillingProfiles } = createActions({
+  [ActionTypes.GET_BILLING_PROFILES]: () => ({}),
+  [ActionTypes.GET_BILLING_PROFILES_SUCCESS]: (profile) => profile,
+  [ActionTypes.GET_BILLING_PROFILES_EXCEPTION]: () => ({}),
+});
+
 export const { getBillingProfileById } = createActions({
   [ActionTypes.GET_BILLING_PROFILE_BY_ID]: (profile) => profile,
   [ActionTypes.GET_BILLING_PROFILE_BY_ID_SUCCESS]: (profile) => profile,

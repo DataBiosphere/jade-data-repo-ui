@@ -19,6 +19,7 @@ import SimpleMDE from 'easymde';
 import { SimpleMdeReact } from 'react-simplemde-editor';
 import { GCP_REGIONS, AZURE_REGIONS } from 'constants/index';
 import isEmail from 'validator/lib/isEmail';
+import { BillingProfileModel } from '../../../generated/tdr';
 import WithoutStylesMarkdownContent from '../../common/WithoutStylesMarkdownContent';
 
 const styles = (theme: CustomTheme) => ({
@@ -53,10 +54,11 @@ const styles = (theme: CustomTheme) => ({
 });
 
 interface IProps extends WithStyles<typeof styles> {
-  userEmail: string;
+  profiles: Array<BillingProfileModel>;
 }
 
-const DatasetSchemaInformationView = withStyles(styles)(({ classes }: IProps) => {
+const DatasetSchemaInformationView = withStyles(styles)(({ classes, profiles }: IProps) => {
+  const profileNames = _.chain(profiles).map('profileName').uniq().value();
   const [regionOptions, setRegionOptions] = useState(GCP_REGIONS);
   const {
     register,
@@ -133,19 +135,33 @@ const DatasetSchemaInformationView = withStyles(styles)(({ classes }: IProps) =>
 
       <Grid item xs={6}>
         <label
-          htmlFor="dataset-terraProject"
-          className={clsx(classes.formLabel, { [classes.formLabelError]: errors.terraProject })}
+          htmlFor="dataset-defaultProfile"
+          className={clsx(classes.formLabel, { [classes.formLabelError]: errors.defaultProfile })}
         >
-          Terra project*
+          Billing Project*
         </label>
         <Controller
-          name="terraProject"
+          name="defaultProfile"
           control={control}
+          rules={{ required: 'default project is required' }}
           render={({ field }) => (
-            <Select id="dataset-terraProject" className={classes.formInput} {...field} disabled>
-              <MenuItem value="yes">Yes</MenuItem>
-              <MenuItem value="no">No</MenuItem>
-            </Select>
+            <Autocomplete
+              id="dataset-defaultProfile"
+              freeSolo
+              options={profileNames}
+              className={classes.formInput}
+              renderInput={(params: any) => (
+                <TextField
+                  {...params}
+                  error={!!errors.defaultProfile}
+                  helperText={errors.defaultProfile ? errors.defaultProfile.message : ''}
+                />
+              )}
+              {...field}
+              onChange={(_event: any, change: any) => {
+                field.onChange(change);
+              }}
+            />
           )}
         />
       </Grid>

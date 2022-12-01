@@ -406,7 +406,7 @@ export function* removeSnapshotPolicyMembers({ payload }: any): any {
  */
 export function* createDataset({ payload }: any): any {
   try {
-    const response = yield call(authPost, `/api/repository/v1/datasets`, payload);
+    const response = yield call(authPost, '/api/repository/v1/datasets', payload);
     yield put({
       type: ActionTypes.CREATE_DATASET_SUCCESS,
       response: { data: response },
@@ -664,6 +664,24 @@ export function* getJournalEntries({ payload }: any): any {
 /**
  * billing profile
  */
+export function* getBillingProfiles({ payload }: any): any {
+  try {
+    const { offset, limit } = payload;
+    const response = yield call(
+      authGet,
+      `/api/resources/v1/profiles?offset=${offset || 0}&limit=${limit || 1000}`,
+    );
+    yield put({
+      type: ActionTypes.GET_BILLING_PROFILES_SUCCESS,
+      profile: { data: response },
+    });
+  } catch (err) {
+    yield put({
+      type: ActionTypes.GET_BILLING_PROFILES_FAILURE,
+    });
+  }
+}
+
 export function* getBillingProfileById({ payload }: any): any {
   try {
     const { profileId } = payload;
@@ -914,6 +932,7 @@ export default function* root() {
     takeLatest(ActionTypes.PAGE_QUERY, pageQuery),
     takeLatest(ActionTypes.COUNT_RESULTS, countResults),
     takeLatest(ActionTypes.GET_FEATURES, getFeatures),
+    takeLatest(ActionTypes.GET_BILLING_PROFILES, getBillingProfiles),
     takeLatest(ActionTypes.GET_BILLING_PROFILE_BY_ID, getBillingProfileById),
     takeLatest(ActionTypes.GET_USER_DATASET_ROLES, getUserDatasetRoles),
     takeLatest(ActionTypes.GET_USER_SNAPSHOT_ROLES, getUserSnapshotRoles),
