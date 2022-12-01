@@ -85,7 +85,8 @@ const JournalEntryTable = withStyles(styles)(
 
           let { note } = row;
 
-          const description = _.get(parsedReq, '1.description') || _.get(row, 'mutation.description');
+          const description =
+            _.get(parsedReq, '1.description') || _.get(row, 'mutation.description');
 
           const details = [];
           if (row.entryType === JournalEntryModelEntryTypeEnum.Create) {
