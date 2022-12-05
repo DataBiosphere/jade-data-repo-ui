@@ -129,7 +129,11 @@ const DatasetSchemaInformationView = withStyles(styles)(({ classes }: IProps) =>
           }}
           render={({ field }) => (
             <>
-              <SimpleMdeReact options={editorOptions} {...field} />
+              <SimpleMdeReact
+                options={editorOptions}
+                {...field}
+                placeholder="Dataset description"
+              />
               {errors.description && (
                 <span className={classes.formInputError}>{errors.description.message}</span>
               )}
@@ -195,8 +199,9 @@ const DatasetSchemaInformationView = withStyles(styles)(({ classes }: IProps) =>
                 );
                 field.onChange(event, change);
               }}
+              placeholder="Cloud platform"
             >
-              {_.map(cloudPlatforms, (key: string, value: string) => (
+              {_.map(cloudPlatforms, (value: string, key: string) => (
                 <MenuItem value={key} key={key}>
                   {value}
                 </MenuItem>
@@ -227,6 +232,7 @@ const DatasetSchemaInformationView = withStyles(styles)(({ classes }: IProps) =>
                   {...params}
                   error={!!errors.region}
                   helperText={errors.region ? errors.region.message : ''}
+                  placeholder="cloud region"
                 />
               )}
               {...field}
@@ -273,6 +279,7 @@ const DatasetSchemaInformationView = withStyles(styles)(({ classes }: IProps) =>
                   {...params}
                   error={!!errors.stewards}
                   helperText={errors.stewards ? errors.stewards.message : ''}
+                  placeholder="username@email.com"
                 />
               )}
               {...field}
@@ -321,6 +328,7 @@ const DatasetSchemaInformationView = withStyles(styles)(({ classes }: IProps) =>
                   {...params}
                   error={!!errors.custodians}
                   helperText={errors.custodians ? errors.custodians.message : ''}
+                  placeholder="username@email.com"
                 />
               )}
               {...field}
