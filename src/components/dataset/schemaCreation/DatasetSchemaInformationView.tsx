@@ -122,7 +122,10 @@ const DatasetSchemaInformationView = withStyles(styles)(({ classes }: IProps) =>
         <Controller
           name="description"
           control={control}
-          rules={{ required: 'description is required' }}
+          rules={{
+            required: 'description is required',
+            maxLength: { value: 10000, message: 'Description must be under 10,000 characters' },
+          }}
           render={({ field }) => (
             <>
               <SimpleMdeReact options={editorOptions} {...field} />
