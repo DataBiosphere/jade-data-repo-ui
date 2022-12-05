@@ -102,7 +102,7 @@ const DatasetSchemaInformationView = withStyles(styles)(({ classes }: IProps) =>
           error={!!errors.name}
           helperText={errors.name ? errors.name.message : ''}
           {...register('name', {
-            required: 'name is required',
+            required: 'Name is required',
             minLength: { value: 1, message: 'Name must be 1+ characters long' },
             maxLength: { value: 511, message: 'Name must be less than 511 characters long' },
             pattern: {
@@ -124,7 +124,7 @@ const DatasetSchemaInformationView = withStyles(styles)(({ classes }: IProps) =>
           name="description"
           control={control}
           rules={{
-            required: 'description is required',
+            required: 'Description is required',
             maxLength: { value: 10000, message: 'Description must be under 10,000 characters' },
           }}
           render={({ field }) => (
@@ -216,11 +216,10 @@ const DatasetSchemaInformationView = withStyles(styles)(({ classes }: IProps) =>
         <Controller
           name="region"
           control={control}
-          rules={{ required: 'region is required' }}
+          rules={{ required: 'Region is required' }}
           render={({ field }) => (
             <Autocomplete
               id="dataset-region"
-              freeSolo
               options={regionOptions}
               className={classes.formInput}
               renderInput={(params: any) => (
