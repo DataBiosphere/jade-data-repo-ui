@@ -6,6 +6,7 @@ import { Button, Typography, CustomTheme, Tabs, Tab } from '@mui/material';
 import { OpenInNew } from '@mui/icons-material';
 import { TdrState } from 'reducers';
 import { FormProvider, useForm } from 'react-hook-form';
+import TabPanel from '../../common/TabPanel';
 import DatasetSchemaInformationView from './DatasetSchemaInformationView';
 
 const styles = (theme: CustomTheme) => ({
@@ -158,7 +159,7 @@ const DatasetSchemaCreationView = withStyles(styles)(({ classes }: IProps) => {
               ))}
             </Tabs>
             {tabs.map((tabConfig: TabConfig, i: number) => (
-              <div key={`dataset-schema-creation-tabpanel-${i}`} hidden={currentTab !== i}>
+              <TabPanel value={currentTab} index={i}>
                 {tabConfig.content}
 
                 {i < tabs.length - 1 ? (
@@ -183,7 +184,7 @@ const DatasetSchemaCreationView = withStyles(styles)(({ classes }: IProps) => {
                     Submit
                   </Button>
                 )}
-              </div>
+              </TabPanel>
             ))}
           </div>
 
