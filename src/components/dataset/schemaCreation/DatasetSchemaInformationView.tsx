@@ -65,6 +65,7 @@ const DatasetSchemaInformationView = withStyles(styles)(({ classes }: IProps) =>
   const {
     register,
     control,
+    setValue,
     formState: { errors },
   } = useFormContext();
 
@@ -197,6 +198,7 @@ const DatasetSchemaInformationView = withStyles(styles)(({ classes }: IProps) =>
                     ? GCP_REGIONS
                     : AZURE_REGIONS,
                 );
+                setValue('region', '');
                 field.onChange(event, change);
               }}
               placeholder="Cloud platform"
@@ -227,6 +229,7 @@ const DatasetSchemaInformationView = withStyles(styles)(({ classes }: IProps) =>
               id="dataset-region"
               options={regionOptions}
               className={classes.formInput}
+              isOptionEqualToValue={(option, value) => value.name === option.name}
               renderInput={(params: any) => (
                 <TextField
                   {...params}
