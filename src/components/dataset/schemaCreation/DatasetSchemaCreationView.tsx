@@ -10,6 +10,7 @@ import { TdrState } from 'reducers';
 import { FormProvider, useForm } from 'react-hook-form';
 import { createDataset, getBillingProfiles } from 'actions/index';
 import { BillingProfileModel } from '../../../generated/tdr';
+import TabPanel from '../../common/TabPanel';
 import DatasetSchemaInformationView from './DatasetSchemaInformationView';
 import DatasetSchemaBuilderView from './DatasetSchemaBuilderView';
 
@@ -245,15 +246,15 @@ const DatasetSchemaCreationView = withStyles(styles)(
                 ))}
               </Tabs>
               {tabs.map((tabConfig: TabConfig, i: number) => (
-                <div key={`dataset-schema-creation-tabpanel-${i}`} hidden={currentTab !== i}>
+                <TabPanel value={currentTab} index={i}>
                   {tabConfig.content}
 
                   {i < tabs.length - 1 ? (
                     <Button
+                      type="button"
                       color="primary"
                       variant="contained"
                       disableElevation
-                      type="button"
                       className={classes.tabButton}
                       onClick={() => setCurrentTab(i + 1)}
                     >
@@ -261,29 +262,15 @@ const DatasetSchemaCreationView = withStyles(styles)(
                     </Button>
                   ) : (
                     <Button
-                      color="primary"
-                      disableElevation
-                      variant="contained"
                       type="submit"
+                      color="primary"
+                      variant="contained"
+                      disableElevation
                       className={classes.tabButton}
                     >
-                      Create dataset
+                      Submit
                     </Button>
                   )}
-                  {i > 0 && (
-                    <Button
-                      className={clsx(classes.tabButton, classes.leftMargin)}
-                      color="primary"
-                      variant="outlined"
-                      disableElevation
-                      type="button"
-                      size="medium"
-                      onClick={() => setCurrentTab(i - 1)}
-                    >
-                      Go back to Step {i}
-                    </Button>
-                  )}
-
                   {_.keys(errors).length > 0 && (
                     <>
                       <div className={clsx(classes.formLabelError, classes.flexRow)}>
@@ -299,7 +286,7 @@ const DatasetSchemaCreationView = withStyles(styles)(
                       </div>
                     </>
                   )}
-                </div>
+                </TabPanel>
               ))}
             </div>
 

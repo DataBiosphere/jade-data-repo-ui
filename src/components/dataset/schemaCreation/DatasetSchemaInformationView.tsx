@@ -17,8 +17,8 @@ import { TdrState } from 'reducers';
 import { Controller, useFormContext } from 'react-hook-form';
 import SimpleMDE from 'easymde';
 import { SimpleMdeReact } from 'react-simplemde-editor';
-import { GCP_REGIONS, AZURE_REGIONS } from 'constants/index';
-import isEmail from 'validator/lib/isEmail';
+import { CLOUD_PLATFORMS } from 'constants/index';
+import { isValidEmail } from '../../../libs/form-validators';
 import { BillingProfileModel } from '../../../generated/tdr';
 import WithoutStylesMarkdownContent from '../../common/WithoutStylesMarkdownContent';
 
@@ -59,10 +59,11 @@ interface IProps extends WithStyles<typeof styles> {
 
 const DatasetSchemaInformationView = withStyles(styles)(({ classes, profiles }: IProps) => {
   const profileNames = _.chain(profiles).map('profileName').uniq().value();
-  const [regionOptions, setRegionOptions] = useState(GCP_REGIONS);
+  const [regionOptions, setRegionOptions] = useState(CLOUD_PLATFORMS.gcp.regions);
   const {
     register,
     control,
+    setValue,
     formState: { errors },
   } = useFormContext();
 
@@ -100,7 +101,7 @@ const DatasetSchemaInformationView = withStyles(styles)(({ classes, profiles }: 
           error={!!errors.name}
           helperText={errors.name ? errors.name.message : ''}
           {...register('name', {
-            required: 'name is required',
+            required: 'Name is required',
             minLength: { value: 1, message: 'Name must be 1+ characters long' },
             maxLength: { value: 511, message: 'Name must be less than 511 characters long' },
             pattern: {
@@ -121,10 +122,17 @@ const DatasetSchemaInformationView = withStyles(styles)(({ classes, profiles }: 
         <Controller
           name="description"
           control={control}
-          rules={{ required: 'description is required' }}
+          rules={{
+            required: 'Description is required',
+            maxLength: { value: 10000, message: 'Description must be under 10,000 characters' },
+          }}
           render={({ field }) => (
             <>
-              <SimpleMdeReact options={editorOptions} {...field} />
+              <SimpleMdeReact
+                options={editorOptions}
+                {...field}
+                placeholder="Dataset description"
+              />
               {errors.description && (
                 <span className={classes.formInputError}>{errors.description.message}</span>
               )}
@@ -197,12 +205,17 @@ const DatasetSchemaInformationView = withStyles(styles)(({ classes, profiles }: 
               {...field}
               onChange={(event: any, change: any) => {
                 const cloudPlatform = event.target.value;
-                setRegionOptions(cloudPlatform === 'gcp' ? GCP_REGIONS : AZURE_REGIONS);
+                setRegionOptions(_.get(CLOUD_PLATFORMS, [cloudPlatform, 'region']));
+                setValue('region', '');
                 field.onChange(event, change);
               }}
+              placeholder="Cloud platform"
             >
-              <MenuItem value="gcp">Google Cloud Platform (GCP)</MenuItem>
-              <MenuItem value="azure">Azure</MenuItem>
+              {_.map(CLOUD_PLATFORMS, (value: any, key: string) => (
+                <MenuItem value={key} key={key}>
+                  {value.label}
+                </MenuItem>
+              ))}
             </Select>
           )}
         />
@@ -218,18 +231,19 @@ const DatasetSchemaInformationView = withStyles(styles)(({ classes, profiles }: 
         <Controller
           name="region"
           control={control}
-          rules={{ required: 'region is required' }}
+          rules={{ required: 'Region is required' }}
           render={({ field }) => (
             <Autocomplete
               id="dataset-region"
-              freeSolo
               options={regionOptions}
               className={classes.formInput}
+              isOptionEqualToValue={(option, value) => value.name === option.name}
               renderInput={(params: any) => (
                 <TextField
                   {...params}
                   error={!!errors.region}
                   helperText={errors.region ? errors.region.message : ''}
+                  placeholder="cloud region"
                 />
               )}
               {...field}
@@ -257,12 +271,7 @@ const DatasetSchemaInformationView = withStyles(styles)(({ classes, profiles }: 
           name="stewards"
           control={control}
           rules={{
-            validate: {
-              isEmail: (values: string[]) => {
-                const emailErrors = _.filter(values, (v: string) => !isEmail(v));
-                return emailErrors.length === 0 || `Invalid emails: "${emailErrors.join('", "')}"`;
-              },
-            },
+            validate: { isValidEmail },
           }}
           render={({ field }) => (
             <Autocomplete
@@ -276,6 +285,7 @@ const DatasetSchemaInformationView = withStyles(styles)(({ classes, profiles }: 
                   {...params}
                   error={!!errors.stewards}
                   helperText={errors.stewards ? errors.stewards.message : ''}
+                  placeholder="username@email.com"
                 />
               )}
               {...field}
@@ -304,10 +314,7 @@ const DatasetSchemaInformationView = withStyles(styles)(({ classes, profiles }: 
           control={control}
           rules={{
             validate: {
-              isEmail: (values: string[]) => {
-                const emailErrors = _.filter(values, (v: string) => !isEmail(v));
-                return emailErrors.length === 0 || `Invalid emails: "${emailErrors.join('", "')}"`;
-              },
+              isValidEmail,
               minLength: (values: string[]) =>
                 values.length > 0 || 'Must include at least one email',
             },
@@ -324,6 +331,7 @@ const DatasetSchemaInformationView = withStyles(styles)(({ classes, profiles }: 
                   {...params}
                   error={!!errors.custodians}
                   helperText={errors.custodians ? errors.custodians.message : ''}
+                  placeholder="username@email.com"
                 />
               )}
               {...field}
