@@ -18,8 +18,8 @@ import { Controller, useFormContext } from 'react-hook-form';
 import SimpleMDE from 'easymde';
 import { SimpleMdeReact } from 'react-simplemde-editor';
 import { GCP_REGIONS, AZURE_REGIONS } from 'constants/index';
-import isEmail from 'validator/lib/isEmail';
 import { cloudPlatforms } from '../../../libs/render-utils';
+import { isValidEmail } from '../../../libs/form-validators';
 import WithoutStylesMarkdownContent from '../../common/WithoutStylesMarkdownContent';
 
 const styles = (theme: CustomTheme) => ({
@@ -263,12 +263,7 @@ const DatasetSchemaInformationView = withStyles(styles)(({ classes }: IProps) =>
           name="stewards"
           control={control}
           rules={{
-            validate: {
-              isEmail: (values: string[]) => {
-                const emailErrors = _.filter(values, (v: string) => !isEmail(v));
-                return emailErrors.length === 0 || `Invalid emails: "${emailErrors.join('", "')}"`;
-              },
-            },
+            validate: { isValidEmail },
           }}
           render={({ field }) => (
             <Autocomplete
@@ -311,10 +306,7 @@ const DatasetSchemaInformationView = withStyles(styles)(({ classes }: IProps) =>
           control={control}
           rules={{
             validate: {
-              isEmail: (values: string[]) => {
-                const emailErrors = _.filter(values, (v: string) => !isEmail(v));
-                return emailErrors.length === 0 || `Invalid emails: "${emailErrors.join('", "')}"`;
-              },
+              isValidEmail,
               minLength: (values: string[]) =>
                 values.length > 0 || 'Must include at least one email',
             },
