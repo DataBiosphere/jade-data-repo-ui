@@ -19,6 +19,7 @@ import SimpleMDE from 'easymde';
 import { SimpleMdeReact } from 'react-simplemde-editor';
 import { GCP_REGIONS, AZURE_REGIONS } from 'constants/index';
 import isEmail from 'validator/lib/isEmail';
+import { cloudPlatforms } from '../../../libs/render-utils';
 import WithoutStylesMarkdownContent from '../../common/WithoutStylesMarkdownContent';
 
 const styles = (theme: CustomTheme) => ({
@@ -187,12 +188,19 @@ const DatasetSchemaInformationView = withStyles(styles)(({ classes }: IProps) =>
               {...field}
               onChange={(event: any, change: any) => {
                 const cloudPlatform = event.target.value;
-                setRegionOptions(cloudPlatform === 'gcp' ? GCP_REGIONS : AZURE_REGIONS);
+                setRegionOptions(
+                  _.get(cloudPlatforms, cloudPlatform) === cloudPlatforms.gcp
+                    ? GCP_REGIONS
+                    : AZURE_REGIONS,
+                );
                 field.onChange(event, change);
               }}
             >
-              <MenuItem value="gcp">Google Cloud Platform (GCP)</MenuItem>
-              <MenuItem value="azure">Azure</MenuItem>
+              {_.map(cloudPlatforms, (key: string, value: string) => (
+                <MenuItem value={key} key={key}>
+                  {value}
+                </MenuItem>
+              ))}
             </Select>
           )}
         />

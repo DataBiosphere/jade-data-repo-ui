@@ -5,7 +5,7 @@ import CopyTextButton from 'components/common/CopyTextButton';
 import InfoHoverButton from 'components/common/InfoHoverButton';
 import { DatasetSummaryModel, SnapshotSummaryModel } from '../generated/tdr';
 
-const cloudPlatforms = { gcp: 'Google Cloud Platform', azure: 'Microsoft Azure' };
+export const cloudPlatforms = { gcp: 'Google Cloud Platform', azure: 'Microsoft Azure' };
 /**
  * Render the cloud platform cell contents of a table
  * @param resource Dataset of Snapshot whose cloud platform to render
