@@ -163,10 +163,10 @@ const DatasetSchemaCreationView = withStyles(styles)(({ classes }: IProps) => {
 
                 {i < tabs.length - 1 ? (
                   <Button
+                    type="button"
                     color="primary"
                     variant="contained"
                     disableElevation
-                    type="button"
                     className={classes.tabButton}
                     onClick={() => setCurrentTab(i + 1)}
                   >
@@ -174,10 +174,10 @@ const DatasetSchemaCreationView = withStyles(styles)(({ classes }: IProps) => {
                   </Button>
                 ) : (
                   <Button
-                    color="primary"
-                    disableElevation
-                    variant="contained"
                     type="submit"
+                    color="primary"
+                    variant="contained"
+                    disableElevation
                     className={classes.tabButton}
                   >
                     Submit
