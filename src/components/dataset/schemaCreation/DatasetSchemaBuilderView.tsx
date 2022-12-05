@@ -29,6 +29,7 @@ import { okaidia } from '@uiw/codemirror-theme-okaidia';
 import { javascript } from '@codemirror/lang-javascript';
 import { ColumnModel, TableDataType, DatasetSpecificationModel, TableModel } from 'generated/tdr';
 import clsx from 'clsx';
+import DatasetSchemaRelationshipModal from './DatasetSchemaRelationshipModal';
 
 const styles = (theme: CustomTheme) =>
   ({
@@ -104,11 +105,11 @@ const styles = (theme: CustomTheme) =>
     },
     schemaBuilderStructureViewColumnContainer: {
       marginLeft: 20,
-      marginTop: -13,
+      marginTop: -11,
       marginBottom: -10,
       paddingLeft: 20,
       paddingTop: 5,
-      borderLeft: `1px dashed ${theme.palette.primary.main}`,
+      borderLeft: `1px dashed #A6B8D4`,
     },
     schemaBuilderStructureColumnContainer_expanded: {
       marginBottom: 20,
@@ -116,7 +117,7 @@ const styles = (theme: CustomTheme) =>
     schemaBuilderStructureViewContentColumn_dotContainer: {
       position: 'absolute',
       bottom: -1,
-      color: theme.palette.primary.main,
+      color: '#A6B8D4',
       padding: '0 15px',
       background: 'linear-gradient(0, white 50%, transparent 50%)',
     },
@@ -171,6 +172,9 @@ const styles = (theme: CustomTheme) =>
       borderRadius: 10,
       padding: 20,
     },
+    flexRow: {
+      display: 'flex',
+    },
   } as any);
 
 interface IProps extends WithStyles<typeof styles> {
@@ -179,7 +183,9 @@ interface IProps extends WithStyles<typeof styles> {
 
 const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: IProps) => {
   const { getValues, setValue } = useFormContext();
-  const [datasetSchema, setDatasetSchema] = useState({} as DatasetSpecificationModel);
+  const [datasetSchema, setDatasetSchema] = useState(
+    getValues().schema as DatasetSpecificationModel,
+  );
   const [selectedTable, setSelectedTable] = useState(-1);
   const [selectedColumn, setSelectedColumn] = useState(-1);
   const [expandedTables, setExpandedTables] = useState({} as any);
@@ -329,7 +335,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: IProps) => {
                 </Button>
               </div>
 
-              <div>
+              <div className={classes.flexRow}>
                 <IconButton
                   size="small"
                   color="primary"
@@ -384,14 +390,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: IProps) => {
                   <i className="fa fa-angle-down" />
                 </IconButton>
 
-                <IconButton
-                  size="small"
-                  color="primary"
-                  className={classes.iconButton}
-                  style={{ marginLeft: 50 }}
-                >
-                  <i className="fa fa-link-horizontal" />
-                </IconButton>
+                <DatasetSchemaRelationshipModal datasetSchema={datasetSchema} />
               </div>
             </div>
             <div className={classes.schemaBuilderStructureViewContent}>
