@@ -17,8 +17,7 @@ import { TdrState } from 'reducers';
 import { Controller, useFormContext } from 'react-hook-form';
 import SimpleMDE from 'easymde';
 import { SimpleMdeReact } from 'react-simplemde-editor';
-import { GCP_REGIONS, AZURE_REGIONS } from 'constants/index';
-import { cloudPlatforms } from '../../../libs/render-utils';
+import { CLOUD_PLATFORMS } from 'constants/index';
 import { isValidEmail } from '../../../libs/form-validators';
 import WithoutStylesMarkdownContent from '../../common/WithoutStylesMarkdownContent';
 
@@ -61,7 +60,7 @@ interface IProps extends WithStyles<typeof styles> {
 }
 
 const DatasetSchemaInformationView = withStyles(styles)(({ classes }: IProps) => {
-  const [regionOptions, setRegionOptions] = useState(GCP_REGIONS);
+  const [regionOptions, setRegionOptions] = useState(CLOUD_PLATFORMS.gcp.regions);
   const {
     register,
     control,
@@ -193,19 +192,15 @@ const DatasetSchemaInformationView = withStyles(styles)(({ classes }: IProps) =>
               {...field}
               onChange={(event: any, change: any) => {
                 const cloudPlatform = event.target.value;
-                setRegionOptions(
-                  _.get(cloudPlatforms, cloudPlatform) === cloudPlatforms.gcp
-                    ? GCP_REGIONS
-                    : AZURE_REGIONS,
-                );
+                setRegionOptions(_.get(CLOUD_PLATFORMS, [cloudPlatform, 'region']));
                 setValue('region', '');
                 field.onChange(event, change);
               }}
               placeholder="Cloud platform"
             >
-              {_.map(cloudPlatforms, (value: string, key: string) => (
+              {_.map(CLOUD_PLATFORMS, (value: any, key: string) => (
                 <MenuItem value={key} key={key}>
-                  {value}
+                  {value.label}
                 </MenuItem>
               ))}
             </Select>
