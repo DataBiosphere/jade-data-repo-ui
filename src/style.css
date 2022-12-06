@@ -123,3 +123,8 @@ body.tdr .simplemde-container .editor-preview a:hover {
 body.tdr .markdown-body {
   font-family: 'Montserrat', sans-serif;
 }
+
+/* Styles for codemirror to show json keys (strings) as a different color from json string values */
+.cm-line .ͼ1c:first-child {
+  color: #ff8900;
+}

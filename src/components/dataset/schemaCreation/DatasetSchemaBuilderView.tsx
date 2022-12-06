@@ -218,7 +218,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: IProps) => {
         // using these regexes to add / remove quotation marks just because the viewer will then color code
         // the keys and values differently. It's easier to read for modifying, but the downside is that
         // it isnt copy-pastable as ready json.
-        const potentialSchema = JSON.parse(value.replace(/([\w+]+):/g, '"$1":'));
+        const potentialSchema = JSON.parse(value);
         setDatasetSchema(potentialSchema);
         setValue('schema', potentialSchema);
       } catch (e) {
@@ -291,8 +291,8 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: IProps) => {
   };
 
   const duplicateColumn = () => {
-    const copyTable = _.cloneDeep(datasetSchema.tables[selectedTable]);
-    datasetSchema.tables.splice(selectedTable + 1, 0, copyTable);
+    const copyColumn = _.cloneDeep(datasetSchema.tables[selectedTable].columns[selectedColumn]);
+    datasetSchema.tables[selectedTable].columns.splice(selectedColumn + 1, 0, copyColumn);
     setDatasetSchema({ ...datasetSchema });
     handleCloseDetailsMenu();
   };
@@ -787,7 +787,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: IProps) => {
             JSON view
           </Typography>
           <CodeMirror
-            value={JSON.stringify(datasetSchema, null, 2).replace(/"(\w+)"\s*:/g, '$1:')}
+            value={JSON.stringify(datasetSchema, null, 2)}
             height="400px"
             theme={okaidia}
             extensions={[javascript({ jsx: true, typescript: true })]}
