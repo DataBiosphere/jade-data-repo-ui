@@ -10,10 +10,13 @@ import {
   DialogTitle,
   IconButton,
   Paper,
-  Typography,
-  Button,
-  Checkbox,
+  FormControl,
   FormControlLabel,
+  FormLabel,
+  Radio,
+  RadioGroup,
+  TextField,
+  Button,
 } from '@mui/material';
 import { Close, IndeterminateCheckBoxOutlined, AddBoxOutlined, Circle } from '@mui/icons-material';
 import { TableModel, ColumnModel, DatasetSpecificationModel } from 'generated/tdr';
@@ -34,19 +37,34 @@ const styles = (theme: CustomTheme) =>
       width: '80%',
       maxWidth: 800,
     },
+    dialogHeader: {
+      fontSize: '1.5rem',
+      lineHeight: 1.5,
+      float: 'left',
+    },
     flexRow: {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',
     },
+    flexCol: {
+      display: 'flex',
+      flexDirection: 'column',
+    },
     tableContainer: {
       width: '40%',
-      height: 350,
+      marginTop: 20,
+    },
+    radioContainer: {
+      'overflow-y': 'auto',
       borderRadius: theme.shape.borderRadius,
       border: '1px solid gray',
+      height: 350,
       padding: 20,
-      marginTop: 20,
-      'overflow-y': 'auto',
+    },
+    formLabel: {
+      fontWeight: 'bold',
+      marginBottom: 5,
     },
     schemaBuilderStructureViewColumnContainer_wrapper: {
       position: 'relative',
@@ -56,7 +74,7 @@ const styles = (theme: CustomTheme) =>
       marginTop: -11,
       marginBottom: -10,
       paddingLeft: 20,
-      borderLeft: `1px dashed #A6B8D4`,
+      borderLeft: '1px dashed #A6B8D4',
     },
     schemaBuilderStructureColumnContainer_expanded: {
       marginBottom: 20,
@@ -65,8 +83,8 @@ const styles = (theme: CustomTheme) =>
       position: 'absolute',
       bottom: -1,
       color: '#A6B8D4',
-      padding: '0 15px',
-      background: 'linear-gradient(0, white 50%, transparent 50%)',
+      padding: '0 15px 7px',
+      background: 'linear-gradient(0, white 70%, transparent 30%)',
     },
     schemaBuilderStructureViewContentColumn_dot: {
       fontSize: 11,
@@ -76,6 +94,24 @@ const styles = (theme: CustomTheme) =>
       marginTop: 4,
       fontWeight: 'normal',
     },
+    summaryContainer: {
+      margin: 20,
+    },
+    summaryLabel: {
+      fontWeight: 700,
+      marginRight: 10,
+    },
+    summaryDetail: {
+      marginRight: 20,
+      fontStyle: 'italic',
+    },
+    actionButtons: {
+      marginTop: 20,
+    },
+    tabButton: {
+      'text-transform': 'none',
+      marginRight: 15,
+    },
   } as any);
 
 type DatasetSchemaRelationshipModalProps = {
@@ -83,12 +119,22 @@ type DatasetSchemaRelationshipModalProps = {
   datasetSchema: DatasetSpecificationModel;
 };
 
+interface DatasetTableProps {
+  id: string;
+  label: string;
+  value: string;
+  setValue: any;
+}
+
 function DatasetSchemaRelationshipModal({
   classes,
   datasetSchema,
 }: DatasetSchemaRelationshipModalProps) {
   const [seeMore, setSeeMore] = useState({ open: false });
   const [expandedTables, setExpandedTables] = useState({} as any);
+  const [relationshipFrom, setRelationshipFrom] = useState('');
+  const [relationshipTo, setRelationshipTo] = useState('');
+  const [relationshipName, setRelationshipName] = useState('');
 
   const handleSeeMoreOpen = () => {
     setSeeMore({ open: true });
@@ -98,54 +144,95 @@ function DatasetSchemaRelationshipModal({
     setSeeMore({ open: false });
   };
 
-  const datasetTable: any = (_index: number) => {
-    return (
-      <div className={classes.tableContainer}>
-        {datasetSchema.tables?.map((table: TableModel, i: number) => (
-          <div key={`datasetSchema-table-${i}`}>
-            <div className={classes.schemaBuilderStructureViewContentTableName}>
-              <IconButton
-                color="primary"
-                onClick={() =>
-                  setExpandedTables({
-                    ...expandedTables,
-                    [i]: !expandedTables[i],
-                  })
-                }
-              >
-                {expandedTables[i] ? <IndeterminateCheckBoxOutlined /> : <AddBoxOutlined />}
-              </IconButton>
-              {table.name}
-            </div>
+  const wrapRadioValue = (tableName: string, columnName: string) =>
+    `${tableName}|column:${columnName}`;
 
-            {table.columns?.length > 0 && expandedTables[i] && (
-              <div className={classes.schemaBuilderStructureViewColumnContainer_wrapper}>
-                <div className={classes.schemaBuilderStructureViewContentColumn_dotContainer}>
-                  <Circle className={classes.schemaBuilderStructureViewContentColumn_dot} />
-                </div>
-                <div
-                  className={clsx(classes.schemaBuilderStructureViewColumnContainer, {
-                    [classes.schemaBuilderStructureColumnContainer_expanded]: expandedTables[i],
-                  })}
+  const unwrapRadioValue = (radioValue: string): { table: string; column: string } => {
+    const splitVal = radioValue.split('|column:');
+    return {
+      table: splitVal[0],
+      column: splitVal[1],
+    };
+  };
+
+  const datasetTable: any = (datasetProps: DatasetTableProps) => {
+    const { id, label, value, setValue } = datasetProps;
+    return (
+      <FormControl className={classes.tableContainer}>
+        <FormLabel id={`radiogroup-${id}`} className={classes.formLabel}>
+          {label}
+        </FormLabel>
+        <RadioGroup
+          className={classes.radioContainer}
+          aria-labelledby={`radiogroup-${id}`}
+          value={value}
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+            setValue((event.target as HTMLInputElement).value);
+          }}
+        >
+          {datasetSchema.tables?.map((table: TableModel, i: number) => (
+            <div key={`datasetSchema-table-${i}`}>
+              <div className={classes.schemaBuilderStructureViewContentTableName}>
+                <IconButton
+                  color="primary"
+                  onClick={() =>
+                    setExpandedTables({
+                      ...expandedTables,
+                      [`${id}-${i}`]: !expandedTables[i],
+                    })
+                  }
                 >
-                  {table.columns.map((column: ColumnModel, j: number) => (
-                    <Button
-                      key={`datasetSchema-table-${i}-column-${j}`}
-                      className={clsx(
-                        classes.schemaBuilderStructureViewContentTableName_text,
-                        classes.schemaBuilderStructureViewContentColumn,
-                      )}
-                      disableFocusRipple
-                      disableRipple
-                    >
-                      {column.name}
-                    </Button>
-                  ))}
-                </div>
+                  {expandedTables[`${id}-${i}`] ? (
+                    <IndeterminateCheckBoxOutlined />
+                  ) : (
+                    <AddBoxOutlined />
+                  )}
+                </IconButton>
+                {table.name}
               </div>
-            )}
-          </div>
-        ))}
+
+              {table.columns?.length > 0 && expandedTables[`${id}-${i}`] && (
+                <div className={classes.schemaBuilderStructureViewColumnContainer_wrapper}>
+                  <div className={classes.schemaBuilderStructureViewContentColumn_dotContainer}>
+                    <Circle className={classes.schemaBuilderStructureViewContentColumn_dot} />
+                  </div>
+                  <div
+                    className={clsx(classes.schemaBuilderStructureViewColumnContainer, {
+                      [classes.schemaBuilderStructureColumnContainer_expanded]:
+                        expandedTables[`${id}-${i}`],
+                    })}
+                  >
+                    {table.columns.map((column: ColumnModel, j: number) => (
+                      <FormControlLabel
+                        key={`table-${table.name}-column-${j}`}
+                        control={<Radio />}
+                        label={column.name}
+                        value={wrapRadioValue(table.name, column.name)}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
+        </RadioGroup>
+      </FormControl>
+    );
+  };
+
+  const relationshipSummary = (radioValue: string) => {
+    const unwrappedVal = unwrapRadioValue(radioValue);
+    return (
+      <div className={classes.flexRow} style={{ justifyContent: 'flex-start' }}>
+        <div>
+          <span className={classes.summaryLabel}>Table:</span>
+          <span className={classes.summaryDetail}>{unwrappedVal.table}</span>
+        </div>
+
+        <div className={classes.summaryDetail}>
+          <span className={classes.summaryLabel}>Column:</span>
+          <span className={classes.summaryDetail}>{unwrappedVal.column}</span>
+        </div>
       </div>
     );
   };
@@ -171,9 +258,7 @@ function DatasetSchemaRelationshipModal({
           onBackdropClick={handleSeeMoreClose}
         >
           <DialogTitle id="see-more-dialog-title">
-            <Typography variant="h3" style={{ float: 'left' }}>
-              Create a relationship
-            </Typography>
+            <div className={classes.dialogHeader}>Create a relationship</div>
             <IconButton size="small" style={{ float: 'right' }} onClick={handleSeeMoreClose}>
               <Close />
             </IconButton>
@@ -186,9 +271,61 @@ function DatasetSchemaRelationshipModal({
             >
               Relationships will lorem ipsum dolor sit amet, consectetur adipiscing elit.
               <div className={classes.flexRow}>
-                {datasetTable(1)}
+                {datasetTable({
+                  id: 'radioGroup-relationshipFrom',
+                  label: 'Choose a column from a table',
+                  value: relationshipFrom,
+                  setValue: setRelationshipFrom,
+                })}
                 <i className="fa fa-circle-arrow-right" style={{ fontSize: '2rem' }} />
-                {datasetTable(2)}
+                {datasetTable({
+                  id: 'radioGroup-relationshipTo',
+                  label: 'Add relationship to this column',
+                  value: relationshipTo,
+                  setValue: setRelationshipTo,
+                })}
+              </div>
+              <div className={classes.summaryContainer}>
+                {relationshipSummary(relationshipFrom)}
+                <div>Add relationship to:</div>
+                {relationshipSummary(relationshipTo)}
+              </div>
+              <div className={classes.flexCol}>
+                <label htmlFor="relationship-name" className={classes.formLabel}>
+                  Relationship name
+                </label>
+                <TextField
+                  id="table-name"
+                  placeholder="Enter a name"
+                  className={classes.formInput}
+                  value={relationshipName}
+                  onChange={(event: any) => setRelationshipName(event.target.value)}
+                />
+              </div>
+              <div className={classes.actionButtons}>
+                <Button
+                  type="button"
+                  color="primary"
+                  variant="contained"
+                  disableElevation
+                  className={classes.tabButton}
+                  disabled={!relationshipFrom || !relationshipTo || !relationshipName}
+                  onClick={() => {
+                    handleSeeMoreClose();
+                  }}
+                >
+                  Add relationship
+                </Button>
+                <Button
+                  type="button"
+                  color="primary"
+                  variant="outlined"
+                  disableElevation
+                  className={classes.tabButton}
+                  onClick={handleSeeMoreClose}
+                >
+                  Cancel
+                </Button>
               </div>
             </DialogContentText>
           </DialogContent>

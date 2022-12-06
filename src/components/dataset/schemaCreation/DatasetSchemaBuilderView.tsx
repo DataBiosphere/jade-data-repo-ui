@@ -109,7 +109,7 @@ const styles = (theme: CustomTheme) =>
       marginBottom: -10,
       paddingLeft: 20,
       paddingTop: 5,
-      borderLeft: `1px dashed #A6B8D4`,
+      borderLeft: '1px dashed #A6B8D4',
     },
     schemaBuilderStructureColumnContainer_expanded: {
       marginBottom: 20,
