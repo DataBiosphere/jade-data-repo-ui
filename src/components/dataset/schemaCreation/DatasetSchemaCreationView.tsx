@@ -13,6 +13,7 @@ import { BillingProfileModel } from '../../../generated/tdr';
 import TabPanel from '../../common/TabPanel';
 import DatasetSchemaInformationView from './DatasetSchemaInformationView';
 import DatasetSchemaBuilderView from './DatasetSchemaBuilderView';
+import { CLOUD_PLATFORMS } from '../../../constants/index';
 
 const styles = (theme: CustomTheme) => ({
   pageRoot: { ...theme.mixins.pageRoot },
@@ -120,7 +121,7 @@ const DatasetSchemaCreationView = withStyles(styles)(
         description: '',
         terraProject: '',
         enableSecureMonitoring: 'true',
-        cloudPlatform: 'gcp',
+        cloudPlatform: CLOUD_PLATFORMS.gcp.key,
         defaultProfile: '',
         region: '',
         stewards: [],
