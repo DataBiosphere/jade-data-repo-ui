@@ -62,6 +62,9 @@ const styles = (theme: CustomTheme) =>
       height: 350,
       padding: 20,
     },
+    radioWrapper: {
+      display: 'block',
+    },
     formLabel: {
       fontWeight: 'bold',
       marginBottom: 5,
@@ -205,6 +208,7 @@ function DatasetSchemaRelationshipModal({
                     {table.columns.map((column: ColumnModel, j: number) => (
                       <FormControlLabel
                         key={`table-${table.name}-column-${j}`}
+                        className={classes.radioWrapper}
                         control={<Radio />}
                         label={column.name}
                         value={wrapRadioValue(table.name, column.name)}
