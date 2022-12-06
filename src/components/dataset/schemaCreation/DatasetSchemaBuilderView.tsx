@@ -35,7 +35,7 @@ import {
   RelationshipModel,
 } from 'generated/tdr';
 import clsx from 'clsx';
-import DatasetSchemaRelationshipModal from './DatasetSchemaRelationshipModal';
+import DatasetSchemaRelationshipModal, { wrapRadioValue } from './DatasetSchemaRelationshipModal';
 
 const styles = (theme: CustomTheme) =>
   ({
@@ -195,6 +195,12 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: IProps) => {
   const [selectedTable, setSelectedTable] = useState(-1);
   const [selectedColumn, setSelectedColumn] = useState(-1);
   const [expandedTables, setExpandedTables] = useState({} as any);
+  const [relationshipModalOpen, setRelationshipModalOpen] = useState(false);
+  const [relationshipModalDefaultValues, setRelationshipModalDefaultValues] = useState({
+    from: '',
+    to: '',
+    expandedTables: {},
+  });
 
   const [anchorElDetailsMenu, setAnchorElDetailsMenu] = React.useState<null | HTMLElement>(null);
   const openDetailsMenu = Boolean(anchorElDetailsMenu);
@@ -396,17 +402,22 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: IProps) => {
                   <i className="fa fa-angle-down" />
                 </IconButton>
 
-                <DatasetSchemaRelationshipModal
-                  datasetSchema={datasetSchema}
-                  onSubmit={(data: RelationshipModel) => {
-                    const schemaCopy = _.cloneDeep(datasetSchema);
-                    if (!schemaCopy.relationships) {
-                      schemaCopy.relationships = [];
-                    }
-                    schemaCopy.relationships.push(data);
-                    setDatasetSchema(schemaCopy);
+                <IconButton
+                  size="small"
+                  color="primary"
+                  className={classes.iconButton}
+                  style={{ marginLeft: 50 }}
+                  onClick={() => {
+                    setRelationshipModalDefaultValues({
+                      from: '',
+                      to: '',
+                      expandedTables: {},
+                    });
+                    setRelationshipModalOpen(true);
                   }}
-                />
+                >
+                  <i className="fa fa-link-horizontal" />
+                </IconButton>
               </div>
             </div>
             <div className={classes.schemaBuilderStructureViewContent}>
@@ -580,7 +591,26 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: IProps) => {
                     'aria-labelledby': 'details-menu-button',
                   }}
                 >
-                  <MenuItem>Create relationship</MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      setRelationshipModalDefaultValues({
+                        from:
+                          selectedTable !== -1 && selectedColumn !== -1
+                            ? wrapRadioValue(
+                                datasetSchema.tables[selectedTable].name,
+                                datasetSchema.tables[selectedTable].columns[selectedColumn].name,
+                              )
+                            : '',
+                        expandedTables: {
+                          [`radioGroup-relationshipFrom-${selectedTable}`]: true,
+                        },
+                        to: '',
+                      });
+                      setRelationshipModalOpen(true);
+                    }}
+                  >
+                    Create relationship
+                  </MenuItem>
                   <MenuItem>Remove relationship</MenuItem>
                   <Divider />
                   <MenuItem onClick={() => duplicateColumn()}>Duplicate column</MenuItem>
@@ -766,6 +796,27 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: IProps) => {
           />
         </div>
       </div>
+
+      {relationshipModalOpen && (
+        <DatasetSchemaRelationshipModal
+          datasetSchema={datasetSchema}
+          defaultRelationshipFrom={relationshipModalDefaultValues.from}
+          defaultRelationshipTo={relationshipModalDefaultValues.to}
+          defaultExpandedTables={relationshipModalDefaultValues.expandedTables}
+          onSubmit={(data: RelationshipModel) => {
+            const schemaCopy = _.cloneDeep(datasetSchema);
+            if (!schemaCopy.relationships) {
+              schemaCopy.relationships = [];
+            }
+            schemaCopy.relationships.push(data);
+            setDatasetSchema(schemaCopy);
+            setRelationshipModalOpen(false);
+          }}
+          onClose={() => {
+            setRelationshipModalOpen(false);
+          }}
+        />
+      )}
     </div>
   );
 });

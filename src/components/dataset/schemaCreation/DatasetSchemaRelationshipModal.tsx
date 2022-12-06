@@ -121,6 +121,10 @@ type DatasetSchemaRelationshipModalProps = {
   classes: ClassNameMap;
   datasetSchema: DatasetSpecificationModel;
   onSubmit: (data: any) => void;
+  onClose: () => void;
+  defaultRelationshipFrom?: string;
+  defaultRelationshipTo?: string;
+  defaultExpandedTables: { [s: string]: boolean };
 };
 
 interface DatasetTableProps {
@@ -130,39 +134,30 @@ interface DatasetTableProps {
   setValue: any;
 }
 
+export const wrapRadioValue = (tableName: string, columnName: string) =>
+  `${tableName}|column:${columnName}`;
+
+export const unwrapRadioValue = (radioValue: string): { table: string; column: string } => {
+  const splitVal = radioValue.split('|column:');
+  return {
+    table: splitVal[0],
+    column: splitVal[1],
+  };
+};
+
 function DatasetSchemaRelationshipModal({
   classes,
   datasetSchema,
   onSubmit,
+  onClose,
+  defaultRelationshipFrom,
+  defaultRelationshipTo,
+  defaultExpandedTables,
 }: DatasetSchemaRelationshipModalProps) {
-  const [seeMore, setSeeMore] = useState({ open: false });
-  const [expandedTables, setExpandedTables] = useState({} as any);
-  const [relationshipFrom, setRelationshipFrom] = useState('');
-  const [relationshipTo, setRelationshipTo] = useState('');
+  const [expandedTables, setExpandedTables] = useState(defaultExpandedTables || ({} as any));
+  const [relationshipFrom, setRelationshipFrom] = useState(defaultRelationshipFrom || '');
+  const [relationshipTo, setRelationshipTo] = useState(defaultRelationshipTo || '');
   const [relationshipName, setRelationshipName] = useState('');
-
-  const handleSeeMoreOpen = () => {
-    setSeeMore({ open: true });
-    setExpandedTables({});
-    setRelationshipFrom('');
-    setRelationshipTo('');
-    setRelationshipName('');
-  };
-
-  const handleSeeMoreClose = () => {
-    setSeeMore({ open: false });
-  };
-
-  const wrapRadioValue = (tableName: string, columnName: string) =>
-    `${tableName}|column:${columnName}`;
-
-  const unwrapRadioValue = (radioValue: string): { table: string; column: string } => {
-    const splitVal = radioValue.split('|column:');
-    return {
-      table: splitVal[0],
-      column: splitVal[1],
-    };
-  };
 
   const datasetTable: any = (datasetProps: DatasetTableProps) => {
     const { id, label, value, setValue } = datasetProps;
@@ -249,27 +244,17 @@ function DatasetSchemaRelationshipModal({
 
   return (
     <div>
-      <IconButton
-        size="small"
-        color="primary"
-        className={classes.iconButton}
-        style={{ marginLeft: 50 }}
-        onClick={handleSeeMoreOpen}
-      >
-        <i className="fa fa-link-horizontal" />
-      </IconButton>
-
       <Paper className={classes.root}>
         <Dialog
-          open={seeMore.open}
+          open={true}
           scroll="paper"
           fullWidth={true}
           classes={{ paper: classes.dialog }}
-          onBackdropClick={handleSeeMoreClose}
+          onBackdropClick={onClose}
         >
           <DialogTitle id="see-more-dialog-title">
             <div className={classes.dialogHeader}>Create a relationship</div>
-            <IconButton size="small" style={{ float: 'right' }} onClick={handleSeeMoreClose}>
+            <IconButton size="small" style={{ float: 'right' }} onClick={onClose}>
               <Close />
             </IconButton>
           </DialogTitle>
@@ -326,7 +311,6 @@ function DatasetSchemaRelationshipModal({
                       from: unwrapRadioValue(relationshipFrom),
                       to: unwrapRadioValue(relationshipTo),
                     });
-                    handleSeeMoreClose();
                   }}
                 >
                   Add relationship
@@ -337,7 +321,7 @@ function DatasetSchemaRelationshipModal({
                   variant="outlined"
                   disableElevation
                   className={classes.tabButton}
-                  onClick={handleSeeMoreClose}
+                  onClick={onClose}
                 >
                   Cancel
                 </Button>
