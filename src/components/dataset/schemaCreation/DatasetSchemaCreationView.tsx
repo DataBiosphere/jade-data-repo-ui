@@ -8,6 +8,7 @@ import { TdrState } from 'reducers';
 import { FormProvider, useForm } from 'react-hook-form';
 import TabPanel from '../../common/TabPanel';
 import DatasetSchemaInformationView from './DatasetSchemaInformationView';
+import { CLOUD_PLATFORMS } from '../../../constants/index';
 
 const styles = (theme: CustomTheme) => ({
   pageRoot: { ...theme.mixins.pageRoot },
@@ -102,7 +103,7 @@ const DatasetSchemaCreationView = withStyles(styles)(({ classes }: IProps) => {
       description: '',
       terraProject: '',
       enableSecureMonitoring: 'true',
-      cloudPlatform: 'gcp',
+      cloudPlatform: CLOUD_PLATFORMS.gcp.key,
       region: '',
       stewards: [],
       custodians: [],

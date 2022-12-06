@@ -210,6 +210,9 @@ export const TABLE_DEFAULT_SORT_ORDER = 'asc';
 export const TABLE_DEFAULT_COLUMN_WIDTH = 300;
 
 const generateGCPRegions: any = () => {
+  // settings to generate servers from https://cloud.google.com/compute/docs/regions-zones
+  // the list is quite long. The final results will be like:
+  // "asia-east1-a", "asia-east1-b", "asia-east1-c", "asia-east2-a", etc.
   const servers = [
     { name: 'asia-east', count: [1, 2], letters: ['a', 'b', 'c'] },
     { name: 'asia-northeast', count: [1, 2, 3], letters: ['a', 'b', 'c'] },
@@ -246,10 +249,12 @@ const generateGCPRegions: any = () => {
 
 export const CLOUD_PLATFORMS = {
   gcp: {
+    key: 'gcp',
     label: 'Google Cloud Platform',
     regions: generateGCPRegions(),
   },
   azure: {
+    key: 'azure',
     label: 'Microsoft Azure',
     regions: [
       { label: 'East US', name: 'eastus' },
