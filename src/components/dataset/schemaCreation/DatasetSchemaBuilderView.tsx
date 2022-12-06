@@ -787,12 +787,13 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: IProps) => {
             JSON view
           </Typography>
           <CodeMirror
-            value={JSON.stringify(datasetSchema, null, 2)}
+            value={_.keys(datasetSchema).length > 0 ? JSON.stringify(datasetSchema, null, 2) : ''}
             height="400px"
             theme={okaidia}
             extensions={[javascript({ jsx: true, typescript: true })]}
             onChange={onJsonViewerChange}
             className={classes.jsonWrapper}
+            placeholder="If you already have json, please paste your code here"
           />
         </div>
       </div>

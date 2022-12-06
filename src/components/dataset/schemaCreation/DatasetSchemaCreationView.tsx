@@ -126,50 +126,7 @@ const DatasetSchemaCreationView = withStyles(styles)(
         region: '',
         stewards: [],
         custodians: [],
-        schema: {
-          tables: [
-            {
-              name: 'party',
-              columns: [
-                {
-                  name: 'balloons',
-                  datatype: 'string',
-                  array_of: false,
-                  required: false,
-                },
-                {
-                  name: 'streamers',
-                  datatype: 'string',
-                  array_of: false,
-                  required: false,
-                },
-              ],
-            },
-            {
-              name: 'colors',
-              columns: [
-                {
-                  name: 'red',
-                  datatype: 'string',
-                  array_of: false,
-                  required: false,
-                },
-                {
-                  name: 'yellow',
-                  datatype: 'string',
-                  array_of: false,
-                  required: false,
-                },
-                {
-                  name: 'green',
-                  datatype: 'string',
-                  array_of: false,
-                  required: false,
-                },
-              ],
-            },
-          ],
-        },
+        schema: {},
       },
     });
 
