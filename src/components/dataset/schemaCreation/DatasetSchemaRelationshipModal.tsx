@@ -120,6 +120,7 @@ const styles = (theme: CustomTheme) =>
 type DatasetSchemaRelationshipModalProps = {
   classes: ClassNameMap;
   datasetSchema: DatasetSpecificationModel;
+  onSubmit: (data: any) => void;
 };
 
 interface DatasetTableProps {
@@ -132,6 +133,7 @@ interface DatasetTableProps {
 function DatasetSchemaRelationshipModal({
   classes,
   datasetSchema,
+  onSubmit,
 }: DatasetSchemaRelationshipModalProps) {
   const [seeMore, setSeeMore] = useState({ open: false });
   const [expandedTables, setExpandedTables] = useState({} as any);
@@ -141,6 +143,10 @@ function DatasetSchemaRelationshipModal({
 
   const handleSeeMoreOpen = () => {
     setSeeMore({ open: true });
+    setExpandedTables({});
+    setRelationshipFrom('');
+    setRelationshipTo('');
+    setRelationshipName('');
   };
 
   const handleSeeMoreClose = () => {
@@ -233,7 +239,7 @@ function DatasetSchemaRelationshipModal({
           <span className={classes.summaryDetail}>{unwrappedVal.table}</span>
         </div>
 
-        <div className={classes.summaryDetail}>
+        <div>
           <span className={classes.summaryLabel}>Column:</span>
           <span className={classes.summaryDetail}>{unwrappedVal.column}</span>
         </div>
@@ -315,6 +321,11 @@ function DatasetSchemaRelationshipModal({
                   className={classes.tabButton}
                   disabled={!relationshipFrom || !relationshipTo || !relationshipName}
                   onClick={() => {
+                    onSubmit({
+                      name: relationshipName,
+                      from: unwrapRadioValue(relationshipFrom),
+                      to: unwrapRadioValue(relationshipTo),
+                    });
                     handleSeeMoreClose();
                   }}
                 >
