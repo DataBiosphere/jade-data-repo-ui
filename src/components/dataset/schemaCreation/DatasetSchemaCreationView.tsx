@@ -159,7 +159,7 @@ const DatasetSchemaCreationView = withStyles(styles)(({ classes }: IProps) => {
               ))}
             </Tabs>
             {tabs.map((tabConfig: TabConfig, i: number) => (
-              <TabPanel value={currentTab} index={i}>
+              <TabPanel value={currentTab} index={i} key={`dataset-schema-creation-tab-${i}`}>
                 {tabConfig.content}
 
                 {i < tabs.length - 1 ? (
