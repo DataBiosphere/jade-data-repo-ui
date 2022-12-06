@@ -205,7 +205,7 @@ const DatasetSchemaInformationView = withStyles(styles)(({ classes, profiles }: 
               {...field}
               onChange={(event: any, change: any) => {
                 const cloudPlatform = event.target.value;
-                setRegionOptions(_.get(CLOUD_PLATFORMS, [cloudPlatform, 'region']));
+                setRegionOptions(_.get(CLOUD_PLATFORMS, [cloudPlatform, 'regions']));
                 setValue('region', '');
                 field.onChange(event, change);
               }}
