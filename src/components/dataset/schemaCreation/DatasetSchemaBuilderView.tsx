@@ -36,13 +36,11 @@ import {
 } from 'generated/tdr';
 import clsx from 'clsx';
 import DatasetSchemaRelationshipModal, { wrapRadioValue } from './DatasetSchemaRelationshipModal';
+import { styles as DatasetCreationStyles } from './DatasetSchemaCommon';
 
 const styles = (theme: CustomTheme) =>
   ({
-    contentContainer: {
-      marginTop: '1rem',
-      maxWidth: 1000,
-    },
+    ...DatasetCreationStyles(theme),
     schemaSectionHeader: {
       marginTop: 40,
       paddingBottom: 5,
@@ -79,62 +77,6 @@ const styles = (theme: CustomTheme) =>
       justifyContent: 'space-between',
       marginTop: 5,
     },
-    schemaBuilderStructureViewContent: {
-      backgroundColor: theme.palette.background.default,
-      borderRadius: 10,
-      height: 400,
-      'overflow-y': 'scroll',
-      marginTop: 15,
-      padding: 15,
-      border: '1px solid rgba(0, 0, 0, .2)',
-    },
-    schemaBuilderStructureViewContentTableName: {
-      display: 'flex',
-      alignItems: 'center',
-    },
-    schemaBuilderStructureViewContentTableName_text: {
-      padding: '0px 6px',
-      borderRadius: theme.shape.borderRadius,
-      'text-transform': 'none',
-      fontWeight: 'bold',
-      color: 'black',
-      minWidth: 'unset',
-    },
-    schemaBuilderStructureViewContentTableName_selected: {
-      backgroundColor: 'rgba(77, 114, 170, .2)',
-      '&:hover': {
-        backgroundColor: 'rgba(77, 114, 170, .4)',
-      },
-    },
-    schemaBuilderStructureViewColumnContainer_wrapper: {
-      position: 'relative',
-    },
-    schemaBuilderStructureViewColumnContainer: {
-      marginLeft: 20,
-      marginTop: -11,
-      marginBottom: -10,
-      paddingLeft: 20,
-      paddingTop: 5,
-      borderLeft: '1px dashed #A6B8D4',
-    },
-    schemaBuilderStructureColumnContainer_expanded: {
-      marginBottom: 20,
-    },
-    schemaBuilderStructureViewContentColumn_dotContainer: {
-      position: 'absolute',
-      bottom: -1,
-      color: '#A6B8D4',
-      padding: '0 15px',
-      background: 'linear-gradient(0, white 50%, transparent 50%)',
-    },
-    schemaBuilderStructureViewContentColumn_dot: {
-      fontSize: 11,
-    },
-    schemaBuilderStructureViewContentColumn: {
-      display: 'block',
-      marginTop: 4,
-      fontWeight: 'normal',
-    },
     schemaControlButton: {
       'text-transform': 'none',
       padding: '10px 14px 10px 11px',
@@ -143,32 +85,11 @@ const styles = (theme: CustomTheme) =>
     iconInButton: {
       marginRight: 6,
     },
-    iconButton: {
-      backgroundColor: 'rgba(77, 114, 170, .2)',
-      height: '2.6rem',
-      width: '2.6rem',
-      borderRadius: '100%',
-      marginRight: 6,
-      fontSize: '1.4rem',
-    },
     schemaBuilderDetailView: {
       width: '100%',
       padding: 10,
       marginLeft: 10,
       marginTop: 50,
-    },
-    formLabel: {
-      display: 'block',
-      fontWeight: 'bold',
-      marginTop: 10,
-      marginBottom: 10,
-    },
-    formLabelError: {
-      color: theme.palette.error.main,
-    },
-    formInput: {
-      width: '100%',
-      backgroundColor: 'white',
     },
     formInputDatatype: {
       maxWidth: 200,
@@ -177,9 +98,6 @@ const styles = (theme: CustomTheme) =>
       backgroundColor: '#272822',
       borderRadius: 10,
       padding: 20,
-    },
-    flexRow: {
-      display: 'flex',
     },
   } as any);
 

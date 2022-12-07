@@ -21,37 +21,12 @@ import { CLOUD_PLATFORMS } from 'constants/index';
 import { isValidEmail } from '../../../libs/form-validators';
 import { BillingProfileModel } from '../../../generated/tdr';
 import WithoutStylesMarkdownContent from '../../common/WithoutStylesMarkdownContent';
+import { styles as DatasetSchemaStyles } from './DatasetSchemaCommon';
 
-const styles = (theme: CustomTheme) => ({
-  contentContainer: {
-    marginTop: '1rem',
-    maxWidth: 1000,
-  },
-  formFieldContainer: {
-    minHeight: 135,
-  },
-  formFieldDescription: {
-    marginBottom: 10,
-  },
-  formLabel: {
-    display: 'block',
-    fontWeight: 'bold',
-    marginTop: 10,
-    marginBottom: 10,
-  },
-  formLabelError: {
-    color: theme.palette.error.main,
-  },
-  formInput: {
-    width: '100%',
-  },
-  formInputError: {
-    color: theme.palette.error.main,
-    fontSize: '0.75rem',
-    lineHeight: '1.66',
-    marginLeft: 14,
-  },
-});
+const styles = (theme: CustomTheme) =>
+  ({
+    ...DatasetSchemaStyles(theme),
+  } as any);
 
 interface IProps extends WithStyles<typeof styles> {
   profiles: Array<BillingProfileModel>;

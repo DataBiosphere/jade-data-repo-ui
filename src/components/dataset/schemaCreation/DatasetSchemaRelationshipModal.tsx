@@ -20,17 +20,11 @@ import {
 } from '@mui/material';
 import { Close, IndeterminateCheckBoxOutlined, AddBoxOutlined, Circle } from '@mui/icons-material';
 import { TableModel, ColumnModel, DatasetSpecificationModel } from 'generated/tdr';
+import { styles as DatasetCreationStyles } from './DatasetSchemaCommon';
 
 const styles = (theme: CustomTheme) =>
   ({
-    iconButton: {
-      backgroundColor: 'rgba(77, 114, 170, .2)',
-      height: '2.6rem',
-      width: '2.6rem',
-      borderRadius: '100%',
-      marginRight: 6,
-      fontSize: '1.4rem',
-    },
+    ...DatasetCreationStyles(theme),
     dialog: {
       minHeight: '80vh',
       maxHeight: '80vh',
@@ -42,60 +36,12 @@ const styles = (theme: CustomTheme) =>
       lineHeight: 1.5,
       float: 'left',
     },
-    flexRow: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-    },
-    flexCol: {
-      display: 'flex',
-      flexDirection: 'column',
-    },
     tableContainer: {
       width: '40%',
       marginTop: 20,
     },
-    radioContainer: {
-      'overflow-y': 'auto',
-      borderRadius: theme.shape.borderRadius,
-      border: '1px solid gray',
-      height: 350,
-      padding: 20,
-    },
     radioWrapper: {
       display: 'block',
-    },
-    formLabel: {
-      fontWeight: 'bold',
-      marginBottom: 5,
-    },
-    schemaBuilderStructureViewColumnContainer_wrapper: {
-      position: 'relative',
-    },
-    schemaBuilderStructureViewColumnContainer: {
-      marginLeft: 20,
-      marginTop: -11,
-      marginBottom: -10,
-      paddingLeft: 20,
-      borderLeft: '1px dashed #A6B8D4',
-    },
-    schemaBuilderStructureColumnContainer_expanded: {
-      marginBottom: 20,
-    },
-    schemaBuilderStructureViewContentColumn_dotContainer: {
-      position: 'absolute',
-      bottom: -1,
-      color: '#A6B8D4',
-      padding: '0 15px 7px',
-      background: 'linear-gradient(0, white 70%, transparent 30%)',
-    },
-    schemaBuilderStructureViewContentColumn_dot: {
-      fontSize: 11,
-    },
-    schemaBuilderStructureViewContentColumn: {
-      display: 'block',
-      marginTop: 4,
-      fontWeight: 'normal',
     },
     summaryContainer: {
       margin: 20,
@@ -167,7 +113,7 @@ function DatasetSchemaRelationshipModal({
           {label}
         </FormLabel>
         <RadioGroup
-          className={classes.radioContainer}
+          className={classes.schemaBuilderStructureViewContent}
           aria-labelledby={`radiogroup-${id}`}
           value={value}
           onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
@@ -182,7 +128,7 @@ function DatasetSchemaRelationshipModal({
                   onClick={() =>
                     setExpandedTables({
                       ...expandedTables,
-                      [`${id}-${i}`]: !expandedTables[i],
+                      [`${id}-${i}`]: !expandedTables[`${id}-${i}`],
                     })
                   }
                 >
