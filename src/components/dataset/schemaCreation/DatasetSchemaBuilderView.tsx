@@ -158,6 +158,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: IProps) => {
         {
           name: 'table_name',
           columns: [],
+          primaryKey: [],
         },
       ],
     });
@@ -217,6 +218,12 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: IProps) => {
 
   const swapArrayLocs = (arr: Array<any>, index1: number, index2: number) => {
     [arr[index1], arr[index2]] = [arr[index2], arr[index1]];
+  };
+
+  const preventFormSubmission = (event: any) => {
+    if (event.code === 'Enter') {
+      event.preventDefault();
+    }
   };
 
   return (
@@ -457,6 +464,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: IProps) => {
                   placeholder="table name"
                   className={classes.formInput}
                   value={datasetSchema.tables[selectedTable].name}
+                  onKeyDown={preventFormSubmission}
                   onChange={(event: any) => {
                     const schemaCopy = _.cloneDeep(datasetSchema);
                     const newName = event.target.value;
@@ -545,6 +553,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: IProps) => {
                   placeholder="column name"
                   className={classes.formInput}
                   value={datasetSchema.tables[selectedTable].columns[selectedColumn].name}
+                  onKeyDown={preventFormSubmission}
                   onChange={(event: any) => {
                     const schemaCopy = _.cloneDeep(datasetSchema);
                     const origName =
@@ -595,7 +604,9 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: IProps) => {
                   id="column-datatype"
                   options={columnDatatypeOptions}
                   className={clsx(classes.formInput, classes.formInputDatatype)}
-                  renderInput={(params: any) => <TextField {...params} />}
+                  renderInput={(params: any) => (
+                    <TextField {...params} onKeyDown={preventFormSubmission} />
+                  )}
                   value={datasetSchema.tables[selectedTable].columns[selectedColumn].datatype}
                   isOptionEqualToValue={(option: string, value: string) =>
                     _.get(TableDataType, option) === value
@@ -646,12 +657,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: IProps) => {
                     } else if (!change && primaryKeyIndex !== -1) {
                       primaryKeyArr.splice(primaryKeyIndex, 1);
                     }
-
-                    if (primaryKeyArr.length > 0) {
-                      schemaCopy.tables[selectedTable].primaryKey = primaryKeyArr;
-                    } else {
-                      delete schemaCopy.tables[selectedTable].primaryKey;
-                    }
+                    schemaCopy.tables[selectedTable].primaryKey = primaryKeyArr;
                     setDatasetSchema(schemaCopy);
                   }}
                 />
