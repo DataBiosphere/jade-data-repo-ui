@@ -61,6 +61,9 @@ const styles = (theme: CustomTheme) =>
       'text-transform': 'none',
       marginRight: 15,
     },
+    relationshipStructureViewContent: {
+      height: 350,
+    },
   } as any);
 
 type DatasetSchemaRelationshipModalProps = {
@@ -113,7 +116,10 @@ function DatasetSchemaRelationshipModal({
           {label}
         </FormLabel>
         <RadioGroup
-          className={classes.schemaBuilderStructureViewContent}
+          className={clsx(
+            classes.schemaBuilderStructureViewContent,
+            classes.relationshipStructureViewContent,
+          )}
           aria-labelledby={`radiogroup-${id}`}
           value={value}
           onChange={(event: React.ChangeEvent<HTMLInputElement>) => {

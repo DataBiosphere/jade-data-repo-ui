@@ -56,7 +56,7 @@ export const styles = (theme: CustomTheme) => {
       backgroundColor: theme.palette.background.default,
       borderRadius: 10,
       height: 400,
-      'overflow-y': 'scroll',
+      'overflow-y': 'auto',
       marginTop: 15,
       padding: 15,
       border: '1px solid rgba(0, 0, 0, .2)',
