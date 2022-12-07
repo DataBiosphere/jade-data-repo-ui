@@ -218,7 +218,7 @@ export const TABLE_DEFAULT_COLUMN_WIDTH = 300;
 const generateGCPRegions: any = () => {
   // settings to generate servers from https://cloud.google.com/compute/docs/regions-zones
   // the list is quite long. The final results will be like:
-  // "asia-east1-a", "asia-east1-b", "asia-east1-c", "asia-east2-a", etc.
+  // "asia-east1", "asia-east2", etc.
   const servers = [
     { name: 'asia-east', count: [1, 2] },
     { name: 'asia-northeast', count: [1, 2, 3] },
