@@ -165,7 +165,7 @@ const DatasetSchemaInformationView = withStyles(styles)(({ classes, profiles }: 
         />
       </Grid>
 
-      <Grid item xs={6}>
+      <Grid item xs={6} data-cy="dataset-region">
         <label htmlFor="dataset-cloudPlatform" className={classes.formLabel}>
           Cloud Platform*
         </label>
@@ -196,7 +196,7 @@ const DatasetSchemaInformationView = withStyles(styles)(({ classes, profiles }: 
         />
       </Grid>
 
-      <Grid item xs={6} className={classes.formFieldContainer}>
+      <Grid item xs={6} className={classes.formFieldContainer} data-cy="dataset-region">
         <label
           htmlFor="dataset-region"
           className={clsx(classes.formLabel, { [classes.formLabelError]: errors.region })}

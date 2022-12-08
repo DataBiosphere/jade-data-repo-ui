@@ -97,7 +97,6 @@ const styles = (theme: CustomTheme) => ({
 });
 
 interface IProps extends WithStyles<typeof styles> {
-  userEmail: string;
   profiles: Array<BillingProfileModel>;
   dispatch: Dispatch<Action>;
   history: any;
@@ -179,7 +178,7 @@ const DatasetSchemaCreationView = withStyles(styles)(
     }, [profiles, setValue]);
 
     return (
-      <div className={classes.pageRoot}>
+      <div className={classes.pageRoot} data-cy="component-root">
         <FormProvider {...formMethods}>
           <form className={classes.contentContainer} onSubmit={handleSubmit(onSubmit)}>
             <div className={classes.mainContent}>
@@ -237,7 +236,10 @@ const DatasetSchemaCreationView = withStyles(styles)(
                   )}
                   {_.keys(errors).length > 0 && (
                     <>
-                      <div className={clsx(classes.formLabelError, classes.flexRow)}>
+                      <div
+                        className={clsx(classes.formLabelError, classes.flexRow)}
+                        data-cy="error-summary"
+                      >
                         <Error style={{ marginRight: 5 }} />
                         There are errors with your form. Please fix these fields to continue:
                       </div>
@@ -297,7 +299,6 @@ const DatasetSchemaCreationView = withStyles(styles)(
 
 function mapStateToProps(state: TdrState) {
   return {
-    userEmail: state.user.email,
     profiles: state.profiles.profiles,
   };
 }
