@@ -122,7 +122,7 @@ const DatasetSchemaCreationView = withStyles(styles)(
         terraProject: '',
         enableSecureMonitoring: 'true',
         cloudPlatform: CLOUD_PLATFORMS.gcp.key,
-        defaultProfile: '',
+        defaultProfile: _.get(profiles, [0, 'profileName'], ''),
         region: '',
         stewards: [],
         custodians: [],
@@ -132,6 +132,7 @@ const DatasetSchemaCreationView = withStyles(styles)(
 
     const {
       handleSubmit,
+      setValue,
       formState: { errors },
     } = formMethods;
 
@@ -171,6 +172,11 @@ const DatasetSchemaCreationView = withStyles(styles)(
     useEffect(() => {
       dispatch(getBillingProfiles());
     }, [dispatch]);
+
+    useEffect(() => {
+      const firstProfile = _.get(profiles, [0, 'profileName'], '');
+      setValue('defaultProfile', firstProfile);
+    }, [profiles, setValue]);
 
     return (
       <div className={classes.pageRoot}>
