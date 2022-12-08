@@ -112,10 +112,25 @@ describe('DatasetSchemaCreationView', () => {
         .focus()
         .type('haha{enter}')
         .type('hehe{enter}')
+        .type('a@a.com{enter}')
         .type('hoho{enter}')
         .blur();
       cy.get('.Mui-error').should('exist');
       cy.get('#dataset-custodians-helper-text').contains('Invalid emails: "haha", "hehe", "hoho"');
+    });
+  });
+
+  describe('Schema Builder view', () => {
+    beforeEach((done) => {
+      cy.get('.MuiTabs-scroller button').eq(1).click().then(() => {
+        done();
+      });
+    });
+
+    it('should start with an empty schema', () => {
+      cy.get('[data-cy="schema-builder-structure-view"]').children().should('have.length', 0);
+      cy.get('.cm-theme').should('exist');
+      cy.get('.cm-theme').contains('If you already have json, please paste your code here');
     });
   });
 });

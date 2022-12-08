@@ -345,7 +345,10 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: IProps) => {
                 </IconButton>
               </div>
             </div>
-            <div className={classes.schemaBuilderStructureViewContent}>
+            <div
+              className={classes.schemaBuilderStructureViewContent}
+              data-cy="schema-builder-structure-view"
+            >
               {datasetSchema.tables?.map((table: TableModel, i: number) => (
                 <div key={`datasetSchema-table-${i}`}>
                   <div className={classes.schemaBuilderStructureViewContentTableName}>
