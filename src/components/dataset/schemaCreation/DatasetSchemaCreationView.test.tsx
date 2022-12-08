@@ -59,6 +59,64 @@ describe('DatasetSchemaCreationView', () => {
         done();
       });
     });
+
+    it('should not submit if errors exist', () => {
+      const mockStore = createMockStore([]);
+      const store = mockStore(initialState);
+      const historySpy = {
+        push: cy.spy().as('historySpy')
+      };
+      mount(
+        <Router history={history}>
+          <Provider store={store}>
+            <ThemeProvider theme={globalTheme}>
+              <DatasetSchemaCreationView history={historySpy} />
+            </ThemeProvider>
+          </Provider>
+        </Router>,
+      );
+      cy.get('.MuiTabs-scroller button').eq(1).click();
+      cy.get('button[type="submit"]').click();
+      cy.get('.Mui-error').should('exist');
+      cy.get('[data-cy="error-details"]').find('li').should('have.length', 10);
+      cy.get('@historySpy').should('not.have.been.calledWith', '/datasets');
+    });
+
+    it('should submit if valid', () => {
+      const mockStore = createMockStore([]);
+      const store = mockStore(initialState);
+      const historySpy = {
+        push: cy.spy().as('historySpy')
+      };
+      mount(
+        <Router history={history}>
+          <Provider store={store}>
+            <ThemeProvider theme={globalTheme}>
+              <DatasetSchemaCreationView history={historySpy} />
+            </ThemeProvider>
+          </Provider>
+        </Router>,
+      );
+
+      // Setting required fields for information
+      cy.get('#dataset-name').type('abc').blur();
+      // we use `force: true` below because the codemirror textarea is hidden
+      // and by default Cypress won't interact with hidden elements
+      cy.get('.CodeMirror textarea')
+        .type('test test test test', { force: true });
+      cy.get('[data-cy="dataset-region"] .MuiAutocomplete-popupIndicator').click();
+      cy.get('#dataset-region-option-0').click();
+      cy.get('#dataset-custodians').type('a@a.com{enter}').blur();
+
+      // Setting required fields for table
+      cy.get('.MuiTabs-scroller button').eq(1).click();
+      cy.get('#schemabuilder-createTable').click();
+      cy.get('#schemabuilder-createColumn').click();
+
+      // Submitting
+      cy.get('button[type="submit"]').click();
+      cy.get('@historySpy').should('have.been.calledWith', '/datasets');
+    });
   })
 
   describe('Information view', () => {

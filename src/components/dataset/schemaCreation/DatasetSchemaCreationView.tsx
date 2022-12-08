@@ -242,7 +242,7 @@ const DatasetSchemaCreationView = withStyles(styles)(
                         <Error style={{ marginRight: 5 }} />
                         There are errors with your form. Please fix these fields to continue:
                       </div>
-                      <div className={classes.formLabelError}>
+                      <div className={classes.formLabelError} data-cy="error-details">
                         <ul>
                           {_.keys(errors).map((error: string) => (
                             <li key={error}>{error}</li>

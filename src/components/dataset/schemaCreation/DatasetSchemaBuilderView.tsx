@@ -258,6 +258,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: IProps) => {
             <div className={classes.schemaBuilderStructureViewControls}>
               <div>
                 <Button
+                  id="schemabuilder-createTable"
                   color="primary"
                   disableElevation
                   variant="contained"
@@ -270,6 +271,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: IProps) => {
                 </Button>
 
                 <Button
+                  id="schemabuilder-createColumn"
                   color="primary"
                   disableElevation
                   variant="contained"
