@@ -37,7 +37,7 @@ beforeEach(() => {
 
 describe('DatasetSchemaCreationView', () => {
   describe('CreationView', () => {
-    it('should create!', () => {
+    it('should load the component', () => {
       cy.get('[data-cy="component-root"]').should('exist');
       cy.get('.MuiTabs-scroller').should('exist');
       cy.get('.MuiTabs-scroller button').should('have.length', 2);
