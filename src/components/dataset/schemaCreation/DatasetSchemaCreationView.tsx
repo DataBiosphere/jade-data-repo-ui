@@ -10,7 +10,6 @@ import { TdrState } from 'reducers';
 import { FormProvider, useForm } from 'react-hook-form';
 import { createDataset, getBillingProfiles } from 'actions/index';
 import { BillingProfileModel } from '../../../generated/tdr';
-import TabPanel from '../../common/TabPanel';
 import DatasetSchemaInformationView from './DatasetSchemaInformationView';
 import DatasetSchemaBuilderView from './DatasetSchemaBuilderView';
 import { CLOUD_PLATFORMS } from '../../../constants/index';
@@ -113,7 +112,7 @@ const DatasetSchemaCreationView = withStyles(styles)(
     const changeTab = (_event: any, newCurrentTab: any) => setCurrentTab(newCurrentTab);
 
     const formMethods = useForm({
-      mode: 'onTouched',
+      mode: 'all',
       reValidateMode: 'onChange',
       defaultValues: {
         name: '',
@@ -209,7 +208,7 @@ const DatasetSchemaCreationView = withStyles(styles)(
                 ))}
               </Tabs>
               {tabs.map((tabConfig: TabConfig, i: number) => (
-                <TabPanel value={currentTab} index={i} key={`tabPanel-${i}`}>
+                <div key={`tabPanel-${i}`} hidden={currentTab !== i}>
                   {tabConfig.content}
 
                   {i < tabs.length - 1 ? (
@@ -252,7 +251,7 @@ const DatasetSchemaCreationView = withStyles(styles)(
                       </div>
                     </>
                   )}
-                </TabPanel>
+                </div>
               ))}
             </div>
 

@@ -106,7 +106,7 @@ interface IProps extends WithStyles<typeof styles> {
 }
 
 const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: IProps) => {
-  const { getValues, setValue } = useFormContext();
+  const { register, getValues, setValue } = useFormContext();
   const [datasetSchema, setDatasetSchema] = useState(
     getValues().schema as DatasetSpecificationModel,
   );
@@ -225,6 +225,17 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: IProps) => {
       event.preventDefault();
     }
   };
+
+  const isValidSchema = (tempSchema: any) => {
+    if (!tempSchema.tables) {
+      return 'Schema must have tables';
+    }
+    return true;
+  };
+
+  register('schema', {
+    validate: { isValidSchema },
+  });
 
   return (
     <div className={classes.contentContainer}>
