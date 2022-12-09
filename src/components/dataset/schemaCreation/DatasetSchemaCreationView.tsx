@@ -2,10 +2,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 import clsx from 'clsx';
 import { WithStyles, withStyles } from '@mui/styles';
-import { Typography, CustomTheme, Tabs, Tab } from '@mui/material';
+import { Button, Typography, CustomTheme, Tabs, Tab } from '@mui/material';
 import { OpenInNew } from '@mui/icons-material';
 import { TdrState } from 'reducers';
+import { FormProvider, useForm } from 'react-hook-form';
 import TabPanel from '../../common/TabPanel';
+import DatasetSchemaInformationView from './DatasetSchemaInformationView';
+import { CLOUD_PLATFORMS } from '../../../constants/index';
 
 const styles = (theme: CustomTheme) => ({
   pageRoot: { ...theme.mixins.pageRoot },
@@ -63,6 +66,20 @@ const styles = (theme: CustomTheme) => ({
   helpListLink: {
     marginTop: 5,
   },
+  tabButton: {
+    'text-transform': 'none',
+    marginTop: 30,
+    marginBottom: 30,
+  },
+  formLabel: {
+    display: 'block',
+    fontWeight: 'bold',
+    marginTop: 20,
+    marginBottom: 10,
+  },
+  formLabelError: {
+    color: theme.palette.error.main,
+  },
 });
 
 interface IProps extends WithStyles<typeof styles> {
@@ -75,15 +92,30 @@ interface TabConfig {
 }
 
 const DatasetSchemaCreationView = withStyles(styles)(({ classes }: IProps) => {
-  const [value, setValue] = React.useState(0);
-  const handleChange = (_event: any, newValue: any) => {
-    setValue(newValue);
-  };
+  const [currentTab, setCurrentTab] = React.useState(0);
+  const changeTab = (_event: any, newCurrentTab: any) => setCurrentTab(newCurrentTab);
+
+  const formMethods = useForm({
+    mode: 'onTouched',
+    reValidateMode: 'onChange',
+    defaultValues: {
+      name: '',
+      description: '',
+      terraProject: '',
+      enableSecureMonitoring: 'true',
+      cloudPlatform: CLOUD_PLATFORMS.gcp.key,
+      region: '',
+      stewards: [],
+      custodians: [],
+    },
+  });
+
+  const { handleSubmit } = formMethods;
 
   const tabs: TabConfig[] = [
     {
       description: 'Provide dataset information',
-      content: <div>Step 1!</div>,
+      content: <DatasetSchemaInformationView />,
     },
     {
       description: 'Build a schema and create dataset',
@@ -91,77 +123,108 @@ const DatasetSchemaCreationView = withStyles(styles)(({ classes }: IProps) => {
     },
   ];
 
+  const onSubmit = (data: any) => {
+    // eslint-disable-next-line
+    console.log(data);
+  };
+
   return (
     <div className={classes.pageRoot}>
-      <div className={classes.contentContainer}>
-        <div className={classes.mainContent}>
-          <Typography variant="h3" className={classes.pageTitle}>
-            Create a dataset schema for ingesting data
-          </Typography>
-          Before you can ingest data files, you need to define the structure of the data you'll be
-          ingesting by specifying the schema of the data. The schema is a template for the data
-          you'll ingest later. You'll specify the number and names of the data categories - the
-          tables and columns within the tables - and any associations between columns in separate
-          tables, if multiple tables contain the same data category (for instance, if you have a
-          "subject" table and a "sample" table, and both tables contain a column of the same subject
-          IDs).
-          <Tabs classes={{ root: classes.tabsRoot }} value={value} onChange={handleChange}>
-            {tabs.map((tabConfig: TabConfig, i: number) => (
-              <Tab
-                key={`dataset-schema-creation-tab-${i}`}
-                label={
-                  <div>
-                    <Typography variant="h3">Step {i + 1}</Typography>
-                    <div className={classes.tabDescription}>{tabConfig.description}</div>
-                  </div>
-                }
-                className={classes.tabRoot}
-                disableFocusRipple
-                disableRipple
-              />
-            ))}
-          </Tabs>
-          {tabs.map((tabConfig: TabConfig, i: number) => (
-            <TabPanel value={value} index={i} key={`dataset-schema-creation-tabpanel-${i}`}>
-              {tabConfig.content}
-            </TabPanel>
-          ))}
-        </div>
-
-        <div className={classes.detailsColumn}>
-          <div className={classes.detailsCard}>
-            <Typography variant="h4" className={classes.pageTitle}>
-              Have questions?
+      <FormProvider {...formMethods}>
+        <form className={classes.contentContainer} onSubmit={handleSubmit(onSubmit)}>
+          <div className={classes.mainContent}>
+            <Typography variant="h3" className={classes.pageTitle}>
+              Create a dataset schema for ingesting data
             </Typography>
-            Learn more about ingesting data into the Terra Data Repo:
-            <ul className={classes.helpList}>
-              <li>
-                <a
-                  className={clsx(classes.jadeLink, classes.helpListLink)}
-                  href="#"
-                  target="_blank"
-                >
-                  Dataset schema overview <OpenInNew className={classes.jadeLinkIcon} />
-                </a>
-              </li>
-              <li>
-                <a
-                  className={clsx(classes.jadeLink, classes.helpListLink)}
-                  href="#"
-                  target="_blank"
-                >
-                  How to create dataset assets in TDR <OpenInNew className={classes.jadeLinkIcon} />
-                </a>
-              </li>
-            </ul>
+            Before you can ingest data files, you need to define the structure of the data you'll be
+            ingesting by specifying the schema of the data. The schema is a template for the data
+            you'll ingest later. You'll specify the number and names of the data categories - the
+            tables and columns within the tables - and any associations between columns in separate
+            tables, if multiple tables contain the same data category (for instance, if you have a
+            "subject" table and a "sample" table, and both tables contain a column of the same
+            subject IDs).
+            <Tabs classes={{ root: classes.tabsRoot }} value={currentTab} onChange={changeTab}>
+              {tabs.map((tabConfig: TabConfig, i: number) => (
+                <Tab
+                  key={`dataset-schema-creation-tab-${i}`}
+                  label={
+                    <div>
+                      <Typography variant="h3">Step {i + 1}</Typography>
+                      <div className={classes.tabDescription}>{tabConfig.description}</div>
+                    </div>
+                  }
+                  className={classes.tabRoot}
+                  disableFocusRipple
+                  disableRipple
+                />
+              ))}
+            </Tabs>
+            {tabs.map((tabConfig: TabConfig, i: number) => (
+              <TabPanel value={currentTab} index={i} key={`dataset-schema-creation-tab-${i}`}>
+                {tabConfig.content}
+
+                {i < tabs.length - 1 ? (
+                  <Button
+                    type="button"
+                    color="primary"
+                    variant="contained"
+                    disableElevation
+                    className={classes.tabButton}
+                    onClick={() => setCurrentTab(i + 1)}
+                  >
+                    Go to Step {i + 2}
+                  </Button>
+                ) : (
+                  <Button
+                    type="submit"
+                    color="primary"
+                    variant="contained"
+                    disableElevation
+                    className={classes.tabButton}
+                  >
+                    Submit
+                  </Button>
+                )}
+              </TabPanel>
+            ))}
           </div>
 
-          <div className={classes.detailsCard}>
-            Once the dataset schema is created, you'll have tools on the dataset summary page to
-            view the dataset and ingest data files for each table
+          <div className={classes.detailsColumn}>
+            <div className={classes.detailsCard}>
+              <Typography variant="h4" className={classes.pageTitle}>
+                Have questions?
+              </Typography>
+              Learn more about ingesting data into the Terra Data Repo:
+              <ul className={classes.helpList}>
+                <li>
+                  <a
+                    className={clsx(classes.jadeLink, classes.helpListLink)}
+                    href="#"
+                    target="_blank"
+                  >
+                    Dataset schema overview <OpenInNew className={classes.jadeLinkIcon} />
+                  </a>
+                </li>
+                <li>
+                  <a
+                    className={clsx(classes.jadeLink, classes.helpListLink)}
+                    href="#"
+                    target="_blank"
+                  >
+                    How to create dataset assets in TDR
+                    <OpenInNew className={classes.jadeLinkIcon} />
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            <div className={classes.detailsCard}>
+              Once the dataset schema is created, you'll have tools on the dataset summary page to
+              view the dataset and ingest data files for each table
+            </div>
           </div>
-        </div>
-      </div>
+        </form>
+      </FormProvider>
     </div>
   );
 });

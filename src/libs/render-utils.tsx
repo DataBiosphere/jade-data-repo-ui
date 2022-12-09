@@ -1,11 +1,12 @@
 import React from 'react';
+import _ from 'lodash';
 import { Box, Typography } from '@mui/material';
 import TextContent from 'components/common/TextContent';
 import CopyTextButton from 'components/common/CopyTextButton';
 import InfoHoverButton from 'components/common/InfoHoverButton';
 import { DatasetSummaryModel, SnapshotSummaryModel } from '../generated/tdr';
+import { CLOUD_PLATFORMS } from '../constants/index';
 
-const cloudPlatforms = { gcp: 'Google Cloud Platform', azure: 'Microsoft Azure' };
 /**
  * Render the cloud platform cell contents of a table
  * @param resource Dataset of Snapshot whose cloud platform to render
@@ -16,7 +17,7 @@ export const renderCloudPlatforms = (resource: DatasetSummaryModel | SnapshotSum
     {Array.from(
       new Set(
         resource.storage?.map((s) =>
-          s.cloudPlatform ? cloudPlatforms[s.cloudPlatform] : undefined,
+          s.cloudPlatform ? CLOUD_PLATFORMS[s.cloudPlatform].label : undefined,
         ),
       ),
     ).map((c, index) => (
