@@ -442,7 +442,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: IProps) => {
             </div>
           </div>
           {selectedTable !== -1 && selectedColumn === -1 && (
-            <div className={classes.schemaBuilderDetailView}>
+            <div className={classes.schemaBuilderDetailView} data-cy="schemaBuilder-detailView">
               <div className={classes.schemaBuilderStructureViewControls}>
                 <Typography variant="h4">Table attributes</Typography>
                 <IconButton
@@ -727,6 +727,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: IProps) => {
             JSON view
           </Typography>
           <CodeMirror
+            data-cy={JSON.stringify(datasetSchema)}
             value={_.keys(datasetSchema).length > 0 ? JSON.stringify(datasetSchema, null, 2) : ''}
             height="400px"
             theme={okaidia}

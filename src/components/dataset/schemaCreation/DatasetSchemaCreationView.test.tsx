@@ -21,6 +21,17 @@ const initialState = {
   user: _.cloneDeep(initialUserState),
 };
 
+const fillValidInfoFields = () => {
+  // Setting required fields for information
+  cy.get('#dataset-name').type('abc').blur();
+  // we use `force: true` below because the codemirror textarea is hidden
+  // and by default Cypress won't interact with hidden elements
+  cy.get('.CodeMirror textarea').type('test test test test', { force: true });
+  cy.get('[data-cy="dataset-region"] .MuiAutocomplete-popupIndicator').click();
+  cy.get('#dataset-region-option-0').click();
+  cy.get('#dataset-custodians').type('a@a.com{enter}').blur();
+};
+
 beforeEach(() => {
   const mockStore = createMockStore([]);
   const store = mockStore(initialState);
@@ -98,15 +109,7 @@ describe('DatasetSchemaCreationView', () => {
         </Router>,
       );
 
-      // Setting required fields for information
-      cy.get('#dataset-name').type('abc').blur();
-      // we use `force: true` below because the codemirror textarea is hidden
-      // and by default Cypress won't interact with hidden elements
-      cy.get('.CodeMirror textarea')
-        .type('test test test test', { force: true });
-      cy.get('[data-cy="dataset-region"] .MuiAutocomplete-popupIndicator').click();
-      cy.get('#dataset-region-option-0').click();
-      cy.get('#dataset-custodians').type('a@a.com{enter}').blur();
+      fillValidInfoFields();
 
       // Setting required fields for table
       cy.get('.MuiTabs-scroller button').eq(1).click();
@@ -117,7 +120,7 @@ describe('DatasetSchemaCreationView', () => {
       cy.get('button[type="submit"]').click();
       cy.get('@historySpy').should('have.been.calledWith', '/datasets');
     });
-  })
+  });
 
   describe('Information view', () => {
     it('should validate name on regex pattern', () => {
@@ -179,10 +182,8 @@ describe('DatasetSchemaCreationView', () => {
   });
 
   describe('Schema Builder view', () => {
-    beforeEach((done) => {
-      cy.get('.MuiTabs-scroller button').eq(1).click().then(() => {
-        done();
-      });
+    beforeEach(() => {
+      cy.get('.MuiTabs-scroller button').eq(1).click();
     });
 
     it('should start with an empty schema', () => {
@@ -190,5 +191,66 @@ describe('DatasetSchemaCreationView', () => {
       cy.get('.cm-theme').should('exist');
       cy.get('.cm-theme').contains('If you already have json, please paste your code here');
     });
+
+    describe('Tables', () => {
+      it('should create a single table', () => {
+        cy.get('#schemabuilder-createTable').click();
+        cy.get('[data-cy="schema-builder-structure-view"]').children().should('have.length', 1);
+  
+        // Should automatically select the new table
+        cy.get('[data-cy="schemaBuilder-detailView"]').should('exist');
+        cy.get('#table-name').should('have.value', 'table_name');
+
+        cy.get('.cm-theme').then((elem) => {
+          const comparison = {
+            tables: [
+              {
+                name: 'table_name',
+                columns: [],
+                primaryKey: [],
+              },
+            ],
+          };
+          expect(elem.attr('data-cy')).to.equal(JSON.stringify(comparison));
+        });
+      });
+
+      it('should create multiple tables', () => {
+        cy.get('.MuiTabs-scroller button').eq(1).click();
+        cy.get('#schemabuilder-createTable').click();
+        cy.get('[data-cy="schema-builder-structure-view"]').children().should('have.length', 1);
+  
+        // Should automatically select the new table
+        cy.get('[data-cy="schemaBuilder-detailView"]').should('exist');
+        cy.get('#table-name')
+          .clear()
+          .type('party')
+          .blur();
+
+        cy.get('#schemabuilder-createTable').click();
+        cy.get('[data-cy="schema-builder-structure-view"]').children().should('have.length', 2);
+        // Should select the new table again
+        cy.get('#table-name').should('have.value', 'table_name');
+
+        cy.get('.cm-theme').then((elem) => {
+          const comparison = {
+            tables: [
+              {
+                name: 'party',
+                columns: [],
+                primaryKey: [],
+              },
+              {
+                name: 'table_name',
+                columns: [],
+                primaryKey: [],
+              },
+            ],
+          };
+          expect(elem.attr('data-cy')).to.equal(JSON.stringify(comparison));
+        });
+      });
+    });
+
   });
 });
