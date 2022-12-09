@@ -5,18 +5,15 @@ import { ThemeProvider } from '@mui/styles';
 import createMockStore from 'redux-mock-store';
 import React from 'react';
 import _ from 'lodash';
-import DatasetSchemaCreationView from './DatasetSchemaCreationView';
 import { initialUserState } from 'reducers/user';
+import DatasetSchemaCreationView from './DatasetSchemaCreationView';
 import globalTheme from '../../../modules/theme';
 import history from '../../../modules/hist';
 
 const initialState = {
   searchString: '',
   profiles: {
-    profiles: [
-      { profileName: 'default profile' },
-      { profileName: 'second profile' },
-    ],
+    profiles: [{ profileName: 'default profile' }, { profileName: 'second profile' }],
   },
   user: _.cloneDeep(initialUserState),
 };
@@ -54,7 +51,7 @@ describe('DatasetSchemaCreationView', () => {
       cy.get('.MuiTabs-scroller button').should('have.length', 2);
       cy.get('.MuiTabs-scroller button').eq(0).should('have.class', 'Mui-selected');
     });
-  
+
     it('should validate input fields on blur', () => {
       cy.get('#dataset-name').should('exist');
       cy.get('#dataset-name').focus().blur();
@@ -62,20 +59,23 @@ describe('DatasetSchemaCreationView', () => {
       cy.get('.Mui-error').contains('Name is required');
       cy.get('[data-cy="error-summary"]').should('exist');
     });
-  
+
     it('should switch tabs', (done) => {
-      cy.get('.MuiTabs-scroller button').eq(1).click().then(() => {
-        cy.get('.MuiTabs-scroller button').eq(1).should('have.class', 'Mui-selected');
-        cy.get('[data-cy="component-root"]').contains('Build a schema');
-        done();
-      });
+      cy.get('.MuiTabs-scroller button')
+        .eq(1)
+        .click()
+        .then(() => {
+          cy.get('.MuiTabs-scroller button').eq(1).should('have.class', 'Mui-selected');
+          cy.get('[data-cy="component-root"]').contains('Build a schema');
+          done();
+        });
     });
 
     it('should not submit if errors exist', () => {
       const mockStore = createMockStore([]);
       const store = mockStore(initialState);
       const historySpy = {
-        push: cy.spy().as('historySpy')
+        push: cy.spy().as('historySpy'),
       };
       mount(
         <Router history={history}>
@@ -97,7 +97,7 @@ describe('DatasetSchemaCreationView', () => {
       const mockStore = createMockStore([]);
       const store = mockStore(initialState);
       const historySpy = {
-        push: cy.spy().as('historySpy')
+        push: cy.spy().as('historySpy'),
       };
       mount(
         <Router history={history}>
@@ -196,7 +196,7 @@ describe('DatasetSchemaCreationView', () => {
       it('should create a single table', () => {
         cy.get('#schemabuilder-createTable').click();
         cy.get('[data-cy="schema-builder-structure-view"]').children().should('have.length', 1);
-  
+
         // Should automatically select the new table
         cy.get('[data-cy="schemaBuilder-detailView"]').should('exist');
         cy.get('#table-name').should('have.value', 'table_name');
@@ -218,13 +218,10 @@ describe('DatasetSchemaCreationView', () => {
       it('should create multiple tables', () => {
         cy.get('#schemabuilder-createTable').click();
         cy.get('[data-cy="schema-builder-structure-view"]').children().should('have.length', 1);
-  
+
         // Should automatically select the new table
         cy.get('[data-cy="schemaBuilder-detailView"]').should('exist');
-        cy.get('#table-name')
-          .clear()
-          .type('party')
-          .blur();
+        cy.get('#table-name').clear().type('party');
 
         cy.get('#schemabuilder-createTable').click();
         cy.get('[data-cy="schema-builder-structure-view"]').children().should('have.length', 2);
@@ -254,7 +251,7 @@ describe('DatasetSchemaCreationView', () => {
         const mockStore = createMockStore([]);
         const store = mockStore(initialState);
         const historySpy = {
-          push: cy.spy().as('historySpy')
+          push: cy.spy().as('historySpy'),
         };
         mount(
           <Router history={history}>
@@ -267,13 +264,11 @@ describe('DatasetSchemaCreationView', () => {
         );
         cy.get('.MuiTabs-scroller button').eq(1).click();
         cy.get('#schemabuilder-createTable').click();
-        cy.get('#table-name')
-          .clear()
-          .type('party{enter}');
+        cy.get('#table-name').clear().type('party{enter}');
         cy.get('@historySpy').should('not.have.been.calledWith', '/datasets');
       });
 
-      it('should expand and collapse the table\s contents', () => {
+      it('should expand and collapse the tables contents', () => {
         cy.get('#schemabuilder-createTable').click();
         cy.get('#table-name').clear().type('party');
 
@@ -286,16 +281,14 @@ describe('DatasetSchemaCreationView', () => {
         cy.get('#schemabuilder-createColumn').click();
         cy.get('#column-name').clear().type('red');
 
-        cy.get('div[data-cy="schemaBuilder-tableColumns"]')
-          .should('have.length', 2);
+        cy.get('div[data-cy="schemaBuilder-tableColumns"]').should('have.length', 2);
 
         cy.get('div[data-cy="schemaBuilder-selectTableButton"] button')
           .eq(0)
           .find('[data-testid="IndeterminateCheckBoxOutlinedIcon"]')
           .click();
 
-        cy.get('div[data-cy="schemaBuilder-tableColumns"]')
-          .should('have.length', 1);
+        cy.get('div[data-cy="schemaBuilder-tableColumns"]').should('have.length', 1);
       });
 
       it('should duplicate a table', () => {
@@ -314,10 +307,7 @@ describe('DatasetSchemaCreationView', () => {
         cy.get('div[data-cy="schemaBuilder-selectTableButton"] button').eq(3).click();
 
         cy.get('#details-menu-button').click();
-        cy.get('ul[aria-labelledby="details-menu-button"]')
-          .children()
-          .eq(0)
-          .click();
+        cy.get('ul[aria-labelledby="details-menu-button"]').children().eq(0).click();
 
         cy.get('div[data-cy="schemaBuilder-selectTableButton"] button').should('have.length', 6);
         cy.get('.cm-theme').then((elem) => {
@@ -332,16 +322,16 @@ describe('DatasetSchemaCreationView', () => {
                 name: 'colors',
                 columns: [
                   {
-                    "name": "red",
-                    "datatype": "string",
-                    "array_of": false,
-                    "required": false,
+                    name: 'red',
+                    datatype: 'string',
+                    array_of: false,
+                    required: false,
                   },
                   {
-                    "name": "yellow",
-                    "datatype": "string",
-                    "array_of": false,
-                    "required": false,
+                    name: 'yellow',
+                    datatype: 'string',
+                    array_of: false,
+                    required: false,
                   },
                 ],
                 primaryKey: [],
@@ -350,16 +340,16 @@ describe('DatasetSchemaCreationView', () => {
                 name: 'colors',
                 columns: [
                   {
-                    "name": "red",
-                    "datatype": "string",
-                    "array_of": false,
-                    "required": false,
+                    name: 'red',
+                    datatype: 'string',
+                    array_of: false,
+                    required: false,
                   },
                   {
-                    "name": "yellow",
-                    "datatype": "string",
-                    "array_of": false,
-                    "required": false,
+                    name: 'yellow',
+                    datatype: 'string',
+                    array_of: false,
+                    required: false,
                   },
                 ],
                 primaryKey: [],
@@ -376,13 +366,10 @@ describe('DatasetSchemaCreationView', () => {
 
         cy.get('#schemabuilder-createTable').click();
         cy.get('#table-name').clear().type('colors');
-  
+
         cy.get('#details-menu-button').click();
-        cy.get('ul[aria-labelledby="details-menu-button"]')
-          .children()
-          .eq(2)
-          .click();
-  
+        cy.get('ul[aria-labelledby="details-menu-button"]').children().eq(2).click();
+
         cy.get('.cm-theme').then((elem) => {
           const comparison = {
             tables: [
