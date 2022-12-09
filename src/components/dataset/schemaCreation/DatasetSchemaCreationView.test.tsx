@@ -306,7 +306,25 @@ describe('DatasetSchemaCreationView', () => {
       });
 
       it('should expand and collapse the table\s contents', () => {
-        fillTableContents();
+        cy.get('#schemabuilder-createTable').click();
+        cy.get('#table-name')
+          .clear()
+          .type('party');
+
+        cy.get('#schemabuilder-createColumn').click();
+        cy.get('#column-name')
+          .clear()
+          .type('streamers');
+
+        cy.get('#schemabuilder-createTable').click();
+        cy.get('#table-name')
+          .clear()
+          .type('colors');
+
+        cy.get('#schemabuilder-createColumn').click();
+        cy.get('#column-name')
+          .clear()
+          .type('red');
 
         cy.get('div[data-cy="schemaBuilder-tableColumns"]')
           .should('have.length', 2);
