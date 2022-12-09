@@ -156,7 +156,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: IProps) => {
       tables: [
         ...datasetSchema.tables,
         {
-          name: 'table_name',
+          name: `table_name${datasetSchema.tables.length || ''}`,
           columns: [],
           primaryKey: [],
         },
@@ -190,7 +190,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: IProps) => {
   const createColumn = () => {
     const newSchema = _.cloneDeep(datasetSchema);
     newSchema.tables[selectedTable].columns.push({
-      name: 'new_column',
+      name: `new_column${newSchema.tables[selectedTable].columns.length || ''}`,
       datatype: 'string',
       array_of: false,
       required: false,
@@ -398,7 +398,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: IProps) => {
                       disableFocusRipple
                       disableRipple
                     >
-                      {table.name}
+                      {table.name || '(unnamed table)'}
                     </Button>
                   </div>
 
@@ -439,7 +439,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: IProps) => {
                             disableFocusRipple
                             disableRipple
                           >
-                            {column.name}
+                            {column.name || '(unnamed column)'}
                           </Button>
                         ))}
                       </div>
