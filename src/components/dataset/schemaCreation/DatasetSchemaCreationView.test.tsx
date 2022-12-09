@@ -32,6 +32,38 @@ const fillValidInfoFields = () => {
   cy.get('#dataset-custodians').type('a@a.com{enter}').blur();
 };
 
+const fillTableContents = () => {
+  cy.get('#schemabuilder-createTable').click();
+  cy.get('#table-name')
+    .clear()
+    .type('party');
+
+  cy.get('#schemabuilder-createColumn').click();
+  cy.get('#column-name')
+    .clear()
+    .type('streamers');
+
+  cy.get('#schemabuilder-createColumn').click();
+  cy.get('#column-name')
+    .clear()
+    .type('balloons');
+
+  cy.get('#schemabuilder-createTable').click();
+  cy.get('#table-name')
+    .clear()
+    .type('colors');
+
+  cy.get('#schemabuilder-createColumn').click();
+  cy.get('#column-name')
+    .clear()
+    .type('red');
+
+  cy.get('#schemabuilder-createColumn').click();
+  cy.get('#column-name')
+    .clear()
+    .type('yellow');
+};
+
 beforeEach(() => {
   const mockStore = createMockStore([]);
   const store = mockStore(initialState);
@@ -216,7 +248,6 @@ describe('DatasetSchemaCreationView', () => {
       });
 
       it('should create multiple tables', () => {
-        cy.get('.MuiTabs-scroller button').eq(1).click();
         cy.get('#schemabuilder-createTable').click();
         cy.get('[data-cy="schema-builder-structure-view"]').children().should('have.length', 1);
   
@@ -243,6 +274,119 @@ describe('DatasetSchemaCreationView', () => {
               {
                 name: 'table_name',
                 columns: [],
+                primaryKey: [],
+              },
+            ],
+          };
+          expect(elem.attr('data-cy')).to.equal(JSON.stringify(comparison));
+        });
+      });
+
+      it('should not submit on text field enter', () => {
+        const mockStore = createMockStore([]);
+        const store = mockStore(initialState);
+        const historySpy = {
+          push: cy.spy().as('historySpy')
+        };
+        mount(
+          <Router history={history}>
+            <Provider store={store}>
+              <ThemeProvider theme={globalTheme}>
+                <DatasetSchemaCreationView history={historySpy} />
+              </ThemeProvider>
+            </Provider>
+          </Router>,
+        );
+        cy.get('.MuiTabs-scroller button').eq(1).click();
+        cy.get('#schemabuilder-createTable').click();
+        cy.get('#table-name')
+          .clear()
+          .type('party{enter}');
+        cy.get('@historySpy').should('not.have.been.calledWith', '/datasets');
+      });
+
+      it('should expand and collapse the table\s contents', () => {
+        fillTableContents();
+
+        cy.get('div[data-cy="schemaBuilder-tableColumns"]')
+          .should('have.length', 2);
+
+        cy.get('div[data-cy="schemaBuilder-selectTableButton"] button')
+          .eq(0)
+          .find('[data-testid="IndeterminateCheckBoxOutlinedIcon"]')
+          .click();
+
+        cy.get('div[data-cy="schemaBuilder-tableColumns"]')
+          .should('have.length', 1);
+      });
+
+      it('should duplicate a table', () => {
+        fillTableContents();
+
+        cy.get('div[data-cy="schemaBuilder-selectTableButton"] button').eq(3).click();
+
+        cy.get('#details-menu-button').click();
+        cy.get('ul[aria-labelledby="details-menu-button"]')
+          .children()
+          .eq(0)
+          .click();
+
+        cy.get('div[data-cy="schemaBuilder-selectTableButton"] button').should('have.length', 6);
+        cy.get('.cm-theme').then((elem) => {
+          const comparison = {
+            tables: [
+              {
+                name: 'party',
+                columns: [
+                  {
+                    "name": "streamers",
+                    "datatype": "string",
+                    "array_of": false,
+                    "required": false,
+                  },
+                  {
+                    "name": "balloons",
+                    "datatype": "string",
+                    "array_of": false,
+                    "required": false,
+                  },
+                ],
+                primaryKey: [],
+              },
+              {
+                name: 'colors',
+                columns: [
+                  {
+                    "name": "red",
+                    "datatype": "string",
+                    "array_of": false,
+                    "required": false,
+                  },
+                  {
+                    "name": "yellow",
+                    "datatype": "string",
+                    "array_of": false,
+                    "required": false,
+                  },
+                ],
+                primaryKey: [],
+              },
+              {
+                name: 'colors',
+                columns: [
+                  {
+                    "name": "red",
+                    "datatype": "string",
+                    "array_of": false,
+                    "required": false,
+                  },
+                  {
+                    "name": "yellow",
+                    "datatype": "string",
+                    "array_of": false,
+                    "required": false,
+                  },
+                ],
                 primaryKey: [],
               },
             ],

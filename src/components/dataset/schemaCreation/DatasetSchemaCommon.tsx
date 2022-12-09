@@ -96,7 +96,7 @@ export const styles = (theme: CustomTheme) => ({
     position: 'absolute',
     bottom: -1,
     color: '#A6B8D4',
-    padding: '0 15px 7px',
+    padding: '0 15px',
     background: 'linear-gradient(0, white 70%, transparent 30%)',
   },
   schemaBuilderStructureViewContentColumn_dot: {

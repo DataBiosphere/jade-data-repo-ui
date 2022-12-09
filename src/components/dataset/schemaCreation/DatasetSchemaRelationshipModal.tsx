@@ -64,6 +64,9 @@ const styles = (theme: CustomTheme) =>
     relationshipStructureViewContent: {
       height: 350,
     },
+    dotContainer: {
+      padding: '0 15px 9px',
+    },
   } as any);
 
 type DatasetSchemaRelationshipModalProps = {
@@ -149,7 +152,12 @@ function DatasetSchemaRelationshipModal({
 
               {table.columns?.length > 0 && expandedTables[`${id}-${i}`] && (
                 <div className={classes.schemaBuilderStructureViewColumnContainer_wrapper}>
-                  <div className={classes.schemaBuilderStructureViewContentColumn_dotContainer}>
+                  <div
+                    className={clsx(
+                      classes.schemaBuilderStructureViewContentColumn_dotContainer,
+                      classes.dotContainer,
+                    )}
+                  >
                     <Circle className={classes.schemaBuilderStructureViewContentColumn_dot} />
                   </div>
                   <div

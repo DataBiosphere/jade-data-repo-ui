@@ -364,7 +364,10 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: IProps) => {
             >
               {datasetSchema.tables?.map((table: TableModel, i: number) => (
                 <div key={`datasetSchema-table-${i}`}>
-                  <div className={classes.schemaBuilderStructureViewContentTableName}>
+                  <div
+                    className={classes.schemaBuilderStructureViewContentTableName}
+                    data-cy="schemaBuilder-selectTableButton"
+                  >
                     <IconButton
                       color="primary"
                       onClick={() =>
@@ -398,7 +401,10 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: IProps) => {
                   </div>
 
                   {table.columns?.length > 0 && expandedTables[i] && (
-                    <div className={classes.schemaBuilderStructureViewColumnContainer_wrapper}>
+                    <div
+                      className={classes.schemaBuilderStructureViewColumnContainer_wrapper}
+                      data-cy="schemaBuilder-tableColumns"
+                    >
                       <div className={classes.schemaBuilderStructureViewContentColumn_dotContainer}>
                         <Circle className={classes.schemaBuilderStructureViewContentColumn_dot} />
                       </div>
