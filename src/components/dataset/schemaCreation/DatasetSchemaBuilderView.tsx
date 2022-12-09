@@ -171,10 +171,18 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: IProps) => {
   };
 
   const deleteTable = () => {
-    setDatasetSchema({
-      ...datasetSchema,
-      tables: datasetSchema.tables.filter((_value, index: number) => index !== selectedTable),
-    });
+    const newSchema = _.cloneDeep(datasetSchema);
+    const tableName = newSchema.tables[selectedTable].name;
+    newSchema.tables = datasetSchema.tables.filter(
+      (_value, index: number) => index !== selectedTable,
+    );
+    if (newSchema.relationships) {
+      newSchema.relationships = newSchema.relationships.filter(
+        (relationship: RelationshipModel) =>
+          relationship.from.table !== tableName && relationship.to.table !== tableName,
+      );
+    }
+    setDatasetSchema(newSchema);
     handleCloseDetailsMenu();
     setSelectedTable(-1);
     setSelectedColumn(-1);
@@ -201,9 +209,19 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: IProps) => {
 
   const deleteColumn = () => {
     const newSchema = _.cloneDeep(datasetSchema);
+    const columnName = newSchema.tables[selectedTable].columns[selectedColumn].name;
     newSchema.tables[selectedTable].columns = newSchema.tables[selectedTable].columns.filter(
       (_value, index: number) => index !== selectedColumn,
     );
+    newSchema.tables[selectedTable].primaryKey = newSchema.tables[selectedTable].primaryKey?.filter(
+      (value) => value !== columnName,
+    );
+    if (newSchema.relationships) {
+      newSchema.relationships = newSchema.relationships.filter(
+        (relationship: RelationshipModel) =>
+          relationship.from.column !== columnName && relationship.to.column !== columnName,
+      );
+    }
     setDatasetSchema(newSchema);
     handleCloseDetailsMenu();
     setSelectedColumn(-1);

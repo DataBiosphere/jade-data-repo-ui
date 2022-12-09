@@ -147,7 +147,7 @@ function DatasetSchemaRelationshipModal({
                     <AddBoxOutlined />
                   )}
                 </IconButton>
-                {table.name}
+                {table.name || '(unnamed table)'}
               </div>
 
               {table.columns?.length > 0 && expandedTables[`${id}-${i}`] && (
@@ -172,7 +172,7 @@ function DatasetSchemaRelationshipModal({
                         className={classes.radioWrapper}
                         control={<Radio />}
                         label={column.name}
-                        value={wrapRadioValue(table.name, column.name)}
+                        value={wrapRadioValue(table.name, column.name || '(unnamed column)')}
                       />
                     ))}
                   </div>
