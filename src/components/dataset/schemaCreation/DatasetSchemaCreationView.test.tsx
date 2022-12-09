@@ -428,5 +428,338 @@ describe('DatasetSchemaCreationView', () => {
         cy.get('div[data-cy="schemaBuilder-selectTableButton"] button').eq(3).contains('party');
       });
     });
+
+    describe('Columns', () => {
+      it('should disable column creation until a table exists', () => {
+        cy.get('#schemabuilder-createColumn').should('have.attr', 'disabled');
+        cy.get('#schemabuilder-createTable').click();
+        cy.get('#schemabuilder-createColumn').should('not.have.attr', 'disabled');
+      });
+
+      it('should create a single column', () => {
+        cy.get('#schemabuilder-createTable').click();
+        cy.get('[data-cy="schemaBuilder-tableColumns"]').should('not.exist');
+        cy.get('#schemabuilder-createColumn').click();
+        cy.get('[data-cy="schemaBuilder-tableColumns"]').should('exist');
+        cy.get('[data-cy="schemaBuilder-tableColumns"] button').should('have.length', 1);
+      });
+
+      it('should create a multiple columns', () => {
+        cy.get('#schemabuilder-createTable').click();
+        cy.get('[data-cy="schemaBuilder-tableColumns"]').should('not.exist');
+        cy.get('#schemabuilder-createColumn').click();
+        cy.get('#schemabuilder-createColumn').click();
+        cy.get('[data-cy="schemaBuilder-tableColumns"]').should('exist');
+        cy.get('[data-cy="schemaBuilder-tableColumns"] button').should('have.length', 2);
+      });
+
+      it('should not submit on text field enter', () => {
+        const mockStore = createMockStore([]);
+        const store = mockStore(initialState);
+        const historySpy = {
+          push: cy.spy().as('historySpy'),
+        };
+        mount(
+          <Router history={history}>
+            <Provider store={store}>
+              <ThemeProvider theme={globalTheme}>
+                <DatasetSchemaCreationView history={historySpy} />
+              </ThemeProvider>
+            </Provider>
+          </Router>,
+        );
+        cy.get('.MuiTabs-scroller button').eq(1).click();
+        cy.get('#schemabuilder-createTable').click();
+        cy.get('#schemabuilder-createColumn').click();
+        cy.get('#column-name').clear().type('red{enter}');
+        cy.get('@historySpy').should('not.have.been.calledWith', '/datasets');
+      });
+
+      it('should duplicate a column', () => {
+        cy.get('#schemabuilder-createTable').click();
+        cy.get('#table-name').clear().type('colors');
+
+        cy.get('#schemabuilder-createColumn').click();
+        cy.get('#column-name').clear().type('red');
+
+        cy.get('#schemabuilder-createColumn').click();
+        cy.get('#column-name').clear().type('yellow');
+
+        cy.get('#details-menu-button').click();
+        cy.get('ul[aria-labelledby="details-menu-button"]').children().eq(3).click();
+
+        cy.get('[data-cy="schemaBuilder-tableColumns"] button').should('have.length', 3);
+        cy.get('.cm-theme').then((elem) => {
+          const comparison = {
+            tables: [
+              {
+                name: 'colors',
+                columns: [
+                  {
+                    name: 'red',
+                    datatype: 'string',
+                    array_of: false,
+                    required: false,
+                  },
+                  {
+                    name: 'yellow',
+                    datatype: 'string',
+                    array_of: false,
+                    required: false,
+                  },
+                  {
+                    name: 'yellow',
+                    datatype: 'string',
+                    array_of: false,
+                    required: false,
+                  },
+                ],
+                primaryKey: [],
+              },
+            ],
+          };
+          expect(elem.attr('data-cy')).to.equal(JSON.stringify(comparison));
+        });
+      });
+
+      it('should delete a column', () => {
+        cy.get('#schemabuilder-createTable').click();
+        cy.get('#table-name').clear().type('colors');
+
+        cy.get('#schemabuilder-createColumn').click();
+        cy.get('#column-name').clear().type('red');
+
+        cy.get('#schemabuilder-createColumn').click();
+        cy.get('#column-name').clear().type('yellow');
+
+        cy.get('#details-menu-button').click();
+        cy.get('ul[aria-labelledby="details-menu-button"]').children().eq(5).click();
+
+        cy.get('.cm-theme').then((elem) => {
+          const comparison = {
+            tables: [
+              {
+                name: 'colors',
+                columns: [
+                  {
+                    name: 'red',
+                    datatype: 'string',
+                    array_of: false,
+                    required: false,
+                  },
+                ],
+                primaryKey: [],
+              },
+            ],
+          };
+          expect(elem.attr('data-cy')).to.equal(JSON.stringify(comparison));
+        });
+      });
+
+      it('should be able to select and deselect a column', () => {
+        cy.get('#schemabuilder-createTable').click();
+        cy.get('#table-name').clear().type('colors');
+
+        cy.get('#schemabuilder-createColumn').click();
+        cy.get('#column-name').clear().type('red');
+
+        cy.get('#schemabuilder-createColumn').click();
+        cy.get('#column-name').clear().type('yellow');
+
+        cy.get('[data-cy="schemaBuilder-tableColumns"] button').eq(0).click();
+        cy.get('#column-name').should('have.value', 'red');
+
+        cy.get('[data-cy="schemaBuilder-tableColumns"] button').eq(1).click();
+        cy.get('#column-name').should('have.value', 'yellow');
+      });
+
+      it('should be able to move columns up in the list', () => {
+        cy.get('#schemabuilder-createTable').click();
+        cy.get('#table-name').clear().type('colors');
+
+        cy.get('#schemabuilder-createColumn').click();
+        cy.get('#column-name').clear().type('red');
+
+        cy.get('#schemabuilder-createColumn').click();
+        cy.get('#column-name').clear().type('yellow');
+
+        cy.get('#datasetSchema-up').click();
+        cy.get('[data-cy="schemaBuilder-tableColumns"] button').eq(0).contains('yellow');
+
+        cy.get('#datasetSchema-up').click();
+        cy.get('[data-cy="schemaBuilder-tableColumns"] button').eq(0).contains('yellow');
+      });
+
+      it('should be able to move tables down in the list', () => {
+        cy.get('#schemabuilder-createTable').click();
+        cy.get('#table-name').clear().type('colors');
+
+        cy.get('#schemabuilder-createColumn').click();
+        cy.get('#column-name').clear().type('red');
+
+        cy.get('#schemabuilder-createColumn').click();
+        cy.get('#column-name').clear().type('yellow');
+
+        cy.get('[data-cy="schemaBuilder-tableColumns"] button').eq(0).click();
+
+        cy.get('#datasetSchema-down').click();
+        cy.get('[data-cy="schemaBuilder-tableColumns"] button').eq(1).contains('red');
+
+        cy.get('#datasetSchema-down').click();
+        cy.get('[data-cy="schemaBuilder-tableColumns"] button').eq(1).contains('red');
+      });
+
+      it('should update column array_of', () => {
+        cy.get('#schemabuilder-createTable').click();
+        cy.get('#table-name').clear().type('colors');
+
+        cy.get('#schemabuilder-createColumn').click();
+        cy.get('#column-name').clear().type('red');
+
+        cy.get('[data-cy="schemaBuilder-column-array"]').click();
+
+        cy.get('.cm-theme').then((elem) => {
+          const comparison = {
+            tables: [
+              {
+                name: 'colors',
+                columns: [
+                  {
+                    name: 'red',
+                    datatype: 'string',
+                    array_of: true,
+                    required: false,
+                  },
+                ],
+                primaryKey: [],
+              },
+            ],
+          };
+          expect(elem.attr('data-cy')).to.equal(JSON.stringify(comparison));
+
+          cy.get('[data-cy="schemaBuilder-column-array"]')
+            .click()
+            .then(() => {
+              comparison.tables[0].columns[0].array_of = false;
+              expect(elem.attr('data-cy')).to.equal(JSON.stringify(comparison));
+            });
+        });
+      });
+
+      it('should update column required', () => {
+        cy.get('#schemabuilder-createTable').click();
+        cy.get('#table-name').clear().type('colors');
+
+        cy.get('#schemabuilder-createColumn').click();
+        cy.get('#column-name').clear().type('red');
+
+        cy.get('[data-cy="schemaBuilder-column-required"]').click();
+
+        cy.get('.cm-theme').then((elem) => {
+          const comparison = {
+            tables: [
+              {
+                name: 'colors',
+                columns: [
+                  {
+                    name: 'red',
+                    datatype: 'string',
+                    array_of: false,
+                    required: true,
+                  },
+                ],
+                primaryKey: [],
+              },
+            ],
+          };
+          expect(elem.attr('data-cy')).to.equal(JSON.stringify(comparison));
+
+          cy.get('[data-cy="schemaBuilder-column-required"]')
+            .click()
+            .then(() => {
+              comparison.tables[0].columns[0].required = false;
+              expect(elem.attr('data-cy')).to.equal(JSON.stringify(comparison));
+            });
+        });
+      });
+
+      it('should update column primary', () => {
+        cy.get('#schemabuilder-createTable').click();
+        cy.get('#table-name').clear().type('colors');
+
+        cy.get('#schemabuilder-createColumn').click();
+        cy.get('#column-name').clear().type('red');
+
+        cy.get('[data-cy="schemaBuilder-column-primary"]').click();
+
+        cy.get('.cm-theme').then((elem) => {
+          const comparison = {
+            tables: [
+              {
+                name: 'colors',
+                columns: [
+                  {
+                    name: 'red',
+                    datatype: 'string',
+                    array_of: false,
+                    required: true,
+                  },
+                ],
+                primaryKey: ['red'],
+              },
+            ],
+          };
+          expect(elem.attr('data-cy')).to.equal(JSON.stringify(comparison));
+          cy.get('[data-cy="schemaBuilder-column-required"] input').should('have.attr', 'disabled');
+          cy.get('[data-cy="schemaBuilder-column-array"] input').should('have.attr', 'disabled');
+
+          cy.get('[data-cy="schemaBuilder-column-primary"]')
+            .click()
+            .then(() => {
+              comparison.tables[0].primaryKey = [];
+              expect(elem.attr('data-cy')).to.equal(JSON.stringify(comparison));
+              cy.get('[data-cy="schemaBuilder-column-required"] input').should(
+                'not.have.attr',
+                'disabled',
+              );
+              cy.get('[data-cy="schemaBuilder-column-array"] input').should(
+                'not.have.attr',
+                'disabled',
+              );
+            });
+        });
+      });
+
+      it('should update impacted fields when the column name changes', () => {
+        cy.get('#schemabuilder-createTable').click();
+        cy.get('#table-name').clear().type('colors');
+
+        cy.get('#schemabuilder-createColumn').click();
+        cy.get('#column-name').clear().type('red');
+
+        cy.get('[data-cy="schemaBuilder-column-primary"]').click();
+        cy.get('#column-name').clear().type('burgundy');
+
+        cy.get('.cm-theme').then((elem) => {
+          const comparison = {
+            tables: [
+              {
+                name: 'colors',
+                columns: [
+                  {
+                    name: 'burgundy',
+                    datatype: 'string',
+                    array_of: false,
+                    required: true,
+                  },
+                ],
+                primaryKey: ['burgundy'],
+              },
+            ],
+          };
+          expect(elem.attr('data-cy')).to.equal(JSON.stringify(comparison));
+        });
+      });
+    });
   });
 });

@@ -664,6 +664,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: IProps) => {
                     />
                   }
                   label="Primary"
+                  data-cy="schemaBuilder-column-primary"
                   onChange={(_event: any, change: boolean) => {
                     const schemaCopy = _.cloneDeep(datasetSchema);
                     const columnName =
@@ -699,6 +700,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: IProps) => {
                     />
                   }
                   label="Required"
+                  data-cy="schemaBuilder-column-required"
                   onChange={(_event: any, change: boolean) => {
                     const schemaCopy = _.cloneDeep(datasetSchema);
                     schemaCopy.tables[selectedTable].columns[selectedColumn].required = change;
@@ -719,6 +721,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: IProps) => {
                     />
                   }
                   label="Array"
+                  data-cy="schemaBuilder-column-array"
                   onChange={(_event: any, change: boolean) => {
                     const schemaCopy = _.cloneDeep(datasetSchema);
                     schemaCopy.tables[selectedTable].columns[selectedColumn].array_of = change;
