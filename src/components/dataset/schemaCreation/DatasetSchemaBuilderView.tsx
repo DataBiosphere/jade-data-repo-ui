@@ -287,6 +287,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: IProps) => {
 
               <div className={classes.flexRow}>
                 <IconButton
+                  id="datasetSchema-up"
                   size="small"
                   color="primary"
                   className={classes.iconButton}
@@ -311,6 +312,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: IProps) => {
                 </IconButton>
 
                 <IconButton
+                  id="datasetSchema-down"
                   size="small"
                   color="primary"
                   className={classes.iconButton}

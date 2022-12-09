@@ -32,38 +32,6 @@ const fillValidInfoFields = () => {
   cy.get('#dataset-custodians').type('a@a.com{enter}').blur();
 };
 
-const fillTableContents = () => {
-  cy.get('#schemabuilder-createTable').click();
-  cy.get('#table-name')
-    .clear()
-    .type('party');
-
-  cy.get('#schemabuilder-createColumn').click();
-  cy.get('#column-name')
-    .clear()
-    .type('streamers');
-
-  cy.get('#schemabuilder-createColumn').click();
-  cy.get('#column-name')
-    .clear()
-    .type('balloons');
-
-  cy.get('#schemabuilder-createTable').click();
-  cy.get('#table-name')
-    .clear()
-    .type('colors');
-
-  cy.get('#schemabuilder-createColumn').click();
-  cy.get('#column-name')
-    .clear()
-    .type('red');
-
-  cy.get('#schemabuilder-createColumn').click();
-  cy.get('#column-name')
-    .clear()
-    .type('yellow');
-};
-
 beforeEach(() => {
   const mockStore = createMockStore([]);
   const store = mockStore(initialState);
@@ -307,24 +275,16 @@ describe('DatasetSchemaCreationView', () => {
 
       it('should expand and collapse the table\s contents', () => {
         cy.get('#schemabuilder-createTable').click();
-        cy.get('#table-name')
-          .clear()
-          .type('party');
+        cy.get('#table-name').clear().type('party');
 
         cy.get('#schemabuilder-createColumn').click();
-        cy.get('#column-name')
-          .clear()
-          .type('streamers');
+        cy.get('#column-name').clear().type('streamers');
 
         cy.get('#schemabuilder-createTable').click();
-        cy.get('#table-name')
-          .clear()
-          .type('colors');
+        cy.get('#table-name').clear().type('colors');
 
         cy.get('#schemabuilder-createColumn').click();
-        cy.get('#column-name')
-          .clear()
-          .type('red');
+        cy.get('#column-name').clear().type('red');
 
         cy.get('div[data-cy="schemaBuilder-tableColumns"]')
           .should('have.length', 2);
@@ -339,7 +299,17 @@ describe('DatasetSchemaCreationView', () => {
       });
 
       it('should duplicate a table', () => {
-        fillTableContents();
+        cy.get('#schemabuilder-createTable').click();
+        cy.get('#table-name').clear().type('party');
+
+        cy.get('#schemabuilder-createTable').click();
+        cy.get('#table-name').clear().type('colors');
+
+        cy.get('#schemabuilder-createColumn').click();
+        cy.get('#column-name').clear().type('red');
+
+        cy.get('#schemabuilder-createColumn').click();
+        cy.get('#column-name').clear().type('yellow');
 
         cy.get('div[data-cy="schemaBuilder-selectTableButton"] button').eq(3).click();
 
@@ -355,20 +325,7 @@ describe('DatasetSchemaCreationView', () => {
             tables: [
               {
                 name: 'party',
-                columns: [
-                  {
-                    "name": "streamers",
-                    "datatype": "string",
-                    "array_of": false,
-                    "required": false,
-                  },
-                  {
-                    "name": "balloons",
-                    "datatype": "string",
-                    "array_of": false,
-                    "required": false,
-                  },
-                ],
+                columns: [],
                 primaryKey: [],
               },
               {
@@ -412,7 +369,77 @@ describe('DatasetSchemaCreationView', () => {
           expect(elem.attr('data-cy')).to.equal(JSON.stringify(comparison));
         });
       });
-    });
 
+      it('should delete a table', () => {
+        cy.get('#schemabuilder-createTable').click();
+        cy.get('#table-name').clear().type('party');
+
+        cy.get('#schemabuilder-createTable').click();
+        cy.get('#table-name').clear().type('colors');
+  
+        cy.get('#details-menu-button').click();
+        cy.get('ul[aria-labelledby="details-menu-button"]')
+          .children()
+          .eq(2)
+          .click();
+  
+        cy.get('.cm-theme').then((elem) => {
+          const comparison = {
+            tables: [
+              {
+                name: 'party',
+                columns: [],
+                primaryKey: [],
+              },
+            ],
+          };
+          expect(elem.attr('data-cy')).to.equal(JSON.stringify(comparison));
+        });
+      });
+
+      it('should be able to select and deselect a table', () => {
+        cy.get('#schemabuilder-createTable').click();
+        cy.get('#table-name').clear().type('party');
+
+        cy.get('#schemabuilder-createTable').click();
+        cy.get('#table-name').clear().type('colors');
+
+        cy.get('div[data-cy="schemaBuilder-selectTableButton"] button').eq(1).click();
+        cy.get('#table-name').should('have.value', 'party');
+
+        cy.get('div[data-cy="schemaBuilder-selectTableButton"] button').eq(1).click();
+        cy.get('#table-name').should('not.exist');
+      });
+
+      it('should be able to move tables up in the list', () => {
+        cy.get('#schemabuilder-createTable').click();
+        cy.get('#table-name').clear().type('party');
+
+        cy.get('#schemabuilder-createTable').click();
+        cy.get('#table-name').clear().type('colors');
+
+        cy.get('#datasetSchema-up').click();
+        cy.get('div[data-cy="schemaBuilder-selectTableButton"] button').eq(1).contains('colors');
+
+        cy.get('#datasetSchema-up').click();
+        cy.get('div[data-cy="schemaBuilder-selectTableButton"] button').eq(1).contains('colors');
+      });
+
+      it('should be able to move tables down in the list', () => {
+        cy.get('#schemabuilder-createTable').click();
+        cy.get('#table-name').clear().type('party');
+
+        cy.get('#schemabuilder-createTable').click();
+        cy.get('#table-name').clear().type('colors');
+
+        cy.get('div[data-cy="schemaBuilder-selectTableButton"] button').eq(1).click();
+
+        cy.get('#datasetSchema-down').click();
+        cy.get('div[data-cy="schemaBuilder-selectTableButton"] button').eq(3).contains('party');
+
+        cy.get('#datasetSchema-down').click();
+        cy.get('div[data-cy="schemaBuilder-selectTableButton"] button').eq(3).contains('party');
+      });
+    });
   });
 });
