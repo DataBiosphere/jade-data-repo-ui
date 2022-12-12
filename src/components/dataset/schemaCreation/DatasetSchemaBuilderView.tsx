@@ -361,10 +361,12 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: IProps) => {
                 </IconButton>
 
                 <IconButton
+                  id="datasetSchema-linkRel"
                   size="small"
                   color="primary"
                   className={classes.iconButton}
                   style={{ marginLeft: 50 }}
+                  disabled={!datasetSchema.tables || datasetSchema.tables.length < 2}
                   onClick={() => {
                     setRelationshipModalDefaultValues({
                       from: '',

@@ -133,6 +133,7 @@ function DatasetSchemaRelationshipModal({
             <div key={`datasetSchema-table-${i}`}>
               <div className={classes.schemaBuilderStructureViewContentTableName}>
                 <IconButton
+                  data-cy="expand-table-button"
                   color="primary"
                   onClick={() =>
                     setExpandedTables({
@@ -185,18 +186,18 @@ function DatasetSchemaRelationshipModal({
     );
   };
 
-  const relationshipSummary = (radioValue: string) => {
+  const relationshipSummary = (radioValue: string, label: string) => {
     const unwrappedVal = unwrapRadioValue(radioValue);
     return (
       <div className={classes.flexRow} style={{ justifyContent: 'flex-start' }}>
         <div>
           <span className={classes.summaryLabel}>Table:</span>
-          <span className={classes.summaryDetail}>{unwrappedVal.table}</span>
+          <span id={`${label}-table`} className={classes.summaryDetail}>{unwrappedVal.table}</span>
         </div>
 
         <div>
           <span className={classes.summaryLabel}>Column:</span>
-          <span className={classes.summaryDetail}>{unwrappedVal.column}</span>
+          <span id={`${label}-column`} className={classes.summaryDetail}>{unwrappedVal.column}</span>
         </div>
       </div>
     );
@@ -241,9 +242,9 @@ function DatasetSchemaRelationshipModal({
                 })}
               </div>
               <div className={classes.summaryContainer}>
-                {relationshipSummary(relationshipFrom)}
+                {relationshipSummary(relationshipFrom, 'from')}
                 <div>Add relationship to:</div>
-                {relationshipSummary(relationshipTo)}
+                {relationshipSummary(relationshipTo, 'to')}
               </div>
               <div className={classes.flexCol}>
                 <label htmlFor="relationship-name" className={classes.formLabel}>
@@ -259,6 +260,7 @@ function DatasetSchemaRelationshipModal({
               </div>
               <div className={classes.actionButtons}>
                 <Button
+                  id="submitButton"
                   type="button"
                   color="primary"
                   variant="contained"
