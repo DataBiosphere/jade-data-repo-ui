@@ -949,7 +949,7 @@ describe('DatasetSchemaCreationView', () => {
                   table: 'party',
                   column: 'new_column',
                 },
-              }
+              },
             ],
           };
           expect(elem.attr('data-cy')).to.equal(JSON.stringify(comparison));
@@ -1010,7 +1010,7 @@ describe('DatasetSchemaCreationView', () => {
                   table: 'table_name',
                   column: 'new_column',
                 },
-              }
+              },
             ],
           };
           expect(elem.attr('data-cy')).to.equal(JSON.stringify(comparison));

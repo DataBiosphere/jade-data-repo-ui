@@ -192,12 +192,16 @@ function DatasetSchemaRelationshipModal({
       <div className={classes.flexRow} style={{ justifyContent: 'flex-start' }}>
         <div>
           <span className={classes.summaryLabel}>Table:</span>
-          <span id={`${label}-table`} className={classes.summaryDetail}>{unwrappedVal.table}</span>
+          <span id={`${label}-table`} className={classes.summaryDetail}>
+            {unwrappedVal.table}
+          </span>
         </div>
 
         <div>
           <span className={classes.summaryLabel}>Column:</span>
-          <span id={`${label}-column`} className={classes.summaryDetail}>{unwrappedVal.column}</span>
+          <span id={`${label}-column`} className={classes.summaryDetail}>
+            {unwrappedVal.column}
+          </span>
         </div>
       </div>
     );
