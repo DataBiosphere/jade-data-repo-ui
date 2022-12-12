@@ -226,7 +226,7 @@ describe('DatasetSchemaCreationView', () => {
         cy.get('#schemabuilder-createTable').click();
         cy.get('[data-cy="schema-builder-structure-view"]').children().should('have.length', 2);
         // Should select the new table again
-        cy.get('#table-name').should('have.value', 'table_name');
+        cy.get('#table-name').should('have.value', 'table_name1');
 
         cy.get('.cm-theme').then((elem) => {
           const comparison = {
