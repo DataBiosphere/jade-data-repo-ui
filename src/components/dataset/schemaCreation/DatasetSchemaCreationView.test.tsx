@@ -237,7 +237,7 @@ describe('DatasetSchemaCreationView', () => {
                 primaryKey: [],
               },
               {
-                name: 'table_name',
+                name: 'table_name1',
                 columns: [],
                 primaryKey: [],
               },
