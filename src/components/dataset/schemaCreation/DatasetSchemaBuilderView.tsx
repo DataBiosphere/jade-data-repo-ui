@@ -133,9 +133,6 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: IProps) => {
   const onJsonViewerChange = React.useCallback(
     (value: string) => {
       try {
-        // using these regexes to add / remove quotation marks just because the viewer will then color code
-        // the keys and values differently. It's easier to read for modifying, but the downside is that
-        // it isnt copy-pastable as ready json.
         const potentialSchema = JSON.parse(value);
         setDatasetSchema(potentialSchema);
         setValue('schema', potentialSchema);
