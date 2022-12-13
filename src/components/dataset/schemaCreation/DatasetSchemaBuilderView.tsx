@@ -122,6 +122,39 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
     setAnchorElDetailsMenu(event.currentTarget);
   };
   const handleCloseDetailsMenu = () => setAnchorElDetailsMenu(null);
+  type DetailsMenuButtonProps = {
+    children: React.ReactNode;
+  };
+  function DetailsMenuButton(props: DetailsMenuButtonProps) {
+    const { children } = props;
+    return (
+      <>
+        <IconButton
+          id="details-menu-button"
+          size="small"
+          color="primary"
+          className={classes.iconButton}
+          onClick={handleClickDetailsMenu}
+          aria-controls={openDetailsMenu ? 'details-menu' : undefined}
+          aria-haspopup="true"
+          aria-expanded={openDetailsMenu ? 'true' : undefined}
+        >
+          <MoreVert />
+        </IconButton>
+        <Menu
+          id="details-menu"
+          anchorEl={anchorElDetailsMenu}
+          open={openDetailsMenu}
+          onClose={handleCloseDetailsMenu}
+          MenuListProps={{
+            'aria-labelledby': 'details-menu-button',
+          }}
+        >
+          {children}
+        </Menu>
+      </>
+    );
+  }
 
   const onJsonViewerChange = useCallback(
     (value: string) => {
@@ -463,31 +496,11 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
             <div className={classes.schemaBuilderDetailView} data-cy="schemaBuilder-detailView">
               <div className={classes.schemaBuilderStructureViewControls}>
                 <Typography variant="h4">Table attributes</Typography>
-                <IconButton
-                  id="details-menu-button"
-                  size="small"
-                  color="primary"
-                  className={classes.iconButton}
-                  onClick={handleClickDetailsMenu}
-                  aria-controls={openDetailsMenu ? 'details-menu' : undefined}
-                  aria-haspopup="true"
-                  aria-expanded={openDetailsMenu ? 'true' : undefined}
-                >
-                  <MoreVert />
-                </IconButton>
-                <Menu
-                  id="details-menu"
-                  anchorEl={anchorElDetailsMenu}
-                  open={openDetailsMenu}
-                  onClose={handleCloseDetailsMenu}
-                  MenuListProps={{
-                    'aria-labelledby': 'details-menu-button',
-                  }}
-                >
+                <DetailsMenuButton>
                   <MenuItem onClick={() => duplicateTable()}>Duplicate table</MenuItem>
                   <Divider />
                   <MenuItem onClick={() => deleteTable()}>Delete table</MenuItem>
-                </Menu>
+                </DetailsMenuButton>
               </div>
               <div>
                 <label htmlFor="table-name" className={classes.formLabel}>
@@ -530,36 +543,16 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
             <div className={classes.schemaBuilderDetailView}>
               <div className={classes.schemaBuilderStructureViewControls}>
                 <Typography variant="h4">Column attributes</Typography>
-                <IconButton
-                  id="details-menu-button"
-                  size="small"
-                  color="primary"
-                  className={classes.iconButton}
-                  onClick={handleClickDetailsMenu}
-                  aria-controls={openDetailsMenu ? 'details-menu' : undefined}
-                  aria-haspopup="true"
-                  aria-expanded={openDetailsMenu ? 'true' : undefined}
-                >
-                  <MoreVert />
-                </IconButton>
-                <Menu
-                  id="details-menu"
-                  anchorEl={anchorElDetailsMenu}
-                  open={openDetailsMenu}
-                  onClose={handleCloseDetailsMenu}
-                  MenuListProps={{
-                    'aria-labelledby': 'details-menu-button',
-                  }}
-                >
+                <DetailsMenuButton>
                   <MenuItem
                     onClick={() => {
+                      const tableName = datasetSchema.tables[selectedTable].name;
+                      const colName =
+                        datasetSchema.tables[selectedTable].columns[selectedColumn].name;
                       setRelationshipModalDefaultValues({
                         from:
                           selectedTable !== -1 && selectedColumn !== -1
-                            ? wrapRadioValue(
-                                datasetSchema.tables[selectedTable].name,
-                                datasetSchema.tables[selectedTable].columns[selectedColumn].name,
-                              )
+                            ? wrapRadioValue(tableName, colName)
                             : '',
                         expandedTables: {
                           [`radioGroup-relationshipFrom-${selectedTable}`]: true,
@@ -576,7 +569,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
                   <MenuItem onClick={() => duplicateColumn()}>Duplicate column</MenuItem>
                   <Divider />
                   <MenuItem onClick={() => deleteColumn()}>Delete column</MenuItem>
-                </Menu>
+                </DetailsMenuButton>
               </div>
               <div>
                 <label htmlFor="column-name" className={classes.formLabel}>
