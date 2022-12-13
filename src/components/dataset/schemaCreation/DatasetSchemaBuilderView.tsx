@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
-import { connect } from 'react-redux';
+import React, { useState, useCallback } from 'react';
 import _ from 'lodash';
-import { WithStyles, withStyles } from '@mui/styles';
+import { withStyles } from '@mui/styles';
 import {
   Typography,
   CustomTheme,
@@ -22,7 +21,6 @@ import {
   MoreVert,
   Circle,
 } from '@mui/icons-material';
-import { TdrState } from 'reducers';
 import { useFormContext } from 'react-hook-form';
 import CodeMirror from '@uiw/react-codemirror';
 import { okaidia } from '@uiw/codemirror-theme-okaidia';
@@ -95,17 +93,14 @@ const styles = (theme: CustomTheme) =>
       maxWidth: 200,
     },
     jsonWrapper: {
+      // background color to match codemirror okaidia's background color
       backgroundColor: '#272822',
       borderRadius: 10,
       padding: 20,
     },
   } as any);
 
-interface IProps extends WithStyles<typeof styles> {
-  userEmail: string;
-}
-
-const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: IProps) => {
+const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
   const { register, getValues, setValue } = useFormContext();
   const [datasetSchema, setDatasetSchema] = useState(
     getValues().schema as DatasetSpecificationModel,
@@ -120,21 +115,19 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: IProps) => {
     expandedTables: {},
   });
 
-  const [anchorElDetailsMenu, setAnchorElDetailsMenu] = React.useState<null | HTMLElement>(null);
+  const [anchorElDetailsMenu, setAnchorElDetailsMenu] = useState<null | HTMLElement>();
   const openDetailsMenu = Boolean(anchorElDetailsMenu);
-
-  const columnDatatypeOptions: string[] = _.keys(TableDataType);
 
   const handleClickDetailsMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorElDetailsMenu(event.currentTarget);
   };
   const handleCloseDetailsMenu = () => setAnchorElDetailsMenu(null);
 
-  const onJsonViewerChange = React.useCallback(
+  const onJsonViewerChange = useCallback(
     (value: string) => {
       try {
         const potentialSchema = JSON.parse(value);
-        setDatasetSchema(potentialSchema);
+        // setDatasetSchema(potentialSchema);
         setValue('schema', potentialSchema);
       } catch (e) {
         // do nothing
@@ -643,7 +636,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: IProps) => {
                 </label>
                 <Autocomplete
                   id="column-datatype"
-                  options={columnDatatypeOptions}
+                  options={_.keys(TableDataType)}
                   className={clsx(classes.formInput, classes.formInputDatatype)}
                   renderInput={(params: any) => (
                     <TextField {...params} onKeyDown={preventFormSubmission} />
@@ -791,10 +784,4 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: IProps) => {
   );
 });
 
-function mapStateToProps(state: TdrState) {
-  return {
-    userEmail: state.user.email,
-  };
-}
-
-export default connect(mapStateToProps)(DatasetSchemaBuilderView);
+export default DatasetSchemaBuilderView;
