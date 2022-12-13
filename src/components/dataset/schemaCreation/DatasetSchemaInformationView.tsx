@@ -121,7 +121,7 @@ const DatasetSchemaInformationView = withStyles(styles)(({ classes, profiles }: 
           htmlFor="dataset-defaultProfile"
           className={clsx(classes.formLabel, { [classes.formLabelError]: errors.defaultProfile })}
         >
-          Billing Project*
+          Billing Profile*
         </label>
         <Controller
           name="defaultProfile"

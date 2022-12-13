@@ -118,7 +118,7 @@ const DatasetSchemaCreationView = withStyles(styles)(
         name: '',
         description: '',
         terraProject: '',
-        enableSecureMonitoring: 'true',
+        enableSecureMonitoring: 'false',
         cloudPlatform: CLOUD_PLATFORMS.gcp.key,
         defaultProfile: _.get(profiles, [0, 'profileName'], ''),
         region: '',
