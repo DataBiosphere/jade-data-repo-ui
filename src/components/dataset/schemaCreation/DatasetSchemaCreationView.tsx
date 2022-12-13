@@ -120,7 +120,7 @@ const DatasetSchemaCreationView = withStyles(styles)(
         terraProject: '',
         enableSecureMonitoring: 'false',
         cloudPlatform: CLOUD_PLATFORMS.gcp.key,
-        defaultProfile: _.get(profiles, [0, 'profileName'], ''),
+        defaultProfileId: _.get(profiles, [0, 'id'], ''),
         region: '',
         stewards: [],
         custodians: [],
@@ -146,17 +146,12 @@ const DatasetSchemaCreationView = withStyles(styles)(
     ];
 
     const onSubmit = (data: any) => {
-      const defaultProfile = _.find(
-        profiles,
-        (x: BillingProfileModel) => x.profileName === data.defaultProfile,
-      );
       const normalizedData = {
         ...data,
         policies: {
           stewards: data.stewards,
           custodians: data.custodians,
         },
-        defaultProfileId: defaultProfile ? defaultProfile.id : data.defaultProfile,
       };
       delete normalizedData.terraProject;
       delete normalizedData.stewards;
@@ -172,8 +167,8 @@ const DatasetSchemaCreationView = withStyles(styles)(
     }, [dispatch]);
 
     useEffect(() => {
-      const firstProfile = _.get(profiles, [0, 'profileName'], '');
-      setValue('defaultProfile', firstProfile);
+      const firstProfile = _.get(profiles, [0, 'id'], '');
+      setValue('defaultProfileId', firstProfile);
     }, [profiles, setValue]);
 
     return (

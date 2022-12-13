@@ -13,7 +13,10 @@ import history from '../../../modules/hist';
 const initialState = {
   searchString: '',
   profiles: {
-    profiles: [{ profileName: 'default profile' }, { profileName: 'second profile' }],
+    profiles: [
+      { id: 'default', profileName: 'default profile' },
+      { id: 'second', profileName: 'second profile' },
+    ],
   },
   user: _.cloneDeep(initialUserState),
 };
@@ -37,13 +40,13 @@ interface InitialTableState {
 }
 
 const createInitialTableState = (schema: InitialTableState[]) => {
-  schema.forEach((table: any) => {
+  schema?.forEach((table: any) => {
     cy.get('#schemabuilder-createTable').click();
     if (table.name) {
       cy.get('#table-name').clear().type(table.name);
     }
     if (table.columns) {
-      table.columsn.forEach((column: any) => {
+      table.columns.forEach((column: any) => {
         cy.get('#schemabuilder-createColumn').click();
         if (column.name) {
           cy.get('#column-name').clear().type(column.name);
@@ -156,7 +159,7 @@ describe('DatasetSchemaCreationView', () => {
     });
 
     it('should load a default billing profile', () => {
-      cy.get('#dataset-defaultProfile').should('have.value', 'default profile');
+      cy.get('#dataset-defaultProfileId').contains('default profile');
     });
 
     it('should update regions when the cloud platform is updated', () => {

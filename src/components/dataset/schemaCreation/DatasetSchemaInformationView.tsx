@@ -33,7 +33,6 @@ interface IProps extends WithStyles<typeof styles> {
 }
 
 const DatasetSchemaInformationView = withStyles(styles)(({ classes, profiles }: IProps) => {
-  const profileNames = _.chain(profiles).map('profileName').uniq().value();
   const [regionOptions, setRegionOptions] = useState(CLOUD_PLATFORMS.gcp.regions);
   const {
     register,
@@ -118,33 +117,24 @@ const DatasetSchemaInformationView = withStyles(styles)(({ classes, profiles }: 
 
       <Grid item xs={6}>
         <label
-          htmlFor="dataset-defaultProfile"
+          htmlFor="dataset-defaultProfileId"
           className={clsx(classes.formLabel, { [classes.formLabelError]: errors.defaultProfile })}
         >
           Billing Profile*
         </label>
         <Controller
-          name="defaultProfile"
+          name="defaultProfileId"
           control={control}
           rules={{ required: 'default project is required' }}
           render={({ field }) => (
-            <Autocomplete
-              id="dataset-defaultProfile"
-              freeSolo
-              options={profileNames}
-              className={classes.formInput}
-              renderInput={(params: any) => (
-                <TextField
-                  {...params}
-                  error={!!errors.defaultProfile}
-                  helperText={errors.defaultProfile ? errors.defaultProfile.message : ''}
-                />
-              )}
-              {...field}
-              onChange={(_event: any, change: any) => {
-                field.onChange(change);
-              }}
-            />
+            <Select id="dataset-defaultProfileId" className={classes.formInput} {...field}>
+              <MenuItem value="true">Yes</MenuItem>
+              {profiles.map((profile: BillingProfileModel) => (
+                <MenuItem key={profile.id} value={profile.id}>
+                  {profile.profileName}
+                </MenuItem>
+              ))}
+            </Select>
           )}
         />
       </Grid>
