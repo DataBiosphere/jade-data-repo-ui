@@ -100,6 +100,12 @@ const styles = (theme: CustomTheme) =>
     },
   } as any);
 
+const defaultRelationship = {
+  from: '',
+  to: '',
+  expandedTables: {},
+};
+
 const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
   const { register, getValues, setValue } = useFormContext();
   const [datasetSchema, setDatasetSchema] = useState(
@@ -109,11 +115,9 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
   const [selectedColumn, setSelectedColumn] = useState(-1);
   const [expandedTables, setExpandedTables] = useState({} as any);
   const [relationshipModalOpen, setRelationshipModalOpen] = useState(false);
-  const [relationshipModalDefaultValues, setRelationshipModalDefaultValues] = useState({
-    from: '',
-    to: '',
-    expandedTables: {},
-  });
+  const [relationshipModalDefaultValues, setRelationshipModalDefaultValues] = useState(
+    defaultRelationship,
+  );
 
   const [anchorElDetailsMenu, setAnchorElDetailsMenu] = useState<null | HTMLElement>();
   const openDetailsMenu = Boolean(anchorElDetailsMenu);
@@ -257,6 +261,37 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
     handleCloseDetailsMenu();
   };
 
+  const changeColumnName = (event: any) => {
+    const schemaCopy = _.cloneDeep(datasetSchema);
+    const origName = datasetSchema.tables[selectedTable].columns[selectedColumn].name;
+    const newName = event.target.value;
+    schemaCopy.tables[selectedTable].columns[selectedColumn].name = newName;
+
+    // Update the primary key name if this is a primary key column.
+    if (schemaCopy.tables[selectedTable].primaryKey) {
+      const primaryKeyArr = _.get(schemaCopy.tables[selectedTable], 'primaryKey', [] as string[]);
+      const indexOfPrimaryKey = primaryKeyArr.indexOf(origName);
+      primaryKeyArr[indexOfPrimaryKey] = newName;
+    }
+
+    // Update the name if this column has a relationship
+    if (schemaCopy.relationships) {
+      schemaCopy.relationships = schemaCopy.relationships.map((rel: RelationshipModel) => {
+        if (
+          rel.from.table === schemaCopy.tables[selectedTable].name &&
+          rel.from.column === origName
+        ) {
+          rel.from.column = newName;
+        }
+        if (rel.to.table === schemaCopy.tables[selectedTable].name && rel.to.column === origName) {
+          rel.to.column = newName;
+        }
+        return rel;
+      });
+    }
+    setDatasetSchema(schemaCopy);
+  };
+
   const swapArrayLocs = (arr: Array<any>, index1: number, index2: number) => {
     [arr[index1], arr[index2]] = [arr[index2], arr[index1]];
   };
@@ -391,11 +426,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
                   style={{ marginLeft: 50 }}
                   disabled={!datasetSchema.tables || datasetSchema.tables.length < 2}
                   onClick={() => {
-                    setRelationshipModalDefaultValues({
-                      from: '',
-                      to: '',
-                      expandedTables: {},
-                    });
+                    setRelationshipModalDefaultValues(defaultRelationship);
                     setRelationshipModalOpen(true);
                   }}
                 >
@@ -581,46 +612,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
                   className={classes.formInput}
                   value={datasetSchema.tables[selectedTable].columns[selectedColumn].name}
                   onKeyDown={preventFormSubmission}
-                  onChange={(event: any) => {
-                    const schemaCopy = _.cloneDeep(datasetSchema);
-                    const origName =
-                      datasetSchema.tables[selectedTable].columns[selectedColumn].name;
-                    const newName = event.target.value;
-                    schemaCopy.tables[selectedTable].columns[selectedColumn].name = newName;
-
-                    // Update the primary key name if this is a primary key column.
-                    if (schemaCopy.tables[selectedTable].primaryKey) {
-                      const primaryKeyArr = _.get(
-                        schemaCopy.tables[selectedTable],
-                        'primaryKey',
-                        [] as string[],
-                      );
-                      const indexOfPrimaryKey = primaryKeyArr.indexOf(origName);
-                      primaryKeyArr[indexOfPrimaryKey] = newName;
-                    }
-
-                    // Update the name if this column has a relationship
-                    if (schemaCopy.relationships) {
-                      schemaCopy.relationships = schemaCopy.relationships.map(
-                        (rel: RelationshipModel) => {
-                          if (
-                            rel.from.table === schemaCopy.tables[selectedTable].name &&
-                            rel.from.column === origName
-                          ) {
-                            rel.from.column = newName;
-                          }
-                          if (
-                            rel.to.table === schemaCopy.tables[selectedTable].name &&
-                            rel.to.column === origName
-                          ) {
-                            rel.to.column = newName;
-                          }
-                          return rel;
-                        },
-                      );
-                    }
-                    setDatasetSchema(schemaCopy);
-                  }}
+                  onChange={changeColumnName}
                 />
               </div>
               <div>

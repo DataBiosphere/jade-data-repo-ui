@@ -109,7 +109,7 @@ interface TabConfig {
 const DatasetSchemaCreationView = withStyles(styles)(
   ({ classes, dispatch, profiles, history }: IProps) => {
     const [currentTab, setCurrentTab] = React.useState(0);
-    const changeTab = (_event: any, newCurrentTab: any) => setCurrentTab(newCurrentTab);
+    const changeTab = (_event: any, newCurrentTab: number) => setCurrentTab(newCurrentTab);
 
     const formMethods = useForm({
       mode: 'all',
