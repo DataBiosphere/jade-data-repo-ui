@@ -102,6 +102,11 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
               useMarkdown={true}
             />
           </Grid>
+          <Grid item xs={12}>
+            <Grid item xs={4}>
+              {renderTextFieldValue('DUOS Id', snapshot.duosFirecloudGroup?.duosId)}
+            </Grid>
+          </Grid>
           <Grid item xs={4}>
             <Typography variant="h6">Root dataset:</Typography>
             <Typography data-cy="snapshot-source-dataset" className={classes.datasetText}>
