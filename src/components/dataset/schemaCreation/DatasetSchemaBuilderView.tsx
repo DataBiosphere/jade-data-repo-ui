@@ -367,7 +367,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
                   size="small"
                   color="primary"
                   className={classes.iconButton}
-                  disabled={selectedTable === -1}
+                  disabled={selectedTable === -1 || selectedTable === 0}
                   onClick={() => {
                     const schemaCopy = _.cloneDeep(datasetSchema);
                     if (selectedColumn > 0) {
@@ -392,7 +392,9 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
                   size="small"
                   color="primary"
                   className={classes.iconButton}
-                  disabled={selectedTable === -1}
+                  disabled={
+                    selectedTable === -1 || selectedTable === datasetSchema.tables.length - 1
+                  }
                   onClick={() => {
                     const schemaCopy = _.cloneDeep(datasetSchema);
                     if (

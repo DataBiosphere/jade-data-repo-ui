@@ -408,8 +408,7 @@ describe('DatasetSchemaCreationView', () => {
         cy.get('#datasetSchema-up').click();
         cy.get('div[data-cy="schemaBuilder-selectTableButton"] button').eq(1).contains('colors');
 
-        cy.get('#datasetSchema-up').click();
-        cy.get('div[data-cy="schemaBuilder-selectTableButton"] button').eq(1).contains('colors');
+        cy.get('#datasetSchema-up').should('have.attr', 'disabled');
       });
 
       it('should be able to move tables down in the list', () => {
@@ -420,8 +419,7 @@ describe('DatasetSchemaCreationView', () => {
         cy.get('#datasetSchema-down').click();
         cy.get('div[data-cy="schemaBuilder-selectTableButton"] button').eq(3).contains('party');
 
-        cy.get('#datasetSchema-down').click();
-        cy.get('div[data-cy="schemaBuilder-selectTableButton"] button').eq(3).contains('party');
+        cy.get('#datasetSchema-down').should('have.attr', 'disabled');
       });
     });
 
@@ -572,8 +570,7 @@ describe('DatasetSchemaCreationView', () => {
         cy.get('#datasetSchema-up').click();
         cy.get('[data-cy="schemaBuilder-tableColumns"] button').eq(0).contains('yellow');
 
-        cy.get('#datasetSchema-up').click();
-        cy.get('[data-cy="schemaBuilder-tableColumns"] button').eq(0).contains('yellow');
+        cy.get('#datasetSchema-up').should('have.attr', 'disabled');
       });
 
       it('should be able to move tables down in the list', () => {
@@ -589,8 +586,7 @@ describe('DatasetSchemaCreationView', () => {
         cy.get('#datasetSchema-down').click();
         cy.get('[data-cy="schemaBuilder-tableColumns"] button').eq(1).contains('red');
 
-        cy.get('#datasetSchema-down').click();
-        cy.get('[data-cy="schemaBuilder-tableColumns"] button').eq(1).contains('red');
+        cy.get('#datasetSchema-down').should('have.attr', 'disabled');
       });
 
       it('should update column array_of', () => {
