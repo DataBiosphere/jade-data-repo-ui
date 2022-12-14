@@ -204,6 +204,7 @@ export function* createSnapshot(): any {
   const {
     name,
     description,
+    duosFirecloudGroup,
     assetName,
     filterStatement,
     joinStatement,
@@ -220,6 +221,7 @@ export function* createSnapshot(): any {
     name,
     profileId: dataset.defaultProfileId,
     description,
+    duosFirecloudGroup,
     policies,
     contents: [
       {

@@ -45,10 +45,11 @@ export class CreateSnapshotPanel extends React.PureComponent {
   constructor(props) {
     super(props);
     const { snapshots } = this.props;
-    const { name, description, assetName } = snapshots.snapshotRequest;
+    const { name, description, duosFirecloudGroup, assetName } = snapshots.snapshotRequest;
     this.state = {
       name,
       description,
+      duosFirecloudGroup,
       assetName,
     };
   }
@@ -65,8 +66,10 @@ export class CreateSnapshotPanel extends React.PureComponent {
 
   saveNameAndDescription = () => {
     const { dispatch, switchPanels, filterData, dataset } = this.props;
-    const { name, description, assetName } = this.state;
-    dispatch(snapshotCreateDetails(name, description, assetName, filterData, dataset));
+    const { name, description, duosFirecloudGroup, assetName } = this.state;
+    dispatch(
+      snapshotCreateDetails(name, description, duosFirecloudGroup, assetName, filterData, dataset),
+    );
     switchPanels(ShareSnapshot);
   };
 
@@ -79,7 +82,7 @@ export class CreateSnapshotPanel extends React.PureComponent {
 
   render() {
     const { classes, dataset, handleCreateSnapshot } = this.props;
-    const { name, description, assetName } = this.state;
+    const { name, description, duosFirecloudGroup, assetName } = this.state;
     return (
       <div className={classes.root}>
         <div className={classes.rowOne}>
@@ -106,6 +109,22 @@ export class CreateSnapshotPanel extends React.PureComponent {
             className={classes.textField}
             onChange={(event) => this.setState({ description: event.target.value })}
             value={description}
+          />
+          <Typography variant="subtitle2">DUOS ID</Typography>
+          <TextField
+            id="snapshotDuosID"
+            variant="outlined"
+            size="small"
+            fullWidth
+            className={classes.textField}
+            onChange={(event) =>
+              this.setState({
+                duosFirecloudGroup: {
+                  duosId: event.target.value,
+                },
+              })
+            }
+            value={duosFirecloudGroup?.duosId || ''}
           />
           {/* TODO: decide what to do when there's only one asset */}
           <CreateSnapshotDropdown

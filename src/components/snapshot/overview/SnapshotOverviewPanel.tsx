@@ -102,6 +102,20 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
               useMarkdown={true}
             />
           </Grid>
+          <Grid item xs={12}>
+            <Grid xs={4}>
+              <EditableFieldView
+                fieldValue={snapshot.duosFirecloudGroup?.duosId}
+                fieldName="DUOS ID"
+                canEdit={isSteward}
+                updateFieldValueFn={(text: string | undefined) =>
+                  dispatch(patchSnapshot(snapshot.id, { duosFirecloudGroup: { duosId: text } }))
+                }
+                useMarkdown={false}
+                infoButtonText="The ID used in DUOS"
+              />
+            </Grid>
+          </Grid>
           <Grid item xs={4}>
             <Typography variant="h6">Root dataset:</Typography>
             <Typography data-cy="snapshot-source-dataset" className={classes.datasetText}>

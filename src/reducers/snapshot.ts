@@ -6,6 +6,7 @@ import { LOCATION_CHANGE } from 'connected-react-router';
 import { ActionTypes } from '../constants';
 import {
   DatasetModel,
+  DuosFirecloudGroupModel,
   InaccessibleWorkspacePolicyModel,
   PolicyModel,
   SnapshotExportResponseModel,
@@ -23,6 +24,7 @@ export interface SnapshotRequest {
   filterStatement: string;
   joinStatement: string;
   policies: SnapshotRequestModelPolicies;
+  duosFirecloudGroup?: DuosFirecloudGroupModel;
 }
 
 export interface SnapshotState {
@@ -259,13 +261,21 @@ export default {
       },
       [ActionTypes.SNAPSHOT_CREATE_DETAILS]: (state, action: any) => {
         const bigquery = new BigQuery();
-        const { name, description, assetName, filterData, dataset } = action.payload;
+        const {
+          name,
+          description,
+          duosFirecloudGroup,
+          assetName,
+          filterData,
+          dataset,
+        } = action.payload;
 
         const joinStatement = bigquery.buildSnapshotJoinStatement(filterData, assetName, dataset);
         const snapshotRequest = {
           ...state.snapshotRequest,
           name,
           description,
+          duosFirecloudGroup,
           assetName,
           joinStatement,
         };

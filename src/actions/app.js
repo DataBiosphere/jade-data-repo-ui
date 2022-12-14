@@ -306,9 +306,17 @@ export const { countResults } = createActions({
 });
 
 export const { snapshotCreateDetails } = createActions({
-  [ActionTypes.SNAPSHOT_CREATE_DETAILS]: (name, description, assetName, filterData, dataset) => ({
+  [ActionTypes.SNAPSHOT_CREATE_DETAILS]: (
     name,
     description,
+    duosFirecloudGroup,
+    assetName,
+    filterData,
+    dataset,
+  ) => ({
+    name,
+    description,
+    duosFirecloudGroup,
     assetName,
     filterData,
     dataset,
