@@ -35,6 +35,7 @@ import {
 import clsx from 'clsx';
 import DatasetSchemaRelationshipModal, { wrapRadioValue } from './DatasetSchemaRelationshipModal';
 import { styles as DatasetCreationStyles } from './DatasetSchemaCommon';
+import ConfirmationModal from '../../common/ConfirmationModal';
 
 const styles = (theme: CustomTheme) =>
   ({
@@ -118,6 +119,8 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
   const [relationshipModalDefaultValues, setRelationshipModalDefaultValues] = useState(
     defaultRelationship,
   );
+  const [deleteTableConfirmOpen, setDeleteTableConfirmOpen] = useState(false);
+  const [deleteColumnConfirmOpen, setDeleteColumnConfirmOpen] = useState(false);
 
   const [anchorElDetailsMenu, setAnchorElDetailsMenu] = useState<null | HTMLElement>();
   const openDetailsMenu = Boolean(anchorElDetailsMenu);
@@ -213,6 +216,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
     handleCloseDetailsMenu();
     setSelectedTable(-1);
     setSelectedColumn(-1);
+    setDeleteTableConfirmOpen(false);
   };
 
   const duplicateTable = () => {
@@ -252,6 +256,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
     setDatasetSchema(newSchema);
     handleCloseDetailsMenu();
     setSelectedColumn(-1);
+    setDeleteColumnConfirmOpen(false);
   };
 
   const duplicateColumn = () => {
@@ -539,7 +544,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
                 <DetailsMenuButton>
                   <MenuItem onClick={() => duplicateTable()}>Duplicate table</MenuItem>
                   <Divider />
-                  <MenuItem onClick={() => deleteTable()}>Delete table</MenuItem>
+                  <MenuItem onClick={() => setDeleteTableConfirmOpen(true)}>Delete table</MenuItem>
                 </DetailsMenuButton>
               </div>
               <div>
@@ -608,7 +613,9 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
                   <Divider />
                   <MenuItem onClick={() => duplicateColumn()}>Duplicate column</MenuItem>
                   <Divider />
-                  <MenuItem onClick={() => deleteColumn()}>Delete column</MenuItem>
+                  <MenuItem onClick={() => setDeleteColumnConfirmOpen(true)}>
+                    Delete column
+                  </MenuItem>
                 </DetailsMenuButton>
               </div>
               <div>
@@ -774,6 +781,26 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
           }}
         />
       )}
+      <ConfirmationModal
+        title={
+          selectedTable !== -1
+            ? `Are you sure you want to delete this table (${datasetSchema.tables[selectedTable].name})?`
+            : ''
+        }
+        open={deleteTableConfirmOpen}
+        onSubmit={deleteTable}
+        onClose={() => setDeleteTableConfirmOpen(false)}
+      />
+      <ConfirmationModal
+        title={
+          selectedTable !== -1 && selectedColumn !== -1
+            ? `Are you sure you want to delete this column (${datasetSchema.tables[selectedTable].columns[selectedColumn].name})?`
+            : ''
+        }
+        open={deleteColumnConfirmOpen}
+        onSubmit={deleteColumn}
+        onClose={() => setDeleteColumnConfirmOpen(false)}
+      />
     </div>
   );
 });
