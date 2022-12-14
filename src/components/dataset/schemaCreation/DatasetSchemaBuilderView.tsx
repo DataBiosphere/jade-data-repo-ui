@@ -164,7 +164,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
     (value: string) => {
       try {
         const potentialSchema = JSON.parse(value);
-        // setDatasetSchema(potentialSchema);
+        setDatasetSchema(potentialSchema);
         setValue('schema', potentialSchema);
       } catch (e) {
         // do nothing
@@ -367,7 +367,11 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
                   size="small"
                   color="primary"
                   className={classes.iconButton}
-                  disabled={selectedTable === -1 || selectedTable === 0}
+                  disabled={
+                    selectedTable === -1 ||
+                    selectedColumn === 0 ||
+                    (selectedTable === 0 && selectedColumn === -1)
+                  }
                   onClick={() => {
                     const schemaCopy = _.cloneDeep(datasetSchema);
                     if (selectedColumn > 0) {
@@ -393,7 +397,10 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
                   color="primary"
                   className={classes.iconButton}
                   disabled={
-                    selectedTable === -1 || selectedTable === datasetSchema.tables.length - 1
+                    selectedTable === -1 ||
+                    (selectedTable === datasetSchema.tables.length - 1 && selectedColumn === -1) ||
+                    (selectedColumn !== -1 &&
+                      selectedColumn === datasetSchema.tables[selectedTable].columns.length - 1)
                   }
                   onClick={() => {
                     const schemaCopy = _.cloneDeep(datasetSchema);
