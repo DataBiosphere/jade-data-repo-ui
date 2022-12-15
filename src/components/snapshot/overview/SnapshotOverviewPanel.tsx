@@ -105,7 +105,7 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
           <Grid item xs={12}>
             <Grid item xs={4}>
               {renderTextFieldValue(
-                'DUOS Id',
+                'DUOS ID',
                 snapshot.duosFirecloudGroup?.duosId,
                 'Link with a DUOS dataset ID to automatically add DAC approved users as snapshot readers',
               )}
