@@ -377,6 +377,7 @@ describe('DatasetSchemaCreationView', () => {
 
         cy.get('#details-menu-button').click();
         cy.get('ul[aria-labelledby="details-menu-button"]').children().eq(2).click();
+        cy.get('#submitButton').click();
 
         cy.get('.cm-theme').then((elem) => {
           const comparison = {
@@ -522,6 +523,7 @@ describe('DatasetSchemaCreationView', () => {
 
         cy.get('#details-menu-button').click();
         cy.get('ul[aria-labelledby="details-menu-button"]').children().eq(5).click();
+        cy.get('#submitButton').click();
 
         cy.get('.cm-theme').then((elem) => {
           const comparison = {
