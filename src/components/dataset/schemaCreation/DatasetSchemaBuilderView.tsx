@@ -33,6 +33,7 @@ import {
   RelationshipModel,
 } from 'generated/tdr';
 import clsx from 'clsx';
+import TerraTooltip from '../../common/TerraTooltip';
 import DatasetSchemaRelationshipModal, { wrapRadioValue } from './DatasetSchemaRelationshipModal';
 import { styles as DatasetCreationStyles } from './DatasetSchemaCommon';
 
@@ -92,6 +93,19 @@ const styles = (theme: CustomTheme) =>
     formInputDatatype: {
       maxWidth: 200,
     },
+    columnNameDisplay: {
+      display: 'flex',
+      width: '100%',
+      alignItems: 'center',
+    },
+    relationshipButton: {
+      backgroundColor: 'transparent',
+      fontSize: '1rem',
+      height: '1rem',
+      width: '1rem',
+      marginTop: 6,
+      marginLeft: 6,
+    },
     jsonWrapper: {
       // background color to match codemirror okaidia's background color
       backgroundColor: '#272822',
@@ -113,6 +127,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
   );
   const [selectedTable, setSelectedTable] = useState(-1);
   const [selectedColumn, setSelectedColumn] = useState(-1);
+  const [selectedRelationship, setSelectedRelationship] = useState(null as any);
   const [expandedTables, setExpandedTables] = useState({} as any);
   const [relationshipModalOpen, setRelationshipModalOpen] = useState(false);
   const [relationshipModalDefaultValues, setRelationshipModalDefaultValues] = useState(
@@ -158,6 +173,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
     });
     setSelectedTable(newIndex);
     setSelectedColumn(-1);
+    setSelectedRelationship(null);
     setExpandedTables({
       ...expandedTables,
       [newIndex]: true,
@@ -180,6 +196,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
     handleCloseDetailsMenu();
     setSelectedTable(-1);
     setSelectedColumn(-1);
+    setSelectedRelationship(null);
   };
 
   const duplicateTable = () => {
@@ -199,6 +216,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
     });
     setDatasetSchema(newSchema);
     setSelectedColumn(newSchema.tables[selectedTable].columns.length - 1);
+    setSelectedRelationship(null);
   };
 
   const deleteColumn = () => {
@@ -257,6 +275,20 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
       });
     }
     setDatasetSchema(schemaCopy);
+  };
+
+  const deleteRelationship = () => {
+    const schemaCopy = _.cloneDeep(datasetSchema);
+    const selRel = selectedRelationship as RelationshipModel;
+    schemaCopy.relationships = schemaCopy.relationships?.filter((rel: RelationshipModel) => {
+      const fromEquals =
+        selRel.from.table === rel.from.table && selRel.from.column === rel.from.column;
+      const toEquals = selRel.to.table === rel.to.table && selRel.to.column === rel.to.column;
+      return !fromEquals || !toEquals;
+    });
+    setDatasetSchema(schemaCopy);
+    setSelectedRelationship(null);
+    handleCloseDetailsMenu();
   };
 
   const swapArrayLocs = (arr: Array<any>, index1: number, index2: number) => {
@@ -439,6 +471,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
                         } else {
                           setSelectedTable(i);
                           setSelectedColumn(-1);
+                          setSelectedRelationship(null);
                         }
                       }}
                       className={clsx(classes.schemaBuilderStructureViewContentTableName_text, {
@@ -467,30 +500,57 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
                         })}
                       >
                         {table.columns.map((column: ColumnModel, j: number) => (
-                          <Button
-                            key={`datasetSchema-table-${i}-column-${j}`}
-                            onClick={() => {
-                              if (selectedTable === i && selectedColumn === j) {
-                                setSelectedTable(-1);
-                                setSelectedColumn(-1);
-                              } else {
-                                setSelectedTable(i);
-                                setSelectedColumn(j);
-                              }
-                            }}
-                            className={clsx(
-                              classes.schemaBuilderStructureViewContentTableName_text,
-                              classes.schemaBuilderStructureViewContentColumn,
-                              {
-                                [classes.schemaBuilderStructureViewContentTableName_selected]:
-                                  selectedTable === i && selectedColumn === j,
-                              },
-                            )}
-                            disableFocusRipple
-                            disableRipple
-                          >
-                            {column.name || '(unnamed column)'}
-                          </Button>
+                          <div className={classes.columnNameDisplay}>
+                            <Button
+                              key={`datasetSchema-table-${i}-column-${j}`}
+                              onClick={() => {
+                                if (selectedTable === i && selectedColumn === j) {
+                                  setSelectedTable(-1);
+                                  setSelectedColumn(-1);
+                                } else {
+                                  setSelectedTable(i);
+                                  setSelectedColumn(j);
+                                  setSelectedRelationship(null);
+                                }
+                              }}
+                              className={clsx(
+                                classes.schemaBuilderStructureViewContentTableName_text,
+                                classes.schemaBuilderStructureViewContentColumn,
+                                {
+                                  [classes.schemaBuilderStructureViewContentTableName_selected]:
+                                    selectedTable === i && selectedColumn === j,
+                                },
+                              )}
+                              disableFocusRipple
+                              disableRipple
+                            >
+                              {column.name || '(unnamed column)'}
+                            </Button>
+                            {datasetSchema.relationships
+                              ?.filter((rel: RelationshipModel) => {
+                                const isFrom =
+                                  rel.from.table === table.name && rel.from.column === column.name;
+                                const isTo =
+                                  rel.to.table === table.name && rel.to.column === column.name;
+                                return isFrom || isTo;
+                              })
+                              .map((rel: RelationshipModel) => (
+                                <TerraTooltip title={rel.name} key={`rel-${rel.name}`}>
+                                  <IconButton
+                                    size="small"
+                                    color="primary"
+                                    className={classes.relationshipButton}
+                                    onClick={() => {
+                                      setSelectedRelationship(rel);
+                                      setSelectedTable(-1);
+                                      setSelectedColumn(-1);
+                                    }}
+                                  >
+                                    <i className="fa fa-link-horizontal" />
+                                  </IconButton>
+                                </TerraTooltip>
+                              ))}
+                          </div>
                         ))}
                       </div>
                     </div>
@@ -607,11 +667,11 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
                         to: '',
                       });
                       setRelationshipModalOpen(true);
+                      handleCloseDetailsMenu();
                     }}
                   >
                     Create relationship
                   </MenuItem>
-                  <MenuItem>Remove relationship</MenuItem>
                   <Divider />
                   <MenuItem onClick={() => duplicateColumn()}>Duplicate column</MenuItem>
                   <Divider />
@@ -737,6 +797,65 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
                     const schemaCopy = _.cloneDeep(datasetSchema);
                     schemaCopy.tables[selectedTable].columns[selectedColumn].array_of = change;
                     setDatasetSchema(schemaCopy);
+                  }}
+                />
+              </div>
+            </div>
+          )}
+          {selectedRelationship && (
+            <div className={classes.schemaBuilderDetailView} data-cy="schemaBuilder-detailView">
+              <div className={classes.schemaBuilderStructureViewControls}>
+                <Typography variant="h4">Relationship Attributes</Typography>
+                <IconButton
+                  id="details-menu-button"
+                  size="small"
+                  color="primary"
+                  className={classes.iconButton}
+                  onClick={handleClickDetailsMenu}
+                  aria-controls={openDetailsMenu ? 'details-menu' : undefined}
+                  aria-haspopup="true"
+                  aria-expanded={openDetailsMenu ? 'true' : undefined}
+                >
+                  <MoreVert />
+                </IconButton>
+                <Menu
+                  id="details-menu"
+                  anchorEl={anchorElDetailsMenu}
+                  open={openDetailsMenu}
+                  onClose={handleCloseDetailsMenu}
+                  MenuListProps={{
+                    'aria-labelledby': 'details-menu-button',
+                  }}
+                >
+                  <MenuItem onClick={() => deleteRelationship()}>Delete relationship</MenuItem>
+                </Menu>
+              </div>
+              <div>
+                <label htmlFor="table-name" className={classes.formLabel}>
+                  Relationship name
+                </label>
+                <TextField
+                  id="rel-name"
+                  placeholder="relationship name"
+                  className={classes.formInput}
+                  value={selectedRelationship.name}
+                  onKeyDown={preventFormSubmission}
+                  onChange={(event: any) => {
+                    const schemaCopy = _.cloneDeep(datasetSchema);
+                    const relCopy = _.cloneDeep(selectedRelationship);
+                    const newName = event.target.value;
+                    const origName = selectedRelationship.name;
+                    relCopy.name = newName;
+                    schemaCopy.relationships = schemaCopy.relationships?.map(
+                      (rel: RelationshipModel) => {
+                        if (rel.name === origName) {
+                          rel.name = newName;
+                        }
+                        return rel;
+                      },
+                    );
+                    setDatasetSchema(schemaCopy);
+                    setSelectedRelationship(relCopy);
                   }}
                 />
               </div>
