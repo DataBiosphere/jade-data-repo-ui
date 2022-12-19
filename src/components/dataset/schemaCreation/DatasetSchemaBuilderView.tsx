@@ -98,6 +98,9 @@ const styles = (theme: CustomTheme) =>
       width: '100%',
       alignItems: 'center',
     },
+    columnHighlighted: {
+      outline: `1px solid ${theme.palette.primary.main}`
+    },
     relationshipButton: {
       backgroundColor: 'transparent',
       fontSize: '1rem',
@@ -134,6 +137,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
   const [relationshipModalDefaultValues, setRelationshipModalDefaultValues] = useState(
     defaultRelationship,
   );
+  const [outlinedRelationships, setOutlinedRelationships] = useState({} as any);
 
   const [anchorElDetailsMenu, setAnchorElDetailsMenu] = useState<null | HTMLElement>();
   const openDetailsMenu = Boolean(anchorElDetailsMenu);
@@ -304,6 +308,24 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
     schemaCopy.relationships = schemaCopy.relationships?.filter((rel: RelationshipModel) => rel.name !== relationshipModalDefaultValues.name);
     setDatasetSchema(schemaCopy);
     setRelationshipModalOpen(false);
+  };
+
+  const highlightRelationshipColumns = (rel: RelationshipModel) => {
+    const fromIndices = getIndices(rel.from.table, rel.from.column);
+    const toIndices = getIndices(rel.to.table, rel.to.column);
+    setOutlinedRelationships({
+      [`${fromIndices.table}-${fromIndices.column}`]: true,
+      [`${toIndices.table}-${toIndices.column}`]: true,
+    });
+  };
+
+  const getIndices = (table: string, column: string) => {
+    const tableIndex = _.findIndex(datasetSchema.tables, (schemaTable: TableModel) => schemaTable.name === table);
+    const columnIndex = _.findIndex(datasetSchema.tables[tableIndex].columns, (schemaCol: ColumnModel) => schemaCol.name === column);
+    return {
+      table: tableIndex,
+      column: columnIndex,
+    };
   };
 
   const swapArrayLocs = (arr: Array<any>, index1: number, index2: number) => {
@@ -543,6 +565,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
                                 {
                                   [classes.schemaBuilderStructureViewContentTableName_selected]:
                                     selectedTable === i && selectedColumn === j,
+                                  [classes.columnHighlighted]: outlinedRelationships[`${i}-${j}`]
                                 },
                               )}
                               disableFocusRipple
@@ -564,6 +587,10 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
                                     size="small"
                                     color="primary"
                                     className={classes.relationshipButton}
+                                    onMouseEnter={() => highlightRelationshipColumns(rel)}
+                                    onMouseLeave={() => {
+                                      setOutlinedRelationships({});
+                                    }}
                                     onClick={() => {
                                       const fromIndex = _.findIndex(datasetSchema.tables, (table: TableModel) => table.name === rel.from.table);
                                       const toIndex = _.findIndex(datasetSchema.tables, (table: TableModel) => table.name === rel.to.table);
