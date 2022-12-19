@@ -331,89 +331,95 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
 
               <div className={classes.flexRow}>
                 <TerraTooltip title="Move up">
-                  <IconButton
-                    id="datasetSchema-up"
-                    size="small"
-                    color="primary"
-                    className={classes.iconButton}
-                    disabled={
-                      selectedTable === -1 ||
-                      selectedColumn === 0 ||
-                      (selectedTable === 0 && selectedColumn === -1)
-                    }
-                    onClick={() => {
-                      const schemaCopy = _.cloneDeep(datasetSchema);
-                      if (selectedColumn > 0) {
-                        swapArrayLocs(
-                          schemaCopy.tables[selectedTable].columns,
-                          selectedColumn,
-                          selectedColumn - 1,
-                        );
-                        setSelectedColumn(selectedColumn - 1);
-                      } else if (selectedColumn === -1 && selectedTable > 0) {
-                        swapArrayLocs(schemaCopy.tables, selectedTable, selectedTable - 1);
-                        setSelectedTable(selectedTable - 1);
+                  <span>
+                    <IconButton
+                      id="datasetSchema-up"
+                      size="small"
+                      color="primary"
+                      className={classes.iconButton}
+                      disabled={
+                        selectedTable === -1 ||
+                        selectedColumn === 0 ||
+                        (selectedTable === 0 && selectedColumn === -1)
                       }
-                      setDatasetSchema(schemaCopy);
-                    }}
-                  >
-                    <i className="fa fa-angle-up" />
-                  </IconButton>
+                      onClick={() => {
+                        const schemaCopy = _.cloneDeep(datasetSchema);
+                        if (selectedColumn > 0) {
+                          swapArrayLocs(
+                            schemaCopy.tables[selectedTable].columns,
+                            selectedColumn,
+                            selectedColumn - 1,
+                          );
+                          setSelectedColumn(selectedColumn - 1);
+                        } else if (selectedColumn === -1 && selectedTable > 0) {
+                          swapArrayLocs(schemaCopy.tables, selectedTable, selectedTable - 1);
+                          setSelectedTable(selectedTable - 1);
+                        }
+                        setDatasetSchema(schemaCopy);
+                      }}
+                    >
+                      <i className="fa fa-angle-up" />
+                    </IconButton>
+                  </span>
                 </TerraTooltip>
 
                 <TerraTooltip title="Move down">
-                  <IconButton
-                    id="datasetSchema-down"
-                    size="small"
-                    color="primary"
-                    className={classes.iconButton}
-                    disabled={
-                      selectedTable === -1 ||
-                      (selectedTable === datasetSchema.tables.length - 1 && selectedColumn === -1) ||
-                      (selectedColumn !== -1 &&
-                        selectedColumn === datasetSchema.tables[selectedTable].columns.length - 1)
-                    }
-                    onClick={() => {
-                      const schemaCopy = _.cloneDeep(datasetSchema);
-                      if (
-                        selectedColumn !== -1 &&
-                        selectedColumn < schemaCopy.tables[selectedTable].columns.length - 1
-                      ) {
-                        swapArrayLocs(
-                          schemaCopy.tables[selectedTable].columns,
-                          selectedColumn,
-                          selectedColumn + 1,
-                        );
-                        setSelectedColumn(selectedColumn + 1);
-                      } else if (
-                        selectedTable !== -1 &&
-                        selectedTable < schemaCopy.tables.length - 1
-                      ) {
-                        swapArrayLocs(schemaCopy.tables, selectedTable, selectedTable + 1);
-                        setSelectedTable(selectedTable + 1);
+                  <span>
+                    <IconButton
+                      id="datasetSchema-down"
+                      size="small"
+                      color="primary"
+                      className={classes.iconButton}
+                      disabled={
+                        selectedTable === -1 ||
+                        (selectedTable === datasetSchema.tables.length - 1 && selectedColumn === -1) ||
+                        (selectedColumn !== -1 &&
+                          selectedColumn === datasetSchema.tables[selectedTable].columns.length - 1)
                       }
-                      setDatasetSchema(schemaCopy);
-                    }}
-                  >
-                    <i className="fa fa-angle-down" />
-                  </IconButton>
+                      onClick={() => {
+                        const schemaCopy = _.cloneDeep(datasetSchema);
+                        if (
+                          selectedColumn !== -1 &&
+                          selectedColumn < schemaCopy.tables[selectedTable].columns.length - 1
+                        ) {
+                          swapArrayLocs(
+                            schemaCopy.tables[selectedTable].columns,
+                            selectedColumn,
+                            selectedColumn + 1,
+                          );
+                          setSelectedColumn(selectedColumn + 1);
+                        } else if (
+                          selectedTable !== -1 &&
+                          selectedTable < schemaCopy.tables.length - 1
+                        ) {
+                          swapArrayLocs(schemaCopy.tables, selectedTable, selectedTable + 1);
+                          setSelectedTable(selectedTable + 1);
+                        }
+                        setDatasetSchema(schemaCopy);
+                      }}
+                    >
+                      <i className="fa fa-angle-down" />
+                    </IconButton>
+                  </span>
                 </TerraTooltip>
 
                 <TerraTooltip title="Create relationships">
-                  <IconButton
-                    id="datasetSchema-linkRel"
-                    size="small"
-                    color="primary"
-                    className={classes.iconButton}
-                    style={{ marginLeft: 50 }}
-                    disabled={!datasetSchema.tables || datasetSchema.tables.length < 2}
-                    onClick={() => {
-                      setRelationshipModalDefaultValues(defaultRelationship);
-                      setRelationshipModalOpen(true);
-                    }}
-                  >
-                    <i className="fa fa-link-horizontal" />
-                  </IconButton>
+                  <span>
+                    <IconButton
+                      id="datasetSchema-linkRel"
+                      size="small"
+                      color="primary"
+                      className={classes.iconButton}
+                      style={{ marginLeft: 50 }}
+                      disabled={!datasetSchema.tables || datasetSchema.tables.length < 2}
+                      onClick={() => {
+                        setRelationshipModalDefaultValues(defaultRelationship);
+                        setRelationshipModalOpen(true);
+                      }}
+                    >
+                      <i className="fa fa-link-horizontal" />
+                    </IconButton>
+                  </span>
                 </TerraTooltip>
               </div>
             </div>
