@@ -190,6 +190,7 @@ export enum SnapshotIncludeOptions {
   ACCESS_INFORMATION = 'ACCESS_INFORMATION',
   PROFILE = 'PROFILE',
   DATA_PROJECT = 'DATA_PROJECT',
+  DUOS = 'DUOS',
 }
 
 export enum BreadcrumbType {
