@@ -706,7 +706,7 @@ describe('DatasetSchemaCreationView', () => {
                 'disabled',
               );
               cy.get('[data-cy="schemaBuilder-column-array"] input').should(
-                'not.have.attr',
+                'have.attr',
                 'disabled',
               );
             });
