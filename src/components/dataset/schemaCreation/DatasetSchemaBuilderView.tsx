@@ -500,9 +500,8 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
                         })}
                       >
                         {table.columns.map((column: ColumnModel, j: number) => (
-                          <div className={classes.columnNameDisplay}>
+                          <div className={classes.columnNameDisplay} key={`datasetSchema-table-${i}-column-${j}`}>
                             <Button
-                              key={`datasetSchema-table-${i}-column-${j}`}
                               onClick={() => {
                                 if (selectedTable === i && selectedColumn === j) {
                                   setSelectedTable(-1);
