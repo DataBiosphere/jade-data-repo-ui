@@ -18,9 +18,15 @@ import {
   TextField,
   Button,
 } from '@mui/material';
-import { Close, IndeterminateCheckBoxOutlined, AddBoxOutlined, Circle, Delete } from '@mui/icons-material';
-import TerraTooltip from '../../common/TerraTooltip';
+import {
+  Close,
+  IndeterminateCheckBoxOutlined,
+  AddBoxOutlined,
+  Circle,
+  Delete,
+} from '@mui/icons-material';
 import { TableModel, ColumnModel, DatasetSpecificationModel } from 'generated/tdr';
+import TerraTooltip from '../../common/TerraTooltip';
 import { styles as DatasetCreationStyles } from './DatasetSchemaCommon';
 
 const styles = (theme: CustomTheme) =>
@@ -235,15 +241,11 @@ function DatasetSchemaRelationshipModal({
         >
           <DialogTitle id="see-more-dialog-title">
             <div className={classes.dialogHeader}>
-              { isEditMode ? 'Edit relationship' : 'Create a relationship' }
-              { isEditMode && (
+              {isEditMode ? 'Edit relationship' : 'Create a relationship'}
+              {isEditMode && (
                 <TerraTooltip title="Delete relationship">
                   <span>
-                    <IconButton
-                      size="small"
-                      color="primary"
-                      onClick={onDelete}
-                    >
+                    <IconButton size="small" color="primary" onClick={onDelete}>
                       <Delete />
                     </IconButton>
                   </span>
@@ -310,7 +312,7 @@ function DatasetSchemaRelationshipModal({
                     });
                   }}
                 >
-                  { isEditMode ? 'Update relationship' : 'Create a relationship' }
+                  {isEditMode ? 'Update relationship' : 'Create a relationship'}
                 </Button>
                 <Button
                   type="button"

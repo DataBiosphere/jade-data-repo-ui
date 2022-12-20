@@ -99,7 +99,7 @@ const styles = (theme: CustomTheme) =>
       alignItems: 'center',
     },
     columnHighlighted: {
-      outline: `1px solid ${theme.palette.primary.main}`
+      outline: `1px solid ${theme.palette.primary.main}`,
     },
     relationshipButton: {
       backgroundColor: 'transparent',
@@ -305,7 +305,9 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
 
   const deleteRelationship = () => {
     const schemaCopy = _.cloneDeep(datasetSchema);
-    schemaCopy.relationships = schemaCopy.relationships?.filter((rel: RelationshipModel) => rel.name !== relationshipModalDefaultValues.name);
+    schemaCopy.relationships = schemaCopy.relationships?.filter(
+      (rel: RelationshipModel) => rel.name !== relationshipModalDefaultValues.name,
+    );
     setDatasetSchema(schemaCopy);
     setRelationshipModalOpen(false);
   };
@@ -320,8 +322,14 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
   };
 
   const getIndices = (table: string, column: string) => {
-    const tableIndex = _.findIndex(datasetSchema.tables, (schemaTable: TableModel) => schemaTable.name === table);
-    const columnIndex = _.findIndex(datasetSchema.tables[tableIndex].columns, (schemaCol: ColumnModel) => schemaCol.name === column);
+    const tableIndex = _.findIndex(
+      datasetSchema.tables,
+      (schemaTable: TableModel) => schemaTable.name === table,
+    );
+    const columnIndex = _.findIndex(
+      datasetSchema.tables[tableIndex].columns,
+      (schemaCol: ColumnModel) => schemaCol.name === column,
+    );
     return {
       table: tableIndex,
       column: columnIndex,
@@ -440,7 +448,8 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
                       className={classes.iconButton}
                       disabled={
                         selectedTable === -1 ||
-                        (selectedTable === datasetSchema.tables.length - 1 && selectedColumn === -1) ||
+                        (selectedTable === datasetSchema.tables.length - 1 &&
+                          selectedColumn === -1) ||
                         (selectedColumn !== -1 &&
                           selectedColumn === datasetSchema.tables[selectedTable].columns.length - 1)
                       }
@@ -548,7 +557,10 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
                         })}
                       >
                         {table.columns.map((column: ColumnModel, j: number) => (
-                          <div className={classes.columnNameDisplay} key={`datasetSchema-table-${i}-column-${j}`}>
+                          <div
+                            className={classes.columnNameDisplay}
+                            key={`datasetSchema-table-${i}-column-${j}`}
+                          >
                             <Button
                               onClick={() => {
                                 if (selectedTable === i && selectedColumn === j) {
@@ -565,7 +577,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
                                 {
                                   [classes.schemaBuilderStructureViewContentTableName_selected]:
                                     selectedTable === i && selectedColumn === j,
-                                  [classes.columnHighlighted]: outlinedRelationships[`${i}-${j}`]
+                                  [classes.columnHighlighted]: outlinedRelationships[`${i}-${j}`],
                                 },
                               )}
                               disableFocusRipple
@@ -592,8 +604,16 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
                                       setOutlinedRelationships({});
                                     }}
                                     onClick={() => {
-                                      const fromIndex = _.findIndex(datasetSchema.tables, (table: TableModel) => table.name === rel.from.table);
-                                      const toIndex = _.findIndex(datasetSchema.tables, (table: TableModel) => table.name === rel.to.table);
+                                      const fromIndex = _.findIndex(
+                                        datasetSchema.tables,
+                                        (schemaTable: TableModel) =>
+                                          schemaTable.name === rel.from.table,
+                                      );
+                                      const toIndex = _.findIndex(
+                                        datasetSchema.tables,
+                                        (schemaTable: TableModel) =>
+                                          schemaTable.name === rel.to.table,
+                                      );
                                       setRelationshipModalDefaultValues({
                                         from: wrapRadioValue(rel.from.table, rel.from.column),
                                         to: wrapRadioValue(rel.to.table, rel.to.column),
@@ -827,10 +847,10 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
                       checked={datasetSchema.tables[selectedTable].columns[selectedColumn].required}
                       disabled={
                         datasetSchema.tables[selectedTable].columns[selectedColumn].array_of ||
-                        datasetSchema.tables[selectedTable].primaryKey &&
-                        (datasetSchema.tables[selectedTable].primaryKey as string[]).indexOf(
-                          datasetSchema.tables[selectedTable].columns[selectedColumn].name,
-                        ) !== -1
+                        (datasetSchema.tables[selectedTable].primaryKey &&
+                          (datasetSchema.tables[selectedTable].primaryKey as string[]).indexOf(
+                            datasetSchema.tables[selectedTable].columns[selectedColumn].name,
+                          ) !== -1)
                       }
                     />
                   }
@@ -849,10 +869,10 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
                       checked={datasetSchema.tables[selectedTable].columns[selectedColumn].array_of}
                       disabled={
                         datasetSchema.tables[selectedTable].columns[selectedColumn].required ||
-                        datasetSchema.tables[selectedTable].primaryKey &&
-                        (datasetSchema.tables[selectedTable].primaryKey as string[]).indexOf(
-                          datasetSchema.tables[selectedTable].columns[selectedColumn].name,
-                        ) !== -1
+                        (datasetSchema.tables[selectedTable].primaryKey &&
+                          (datasetSchema.tables[selectedTable].primaryKey as string[]).indexOf(
+                            datasetSchema.tables[selectedTable].columns[selectedColumn].name,
+                          ) !== -1)
                       }
                     />
                   }
