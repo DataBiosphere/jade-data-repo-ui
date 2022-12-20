@@ -91,8 +91,8 @@ const JournalEntryTable = withStyles(styles)(
           const details = [];
           if (row.entryType === JournalEntryModelEntryTypeEnum.Create) {
             note = description;
-          } else if (_.get(parsedReq, 0) === 'bio.terra.model.IngestRequestModel') {
-            const strategy = _.get(parsedReq, [1, 'updateStrategy'], '');
+          } else if (parsedReq?.[0] === 'bio.terra.model.IngestRequestModel') {
+            const strategy = parsedReq?.[1]?.updateStrategy || '';
             const casedStrategy = `${strategy[0].toUpperCase()}${strategy.substring(1)}`;
             details.push(`${casedStrategy} with ${parsedReq[1].path}`);
           } else if (description && description !== note) {
