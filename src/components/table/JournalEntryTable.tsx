@@ -82,7 +82,6 @@ const JournalEntryTable = withStyles(styles)(
         render: (row: any) => {
           const request = _.get(row, ['mutation', 'request.json'], '{}');
           const parsedReq = JSON.parse(request);
-          console.log('parsedReq', parsedReq);
 
           let { note } = row;
 
