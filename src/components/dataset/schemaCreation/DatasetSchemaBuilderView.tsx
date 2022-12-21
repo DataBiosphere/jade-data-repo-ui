@@ -372,7 +372,8 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
                       className={classes.iconButton}
                       disabled={
                         selectedTable === -1 ||
-                        (selectedTable === datasetSchema.tables.length - 1 && selectedColumn === -1) ||
+                        (selectedTable === datasetSchema.tables.length - 1 &&
+                          selectedColumn === -1) ||
                         (selectedColumn !== -1 &&
                           selectedColumn === datasetSchema.tables[selectedTable].columns.length - 1)
                       }
@@ -717,10 +718,10 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
                       checked={datasetSchema.tables[selectedTable].columns[selectedColumn].required}
                       disabled={
                         datasetSchema.tables[selectedTable].columns[selectedColumn].array_of ||
-                        datasetSchema.tables[selectedTable].primaryKey &&
-                        (datasetSchema.tables[selectedTable].primaryKey as string[]).indexOf(
-                          datasetSchema.tables[selectedTable].columns[selectedColumn].name,
-                        ) !== -1
+                        (datasetSchema.tables[selectedTable].primaryKey &&
+                          (datasetSchema.tables[selectedTable].primaryKey as string[]).indexOf(
+                            datasetSchema.tables[selectedTable].columns[selectedColumn].name,
+                          ) !== -1)
                       }
                     />
                   }
@@ -739,10 +740,10 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
                       checked={datasetSchema.tables[selectedTable].columns[selectedColumn].array_of}
                       disabled={
                         datasetSchema.tables[selectedTable].columns[selectedColumn].required ||
-                        datasetSchema.tables[selectedTable].primaryKey &&
-                        (datasetSchema.tables[selectedTable].primaryKey as string[]).indexOf(
-                          datasetSchema.tables[selectedTable].columns[selectedColumn].name,
-                        ) !== -1
+                        (datasetSchema.tables[selectedTable].primaryKey &&
+                          (datasetSchema.tables[selectedTable].primaryKey as string[]).indexOf(
+                            datasetSchema.tables[selectedTable].columns[selectedColumn].name,
+                          ) !== -1)
                       }
                     />
                   }
