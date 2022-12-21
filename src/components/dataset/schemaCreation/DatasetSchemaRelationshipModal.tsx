@@ -18,8 +18,15 @@ import {
   TextField,
   Button,
 } from '@mui/material';
-import { Close, IndeterminateCheckBoxOutlined, AddBoxOutlined, Circle } from '@mui/icons-material';
+import {
+  Close,
+  IndeterminateCheckBoxOutlined,
+  AddBoxOutlined,
+  Circle,
+  Delete,
+} from '@mui/icons-material';
 import { TableModel, ColumnModel, DatasetSpecificationModel } from 'generated/tdr';
+import TerraTooltip from '../../common/TerraTooltip';
 import { styles as DatasetCreationStyles } from './DatasetSchemaCommon';
 
 const styles = (theme: CustomTheme) =>
@@ -40,8 +47,15 @@ const styles = (theme: CustomTheme) =>
       width: '40%',
       marginTop: 20,
     },
+    tableHeader: {
+      marginBottom: 0,
+      marginLeft: 2,
+    },
     radioWrapper: {
       display: 'block',
+    },
+    schemaBuilderViewContentChild: {
+      width: '100%',
     },
     summaryContainer: {
       margin: 20,
@@ -63,6 +77,8 @@ const styles = (theme: CustomTheme) =>
     },
     relationshipStructureViewContent: {
       height: 350,
+      marginTop: 5,
+      flexWrap: 'unset',
     },
     dotContainer: {
       padding: '0 15px 9px',
@@ -74,9 +90,12 @@ type DatasetSchemaRelationshipModalProps = {
   datasetSchema: DatasetSpecificationModel;
   onSubmit: (data: any) => void;
   onClose: () => void;
+  onDelete: () => void;
   defaultRelationshipFrom?: string;
   defaultRelationshipTo?: string;
   defaultExpandedTables: { [s: string]: boolean };
+  defaultRelationshipName?: string;
+  isEditMode?: boolean;
 };
 
 interface DatasetTableProps {
@@ -102,20 +121,23 @@ function DatasetSchemaRelationshipModal({
   datasetSchema,
   onSubmit,
   onClose,
+  onDelete,
   defaultRelationshipFrom,
   defaultRelationshipTo,
   defaultExpandedTables,
+  isEditMode = false,
+  defaultRelationshipName,
 }: DatasetSchemaRelationshipModalProps) {
   const [expandedTables, setExpandedTables] = useState(defaultExpandedTables || ({} as any));
   const [relationshipFrom, setRelationshipFrom] = useState(defaultRelationshipFrom || '');
   const [relationshipTo, setRelationshipTo] = useState(defaultRelationshipTo || '');
-  const [relationshipName, setRelationshipName] = useState('');
+  const [relationshipName, setRelationshipName] = useState(defaultRelationshipName || '');
 
   const datasetTable: any = (datasetProps: DatasetTableProps) => {
     const { id, label, value, setValue } = datasetProps;
     return (
       <FormControl className={classes.tableContainer}>
-        <FormLabel id={`radiogroup-${id}`} className={classes.formLabel}>
+        <FormLabel id={`radiogroup-${id}`} className={clsx(classes.formLabel, classes.tableHeader)}>
           {label}
         </FormLabel>
         <RadioGroup
@@ -130,7 +152,7 @@ function DatasetSchemaRelationshipModal({
           }}
         >
           {datasetSchema.tables?.map((table: TableModel, i: number) => (
-            <div key={`datasetSchema-table-${i}`}>
+            <div key={`datasetSchema-table-${i}`} className={classes.schemaBuilderViewContentChild}>
               <div className={classes.schemaBuilderStructureViewContentTableName}>
                 <IconButton
                   data-cy="expand-table-button"
@@ -218,7 +240,18 @@ function DatasetSchemaRelationshipModal({
           onBackdropClick={onClose}
         >
           <DialogTitle id="see-more-dialog-title">
-            <div className={classes.dialogHeader}>Create a relationship</div>
+            <div className={classes.dialogHeader}>
+              {isEditMode ? 'Edit relationship' : 'Create a relationship'}
+              {isEditMode && (
+                <TerraTooltip title="Delete relationship">
+                  <span>
+                    <IconButton size="small" color="primary" onClick={onDelete}>
+                      <Delete />
+                    </IconButton>
+                  </span>
+                </TerraTooltip>
+              )}
+            </div>
             <IconButton size="small" style={{ float: 'right' }} onClick={onClose}>
               <Close />
             </IconButton>
@@ -279,7 +312,7 @@ function DatasetSchemaRelationshipModal({
                     });
                   }}
                 >
-                  Add relationship
+                  {isEditMode ? 'Update relationship' : 'Create a relationship'}
                 </Button>
                 <Button
                   type="button"

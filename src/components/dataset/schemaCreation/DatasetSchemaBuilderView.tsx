@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import _ from 'lodash';
 import { withStyles } from '@mui/styles';
 import {
@@ -93,6 +93,22 @@ const styles = (theme: CustomTheme) =>
     formInputDatatype: {
       maxWidth: 200,
     },
+    columnNameDisplay: {
+      display: 'flex',
+      width: '100%',
+      alignItems: 'center',
+    },
+    columnHighlighted: {
+      outline: `1px solid ${theme.palette.primary.main}`,
+    },
+    relationshipButton: {
+      backgroundColor: 'transparent',
+      fontSize: '1rem',
+      height: '1rem',
+      width: '1rem',
+      marginTop: 6,
+      marginLeft: 6,
+    },
     jsonWrapper: {
       // background color to match codemirror okaidia's background color
       backgroundColor: '#272822',
@@ -105,6 +121,14 @@ const defaultRelationship = {
   from: '',
   to: '',
   expandedTables: {},
+  name: '',
+  isEditMode: false,
+};
+
+const defaultUiState = {
+  canCreateColumn: false,
+  disabledMoveUp: true,
+  disabledMoveDown: true,
 };
 
 const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
@@ -119,27 +143,46 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
   const [relationshipModalDefaultValues, setRelationshipModalDefaultValues] = useState(
     defaultRelationship,
   );
+  const [outlinedRelationships, setOutlinedRelationships] = useState({} as any);
+  const [uiState, setUiState] = useState(defaultUiState);
 
   const [anchorElDetailsMenu, setAnchorElDetailsMenu] = useState<null | HTMLElement>();
   const openDetailsMenu = Boolean(anchorElDetailsMenu);
 
-  const handleClickDetailsMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorElDetailsMenu(event.currentTarget);
-  };
-  const handleCloseDetailsMenu = () => setAnchorElDetailsMenu(null);
+  useEffect(() => {
+    setUiState({
+      canCreateColumn: selectedTable !== -1,
+      disabledMoveUp:
+        selectedTable === -1 ||
+        selectedColumn === 0 ||
+        (selectedTable === 0 && selectedColumn === -1),
+      disabledMoveDown:
+        selectedTable === -1 ||
+        (selectedTable === datasetSchema.tables.length - 1 && selectedColumn === -1) ||
+        (selectedColumn !== -1 &&
+          selectedColumn === datasetSchema.tables[selectedTable].columns.length - 1),
+    });
+  }, [selectedTable, selectedColumn, datasetSchema.tables]);
 
-  const onJsonViewerChange = useCallback(
-    (value: string) => {
-      try {
-        const potentialSchema = JSON.parse(value);
-        setDatasetSchema(potentialSchema);
-        setValue('schema', potentialSchema);
-      } catch (e) {
-        // do nothing
-      }
-    },
-    [setValue],
-  );
+  // ----------------------------------------
+  // Tables
+  // ----------------------------------------
+  const expandTable = (i: number) => {
+    setExpandedTables({
+      ...expandedTables,
+      [i]: !expandedTables[i],
+    });
+  };
+
+  const selectTable = (i: number) => {
+    if (selectedTable === i && selectedColumn === -1) {
+      setSelectedTable(-1);
+      setSelectedColumn(-1);
+    } else {
+      setSelectedTable(i);
+      setSelectedColumn(-1);
+    }
+  };
 
   const createTable = () => {
     if (!datasetSchema.tables) {
@@ -188,6 +231,85 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
     datasetSchema.tables.splice(selectedTable + 1, 0, copyTable);
     setDatasetSchema({ ...datasetSchema });
     handleCloseDetailsMenu();
+  };
+
+  const changeTableName = (event: any) => {
+    const schemaCopy = _.cloneDeep(datasetSchema);
+    const newName = event.target.value;
+    const origName = datasetSchema.tables[selectedTable].name;
+    schemaCopy.tables[selectedTable].name = newName;
+    setDatasetSchema(schemaCopy);
+
+    // Update the name if this table has a relationship
+    if (schemaCopy.relationships) {
+      schemaCopy.relationships = schemaCopy.relationships.map((rel: RelationshipModel) => {
+        if (rel.from.table === origName) {
+          rel.from.table = newName;
+        }
+        if (rel.to.table === origName) {
+          rel.to.table = newName;
+        }
+        return rel;
+      });
+    }
+    setDatasetSchema(schemaCopy);
+  };
+
+  const renderTableDetails = () => (
+    <div className={classes.schemaBuilderDetailView} data-cy="schemaBuilder-detailView">
+      <div className={classes.schemaBuilderStructureViewControls}>
+        <Typography variant="h4">Table attributes</Typography>
+        <IconButton
+          id="details-menu-button"
+          size="small"
+          color="primary"
+          className={classes.iconButton}
+          onClick={handleClickDetailsMenu}
+          aria-controls={openDetailsMenu ? 'details-menu' : undefined}
+          aria-haspopup="true"
+          aria-expanded={openDetailsMenu ? 'true' : undefined}
+        >
+          <MoreVert />
+        </IconButton>
+        <Menu
+          id="details-menu"
+          anchorEl={anchorElDetailsMenu}
+          open={openDetailsMenu}
+          onClose={handleCloseDetailsMenu}
+          MenuListProps={{ 'aria-labelledby': 'details-menu-button' }}
+        >
+          <MenuItem onClick={() => duplicateTable()}>Duplicate table</MenuItem>
+          <Divider />
+          <MenuItem onClick={() => deleteTable()}>Delete table</MenuItem>
+        </Menu>
+      </div>
+      <div>
+        <label htmlFor="table-name" className={classes.formLabel}>
+          Table name
+        </label>
+        <TextField
+          id="table-name"
+          placeholder="table name"
+          className={classes.formInput}
+          value={datasetSchema.tables[selectedTable].name}
+          onKeyDown={preventFormSubmission}
+          onChange={changeTableName}
+        />
+      </div>
+    </div>
+  );
+
+  // ----------------------------------------
+  // Columns
+  // ----------------------------------------
+  const selectColumn = (i: number, j: number) => {
+    if (selectedTable === i && selectedColumn === j) {
+      setSelectedTable(-1);
+      setSelectedColumn(-1);
+    } else {
+      setSelectedTable(i);
+      setSelectedColumn(j);
+    }
   };
 
   const createColumn = () => {
@@ -260,10 +382,316 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
     setDatasetSchema(schemaCopy);
   };
 
+  const renderColumnDetails = () => (
+    <div className={classes.schemaBuilderDetailView}>
+      <div className={classes.schemaBuilderStructureViewControls}>
+        <Typography variant="h4">Column attributes</Typography>
+        <IconButton
+          id="details-menu-button"
+          size="small"
+          color="primary"
+          className={classes.iconButton}
+          onClick={handleClickDetailsMenu}
+          aria-controls={openDetailsMenu ? 'details-menu' : undefined}
+          aria-haspopup="true"
+          aria-expanded={openDetailsMenu ? 'true' : undefined}
+        >
+          <MoreVert />
+        </IconButton>
+        <Menu
+          id="details-menu"
+          anchorEl={anchorElDetailsMenu}
+          open={openDetailsMenu}
+          onClose={handleCloseDetailsMenu}
+          MenuListProps={{ 'aria-labelledby': 'details-menu-button' }}
+        >
+          <MenuItem onClick={() => openRelationshipEditor({ useSelectedColumn: true })}>
+            Create relationship
+          </MenuItem>
+          <Divider />
+          <MenuItem onClick={() => duplicateColumn()}>Duplicate column</MenuItem>
+          <Divider />
+          <MenuItem onClick={() => deleteColumn()}>Delete column</MenuItem>
+        </Menu>
+      </div>
+      <div>
+        <label htmlFor="column-name" className={classes.formLabel}>
+          Column name
+        </label>
+        <TextField
+          id="column-name"
+          placeholder="column name"
+          className={classes.formInput}
+          value={datasetSchema.tables[selectedTable].columns[selectedColumn].name}
+          onKeyDown={preventFormSubmission}
+          onChange={changeColumnName}
+        />
+      </div>
+      <div>
+        <label htmlFor="column-datatype" className={classes.formLabel}>
+          Data type
+        </label>
+        <Autocomplete
+          id="column-datatype"
+          options={_.keys(TableDataType)}
+          className={clsx(classes.formInput, classes.formInputDatatype)}
+          renderInput={(params: any) => <TextField {...params} onKeyDown={preventFormSubmission} />}
+          value={datasetSchema.tables[selectedTable].columns[selectedColumn].datatype}
+          isOptionEqualToValue={(option: string, value: string) =>
+            _.get(TableDataType, option) === value
+          }
+          onChange={(_event: any, change: any) => {
+            if (_.has(TableDataType, change)) {
+              const schemaCopy = _.cloneDeep(datasetSchema);
+              schemaCopy.tables[selectedTable].columns[selectedColumn].datatype = _.get(
+                TableDataType,
+                change,
+                '',
+              );
+              setDatasetSchema(schemaCopy);
+            }
+          }}
+        />
+      </div>
+      <div style={{ marginTop: 10 }}>
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={
+                datasetSchema.tables[selectedTable].primaryKey &&
+                (datasetSchema.tables[selectedTable].primaryKey as string[]).indexOf(
+                  datasetSchema.tables[selectedTable].columns[selectedColumn].name,
+                ) !== -1
+              }
+              disabled={datasetSchema.tables[selectedTable].columns[selectedColumn].array_of}
+            />
+          }
+          label="Primary"
+          data-cy="schemaBuilder-column-primary"
+          onChange={(_event: any, change: boolean) => {
+            const schemaCopy = _.cloneDeep(datasetSchema);
+            const columnName = schemaCopy.tables[selectedTable].columns[selectedColumn].name;
+            const primaryKeyArr: string[] = _.get(
+              schemaCopy.tables[selectedTable],
+              'primaryKey',
+              [],
+            );
+            const primaryKeyIndex: number = primaryKeyArr.indexOf(columnName);
+            if (change && primaryKeyIndex === -1) {
+              primaryKeyArr.push(columnName);
+              schemaCopy.tables[selectedTable].columns[selectedColumn].required = true;
+              schemaCopy.tables[selectedTable].columns[selectedColumn].array_of = false;
+            } else if (!change && primaryKeyIndex !== -1) {
+              primaryKeyArr.splice(primaryKeyIndex, 1);
+            }
+            schemaCopy.tables[selectedTable].primaryKey = primaryKeyArr;
+            setDatasetSchema(schemaCopy);
+          }}
+        />
+
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={datasetSchema.tables[selectedTable].columns[selectedColumn].required}
+              disabled={
+                datasetSchema.tables[selectedTable].columns[selectedColumn].array_of ||
+                datasetSchema.tables[selectedTable].primaryKey?.indexOf(
+                  datasetSchema.tables[selectedTable].columns[selectedColumn].name,
+                ) !== -1
+              }
+            />
+          }
+          label="Required"
+          data-cy="schemaBuilder-column-required"
+          onChange={(_event: any, change: boolean) => {
+            const schemaCopy = _.cloneDeep(datasetSchema);
+            schemaCopy.tables[selectedTable].columns[selectedColumn].required = change;
+            setDatasetSchema(schemaCopy);
+          }}
+        />
+
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={datasetSchema.tables[selectedTable].columns[selectedColumn].array_of}
+              disabled={
+                datasetSchema.tables[selectedTable].columns[selectedColumn].required ||
+                datasetSchema.tables[selectedTable].primaryKey?.indexOf(
+                  datasetSchema.tables[selectedTable].columns[selectedColumn].name,
+                ) !== -1
+              }
+            />
+          }
+          label="Array"
+          data-cy="schemaBuilder-column-array"
+          onChange={(_event: any, change: boolean) => {
+            const schemaCopy = _.cloneDeep(datasetSchema);
+            schemaCopy.tables[selectedTable].columns[selectedColumn].array_of = change;
+            setDatasetSchema(schemaCopy);
+          }}
+        />
+      </div>
+    </div>
+  );
+
+  // ----------------------------------------
+  // Relationships
+  // ----------------------------------------
+  const openRelationshipEditor = (props: {
+    rel?: RelationshipModel;
+    useSelectedColumn?: boolean;
+  }) => {
+    const { rel, useSelectedColumn } = props;
+    if (rel) {
+      const fromIndex = _.findIndex(
+        datasetSchema.tables,
+        (schemaTable: TableModel) => schemaTable.name === rel.from.table,
+      );
+      const toIndex = _.findIndex(
+        datasetSchema.tables,
+        (schemaTable: TableModel) => schemaTable.name === rel.to.table,
+      );
+      setRelationshipModalDefaultValues({
+        from: wrapRadioValue(rel.from.table, rel.from.column),
+        to: wrapRadioValue(rel.to.table, rel.to.column),
+        expandedTables: {
+          [`radioGroup-relationshipFrom-${fromIndex}`]: true,
+          [`radioGroup-relationshipTo-${toIndex}`]: true,
+        },
+        name: rel.name,
+        isEditMode: true,
+      });
+    } else if (useSelectedColumn) {
+      const tableName = datasetSchema.tables[selectedTable].name;
+      const colName = datasetSchema.tables[selectedTable].columns[selectedColumn].name;
+      setRelationshipModalDefaultValues({
+        from:
+          selectedTable !== -1 && selectedColumn !== -1 ? wrapRadioValue(tableName, colName) : '',
+        expandedTables: {
+          [`radioGroup-relationshipFrom-${selectedTable}`]: true,
+        },
+        to: '',
+        name: '',
+        isEditMode: false,
+      });
+    } else {
+      setRelationshipModalDefaultValues(defaultRelationship);
+    }
+
+    setRelationshipModalOpen(true);
+    handleCloseDetailsMenu();
+  };
+
+  const createRelationship = (data: RelationshipModel) => {
+    const schemaCopy = _.cloneDeep(datasetSchema);
+    if (!schemaCopy.relationships) {
+      schemaCopy.relationships = [];
+    }
+    schemaCopy.relationships.push(data);
+    setDatasetSchema(schemaCopy);
+    setRelationshipModalOpen(false);
+  };
+
+  const editRelationship = (data: RelationshipModel) => {
+    const schemaCopy = _.cloneDeep(datasetSchema);
+    if (schemaCopy.relationships) {
+      schemaCopy.relationships = schemaCopy.relationships.map((rel: RelationshipModel) => {
+        if (rel.name === relationshipModalDefaultValues.name) {
+          return data;
+        }
+        return rel;
+      });
+    }
+    setDatasetSchema(schemaCopy);
+    setRelationshipModalOpen(false);
+  };
+
+  const deleteRelationship = () => {
+    const schemaCopy = _.cloneDeep(datasetSchema);
+    schemaCopy.relationships = schemaCopy.relationships?.filter(
+      (rel: RelationshipModel) => rel.name !== relationshipModalDefaultValues.name,
+    );
+    setDatasetSchema(schemaCopy);
+    setRelationshipModalOpen(false);
+  };
+
+  const highlightRelationshipColumns = (rel: RelationshipModel) => {
+    const fromIndices = getIndices(rel.from.table, rel.from.column);
+    const toIndices = getIndices(rel.to.table, rel.to.column);
+    setOutlinedRelationships({
+      [`${fromIndices.table}-${fromIndices.column}`]: true,
+      [`${toIndices.table}-${toIndices.column}`]: true,
+    });
+  };
+
+  // ----------------------------------------
+  // Table Helper Methods
+  // ----------------------------------------
+  const getIndices = (table: string, column: string) => {
+    const tableIndex = _.findIndex(
+      datasetSchema.tables,
+      (schemaTable: TableModel) => schemaTable.name === table,
+    );
+    const columnIndex = _.findIndex(
+      datasetSchema.tables[tableIndex].columns,
+      (schemaCol: ColumnModel) => schemaCol.name === column,
+    );
+    return {
+      table: tableIndex,
+      column: columnIndex,
+    };
+  };
+
   const swapArrayLocs = (arr: Array<any>, index1: number, index2: number) => {
     [arr[index1], arr[index2]] = [arr[index2], arr[index1]];
   };
 
+  const moveSelectedUp = () => {
+    const schemaCopy = _.cloneDeep(datasetSchema);
+    if (selectedColumn > 0) {
+      swapArrayLocs(schemaCopy.tables[selectedTable].columns, selectedColumn, selectedColumn - 1);
+      setSelectedColumn(selectedColumn - 1);
+    } else if (selectedColumn === -1 && selectedTable > 0) {
+      swapArrayLocs(schemaCopy.tables, selectedTable, selectedTable - 1);
+      setSelectedTable(selectedTable - 1);
+    }
+    setDatasetSchema(schemaCopy);
+  };
+
+  const moveSelectedDown = () => {
+    const schemaCopy = _.cloneDeep(datasetSchema);
+    if (
+      selectedColumn !== -1 &&
+      selectedColumn < schemaCopy.tables[selectedTable].columns.length - 1
+    ) {
+      swapArrayLocs(schemaCopy.tables[selectedTable].columns, selectedColumn, selectedColumn + 1);
+      setSelectedColumn(selectedColumn + 1);
+    } else if (selectedTable !== -1 && selectedTable < schemaCopy.tables.length - 1) {
+      swapArrayLocs(schemaCopy.tables, selectedTable, selectedTable + 1);
+      setSelectedTable(selectedTable + 1);
+    }
+    setDatasetSchema(schemaCopy);
+  };
+
+  // ----------------------------------------
+  // CodeMirror (JSON viewer)
+  // ----------------------------------------
+  const onJsonViewerChange = useCallback(
+    (value: string) => {
+      try {
+        const potentialSchema = JSON.parse(value);
+        setDatasetSchema(potentialSchema);
+        setValue('schema', potentialSchema);
+      } catch (e) {
+        // do nothing
+      }
+    },
+    [setValue],
+  );
+
+  // ----------------------------------------
+  // Form Methods
+  // ----------------------------------------
   const preventFormSubmission = (event: any) => {
     if (event.code === 'Enter') {
       event.preventDefault();
@@ -281,6 +709,17 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
     validate: { isValidSchema },
   });
 
+  // ----------------------------------------
+  // UI
+  // ----------------------------------------
+  const handleClickDetailsMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorElDetailsMenu(event.currentTarget);
+  };
+  const handleCloseDetailsMenu = () => setAnchorElDetailsMenu(null);
+
+  // ----------------------------------------
+  // Final render
+  // ----------------------------------------
   return (
     <div className={classes.contentContainer}>
       <div>
@@ -320,7 +759,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
                   disableElevation
                   variant="contained"
                   type="button"
-                  disabled={selectedTable === -1}
+                  disabled={!uiState.canCreateColumn}
                   className={classes.schemaControlButton}
                   onClick={createColumn}
                 >
@@ -337,26 +776,8 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
                       size="small"
                       color="primary"
                       className={classes.iconButton}
-                      disabled={
-                        selectedTable === -1 ||
-                        selectedColumn === 0 ||
-                        (selectedTable === 0 && selectedColumn === -1)
-                      }
-                      onClick={() => {
-                        const schemaCopy = _.cloneDeep(datasetSchema);
-                        if (selectedColumn > 0) {
-                          swapArrayLocs(
-                            schemaCopy.tables[selectedTable].columns,
-                            selectedColumn,
-                            selectedColumn - 1,
-                          );
-                          setSelectedColumn(selectedColumn - 1);
-                        } else if (selectedColumn === -1 && selectedTable > 0) {
-                          swapArrayLocs(schemaCopy.tables, selectedTable, selectedTable - 1);
-                          setSelectedTable(selectedTable - 1);
-                        }
-                        setDatasetSchema(schemaCopy);
-                      }}
+                      disabled={uiState.disabledMoveUp}
+                      onClick={moveSelectedUp}
                     >
                       <i className="fa fa-angle-up" />
                     </IconButton>
@@ -370,34 +791,8 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
                       size="small"
                       color="primary"
                       className={classes.iconButton}
-                      disabled={
-                        selectedTable === -1 ||
-                        (selectedTable === datasetSchema.tables.length - 1 &&
-                          selectedColumn === -1) ||
-                        (selectedColumn !== -1 &&
-                          selectedColumn === datasetSchema.tables[selectedTable].columns.length - 1)
-                      }
-                      onClick={() => {
-                        const schemaCopy = _.cloneDeep(datasetSchema);
-                        if (
-                          selectedColumn !== -1 &&
-                          selectedColumn < schemaCopy.tables[selectedTable].columns.length - 1
-                        ) {
-                          swapArrayLocs(
-                            schemaCopy.tables[selectedTable].columns,
-                            selectedColumn,
-                            selectedColumn + 1,
-                          );
-                          setSelectedColumn(selectedColumn + 1);
-                        } else if (
-                          selectedTable !== -1 &&
-                          selectedTable < schemaCopy.tables.length - 1
-                        ) {
-                          swapArrayLocs(schemaCopy.tables, selectedTable, selectedTable + 1);
-                          setSelectedTable(selectedTable + 1);
-                        }
-                        setDatasetSchema(schemaCopy);
-                      }}
+                      disabled={uiState.disabledMoveDown}
+                      onClick={moveSelectedDown}
                     >
                       <i className="fa fa-angle-down" />
                     </IconButton>
@@ -413,10 +808,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
                       className={classes.iconButton}
                       style={{ marginLeft: 50 }}
                       disabled={!datasetSchema.tables || datasetSchema.tables.length < 2}
-                      onClick={() => {
-                        setRelationshipModalDefaultValues(defaultRelationship);
-                        setRelationshipModalOpen(true);
-                      }}
+                      onClick={() => openRelationshipEditor({})}
                     >
                       <i className="fa fa-link-horizontal" />
                     </IconButton>
@@ -434,27 +826,11 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
                     className={classes.schemaBuilderStructureViewContentTableName}
                     data-cy="schemaBuilder-selectTableButton"
                   >
-                    <IconButton
-                      color="primary"
-                      onClick={() =>
-                        setExpandedTables({
-                          ...expandedTables,
-                          [i]: !expandedTables[i],
-                        })
-                      }
-                    >
+                    <IconButton color="primary" onClick={() => expandTable(i)}>
                       {expandedTables[i] ? <IndeterminateCheckBoxOutlined /> : <AddBoxOutlined />}
                     </IconButton>
                     <Button
-                      onClick={() => {
-                        if (selectedTable === i && selectedColumn === -1) {
-                          setSelectedTable(-1);
-                          setSelectedColumn(-1);
-                        } else {
-                          setSelectedTable(i);
-                          setSelectedColumn(-1);
-                        }
-                      }}
+                      onClick={() => selectTable(i)}
                       className={clsx(classes.schemaBuilderStructureViewContentTableName_text, {
                         [classes.schemaBuilderStructureViewContentTableName_selected]:
                           selectedTable === i && selectedColumn === -1,
@@ -481,30 +857,49 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
                         })}
                       >
                         {table.columns.map((column: ColumnModel, j: number) => (
-                          <Button
+                          <div
+                            className={classes.columnNameDisplay}
                             key={`datasetSchema-table-${i}-column-${j}`}
-                            onClick={() => {
-                              if (selectedTable === i && selectedColumn === j) {
-                                setSelectedTable(-1);
-                                setSelectedColumn(-1);
-                              } else {
-                                setSelectedTable(i);
-                                setSelectedColumn(j);
-                              }
-                            }}
-                            className={clsx(
-                              classes.schemaBuilderStructureViewContentTableName_text,
-                              classes.schemaBuilderStructureViewContentColumn,
-                              {
-                                [classes.schemaBuilderStructureViewContentTableName_selected]:
-                                  selectedTable === i && selectedColumn === j,
-                              },
-                            )}
-                            disableFocusRipple
-                            disableRipple
                           >
-                            {column.name || '(unnamed column)'}
-                          </Button>
+                            <Button
+                              onClick={() => selectColumn(i, j)}
+                              className={clsx(
+                                classes.schemaBuilderStructureViewContentTableName_text,
+                                classes.schemaBuilderStructureViewContentColumn,
+                                {
+                                  [classes.schemaBuilderStructureViewContentTableName_selected]:
+                                    selectedTable === i && selectedColumn === j,
+                                  [classes.columnHighlighted]: outlinedRelationships[`${i}-${j}`],
+                                },
+                              )}
+                              disableFocusRipple
+                              disableRipple
+                            >
+                              {column.name || '(unnamed column)'}
+                            </Button>
+                            {datasetSchema.relationships
+                              ?.filter((rel: RelationshipModel) => {
+                                const isFrom =
+                                  rel.from.table === table.name && rel.from.column === column.name;
+                                const isTo =
+                                  rel.to.table === table.name && rel.to.column === column.name;
+                                return isFrom || isTo;
+                              })
+                              .map((rel: RelationshipModel) => (
+                                <TerraTooltip title={rel.name} key={`rel-${rel.name}`}>
+                                  <IconButton
+                                    size="small"
+                                    color="primary"
+                                    className={classes.relationshipButton}
+                                    onMouseEnter={() => highlightRelationshipColumns(rel)}
+                                    onMouseLeave={() => setOutlinedRelationships({})}
+                                    onClick={() => openRelationshipEditor({ rel })}
+                                  >
+                                    <i className="fa fa-link-horizontal" />
+                                  </IconButton>
+                                </TerraTooltip>
+                              ))}
+                          </div>
                         ))}
                       </div>
                     </div>
@@ -513,251 +908,8 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
               ))}
             </div>
           </div>
-          {selectedTable !== -1 && selectedColumn === -1 && (
-            <div className={classes.schemaBuilderDetailView} data-cy="schemaBuilder-detailView">
-              <div className={classes.schemaBuilderStructureViewControls}>
-                <Typography variant="h4">Table attributes</Typography>
-                <IconButton
-                  id="details-menu-button"
-                  size="small"
-                  color="primary"
-                  className={classes.iconButton}
-                  onClick={handleClickDetailsMenu}
-                  aria-controls={openDetailsMenu ? 'details-menu' : undefined}
-                  aria-haspopup="true"
-                  aria-expanded={openDetailsMenu ? 'true' : undefined}
-                >
-                  <MoreVert />
-                </IconButton>
-                <Menu
-                  id="details-menu"
-                  anchorEl={anchorElDetailsMenu}
-                  open={openDetailsMenu}
-                  onClose={handleCloseDetailsMenu}
-                  MenuListProps={{
-                    'aria-labelledby': 'details-menu-button',
-                  }}
-                >
-                  <MenuItem onClick={() => duplicateTable()}>Duplicate table</MenuItem>
-                  <Divider />
-                  <MenuItem onClick={() => deleteTable()}>Delete table</MenuItem>
-                </Menu>
-              </div>
-              <div>
-                <label htmlFor="table-name" className={classes.formLabel}>
-                  Table name
-                </label>
-                <TextField
-                  id="table-name"
-                  placeholder="table name"
-                  className={classes.formInput}
-                  value={datasetSchema.tables[selectedTable].name}
-                  onKeyDown={preventFormSubmission}
-                  onChange={(event: any) => {
-                    const schemaCopy = _.cloneDeep(datasetSchema);
-                    const newName = event.target.value;
-                    const origName = datasetSchema.tables[selectedTable].name;
-                    schemaCopy.tables[selectedTable].name = newName;
-                    setDatasetSchema(schemaCopy);
-
-                    // Update the name if this table has a relationship
-                    if (schemaCopy.relationships) {
-                      schemaCopy.relationships = schemaCopy.relationships.map(
-                        (rel: RelationshipModel) => {
-                          if (rel.from.table === origName) {
-                            rel.from.table = newName;
-                          }
-                          if (rel.to.table === origName) {
-                            rel.to.table = newName;
-                          }
-                          return rel;
-                        },
-                      );
-                    }
-                    setDatasetSchema(schemaCopy);
-                  }}
-                />
-              </div>
-            </div>
-          )}
-          {selectedTable !== -1 && selectedColumn !== -1 && (
-            <div className={classes.schemaBuilderDetailView}>
-              <div className={classes.schemaBuilderStructureViewControls}>
-                <Typography variant="h4">Column attributes</Typography>
-                <IconButton
-                  id="details-menu-button"
-                  size="small"
-                  color="primary"
-                  className={classes.iconButton}
-                  onClick={handleClickDetailsMenu}
-                  aria-controls={openDetailsMenu ? 'details-menu' : undefined}
-                  aria-haspopup="true"
-                  aria-expanded={openDetailsMenu ? 'true' : undefined}
-                >
-                  <MoreVert />
-                </IconButton>
-                <Menu
-                  id="details-menu"
-                  anchorEl={anchorElDetailsMenu}
-                  open={openDetailsMenu}
-                  onClose={handleCloseDetailsMenu}
-                  MenuListProps={{
-                    'aria-labelledby': 'details-menu-button',
-                  }}
-                >
-                  <MenuItem
-                    onClick={() => {
-                      const tableName = datasetSchema.tables[selectedTable].name;
-                      const colName =
-                        datasetSchema.tables[selectedTable].columns[selectedColumn].name;
-                      setRelationshipModalDefaultValues({
-                        from:
-                          selectedTable !== -1 && selectedColumn !== -1
-                            ? wrapRadioValue(tableName, colName)
-                            : '',
-                        expandedTables: {
-                          [`radioGroup-relationshipFrom-${selectedTable}`]: true,
-                        },
-                        to: '',
-                      });
-                      setRelationshipModalOpen(true);
-                    }}
-                  >
-                    Create relationship
-                  </MenuItem>
-                  <MenuItem>Remove relationship</MenuItem>
-                  <Divider />
-                  <MenuItem onClick={() => duplicateColumn()}>Duplicate column</MenuItem>
-                  <Divider />
-                  <MenuItem onClick={() => deleteColumn()}>Delete column</MenuItem>
-                </Menu>
-              </div>
-              <div>
-                <label htmlFor="column-name" className={classes.formLabel}>
-                  Column name
-                </label>
-                <TextField
-                  id="column-name"
-                  placeholder="column name"
-                  className={classes.formInput}
-                  value={datasetSchema.tables[selectedTable].columns[selectedColumn].name}
-                  onKeyDown={preventFormSubmission}
-                  onChange={changeColumnName}
-                />
-              </div>
-              <div>
-                <label htmlFor="column-datatype" className={classes.formLabel}>
-                  Data type
-                </label>
-                <Autocomplete
-                  id="column-datatype"
-                  options={_.keys(TableDataType)}
-                  className={clsx(classes.formInput, classes.formInputDatatype)}
-                  renderInput={(params: any) => (
-                    <TextField {...params} onKeyDown={preventFormSubmission} />
-                  )}
-                  value={datasetSchema.tables[selectedTable].columns[selectedColumn].datatype}
-                  isOptionEqualToValue={(option: string, value: string) =>
-                    _.get(TableDataType, option) === value
-                  }
-                  onChange={(_event: any, change: any) => {
-                    if (_.has(TableDataType, change)) {
-                      const schemaCopy = _.cloneDeep(datasetSchema);
-                      schemaCopy.tables[selectedTable].columns[selectedColumn].datatype = _.get(
-                        TableDataType,
-                        change,
-                        '',
-                      );
-                      setDatasetSchema(schemaCopy);
-                    }
-                  }}
-                />
-              </div>
-              <div style={{ marginTop: 10 }}>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={
-                        datasetSchema.tables[selectedTable].primaryKey &&
-                        (datasetSchema.tables[selectedTable].primaryKey as string[]).indexOf(
-                          datasetSchema.tables[selectedTable].columns[selectedColumn].name,
-                        ) !== -1
-                      }
-                      disabled={
-                        datasetSchema.tables[selectedTable].columns[selectedColumn].array_of
-                      }
-                    />
-                  }
-                  label="Primary"
-                  data-cy="schemaBuilder-column-primary"
-                  onChange={(_event: any, change: boolean) => {
-                    const schemaCopy = _.cloneDeep(datasetSchema);
-                    const columnName =
-                      schemaCopy.tables[selectedTable].columns[selectedColumn].name;
-                    const primaryKeyArr: string[] = _.get(
-                      schemaCopy.tables[selectedTable],
-                      'primaryKey',
-                      [],
-                    );
-                    const primaryKeyIndex: number = primaryKeyArr.indexOf(columnName);
-                    if (change && primaryKeyIndex === -1) {
-                      primaryKeyArr.push(columnName);
-                      schemaCopy.tables[selectedTable].columns[selectedColumn].required = true;
-                      schemaCopy.tables[selectedTable].columns[selectedColumn].array_of = false;
-                    } else if (!change && primaryKeyIndex !== -1) {
-                      primaryKeyArr.splice(primaryKeyIndex, 1);
-                    }
-                    schemaCopy.tables[selectedTable].primaryKey = primaryKeyArr;
-                    setDatasetSchema(schemaCopy);
-                  }}
-                />
-
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={datasetSchema.tables[selectedTable].columns[selectedColumn].required}
-                      disabled={
-                        datasetSchema.tables[selectedTable].columns[selectedColumn].array_of ||
-                        (datasetSchema.tables[selectedTable].primaryKey &&
-                          (datasetSchema.tables[selectedTable].primaryKey as string[]).indexOf(
-                            datasetSchema.tables[selectedTable].columns[selectedColumn].name,
-                          ) !== -1)
-                      }
-                    />
-                  }
-                  label="Required"
-                  data-cy="schemaBuilder-column-required"
-                  onChange={(_event: any, change: boolean) => {
-                    const schemaCopy = _.cloneDeep(datasetSchema);
-                    schemaCopy.tables[selectedTable].columns[selectedColumn].required = change;
-                    setDatasetSchema(schemaCopy);
-                  }}
-                />
-
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={datasetSchema.tables[selectedTable].columns[selectedColumn].array_of}
-                      disabled={
-                        datasetSchema.tables[selectedTable].columns[selectedColumn].required ||
-                        (datasetSchema.tables[selectedTable].primaryKey &&
-                          (datasetSchema.tables[selectedTable].primaryKey as string[]).indexOf(
-                            datasetSchema.tables[selectedTable].columns[selectedColumn].name,
-                          ) !== -1)
-                      }
-                    />
-                  }
-                  label="Array"
-                  data-cy="schemaBuilder-column-array"
-                  onChange={(_event: any, change: boolean) => {
-                    const schemaCopy = _.cloneDeep(datasetSchema);
-                    schemaCopy.tables[selectedTable].columns[selectedColumn].array_of = change;
-                    setDatasetSchema(schemaCopy);
-                  }}
-                />
-              </div>
-            </div>
-          )}
+          {selectedTable !== -1 && selectedColumn === -1 && renderTableDetails()}
+          {selectedTable !== -1 && selectedColumn !== -1 && renderColumnDetails()}
         </div>
 
         <div>
@@ -780,21 +932,22 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
       {relationshipModalOpen && (
         <DatasetSchemaRelationshipModal
           datasetSchema={datasetSchema}
+          isEditMode={relationshipModalDefaultValues.isEditMode}
+          defaultRelationshipName={relationshipModalDefaultValues.name}
           defaultRelationshipFrom={relationshipModalDefaultValues.from}
           defaultRelationshipTo={relationshipModalDefaultValues.to}
           defaultExpandedTables={relationshipModalDefaultValues.expandedTables}
           onSubmit={(data: RelationshipModel) => {
-            const schemaCopy = _.cloneDeep(datasetSchema);
-            if (!schemaCopy.relationships) {
-              schemaCopy.relationships = [];
+            if (relationshipModalDefaultValues.isEditMode) {
+              editRelationship(data);
+            } else {
+              createRelationship(data);
             }
-            schemaCopy.relationships.push(data);
-            setDatasetSchema(schemaCopy);
-            setRelationshipModalOpen(false);
           }}
           onClose={() => {
             setRelationshipModalOpen(false);
           }}
+          onDelete={deleteRelationship}
         />
       )}
     </div>
