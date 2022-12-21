@@ -10,6 +10,30 @@ import clsx from 'clsx';
 import { ColumnModel, TableModel } from '../../../generated/tdr';
 import TerraTooltip from '../TerraTooltip';
 
+export const columnRenderStyles = {
+  columnBox: {
+    background: '#e6e6e6',
+    textAlign: 'center',
+    borderRadius: 3,
+    fontSize: 12,
+    width: 18,
+    height: 18,
+    display: 'inline-block',
+    paddingTop: 4,
+    fontWeight: 700,
+    lineHeight: '12px',
+    marginRight: 4,
+    position: 'relative',
+  },
+  columnSubscript: {
+    position: 'absolute',
+    fontSize: 8,
+    top: 9,
+    left: 12,
+    whiteSpace: 'nowrap',
+  },
+};
+
 const styles = (theme: CustomTheme) =>
   createStyles({
     root: {
@@ -37,26 +61,6 @@ const styles = (theme: CustomTheme) =>
       display: 'flex',
       flexDirection: 'row',
     },
-    columnBox: {
-      background: '#e6e6e6',
-      textAlign: 'center',
-      borderRadius: 3,
-      fontSize: 12,
-      width: 18,
-      height: 18,
-      display: 'inline-block',
-      paddingTop: 4,
-      fontWeight: 700,
-      lineHeight: '12px',
-      marginRight: 4,
-      position: 'relative',
-    },
-    columnSubscript: {
-      position: 'absolute',
-      fontSize: 8,
-      top: 9,
-      left: 12,
-    },
     columnNameHighlight: {
       background: '#e6e6e6',
       borderRadius: 3,
@@ -72,7 +76,8 @@ const styles = (theme: CustomTheme) =>
     ellipsis: {
       ...theme.mixins.ellipsis,
     },
-  });
+    ...columnRenderStyles,
+  } as any);
 
 const StyledTreeItem = withStyles((theme) => ({
   content: {
@@ -134,7 +139,7 @@ const renderTableName = (table: TableModel) => {
   return retVal;
 };
 
-const renderColumnName = (
+export const renderColumnName = (
   column: ColumnModel,
   table: TableModel,
   classes: ClassNameMap<string>,
@@ -154,7 +159,7 @@ const renderColumnName = (
         [classes.columnNameHighlight]: isPk,
       })}
     >
-      {column.name}
+      {column.name || '(unnamed column)'}
       {column.required ? ' *' : ''}
     </span>,
   );

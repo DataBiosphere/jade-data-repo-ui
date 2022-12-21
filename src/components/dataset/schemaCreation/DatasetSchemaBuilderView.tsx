@@ -34,6 +34,7 @@ import {
 } from 'generated/tdr';
 import clsx from 'clsx';
 import TerraTooltip from '../../common/TerraTooltip';
+import { renderColumnName, columnRenderStyles } from '../../common/overview/SchemaPanel';
 import DatasetSchemaRelationshipModal, { wrapRadioValue } from './DatasetSchemaRelationshipModal';
 import { styles as DatasetCreationStyles } from './DatasetSchemaCommon';
 
@@ -115,6 +116,7 @@ const styles = (theme: CustomTheme) =>
       borderRadius: 10,
       padding: 20,
     },
+    ...columnRenderStyles,
   } as any);
 
 const defaultRelationship = {
@@ -875,7 +877,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
                               disableFocusRipple
                               disableRipple
                             >
-                              {column.name || '(unnamed column)'}
+                              {renderColumnName(column, table, classes)}
                             </Button>
                             {datasetSchema.relationships
                               ?.filter((rel: RelationshipModel) => {
