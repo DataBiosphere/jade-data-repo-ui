@@ -71,6 +71,7 @@ function SnapshotOverview(props: AllSnapshotProps) {
           SnapshotIncludeOptions.ACCESS_INFORMATION,
           SnapshotIncludeOptions.PROFILE,
           SnapshotIncludeOptions.DATA_PROJECT,
+          SnapshotIncludeOptions.DUOS,
         ],
       }),
     );
