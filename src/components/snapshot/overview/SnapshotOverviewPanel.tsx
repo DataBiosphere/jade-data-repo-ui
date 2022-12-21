@@ -102,6 +102,15 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
               useMarkdown={true}
             />
           </Grid>
+          <Grid item xs={12}>
+            <Grid item xs={4}>
+              {renderTextFieldValue(
+                'DUOS ID',
+                snapshot.duosFirecloudGroup?.duosId,
+                'Link with a DUOS dataset ID to automatically add DAC approved users as snapshot readers',
+              )}
+            </Grid>
+          </Grid>
           <Grid item xs={4}>
             <Typography variant="h6">Root dataset:</Typography>
             <Typography data-cy="snapshot-source-dataset" className={classes.datasetText}>
