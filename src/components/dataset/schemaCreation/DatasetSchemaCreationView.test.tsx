@@ -476,7 +476,7 @@ describe('DatasetSchemaCreationView', () => {
         ]);
 
         cy.get('#details-menu-button').click();
-        cy.get('ul[aria-labelledby="details-menu-button"]').children().eq(3).click();
+        cy.get('ul[aria-labelledby="details-menu-button"]').children().eq(2).click();
 
         cy.get('[data-cy="schemaBuilder-tableColumns"] button').should('have.length', 3);
         cy.get('.cm-theme').then((elem) => {
@@ -521,7 +521,7 @@ describe('DatasetSchemaCreationView', () => {
         ]);
 
         cy.get('#details-menu-button').click();
-        cy.get('ul[aria-labelledby="details-menu-button"]').children().eq(5).click();
+        cy.get('ul[aria-labelledby="details-menu-button"]').children().eq(4).click();
 
         cy.get('.cm-theme').then((elem) => {
           const comparison = {
@@ -555,7 +555,7 @@ describe('DatasetSchemaCreationView', () => {
         cy.get('[data-cy="schemaBuilder-tableColumns"] button').eq(0).click();
         cy.get('#column-name').should('have.value', 'red');
 
-        cy.get('[data-cy="schemaBuilder-tableColumns"] button').eq(1).click();
+        cy.get('[data-cy="schemaBuilder-tableColumns"] button').eq(1).click({ force: true });
         cy.get('#column-name').should('have.value', 'yellow');
       });
 
