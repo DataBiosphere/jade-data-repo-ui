@@ -143,7 +143,7 @@ const renderColumnName = (
   const isPk = _.includes(table.primaryKey || [], column.name);
   retVal.push(
     <span key="dt" className={classes.columnBox} title={column.datatype}>
-      {column.datatype.substring(0, 1).toUpperCase()}
+      {column.datatype ? column.datatype.substring(0, 1).toUpperCase() : '?'}
       {column.array_of && <span className={classes.columnSubscript}>[ ]</span>}
     </span>,
   );
@@ -162,7 +162,7 @@ const renderColumnName = (
   const tooltipText = (
     <div>
       <p>
-        Column <b>{column.name}</b> has datatype <b>{column.datatype}</b>
+        Column <b>{column.name}</b> has datatype <b>{column.datatype || '(none)'}</b>
       </p>
       <ul>
         {isPk && <li>It is a primary key</li>}
