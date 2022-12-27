@@ -84,6 +84,19 @@ export function* authPost(url: string, params = {}, isDelegateToken = false) {
   throw timeoutMsg;
 }
 
+export function* authPut(url: string, params = {}, isDelegateToken = false) {
+  const tokenIsValid: boolean = yield call(checkToken);
+  if (tokenIsValid) {
+    // check expiration time against now
+    const token: string = yield call(getTokenToUse, isDelegateToken);
+    const result: AxiosResponse = yield call(axios.put, url, {
+      params,
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    });
+    return result;
+  }
+  throw timeoutMsg;
+}
 export function* authPatch(url: string, params = {}, isDelegateToken = false) {
   const tokenIsValid: boolean = yield call(checkToken);
   if (tokenIsValid) {
@@ -289,6 +302,26 @@ export function* patchSnapshot({ payload }: any): any {
       type: ActionTypes.PATCH_SNAPSHOT_SUCCESS,
       data,
     });
+  } catch (err) {
+    showNotification(err);
+  }
+}
+
+export function* linkDuosDataset({ payload }: any): any {
+  const { snapshotId, duosId } = payload;
+  const url = `/api/repository/v1/snapshots/${snapshotId}/linkDuosDataset/${duosId}`;
+  try {
+    yield call(authPut, url);
+  } catch (err) {
+    showNotification(err);
+  }
+}
+
+export function* unlinkDuosDataset({ payload }: any): any {
+  const { snapshotId } = payload;
+  const url = `/api/repository/v1/snapshots/${snapshotId}/unlinkDuosDataset`;
+  try {
+    yield call(authDelete, url);
   } catch (err) {
     showNotification(err);
   }
@@ -905,6 +938,8 @@ export default function* root() {
     takeLatest(ActionTypes.GET_USER_STATUS, getUserStatus),
     takeLatest(ActionTypes.PATCH_DATASET, patchDataset),
     takeLatest(ActionTypes.PATCH_SNAPSHOT, patchSnapshot),
+    takeLatest(ActionTypes.LINK_DUOS_DATASET, linkDuosDataset),
+    takeLatest(ActionTypes.UNLINK_DUOS_DATASET, unlinkDuosDataset),
     fork(watchGetDatasetByIdSuccess),
   ]);
 }

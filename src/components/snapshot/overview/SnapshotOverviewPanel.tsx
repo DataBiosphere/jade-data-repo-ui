@@ -3,7 +3,7 @@ import { Grid, Tab, Tabs, Typography } from '@mui/material';
 import { createStyles, WithStyles, withStyles } from '@mui/styles';
 import moment from 'moment';
 import { CustomTheme } from '@mui/material/styles';
-import { patchSnapshot } from 'actions';
+import { patchSnapshot, linkDuosDataset, unlinkDuosDataset } from 'actions';
 import EditableFieldView from 'components/EditableFieldView';
 import GoogleSheetExport from 'components/common/overview/GoogleSheetExport';
 import { Link } from 'react-router-dom';
@@ -104,11 +104,21 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
           </Grid>
           <Grid item xs={12}>
             <Grid item xs={4}>
-              {renderTextFieldValue(
-                'DUOS ID',
-                snapshot.duosFirecloudGroup?.duosId,
-                'Link with a DUOS dataset ID to automatically add DAC approved users as snapshot readers',
-              )}
+              <EditableFieldView
+                fieldValue={snapshot.duosFirecloudGroup?.duosId}
+                fieldName="DUOS ID"
+                canEdit={isSteward}
+                updateFieldValueFn={(text: string | undefined) => {
+                  console.log('in update field value fn', text);
+                  if (text) {
+                    dispatch(linkDuosDataset(snapshot.id, text));
+                  } else {
+                    dispatch(unlinkDuosDataset(snapshot.id, text));
+                  }
+                }}
+                useMarkdown={false}
+                infoButtonText="'Link with a DUOS dataset ID to automatically add DAC approved users as snapshot readers'"
+              />
             </Grid>
           </Grid>
           <Grid item xs={4}>

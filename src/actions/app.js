@@ -162,6 +162,19 @@ export const { patchSnapshot } = createActions({
   }),
 });
 
+export const { linkDuosDataset } = createActions({
+  [ActionTypes.LINK_DUOS_DATASET]: (snapshotId, duosId) => ({
+    snapshotId,
+    duosId,
+  }),
+});
+
+export const { unlinkDuosDataset } = createActions({
+  [ActionTypes.UNLINK_DUOS_DATASET]: (snapshotId) => ({
+    snapshotId,
+  }),
+});
+
 export const { removeDatasetPolicyMember } = createActions({
   [ActionTypes.REMOVE_DATASET_POLICY_MEMBER]: (datasetId, user, policy) => ({
     datasetId,
