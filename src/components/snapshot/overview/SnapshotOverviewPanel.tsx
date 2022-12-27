@@ -109,7 +109,6 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
                 fieldName="DUOS ID"
                 canEdit={isSteward}
                 updateFieldValueFn={(text: string | undefined) => {
-                  console.log('in update field value fn', text);
                   if (text) {
                     dispatch(linkDuosDataset(snapshot.id, text));
                   } else {
