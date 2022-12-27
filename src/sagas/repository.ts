@@ -312,8 +312,10 @@ export function* linkDuosDataset({ payload }: any): any {
   const url = `/api/repository/v1/snapshots/${snapshotId}/linkDuosDataset/${duosId}`;
   try {
     yield call(authPut, url);
+    yield put({ type: ActionTypes.UNLINK_DUOS_DATASET_SUCCESS });
   } catch (err) {
     showNotification(err);
+    yield put({ type: ActionTypes.LINK_DUOS_DATASET_FAILURE });
   }
 }
 
@@ -322,8 +324,10 @@ export function* unlinkDuosDataset({ payload }: any): any {
   const url = `/api/repository/v1/snapshots/${snapshotId}/unlinkDuosDataset`;
   try {
     yield call(authDelete, url);
+    yield put({ type: ActionTypes.UNLINK_DUOS_DATASET_SUCCESS });
   } catch (err) {
     showNotification(err);
+    yield put({ type: ActionTypes.LINK_DUOS_DATASET_FAILURE });
   }
 }
 
