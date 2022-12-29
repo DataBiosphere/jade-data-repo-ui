@@ -113,7 +113,11 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
           </Grid>
           <Grid item xs={4}>
             <Typography variant="h6">Root dataset:</Typography>
-            <Typography data-cy="snapshot-source-dataset" className={classes.datasetText}>
+            <Typography
+              data-cy="snapshot-source-dataset"
+              className={classes.datasetText}
+              component="span"
+            >
               <Link to={`/datasets/${sourceDataset.id}`}>
                 <span className={classes.jadeLink} title={sourceDataset.name}>
                   <TextContent text={sourceDataset.name} />
