@@ -138,11 +138,11 @@ const DatasetSchemaInformationView = withStyles(styles)(({ classes, profiles }: 
               className={classes.formInput}
               {...field}
               onChange={(event: any, change: any) => {
-                const cloudPlatform = event.target.value;
+                const selectedCloudPlatform = event.target.value;
                 setValue('region', null);
                 setValue('defaultProfileId', null);
-                setRegionOptions(_.get(CLOUD_PLATFORMS, [cloudPlatform, 'regions']));
-                setCloudPlatform(cloudPlatform);
+                setRegionOptions(_.get(CLOUD_PLATFORMS, [selectedCloudPlatform, 'regions']));
+                setCloudPlatform(selectedCloudPlatform);
                 field.onChange(event, change);
               }}
               placeholder="Cloud platform"

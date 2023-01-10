@@ -1,4 +1,4 @@
-import React, { Dispatch, useEffect } from 'react';
+import React, { Dispatch, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import { Action } from 'redux';
 import _ from 'lodash';
@@ -14,7 +14,6 @@ import DatasetSchemaInformationView from './DatasetSchemaInformationView';
 import DatasetSchemaBuilderView from './DatasetSchemaBuilderView';
 import { CLOUD_PLATFORMS } from '../../../constants/index';
 import DatasetCreationModal from './DatasetCreationModal';
-import { useRef } from 'react';
 
 const styles = (theme: CustomTheme) => ({
   pageRoot: { ...theme.mixins.pageRoot },

@@ -62,7 +62,7 @@ const createInitialTableState = (schema: InitialTableState[]) => {
   });
 };
 
-const assertCreateDatasetWasNotCalled = (store: MockStoreEnhanced<unknown, {}>) => {
+const assertCreateDatasetWasNotCalled = (store: MockStoreEnhanced<unknown, unknown>) => {
   expect(
     store
       .getActions()
@@ -71,7 +71,7 @@ const assertCreateDatasetWasNotCalled = (store: MockStoreEnhanced<unknown, {}>) 
   ).to.be.eq(-1);
 };
 
-const assertCreateDatasetWasCalled = (store: MockStoreEnhanced<unknown, {}>) => {
+const assertCreateDatasetWasCalled = (store: MockStoreEnhanced<unknown, unknown>) => {
   expect(
     store
       .getActions()

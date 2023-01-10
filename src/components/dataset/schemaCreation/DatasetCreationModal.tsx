@@ -61,7 +61,8 @@ const DatasetCreationModal = withStyles(styles)(
           </DialogContent>
         </Dialog>
       );
-    } else if (dataset) {
+    }
+    if (dataset) {
       return (
         <Dialog open={isOpen}>
           <DialogTitle>Your dataset was successfully created!</DialogTitle>

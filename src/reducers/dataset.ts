@@ -1,5 +1,6 @@
 import { handleActions } from 'redux-actions';
 import immutable from 'immutability-helper';
+import { LOCATION_CHANGE } from 'connected-react-router';
 
 import { ActionTypes } from '../constants';
 import {
@@ -8,7 +9,6 @@ import {
   PolicyModel,
   SnapshotSummaryModel,
 } from '../generated/tdr';
-import { LOCATION_CHANGE } from 'connected-react-router';
 
 export interface DatasetState {
   datasets: Array<DatasetSummaryModel>;

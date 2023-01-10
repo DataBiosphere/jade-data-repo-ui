@@ -731,7 +731,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
         // do nothing
       }
     },
-    [setValue, datasetSchema],
+    [setValue, datasetSchema, selectedColumn, selectedTable],
   );
 
   // ----------------------------------------
