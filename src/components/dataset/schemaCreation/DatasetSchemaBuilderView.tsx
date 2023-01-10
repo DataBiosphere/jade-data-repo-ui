@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import _ from 'lodash';
+import { diff } from 'jsondiffpatch';
 import { withStyles } from '@mui/styles';
 import {
   Typography,
@@ -43,7 +44,7 @@ const styles = (theme: CustomTheme) =>
     schemaSectionHeader: {
       marginTop: 40,
       paddingBottom: 5,
-      borderBottom: `2px solid ${theme.palette.terra.green}`,
+      borderBottom: `1px solid ${theme.palette.terra.green}`,
       display: 'flex',
       alignItems: 'center',
       fontSize: '1.5rem',
@@ -435,7 +436,16 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
           id="column-datatype"
           options={_.keys(TableDataType)}
           className={clsx(classes.formInput, classes.formInputDatatype)}
-          renderInput={(params: any) => <TextField {...params} onKeyDown={preventFormSubmission} />}
+          renderInput={(params: any) => (
+            <TextField
+              {...params}
+              onKeyDown={preventFormSubmission}
+              inputProps={{
+                ...params.inputProps,
+                value: _.findKey(TableDataType, (v) => params.inputProps.value === v) || '#ERROR',
+              }}
+            />
+          )}
           value={datasetSchema.tables[selectedTable].columns[selectedColumn].datatype}
           isOptionEqualToValue={(option: string, value: string) =>
             _.get(TableDataType, option) === value
@@ -451,6 +461,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
               setDatasetSchema(schemaCopy);
             }
           }}
+          disableClearable
         />
       </div>
       <div style={{ marginTop: 10 }}>
@@ -680,13 +691,47 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
     (value: string) => {
       try {
         const potentialSchema = JSON.parse(value);
+        // Clear the selected and expanded tables to avoid unexpected NPEs if any of the changes were deletes
+        // Delta is in the format described here: https://github.com/benjamine/jsondiffpatch/blob/HEAD/docs/deltas.md
+        if (selectedTable > -1 || selectedColumn > -1) {
+          const delta = diff(datasetSchema, potentialSchema);
+
+          if (delta) {
+            // See if there were any table deletions
+            if (selectedTable > -1) {
+              const anyTableDeletes = _.some(
+                delta.tables || [],
+                (table: Array<any>) => table.length === 3 && table[1] === 0 && table[2] === 0,
+              );
+
+              if (anyTableDeletes) {
+                setExpandedTables({});
+                setSelectedTable(-1);
+                setSelectedColumn(-1);
+              } else if (selectedColumn > -1) {
+                // Identify any potentially deleted columns
+                const anyColumnDeletes = _.some(_.omit(delta.tables, '_t'), (table) =>
+                  _.some(
+                    _.omit(table.columns, '_t'),
+                    (column) => column.length === 3 && column[1] === 0 && column[2] === 0,
+                  ),
+                );
+                if (anyColumnDeletes) {
+                  setExpandedTables({});
+                  setSelectedTable(-1);
+                  setSelectedColumn(-1);
+                }
+              }
+            }
+          }
+        }
         setDatasetSchema(potentialSchema);
         setValue('schema', potentialSchema);
       } catch (e) {
         // do nothing
       }
     },
-    [setValue],
+    [setValue, datasetSchema],
   );
 
   // ----------------------------------------
@@ -799,21 +844,22 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
                   </span>
                 </TerraTooltip>
 
-                <TerraTooltip title="Create relationships">
-                  <span>
-                    <IconButton
-                      id="datasetSchema-linkRel"
-                      size="small"
-                      color="primary"
-                      className={classes.iconButton}
-                      style={{ marginLeft: 50 }}
-                      disabled={!datasetSchema.tables || datasetSchema.tables.length < 2}
-                      onClick={() => openRelationshipEditor({})}
-                    >
-                      <i className="fa fa-link-horizontal" />
-                    </IconButton>
-                  </span>
-                </TerraTooltip>
+                <span style={{ marginLeft: 50 }}>
+                  <TerraTooltip title="Create relationships">
+                    <span>
+                      <IconButton
+                        id="datasetSchema-linkRel"
+                        size="small"
+                        color="primary"
+                        className={classes.iconButton}
+                        disabled={!datasetSchema.tables || datasetSchema.tables.length < 2}
+                        onClick={() => openRelationshipEditor({})}
+                      >
+                        <i className="fa fa-link-horizontal" />
+                      </IconButton>
+                    </span>
+                  </TerraTooltip>
+                </span>
               </div>
             </div>
             <div
@@ -908,8 +954,14 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
               ))}
             </div>
           </div>
-          {selectedTable !== -1 && selectedColumn === -1 && renderTableDetails()}
-          {selectedTable !== -1 && selectedColumn !== -1 && renderColumnDetails()}
+          {selectedTable !== -1 &&
+            selectedColumn === -1 &&
+            datasetSchema.tables[selectedTable] &&
+            renderTableDetails()}
+          {selectedTable !== -1 &&
+            selectedColumn !== -1 &&
+            datasetSchema.tables[selectedTable]?.columns[selectedColumn] &&
+            renderColumnDetails()}
         </div>
 
         <div>

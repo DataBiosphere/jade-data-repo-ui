@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import ReactDOMServer from 'react-dom/server';
 import { connect } from 'react-redux';
 import _ from 'lodash';
@@ -34,6 +34,8 @@ interface IProps extends WithStyles<typeof styles> {
 
 const DatasetSchemaInformationView = withStyles(styles)(({ classes, profiles }: IProps) => {
   const [regionOptions, setRegionOptions] = useState(CLOUD_PLATFORMS.gcp.regions);
+  const [cloudPlatform, setCloudPlatform] = useState(CLOUD_PLATFORMS.gcp.key);
+  const [profileOptions, setProfileOptions] = useState<Array<BillingProfileModel>>([]);
   const {
     register,
     control,
@@ -53,6 +55,14 @@ const DatasetSchemaInformationView = withStyles(styles)(({ classes, profiles }: 
       } as SimpleMDE.Options),
     [],
   );
+
+  useEffect(() => {
+    setProfileOptions(
+      profiles.filter(
+        (p) => p.cloudPlatform === _.get(CLOUD_PLATFORMS, [cloudPlatform, 'platform']),
+      ),
+    );
+  }, [profiles, setProfileOptions, cloudPlatform]);
 
   return (
     <Grid container rowSpacing={2} columnSpacing={5} className={classes.contentContainer}>
@@ -91,13 +101,12 @@ const DatasetSchemaInformationView = withStyles(styles)(({ classes, profiles }: 
           htmlFor="dataset-description"
           className={clsx(classes.formLabel, { [classes.formLabelError]: errors.description })}
         >
-          Dataset description*
+          Dataset description
         </label>
         <Controller
           name="description"
           control={control}
           rules={{
-            required: 'Description is required',
             maxLength: { value: 10000, message: 'Description must be under 10,000 characters' },
           }}
           render={({ field }) => (
@@ -111,46 +120,6 @@ const DatasetSchemaInformationView = withStyles(styles)(({ classes, profiles }: 
                 <span className={classes.formInputError}>{errors.description.message}</span>
               )}
             </>
-          )}
-        />
-      </Grid>
-
-      <Grid item xs={6}>
-        <label
-          htmlFor="dataset-defaultProfileId"
-          className={clsx(classes.formLabel, { [classes.formLabelError]: errors.defaultProfile })}
-        >
-          Billing Profile*
-        </label>
-        <Controller
-          name="defaultProfileId"
-          control={control}
-          rules={{ required: 'default project is required' }}
-          render={({ field }) => (
-            <Select id="dataset-defaultProfileId" className={classes.formInput} {...field}>
-              <MenuItem value="true">Yes</MenuItem>
-              {profiles.map((profile: BillingProfileModel) => (
-                <MenuItem key={profile.id} value={profile.id}>
-                  {profile.profileName}
-                </MenuItem>
-              ))}
-            </Select>
-          )}
-        />
-      </Grid>
-
-      <Grid item xs={6}>
-        <label htmlFor="dataset-enableSecureMonitoring" className={classes.formLabel}>
-          Secure monitoring
-        </label>
-        <Controller
-          name="enableSecureMonitoring"
-          control={control}
-          render={({ field }) => (
-            <Select id="dataset-enableSecureMonitoring" className={classes.formInput} {...field}>
-              <MenuItem value="true">Yes</MenuItem>
-              <MenuItem value="false">No</MenuItem>
-            </Select>
           )}
         />
       </Grid>
@@ -170,8 +139,10 @@ const DatasetSchemaInformationView = withStyles(styles)(({ classes, profiles }: 
               {...field}
               onChange={(event: any, change: any) => {
                 const cloudPlatform = event.target.value;
+                setValue('region', null);
+                setValue('defaultProfileId', null);
                 setRegionOptions(_.get(CLOUD_PLATFORMS, [cloudPlatform, 'regions']));
-                setValue('region', '');
+                setCloudPlatform(cloudPlatform);
                 field.onChange(event, change);
               }}
               placeholder="Cloud platform"
@@ -182,6 +153,41 @@ const DatasetSchemaInformationView = withStyles(styles)(({ classes, profiles }: 
                 </MenuItem>
               ))}
             </Select>
+          )}
+        />
+      </Grid>
+
+      <Grid item xs={6}>
+        <label
+          htmlFor="dataset-defaultProfileId"
+          className={clsx(classes.formLabel, { [classes.formLabelError]: errors.defaultProfile })}
+        >
+          Billing Profile*
+        </label>
+        <Controller
+          name="defaultProfileId"
+          control={control}
+          rules={{ required: 'default billing profile is required' }}
+          render={({ field }) => (
+            <Autocomplete
+              id="dataset-defaultProfileId"
+              options={profileOptions}
+              className={classes.formInput}
+              isOptionEqualToValue={(option, value) => value.profileName === option.profileName}
+              renderInput={(params: any) => (
+                <TextField
+                  {...params}
+                  error={!!errors.defaultProfileId}
+                  helperText={errors.defaultProfileId ? errors.defaultProfileId.message : ''}
+                  placeholder="Default billing profile"
+                />
+              )}
+              getOptionLabel={(option: BillingProfileModel) => option.profileName || ''}
+              {...field}
+              onChange={(_event: any, change: any) => {
+                field.onChange(change);
+              }}
+            />
           )}
         />
       </Grid>
@@ -202,13 +208,12 @@ const DatasetSchemaInformationView = withStyles(styles)(({ classes, profiles }: 
               id="dataset-region"
               options={regionOptions}
               className={classes.formInput}
-              isOptionEqualToValue={(option, value) => value.name === option.name}
               renderInput={(params: any) => (
                 <TextField
                   {...params}
                   error={!!errors.region}
                   helperText={errors.region ? errors.region.message : ''}
-                  placeholder="cloud region"
+                  placeholder="Cloud region"
                 />
               )}
               {...field}
@@ -216,6 +221,22 @@ const DatasetSchemaInformationView = withStyles(styles)(({ classes, profiles }: 
                 field.onChange(change);
               }}
             />
+          )}
+        />
+      </Grid>
+
+      <Grid item xs={6}>
+        <label htmlFor="dataset-enableSecureMonitoring" className={classes.formLabel}>
+          Secure monitoring
+        </label>
+        <Controller
+          name="enableSecureMonitoring"
+          control={control}
+          render={({ field }) => (
+            <Select id="dataset-enableSecureMonitoring" className={classes.formInput} {...field}>
+              <MenuItem value="true">Yes</MenuItem>
+              <MenuItem value="false">No</MenuItem>
+            </Select>
           )}
         />
       </Grid>
@@ -267,7 +288,7 @@ const DatasetSchemaInformationView = withStyles(styles)(({ classes, profiles }: 
           htmlFor="dataset-custodians"
           className={clsx(classes.formLabel, { [classes.formLabelError]: errors.custodians })}
         >
-          Custodians*
+          Custodians
         </label>
         <div className={classes.formFieldDescription}>
           The Custodian role is defined on a dataset. Someone may be the Custodian for one or more
@@ -280,8 +301,6 @@ const DatasetSchemaInformationView = withStyles(styles)(({ classes, profiles }: 
           rules={{
             validate: {
               isValidEmail,
-              minLength: (values: string[]) =>
-                values.length > 0 || 'Must include at least one email',
             },
           }}
           render={({ field }) => (

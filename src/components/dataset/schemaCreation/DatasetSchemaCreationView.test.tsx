@@ -2,21 +2,25 @@ import { mount } from '@cypress/react';
 import { Router } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { ThemeProvider } from '@mui/styles';
-import createMockStore from 'redux-mock-store';
+import createMockStore, { MockStoreEnhanced } from 'redux-mock-store';
 import React from 'react';
 import _ from 'lodash';
 import { initialUserState } from 'reducers/user';
 import DatasetSchemaCreationView from './DatasetSchemaCreationView';
 import globalTheme from '../../../modules/theme';
 import history from '../../../modules/hist';
+import { ActionTypes } from '../../../constants';
 
 const initialState = {
   searchString: '',
   profiles: {
     profiles: [
-      { id: 'default', profileName: 'default profile' },
-      { id: 'second', profileName: 'second profile' },
+      { id: 'default', profileName: 'default profile', cloudPlatform: 'gcp' },
+      { id: 'second', profileName: 'second profile', cloudPlatform: 'azure' },
     ],
+  },
+  datasets: {
+    dialogIsOpen: false,
   },
   user: _.cloneDeep(initialUserState),
 };
@@ -30,6 +34,8 @@ const fillValidInfoFields = () => {
   cy.get('[data-cy="dataset-region"] .MuiAutocomplete-popupIndicator').click();
   cy.get('#dataset-region-option-0').click();
   cy.get('#dataset-custodians').type('a@a.com{enter}').blur();
+  cy.get('#dataset-defaultProfileId').type('default');
+  cy.get('#dataset-defaultProfileId-option-0').click();
 };
 
 interface InitialTableState {
@@ -56,6 +62,24 @@ const createInitialTableState = (schema: InitialTableState[]) => {
   });
 };
 
+const assertCreateDatasetWasNotCalled = (store: MockStoreEnhanced<unknown, {}>) => {
+  expect(
+    store
+      .getActions()
+      .map((a) => a.type)
+      .indexOf(ActionTypes.CREATE_DATASET),
+  ).to.be.eq(-1);
+};
+
+const assertCreateDatasetWasCalled = (store: MockStoreEnhanced<unknown, {}>) => {
+  expect(
+    store
+      .getActions()
+      .map((a) => a.type)
+      .indexOf(ActionTypes.CREATE_DATASET),
+  ).to.be.greaterThan(-1);
+};
+
 beforeEach(() => {
   const mockStore = createMockStore([]);
   const store = mockStore(initialState);
@@ -63,7 +87,7 @@ beforeEach(() => {
     <Router history={history}>
       <Provider store={store}>
         <ThemeProvider theme={globalTheme}>
-          <DatasetSchemaCreationView history={history} />
+          <DatasetSchemaCreationView />
         </ThemeProvider>
       </Provider>
     </Router>,
@@ -101,36 +125,31 @@ describe('DatasetSchemaCreationView', () => {
     it('should not submit if errors exist', () => {
       const mockStore = createMockStore([]);
       const store = mockStore(initialState);
-      const historySpy = {
-        push: cy.spy().as('historySpy'),
-      };
       mount(
         <Router history={history}>
           <Provider store={store}>
             <ThemeProvider theme={globalTheme}>
-              <DatasetSchemaCreationView history={historySpy} />
+              <DatasetSchemaCreationView />
             </ThemeProvider>
           </Provider>
         </Router>,
       );
       cy.get('.MuiTabs-scroller button').eq(1).click();
-      cy.get('button[type="submit"]').click();
+      cy.get('button[type="submit"]')
+        .click()
+        .then(() => assertCreateDatasetWasNotCalled(store));
       cy.get('.Mui-error').should('exist');
-      cy.get('[data-cy="error-details"]').find('li').should('have.length', 10);
-      cy.get('@historySpy').should('not.have.been.calledWith', '/datasets');
+      cy.get('[data-cy="error-details"]').find('li').should('have.length', 8);
     });
 
     it('should submit if valid', () => {
       const mockStore = createMockStore([]);
       const store = mockStore(initialState);
-      const historySpy = {
-        push: cy.spy().as('historySpy'),
-      };
       mount(
         <Router history={history}>
           <Provider store={store}>
             <ThemeProvider theme={globalTheme}>
-              <DatasetSchemaCreationView history={historySpy} />
+              <DatasetSchemaCreationView />
             </ThemeProvider>
           </Provider>
         </Router>,
@@ -143,8 +162,9 @@ describe('DatasetSchemaCreationView', () => {
       createInitialTableState([{ columns: [{}] }]);
 
       // Submitting
-      cy.get('button[type="submit"]').click();
-      cy.get('@historySpy').should('have.been.calledWith', '/datasets');
+      cy.get('button[type="submit"]')
+        .click()
+        .then(() => assertCreateDatasetWasCalled(store));
     });
   });
 
@@ -156,10 +176,6 @@ describe('DatasetSchemaCreationView', () => {
       cy.get('#dataset-name').clear();
       cy.get('#dataset-name').type('ab').blur();
       cy.get('.Mui-error').should('not.exist');
-    });
-
-    it('should load a default billing profile', () => {
-      cy.get('#dataset-defaultProfileId').contains('default profile');
     });
 
     it('should update regions when the cloud platform is updated', () => {
@@ -179,13 +195,6 @@ describe('DatasetSchemaCreationView', () => {
       cy.get('[data-cy="dataset-region"] .MuiAutocomplete-popupIndicator').click();
       cy.get('.MuiAutocomplete-popper').should('exist');
       cy.get('.MuiAutocomplete-popper').contains('East US');
-    });
-
-    it('should validate custodians for required', () => {
-      cy.get('#dataset-stewards').focus().blur();
-      cy.get('.Mui-error').should('not.exist');
-      cy.get('#dataset-custodians').focus().blur();
-      cy.get('.Mui-error').should('exist');
     });
 
     it('should validate emails for stewards', () => {
@@ -276,22 +285,23 @@ describe('DatasetSchemaCreationView', () => {
       it('should not submit on text field enter', () => {
         const mockStore = createMockStore([]);
         const store = mockStore(initialState);
-        const historySpy = {
-          push: cy.spy().as('historySpy'),
-        };
         mount(
           <Router history={history}>
             <Provider store={store}>
               <ThemeProvider theme={globalTheme}>
-                <DatasetSchemaCreationView history={historySpy} />
+                <DatasetSchemaCreationView />
               </ThemeProvider>
             </Provider>
           </Router>,
         );
         cy.get('.MuiTabs-scroller button').eq(1).click();
-        cy.get('#schemabuilder-createTable').click();
-        cy.get('#table-name').clear().type('party{enter}');
-        cy.get('@historySpy').should('not.have.been.calledWith', '/datasets');
+        cy.get('#schemabuilder-createTable')
+          .click()
+          .then(() => assertCreateDatasetWasNotCalled(store));
+        cy.get('#table-name')
+          .clear()
+          .type('party{enter}')
+          .then(() => assertCreateDatasetWasNotCalled(store));
       });
 
       it('should expand and collapse the tables contents', () => {
@@ -450,21 +460,18 @@ describe('DatasetSchemaCreationView', () => {
       it('should not submit on text field enter', () => {
         const mockStore = createMockStore([]);
         const store = mockStore(initialState);
-        const historySpy = {
-          push: cy.spy().as('historySpy'),
-        };
         mount(
           <Router history={history}>
             <Provider store={store}>
               <ThemeProvider theme={globalTheme}>
-                <DatasetSchemaCreationView history={historySpy} />
+                <DatasetSchemaCreationView />
               </ThemeProvider>
             </Provider>
           </Router>,
         );
         cy.get('.MuiTabs-scroller button').eq(1).click();
         createInitialTableState([{ columns: [{ name: 'red{enter}' }] }]);
-        cy.get('@historySpy').should('not.have.been.calledWith', '/datasets');
+        assertCreateDatasetWasNotCalled(store);
       });
 
       it('should duplicate a column', () => {

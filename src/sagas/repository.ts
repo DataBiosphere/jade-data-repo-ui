@@ -140,7 +140,7 @@ function* pollJobWorker(
         type: ActionTypes.GET_JOB_BY_ID_SUCCESS,
         payload: { status: response.data.job_status },
       });
-      yield call(delay, 1000);
+      yield delay(1000);
       yield call(pollJobWorker, jobId, jobTypeSuccess, jobTypeFailure, jobTypeException);
     }
   } catch (err) {
@@ -407,14 +407,22 @@ export function* removeSnapshotPolicyMembers({ payload }: any): any {
 export function* createDataset({ payload }: any): any {
   try {
     const response = yield call(authPost, '/api/repository/v1/datasets', payload);
+    const jobId = response.data.id;
     yield put({
-      type: ActionTypes.CREATE_DATASET_SUCCESS,
-      response: { data: response },
+      type: ActionTypes.CREATE_DATASET_JOB,
+      payload: { data: response, jobId, payload },
     });
+    yield call(
+      pollJobWorker,
+      jobId,
+      ActionTypes.CREATE_DATASET_SUCCESS,
+      ActionTypes.CREATE_DATASET_FAILURE,
+      ActionTypes.CREATE_DATASET_EXCEPTION,
+    );
   } catch (err) {
     showNotification(err);
     yield put({
-      type: ActionTypes.CREATE_DATASET_ERROR,
+      type: ActionTypes.CREATE_DATASET_EXCEPTION,
     });
   }
 }

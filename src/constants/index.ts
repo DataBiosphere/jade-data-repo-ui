@@ -1,3 +1,4 @@
+import { CloudPlatform } from 'generated/tdr';
 import _ from 'lodash';
 
 /**
@@ -39,8 +40,10 @@ export enum ActionTypes {
   RESET_SNAPSHOT_EXPORT = 'RESET_SNAPSHOT_EXPORT',
   RESET_SNAPSHOT_EXPORT_DATA = 'RESET_SNAPSHOT_EXPORT_DATA',
   CREATE_DATASET = 'CREATE_DATASET',
+  CREATE_DATASET_JOB = 'CREATE_DATASET_JOB',
   CREATE_DATASET_SUCCESS = 'CREATE_DATASET_SUCCESS',
-  CREATE_DATASET_ERROR = 'CREATE_DATASET_ERROR',
+  CREATE_DATASET_FAILURE = 'CREATE_DATASET_FAILURE',
+  CREATE_DATASET_EXCEPTION = 'CREATE_DATASET_EXCEPTION',
   REFRESH_DATASETS = 'REFRESH_DATASETS',
   GET_DATASETS = 'GET_DATASETS',
   GET_DATASETS_SUCCESS = 'GET_DATASETS_SUCCESS',
@@ -251,11 +254,13 @@ export const CLOUD_PLATFORMS = {
   gcp: {
     key: 'gcp',
     label: 'Google Cloud Platform',
+    platform: CloudPlatform.Gcp,
     regions: generateGCPRegions(),
   },
   azure: {
     key: 'azure',
     label: 'Microsoft Azure',
+    platform: CloudPlatform.Azure,
     regions: [
       { label: 'East US', name: 'eastus' },
       { label: 'East US 2', name: 'eastus2' },

@@ -4,7 +4,6 @@ export const styles = (theme: CustomTheme) => ({
   // General
   contentContainer: {
     marginTop: '1rem',
-    maxWidth: 1000,
   },
   flexRow: {
     display: 'flex',

@@ -13,6 +13,8 @@ import { BillingProfileModel } from '../../../generated/tdr';
 import DatasetSchemaInformationView from './DatasetSchemaInformationView';
 import DatasetSchemaBuilderView from './DatasetSchemaBuilderView';
 import { CLOUD_PLATFORMS } from '../../../constants/index';
+import DatasetCreationModal from './DatasetCreationModal';
+import { useRef } from 'react';
 
 const styles = (theme: CustomTheme) => ({
   pageRoot: { ...theme.mixins.pageRoot },
@@ -98,7 +100,6 @@ const styles = (theme: CustomTheme) => ({
 interface IProps extends WithStyles<typeof styles> {
   profiles: Array<BillingProfileModel>;
   dispatch: Dispatch<Action>;
-  history: any;
 }
 
 interface TabConfig {
@@ -106,190 +107,195 @@ interface TabConfig {
   content: any;
 }
 
-const DatasetSchemaCreationView = withStyles(styles)(
-  ({ classes, dispatch, profiles, history }: IProps) => {
-    const [currentTab, setCurrentTab] = React.useState(0);
-    const changeTab = (_event: any, newCurrentTab: number) => setCurrentTab(newCurrentTab);
+const DatasetSchemaCreationView = withStyles(styles)(({ classes, dispatch, profiles }: IProps) => {
+  const [currentTab, setCurrentTab] = React.useState(0);
+  const ref = useRef<HTMLInputElement>(null);
+  const updateTab = (tab: number) => {
+    // Reset scroll on tab change
+    ref.current?.parentElement?.scrollTo(0, 0);
+    setCurrentTab(tab);
+  };
+  const changeTab = (_event: any, newCurrentTab: number) => updateTab(newCurrentTab);
 
-    const formMethods = useForm({
-      mode: 'all',
-      reValidateMode: 'onChange',
-      defaultValues: {
-        name: '',
-        description: '',
-        terraProject: '',
-        enableSecureMonitoring: 'false',
-        cloudPlatform: CLOUD_PLATFORMS.gcp.key,
-        defaultProfileId: _.get(profiles, [0, 'id'], ''),
-        region: '',
-        stewards: [],
-        custodians: [],
-        schema: {},
+  const formMethods = useForm({
+    mode: 'all',
+    reValidateMode: 'onChange',
+    defaultValues: {
+      name: null,
+      description: null,
+      terraProject: null,
+      enableSecureMonitoring: false,
+      cloudPlatform: CLOUD_PLATFORMS.gcp.key,
+      defaultProfileId: null,
+      region: null,
+      stewards: [],
+      custodians: [],
+      schema: {},
+    },
+  });
+
+  const {
+    handleSubmit,
+    formState: { errors },
+  } = formMethods;
+
+  const tabs: TabConfig[] = [
+    {
+      description: 'Provide dataset information',
+      content: <DatasetSchemaInformationView profiles={profiles} />,
+    },
+    {
+      description: 'Build a schema and create dataset',
+      content: <DatasetSchemaBuilderView />,
+    },
+  ];
+
+  const onSubmit = (data: any) => {
+    const normalizedData = {
+      ...data,
+      defaultProfileId: data.defaultProfileId?.id,
+      policies: {
+        stewards: data.stewards,
+        custodians: data.custodians,
       },
-    });
-
-    const {
-      handleSubmit,
-      setValue,
-      formState: { errors },
-    } = formMethods;
-
-    const tabs: TabConfig[] = [
-      {
-        description: 'Provide dataset information',
-        content: <DatasetSchemaInformationView profiles={profiles} />,
-      },
-      {
-        description: 'Build a schema and create dataset',
-        content: <DatasetSchemaBuilderView />,
-      },
-    ];
-
-    const onSubmit = (data: any) => {
-      const normalizedData = {
-        ...data,
-        policies: {
-          stewards: data.stewards,
-          custodians: data.custodians,
-        },
-      };
-      delete normalizedData.terraProject;
-      delete normalizedData.stewards;
-      delete normalizedData.custodians;
-      delete normalizedData.defaultProfile;
-
-      dispatch(createDataset(normalizedData));
-      history.push('/datasets');
     };
+    delete normalizedData.terraProject;
+    delete normalizedData.stewards;
+    delete normalizedData.custodians;
+    delete normalizedData.defaultProfile;
 
-    useEffect(() => {
-      dispatch(getBillingProfiles());
-    }, [dispatch]);
+    dispatch(createDataset(normalizedData));
+  };
 
-    useEffect(() => {
-      const firstProfile = _.get(profiles, [0, 'id'], '');
-      setValue('defaultProfileId', firstProfile);
-    }, [profiles, setValue]);
+  useEffect(() => {
+    dispatch(getBillingProfiles());
+  }, [dispatch]);
 
-    return (
-      <div className={classes.pageRoot} data-cy="component-root">
-        <FormProvider {...formMethods}>
-          <form className={classes.contentContainer} onSubmit={handleSubmit(onSubmit)}>
-            <div className={classes.mainContent}>
-              <Typography variant="h3" className={classes.pageTitle}>
-                Create a dataset schema for ingesting data
-              </Typography>
-              Before you can ingest data files, you need to define the structure of the data you'll
-              be ingesting by specifying the schema of the data. The schema is a template for the
-              data you'll ingest later. You'll specify the number and names of the data categories -
-              the tables and columns within the tables - and any associations between columns in
-              separate tables, if multiple tables contain the same data category (for instance, if
-              you have a 'subject' table and a 'sample' table, and both tables contain a column of
-              the same subject IDs).
-              <Tabs classes={{ root: classes.tabsRoot }} value={currentTab} onChange={changeTab}>
-                {tabs.map((tabConfig: TabConfig, i: number) => (
-                  <Tab
-                    key={`dataset-schema-creation-tab-${i}`}
-                    label={
-                      <div>
-                        <Typography variant="h3">Step {i + 1}</Typography>
-                        <div className={classes.tabDescription}>{tabConfig.description}</div>
-                      </div>
-                    }
-                    className={classes.tabRoot}
-                    disableFocusRipple
-                    disableRipple
-                  />
-                ))}
-              </Tabs>
+  return (
+    <div className={classes.pageRoot} data-cy="component-root" ref={ref}>
+      <FormProvider {...formMethods}>
+        <form
+          className={classes.contentContainer}
+          onSubmit={handleSubmit(onSubmit)}
+          autoComplete="off"
+        >
+          {/* disable autocomplete in FF */}
+          <input autoComplete="false" name="hidden" type="text" style={{ display: 'none' }} />
+          <div className={classes.mainContent}>
+            <Typography variant="h3" className={classes.pageTitle}>
+              Create a dataset schema for ingesting data
+            </Typography>
+            Before you can ingest data files, you need to define the structure of the data you'll be
+            ingesting by specifying the schema of the data. The schema is a template for the data
+            you'll ingest later. You'll specify the number and names of the data categories - the
+            tables and columns within the tables - and any associations between columns in separate
+            tables, if multiple tables contain the same data category (for instance, if you have a
+            'subject' table and a 'sample' table, and both tables contain a column of the same
+            subject IDs).
+            <Tabs classes={{ root: classes.tabsRoot }} value={currentTab} onChange={changeTab}>
               {tabs.map((tabConfig: TabConfig, i: number) => (
-                <div key={`tabPanel-${i}`} hidden={currentTab !== i}>
-                  {tabConfig.content}
-
-                  {i < tabs.length - 1 ? (
-                    <Button
-                      type="button"
-                      color="primary"
-                      variant="contained"
-                      disableElevation
-                      className={classes.tabButton}
-                      onClick={() => setCurrentTab(i + 1)}
-                    >
-                      Go to Step {i + 2}
-                    </Button>
-                  ) : (
-                    <Button
-                      type="submit"
-                      color="primary"
-                      variant="contained"
-                      disableElevation
-                      className={classes.tabButton}
-                    >
-                      Submit
-                    </Button>
-                  )}
-                  {_.keys(errors).length > 0 && (
-                    <>
-                      <div
-                        className={clsx(classes.formLabelError, classes.flexRow)}
-                        data-cy="error-summary"
-                      >
-                        <Error style={{ marginRight: 5 }} />
-                        There are errors with your form. Please fix these fields to continue:
-                      </div>
-                      <div className={classes.formLabelError} data-cy="error-details">
-                        <ul>
-                          {_.keys(errors).map((error: string) => (
-                            <li key={error}>{error}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    </>
-                  )}
-                </div>
+                <Tab
+                  key={`dataset-schema-creation-tab-${i}`}
+                  label={
+                    <div>
+                      <Typography variant="h3">Step {i + 1}</Typography>
+                      <div className={classes.tabDescription}>{tabConfig.description}</div>
+                    </div>
+                  }
+                  className={classes.tabRoot}
+                  disableFocusRipple
+                  disableRipple
+                />
               ))}
+            </Tabs>
+            {tabs.map((tabConfig: TabConfig, i: number) => (
+              <div key={`tabPanel-${i}`} hidden={currentTab !== i}>
+                {tabConfig.content}
+
+                {i < tabs.length - 1 ? (
+                  <Button
+                    type="button"
+                    color="primary"
+                    variant="contained"
+                    disableElevation
+                    className={classes.tabButton}
+                    onClick={() => updateTab(i + 1)}
+                  >
+                    Go to Step {i + 2}
+                  </Button>
+                ) : (
+                  <Button
+                    type="submit"
+                    color="primary"
+                    variant="contained"
+                    disableElevation
+                    className={classes.tabButton}
+                  >
+                    Submit
+                  </Button>
+                )}
+                {_.keys(errors).length > 0 && (
+                  <>
+                    <div
+                      className={clsx(classes.formLabelError, classes.flexRow)}
+                      data-cy="error-summary"
+                    >
+                      <Error style={{ marginRight: 5 }} />
+                      There are errors with your form. Please fix these fields to continue:
+                    </div>
+                    <div className={classes.formLabelError} data-cy="error-details">
+                      <ul>
+                        {_.keys(errors).map((error: string) => (
+                          <li key={error}>{error}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </>
+                )}
+              </div>
+            ))}
+          </div>
+
+          <div className={classes.detailsColumn}>
+            <div className={classes.detailsCard}>
+              <Typography variant="h4" className={classes.pageTitle}>
+                Have questions?
+              </Typography>
+              Learn more about ingesting data into the Terra Data Repo:
+              <ul className={classes.helpList}>
+                <li>
+                  <a
+                    className={clsx(classes.jadeLink, classes.helpListLink)}
+                    href="#"
+                    target="_blank"
+                  >
+                    Dataset schema overview <OpenInNew className={classes.jadeLinkIcon} />
+                  </a>
+                </li>
+                <li>
+                  <a
+                    className={clsx(classes.jadeLink, classes.helpListLink)}
+                    href="#"
+                    target="_blank"
+                  >
+                    How to create dataset assets in TDR
+                    <OpenInNew className={classes.jadeLinkIcon} />
+                  </a>
+                </li>
+              </ul>
             </div>
 
-            <div className={classes.detailsColumn}>
-              <div className={classes.detailsCard}>
-                <Typography variant="h4" className={classes.pageTitle}>
-                  Have questions?
-                </Typography>
-                Learn more about ingesting data into the Terra Data Repo:
-                <ul className={classes.helpList}>
-                  <li>
-                    <a
-                      className={clsx(classes.jadeLink, classes.helpListLink)}
-                      href="#"
-                      target="_blank"
-                    >
-                      Dataset schema overview <OpenInNew className={classes.jadeLinkIcon} />
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      className={clsx(classes.jadeLink, classes.helpListLink)}
-                      href="#"
-                      target="_blank"
-                    >
-                      How to create dataset assets in TDR
-                      <OpenInNew className={classes.jadeLinkIcon} />
-                    </a>
-                  </li>
-                </ul>
-              </div>
-
-              <div className={classes.detailsCard}>
-                Once the dataset schema is created, you'll have tools on the dataset summary page to
-                view the dataset and ingest data files for each table
-              </div>
+            <div className={classes.detailsCard}>
+              Once the dataset schema is created, you'll have tools on the dataset summary page to
+              view the dataset and ingest data files for each table
             </div>
-          </form>
-        </FormProvider>
-      </div>
-    );
-  },
-);
+          </div>
+        </form>
+        <DatasetCreationModal />
+      </FormProvider>
+    </div>
+  );
+});
 
 function mapStateToProps(state: TdrState) {
   return {
