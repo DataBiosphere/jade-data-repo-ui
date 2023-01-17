@@ -11,21 +11,13 @@ import {
   IconButton,
   Paper,
   FormControl,
-  FormControlLabel,
   FormLabel,
-  Radio,
-  RadioGroup,
   TextField,
   Button,
 } from '@mui/material';
-import {
-  Close,
-  IndeterminateCheckBoxOutlined,
-  AddBoxOutlined,
-  Circle,
-  Delete,
-} from '@mui/icons-material';
-import { TableModel, ColumnModel, DatasetSpecificationModel } from 'generated/tdr';
+import { Close, Delete } from '@mui/icons-material';
+import { DatasetSpecificationModel } from 'generated/tdr';
+import { SchemaTree } from 'components/common/overview/SchemaPanel';
 import TerraTooltip from '../../common/TerraTooltip';
 import { styles as DatasetCreationStyles } from './DatasetSchemaCommon';
 
@@ -44,12 +36,19 @@ const styles = (theme: CustomTheme) =>
       float: 'left',
     },
     tableContainer: {
-      width: '40%',
+      width: '45%',
       marginTop: 20,
     },
     tableHeader: {
       marginBottom: 0,
       marginLeft: 2,
+    },
+    tableTreeContainer: {
+      border: `1px solid ${theme.palette.common.border}`,
+      padding: 15,
+      borderRadius: 10,
+      height: 350,
+      overflow: 'auto',
     },
     radioWrapper: {
       display: 'block',
@@ -93,7 +92,8 @@ type DatasetSchemaRelationshipModalProps = {
   onDelete: () => void;
   defaultRelationshipFrom?: string;
   defaultRelationshipTo?: string;
-  defaultExpandedTables: { [s: string]: boolean };
+  defaultExpandedTablesFrom: number[];
+  defaultExpandedTablesTo: number[];
   defaultRelationshipName?: string;
   isEditMode?: boolean;
 };
@@ -103,16 +103,38 @@ interface DatasetTableProps {
   label: string;
   value: string;
   setValue: any;
+  expandedTables: number[];
+  setExpandedTables: React.Dispatch<React.SetStateAction<number[]>>;
 }
 
-export const wrapRadioValue = (tableName: string, columnName: string) =>
-  `${tableName}|column:${columnName}`;
+export interface UnwrappedValue {
+  table: string;
+  column: string;
+}
 
-export const unwrapRadioValue = (radioValue: string): { table: string; column: string } => {
+export const wrapRadioValue = (unwrappedValue: UnwrappedValue) =>
+  `${unwrappedValue.table}|column:${unwrappedValue.column}`;
+
+export const unwrapRadioValue = (radioValue: string): UnwrappedValue => {
   const splitVal = radioValue.split('|column:');
   return {
     table: splitVal[0],
     column: splitVal[1],
+  };
+};
+
+const unwrappedValueToIndices = (
+  unwrappedValue: UnwrappedValue,
+  datasetSchema: DatasetSpecificationModel,
+) => {
+  const tableIndex = _.findIndex(datasetSchema.tables, (t) => t.name === unwrappedValue.table);
+  const columnIndex = _.findIndex(
+    datasetSchema.tables[tableIndex]?.columns || [],
+    (c) => c.name === unwrappedValue.column,
+  );
+  return {
+    tableIndex,
+    columnIndex,
   };
 };
 
@@ -124,86 +146,46 @@ function DatasetSchemaRelationshipModal({
   onDelete,
   defaultRelationshipFrom,
   defaultRelationshipTo,
-  defaultExpandedTables,
+  defaultExpandedTablesFrom,
+  defaultExpandedTablesTo,
   isEditMode = false,
   defaultRelationshipName,
 }: DatasetSchemaRelationshipModalProps) {
-  const [expandedTables, setExpandedTables] = useState(defaultExpandedTables || ({} as any));
+  const [expandedTablesFrom, setExpandedTablesFrom] = useState(defaultExpandedTablesFrom);
+  const [expandedTablesTo, setExpandedTablesTo] = useState(defaultExpandedTablesTo);
   const [relationshipFrom, setRelationshipFrom] = useState(defaultRelationshipFrom || '');
   const [relationshipTo, setRelationshipTo] = useState(defaultRelationshipTo || '');
   const [relationshipName, setRelationshipName] = useState(defaultRelationshipName || '');
 
-  const datasetTable: any = (datasetProps: DatasetTableProps) => {
-    const { id, label, value, setValue } = datasetProps;
+  const datasetTable = (datasetProps: DatasetTableProps) => {
+    const { id, label, value, setValue, expandedTables, setExpandedTables } = datasetProps;
+    const unwrappedIndices = unwrappedValueToIndices(unwrapRadioValue(value), datasetSchema);
     return (
       <FormControl className={classes.tableContainer}>
         <FormLabel id={`radiogroup-${id}`} className={clsx(classes.formLabel, classes.tableHeader)}>
           {label}
         </FormLabel>
-        <RadioGroup
-          className={clsx(
-            classes.schemaBuilderStructureViewContent,
-            classes.relationshipStructureViewContent,
-          )}
-          aria-labelledby={`radiogroup-${id}`}
-          value={value}
-          onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-            setValue((event.target as HTMLInputElement).value);
-          }}
-        >
-          {datasetSchema.tables?.map((table: TableModel, i: number) => (
-            <div key={`datasetSchema-table-${i}`} className={classes.schemaBuilderViewContentChild}>
-              <div className={classes.schemaBuilderStructureViewContentTableName}>
-                <IconButton
-                  data-cy="expand-table-button"
-                  color="primary"
-                  onClick={() =>
-                    setExpandedTables({
-                      ...expandedTables,
-                      [`${id}-${i}`]: !expandedTables[`${id}-${i}`],
-                    })
-                  }
-                >
-                  {expandedTables[`${id}-${i}`] ? (
-                    <IndeterminateCheckBoxOutlined />
-                  ) : (
-                    <AddBoxOutlined />
-                  )}
-                </IconButton>
-                {table.name || '(unnamed table)'}
-              </div>
-
-              {table.columns?.length > 0 && expandedTables[`${id}-${i}`] && (
-                <div className={classes.schemaBuilderStructureViewColumnContainer_wrapper}>
-                  <div
-                    className={clsx(
-                      classes.schemaBuilderStructureViewContentColumn_dotContainer,
-                      classes.dotContainer,
-                    )}
-                  >
-                    <Circle className={classes.schemaBuilderStructureViewContentColumn_dot} />
-                  </div>
-                  <div
-                    className={clsx(classes.schemaBuilderStructureViewColumnContainer, {
-                      [classes.schemaBuilderStructureColumnContainer_expanded]:
-                        expandedTables[`${id}-${i}`],
-                    })}
-                  >
-                    {table.columns.map((column: ColumnModel, j: number) => (
-                      <FormControlLabel
-                        key={`table-${table.name}-column-${j}`}
-                        className={classes.radioWrapper}
-                        control={<Radio />}
-                        label={column.name}
-                        value={wrapRadioValue(table.name, column.name || '(unnamed column)')}
-                      />
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          ))}
-        </RadioGroup>
+        <div className={classes.tableTreeContainer}>
+          <SchemaTree
+            tables={datasetSchema.tables || []}
+            readOnly={false}
+            expanded={expandedTables.map((t) => `${t}`)}
+            onNodeToggle={(_e, nodeIds) => setExpandedTables(nodeIds.map((n) => Number(n)))}
+            selected={`${unwrappedIndices.tableIndex}-${unwrappedIndices.columnIndex}`}
+            selectedColumnnsAsRadio
+            onNodeSelect={(_e, nodeId) => {
+              const indexes = nodeId.split('-').map((i) => Number(i));
+              if (indexes.length === 2) {
+                setValue(
+                  wrapRadioValue({
+                    table: datasetSchema.tables[indexes[0]].name,
+                    column: datasetSchema.tables[indexes[0]].columns[indexes[1]].name,
+                  }),
+                );
+              }
+            }}
+          />
+        </div>
       </FormControl>
     );
   };
@@ -269,6 +251,8 @@ function DatasetSchemaRelationshipModal({
                   label: 'Choose a column from a table',
                   value: relationshipFrom,
                   setValue: setRelationshipFrom,
+                  expandedTables: expandedTablesFrom,
+                  setExpandedTables: setExpandedTablesFrom,
                 })}
                 <i className="fa fa-circle-arrow-right" style={{ fontSize: '2rem' }} />
                 {datasetTable({
@@ -276,6 +260,8 @@ function DatasetSchemaRelationshipModal({
                   label: 'Add relationship to this column',
                   value: relationshipTo,
                   setValue: setRelationshipTo,
+                  expandedTables: expandedTablesTo,
+                  setExpandedTables: setExpandedTablesTo,
                 })}
               </div>
               <div className={classes.summaryContainer}>

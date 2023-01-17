@@ -222,7 +222,7 @@ describe('DatasetSchemaCreationView', () => {
     });
 
     it('should start with an empty schema', () => {
-      cy.get('[data-cy="schema-builder-structure-view"]').children().should('have.length', 0);
+      cy.get('[data-cy="schema-navigator"]').children().should('have.length', 0);
       cy.get('.cm-theme').should('exist');
       cy.get('.cm-theme').contains('If you already have json, please paste your code here');
     });
@@ -230,7 +230,7 @@ describe('DatasetSchemaCreationView', () => {
     describe('Tables', () => {
       it('should create a single table', () => {
         createInitialTableState([{}]);
-        cy.get('[data-cy="schema-builder-structure-view"]').children().should('have.length', 1);
+        cy.get('[data-cy="schema-navigator"]').children().should('have.length', 1);
 
         // Should automatically select the new table
         cy.get('[data-cy="schemaBuilder-detailView"]').should('exist');
@@ -252,14 +252,14 @@ describe('DatasetSchemaCreationView', () => {
 
       it('should create multiple tables', () => {
         cy.get('#schemabuilder-createTable').click();
-        cy.get('[data-cy="schema-builder-structure-view"]').children().should('have.length', 1);
+        cy.get('[data-cy="schema-navigator"]').children().should('have.length', 1);
 
         // Should automatically select the new table
         cy.get('[data-cy="schemaBuilder-detailView"]').should('exist');
         cy.get('#table-name').clear().type('party');
 
         cy.get('#schemabuilder-createTable').click();
-        cy.get('[data-cy="schema-builder-structure-view"]').children().should('have.length', 2);
+        cy.get('[data-cy="schema-navigator"]').children().should('have.length', 2);
         // Should select the new table again
         cy.get('#table-name').should('have.value', 'table_name1');
 
@@ -310,14 +310,14 @@ describe('DatasetSchemaCreationView', () => {
           { name: 'colors', columns: [{ name: 'red' }] },
         ]);
 
-        cy.get('div[data-cy="schemaBuilder-tableColumns"]').should('have.length', 2);
+        // all three columns are expanded
+        cy.get('li[data-cy="column-name"]').should('have.length', 3);
 
-        cy.get('div[data-cy="schemaBuilder-selectTableButton"] button')
-          .eq(0)
-          .find('[data-testid="IndeterminateCheckBoxOutlinedIcon"]')
-          .click();
+        // minimize the first table
+        cy.get('h6[data-cy="table-name"]').eq(0).click();
 
-        cy.get('div[data-cy="schemaBuilder-tableColumns"]').should('have.length', 1);
+        // only one columns is now expanded
+        cy.get('li[data-cy="column-name"]').should('have.length', 1);
       });
 
       it('should duplicate a table', () => {
@@ -326,12 +326,14 @@ describe('DatasetSchemaCreationView', () => {
           { name: 'colors', columns: [{ name: 'red' }, { name: 'yellow' }] },
         ]);
 
-        cy.get('div[data-cy="schemaBuilder-selectTableButton"] button').eq(3).click();
+        // select the second table
+        cy.get('h6[data-cy="table-name"]').eq(1).click();
 
         cy.get('#details-menu-button').click();
         cy.get('ul[aria-labelledby="details-menu-button"]').children().eq(0).click();
 
-        cy.get('div[data-cy="schemaBuilder-selectTableButton"] button').should('have.length', 6);
+        // there should be three tables
+        cy.get('h6[data-cy="table-name"]').should('have.length', 3);
         cy.get('.cm-theme').then((elem) => {
           const comparison = {
             tables: [
@@ -402,21 +404,11 @@ describe('DatasetSchemaCreationView', () => {
         });
       });
 
-      it('should be able to select and deselect a table', () => {
-        createInitialTableState([{ name: 'party' }, { name: 'colors' }]);
-
-        cy.get('div[data-cy="schemaBuilder-selectTableButton"] button').eq(1).click();
-        cy.get('#table-name').should('have.value', 'party');
-
-        cy.get('div[data-cy="schemaBuilder-selectTableButton"] button').eq(1).click();
-        cy.get('#table-name').should('not.exist');
-      });
-
       it('should be able to move tables up in the list', () => {
         createInitialTableState([{ name: 'party' }, { name: 'colors' }]);
 
         cy.get('#datasetSchema-up').click();
-        cy.get('div[data-cy="schemaBuilder-selectTableButton"] button').eq(1).contains('colors');
+        cy.get('h6[data-cy="table-name"]').eq(0).contains('colors');
 
         cy.get('#datasetSchema-up').should('have.attr', 'disabled');
       });
@@ -424,10 +416,10 @@ describe('DatasetSchemaCreationView', () => {
       it('should be able to move tables down in the list', () => {
         createInitialTableState([{ name: 'party' }, { name: 'colors' }]);
 
-        cy.get('div[data-cy="schemaBuilder-selectTableButton"] button').eq(1).click();
+        cy.get('h6[data-cy="table-name"]').eq(0).click();
 
         cy.get('#datasetSchema-down').click();
-        cy.get('div[data-cy="schemaBuilder-selectTableButton"] button').eq(3).contains('party');
+        cy.get('h6[data-cy="table-name"]').eq(1).contains('party');
 
         cy.get('#datasetSchema-down').should('have.attr', 'disabled');
       });
@@ -442,19 +434,19 @@ describe('DatasetSchemaCreationView', () => {
 
       it('should create a single column', () => {
         createInitialTableState([{}]);
-        cy.get('[data-cy="schemaBuilder-tableColumns"]').should('not.exist');
+        cy.get('li[data-cy="column-name"]').should('not.exist');
         cy.get('#schemabuilder-createColumn').click();
-        cy.get('[data-cy="schemaBuilder-tableColumns"]').should('exist');
-        cy.get('[data-cy="schemaBuilder-tableColumns"] button').should('have.length', 1);
+        cy.get('li[data-cy="column-name"]').should('exist');
+        cy.get('li[data-cy="column-name"]').should('have.length', 1);
       });
 
       it('should create a multiple columns', () => {
         createInitialTableState([{}]);
-        cy.get('[data-cy="schemaBuilder-tableColumns"]').should('not.exist');
+        cy.get('li[data-cy="column-name"]').should('not.exist');
         cy.get('#schemabuilder-createColumn').click();
         cy.get('#schemabuilder-createColumn').click();
-        cy.get('[data-cy="schemaBuilder-tableColumns"]').should('exist');
-        cy.get('[data-cy="schemaBuilder-tableColumns"] button').should('have.length', 2);
+        cy.get('li[data-cy="column-name"]').should('exist');
+        cy.get('li[data-cy="column-name"]').should('have.length', 2);
       });
 
       it('should not submit on text field enter', () => {
@@ -485,7 +477,7 @@ describe('DatasetSchemaCreationView', () => {
         cy.get('#details-menu-button').click();
         cy.get('ul[aria-labelledby="details-menu-button"]').children().eq(2).click();
 
-        cy.get('[data-cy="schemaBuilder-tableColumns"] button').should('have.length', 3);
+        cy.get('li[data-cy="column-name"]').should('have.length', 3);
         cy.get('.cm-theme').then((elem) => {
           const comparison = {
             tables: [
@@ -551,21 +543,6 @@ describe('DatasetSchemaCreationView', () => {
         });
       });
 
-      it('should be able to select and deselect a column', () => {
-        createInitialTableState([
-          {
-            name: 'colors',
-            columns: [{ name: 'red' }, { name: 'yellow' }],
-          },
-        ]);
-
-        cy.get('[data-cy="schemaBuilder-tableColumns"] button').eq(0).click();
-        cy.get('#column-name').should('have.value', 'red');
-
-        cy.get('[data-cy="schemaBuilder-tableColumns"] button').eq(1).click({ force: true });
-        cy.get('#column-name').should('have.value', 'yellow');
-      });
-
       it('should be able to move columns up in the list', () => {
         createInitialTableState([
           {
@@ -575,7 +552,7 @@ describe('DatasetSchemaCreationView', () => {
         ]);
 
         cy.get('#datasetSchema-up').click();
-        cy.get('[data-cy="schemaBuilder-tableColumns"] button').eq(0).contains('yellow');
+        cy.get('li[data-cy="column-name"]').eq(0).contains('yellow');
 
         cy.get('#datasetSchema-up').should('have.attr', 'disabled');
       });
@@ -588,10 +565,10 @@ describe('DatasetSchemaCreationView', () => {
           },
         ]);
 
-        cy.get('[data-cy="schemaBuilder-tableColumns"] button').eq(0).click();
+        cy.get('li[data-cy="column-name"]').eq(0).click();
 
         cy.get('#datasetSchema-down').click();
-        cy.get('[data-cy="schemaBuilder-tableColumns"] button').eq(1).contains('red');
+        cy.get('li[data-cy="column-name"]').eq(1).contains('red');
 
         cy.get('#datasetSchema-down').should('have.attr', 'disabled');
       });
@@ -787,8 +764,10 @@ describe('DatasetSchemaCreationView', () => {
         createInitialTableState([{ columns: [{}] }, { columns: [{}, {}] }]);
         cy.get('#datasetSchema-linkRel').click();
 
-        cy.get('[data-cy="expand-table-button"]').eq(1).click();
-        cy.get('input[value="table_name1|column:new_column1"]').eq(0).click();
+        // Expand second "from" table
+        cy.get('.MuiModal-root h6[data-cy="table-name"]').eq(1).click();
+        // Select second column
+        cy.get('.MuiModal-root li[data-cy="column-name"]').eq(1).click();
         cy.get('#from-table').contains('table_name1');
         cy.get('#from-column').contains('new_column1');
       });
@@ -797,8 +776,10 @@ describe('DatasetSchemaCreationView', () => {
         createInitialTableState([{ columns: [{}] }, { columns: [{}, {}] }]);
         cy.get('#datasetSchema-linkRel').click();
 
-        cy.get('[data-cy="expand-table-button"]').eq(2).click();
-        cy.get('input[value="table_name|column:new_column"]').eq(0).click();
+        // Expand first "to" table
+        cy.get('.MuiModal-root h6[data-cy="table-name"]').eq(2).click();
+        // Select first column
+        cy.get('.MuiModal-root li[data-cy="column-name"]').eq(0).click();
         cy.get('#to-table').contains('table_name');
         cy.get('#to-column').contains('new_column');
       });
@@ -806,10 +787,14 @@ describe('DatasetSchemaCreationView', () => {
       it('should allow user to add a relationship after all values are provided!', () => {
         createInitialTableState([{ columns: [{}] }, { columns: [{}, {}] }]);
         cy.get('#datasetSchema-linkRel').click();
-        cy.get('[data-cy="expand-table-button"]').eq(1).click();
-        cy.get('input[value="table_name1|column:new_column1"]').eq(0).click();
-        cy.get('[data-cy="expand-table-button"]').eq(2).click();
-        cy.get('input[value="table_name|column:new_column"]').eq(0).click();
+        // Expand second "from" table
+        cy.get('.MuiModal-root h6[data-cy="table-name"]').eq(1).click();
+        // Select second column
+        cy.get('.MuiModal-root li[data-cy="column-name"]').eq(1).click();
+        // Expand first "to" table
+        cy.get('.MuiModal-root h6[data-cy="table-name"]').eq(2).click();
+        // Select first column (it's the third overall column)
+        cy.get('.MuiModal-root li[data-cy="column-name"]').eq(2).click();
         cy.get('#submitButton').should('have.attr', 'disabled');
         cy.get('#table-name').should('have.value', '');
         cy.get('#table-name').type('rel-name');
@@ -871,14 +856,19 @@ describe('DatasetSchemaCreationView', () => {
       it('updating table name should update relationship value', () => {
         createInitialTableState([{ columns: [{}] }, { columns: [{}] }]);
         cy.get('#datasetSchema-linkRel').click();
-        cy.get('[data-cy="expand-table-button"]').eq(1).click();
-        cy.get('input[value="table_name1|column:new_column"]').eq(0).click();
-        cy.get('[data-cy="expand-table-button"]').eq(2).click();
-        cy.get('input[value="table_name|column:new_column"]').eq(0).click();
+        // Expand second "from" table
+        cy.get('.MuiModal-root h6[data-cy="table-name"]').eq(1).click();
+        // Select second column
+        cy.get('.MuiModal-root li[data-cy="column-name"]').eq(0).click();
+        // Expand first "to" table
+        cy.get('.MuiModal-root h6[data-cy="table-name"]').eq(2).click();
+        // Select first column (it's the second overall column)
+        cy.get('.MuiModal-root li[data-cy="column-name"]').eq(1).click();
         cy.get('#table-name').type('rel-name');
         cy.get('#submitButton').click();
 
-        cy.get('div[data-cy="schemaBuilder-selectTableButton"] button').eq(1).click();
+        // Rename the first table
+        cy.get('h6[data-cy="table-name"]').eq(0).click();
         cy.get('#table-name').clear().type('party');
 
         cy.get('.cm-theme').then((elem) => {
@@ -930,13 +920,18 @@ describe('DatasetSchemaCreationView', () => {
       it('updating column name should update relationship value', () => {
         createInitialTableState([{ columns: [{}] }, { columns: [{}] }]);
         cy.get('#datasetSchema-linkRel').click();
-        cy.get('[data-cy="expand-table-button"]').eq(1).click();
-        cy.get('input[value="table_name1|column:new_column"]').eq(0).click();
-        cy.get('[data-cy="expand-table-button"]').eq(2).click();
-        cy.get('input[value="table_name|column:new_column"]').eq(0).click();
+        // Expand second "from" table
+        cy.get('.MuiModal-root h6[data-cy="table-name"]').eq(1).click();
+        // Select second column
+        cy.get('.MuiModal-root li[data-cy="column-name"]').eq(0).click();
+        // Expand first "to" table
+        cy.get('.MuiModal-root h6[data-cy="table-name"]').eq(2).click();
+        // Select first column (it's the second overall column)
+        cy.get('.MuiModal-root li[data-cy="column-name"]').eq(1).click();
         cy.get('#table-name').type('rel-name');
         cy.get('#submitButton').click();
 
+        // This column happens to be selected
         cy.get('#column-name').clear().type('party');
 
         cy.get('.cm-theme').then((elem) => {

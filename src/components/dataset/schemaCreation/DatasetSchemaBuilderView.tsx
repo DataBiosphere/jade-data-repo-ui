@@ -15,13 +15,7 @@ import {
   Checkbox,
   FormControlLabel,
 } from '@mui/material';
-import {
-  AddCircleRounded,
-  IndeterminateCheckBoxOutlined,
-  AddBoxOutlined,
-  MoreVert,
-  Circle,
-} from '@mui/icons-material';
+import { AddCircleRounded, MoreVert } from '@mui/icons-material';
 import { useFormContext } from 'react-hook-form';
 import CodeMirror from '@uiw/react-codemirror';
 import { okaidia } from '@uiw/codemirror-theme-okaidia';
@@ -34,6 +28,7 @@ import {
   RelationshipModel,
 } from 'generated/tdr';
 import clsx from 'clsx';
+import { SchemaTree } from 'components/common/overview/SchemaPanel';
 import TerraTooltip from '../../common/TerraTooltip';
 import DatasetSchemaRelationshipModal, { wrapRadioValue } from './DatasetSchemaRelationshipModal';
 import { styles as DatasetCreationStyles } from './DatasetSchemaCommon';
@@ -121,7 +116,8 @@ const styles = (theme: CustomTheme) =>
 const defaultRelationship = {
   from: '',
   to: '',
-  expandedTables: {},
+  expandedTablesFrom: [] as number[],
+  expandedTablesTo: [] as number[],
   name: '',
   isEditMode: false,
 };
@@ -139,12 +135,12 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
   );
   const [selectedTable, setSelectedTable] = useState(-1);
   const [selectedColumn, setSelectedColumn] = useState(-1);
-  const [expandedTables, setExpandedTables] = useState({} as any);
+  const [expandedTables, setExpandedTables] = useState<number[]>([]);
   const [relationshipModalOpen, setRelationshipModalOpen] = useState(false);
   const [relationshipModalDefaultValues, setRelationshipModalDefaultValues] = useState(
     defaultRelationship,
   );
-  const [outlinedRelationships, setOutlinedRelationships] = useState({} as any);
+  const [outlinedRelationships, setOutlinedRelationships] = useState<string[]>([]);
   const [uiState, setUiState] = useState(defaultUiState);
 
   const [anchorElDetailsMenu, setAnchorElDetailsMenu] = useState<null | HTMLElement>();
@@ -168,20 +164,11 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
   // ----------------------------------------
   // Tables
   // ----------------------------------------
-  const expandTable = (i: number) => {
-    setExpandedTables({
-      ...expandedTables,
-      [i]: !expandedTables[i],
-    });
-  };
-
-  const selectTable = (i: number) => {
-    if (selectedTable === i && selectedColumn === -1) {
-      setSelectedTable(-1);
-      setSelectedColumn(-1);
+  const toggleExpandedTable = (i: number) => {
+    if (expandedTables.indexOf(i) > -1) {
+      setExpandedTables(_.without(expandedTables, i));
     } else {
-      setSelectedTable(i);
-      setSelectedColumn(-1);
+      setExpandedTables(_.concat(expandedTables, i));
     }
   };
 
@@ -203,10 +190,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
     });
     setSelectedTable(newIndex);
     setSelectedColumn(-1);
-    setExpandedTables({
-      ...expandedTables,
-      [newIndex]: true,
-    });
+    toggleExpandedTable(newIndex);
   };
 
   const deleteTable = () => {
@@ -303,15 +287,6 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
   // ----------------------------------------
   // Columns
   // ----------------------------------------
-  const selectColumn = (i: number, j: number) => {
-    if (selectedTable === i && selectedColumn === j) {
-      setSelectedTable(-1);
-      setSelectedColumn(-1);
-    } else {
-      setSelectedTable(i);
-      setSelectedColumn(j);
-    }
-  };
 
   const createColumn = () => {
     const newSchema = _.cloneDeep(datasetSchema);
@@ -563,12 +538,10 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
         (schemaTable: TableModel) => schemaTable.name === rel.to.table,
       );
       setRelationshipModalDefaultValues({
-        from: wrapRadioValue(rel.from.table, rel.from.column),
-        to: wrapRadioValue(rel.to.table, rel.to.column),
-        expandedTables: {
-          [`radioGroup-relationshipFrom-${fromIndex}`]: true,
-          [`radioGroup-relationshipTo-${toIndex}`]: true,
-        },
+        from: wrapRadioValue({ table: rel.from.table, column: rel.from.column }),
+        to: wrapRadioValue({ table: rel.to.table, column: rel.to.column }),
+        expandedTablesFrom: [fromIndex],
+        expandedTablesTo: [toIndex],
         name: rel.name,
         isEditMode: true,
       });
@@ -577,10 +550,11 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
       const colName = datasetSchema.tables[selectedTable].columns[selectedColumn].name;
       setRelationshipModalDefaultValues({
         from:
-          selectedTable !== -1 && selectedColumn !== -1 ? wrapRadioValue(tableName, colName) : '',
-        expandedTables: {
-          [`radioGroup-relationshipFrom-${selectedTable}`]: true,
-        },
+          selectedTable !== -1 && selectedColumn !== -1
+            ? wrapRadioValue({ table: tableName, column: colName })
+            : '',
+        expandedTablesFrom: [selectedTable],
+        expandedTablesTo: [],
         to: '',
         name: '',
         isEditMode: false,
@@ -629,10 +603,10 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
   const highlightRelationshipColumns = (rel: RelationshipModel) => {
     const fromIndices = getIndices(rel.from.table, rel.from.column);
     const toIndices = getIndices(rel.to.table, rel.to.column);
-    setOutlinedRelationships({
-      [`${fromIndices.table}-${fromIndices.column}`]: true,
-      [`${toIndices.table}-${toIndices.column}`]: true,
-    });
+    setOutlinedRelationships([
+      `${fromIndices.table}-${fromIndices.column}`,
+      `${toIndices.table}-${toIndices.column}`,
+    ]);
   };
 
   // ----------------------------------------
@@ -651,6 +625,16 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
       table: tableIndex,
       column: columnIndex,
     };
+  };
+
+  const getNodeId = (tableIndex: number, columnIndex: number) => {
+    if (tableIndex === -1) {
+      return '';
+    }
+    if (columnIndex > -1) {
+      return `${tableIndex}-${columnIndex}`;
+    }
+    return `${tableIndex}`;
   };
 
   const swapArrayLocs = (arr: Array<any>, index1: number, index2: number) => {
@@ -705,7 +689,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
               );
 
               if (anyTableDeletes) {
-                setExpandedTables({});
+                setExpandedTables([]);
                 setSelectedTable(-1);
                 setSelectedColumn(-1);
               } else if (selectedColumn > -1) {
@@ -717,7 +701,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
                   ),
                 );
                 if (anyColumnDeletes) {
-                  setExpandedTables({});
+                  setExpandedTables([]);
                   setSelectedTable(-1);
                   setSelectedColumn(-1);
                 }
@@ -866,92 +850,51 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
               className={classes.schemaBuilderStructureViewContent}
               data-cy="schema-builder-structure-view"
             >
-              {datasetSchema.tables?.map((table: TableModel, i: number) => (
-                <div key={`datasetSchema-table-${i}`}>
-                  <div
-                    className={classes.schemaBuilderStructureViewContentTableName}
-                    data-cy="schemaBuilder-selectTableButton"
-                  >
-                    <IconButton color="primary" onClick={() => expandTable(i)}>
-                      {expandedTables[i] ? <IndeterminateCheckBoxOutlined /> : <AddBoxOutlined />}
-                    </IconButton>
-                    <Button
-                      onClick={() => selectTable(i)}
-                      className={clsx(classes.schemaBuilderStructureViewContentTableName_text, {
-                        [classes.schemaBuilderStructureViewContentTableName_selected]:
-                          selectedTable === i && selectedColumn === -1,
-                      })}
-                      disableFocusRipple
-                      disableRipple
-                    >
-                      {table.name || '(unnamed table)'}
-                    </Button>
-                  </div>
-
-                  {table.columns?.length > 0 && expandedTables[i] && (
-                    <div
-                      className={classes.schemaBuilderStructureViewColumnContainer_wrapper}
-                      data-cy="schemaBuilder-tableColumns"
-                    >
-                      <div className={classes.schemaBuilderStructureViewContentColumn_dotContainer}>
-                        <Circle className={classes.schemaBuilderStructureViewContentColumn_dot} />
-                      </div>
-                      <div
-                        className={clsx(classes.schemaBuilderStructureViewColumnContainer, {
-                          [classes.schemaBuilderStructureColumnContainer_expanded]:
-                            expandedTables[i],
-                        })}
-                      >
-                        {table.columns.map((column: ColumnModel, j: number) => (
-                          <div
-                            className={classes.columnNameDisplay}
-                            key={`datasetSchema-table-${i}-column-${j}`}
-                          >
-                            <Button
-                              onClick={() => selectColumn(i, j)}
-                              className={clsx(
-                                classes.schemaBuilderStructureViewContentTableName_text,
-                                classes.schemaBuilderStructureViewContentColumn,
-                                {
-                                  [classes.schemaBuilderStructureViewContentTableName_selected]:
-                                    selectedTable === i && selectedColumn === j,
-                                  [classes.columnHighlighted]: outlinedRelationships[`${i}-${j}`],
-                                },
-                              )}
-                              disableFocusRipple
-                              disableRipple
-                            >
-                              {column.name || '(unnamed column)'}
-                            </Button>
-                            {datasetSchema.relationships
-                              ?.filter((rel: RelationshipModel) => {
-                                const isFrom =
-                                  rel.from.table === table.name && rel.from.column === column.name;
-                                const isTo =
-                                  rel.to.table === table.name && rel.to.column === column.name;
-                                return isFrom || isTo;
-                              })
-                              .map((rel: RelationshipModel) => (
-                                <TerraTooltip title={rel.name} key={`rel-${rel.name}`}>
-                                  <IconButton
-                                    size="small"
-                                    color="primary"
-                                    className={classes.relationshipButton}
-                                    onMouseEnter={() => highlightRelationshipColumns(rel)}
-                                    onMouseLeave={() => setOutlinedRelationships({})}
-                                    onClick={() => openRelationshipEditor({ rel })}
-                                  >
-                                    <i className="fa fa-link-horizontal" />
-                                  </IconButton>
-                                </TerraTooltip>
-                              ))}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ))}
+              <SchemaTree
+                tables={datasetSchema.tables || []}
+                readOnly={false}
+                selected={getNodeId(selectedTable, selectedColumn)}
+                onNodeSelect={(_e, nodeId) => {
+                  const indexes = nodeId.split('-').map((n) => Number(n));
+                  if (indexes.length === 1) {
+                    // Table node was selected
+                    setSelectedTable(indexes[0]);
+                    setSelectedColumn(-1);
+                  } else {
+                    // Column node was selected
+                    setSelectedTable(indexes[0]);
+                    setSelectedColumn(indexes[1]);
+                  }
+                }}
+                expanded={expandedTables.map((t) => `${t}`)}
+                highlighted={outlinedRelationships}
+                onNodeToggle={(_e, nodeIds) => setExpandedTables(nodeIds.map((n) => Number(n)))}
+                afterLabelIcons={(table, column) =>
+                  datasetSchema.relationships
+                    ?.filter((rel: RelationshipModel) => {
+                      const isFrom =
+                        rel.from.table === table.name && rel.from.column === column.name;
+                      const isTo = rel.to.table === table.name && rel.to.column === column.name;
+                      return isFrom || isTo;
+                    })
+                    .map((rel: RelationshipModel) => ({
+                      tooltip: rel.name,
+                      icon: (
+                        <IconButton
+                          size="small"
+                          color="primary"
+                          className={classes.relationshipButton}
+                          onMouseEnter={() => highlightRelationshipColumns(rel)}
+                          onMouseLeave={() => setOutlinedRelationships([])}
+                          onClick={() => openRelationshipEditor({ rel })}
+                          disableRipple
+                        >
+                          <i className="fa fa-link-horizontal" />
+                        </IconButton>
+                      ),
+                    })) || []
+                }
+              />
             </div>
           </div>
           {selectedTable !== -1 &&
@@ -988,7 +931,8 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
           defaultRelationshipName={relationshipModalDefaultValues.name}
           defaultRelationshipFrom={relationshipModalDefaultValues.from}
           defaultRelationshipTo={relationshipModalDefaultValues.to}
-          defaultExpandedTables={relationshipModalDefaultValues.expandedTables}
+          defaultExpandedTablesFrom={relationshipModalDefaultValues.expandedTablesFrom}
+          defaultExpandedTablesTo={relationshipModalDefaultValues.expandedTablesTo}
           onSubmit={(data: RelationshipModel) => {
             if (relationshipModalDefaultValues.isEditMode) {
               editRelationship(data);
