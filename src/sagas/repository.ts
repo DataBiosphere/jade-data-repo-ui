@@ -140,7 +140,7 @@ function* pollJobWorker(
         type: ActionTypes.GET_JOB_BY_ID_SUCCESS,
         payload: { status: response.data.job_status },
       });
-      yield call(delay, 1000);
+      yield delay(1000);
       yield call(pollJobWorker, jobId, jobTypeSuccess, jobTypeFailure, jobTypeException);
     }
   } catch (err) {
@@ -404,6 +404,28 @@ export function* removeSnapshotPolicyMembers({ payload }: any): any {
 /**
  * Datasets.
  */
+export function* createDataset({ payload }: any): any {
+  try {
+    const response = yield call(authPost, '/api/repository/v1/datasets', payload);
+    const jobId = response.data.id;
+    yield put({
+      type: ActionTypes.CREATE_DATASET_JOB,
+      payload: { data: response, jobId, payload },
+    });
+    yield call(
+      pollJobWorker,
+      jobId,
+      ActionTypes.CREATE_DATASET_SUCCESS,
+      ActionTypes.CREATE_DATASET_FAILURE,
+      ActionTypes.CREATE_DATASET_EXCEPTION,
+    );
+  } catch (err) {
+    showNotification(err);
+    yield put({
+      type: ActionTypes.CREATE_DATASET_EXCEPTION,
+    });
+  }
+}
 
 export function* getDatasets({ payload }: any): any {
   const { limit, offset, sort, direction, searchString } = payload;
@@ -650,6 +672,24 @@ export function* getJournalEntries({ payload }: any): any {
 /**
  * billing profile
  */
+export function* getBillingProfiles({ payload }: any): any {
+  try {
+    const { offset, limit } = payload;
+    const response = yield call(
+      authGet,
+      `/api/resources/v1/profiles?offset=${offset || 0}&limit=${limit || 1000}`,
+    );
+    yield put({
+      type: ActionTypes.GET_BILLING_PROFILES_SUCCESS,
+      profile: { data: response },
+    });
+  } catch (err) {
+    yield put({
+      type: ActionTypes.GET_BILLING_PROFILES_FAILURE,
+    });
+  }
+}
+
 export function* getBillingProfileById({ payload }: any): any {
   try {
     const { profileId } = payload;
@@ -891,6 +931,7 @@ export default function* root() {
     takeLatest(ActionTypes.GET_DATASET_POLICY, getDatasetPolicy),
     takeLatest(ActionTypes.ADD_DATASET_POLICY_MEMBER, addDatasetPolicyMember),
     takeLatest(ActionTypes.REMOVE_DATASET_POLICY_MEMBER, removeDatasetPolicyMember),
+    takeLatest(ActionTypes.CREATE_DATASET, createDataset),
     takeLatest(ActionTypes.GET_JOBS, getJobs),
     takeLatest(ActionTypes.GET_JOB_RESULT, getJobResult),
     takeLatest(ActionTypes.GET_JOURNAL_ENTRIES, getJournalEntries),
@@ -899,6 +940,7 @@ export default function* root() {
     takeLatest(ActionTypes.PAGE_QUERY, pageQuery),
     takeLatest(ActionTypes.COUNT_RESULTS, countResults),
     takeLatest(ActionTypes.GET_FEATURES, getFeatures),
+    takeLatest(ActionTypes.GET_BILLING_PROFILES, getBillingProfiles),
     takeLatest(ActionTypes.GET_BILLING_PROFILE_BY_ID, getBillingProfileById),
     takeLatest(ActionTypes.GET_USER_DATASET_ROLES, getUserDatasetRoles),
     takeLatest(ActionTypes.GET_USER_SNAPSHOT_ROLES, getUserSnapshotRoles),

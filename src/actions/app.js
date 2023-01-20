@@ -8,6 +8,12 @@ import { createActions } from 'redux-actions';
 
 import { ActionTypes } from 'constants/index';
 
+export const { getBillingProfiles } = createActions({
+  [ActionTypes.GET_BILLING_PROFILES]: () => ({}),
+  [ActionTypes.GET_BILLING_PROFILES_SUCCESS]: (profile) => profile,
+  [ActionTypes.GET_BILLING_PROFILES_EXCEPTION]: () => ({}),
+});
+
 export const { getBillingProfileById } = createActions({
   [ActionTypes.GET_BILLING_PROFILE_BY_ID]: (profile) => profile,
   [ActionTypes.GET_BILLING_PROFILE_BY_ID_SUCCESS]: (profile) => profile,
@@ -56,6 +62,14 @@ export const { getSnapshots } = createActions({
 
 export const { refreshSnapshots } = createActions({
   [ActionTypes.REFRESH_SNAPSHOTS]: () => ({}),
+});
+
+export const { createDataset } = createActions({
+  [ActionTypes.CREATE_DATASET]: (payload) => payload,
+  [ActionTypes.CREATE_DATASET_JOB]: (dataset) => dataset,
+  [ActionTypes.CREATE_DATASET_SUCCESS]: (dataset) => dataset,
+  [ActionTypes.CREATE_DATASET_FAILURE]: (dataset) => dataset,
+  [ActionTypes.CREATE_DATASET_EXCEPTION]: () => ({}),
 });
 
 export const { getDatasetSnapshots } = createActions({

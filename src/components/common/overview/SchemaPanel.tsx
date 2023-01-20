@@ -1,8 +1,13 @@
 import React from 'react';
 import _ from 'lodash';
-import { Box, Button, Paper, Typography } from '@mui/material';
-import { TreeItem, TreeItemProps, TreeView } from '@mui/lab';
-import { AddBoxOutlined, IndeterminateCheckBoxOutlined } from '@mui/icons-material';
+import { Box, Button, IconButtonProps, Paper, Typography, iconButtonClasses } from '@mui/material';
+import { TreeItem, TreeItemProps, TreeView, treeItemClasses } from '@mui/lab';
+import {
+  AddBoxOutlined,
+  IndeterminateCheckBoxOutlined,
+  RadioButtonUncheckedOutlined,
+  RadioButtonCheckedOutlined,
+} from '@mui/icons-material';
 import { alpha, CustomTheme } from '@mui/material/styles';
 import { ClassNameMap, createStyles, WithStyles, withStyles } from '@mui/styles';
 import { Link } from 'react-router-dom';
@@ -16,6 +21,12 @@ const styles = (theme: CustomTheme) =>
       height: '100%',
       padding: 15,
       width: 350,
+    },
+    readOnly: {
+      [`& .${treeItemClasses.content}`]: {
+        backgroundColor: 'white !important',
+        cursor: 'default',
+      },
     },
     headerText: {
       fontWeight: theme.typography.bold,
@@ -37,19 +48,28 @@ const styles = (theme: CustomTheme) =>
       display: 'flex',
       flexDirection: 'row',
     },
+    columnLabelIcons: {
+      [`& .${iconButtonClasses.root}`]: {
+        display: 'flex',
+        marginTop: 0,
+      },
+    },
     columnBox: {
       background: '#e6e6e6',
       textAlign: 'center',
       borderRadius: 3,
       fontSize: 12,
       width: 18,
+      minWidth: 18,
       height: 18,
       display: 'inline-block',
       paddingTop: 4,
       fontWeight: 700,
-      lineHeight: '12px',
+      lineHeight: '9px',
+      marginTop: 1,
       marginRight: 4,
       position: 'relative',
+      border: '1px solid #d0d0d0',
     },
     columnSubscript: {
       position: 'absolute',
@@ -59,15 +79,32 @@ const styles = (theme: CustomTheme) =>
     },
     columnNameHighlight: {
       background: '#e6e6e6',
-      borderRadius: 3,
       marginRight: '4px',
+    },
+    highlight: {
+      border: `1px solid ${theme.palette.primary.main} !important`,
     },
     columnNamePlain: {
       paddingRight: 8,
       paddingLeft: 8,
       lineHeight: '1.1rem',
-      maxWidth: 260,
       display: 'block',
+      borderRadius: 3,
+      border: '1px solid transparent',
+    },
+    columnNode: {
+      [`& .${treeItemClasses.content}`]: {
+        paddingTop: 2,
+        paddingRight: 0,
+        paddingBottom: 2,
+        paddingLeft: 0,
+      },
+      [`& .${treeItemClasses.iconContainer}`]: {
+        display: 'none',
+      },
+    },
+    radioIcon: {
+      marginRight: 7,
     },
     ellipsis: {
       ...theme.mixins.ellipsis,
@@ -75,11 +112,6 @@ const styles = (theme: CustomTheme) =>
   });
 
 const StyledTreeItem = withStyles((theme) => ({
-  content: {
-    padding: 0,
-    backgroundColor: 'white !important',
-    cursor: 'default',
-  },
   iconContainer: {
     cursor: 'pointer',
     '& .close': {
@@ -87,28 +119,11 @@ const StyledTreeItem = withStyles((theme) => ({
     },
   },
   group: {
-    marginLeft: 9,
-    paddingLeft: 5,
-    position: 'relative',
-    '&:before': {
-      content: '" "',
-      position: 'absolute',
-      top: 0,
-      bottom: 25,
-      left: -2,
-      borderLeft: `2px dashed ${alpha(theme.palette.primary.main, 0.5)}`,
-    },
-    '&:after': {
-      content: '" "',
-      position: 'absolute',
-      width: 10,
-      height: 10,
-      borderRadius: 10,
-      bottom: 11,
-      left: -6,
-      backgroundColor: alpha(theme.palette.primary.main, 0.5),
-    },
+    marginLeft: 14,
+    paddingLeft: 18,
+    borderLeft: `2px dashed ${alpha(theme.palette.primary.main, 0.5)}`,
   },
+
   label: {
     marginTop: '2px',
     marginBottom: '2px',
@@ -138,8 +153,32 @@ const renderColumnName = (
   column: ColumnModel,
   table: TableModel,
   classes: ClassNameMap<string>,
+  selected: boolean,
+  highlighted: boolean,
+  afterLabelIcons?: (table: TableModel, column: ColumnModel) => LabelIcon[],
+  selectedColumnnsAsRadio?: boolean,
 ) => {
   const retVal = [];
+
+  if (selectedColumnnsAsRadio && column) {
+    if (selected) {
+      retVal.push(
+        <RadioButtonCheckedOutlined
+          className={classes.radioIcon}
+          color="primary"
+          fontSize="small"
+        />,
+      );
+    } else {
+      retVal.push(
+        <RadioButtonUncheckedOutlined
+          className={classes.radioIcon}
+          color="primary"
+          fontSize="small"
+        />,
+      );
+    }
+  }
   const isPk = _.includes(table.primaryKey || [], column.name);
   retVal.push(
     <span key="dt" className={classes.columnBox} title={column.datatype}>
@@ -152,6 +191,7 @@ const renderColumnName = (
       key="name"
       className={clsx(classes.columnNamePlain, classes.ellipsis, {
         [classes.columnNameHighlight]: isPk,
+        [classes.highlight]: highlighted,
       })}
     >
       {column.name}
@@ -172,48 +212,120 @@ const renderColumnName = (
     </div>
   );
   return (
-    <TerraTooltip title={tooltipText}>
-      <span className={classes.columnLabel}>{retVal}</span>
-    </TerraTooltip>
+    <span className={classes.columnLabel}>
+      <TerraTooltip title={tooltipText} enterDelay={500} enterNextDelay={500}>
+        <span style={{ display: 'flex', maxWidth: '100%' }}>{retVal}</span>
+      </TerraTooltip>
+      <span className={classes.columnLabelIcons}>
+        {afterLabelIcons &&
+          afterLabelIcons(table, column).map((i) =>
+            _.isEmpty(i.tooltip) ? (
+              i.icon
+            ) : (
+              <TerraTooltip title={i.tooltip || ''}>{i.icon}</TerraTooltip>
+            ),
+          )}
+      </span>
+    </span>
   );
 };
 
-const datasetTables = (tables: Array<TableModel>, classes: ClassNameMap<string>) => (
-  <TreeView
-    aria-label="dataset schema navigator"
-    data-cy="schema-navigator"
-    defaultCollapseIcon={<IndeterminateCheckBoxOutlined color="primary" />}
-    defaultExpandIcon={<AddBoxOutlined color="primary" />}
-    defaultExpanded={['0']}
-  >
-    {tables.map((table: TableModel, i: number) => (
-      <StyledTreeItem
-        key={`${i}`}
-        nodeId={`${i}`}
-        label={
-          <Box sx={{ cursor: 'pointer' }}>
-            <Typography
-              data-cy="table-name"
-              variant="h6"
-              sx={{ cursor: 'pointer', whiteSpace: 'nowrap' }}
-            >
-              {renderTableName(table)}
-            </Typography>
-          </Box>
-        }
-      >
-        {table.columns.map((column, j) => (
-          <StyledTreeItem
-            data-cy="column-name"
-            key={`${i}${j}`}
-            nodeId={`${i}${j}`}
-            label={renderColumnName(column, table, classes)}
-          />
-        ))}
-      </StyledTreeItem>
-    ))}
-  </TreeView>
+export interface LabelIcon {
+  icon: React.ReactElement<IconButtonProps>;
+  tooltip?: string | JSX.Element;
+}
+
+interface IPanelProps extends WithStyles<typeof styles> {
+  // Tables to render
+  tables: Array<TableModel>;
+  // If true, will remove hover styling
+  readOnly?: boolean;
+  // If true, render a radio button to represent selection for columns
+  selectedColumnnsAsRadio?: boolean;
+  // Selected node by id where the id is either {table index} if the selected node is a table or {table index}-{column index} if the selected node is a column
+  selected?: string;
+  // If passed in, callback method to execute when any node gets selected
+  onNodeSelect?: (event: React.SyntheticEvent, nodeId: string) => void;
+  // Expanded nodes by id where the id is the {table index}
+  expanded?: Array<string>;
+  // Highlighted nodes by id where the id is the {table index}-{column index}
+  highlighted?: Array<string>;
+  // If passed in, callback method to execute when any node gets toggled
+  onNodeToggle?: (event: React.SyntheticEvent, nodeIds: string[]) => void;
+  // Array of react elements to add before a column label
+  beforeLabelIcons?: React.ReactElement[];
+  // Array of react elements to add after a column label
+  afterLabelIcons?: (table: TableModel, column: ColumnModel) => LabelIcon[];
+}
+export const SchemaTree = withStyles(styles)(
+  ({
+    classes,
+    tables,
+    selectedColumnnsAsRadio,
+    selected,
+    onNodeSelect,
+    expanded,
+    highlighted,
+    onNodeToggle,
+    afterLabelIcons,
+    readOnly,
+  }: IPanelProps) => (
+    <TreeView
+      aria-label="dataset schema navigator"
+      data-cy="schema-navigator"
+      defaultCollapseIcon={<IndeterminateCheckBoxOutlined color="primary" />}
+      defaultExpandIcon={<AddBoxOutlined color="primary" />}
+      defaultParentIcon={<AddBoxOutlined color="primary" />}
+      defaultExpanded={tables.length > 0 ? ['0'] : []}
+      selected={selected}
+      onNodeSelect={onNodeSelect}
+      expanded={expanded}
+      onNodeToggle={onNodeToggle}
+    >
+      {tables.map((table: TableModel, i: number) => (
+        <StyledTreeItem
+          key={`${i}`}
+          nodeId={`${i}`}
+          className={clsx({ [classes.readOnly]: readOnly })}
+          icon={table.columns.length === 0 && <IndeterminateCheckBoxOutlined color="disabled" />}
+          TransitionProps={{
+            timeout: 0,
+          }}
+          label={
+            <Box sx={{ cursor: 'pointer' }}>
+              <Typography
+                data-cy="table-name"
+                variant="h6"
+                sx={{ cursor: 'pointer', whiteSpace: 'nowrap' }}
+              >
+                {renderTableName(table)}
+              </Typography>
+            </Box>
+          }
+        >
+          {table.columns.map((column, j) => (
+            <StyledTreeItem
+              data-cy="column-name"
+              key={`${i}-${j}`}
+              nodeId={`${i}-${j}`}
+              className={classes.columnNode}
+              label={renderColumnName(
+                column,
+                table,
+                classes,
+                !_.isEmpty(selected) && selected === `${i}-${j}`,
+                (highlighted || []).indexOf(`${i}-${j}`) > -1,
+                afterLabelIcons,
+                selectedColumnnsAsRadio,
+              )}
+            />
+          ))}
+        </StyledTreeItem>
+      ))}
+    </TreeView>
+  ),
 );
+
 const SchemaPanel = withStyles(styles)(({ classes, resourceId, resourceType, tables }: IProps) => (
   <Paper className={classes.root} elevation={4} data-cy="schema-panel">
     <Link to={`${resourceId}/data`} data-cy="view-data-link">
@@ -238,7 +350,9 @@ const SchemaPanel = withStyles(styles)(({ classes, resourceId, resourceType, tab
         &nbsp;({tables.length})
       </Typography>
     </div>
-    <div className={classes.schemaSection}>{datasetTables(tables, classes)}</div>
+    <div className={classes.schemaSection}>
+      <SchemaTree tables={tables} readOnly />
+    </div>
   </Paper>
 ));
 

@@ -1,3 +1,4 @@
+import { CloudPlatform } from 'generated/tdr';
 import _ from 'lodash';
 
 /**
@@ -38,6 +39,11 @@ export enum ActionTypes {
   EXPORT_SNAPSHOT_FAILURE = 'EXPORT_SNAPSHOT_FAILURE',
   RESET_SNAPSHOT_EXPORT = 'RESET_SNAPSHOT_EXPORT',
   RESET_SNAPSHOT_EXPORT_DATA = 'RESET_SNAPSHOT_EXPORT_DATA',
+  CREATE_DATASET = 'CREATE_DATASET',
+  CREATE_DATASET_JOB = 'CREATE_DATASET_JOB',
+  CREATE_DATASET_SUCCESS = 'CREATE_DATASET_SUCCESS',
+  CREATE_DATASET_FAILURE = 'CREATE_DATASET_FAILURE',
+  CREATE_DATASET_EXCEPTION = 'CREATE_DATASET_EXCEPTION',
   REFRESH_DATASETS = 'REFRESH_DATASETS',
   GET_DATASETS = 'GET_DATASETS',
   GET_DATASETS_SUCCESS = 'GET_DATASETS_SUCCESS',
@@ -77,6 +83,9 @@ export enum ActionTypes {
   REMOVE_SNAPSHOT_POLICY_MEMBERS_EXCEPTION = 'REMOVE_SNAPSHOT_POLICY_MEMBERS_EXCEPTION',
   GET_USER_DATASET_ROLES = 'GET_USER_DATASET_ROLES',
   GET_USER_DATASET_ROLES_SUCCESS = 'GET_USER_DATASET_ROLES_SUCCESS',
+  GET_BILLING_PROFILES = 'GET_BILLING_PROFILES',
+  GET_BILLING_PROFILES_SUCCESS = 'GET_BILLING_PROFILES_SUCCESS',
+  GET_BILLING_PROFILES_FAILURE = 'GET_BILLING_PROFILES_FAILURE',
   GET_BILLING_PROFILE_BY_ID = 'GET_BILLING_PROFILE_BY_ID',
   GET_BILLING_PROFILE_BY_ID_SUCCESS = 'GET_BILLING_PROFILE_BY_ID_SUCCESS',
   GET_BILLING_PROFILE_BY_ID_EXCEPTION = 'GET_BILLING_PROFILE_BY_ID_EXCEPTION',
@@ -213,38 +222,31 @@ export const TABLE_DEFAULT_COLUMN_WIDTH = 300;
 const generateGCPRegions: any = () => {
   // settings to generate servers from https://cloud.google.com/compute/docs/regions-zones
   // the list is quite long. The final results will be like:
-  // "asia-east1-a", "asia-east1-b", "asia-east1-c", "asia-east2-a", etc.
+  // "asia-east1", "asia-east2", etc.
   const servers = [
-    { name: 'asia-east', count: [1, 2], letters: ['a', 'b', 'c'] },
-    { name: 'asia-northeast', count: [1, 2, 3], letters: ['a', 'b', 'c'] },
-    { name: 'asia-south', count: [1, 2], letters: ['a', 'b', 'c'] },
-    { name: 'asia-southeast', count: [1, 2], letters: ['a', 'b', 'c'] },
-    { name: 'australia-southeast', count: [1, 2], letters: ['a', 'b', 'c'] },
-    { name: 'europe-central', count: [1, 2], letters: ['a', 'b', 'c'] },
-    { name: 'europe-north', count: [1], letters: ['a', 'b', 'c'] },
-    { name: 'europe-southwest', count: [1], letters: ['a', 'b', 'c'] },
-    { name: 'europe-west', count: [1], letters: ['b', 'c', 'd'] },
-    { name: 'europe-west', count: [2, 3, 4, 6, 8, 9], letters: ['a', 'b', 'c'] },
-    { name: 'me-west', count: [1], letters: ['a', 'b', 'c'] },
-    { name: 'northamerica-northeast', count: [1, 2], letters: ['a', 'b', 'c'] },
-    { name: 'southamerica-east', count: [1], letters: ['a', 'b', 'c'] },
-    { name: 'southamerica-west', count: [1], letters: ['a', 'b', 'c'] },
-    { name: 'us-central', count: [1], letters: ['a', 'b', 'c', 'f'] },
-    { name: 'us-east', count: [1], letters: ['b', 'c', 'd'] },
-    { name: 'us-east', count: [4, 5], letters: ['a', 'b', 'c', 'd'] },
-    { name: 'us-south', count: [1], letters: ['a', 'b', 'c'] },
-    { name: 'us-west', count: [1, 2, 3, 4], letters: ['a', 'b', 'c'] },
+    { name: 'asia-east', count: [1, 2] },
+    { name: 'asia-northeast', count: [1, 2, 3] },
+    { name: 'asia-south', count: [1, 2] },
+    { name: 'asia-southeast', count: [1, 2] },
+    { name: 'australia-southeast', count: [1, 2] },
+    { name: 'europe-central', count: [1, 2] },
+    { name: 'europe-north', count: [1] },
+    { name: 'europe-southwest', count: [1] },
+    { name: 'europe-west', count: [1] },
+    { name: 'europe-west', count: [2, 3, 4, 6, 8, 9] },
+    { name: 'me-west', count: [1] },
+    { name: 'northamerica-northeast', count: [1, 2] },
+    { name: 'southamerica-east', count: [1] },
+    { name: 'southamerica-west', count: [1] },
+    { name: 'us-central', count: [1] },
+    { name: 'us-east', count: [1] },
+    { name: 'us-east', count: [4, 5] },
+    { name: 'us-south', count: [1] },
+    { name: 'us-west', count: [1, 2, 3, 4] },
   ];
 
   return _.flatMap(servers, (serverSettings: any) =>
-    _.flatMap(
-      _.map(serverSettings.count, (count: number) =>
-        _.map(
-          serverSettings.letters,
-          (letter: string) => `${serverSettings.name}${count}-${letter}`,
-        ),
-      ),
-    ),
+    _.flatMap(_.map(serverSettings.count, (count: number) => `${serverSettings.name}${count}`)),
   );
 };
 
@@ -252,11 +254,13 @@ export const CLOUD_PLATFORMS = {
   gcp: {
     key: 'gcp',
     label: 'Google Cloud Platform',
+    platform: CloudPlatform.Gcp,
     regions: generateGCPRegions(),
   },
   azure: {
     key: 'azure',
     label: 'Microsoft Azure',
+    platform: CloudPlatform.Azure,
     regions: [
       { label: 'East US', name: 'eastus' },
       { label: 'East US 2', name: 'eastus2' },
