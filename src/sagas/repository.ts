@@ -89,8 +89,7 @@ export function* authPut(url: string, params = {}, isDelegateToken = false) {
   if (tokenIsValid) {
     // check expiration time against now
     const token: string = yield call(getTokenToUse, isDelegateToken);
-    const result: AxiosResponse = yield call(axios.put, url, {
-      params,
+    const result: AxiosResponse = yield call(axios.put, url, params, {
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
     });
     return result;
