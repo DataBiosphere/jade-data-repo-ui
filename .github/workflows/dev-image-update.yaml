@@ -92,22 +92,22 @@ jobs:
           actions_subcommand: 'deploytagupdate'
           helm_env_prefix: dev
           helm_imagetag_update: ui
-    helm_tag_bump:
-      needs: update_image
-      uses: ./.github/workflows/helmtagbump.yaml
-      secrets: inherit
-    action_notify:
-      runs-on: ubuntu-latest
-      # if: always()
-      needs:
-        - update_image
-        - helm_tag_bump
-      steps:
-      - name: Slack job status
-        uses: broadinstitute/action-slack@v2
-        with:
-          status: ${{ job.status }}
-          author_name: Integration Test
-        env:
-          GITHUB_TOKEN: ${{ secrets.BROADBOT_TOKEN }}
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+  helm_tag_bump:
+    needs: update_image
+    uses: ./.github/workflows/helmtagbump.yaml
+    secrets: inherit
+  action_notify:
+    runs-on: ubuntu-latest
+    # if: always() TODO - uncomment before merging
+    needs:
+      - update_image
+      - helm_tag_bump
+    steps:
+    - name: Slack job status
+      uses: broadinstitute/action-slack@v2
+      with:
+        status: ${{ job.status }}
+        author_name: Integration Test
+      env:
+        GITHUB_TOKEN: ${{ secrets.BROADBOT_TOKEN }}
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
