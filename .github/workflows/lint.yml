@@ -8,7 +8,7 @@ jobs:
     timeout-minutes: 180
     strategy:
       matrix:
-        node-version: [16.x]
+        node-version: [14.x]
     if: "!contains( github.event.pull_request.labels.*.name, 'skip-ci')"
     runs-on: ubuntu-latest
     steps:
