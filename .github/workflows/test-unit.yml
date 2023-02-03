@@ -37,7 +37,7 @@ jobs:
       - name: Run codegen
         run: npm run codegen
       - name: Cypress Run Component Tests
-        uses: cypress-io/github-action@v2
+        uses: cypress-io/github-action@v5
         env:
           DISABLE_ESLINT_PLUGIN: true
         with:
