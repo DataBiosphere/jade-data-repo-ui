@@ -14,9 +14,9 @@ jobs:
           ref: develop
       - name: 'Get Previous tag'
         id: uiprevioustag
-        uses: "broadinstitute/github-action-get-previous-tag@master"
-        env:
-          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+        run: |
+          TAG=$(git for-each-ref --sort=-creatordate --count 1 --format="%(refname:short)" "refs/tags/")
+          echo "tag=${TAG}" >> $GITHUB_OUTPUT
       - name: 'Checkout datarepo-helm-definitions repo'
         uses: actions/checkout@v3
         with:
@@ -64,9 +64,9 @@ jobs:
           ref: develop
       - name: 'Get Previous tag'
         id: uiprevioustag
-        uses: "broadinstitute/github-action-get-previous-tag@master"
-        env:
-          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+        run: |
+          TAG=$(git for-each-ref --sort=-creatordate --count 1 --format="%(refname:short)" "refs/tags/")
+          echo "tag=${TAG}" >> $GITHUB_OUTPUT
       - name: 'Checkout datarepo-helm repo'
         uses: actions/checkout@v3
         with:
