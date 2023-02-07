@@ -98,13 +98,13 @@ jobs:
     secrets: inherit
   action_notify:
     runs-on: ubuntu-latest
-    # if: always() TODO - uncomment before merging
+    if: always()
     needs:
       - update_image
       - helm_tag_bump
     steps:
     - name: Slack job status
-      uses: broadinstitute/action-slack@v2
+      uses: broadinstitute/action-slack@v3.15.0
       with:
         status: ${{ job.status }}
         author_name: Integration Test
