@@ -106,7 +106,7 @@ jobs:
     - name: Slack job status
       uses: broadinstitute/action-slack@v3.15.0
       with:
-        status: ${{ job.status }}
+        status: ${{ contains(needs.*.result, 'failure') && 'failure' || 'success' }}
         author_name: Integration Test
       env:
         GITHUB_TOKEN: ${{ secrets.BROADBOT_TOKEN }}
