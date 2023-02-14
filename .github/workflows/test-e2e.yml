@@ -95,7 +95,7 @@ jobs:
           helm_datarepo_api_chart_version: 0.0.456
           helm_datarepo_ui_chart_version: 0.0.220
           helm_gcloud_sqlproxy_chart_version: 0.19.9
-          helm_oidc_proxy_chart_version: 0.0.40
+          helm_oidc_proxy_chart_version: 0.0.41
           helm_imagetag_update: 'ui'
       - name: "Wait for deployment to come back online"
         uses: broadinstitute/datarepo-actions/actions/wait-for-deployment@0.67.0
