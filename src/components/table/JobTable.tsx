@@ -6,12 +6,11 @@ import _ from 'lodash';
 import { JobModel } from 'generated/tdr';
 import { OrderDirectionOptions, TableColumnType } from 'reducers/query';
 import { CustomTheme } from '@mui/material/styles';
-
-import LightTable from './LightTable';
-import JobResultModal from '../job/JobResultModal';
 import { TdrState } from 'reducers';
 import { RouterRootState } from 'connected-react-router';
 import { connect } from 'react-redux';
+import LightTable from './LightTable';
+import JobResultModal from '../job/JobResultModal';
 
 const styles = (theme: CustomTheme) => ({
   textWrapper: {

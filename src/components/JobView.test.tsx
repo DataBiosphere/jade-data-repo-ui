@@ -8,10 +8,10 @@ import _ from 'lodash';
 import { initialUserState } from 'reducers/user';
 import { initialQueryState } from 'reducers/query';
 import { JobModelJobStatusEnum } from 'generated/tdr';
+import { routerMiddleware } from 'connected-react-router';
 import JobView from './JobView';
 import globalTheme from '../modules/theme';
 import history from '../modules/hist';
-import { routerMiddleware } from 'connected-react-router';
 
 const testDate = new Date();
 const initialState = {

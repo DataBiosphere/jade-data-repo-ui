@@ -9,7 +9,7 @@ export interface NotificationError {
     status: number;
     data?: {
       error?: {
-        errDetail?: Object;
+        errDetail?: unknown;
         message?: string;
       };
       message?: string;

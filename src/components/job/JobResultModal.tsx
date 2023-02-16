@@ -95,7 +95,7 @@ function JobResultModal({
   const handleSeeMoreOpen = () => {
     const params = _.clone(location.query || {});
 
-    params['expandedJob'] = id;
+    params.expandedJob = id;
     push(`${location.pathname}?${urlEncodeParams(params)}`);
   };
 
