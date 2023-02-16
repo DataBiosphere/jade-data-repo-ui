@@ -144,7 +144,7 @@ function* pollJobWorker(
       yield call(pollJobWorker, jobId, jobTypeSuccess, jobTypeFailure, jobTypeException);
     }
   } catch (err) {
-    showNotification(err);
+    showNotification(err, jobId);
     yield put({
       type: jobTypeException,
     });

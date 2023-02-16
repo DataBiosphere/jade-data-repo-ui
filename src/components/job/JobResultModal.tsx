@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Dispatch } from 'react';
+import React, { useEffect, Dispatch } from 'react';
 import _ from 'lodash';
 import { ClassNameMap, withStyles } from '@mui/styles';
 import {
@@ -18,6 +18,10 @@ import { getJobResult } from 'actions';
 import { TdrState } from 'reducers';
 import { JobModelJobStatusEnum } from 'generated/tdr';
 import { JobResult, JobResultError } from 'reducers/job';
+import { RouterLocation, RouterRootState } from 'connected-react-router';
+import { LocationState } from 'history';
+import { push } from 'modules/hist';
+import { urlEncodeParams } from 'libs/utilsTs';
 import LoadingSpinner from '../common/LoadingSpinner';
 
 const styles = (theme: CustomTheme) => ({
@@ -64,7 +68,9 @@ type JobResultModalProps = {
   jobClass?: string;
   loading: boolean;
   jobResult?: JobResult;
+  location: RouterLocation<LocationState>;
   linkDisplay?: any;
+  showLink: boolean;
 };
 
 function JobResultModal({
@@ -75,22 +81,26 @@ function JobResultModal({
   jobClass,
   loading,
   jobResult,
+  location,
   linkDisplay = 'See More',
+  showLink,
 }: JobResultModalProps) {
-  const [seeMore, setSeeMore] = useState({ open: false });
-
+  const expandedJob = location.query?.expandedJob;
   useEffect(() => {
-    if (seeMore.open) {
+    if (expandedJob === id) {
       dispatch(getJobResult({ id }));
     }
-  }, [dispatch, seeMore, id]);
+  }, [dispatch, expandedJob, id]);
 
   const handleSeeMoreOpen = () => {
-    setSeeMore({ open: true });
+    const params = _.clone(location.query || {});
+
+    params['expandedJob'] = id;
+    push(`${location.pathname}?${urlEncodeParams(params)}`);
   };
 
   const handleSeeMoreClose = () => {
-    setSeeMore({ open: false });
+    push(`${location.pathname}`);
   };
 
   const jobError =
@@ -105,12 +115,14 @@ function JobResultModal({
 
   return (
     <div>
-      <button type="button" onClick={handleSeeMoreOpen} className={classes.seeMoreLink}>
-        {linkDisplay}
-      </button>
+      {showLink && (
+        <button type="button" onClick={handleSeeMoreOpen} className={classes.seeMoreLink}>
+          {linkDisplay}
+        </button>
+      )}
       <Paper className={classes.root}>
         <Dialog
-          open={seeMore.open}
+          open={expandedJob === id}
           scroll="paper"
           fullWidth={true}
           classes={{ paper: classes.dialog }}
@@ -186,10 +198,11 @@ function JobResultModal({
   );
 }
 
-function mapStateToProps(state: TdrState) {
+function mapStateToProps(state: TdrState & RouterRootState) {
   return {
     loading: state.jobs.jobResultLoading,
     jobResult: state.jobs.jobResult,
+    location: state.router.location,
   };
 }
 

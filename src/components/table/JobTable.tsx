@@ -9,6 +9,9 @@ import { CustomTheme } from '@mui/material/styles';
 
 import LightTable from './LightTable';
 import JobResultModal from '../job/JobResultModal';
+import { TdrState } from 'reducers';
+import { RouterRootState } from 'connected-react-router';
+import { connect } from 'react-redux';
 
 const styles = (theme: CustomTheme) => ({
   textWrapper: {
@@ -45,17 +48,23 @@ interface IProps extends WithStyles<typeof styles> {
   handleMakeSteward?: (jobId: string) => void;
   loading: boolean;
   searchString: string;
+  expandedJob?: string;
   refreshCnt: number;
 }
 
 const JobTable = withStyles(styles)(
-  ({ classes, jobs, handleFilterJobs, loading, searchString, refreshCnt }: IProps) => {
+  ({ classes, jobs, handleFilterJobs, loading, searchString, expandedJob, refreshCnt }: IProps) => {
     const statusMap: any = {
       succeeded: { icon: `fa fa-circle-check ${classes.statusIconSuccess}`, label: 'Completed' },
       running: { icon: `fa fa-rotate fa-spin ${classes.statusIconSuccess}`, label: 'In Progress' },
       failed: { icon: `fa fa-circle-xmark ${classes.statusIconFailed}`, label: 'Failed' },
     };
 
+    // If the expanded job is not on the page, add the modal explicitly at the top level
+    const jobResultModal =
+      expandedJob && !loading && !jobs.find((j) => j.id === expandedJob) ? (
+        <JobResultModal id={expandedJob} showLink={false} />
+      ) : null;
     const columns: Array<TableColumnType> = [
       {
         label: 'Job ID',
@@ -68,6 +77,7 @@ const JobTable = withStyles(styles)(
             description={row.description}
             linkDisplay={row.id}
             jobClass={row.class_name}
+            showLink
           />
         ),
       },
@@ -76,7 +86,7 @@ const JobTable = withStyles(styles)(
         name: 'class_name',
         allowSort: false,
         width: '15%',
-        render: (row: any) => <div>{_.last(row.class_name.split('.'))}</div>,
+        render: (row: any) => <div>{_.last(row.class_name?.split('.'))}</div>,
       },
       {
         label: 'Description',
@@ -88,7 +98,7 @@ const JobTable = withStyles(styles)(
         label: 'Date',
         name: 'submitted',
         allowSort: true,
-        render: (row: any) => moment(row.submitted).fromNow(),
+        render: (row: any) => moment(row?.submitted).fromNow(),
         width: '10%',
       },
       {
@@ -105,20 +115,29 @@ const JobTable = withStyles(styles)(
       },
     ];
     return (
-      <LightTable
-        columns={columns}
-        handleEnumeration={handleFilterJobs}
-        noRowsMessage="No jobs have been created yet"
-        infinitePaging={true}
-        filteredCount={Number.MAX_SAFE_INTEGER}
-        rows={jobs}
-        searchString={searchString}
-        loading={loading}
-        refreshCnt={refreshCnt}
-        rowKey="id"
-      />
+      <>
+        {jobResultModal}
+        <LightTable
+          columns={columns}
+          handleEnumeration={handleFilterJobs}
+          noRowsMessage="No jobs have been created yet"
+          infinitePaging={true}
+          filteredCount={Number.MAX_SAFE_INTEGER}
+          rows={jobs}
+          searchString={searchString}
+          loading={loading}
+          refreshCnt={refreshCnt}
+          rowKey="id"
+        />
+      </>
     );
   },
 );
 
-export default JobTable;
+function mapStateToProps(state: TdrState & RouterRootState) {
+  return {
+    expandedJob: state.router.location?.query?.expandedJob,
+  };
+}
+
+export default connect(mapStateToProps)(JobTable);
