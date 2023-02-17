@@ -78,8 +78,8 @@ function EditableFieldView({
   const cypressFieldNameFormatted = fieldName.replace(' ', '-').toLowerCase();
 
   useEffect(() => {
-      const fieldUpdated = fieldValue === updatedFieldValue;
-      const fieldUnset = !(fieldValue || updatedFieldValue);
+    const fieldUpdated = fieldValue === updatedFieldValue;
+    const fieldUnset = !(fieldValue || updatedFieldValue);
     if (isPendingSave && (fieldUpdated || fieldUnset)) {
       setHasFieldValueChanged(false);
       setIsPendingSave(false);
@@ -205,7 +205,7 @@ function EditableFieldView({
                   type="button"
                   variant="contained"
                 >
-                  {isPendingSave ? <CircularProgress size={25} /> : "SAVE"}
+                  {isPendingSave ? <CircularProgress size={25} /> : 'SAVE'}
                 </Button>
                 <Button
                   aria-label={`Cancel ${fieldName} changes`}
