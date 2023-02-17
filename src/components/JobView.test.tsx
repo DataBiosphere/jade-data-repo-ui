@@ -49,8 +49,6 @@ const initialState = {
 };
 
 beforeEach(() => {
-  // sinon.replace(history, 'push', (path: any) => console.log('!!!!!', path));
-  // sinon.stub(history, 'push').returns(undefined);
   const mockStore = createMockStore([routerMiddleware(history)]);
   const store = mockStore(initialState);
   mount(
