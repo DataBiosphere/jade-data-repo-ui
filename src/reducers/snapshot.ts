@@ -297,6 +297,11 @@ export default {
         }
         return immutable(state, snapshotObj);
       },
+      [ActionTypes.UPDATE_DUOS_DATASET_SUCCESS]: (state, action: any) => {
+        const snapshotObj: any = { snapshot: {} };
+        snapshotObj.snapshot.duosFirecloudGroup = { $set: action.duosFirecloudGroup };
+        return immutable(state, snapshotObj);
+      },
       [LOCATION_CHANGE]: (state) =>
         immutable(state, {
           snapshotRequest: { $set: defaultSnapshotRequest },

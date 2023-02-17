@@ -3,7 +3,7 @@ import { Grid, Tab, Tabs, Typography } from '@mui/material';
 import { createStyles, WithStyles, withStyles } from '@mui/styles';
 import moment from 'moment';
 import { CustomTheme } from '@mui/material/styles';
-import { patchSnapshot, linkDuosDataset, unlinkDuosDataset } from 'actions';
+import { patchSnapshot, updateDuosDataset } from 'actions';
 import EditableFieldView from 'components/EditableFieldView';
 import GoogleSheetExport from 'components/common/overview/GoogleSheetExport';
 import { Link } from 'react-router-dom';
@@ -108,15 +108,11 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
                 fieldValue={snapshot.duosFirecloudGroup?.duosId}
                 fieldName="DUOS ID"
                 canEdit={isSteward}
-                updateFieldValueFn={(text: string | undefined) => {
-                  if (text) {
-                    dispatch(linkDuosDataset(snapshot.id, text));
-                  } else {
-                    dispatch(unlinkDuosDataset(snapshot.id, text));
-                  }
-                }}
+                updateFieldValueFn={(text: string | undefined) =>
+                  dispatch(updateDuosDataset(snapshot.id, text))
+                }
                 useMarkdown={false}
-                infoButtonText="'Link with a DUOS dataset ID to automatically add DAC approved users as snapshot readers'"
+                infoButtonText="Link with a DUOS dataset ID to automatically add DAC approved users as snapshot readers"
               />
             </Grid>
           </Grid>

@@ -162,16 +162,10 @@ export const { patchSnapshot } = createActions({
   }),
 });
 
-export const { linkDuosDataset } = createActions({
-  [ActionTypes.LINK_DUOS_DATASET]: (snapshotId, duosId) => ({
+export const { updateDuosDataset } = createActions({
+  [ActionTypes.UPDATE_DUOS_DATASET]: (snapshotId, duosId) => ({
     snapshotId,
     duosId,
-  }),
-});
-
-export const { unlinkDuosDataset } = createActions({
-  [ActionTypes.UNLINK_DUOS_DATASET]: (snapshotId) => ({
-    snapshotId,
   }),
 });
 

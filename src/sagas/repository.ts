@@ -306,27 +306,24 @@ export function* patchSnapshot({ payload }: any): any {
   }
 }
 
-export function* linkDuosDataset({ payload }: any): any {
+export function* updateDuosDataset({ payload }: any): any {
   const { snapshotId, duosId } = payload;
-  const url = `/api/repository/v1/snapshots/${snapshotId}/linkDuosDataset/${duosId}`;
+  const baseUrl = `/api/repository/v1/snapshots/${snapshotId}`;
   try {
-    yield call(authPut, url);
-    yield put({ type: ActionTypes.LINK_DUOS_DATASET_SUCCESS });
+    let response;
+    if (duosId) {
+      response = yield call(authPut, `${baseUrl}/linkDuosDataset/${duosId}`);
+    } else {
+      response = yield call(authDelete, `${baseUrl}/unlinkDuosDataset`);
+    }
+    yield put({
+      type: ActionTypes.UPDATE_DUOS_DATASET_SUCCESS,
+      duosFirecloudGroup: response.data.linked,
+    });
   } catch (err) {
     showNotification(err);
-    yield put({ type: ActionTypes.LINK_DUOS_DATASET_FAILURE });
-  }
-}
-
-export function* unlinkDuosDataset({ payload }: any): any {
-  const { snapshotId } = payload;
-  const url = `/api/repository/v1/snapshots/${snapshotId}/unlinkDuosDataset`;
-  try {
-    yield call(authDelete, url);
-    yield put({ type: ActionTypes.UNLINK_DUOS_DATASET_SUCCESS });
-  } catch (err) {
-    showNotification(err);
-    yield put({ type: ActionTypes.UNLINK_DUOS_DATASET_FAILURE });
+    // TODO: this and other change functions used in EditableFieldViews need to signal that the save is no longer
+    // pending.  Otherwise the save and cancel buttons will remain disabled and the user can't escape.
   }
 }
 
@@ -941,8 +938,7 @@ export default function* root() {
     takeLatest(ActionTypes.GET_USER_STATUS, getUserStatus),
     takeLatest(ActionTypes.PATCH_DATASET, patchDataset),
     takeLatest(ActionTypes.PATCH_SNAPSHOT, patchSnapshot),
-    takeLatest(ActionTypes.LINK_DUOS_DATASET, linkDuosDataset),
-    takeLatest(ActionTypes.UNLINK_DUOS_DATASET, unlinkDuosDataset),
+    takeLatest(ActionTypes.UPDATE_DUOS_DATASET, updateDuosDataset),
     fork(watchGetDatasetByIdSuccess),
   ]);
 }
