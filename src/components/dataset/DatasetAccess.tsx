@@ -70,7 +70,6 @@ function DatasetAccess(props: DatasetAccessProps) {
           typeOfUsers="Stewards"
           canManageUsers={canManageStewards}
           removeUser={removeUser(DatasetRoles.STEWARD)}
-          defaultOpen={true}
         />
       </Grid>
       <Grid item xs={12}>
