@@ -100,7 +100,6 @@ function SnapshotAccess(props: SnapshotAccessProps) {
           typeOfUsers="Stewards"
           canManageUsers={canManageUsers}
           removeUser={removeUser(SnapshotRoles.STEWARD)}
-          defaultOpen={true}
         />
       </Grid>
       <Grid item xs={12} data-cy="snapshot-readers">
