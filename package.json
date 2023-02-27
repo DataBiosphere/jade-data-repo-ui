@@ -79,7 +79,7 @@
     "react-markdown": "^8.0.3",
     "react-notifications-component": "^3.4.1",
     "react-oidc-context": "^2.2.0",
-    "react-redux": "^7.2.6",
+    "react-redux": "^7.2.9",
     "react-router-dom": "^5.2.0",
     "react-scripts": "5.0.0",
     "react-select": "^5.2.2",
