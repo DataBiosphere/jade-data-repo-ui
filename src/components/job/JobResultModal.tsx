@@ -52,26 +52,18 @@ const styles = () => ({
 type JobResultModalProps = {
   classes: ClassNameMap;
   dispatch: Dispatch<Action>;
-  id: string;
   loading: boolean;
   jobResult?: JobResult;
   location: RouterLocation<LocationState>;
 };
 
-function JobResultModal({
-  classes,
-  dispatch,
-  id,
-  loading,
-  jobResult,
-  location,
-}: JobResultModalProps) {
+function JobResultModal({ classes, dispatch, loading, jobResult, location }: JobResultModalProps) {
   const expandedJob = location.query?.expandedJob;
   useEffect(() => {
-    if (expandedJob === id) {
-      dispatch(getJobResult({ id }));
+    if (expandedJob) {
+      dispatch(getJobResult({ id: expandedJob }));
     }
-  }, [dispatch, expandedJob, id]);
+  }, [dispatch, expandedJob]);
 
   const handleSeeMoreClose = () => {
     push(`${location.pathname}`);
@@ -92,7 +84,7 @@ function JobResultModal({
   return (
     <Paper className={classes.root}>
       <Dialog
-        open={expandedJob === id}
+        open={!!expandedJob}
         scroll="paper"
         fullWidth={true}
         classes={{ paper: classes.dialog }}
@@ -117,7 +109,7 @@ function JobResultModal({
               <div>
                 <div className={classes.dialogInfo}>
                   <div className={classes.dialogLabel}>ID</div>
-                  <div className={classes.dialogContent}>{id}</div>
+                  <div className={classes.dialogContent}>{expandedJob}</div>
                 </div>
 
                 <div className={classes.dialogInfo}>

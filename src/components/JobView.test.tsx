@@ -12,6 +12,7 @@ import { routerMiddleware } from 'connected-react-router';
 import JobView from './JobView';
 import globalTheme from '../modules/theme';
 import history from '../modules/hist';
+import JobResultModal from './job/JobResultModal';
 
 const testDate = new Date();
 const initialState = {
@@ -113,15 +114,26 @@ describe('JobView', () => {
 
   it('should show the dialog modal to see more details', () => {
     const mockStore = createMockStore([routerMiddleware(history)]);
+
     const store = mockStore({
       ...initialState,
       // mock the router state to show if there is an expandedJob query parameter
       router: { location: { query: { expandedJob: initialState.jobs.jobs[0].id } } },
+      // mock that the job results were fetched
+      jobs: {
+        ...initialState.jobs,
+        jobResult: {
+          resultType: initialState.jobs.jobs[0],
+          result: 'foo',
+          jobInfo: initialState.jobs.jobs[0],
+        },
+      },
     });
     mount(
       <Provider store={store}>
         <Router history={history}>
           <ThemeProvider theme={globalTheme}>
+            <JobResultModal />
             <JobView searchString={initialState.searchString} />
           </ThemeProvider>
         </Router>

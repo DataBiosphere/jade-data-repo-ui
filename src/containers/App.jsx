@@ -193,9 +193,7 @@ export function App(props) {
         <Toolbar className={classes.toolbar}>
           <Logo />
           <div className={classes.grow} />
-          {user.isAuthenticated && user.isInitiallyLoaded && expandedJob && (
-            <JobResultModal id={expandedJob} showLink={false} />
-          )}
+          {user.isAuthenticated && user.isInitiallyLoaded && expandedJob && <JobResultModal />}
           {user.isAuthenticated && user.isInitiallyLoaded && (
             <div className={classes.userSection}>
               <div>
