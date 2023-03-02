@@ -16,6 +16,15 @@ export interface NotificationError {
     };
   };
 }
+
+/**
+ * Calculate an id using the content of a notification (base64 encoded the values).
+ * This makes sure that notifications with duplicated all values don't display
+ * (e.g. only a single one is shown)
+ */
+const makeNotificationId = (errorMessage?: string, status?: string, jobId?: string) =>
+  `${errorMessage}#${status}#${jobId}`;
+
 export function showNotification(err: any | NotificationError, jobId?: string) {
   let message;
   let status;
@@ -24,21 +33,30 @@ export function showNotification(err: any | NotificationError, jobId?: string) {
     status = String(err.response.status);
     if (_.isEmpty(errDetail)) {
       message = _.get(err.response, 'data.message') ?? _.get(err.response, 'data.error.message');
+    } else if (_.isArray(errDetail)) {
+      message = errDetail.join(' ');
     } else {
       message = String(errDetail);
     }
   }
 
-  Store.addNotification({
-    content: <Toast errorMsg={message} status={status} jobId={jobId} />,
+  const notificationId = Store.addNotification({
+    id: makeNotificationId(message, status, jobId),
+    content: (
+      <Toast
+        errorMsg={message}
+        status={status}
+        jobId={jobId}
+        onDismiss={() => Store.removeNotification(notificationId)}
+      />
+    ),
     insert: 'top',
     container: 'top-right',
     animationIn: ['animate__animated', 'animate__slideInRight'],
     animationOut: ['animate__animated', 'animate__slideOutRight'],
+    width: 500,
     dismiss: {
-      duration: 5000,
-      touch: true,
-      pauseOnHover: true,
+      duration: 0,
     },
   });
 }
