@@ -14,6 +14,7 @@ import HeadlessLogin from 'routes/HeadlessLogin';
 import Private from 'routes/Private';
 import NotFound from 'routes/NotFound';
 import Logo from 'components/Logo';
+import JobResultModal from 'components/job/JobResultModal';
 
 import RoutePublic from 'components/RoutePublic';
 import RoutePrivate from 'components/RoutePrivate';
@@ -150,7 +151,7 @@ const styles = (theme) => ({
 });
 
 export function App(props) {
-  const { classes, user, dispatch, configuration, status } = props;
+  const { classes, user, dispatch, configuration, status, expandedJob } = props;
   const [anchorEl, setAnchorEl] = useState(null);
   const [renderLogout, setRenderLogout] = useState(false);
   const open = Boolean(anchorEl);
@@ -192,6 +193,7 @@ export function App(props) {
         <Toolbar className={classes.toolbar}>
           <Logo />
           <div className={classes.grow} />
+          {user.isAuthenticated && user.isInitiallyLoaded && expandedJob && <JobResultModal />}
           {user.isAuthenticated && user.isInitiallyLoaded && (
             <div className={classes.userSection}>
               <div>
@@ -285,6 +287,7 @@ App.propTypes = {
   classes: PropTypes.object.isRequired,
   configuration: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
+  expandedJob: PropTypes.string,
   status: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
 };
@@ -294,6 +297,7 @@ function mapStateToProps(state) {
     user: state.user,
     configuration: state.configuration,
     status: state.status,
+    expandedJob: state.router.location?.query?.expandedJob,
   };
 }
 

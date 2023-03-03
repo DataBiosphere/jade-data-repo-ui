@@ -6,9 +6,12 @@ import _ from 'lodash';
 import { JobModel } from 'generated/tdr';
 import { OrderDirectionOptions, TableColumnType } from 'reducers/query';
 import { CustomTheme } from '@mui/material/styles';
-
+import { TdrState } from 'reducers';
+import { RouterRootState } from 'connected-react-router';
+import { connect } from 'react-redux';
+import { push } from 'modules/hist';
+import { urlEncodeParams } from 'libs/utilsTs';
 import LightTable from './LightTable';
-import JobResultModal from '../job/JobResultModal';
 
 const styles = (theme: CustomTheme) => ({
   textWrapper: {
@@ -28,6 +31,15 @@ const styles = (theme: CustomTheme) => ({
   statusIconFailed: {
     color: theme.palette.error.light,
   },
+  seeMoreLink: {
+    cursor: 'pointer',
+    border: 'none',
+    backgroundColor: 'transparent',
+    color: theme.palette.primary.main,
+    '&:hover': {
+      color: theme.palette.primary.hover,
+    },
+  },
 });
 
 interface IProps extends WithStyles<typeof styles> {
@@ -45,15 +57,22 @@ interface IProps extends WithStyles<typeof styles> {
   handleMakeSteward?: (jobId: string) => void;
   loading: boolean;
   searchString: string;
+  query?: Record<string, string>;
   refreshCnt: number;
 }
 
 const JobTable = withStyles(styles)(
-  ({ classes, jobs, handleFilterJobs, loading, searchString, refreshCnt }: IProps) => {
+  ({ classes, jobs, handleFilterJobs, loading, searchString, query, refreshCnt }: IProps) => {
     const statusMap: any = {
       succeeded: { icon: `fa fa-circle-check ${classes.statusIconSuccess}`, label: 'Completed' },
       running: { icon: `fa fa-rotate fa-spin ${classes.statusIconSuccess}`, label: 'In Progress' },
       failed: { icon: `fa fa-circle-xmark ${classes.statusIconFailed}`, label: 'Failed' },
+    };
+
+    const handleSeeMoreOpen = (jobId: string) => {
+      const params = _.clone(query || {});
+      params.expandedJob = jobId;
+      push(`${location.pathname}?${urlEncodeParams(params)}`);
     };
 
     const columns: Array<TableColumnType> = [
@@ -63,12 +82,13 @@ const JobTable = withStyles(styles)(
         allowSort: false,
         width: '20%',
         render: (row: any) => (
-          <JobResultModal
-            id={row.id}
-            description={row.description}
-            linkDisplay={row.id}
-            jobClass={row.class_name}
-          />
+          <button
+            type="button"
+            onClick={() => handleSeeMoreOpen(row.id)}
+            className={classes.seeMoreLink}
+          >
+            {`${row.id || 'See More'}`}
+          </button>
         ),
       },
       {
@@ -76,7 +96,7 @@ const JobTable = withStyles(styles)(
         name: 'class_name',
         allowSort: false,
         width: '15%',
-        render: (row: any) => <div>{_.last(row.class_name.split('.'))}</div>,
+        render: (row: any) => <div>{_.last(row.class_name?.split('.'))}</div>,
       },
       {
         label: 'Description',
@@ -88,7 +108,7 @@ const JobTable = withStyles(styles)(
         label: 'Date',
         name: 'submitted',
         allowSort: true,
-        render: (row: any) => moment(row.submitted).fromNow(),
+        render: (row: any) => moment(row?.submitted).fromNow(),
         width: '10%',
       },
       {
@@ -121,4 +141,10 @@ const JobTable = withStyles(styles)(
   },
 );
 
-export default JobTable;
+function mapStateToProps(state: TdrState & RouterRootState) {
+  return {
+    query: state.router.location?.query,
+  };
+}
+
+export default connect(mapStateToProps)(JobTable);

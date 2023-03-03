@@ -194,7 +194,7 @@ describe('DatasetSchemaCreationView', () => {
       cy.get('#dataset-region').should('have.value', '');
       cy.get('[data-cy="dataset-region"] .MuiAutocomplete-popupIndicator').click();
       cy.get('.MuiAutocomplete-popper').should('exist');
-      cy.get('.MuiAutocomplete-popper').contains('East US');
+      cy.get('.MuiAutocomplete-popper').contains('eastus');
     });
 
     it('should validate emails for stewards', () => {

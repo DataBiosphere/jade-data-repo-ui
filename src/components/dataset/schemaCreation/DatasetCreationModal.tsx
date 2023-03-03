@@ -69,7 +69,6 @@ const DatasetCreationModal = withStyles(styles)(
           <DialogContent>
             <div className={classes.actions}>
               <Button
-                // className={classes.jadeLink}
                 color="primary"
                 variant="contained"
                 aria-label="Go to created dataset details"

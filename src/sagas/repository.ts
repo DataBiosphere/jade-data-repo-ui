@@ -144,7 +144,7 @@ function* pollJobWorker(
       yield call(pollJobWorker, jobId, jobTypeSuccess, jobTypeFailure, jobTypeException);
     }
   } catch (err) {
-    showNotification(err);
+    showNotification(err, jobId);
     yield put({
       type: jobTypeException,
     });
@@ -605,6 +605,7 @@ export function* getJobResult({ payload }: any): any {
               jobResult: {
                 resultType: JobModelJobStatusEnum.Succeeded,
                 result: resultResponse.data,
+                jobInfo: response.data,
               },
             },
           },
@@ -623,6 +624,7 @@ export function* getJobResult({ payload }: any): any {
                       _.get(err.response, 'data.error.message'),
                     detail: _.get(err.response, 'data.errorDetail'),
                   },
+                  jobInfo: response.data,
                 },
               },
             },
