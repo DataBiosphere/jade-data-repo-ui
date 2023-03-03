@@ -57,6 +57,8 @@ export function showNotification(err: any | NotificationError, jobId?: string) {
     width: 500,
     dismiss: {
       duration: 0,
+      click: false,
+      touch: false,
     },
   });
 }

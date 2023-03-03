@@ -18,6 +18,7 @@ const styles = (theme: CustomTheme) => ({
     borderRadius: 5,
     backgroundColor: '#fbebe8' /* calculated from rgba(219,50,20,0.1) over a white background */,
     width: '100%',
+    cursor: 'default',
   },
   content: {
     display: 'flex',
