@@ -35,7 +35,7 @@ const styles = (theme: CustomTheme) => ({
     fontFamily: theme.typography.fontFamily,
     fontSize: 14,
     fontWeight: 600,
-    padding: `0 24px 0 ${theme.spacing(2)}`,
+    padding: `0 40px 0 ${theme.spacing(2)}`,
     overflowY: 'auto' as Property.OverflowY,
     maxHeight: 300,
   },
