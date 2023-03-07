@@ -135,9 +135,7 @@ function SnapshotExport(props: SnapshotExportProps) {
           label="Add workspace policy groups to snapshot readers"
         />
         <FormHelperText>
-          <i>
-            This will grant workspace members read access to the snapshot's tables and files
-          </i>
+          <i>This will grant workspace members read access to the snapshot's tables and files</i>
         </FormHelperText>
       </FormGroup>
       {!isProcessing && !isDone && (
