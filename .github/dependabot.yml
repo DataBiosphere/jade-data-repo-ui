@@ -5,3 +5,11 @@ updates:
   schedule:
     interval: daily
   open-pull-requests-limit: 10
+  ignore:
+  # newer versions of prettier seem to format the code in a way that is incompatible with eslint (DR-2953)
+  - dependency-name: "prettier"
+  # newer versions of material ui (MUI) cause our styling to not respect theming or straight up break the UI (DR-2952)
+  - dependency-name: "mui"
+  # new versions prevents unit tests from running (DR-2954)
+  - dependency-name: "cypress/react"
+
