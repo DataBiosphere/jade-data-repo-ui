@@ -4,16 +4,6 @@ on:
   pull_request:
     branches:
       - develop
-    paths:
-      - '!*'
-      - 'src/**'
-      - 'package.json'
-      - 'cypress.json'
-      - 'cypress/**'
-      - 'Dockerfile'
-      - 'Dockerfile.direct'
-      - 'config-overrides.js'
-      - '.github/workflows/test-e2e.yml'
   schedule:
     - cron: '0 4 * * *' # run at 4 AM UTC, 12PM EST.
 jobs:
