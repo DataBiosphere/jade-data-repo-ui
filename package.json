@@ -76,7 +76,7 @@
     "react-helmet": "^6.1.0",
     "react-hook-form": "^7.39.5",
     "react-json-view": "^1.21.3",
-    "react-markdown": "^8.0.3",
+    "react-markdown": "^8.0.5",
     "react-notifications-component": "^3.4.1",
     "react-oidc-context": "^2.2.0",
     "react-redux": "^7.2.9",
