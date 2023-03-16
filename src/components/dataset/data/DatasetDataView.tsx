@@ -3,19 +3,17 @@ import { connect } from 'react-redux';
 
 import {
   resetQuery,
-  runQuery,
   getDatasetById,
   getDatasetPolicy,
-  countResults,
   getUserDatasetRoles,
-  pageQuery,
+  previewData,
 } from 'actions/index';
 import { FilterList, Info, People } from '@mui/icons-material';
 import DataView from 'components/common/data/DataView';
 import LoadingSpinner from 'components/common/LoadingSpinner';
 import { BillingProfileModel, DatasetModel, TableModel } from 'generated/tdr';
 import { Action } from 'redux';
-import { OrderDirectionOptions, QueryParams } from 'reducers/query';
+import { OrderDirectionOptions } from 'reducers/query';
 import { RouteComponentProps } from 'react-router-dom';
 import { TdrState } from 'reducers';
 import { SnapshotRequest } from 'reducers/snapshot';
@@ -24,9 +22,7 @@ import DataViewSidebar from './sidebar/DataViewSidebar';
 import InfoView from './sidebar/panels/InfoView';
 import ShareSnapshot from './sidebar/panels/ShareSnapshot';
 import {
-  DbColumns,
   DatasetIncludeOptions,
-  GoogleCloudResource,
   ResourceType,
 } from '../../../constants';
 
@@ -37,21 +33,17 @@ type IProps = {
   joinStatement: string;
   orderDirection: OrderDirectionOptions;
   orderProperty: string;
+  polling: boolean;
   profile: BillingProfileModel;
-  queryParams: QueryParams;
   snapshotRequest: SnapshotRequest;
 } & RouteComponentProps<{ uuid?: string }>;
 
 function DatasetDataView({
   dataset,
   dispatch,
-  filterStatement,
-  joinStatement,
   match,
-  orderDirection,
-  orderProperty,
+  polling,
   profile,
-  queryParams,
   snapshotRequest,
 }: IProps) {
   const [selected, setSelected] = useState('');
@@ -130,40 +122,29 @@ function DatasetDataView({
     }
   }, [profile]);
 
-  useEffect(() => {
-    if (datasetLoaded) {
-      const fromClause = `FROM \`${dataset.dataProject}.datarepo_${dataset.name}.${selected}\` AS ${selected}
-          ${joinStatement}
-          ${filterStatement}`;
-
+  const handleEnumeration = (
+    _limit: number,
+    _offset: number,
+    sort: string,
+    sortDirection: OrderDirectionOptions,
+    _searchString: string,
+    _refreshCnt: number,
+  ) => {
+    const datasetId = match.params.uuid;
+    if (datasetLoaded && datasetId === dataset.id && !polling) {
       dispatch(
-        runQuery(
-          dataset.dataProject,
-          `#standardSQL
-          SELECT ${DbColumns.ROW_ID},
-            ${selectedTable?.columns?.map((column) => column.name).join(', ')} ${fromClause}
-            ${orderProperty ? `ORDER BY ${orderProperty} ${orderDirection}` : ''}`,
-        ),
-      );
-      dispatch(
-        countResults(
-          dataset.dataProject,
-          `#standardSQL
-          SELECT COUNT(1) ${fromClause}`,
+        previewData(
+          ResourceType.DATASET,
+          dataset.id,
+          selected,
+          selectedTable?.columns,
+          selectedTable?.rowCount,
+          sortDirection,
+          sort,
         ),
       );
     }
-  }, [
-    datasetLoaded,
-    dataset,
-    dispatch,
-    filterStatement,
-    joinStatement,
-    orderDirection,
-    orderProperty,
-    selected,
-    selectedTable,
-  ]);
+  };
 
   const handleDrawerWidth = (width: number) => {
     setSidebarWidth(width);
@@ -173,15 +154,6 @@ function DatasetDataView({
     dispatch(resetQuery());
     setSelected(value);
     setSelectedTable(dataset.schema?.tables?.find((t) => t.name === value));
-  };
-
-  const pageBQQuery = () => {
-    const bqStorage = dataset.storage?.find(
-      (s) => s.cloudResource === GoogleCloudResource.BIGQUERY,
-    );
-    const location = bqStorage?.region;
-
-    dispatch(pageQuery(queryParams.pageToken, queryParams.projectId, queryParams.jobId, location));
   };
 
   if (!datasetLoaded || !dataset || !selectedTable) {
@@ -195,8 +167,8 @@ function DatasetDataView({
       resourceName={dataset.name || ''}
       resourceType={ResourceType.DATASET}
       tableNames={tableNames}
+      handleEnumeration={handleEnumeration}
       handleChangeTable={handleChangeTable}
-      pageBQQuery={pageBQQuery}
       selected={selected}
       selectedTable={selectedTable}
       canLink={canLink}
@@ -212,10 +184,12 @@ function mapStateToProps(state: TdrState) {
     dataset: state.datasets.dataset,
     filterStatement: state.query.filterStatement,
     joinStatement: state.query.joinStatement,
-    queryParams: state.query.queryParams,
     orderDirection: state.query.orderDirection,
     orderProperty: state.query.orderProperty,
+    page: state.query.page,
+    polling: state.query.polling,
     profile: state.profiles.profile,
+    rowsPerPage: state.query.rowsPerPage,
     snapshotRequest: state.snapshots.snapshotRequest,
   };
 }

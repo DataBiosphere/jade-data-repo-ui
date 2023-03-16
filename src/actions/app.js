@@ -234,14 +234,6 @@ export const { hideAlert } = createActions({
   [ActionTypes.HIDE_ALERT]: (index) => index,
 });
 
-export const { runQuery } = createActions({
-  [ActionTypes.RUN_QUERY_SUCCESS]: (result) => result,
-  [ActionTypes.RUN_QUERY]: (projectId, query) => ({
-    projectId,
-    query,
-  }),
-});
-
 export const { refreshQuery } = createActions({
   [ActionTypes.REFRESH_QUERY]: () => ({}),
 });
@@ -269,15 +261,6 @@ export const { previewData } = createActions({
     columns,
   }),
   [ActionTypes.PREVIEW_DATA_FAILURE]: (errMsg) => ({ errMsg }),
-});
-
-export const { pageQuery } = createActions({
-  [ActionTypes.PAGE_QUERY]: (pageToken, projectId, jobId, location) => ({
-    pageToken,
-    projectId,
-    jobId,
-    location,
-  }),
 });
 
 export const { applyFilters } = createActions({
@@ -316,14 +299,6 @@ export const { changePage } = createActions({
 
 export const { openSnapshotDialog } = createActions({
   [ActionTypes.OPEN_SNAPSHOT_DIALOG]: (isOpen) => isOpen,
-});
-
-export const { countResults } = createActions({
-  [ActionTypes.COUNT_RESULTS]: (projectId, query) => ({
-    projectId,
-    query,
-  }),
-  [ActionTypes.COUNT_RESULTS_SUCCESS]: (count) => count,
 });
 
 export const { snapshotCreateDetails } = createActions({

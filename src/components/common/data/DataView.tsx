@@ -58,7 +58,6 @@ type DataViewProps = {
     searchString: string,
     refreshCnt: number,
   ) => void;
-  pageBQQuery?: () => void;
   panels: Array<object>;
   polling: boolean;
   resourceId: string;
@@ -82,7 +81,6 @@ function DataView({
   handleChangeTable,
   handleDrawerWidth,
   handleEnumeration,
-  pageBQQuery,
   panels,
   polling,
   resourceId,
@@ -161,7 +159,6 @@ function DataView({
               noRowsMessage={
                 isDatasetFiltered ? 'No rows match your filter' : 'No rows exist in the table'
               }
-              pageBQQuery={pageBQQuery}
               rows={rows}
               searchString={filterStatement}
               tableName={selectedTable.name}

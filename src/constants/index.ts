@@ -173,12 +173,6 @@ export enum SnapshotRoles {
   DISCOVERER = 'discoverer',
 }
 
-export enum GoogleCloudResource {
-  BIGQUERY = 'bigquery',
-  FIRESTORE = 'firestore',
-  BUCKET = 'bucket',
-}
-
 export enum DatasetRoles {
   STEWARD = 'steward',
   CUSTODIAN = 'custodian',

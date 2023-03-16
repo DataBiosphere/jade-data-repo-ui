@@ -142,7 +142,6 @@ type LightTableProps<RowType> = {
   orderProperty: string;
   noRowsMessage: string;
   page: number;
-  pageBQQuery?: () => void;
   rows: Array<RowType>;
   rowsPerPage: number;
   rowKey?: string;
@@ -165,7 +164,6 @@ function LightTable({
   orderDirection,
   orderProperty,
   page,
-  pageBQQuery,
   rows,
   rowsPerPage,
   rowKey,
@@ -191,18 +189,10 @@ function LightTable({
   const handleChangeRowsPerPage = async (event: any) => {
     const newRowsPerPage = parseInt(event.target.value, 10);
     await dispatch(changeRowsPerPage(newRowsPerPage));
-    if (pageBQQuery) {
-      pageBQQuery();
-    }
   };
 
-  // Once we no longer need to support BQ Querying,
-  // we can remove the async/await call and pageBQQuery()
   const handleChangePage = async (_event: any, newPage: number) => {
     await dispatch(changePage(newPage));
-    if (pageBQQuery) {
-      pageBQQuery();
-    }
   };
 
   const handleSeeMoreOpen = (values: Array<any>, title: string) => {

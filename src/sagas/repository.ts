@@ -802,52 +802,6 @@ export function* previewData({ payload }: any): any {
  * bigquery
  */
 
-function* pollQuery(projectId: string, jobId: string): any {
-  try {
-    const url = `/bigquery/v2/projects/${projectId}/queries/${jobId}`;
-    const response = yield call(authGet, url, true);
-    const { jobComplete } = response.data;
-    if (jobComplete) {
-      yield put({
-        type: ActionTypes.RUN_QUERY_SUCCESS,
-        results: response,
-      });
-    } else {
-      yield delay(100);
-      yield call(pollQuery, projectId, jobId);
-    }
-  } catch (err) {
-    showNotification(err);
-  }
-}
-
-export function* runQuery({ payload }: any): any {
-  try {
-    const url = `/bigquery/v2/projects/${payload.projectId}/queries`;
-    const queryState = yield select(getQuery);
-    const body = {
-      query: payload.query,
-      maxResults: queryState.rowsPerPage,
-    };
-    const response = yield call(authPost, url, body, true);
-    const { jobComplete } = response.data;
-    const { jobId } = response.data.jobReference;
-    if (jobComplete) {
-      yield put({
-        type: ActionTypes.RUN_QUERY_SUCCESS,
-        results: response,
-      });
-    } else {
-      yield put({
-        type: ActionTypes.POLL_QUERY,
-      });
-      yield delay(100);
-      yield call(pollQuery, payload.projectId, jobId);
-    }
-  } catch (err) {
-    showNotification(err);
-  }
-}
 
 export function* changeRowsPerPage(rowsPerPage: number): any {
   try {
@@ -866,49 +820,6 @@ export function* changePage(page: number): any {
       type: ActionTypes.CHANGE_PAGE,
       page,
     });
-  } catch (err) {
-    showNotification(err);
-  }
-}
-
-export function* pageQuery({ payload }: any): any {
-  try {
-    const url = `/bigquery/v2/projects/${payload.projectId}/queries/${payload.jobId}`;
-    const queryState = yield select(getQuery);
-    const params = {
-      maxResults: queryState.rowsPerPage,
-      pageToken: payload.pageToken,
-      location: payload.location,
-    };
-    const response = yield call(authGet, url, params, true);
-
-    yield put({
-      type: ActionTypes.PAGE_QUERY_SUCCESS,
-      results: response,
-    });
-  } catch (err) {
-    showNotification(err);
-  }
-}
-
-export function* countResults({ payload }: any): any {
-  try {
-    const url = `/bigquery/v2/projects/${payload.projectId}/queries`;
-    const body = {
-      query: payload.query,
-    };
-    const response = yield call(authPost, url, body, true);
-    const { jobComplete } = response.data;
-    const { jobId } = response.data.jobReference;
-    if (jobComplete) {
-      yield put({
-        type: ActionTypes.COUNT_RESULTS_SUCCESS,
-        resultsCount: parseInt(response.data.rows[0].f[0].v, 10),
-      });
-    } else {
-      yield delay(100);
-      yield call(pollQuery, payload.projectId, jobId);
-    }
   } catch (err) {
     showNotification(err);
   }
@@ -993,10 +904,7 @@ export default function* root() {
     takeLatest(ActionTypes.GET_JOBS, getJobs),
     takeLatest(ActionTypes.GET_JOB_RESULT, getJobResult),
     takeLatest(ActionTypes.GET_JOURNAL_ENTRIES, getJournalEntries),
-    takeLatest(ActionTypes.RUN_QUERY, runQuery),
     takeLatest(ActionTypes.PREVIEW_DATA, previewData),
-    takeLatest(ActionTypes.PAGE_QUERY, pageQuery),
-    takeLatest(ActionTypes.COUNT_RESULTS, countResults),
     takeLatest(ActionTypes.GET_FEATURES, getFeatures),
     takeLatest(ActionTypes.GET_BILLING_PROFILES, getBillingProfiles),
     takeLatest(ActionTypes.GET_BILLING_PROFILE_BY_ID, getBillingProfileById),
