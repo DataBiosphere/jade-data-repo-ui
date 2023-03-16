@@ -4,6 +4,8 @@ updates:
   directory: "/"
   schedule:
     interval: daily
+  # Disable automatic rebasing to avoid tests kicking off all at once
+  rebase-strategy: "disabled"
   open-pull-requests-limit: 10
   ignore:
   # newer versions of prettier seem to format the code in a way that is incompatible with eslint (DR-2953)
