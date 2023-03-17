@@ -2,7 +2,7 @@
   "name": "jade-data-repo-ui",
   "title": "jade-data-repo-ui",
   "description": "Data Repository UI",
-  "version": "0.207.0",
+  "version": "0.209.0",
   "author": "Jade Team <jadeteam@broadinstitute.org>",
   "engines": {
     "node": ">=12.22"
@@ -44,12 +44,12 @@
     "@types/react-dom": "^18.0.8",
     "@types/react-jss": "^10.0.0",
     "@types/react-virtualized": "^9.21.21",
-    "@uiw/codemirror-theme-okaidia": "^4.15.1",
+    "@uiw/codemirror-theme-okaidia": "^4.19.9",
     "@uiw/react-codemirror": "^4.15.1",
     "animate.css": "^4.1.1",
     "awesome-debounce-promise": "^2.1.0",
     "axios": "^0.21.2",
-    "babel-plugin-inline-react-svg": "^2.0.1",
+    "babel-plugin-inline-react-svg": "^2.0.2",
     "classlist-polyfill": "^1.2.0",
     "clsx": "^1.1.0",
     "connected-react-router": "^6.9.3",
