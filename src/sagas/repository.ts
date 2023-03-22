@@ -778,7 +778,9 @@ export function* previewData({ payload }: any): any {
   const sort = queryState.orderProperty === undefined ? '' : `&sort=${queryState.orderProperty}`;
   const sortDirection =
     queryState.orderDirection === undefined ? '' : `&direction=${queryState.orderDirection}`;
-  const query = `/api/repository/v1/${payload.resourceType}s/${payload.resourceId}/data/${payload.table}?offset=${offset}&limit=${limit}${sort}${sortDirection}`;
+  const filter =
+    queryState.newFilterStatement === undefined ? '' : `&filter=${queryState.newFilterStatement}`;
+  const query = `/api/repository/v1/${payload.resourceType}s/${payload.resourceId}/data/${payload.table}?offset=${offset}&limit=${limit}${sort}${sortDirection}${filter}`;
   try {
     const response = yield call(authGet, query);
     yield put({
@@ -801,7 +803,6 @@ export function* previewData({ payload }: any): any {
 /**
  * bigquery
  */
-
 
 export function* changeRowsPerPage(rowsPerPage: number): any {
   try {
