@@ -21,10 +21,7 @@ import { SnapshotRequest } from 'reducers/snapshot';
 import DataViewSidebar from './sidebar/DataViewSidebar';
 import InfoView from './sidebar/panels/InfoView';
 import ShareSnapshot from './sidebar/panels/ShareSnapshot';
-import {
-  DatasetIncludeOptions,
-  ResourceType,
-} from '../../../constants';
+import { DatasetIncludeOptions, ResourceType } from '../../../constants';
 
 type IProps = {
   dataset: DatasetModel;
@@ -38,14 +35,7 @@ type IProps = {
   snapshotRequest: SnapshotRequest;
 } & RouteComponentProps<{ uuid?: string }>;
 
-function DatasetDataView({
-  dataset,
-  dispatch,
-  match,
-  polling,
-  profile,
-  snapshotRequest,
-}: IProps) {
+function DatasetDataView({ dataset, dispatch, match, polling, profile, snapshotRequest }: IProps) {
   const [selected, setSelected] = useState('');
   const [selectedTable, setSelectedTable] = useState<TableModel | undefined>(undefined);
   const [sidebarWidth, setSidebarWidth] = useState(0);
@@ -87,22 +77,24 @@ function DatasetDataView({
 
   useEffect(() => {
     if (datasetLoaded) {
-      const currentPanels = [
-        {
-          icon: Info,
-          width: 600,
-          component: InfoView,
-          selectedTable,
-          dataset,
-        },
-        {
+      const currentPanels = [];
+      currentPanels.push({
+        icon: Info,
+        width: 600,
+        component: InfoView,
+        selectedTable,
+        dataset,
+      });
+      // TODO - remove conditional once we support Azure snapshot create in the UI
+      if (dataset.accessInformation?.bigQuery !== null) {
+        currentPanels.push({
           icon: FilterList,
           width: 600,
           component: DataViewSidebar,
           selectedTable,
           dataset,
-        },
-      ];
+        });
+      }
       if (canLink && snapshotRequest.assetName) {
         currentPanels.push({
           icon: People,
