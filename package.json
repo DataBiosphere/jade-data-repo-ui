@@ -22,7 +22,7 @@
     "ES6"
   ],
   "dependencies": {
-    "@babel/runtime": "^7.17.8",
+    "@babel/runtime": "^7.21.0",
     "@codemirror/lang-javascript": "^6.1.1",
     "@emotion/styled": "^11.10.6",
     "@fortawesome/fontawesome-svg-core": "^6.3.0",
