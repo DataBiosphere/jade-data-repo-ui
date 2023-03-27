@@ -23,7 +23,7 @@
   ],
   "dependencies": {
     "@babel/runtime": "^7.21.0",
-    "@codemirror/lang-javascript": "^6.1.1",
+    "@codemirror/lang-javascript": "^6.1.4",
     "@emotion/styled": "^11.10.6",
     "@fortawesome/fontawesome-svg-core": "^6.3.0",
     "@fortawesome/free-solid-svg-icons": "^6.2.0",
