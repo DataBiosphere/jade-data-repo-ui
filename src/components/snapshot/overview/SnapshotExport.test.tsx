@@ -26,7 +26,7 @@ describe('SnapshotExport', () => {
   beforeEach(() => {
     mockStore = createMockStore([]);
   });
-  it('Test has export button', () => {
+  it('Test steward can export with permission sync', () => {
     const initialState = {
       snapshots: {
         snapshot,
@@ -48,8 +48,11 @@ describe('SnapshotExport', () => {
       </Router>,
     );
     cy.get('[data-cy="export-snapshot-button"]').should('contain.text', 'Export snapshot');
+    cy.get('[data-cy="tdr-sync-permissions-checkbox"] input')
+      .should('not.be.disabled')
+      .and('be.checked');
   });
-  it('Test has export button disabled', () => {
+  it('Test reader can export without permission sync', () => {
     const initialState = {
       snapshots: {
         snapshot,
@@ -70,7 +73,10 @@ describe('SnapshotExport', () => {
         </Provider>
       </Router>,
     );
-    cy.get('[data-cy="export-snapshot-button"]').should('be.disabled');
+    cy.get('[data-cy="export-snapshot-button"]').should('contain.text', 'Export snapshot');
+    cy.get('[data-cy="tdr-sync-permissions-checkbox"] input')
+      .should('be.disabled')
+      .and('not.be.checked');
   });
   it('Test preparing snapshot', () => {
     const preparingSnapshotState = {
@@ -123,7 +129,10 @@ describe('SnapshotExport', () => {
     cy.get('[data-cy="snapshot-export-ready-button"]')
       .should('contain.text', 'Snapshot ready - continue')
       .within(() => {
-        cy.get('a').should('have.attr', 'href').and('include', configuration.configObject.terraUrl);
+        cy.get('a')
+          .should('have.attr', 'href')
+          .and('include', configuration.configObject.terraUrl)
+          .and('include', 'tdrSyncPermissions=true');
       });
   });
 });

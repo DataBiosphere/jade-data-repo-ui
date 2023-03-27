@@ -70,7 +70,7 @@ function DatasetOverview(props) {
     dispatch(getUserDatasetRoles(datasetId));
   });
 
-  return datasetPolicies && dataset && dataset.id === datasetId ? (
+  return datasetPolicies && dataset && dataset.schema && dataset.id === datasetId ? (
     <div className={classes.pageRoot}>
       <AppBreadcrumbs
         context={{ type: BreadcrumbType.DATASET, id: datasetId, name: dataset.name }}

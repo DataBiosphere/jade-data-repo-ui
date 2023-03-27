@@ -1,5 +1,6 @@
 import { handleActions } from 'redux-actions';
 import immutable from 'immutability-helper';
+import { LOCATION_CHANGE } from 'connected-react-router';
 
 import { ActionTypes } from '../constants';
 import {
@@ -23,6 +24,10 @@ export interface DatasetState {
   loading: boolean;
   isAddingOrRemovingUser: boolean;
   refreshCnt: number;
+  // for dataset creation
+  dialogIsOpen: boolean;
+  creationIsProcessing: boolean;
+  exportResponse?: DatasetModel;
 }
 
 export const initialDatasetState: DatasetState = {
@@ -39,6 +44,8 @@ export const initialDatasetState: DatasetState = {
   loading: false,
   isAddingOrRemovingUser: false,
   refreshCnt: 0,
+  dialogIsOpen: false,
+  creationIsProcessing: false,
 };
 
 // We need this method to apply the response from add/remove snapshot members since the API only returns the affected group
@@ -56,6 +63,33 @@ const datasetMembershipResultApply = (action: any) => (
 export default {
   datasets: handleActions(
     {
+      [ActionTypes.CREATE_DATASET]: (state) =>
+        immutable(state, {
+          dataset: { $set: {} },
+          dialogIsOpen: { $set: true },
+          creationIsProcessing: { $set: true },
+        }),
+      [ActionTypes.CREATE_DATASET_JOB]: (state) =>
+        immutable(state, {
+          dataset: { $set: {} },
+          dialogIsOpen: { $set: true },
+          creationIsProcessing: { $set: true },
+        }),
+      [ActionTypes.CREATE_DATASET_SUCCESS]: (state, action: any) =>
+        immutable(state, {
+          dataset: { $set: action.payload.jobResult },
+          creationIsProcessing: { $set: false },
+        }),
+      [ActionTypes.CREATE_DATASET_FAILURE]: (state) =>
+        immutable(state, {
+          dialogIsOpen: { $set: false },
+          creationIsProcessing: { $set: false },
+        }),
+      [ActionTypes.CREATE_DATASET_EXCEPTION]: (state) =>
+        immutable(state, {
+          dialogIsOpen: { $set: false },
+          creationIsProcessing: { $set: false },
+        }),
       [ActionTypes.GET_DATASETS]: (state) =>
         immutable(state, {
           loading: { $set: true },
@@ -155,9 +189,12 @@ export default {
         }
         return immutable(state, {
           datasetPreview: { [action.tableName]: { $set: action.preview.data.rows } },
-          // datasetPreview: { schema: { tables: { [i]: { preview: { $set: action.preview.data.rows } } } } },
         });
       },
+      [LOCATION_CHANGE]: (state) =>
+        immutable(state, {
+          dialogIsOpen: { $set: false },
+        }),
       [ActionTypes.USER_LOGOUT_SUCCESS]: () => initialDatasetState,
     },
     initialDatasetState,

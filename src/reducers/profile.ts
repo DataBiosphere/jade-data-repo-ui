@@ -17,6 +17,12 @@ export const initialProfileState: ProfileState = {
 export default {
   profiles: handleActions(
     {
+      [ActionTypes.GET_BILLING_PROFILES]: (state) => immutable(state, {}),
+      [ActionTypes.GET_BILLING_PROFILES_SUCCESS]: (state, action: any) =>
+        immutable(state, {
+          profiles: { $set: action.profile.data.data.items },
+        }),
+      [ActionTypes.GET_BILLING_PROFILES_FAILURE]: (state) => immutable(state, {}),
       [ActionTypes.GET_BILLING_PROFILE_BY_ID]: (state) =>
         immutable(state, {
           profile: {},

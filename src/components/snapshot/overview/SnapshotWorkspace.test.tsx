@@ -112,7 +112,7 @@ describe('Snapshot workspace accordion - with workspace entries', () => {
   it('Displays accordion and workspaces', () => {
     cy.get('[data-cy="snapshot-workspace-accordion"]').should(
       'contain.text',
-      'Workspaces with this snapshot',
+      'Snapshot Reader Workspaces',
     );
     cy.get('[data-cy="snapshot-workspace-list"]').children().should('have.length', 4);
     cy.get('[data-cy="snapshot-workspace-list"]').find('li').should('have.length', 2);
@@ -141,7 +141,7 @@ describe('Snapshot workspace accordion - without workspace entries', () => {
   it('Displays accordion and lists no workspaces', () => {
     cy.get('[data-cy="snapshot-workspace-accordion"]').should(
       'contain.text',
-      'Workspaces with this snapshot',
+      'Snapshot Reader Workspaces',
     );
     cy.get('.MuiAccordionDetails-root > .MuiTypography-root').should(
       'contain.text',

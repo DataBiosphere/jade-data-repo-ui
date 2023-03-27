@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import ReactDOMServer from 'react-dom/server';
 import { connect } from 'react-redux';
 import _ from 'lodash';
@@ -19,48 +19,23 @@ import SimpleMDE from 'easymde';
 import { SimpleMdeReact } from 'react-simplemde-editor';
 import { CLOUD_PLATFORMS } from 'constants/index';
 import { isValidEmail } from '../../../libs/form-validators';
+import { BillingProfileModel } from '../../../generated/tdr';
 import WithoutStylesMarkdownContent from '../../common/WithoutStylesMarkdownContent';
+import { styles as DatasetSchemaStyles } from './DatasetSchemaCommon';
 
-const styles = (theme: CustomTheme) => ({
-  contentContainer: {
-    marginTop: '1rem',
-    maxWidth: 1000,
-  },
-  form: {
-    width: '100%',
-  },
-  formFieldContainer: {
-    minHeight: 135,
-  },
-  formFieldDescription: {
-    marginBottom: 10,
-  },
-  formLabel: {
-    display: 'block',
-    fontWeight: 'bold',
-    marginTop: 10,
-    marginBottom: 10,
-  },
-  formLabelError: {
-    color: theme.palette.error.main,
-  },
-  formInput: {
-    width: '100%',
-  },
-  formInputError: {
-    color: theme.palette.error.main,
-    fontSize: '0.75rem',
-    lineHeight: '1.66',
-    marginLeft: 14,
-  },
-});
+const styles = (theme: CustomTheme) =>
+  ({
+    ...DatasetSchemaStyles(theme),
+  } as any);
 
 interface IProps extends WithStyles<typeof styles> {
-  userEmail: string;
+  profiles: Array<BillingProfileModel>;
 }
 
-const DatasetSchemaInformationView = withStyles(styles)(({ classes }: IProps) => {
+const DatasetSchemaInformationView = withStyles(styles)(({ classes, profiles }: IProps) => {
   const [regionOptions, setRegionOptions] = useState(CLOUD_PLATFORMS.gcp.regions);
+  const [cloudPlatform, setCloudPlatform] = useState(CLOUD_PLATFORMS.gcp.key);
+  const [profileOptions, setProfileOptions] = useState<Array<BillingProfileModel>>([]);
   const {
     register,
     control,
@@ -80,6 +55,14 @@ const DatasetSchemaInformationView = withStyles(styles)(({ classes }: IProps) =>
       } as SimpleMDE.Options),
     [],
   );
+
+  useEffect(() => {
+    setProfileOptions(
+      profiles.filter(
+        (p) => p.cloudPlatform === _.get(CLOUD_PLATFORMS, [cloudPlatform, 'platform']),
+      ),
+    );
+  }, [profiles, setProfileOptions, cloudPlatform]);
 
   return (
     <Grid container rowSpacing={2} columnSpacing={5} className={classes.contentContainer}>
@@ -118,13 +101,12 @@ const DatasetSchemaInformationView = withStyles(styles)(({ classes }: IProps) =>
           htmlFor="dataset-description"
           className={clsx(classes.formLabel, { [classes.formLabelError]: errors.description })}
         >
-          Dataset description*
+          Dataset description
         </label>
         <Controller
           name="description"
           control={control}
           rules={{
-            required: 'Description is required',
             maxLength: { value: 10000, message: 'Description must be under 10,000 characters' },
           }}
           render={({ field }) => (
@@ -142,21 +124,103 @@ const DatasetSchemaInformationView = withStyles(styles)(({ classes }: IProps) =>
         />
       </Grid>
 
-      <Grid item xs={6}>
-        <label
-          htmlFor="dataset-terraProject"
-          className={clsx(classes.formLabel, { [classes.formLabelError]: errors.terraProject })}
-        >
-          Terra project*
+      <Grid item xs={6} data-cy="dataset-region">
+        <label htmlFor="dataset-cloudPlatform" className={classes.formLabel}>
+          Cloud Platform*
         </label>
         <Controller
-          name="terraProject"
+          name="cloudPlatform"
           control={control}
+          rules={{ required: true }}
           render={({ field }) => (
-            <Select id="dataset-terraProject" className={classes.formInput} {...field}>
-              <MenuItem value="yes">Yes</MenuItem>
-              <MenuItem value="no">No</MenuItem>
+            <Select
+              id="dataset-cloudPlatform"
+              className={classes.formInput}
+              {...field}
+              onChange={(event: any, change: any) => {
+                const selectedCloudPlatform = event.target.value;
+                setValue('region', null);
+                setValue('defaultProfileId', null);
+                setRegionOptions(_.get(CLOUD_PLATFORMS, [selectedCloudPlatform, 'regions']));
+                setCloudPlatform(selectedCloudPlatform);
+                field.onChange(event, change);
+              }}
+              placeholder="Cloud platform"
+            >
+              {_.map(CLOUD_PLATFORMS, (value: any, key: string) => (
+                <MenuItem value={key} key={key}>
+                  {value.label}
+                </MenuItem>
+              ))}
             </Select>
+          )}
+        />
+      </Grid>
+
+      <Grid item xs={6}>
+        <label
+          htmlFor="dataset-defaultProfileId"
+          className={clsx(classes.formLabel, { [classes.formLabelError]: errors.defaultProfile })}
+        >
+          Billing Profile*
+        </label>
+        <Controller
+          name="defaultProfileId"
+          control={control}
+          rules={{ required: 'default billing profile is required' }}
+          render={({ field }) => (
+            <Autocomplete
+              id="dataset-defaultProfileId"
+              options={profileOptions}
+              className={classes.formInput}
+              isOptionEqualToValue={(option, value) => value.profileName === option.profileName}
+              renderInput={(params: any) => (
+                <TextField
+                  {...params}
+                  error={!!errors.defaultProfileId}
+                  helperText={errors.defaultProfileId ? errors.defaultProfileId.message : ''}
+                  placeholder="Default billing profile"
+                />
+              )}
+              getOptionLabel={(option: BillingProfileModel) => option.profileName || ''}
+              {...field}
+              onChange={(_event: any, change: any) => {
+                field.onChange(change);
+              }}
+            />
+          )}
+        />
+      </Grid>
+
+      <Grid item xs={6} className={classes.formFieldContainer} data-cy="dataset-region">
+        <label
+          htmlFor="dataset-region"
+          className={clsx(classes.formLabel, { [classes.formLabelError]: errors.region })}
+        >
+          Region*
+        </label>
+        <Controller
+          name="region"
+          control={control}
+          rules={{ required: 'Region is required' }}
+          render={({ field }) => (
+            <Autocomplete
+              id="dataset-region"
+              options={regionOptions}
+              className={classes.formInput}
+              renderInput={(params: any) => (
+                <TextField
+                  {...params}
+                  error={!!errors.region}
+                  helperText={errors.region ? errors.region.message : ''}
+                  placeholder="Cloud region"
+                />
+              )}
+              {...field}
+              onChange={(_event: any, change: any) => {
+                field.onChange(change);
+              }}
+            />
           )}
         />
       </Grid>
@@ -173,71 +237,6 @@ const DatasetSchemaInformationView = withStyles(styles)(({ classes }: IProps) =>
               <MenuItem value="true">Yes</MenuItem>
               <MenuItem value="false">No</MenuItem>
             </Select>
-          )}
-        />
-      </Grid>
-
-      <Grid item xs={6}>
-        <label htmlFor="dataset-cloudPlatform" className={classes.formLabel}>
-          Cloud Platform*
-        </label>
-        <Controller
-          name="cloudPlatform"
-          control={control}
-          rules={{ required: true }}
-          render={({ field }) => (
-            <Select
-              id="dataset-cloudPlatform"
-              className={classes.formInput}
-              {...field}
-              onChange={(event: any, change: any) => {
-                const cloudPlatform = event.target.value;
-                setRegionOptions(_.get(CLOUD_PLATFORMS, [cloudPlatform, 'regions']));
-                setValue('region', '');
-                field.onChange(event, change);
-              }}
-              placeholder="Cloud platform"
-            >
-              {_.map(CLOUD_PLATFORMS, (value: any, key: string) => (
-                <MenuItem value={key} key={key}>
-                  {value.label}
-                </MenuItem>
-              ))}
-            </Select>
-          )}
-        />
-      </Grid>
-
-      <Grid item xs={6} className={classes.formFieldContainer}>
-        <label
-          htmlFor="dataset-region"
-          className={clsx(classes.formLabel, { [classes.formLabelError]: errors.region })}
-        >
-          Region*
-        </label>
-        <Controller
-          name="region"
-          control={control}
-          rules={{ required: 'Region is required' }}
-          render={({ field }) => (
-            <Autocomplete
-              id="dataset-region"
-              options={regionOptions}
-              className={classes.formInput}
-              isOptionEqualToValue={(option, value) => value.name === option.name}
-              renderInput={(params: any) => (
-                <TextField
-                  {...params}
-                  error={!!errors.region}
-                  helperText={errors.region ? errors.region.message : ''}
-                  placeholder="cloud region"
-                />
-              )}
-              {...field}
-              onChange={(_event: any, change: any) => {
-                field.onChange(change);
-              }}
-            />
           )}
         />
       </Grid>
@@ -289,7 +288,7 @@ const DatasetSchemaInformationView = withStyles(styles)(({ classes }: IProps) =>
           htmlFor="dataset-custodians"
           className={clsx(classes.formLabel, { [classes.formLabelError]: errors.custodians })}
         >
-          Custodians*
+          Custodians
         </label>
         <div className={classes.formFieldDescription}>
           The Custodian role is defined on a dataset. Someone may be the Custodian for one or more
@@ -302,8 +301,6 @@ const DatasetSchemaInformationView = withStyles(styles)(({ classes }: IProps) =>
           rules={{
             validate: {
               isValidEmail,
-              minLength: (values: string[]) =>
-                values.length > 0 || 'Must include at least one email',
             },
           }}
           render={({ field }) => (

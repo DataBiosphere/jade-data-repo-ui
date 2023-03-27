@@ -4,16 +4,6 @@ on:
   pull_request:
     branches:
       - develop
-    paths:
-      - '!*'
-      - 'src/**'
-      - 'package.json'
-      - 'cypress.json'
-      - 'cypress/**'
-      - 'Dockerfile'
-      - 'Dockerfile.direct'
-      - 'config-overrides.js'
-      - '.github/workflows/test-e2e.yml'
   schedule:
     - cron: '0 4 * * *' # run at 4 AM UTC, 12PM EST.
 jobs:
@@ -27,9 +17,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
       - name: npm ci
@@ -37,7 +27,7 @@ jobs:
       - name: Run codegen
         run: npm run codegen
       - name: Cypress Run Component Tests
-        uses: cypress-io/github-action@v2
+        uses: cypress-io/github-action@v5
         env:
           DISABLE_ESLINT_PLUGIN: true
         with:

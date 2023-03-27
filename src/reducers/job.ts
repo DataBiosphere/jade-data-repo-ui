@@ -19,6 +19,7 @@ export interface JobState {
 export interface JobResult {
   resultType?: JobModelJobStatusEnum;
   result?: JobResultError | any;
+  jobInfo?: JobModel;
 }
 export interface JobResultError {
   message?: string;
