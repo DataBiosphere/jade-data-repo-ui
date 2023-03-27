@@ -296,6 +296,10 @@ export function* patchSnapshot({ payload }: any): any {
   const { snapshotId, data } = payload;
   const url = `/api/repository/v1/snapshots/${snapshotId}`;
   try {
+    yield put({
+      type: ActionTypes.PATCH_SNAPSHOT_START,
+      data,
+    });
     yield call(authPatch, url, data);
     yield put({
       type: ActionTypes.PATCH_SNAPSHOT_SUCCESS,
@@ -303,6 +307,10 @@ export function* patchSnapshot({ payload }: any): any {
     });
   } catch (err) {
     showNotification(err);
+    yield put({
+      type: ActionTypes.PATCH_SNAPSHOT_FAILURE,
+      data,
+    });
   }
 }
 
@@ -310,6 +318,9 @@ export function* updateDuosDataset({ payload }: any): any {
   const { snapshotId, duosId } = payload;
   const baseUrl = `/api/repository/v1/snapshots/${snapshotId}`;
   try {
+    yield put({
+      type: ActionTypes.UPDATE_DUOS_DATASET_START,
+    });
     let response;
     if (duosId) {
       response = yield call(authPut, `${baseUrl}/linkDuosDataset/${duosId}`);
@@ -320,10 +331,14 @@ export function* updateDuosDataset({ payload }: any): any {
       type: ActionTypes.UPDATE_DUOS_DATASET_SUCCESS,
       duosFirecloudGroup: response.data.linked,
     });
+    // Snapshot readers may change as a result of a successful DUOS update:
+    yield put({
+      type: ActionTypes.GET_SNAPSHOT_POLICY,
+      payload: snapshotId,
+    });
   } catch (err) {
     showNotification(err);
-    // TODO: this and other change functions used in EditableFieldViews need to signal that the save is no longer
-    // pending.  Otherwise the save and cancel buttons will remain disabled and the user can't escape.
+    yield put({ type: ActionTypes.UPDATE_DUOS_DATASET_FAILURE });
   }
 }
 
@@ -894,6 +909,10 @@ export function* patchDataset({ payload }: any): any {
   const { datasetId, data } = payload;
   const url = `/api/repository/v1/datasets/${datasetId}`;
   try {
+    yield put({
+      type: ActionTypes.PATCH_DATASET_START,
+      data,
+    });
     yield call(authPatch, url, data);
     yield put({
       type: ActionTypes.PATCH_DATASET_SUCCESS,
@@ -901,6 +920,10 @@ export function* patchDataset({ payload }: any): any {
     });
   } catch (err) {
     showNotification(err);
+    yield put({
+      type: ActionTypes.PATCH_DATASET_FAILURE,
+      data,
+    });
   }
 }
 

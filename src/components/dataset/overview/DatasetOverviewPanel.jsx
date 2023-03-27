@@ -4,13 +4,11 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
-  Button,
   Divider,
   Drawer,
   Grid,
   Tab,
   Tabs,
-  TextField,
   Typography,
 } from '@mui/material';
 import { withStyles } from '@mui/styles';
@@ -107,13 +105,13 @@ function DatasetOverviewPanel(props) {
   const [isHelpVisible, setIsHelpVisible] = React.useState(false);
   const [helpTitle, setHelpTitle] = React.useState();
   const [helpContent, setHelpContent] = React.useState();
-  const { classes, dataset, dispatch, userRoles } = props;
+  const { classes, dataset, dispatch, pendingSave, userRoles } = props;
   const linkToBq = dataset.accessInformation?.bigQuery !== undefined;
 
-  const canViewJournalEntries =
-    userRoles.includes(DatasetRoles.STEWARD) || userRoles.includes(DatasetRoles.CUSTODIAN);
-  const canManageUsers =
-    userRoles.includes(DatasetRoles.STEWARD) || userRoles.includes(DatasetRoles.CUSTODIAN);
+  const isSteward = userRoles.includes(DatasetRoles.STEWARD);
+  const isCustodian = userRoles.includes(DatasetRoles.CUSTODIAN);
+  const canViewJournalEntries = isSteward || isCustodian;
+  const canManageUsers = isSteward || isCustodian;
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -162,7 +160,8 @@ function DatasetOverviewPanel(props) {
             <EditableFieldView
               fieldValue={dataset.description}
               fieldName="Description"
-              canEdit={userRoles.includes(DatasetRoles.STEWARD)}
+              canEdit={isSteward}
+              isPendingSave={pendingSave.description}
               updateFieldValueFn={(text) =>
                 dispatch(patchDataset(dataset.id, { description: text }))
               }
@@ -173,7 +172,7 @@ function DatasetOverviewPanel(props) {
             {renderTextFieldValue('Dataset ID', dataset.id)}
           </Grid>
           <Grid item xs={4}>
-            {renderTextFieldValue('Default Billing Profile ID', dataset.defaultBillingProfile)}
+            {renderTextFieldValue('Default Billing Profile ID', dataset.defaultProfileId)}
           </Grid>
           <Grid item xs={4}>
             <Typography variant="h6">Created:</Typography>
@@ -205,7 +204,8 @@ function DatasetOverviewPanel(props) {
             <EditableFieldView
               fieldValue={dataset.phsId}
               fieldName="PHS ID"
-              canEdit={userRoles.includes(DatasetRoles.STEWARD)}
+              canEdit={isSteward}
+              isPendingSave={pendingSave.phsId}
               infoButtonText="PHS IDs are set for the dataset and are inherited by all child snapshots. The PHS ID is used in conjunction with a consent code, which is set at a snapshot level, to determined if a user is authorized to view a snapshot based on their RAS Passport."
               updateFieldValueFn={(text) => dispatch(patchDataset(dataset.id, { phsId: text }))}
               useMarkdown={false}
@@ -284,37 +284,35 @@ function DatasetOverviewPanel(props) {
           </Grid>
         </Grid>
       </TabPanel>
-      {true && (
-        <Drawer
-          variant="permanent"
-          anchor="right"
-          className={clsx(classes.drawer, {
+      <Drawer
+        variant="permanent"
+        anchor="right"
+        className={clsx(classes.drawer, {
+          [classes.drawerOpen]: isHelpVisible,
+          [classes.drawerClose]: !isHelpVisible,
+        })}
+        classes={{
+          paper: clsx(classes.drawer, classes.drawerPosition, {
             [classes.drawerOpen]: isHelpVisible,
             [classes.drawerClose]: !isHelpVisible,
-          })}
-          classes={{
-            paper: clsx(classes.drawer, classes.drawerPosition, {
-              [classes.drawerOpen]: isHelpVisible,
-              [classes.drawerClose]: !isHelpVisible,
-            }),
-          }}
-          open={isHelpVisible}
-        >
-          <Grid key="help-drawer" container spacing={1} className={classes.helpText}>
-            <Grid item xs={11}>
-              {helpTitle}
-            </Grid>
-            <Grid item xs={1}>
-              <IconButton className={classes.helpOverlayCloseButton} onClick={closeHelpOverlay}>
-                <Close />
-              </IconButton>
-            </Grid>
-            <Grid item xs={11}>
-              {helpContent}
-            </Grid>
+          }),
+        }}
+        open={isHelpVisible}
+      >
+        <Grid key="help-drawer" container spacing={1} className={classes.helpText}>
+          <Grid item xs={11}>
+            {helpTitle}
           </Grid>
-        </Drawer>
-      )}
+          <Grid item xs={1}>
+            <IconButton className={classes.helpOverlayCloseButton} onClick={closeHelpOverlay}>
+              <Close />
+            </IconButton>
+          </Grid>
+          <Grid item xs={11}>
+            {helpContent}
+          </Grid>
+        </Grid>
+      </Drawer>
     </div>
   );
 }
@@ -323,6 +321,7 @@ DatasetOverviewPanel.propTypes = {
   classes: PropTypes.object,
   dataset: PropTypes.object,
   dispatch: PropTypes.func.isRequired,
+  pendingSave: PropTypes.object,
   userRoles: PropTypes.array,
 };
 
@@ -330,6 +329,7 @@ function mapStateToProps(state) {
   return {
     dataset: state.datasets.dataset,
     dispatch: state.dispatch,
+    pendingSave: state.pendingSave,
     userRoles: state.datasets.userRoles,
   };
 }

@@ -9,6 +9,11 @@ import {
   SnapshotSummaryModel,
 } from '../generated/tdr';
 
+export interface DatasetPendingSave {
+  description: boolean;
+  phsId: boolean;
+}
+
 export interface DatasetState {
   datasets: Array<DatasetSummaryModel>;
   datasetRoleMaps: { [key: string]: Array<string> };
@@ -23,7 +28,13 @@ export interface DatasetState {
   loading: boolean;
   isAddingOrRemovingUser: boolean;
   refreshCnt: number;
+  pendingSave: DatasetPendingSave;
 }
+
+const defaultPendingSave: DatasetPendingSave = {
+  description: false,
+  phsId: false,
+};
 
 export const initialDatasetState: DatasetState = {
   datasets: [],
@@ -39,6 +50,7 @@ export const initialDatasetState: DatasetState = {
   loading: false,
   isAddingOrRemovingUser: false,
   refreshCnt: 0,
+  pendingSave: defaultPendingSave,
 };
 
 // We need this method to apply the response from add/remove snapshot members since the API only returns the affected group
@@ -88,13 +100,35 @@ export default {
         immutable(state, {
           datasetPolicies: { $set: action.policy.data.policies },
         }),
+      [ActionTypes.PATCH_DATASET_START]: (state, action: any) => {
+        const datasetObj: any = { pendingSave: {} };
+        if (action.data.phsId !== undefined) {
+          datasetObj.pendingSave.phsId = { $set: true };
+        }
+        if (action.data.description !== undefined) {
+          datasetObj.pendingSave.description = { $set: true };
+        }
+        return immutable(state, datasetObj);
+      },
       [ActionTypes.PATCH_DATASET_SUCCESS]: (state, action: any) => {
-        const datasetObj: any = { dataset: {} };
+        const datasetObj: any = { dataset: {}, pendingSave: {} };
         if (action.data.phsId !== undefined) {
           datasetObj.dataset.phsId = { $set: action.data.phsId };
+          datasetObj.pendingSave.phsId = { $set: false };
         }
         if (action.data.description !== undefined) {
           datasetObj.dataset.description = { $set: action.data.description };
+          datasetObj.pendingSave.description = { $set: false };
+        }
+        return immutable(state, datasetObj);
+      },
+      [ActionTypes.PATCH_DATASET_FAILURE]: (state, action: any) => {
+        const datasetObj: any = { pendingSave: {} };
+        if (action.data.phsId !== undefined) {
+          datasetObj.pendingSave.phsId = { $set: false };
+        }
+        if (action.data.description !== undefined) {
+          datasetObj.pendingSave.description = { $set: false };
         }
         return immutable(state, datasetObj);
       },

@@ -25,6 +25,12 @@ export interface SnapshotRequest {
   policies: SnapshotRequestModelPolicies;
 }
 
+export interface SnapshotPendingSave {
+  consentCode: boolean;
+  description: boolean;
+  duosDataset: boolean;
+}
+
 export interface SnapshotState {
   snapshot: SnapshotModel;
   snapshots: Array<SnapshotSummaryModel>;
@@ -39,6 +45,7 @@ export interface SnapshotState {
   dialogIsOpen: boolean;
   loading: boolean;
   snapshotWorkspaceManagerEditInProgress: boolean;
+  pendingSave: SnapshotPendingSave;
   // for snapshot creation
   snapshotRequest: SnapshotRequest;
   userRoles: Array<string>;
@@ -59,6 +66,12 @@ const defaultSnapshotRequest: SnapshotRequest = {
   policies: {},
 };
 
+const defaultPendingSave: SnapshotPendingSave = {
+  consentCode: false,
+  description: false,
+  duosDataset: false,
+};
+
 export const initialSnapshotState: SnapshotState = {
   snapshot: {},
   snapshots: [],
@@ -73,6 +86,7 @@ export const initialSnapshotState: SnapshotState = {
   dialogIsOpen: false,
   loading: false,
   snapshotWorkspaceManagerEditInProgress: false,
+  pendingSave: defaultPendingSave,
   // for snapshot creation
   snapshotRequest: defaultSnapshotRequest,
   userRoles: [],
@@ -287,21 +301,55 @@ export default {
           snapshotRequest: { $set: snapshotRequest },
         });
       },
+      [ActionTypes.PATCH_SNAPSHOT_START]: (state, action: any) => {
+        const snapshotObj: any = { pendingSave: {} };
+        if (action.data.consentCode !== undefined) {
+          snapshotObj.pendingSave.consentCode = { $set: true };
+        }
+        if (action.data.description !== undefined) {
+          snapshotObj.pendingSave.description = { $set: true };
+        }
+        return immutable(state, snapshotObj);
+      },
       [ActionTypes.PATCH_SNAPSHOT_SUCCESS]: (state, action: any) => {
-        const snapshotObj: any = { snapshot: {} };
+        const snapshotObj: any = { snapshot: {}, pendingSave: {} };
         if (action.data.consentCode !== undefined) {
           snapshotObj.snapshot.consentCode = { $set: action.data.consentCode };
+          snapshotObj.pendingSave.consentCode = { $set: false };
         }
         if (action.data.description !== undefined) {
           snapshotObj.snapshot.description = { $set: action.data.description };
+          snapshotObj.pendingSave.description = { $set: false };
         }
         return immutable(state, snapshotObj);
       },
-      [ActionTypes.UPDATE_DUOS_DATASET_SUCCESS]: (state, action: any) => {
-        const snapshotObj: any = { snapshot: {} };
-        snapshotObj.snapshot.duosFirecloudGroup = { $set: action.duosFirecloudGroup };
+      [ActionTypes.PATCH_SNAPSHOT_FAILURE]: (state, action: any) => {
+        const snapshotObj: any = { pendingSave: {} };
+        if (action.data.consentCode !== undefined) {
+          snapshotObj.pendingSave.consentCode = { $set: false };
+        }
+        if (action.data.description !== undefined) {
+          snapshotObj.pendingSave.description = { $set: false };
+        }
         return immutable(state, snapshotObj);
       },
+      [ActionTypes.UPDATE_DUOS_DATASET_START]: (state) =>
+        immutable(state, {
+          pendingSave: { duosDataset: { $set: true } },
+        }),
+      [ActionTypes.UPDATE_DUOS_DATASET_SUCCESS]: (state, action: any) =>
+        immutable(state, {
+          snapshot: {
+            duosFirecloudGroup: { $set: action.duosFirecloudGroup },
+          },
+          pendingSave: {
+            duosDataset: { $set: false },
+          },
+        }),
+      [ActionTypes.UPDATE_DUOS_DATASET_FAILURE]: (state) =>
+        immutable(state, {
+          pendingSave: { duosDataset: { $set: false } },
+        }),
       [LOCATION_CHANGE]: (state) =>
         immutable(state, {
           snapshotRequest: { $set: defaultSnapshotRequest },

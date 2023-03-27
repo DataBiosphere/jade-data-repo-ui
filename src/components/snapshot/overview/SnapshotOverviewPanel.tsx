@@ -9,6 +9,7 @@ import GoogleSheetExport from 'components/common/overview/GoogleSheetExport';
 import { Link } from 'react-router-dom';
 import TextContent from 'components/common/TextContent';
 import { IamResourceTypeEnum } from 'generated/tdr';
+import { connect } from 'react-redux';
 import { renderStorageResources, renderTextFieldValue } from '../../../libs/render-utils';
 import SnapshotAccess from '../SnapshotAccess';
 import SnapshotWorkspace from './SnapshotWorkspace';
@@ -18,6 +19,8 @@ import { SnapshotModel } from '../../../generated/tdr';
 import { SnapshotRoles } from '../../../constants';
 import { AppDispatch } from '../../../store';
 import JournalEntriesView from '../../JournalEntriesView';
+import { SnapshotPendingSave } from '../../../reducers/snapshot';
+import { TdrState } from '../../../reducers';
 
 const styles = (theme: CustomTheme) =>
   createStyles({
@@ -48,15 +51,16 @@ function a11yProps(index: number) {
 
 interface SnapshotOverviewPanelProps extends WithStyles<typeof styles> {
   dispatch: AppDispatch;
+  pendingSave: SnapshotPendingSave;
   snapshot: SnapshotModel;
   userRoles: Array<string>;
 }
 
 function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
   const [value, setValue] = useState(0);
-  const { classes, dispatch, snapshot, userRoles } = props;
+  const { classes, dispatch, pendingSave, snapshot, userRoles } = props;
   const isSteward = userRoles.includes(SnapshotRoles.STEWARD);
-  const canViewJournalEntries = userRoles.includes(SnapshotRoles.STEWARD);
+  const canViewJournalEntries = isSteward;
   // @ts-ignore
   const sourceDataset = snapshot.source[0].dataset;
   const linkToBq = snapshot.cloudPlatform === 'gcp';
@@ -96,6 +100,7 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
               fieldValue={snapshot.description}
               fieldName="Description"
               canEdit={isSteward}
+              isPendingSave={pendingSave.description}
               updateFieldValueFn={(text: string | undefined) =>
                 dispatch(patchSnapshot(snapshot.id, { description: text }))
               }
@@ -108,6 +113,7 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
                 fieldValue={snapshot.duosFirecloudGroup?.duosId}
                 fieldName="DUOS ID"
                 canEdit={isSteward}
+                isPendingSave={pendingSave.duosDataset}
                 updateFieldValueFn={(text: string | undefined) =>
                   dispatch(updateDuosDataset(snapshot.id, text))
                 }
@@ -151,6 +157,7 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
               fieldValue={snapshot.consentCode}
               fieldName="Consent Code"
               canEdit={isSteward}
+              isPendingSave={pendingSave.consentCode}
               infoButtonText="The Consent Code is used in conjunction with the PHS ID to determined if a user is authorized to view a snapshot based on their RAS Passport."
               updateFieldValueFn={(text: string | undefined) => {
                 dispatch(patchSnapshot(snapshot.id, { consentCode: text }));
@@ -211,4 +218,10 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
   );
 }
 
-export default withStyles(styles)(SnapshotOverviewPanel);
+function mapStateToProps(state: TdrState) {
+  return {
+    pendingSave: state.snapshots.pendingSave,
+  };
+}
+
+export default connect(mapStateToProps)(withStyles(styles)(SnapshotOverviewPanel));

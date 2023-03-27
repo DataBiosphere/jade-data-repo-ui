@@ -54,6 +54,7 @@ const UNSET_FIELD_TEXT = '(Empty)';
 
 interface EditableFieldViewProps extends WithStyles<typeof styles> {
   canEdit: boolean;
+  isPendingSave: boolean;
   fieldValue: string | undefined;
   fieldName: string;
   infoButtonText?: string;
@@ -63,6 +64,7 @@ interface EditableFieldViewProps extends WithStyles<typeof styles> {
 
 function EditableFieldView({
   canEdit,
+  isPendingSave,
   classes,
   fieldValue,
   fieldName,
@@ -73,16 +75,14 @@ function EditableFieldView({
   const [hasFieldValueChanged, setHasFieldValueChanged] = useState(false);
   const [updatedFieldValue, setUpdatedFieldValue] = useState(fieldValue);
   const [isEditing, setIsEditing] = useState(false);
-  const [isPendingSave, setIsPendingSave] = useState(false);
 
   const cypressFieldNameFormatted = fieldName.replace(' ', '-').toLowerCase();
 
   useEffect(() => {
     const fieldUpdated = fieldValue === updatedFieldValue;
     const fieldUnset = !(fieldValue || updatedFieldValue);
-    if (isPendingSave && (fieldUpdated || fieldUnset)) {
+    if (fieldUpdated || fieldUnset) {
       setHasFieldValueChanged(false);
-      setIsPendingSave(false);
       setIsEditing(false);
     }
   }, [isPendingSave, fieldValue, updatedFieldValue]);
@@ -105,7 +105,6 @@ function EditableFieldView({
   }, []);
 
   const onSaveClick = useCallback(() => {
-    setIsPendingSave(true);
     updateFieldValueFn(updatedFieldValue);
   }, [updateFieldValueFn, updatedFieldValue]);
 
