@@ -1,14 +1,19 @@
-import React from 'react';
+import React, { Dispatch, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
+import { Action } from 'redux';
+import _ from 'lodash';
 import clsx from 'clsx';
 import { WithStyles, withStyles } from '@mui/styles';
 import { Button, Typography, CustomTheme, Tabs, Tab } from '@mui/material';
-import { OpenInNew } from '@mui/icons-material';
+import { OpenInNew, Error } from '@mui/icons-material';
 import { TdrState } from 'reducers';
 import { FormProvider, useForm } from 'react-hook-form';
-import TabPanel from '../../common/TabPanel';
+import { createDataset, getBillingProfiles } from 'actions/index';
+import { BillingProfileModel } from '../../../generated/tdr';
 import DatasetSchemaInformationView from './DatasetSchemaInformationView';
+import DatasetSchemaBuilderView from './DatasetSchemaBuilderView';
 import { CLOUD_PLATFORMS } from '../../../constants/index';
+import DatasetCreationModal from './DatasetCreationModal';
 
 const styles = (theme: CustomTheme) => ({
   pageRoot: { ...theme.mixins.pageRoot },
@@ -37,6 +42,7 @@ const styles = (theme: CustomTheme) => ({
   mainContent: {
     marginRight: 30,
     marginTop: '1.25em',
+    marginBottom: 30,
   },
   tabsRoot: {
     height: 80,
@@ -55,7 +61,7 @@ const styles = (theme: CustomTheme) => ({
     marginTop: '1.5rem',
     backgroundColor: theme.palette.primary.focus,
     padding: 25,
-    minWidth: 400,
+    width: 400,
     borderRadius: theme.shape.borderRadius,
   },
   helpList: {
@@ -69,7 +75,7 @@ const styles = (theme: CustomTheme) => ({
   tabButton: {
     'text-transform': 'none',
     marginTop: 30,
-    marginBottom: 30,
+    marginBottom: 5,
   },
   formLabel: {
     display: 'block',
@@ -80,10 +86,19 @@ const styles = (theme: CustomTheme) => ({
   formLabelError: {
     color: theme.palette.error.main,
   },
+  leftMargin: {
+    marginLeft: 20,
+  },
+  flexRow: {
+    display: 'flex',
+    alignItems: 'center',
+    marginTop: 10,
+  },
 });
 
 interface IProps extends WithStyles<typeof styles> {
-  userEmail: string;
+  profiles: Array<BillingProfileModel>;
+  dispatch: Dispatch<Action>;
 }
 
 interface TabConfig {
@@ -91,47 +106,80 @@ interface TabConfig {
   content: any;
 }
 
-const DatasetSchemaCreationView = withStyles(styles)(({ classes }: IProps) => {
+const DatasetSchemaCreationView = withStyles(styles)(({ classes, dispatch, profiles }: IProps) => {
   const [currentTab, setCurrentTab] = React.useState(0);
-  const changeTab = (_event: any, newCurrentTab: any) => setCurrentTab(newCurrentTab);
+  const ref = useRef<HTMLInputElement>(null);
+  const updateTab = (tab: number) => {
+    // Reset scroll on tab change
+    ref.current?.parentElement?.scrollTo(0, 0);
+    setCurrentTab(tab);
+  };
+  const changeTab = (_event: any, newCurrentTab: number) => updateTab(newCurrentTab);
 
   const formMethods = useForm({
-    mode: 'onTouched',
+    mode: 'all',
     reValidateMode: 'onChange',
     defaultValues: {
-      name: '',
-      description: '',
-      terraProject: '',
-      enableSecureMonitoring: 'true',
+      name: null,
+      description: null,
+      terraProject: null,
+      enableSecureMonitoring: false,
       cloudPlatform: CLOUD_PLATFORMS.gcp.key,
-      region: '',
+      defaultProfileId: null,
+      region: null,
       stewards: [],
       custodians: [],
+      schema: {},
     },
   });
 
-  const { handleSubmit } = formMethods;
+  const {
+    handleSubmit,
+    formState: { errors },
+  } = formMethods;
 
   const tabs: TabConfig[] = [
     {
       description: 'Provide dataset information',
-      content: <DatasetSchemaInformationView />,
+      content: <DatasetSchemaInformationView profiles={profiles} />,
     },
     {
       description: 'Build a schema and create dataset',
-      content: <div>Step 2!</div>,
+      content: <DatasetSchemaBuilderView />,
     },
   ];
 
   const onSubmit = (data: any) => {
-    // eslint-disable-next-line
-    console.log(data);
+    const normalizedData = {
+      ...data,
+      defaultProfileId: data.defaultProfileId?.id,
+      policies: {
+        stewards: data.stewards,
+        custodians: data.custodians,
+      },
+    };
+    delete normalizedData.terraProject;
+    delete normalizedData.stewards;
+    delete normalizedData.custodians;
+    delete normalizedData.defaultProfile;
+
+    dispatch(createDataset(normalizedData));
   };
 
+  useEffect(() => {
+    dispatch(getBillingProfiles());
+  }, [dispatch]);
+
   return (
-    <div className={classes.pageRoot}>
+    <div className={classes.pageRoot} data-cy="component-root" ref={ref}>
       <FormProvider {...formMethods}>
-        <form className={classes.contentContainer} onSubmit={handleSubmit(onSubmit)}>
+        <form
+          className={classes.contentContainer}
+          onSubmit={handleSubmit(onSubmit)}
+          autoComplete="off"
+        >
+          {/* disable autocomplete in FF */}
+          <input autoComplete="false" name="hidden" type="text" style={{ display: 'none' }} />
           <div className={classes.mainContent}>
             <Typography variant="h3" className={classes.pageTitle}>
               Create a dataset schema for ingesting data
@@ -141,7 +189,7 @@ const DatasetSchemaCreationView = withStyles(styles)(({ classes }: IProps) => {
             you'll ingest later. You'll specify the number and names of the data categories - the
             tables and columns within the tables - and any associations between columns in separate
             tables, if multiple tables contain the same data category (for instance, if you have a
-            "subject" table and a "sample" table, and both tables contain a column of the same
+            'subject' table and a 'sample' table, and both tables contain a column of the same
             subject IDs).
             <Tabs classes={{ root: classes.tabsRoot }} value={currentTab} onChange={changeTab}>
               {tabs.map((tabConfig: TabConfig, i: number) => (
@@ -160,7 +208,7 @@ const DatasetSchemaCreationView = withStyles(styles)(({ classes }: IProps) => {
               ))}
             </Tabs>
             {tabs.map((tabConfig: TabConfig, i: number) => (
-              <TabPanel value={currentTab} index={i} key={`dataset-schema-creation-tab-${i}`}>
+              <div key={`tabPanel-${i}`} hidden={currentTab !== i}>
                 {tabConfig.content}
 
                 {i < tabs.length - 1 ? (
@@ -170,7 +218,7 @@ const DatasetSchemaCreationView = withStyles(styles)(({ classes }: IProps) => {
                     variant="contained"
                     disableElevation
                     className={classes.tabButton}
-                    onClick={() => setCurrentTab(i + 1)}
+                    onClick={() => updateTab(i + 1)}
                   >
                     Go to Step {i + 2}
                   </Button>
@@ -185,7 +233,25 @@ const DatasetSchemaCreationView = withStyles(styles)(({ classes }: IProps) => {
                     Submit
                   </Button>
                 )}
-              </TabPanel>
+                {_.keys(errors).length > 0 && (
+                  <>
+                    <div
+                      className={clsx(classes.formLabelError, classes.flexRow)}
+                      data-cy="error-summary"
+                    >
+                      <Error style={{ marginRight: 5 }} />
+                      There are errors with your form. Please fix these fields to continue:
+                    </div>
+                    <div className={classes.formLabelError} data-cy="error-details">
+                      <ul>
+                        {_.keys(errors).map((error: string) => (
+                          <li key={error}>{error}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </>
+                )}
+              </div>
             ))}
           </div>
 
@@ -224,6 +290,7 @@ const DatasetSchemaCreationView = withStyles(styles)(({ classes }: IProps) => {
             </div>
           </div>
         </form>
+        <DatasetCreationModal />
       </FormProvider>
     </div>
   );
@@ -231,7 +298,7 @@ const DatasetSchemaCreationView = withStyles(styles)(({ classes }: IProps) => {
 
 function mapStateToProps(state: TdrState) {
   return {
-    userEmail: state.user.email,
+    profiles: state.profiles.profiles,
   };
 }
 

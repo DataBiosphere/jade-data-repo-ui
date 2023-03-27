@@ -55,6 +55,8 @@ export interface SnapshotState {
   exportResponse: SnapshotExportResponseModel;
   refreshCnt: number;
   isAddingOrRemovingUser: boolean;
+  // store the current location in this part of the state so that we know if we need to reset state
+  lastPath?: string;
 }
 
 const defaultSnapshotRequest: SnapshotRequest = {
@@ -350,10 +352,21 @@ export default {
         immutable(state, {
           pendingSave: { duosDataset: { $set: false } },
         }),
-      [LOCATION_CHANGE]: (state) =>
-        immutable(state, {
+
+      [LOCATION_CHANGE]: (state, action: any) => {
+        // Don't reset state if the only change was query parameters
+        const path = action.payload?.location?.pathname;
+        if (path === state.lastPath) {
+          return immutable(state, {
+            lastPath: { $set: path },
+          });
+        }
+        return immutable(state, {
           snapshotRequest: { $set: defaultSnapshotRequest },
-        }),
+          lastPath: { $set: path },
+          dialogIsOpen: { $set: false },
+        });
+      },
       [ActionTypes.USER_LOGOUT_SUCCESS]: () => initialSnapshotState,
     },
     initialSnapshotState,

@@ -1,8 +1,7 @@
-import React, { useState, useEffect, Dispatch } from 'react';
+import React, { useEffect, Dispatch } from 'react';
 import _ from 'lodash';
 import { ClassNameMap, withStyles } from '@mui/styles';
 import {
-  CustomTheme,
   Dialog,
   DialogContent,
   DialogContentText,
@@ -18,18 +17,12 @@ import { getJobResult } from 'actions';
 import { TdrState } from 'reducers';
 import { JobModelJobStatusEnum } from 'generated/tdr';
 import { JobResult, JobResultError } from 'reducers/job';
+import { RouterLocation, RouterRootState } from 'connected-react-router';
+import { LocationState } from 'history';
+import { push } from 'modules/hist';
 import LoadingSpinner from '../common/LoadingSpinner';
 
-const styles = (theme: CustomTheme) => ({
-  seeMoreLink: {
-    cursor: 'pointer',
-    border: 'none',
-    backgroundColor: 'transparent',
-    color: theme.palette.primary.main,
-    '&:hover': {
-      color: theme.palette.primary.hover,
-    },
-  },
+const styles = () => ({
   dialog: {
     minHeight: '80vh',
     maxHeight: '80vh',
@@ -59,38 +52,21 @@ const styles = (theme: CustomTheme) => ({
 type JobResultModalProps = {
   classes: ClassNameMap;
   dispatch: Dispatch<Action>;
-  id: string;
-  description?: string;
-  jobClass?: string;
   loading: boolean;
   jobResult?: JobResult;
-  linkDisplay?: any;
+  location: RouterLocation<LocationState>;
 };
 
-function JobResultModal({
-  classes,
-  dispatch,
-  id,
-  description,
-  jobClass,
-  loading,
-  jobResult,
-  linkDisplay = 'See More',
-}: JobResultModalProps) {
-  const [seeMore, setSeeMore] = useState({ open: false });
-
+function JobResultModal({ classes, dispatch, loading, jobResult, location }: JobResultModalProps) {
+  const expandedJob = location.query?.expandedJob;
   useEffect(() => {
-    if (seeMore.open) {
-      dispatch(getJobResult({ id }));
+    if (expandedJob) {
+      dispatch(getJobResult({ id: expandedJob }));
     }
-  }, [dispatch, seeMore, id]);
-
-  const handleSeeMoreOpen = () => {
-    setSeeMore({ open: true });
-  };
+  }, [dispatch, expandedJob]);
 
   const handleSeeMoreClose = () => {
-    setSeeMore({ open: false });
+    push(`${location.pathname}`);
   };
 
   const jobError =
@@ -103,93 +79,91 @@ function JobResultModal({
       ? (jobResult.result as any)
       : null;
 
+  const description = jobResult?.jobInfo?.description;
+  const jobClass = jobResult?.jobInfo?.class_name;
   return (
-    <div>
-      <button type="button" onClick={handleSeeMoreOpen} className={classes.seeMoreLink}>
-        {linkDisplay}
-      </button>
-      <Paper className={classes.root}>
-        <Dialog
-          open={seeMore.open}
-          scroll="paper"
-          fullWidth={true}
-          classes={{ paper: classes.dialog }}
-          onBackdropClick={handleSeeMoreClose}
-        >
-          <DialogTitle id="see-more-dialog-title">
-            <div className={classes.dialogTitle} style={{ float: 'left' }}>
-              Job Details
-            </div>
-            <IconButton size="small" style={{ float: 'right' }} onClick={handleSeeMoreClose}>
-              <Close />
-            </IconButton>
-          </DialogTitle>
-          <DialogContent>
-            <DialogContentText
-              className={classes.dialogContentText}
-              component="div"
-              id="see-more-dialog-content-text"
-            >
-              {loading && <LoadingSpinner />}
-              {!loading && (
-                <div>
-                  <div className={classes.dialogInfo}>
-                    <div className={classes.dialogLabel}>ID</div>
-                    <div className={classes.dialogContent}>{id}</div>
-                  </div>
-
-                  <div className={classes.dialogInfo}>
-                    <div className={classes.dialogLabel}>Class Name</div>
-                    <div className={classes.dialogContent}>{jobClass}</div>
-                  </div>
-
-                  {description && (
-                    <div className={classes.dialogInfo}>
-                      <div className={classes.dialogLabel}>Description</div>
-                      <div className={classes.dialogContent}>{description}</div>
-                    </div>
-                  )}
-
-                  {jobError && (
-                    <>
-                      <div className={classes.dialogInfo}>
-                        <div className={classes.dialogLabel}>Message</div>
-                        <div className={classes.dialogContent}>{jobError.message}</div>
-                      </div>
-
-                      {jobError.detail && jobError.detail.length > 0 && (
-                        <div className={classes.dialogInfo}>
-                          <div className={classes.dialogLabel}>Details</div>
-                          <div className={classes.dialogContent}>
-                            {jobError.detail && <ReactJson src={jobError.detail} />}
-                          </div>
-                        </div>
-                      )}
-                    </>
-                  )}
-
-                  {jobSuccess && (
-                    <div className={classes.dialogInfo}>
-                      <div className={classes.dialogLabel}>Content</div>
-                      <div className={classes.dialogContent}>
-                        {_.isString(jobSuccess) ? jobSuccess : <ReactJson src={jobSuccess} />}
-                      </div>
-                    </div>
-                  )}
+    <Paper className={classes.root}>
+      <Dialog
+        open={!!expandedJob}
+        scroll="paper"
+        fullWidth={true}
+        classes={{ paper: classes.dialog }}
+        onBackdropClick={handleSeeMoreClose}
+      >
+        <DialogTitle id="see-more-dialog-title">
+          <div className={classes.dialogTitle} style={{ float: 'left' }}>
+            Job Details
+          </div>
+          <IconButton size="small" style={{ float: 'right' }} onClick={handleSeeMoreClose}>
+            <Close />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText
+            className={classes.dialogContentText}
+            component="div"
+            id="see-more-dialog-content-text"
+          >
+            {loading && <LoadingSpinner />}
+            {!loading && (
+              <div>
+                <div className={classes.dialogInfo}>
+                  <div className={classes.dialogLabel}>ID</div>
+                  <div className={classes.dialogContent}>{expandedJob}</div>
                 </div>
-              )}
-            </DialogContentText>
-          </DialogContent>
-        </Dialog>
-      </Paper>
-    </div>
+
+                <div className={classes.dialogInfo}>
+                  <div className={classes.dialogLabel}>Class Name</div>
+                  <div className={classes.dialogContent}>{jobClass}</div>
+                </div>
+
+                {description && (
+                  <div className={classes.dialogInfo}>
+                    <div className={classes.dialogLabel}>Description</div>
+                    <div className={classes.dialogContent}>{description}</div>
+                  </div>
+                )}
+
+                {jobError && (
+                  <>
+                    <div className={classes.dialogInfo}>
+                      <div className={classes.dialogLabel}>Message</div>
+                      <div className={classes.dialogContent}>{jobError.message}</div>
+                    </div>
+
+                    {jobError.detail && jobError.detail.length > 0 && (
+                      <div className={classes.dialogInfo}>
+                        <div className={classes.dialogLabel}>Details</div>
+                        <div className={classes.dialogContent}>
+                          {jobError.detail && <ReactJson src={jobError.detail} />}
+                        </div>
+                      </div>
+                    )}
+                  </>
+                )}
+
+                {jobSuccess && (
+                  <div className={classes.dialogInfo}>
+                    <div className={classes.dialogLabel}>Content</div>
+                    <div className={classes.dialogContent}>
+                      {_.isString(jobSuccess) ? jobSuccess : <ReactJson src={jobSuccess} />}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </DialogContentText>
+        </DialogContent>
+      </Dialog>
+    </Paper>
   );
 }
 
-function mapStateToProps(state: TdrState) {
+function mapStateToProps(state: TdrState & RouterRootState) {
   return {
     loading: state.jobs.jobResultLoading,
     jobResult: state.jobs.jobResult,
+    location: state.router.location,
   };
 }
 

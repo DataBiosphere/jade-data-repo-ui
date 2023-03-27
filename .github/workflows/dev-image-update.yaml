@@ -31,19 +31,19 @@ jobs:
     if: "!contains( github.event.sender.login, 'broadbot')"
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
           ref: develop
           token: ${{ secrets.BROADBOT_TOKEN }}
       - name: 'Checkout datarepo-helm-definitions repo'
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: 'broadinstitute/datarepo-helm-definitions'
           token: ${{ secrets.BROADBOT_TOKEN }}
           path: datarepo-helm-definitions
       - name: 'Bump the tag to a new version'
-        uses: broadinstitute/datarepo-actions/actions/main@0.65.0
+        uses: broadinstitute/datarepo-actions/actions/main@0.67.0
         with:
           actions_subcommand: 'bumper'
           role_id: ${{ secrets.ROLE_ID }}
@@ -52,7 +52,7 @@ jobs:
           version_variable_name: version
           GITHUB_TOKEN: ${{ secrets.BROADBOT_TOKEN }}
       - name: 'Get gcp credentials'
-        uses: broadinstitute/datarepo-actions/actions/main@0.65.0
+        uses: broadinstitute/datarepo-actions/actions/main@0.67.0
         with:
           actions_subcommand: 'skip'
           role_id: ${{ secrets.ROLE_ID }}
@@ -87,22 +87,27 @@ jobs:
           gcr.io/${{ env.gcr_google_project }}/jade-data-repo-ui:"${GCR_TAG}" \
           gcr.io/${{ env.gcr_google_project }}/jade-data-repo-ui:"${{ steps.uiprevioustag.outputs.tag }}" --quiet
       - name: 'Check and edit Helm definition for dev'
-        uses: broadinstitute/datarepo-actions/actions/main@0.65.0
+        uses: broadinstitute/datarepo-actions/actions/main@0.67.0
         with:
           actions_subcommand: 'deploytagupdate'
           helm_env_prefix: dev
           helm_imagetag_update: ui
-      - name: Trigger action to update helm tag
-        uses: broadinstitute/workflow-dispatch@v1
-        with:
-          workflow: Update integration ui helm image tag
-          token: ${{ secrets.BROADBOT_TOKEN }}
-      - name: Slack job status
-        if: always()
-        uses: broadinstitute/action-slack@v2
-        with:
-          status: ${{ job.status }}
-          author_name: Integration Test
-        env:
-          GITHUB_TOKEN: ${{ secrets.BROADBOT_TOKEN }}
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+  helm_tag_bump:
+    needs: update_image
+    uses: ./.github/workflows/helmtagbump.yaml
+    secrets: inherit
+  action_notify:
+    runs-on: ubuntu-latest
+    if: always()
+    needs:
+      - update_image
+      - helm_tag_bump
+    steps:
+    - name: Slack job status
+      uses: broadinstitute/action-slack@v3.15.0
+      with:
+        status: ${{ contains(needs.*.result, 'failure') && 'failure' || 'success' }}
+        author_name: Integration Test
+      env:
+        GITHUB_TOKEN: ${{ secrets.BROADBOT_TOKEN }}
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

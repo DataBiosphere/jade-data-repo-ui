@@ -64,7 +64,7 @@ function SnapshotWorkspace(props: SnapshotWorkspaceProps) {
         id="panel1a-header"
       >
         <Typography className={classes.snapshotAccordionTitle}>
-          Workspaces with this snapshot
+          Snapshot Reader Workspaces
         </Typography>
       </AccordionSummary>
       <AccordionDetails>

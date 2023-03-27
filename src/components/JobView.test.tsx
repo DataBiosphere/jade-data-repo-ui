@@ -8,9 +8,11 @@ import _ from 'lodash';
 import { initialUserState } from 'reducers/user';
 import { initialQueryState } from 'reducers/query';
 import { JobModelJobStatusEnum } from 'generated/tdr';
+import { routerMiddleware } from 'connected-react-router';
 import JobView from './JobView';
 import globalTheme from '../modules/theme';
 import history from '../modules/hist';
+import JobResultModal from './job/JobResultModal';
 
 const testDate = new Date();
 const initialState = {
@@ -44,19 +46,20 @@ const initialState = {
   },
   user: _.cloneDeep(initialUserState),
   query: _.cloneDeep(initialQueryState),
+  router: { location: {} },
 };
 
 beforeEach(() => {
-  const mockStore = createMockStore([]);
+  const mockStore = createMockStore([routerMiddleware(history)]);
   const store = mockStore(initialState);
   mount(
-    <Router history={history}>
-      <Provider store={store}>
+    <Provider store={store}>
+      <Router history={history}>
         <ThemeProvider theme={globalTheme}>
           <JobView searchString={initialState.searchString} />
         </ThemeProvider>
-      </Provider>
-    </Router>,
+      </Router>
+    </Provider>,
   );
 });
 
@@ -109,57 +112,70 @@ describe('JobView', () => {
     cy.get('tbody tr').eq(2).children().eq(4).should('have.text', 'In Progress');
   });
 
-  it('should open the dialog modal to see more details', () => {
-    cy.get('tbody tr:first-of-type button')
-      .click()
-      .then(() => {
-        cy.get('.MuiDialog-container').should('exist');
-        cy.get('.MuiDialog-container h2').should('have.text', 'Job Details');
-        cy.get('#see-more-dialog-content-text > div > div').should('have.length', 3);
-        cy.get('#see-more-dialog-content-text > div > div')
-          .eq(0)
-          .children()
-          .eq(0)
-          .should('have.text', 'ID');
-        cy.get('#see-more-dialog-content-text > div > div')
-          .eq(0)
-          .children()
-          .eq(1)
-          .should('have.text', initialState.jobs.jobs[0].id);
-        cy.get('#see-more-dialog-content-text > div > div')
-          .eq(1)
-          .children()
-          .eq(0)
-          .should('have.text', 'Class Name');
-        cy.get('#see-more-dialog-content-text > div > div')
-          .eq(1)
-          .children()
-          .eq(1)
-          .should('have.text', initialState.jobs.jobs[0].class_name);
-        cy.get('#see-more-dialog-content-text > div > div')
-          .eq(2)
-          .children()
-          .eq(0)
-          .should('have.text', 'Description');
-        cy.get('#see-more-dialog-content-text > div > div')
-          .eq(2)
-          .children()
-          .eq(1)
-          .should('have.text', initialState.jobs.jobs[0].description);
-      });
+  it('should show the dialog modal to see more details', () => {
+    const mockStore = createMockStore([routerMiddleware(history)]);
+
+    const store = mockStore({
+      ...initialState,
+      // mock the router state to show if there is an expandedJob query parameter
+      router: { location: { query: { expandedJob: initialState.jobs.jobs[0].id } } },
+      // mock that the job results were fetched
+      jobs: {
+        ...initialState.jobs,
+        jobResult: {
+          resultType: initialState.jobs.jobs[0],
+          result: 'foo',
+          jobInfo: initialState.jobs.jobs[0],
+        },
+      },
+    });
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <ThemeProvider theme={globalTheme}>
+            <JobResultModal />
+            <JobView searchString={initialState.searchString} />
+          </ThemeProvider>
+        </Router>
+      </Provider>,
+    );
+
+    cy.get('.MuiDialog-container').should('exist');
+    cy.get('.MuiDialog-container h2').should('have.text', 'Job Details');
+    cy.get('#see-more-dialog-content-text > div > div').should('have.length', 3);
+    cy.get('#see-more-dialog-content-text > div > div')
+      .eq(0)
+      .children()
+      .eq(0)
+      .should('have.text', 'ID');
+    cy.get('#see-more-dialog-content-text > div > div')
+      .eq(0)
+      .children()
+      .eq(1)
+      .should('have.text', initialState.jobs.jobs[0].id);
+    cy.get('#see-more-dialog-content-text > div > div')
+      .eq(1)
+      .children()
+      .eq(0)
+      .should('have.text', 'Class Name');
+    cy.get('#see-more-dialog-content-text > div > div')
+      .eq(1)
+      .children()
+      .eq(1)
+      .should('have.text', initialState.jobs.jobs[0].class_name);
+    cy.get('#see-more-dialog-content-text > div > div')
+      .eq(2)
+      .children()
+      .eq(0)
+      .should('have.text', 'Description');
+    cy.get('#see-more-dialog-content-text > div > div')
+      .eq(2)
+      .children()
+      .eq(1)
+      .should('have.text', initialState.jobs.jobs[0].description);
   });
 
-  it('should allow closing the modal', () => {
-    cy.get('tbody tr:first-of-type button')
-      .click()
-      .then(() => {
-        cy.get('.MuiDialog-container').should('exist');
-        cy.get('.MuiDialog-container h2 button').should('exist');
-        cy.get('.MuiDialog-container h2 button')
-          .click()
-          .then(() => {
-            cy.get('.MuiDialog-container').should('not.exist');
-          });
-      });
+  it('should NOT show the dialog modal to see more details', () => {
+    cy.get('.MuiDialog-container').should('not.exist');
   });
 });
