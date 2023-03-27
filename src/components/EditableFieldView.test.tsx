@@ -26,6 +26,7 @@ beforeEach(() => {
           fieldValue={initialState.dataset.description}
           fieldName="Description"
           canEdit={true}
+          isPendingSave={false}
           updateFieldValueFn={(text: any) => {
             initialState.dataset.description = text;
           }}
@@ -35,6 +36,7 @@ beforeEach(() => {
           fieldValue={initialState.dataset.phsId}
           fieldName="PHS Id"
           canEdit={true}
+          isPendingSave={false}
           updateFieldValueFn={(text: any) => {
             initialState.dataset.phsId = text;
           }}
