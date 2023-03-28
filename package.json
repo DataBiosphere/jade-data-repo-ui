@@ -2,7 +2,7 @@
   "name": "jade-data-repo-ui",
   "title": "jade-data-repo-ui",
   "description": "Data Repository UI",
-  "version": "0.233.0",
+  "version": "0.235.0",
   "author": "Jade Team <jadeteam@broadinstitute.org>",
   "engines": {
     "node": ">=12.22"
@@ -91,7 +91,7 @@
     "redux-immutable-state-invariant": "^2.1.0",
     "redux-logger": "^3.0.6",
     "redux-saga": "^1.2.1",
-    "rxjs": "^7.5.5",
+    "rxjs": "^7.8.0",
     "strip-markdown": "^5.0.0",
     "symbol-observable": "^4.0.0",
     "tss-react": "^4.8.2",
@@ -123,7 +123,7 @@
     "eslint-config-prettier": "^8.8.0",
     "eslint-config-react-app": "^7.0.1",
     "eslint-plugin-babel": "^5.3.1",
-    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-jsx-a11y": "^6.7.1",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.29.4",
