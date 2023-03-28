@@ -91,7 +91,7 @@
     "redux-immutable-state-invariant": "^2.1.0",
     "redux-logger": "^3.0.6",
     "redux-saga": "^1.2.1",
-    "rxjs": "^7.5.5",
+    "rxjs": "^7.8.0",
     "strip-markdown": "^5.0.0",
     "symbol-observable": "^4.0.0",
     "tss-react": "^4.8.2",
