@@ -329,7 +329,7 @@ function mapStateToProps(state) {
   return {
     dataset: state.datasets.dataset,
     dispatch: state.dispatch,
-    pendingSave: state.pendingSave,
+    pendingSave: state.datasets.pendingSave,
     userRoles: state.datasets.userRoles,
   };
 }
