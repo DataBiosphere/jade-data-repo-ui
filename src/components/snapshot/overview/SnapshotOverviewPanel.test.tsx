@@ -31,6 +31,11 @@ const snapshot = {
 
 const initialState = {
   snapshots: {
+    pendingSave: {
+      consentCode: false,
+      description: false,
+      duosDataset: false,
+    },
     snapshot,
     snapshotPolicies: [
       {
@@ -68,6 +73,7 @@ describe('Snapshot overview panel', () => {
           <ThemeProvider theme={globalTheme}>
             <SnapshotOverviewPanel
               dispatch={store.dispatch}
+              pendingSave={initialState.snapshots.pendingSave}
               snapshot={snapshot}
               userRoles={initialState.snapshots.userRoles}
             />

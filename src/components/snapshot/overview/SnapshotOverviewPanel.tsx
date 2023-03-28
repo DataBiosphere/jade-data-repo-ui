@@ -9,7 +9,6 @@ import GoogleSheetExport from 'components/common/overview/GoogleSheetExport';
 import { Link } from 'react-router-dom';
 import TextContent from 'components/common/TextContent';
 import { IamResourceTypeEnum } from 'generated/tdr';
-import { connect } from 'react-redux';
 import { renderStorageResources, renderTextFieldValue } from '../../../libs/render-utils';
 import SnapshotAccess from '../SnapshotAccess';
 import SnapshotWorkspace from './SnapshotWorkspace';
@@ -20,7 +19,6 @@ import { SnapshotRoles } from '../../../constants';
 import { AppDispatch } from '../../../store';
 import JournalEntriesView from '../../JournalEntriesView';
 import { SnapshotPendingSave } from '../../../reducers/snapshot';
-import { TdrState } from '../../../reducers';
 
 const styles = (theme: CustomTheme) =>
   createStyles({
@@ -218,10 +216,4 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
   );
 }
 
-function mapStateToProps(state: TdrState) {
-  return {
-    pendingSave: state.snapshots.pendingSave,
-  };
-}
-
-export default connect(mapStateToProps)(withStyles(styles)(SnapshotOverviewPanel));
+export default withStyles(styles)(SnapshotOverviewPanel);
