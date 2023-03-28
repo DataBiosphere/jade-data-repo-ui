@@ -2,7 +2,7 @@
   "name": "jade-data-repo-ui",
   "title": "jade-data-repo-ui",
   "description": "Data Repository UI",
-  "version": "0.231.0",
+  "version": "0.234.0",
   "author": "Jade Team <jadeteam@broadinstitute.org>",
   "engines": {
     "node": ">=12.22"
@@ -23,7 +23,7 @@
   ],
   "dependencies": {
     "@babel/runtime": "^7.21.0",
-    "@codemirror/lang-javascript": "^6.1.1",
+    "@codemirror/lang-javascript": "^6.1.4",
     "@emotion/styled": "^11.10.6",
     "@fortawesome/fontawesome-svg-core": "^6.3.0",
     "@fortawesome/free-solid-svg-icons": "^6.2.0",
@@ -111,7 +111,7 @@
     "@types/redux-actions": "^2.6.2",
     "@types/redux-mock-store": "^1.0.3",
     "@types/redux-saga": "^0.10.5",
-    "@types/validator": "^13.7.12",
+    "@types/validator": "^13.7.14",
     "@types/webfontloader": "^1.6.34",
     "@typescript-eslint/eslint-plugin": "^5.56.0",
     "ajv": "^6.12.6",
@@ -123,7 +123,7 @@
     "eslint-config-prettier": "^8.8.0",
     "eslint-config-react-app": "^7.0.1",
     "eslint-plugin-babel": "^5.3.1",
-    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-jsx-a11y": "^6.7.1",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.29.4",
