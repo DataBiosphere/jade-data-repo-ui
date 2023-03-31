@@ -134,7 +134,7 @@ function EditableFieldView({
   }, [fieldValue]);
 
   return (
-    <>
+    <div data-cy={`${cypressFieldNameFormatted}-editable-field-view`}>
       <div>
         <Typography
           className={classes.title}
@@ -178,6 +178,7 @@ function EditableFieldView({
               <>
                 {useMarkdown && (
                   <SimpleMdeReact
+                    disabled={isPendingSave}
                     onChange={onChange}
                     options={editorOptions}
                     value={updatedFieldValue}
@@ -223,7 +224,7 @@ function EditableFieldView({
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }
 export default withStyles(styles)(EditableFieldView);
