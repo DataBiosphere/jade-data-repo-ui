@@ -8,7 +8,7 @@ import EditableFieldView from './EditableFieldView';
 import globalTheme from '../modules/theme';
 import history from '../modules/hist';
 
-function createState(pendingSave: boolean): object {
+function createState(pendingSave: boolean): any {
   return {
     dataset: {
       description: 'A dataset description',
