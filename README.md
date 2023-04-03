@@ -42,7 +42,13 @@ npm install
 - Before running e2e tests, set CYPRESS_GOOGLE_TOKEN to your access token
 
 ```
-export CYPRESS_GOOGLE_TOKEN=$(gcloud auth print-access-token)
+export CYPRESS_GOOGLE_TOKEN=$(gcloud auth print-access-token <the user you want to test with, e.g. dumbledore.admin@test.firecloud.org>)
+```
+
+you may need to log in with the test account using:
+
+```
+gcloud auth login --no-activate
 ```
 
 ### Provides
@@ -108,6 +114,7 @@ for example, if the e2e "Echo tagged image" in your action log output was:
 Pushed docker image gcr.io/broad-jade-dev/jade-data-repo-ui:abcdefg
 
 You would run:
+
 ```
 skaffold deploy --images=gcr.io/broad-jade-dev/jade-data-repo-ui:abcdefg
 ```
