@@ -133,6 +133,8 @@ describe('Description in Markdown EditableFieldView', () => {
           .first({ timeout: 5 })
           .type('change ', { force: true })
           .then(() => {
+            // We cannot disable the textarea in a SimpleMdeReact component,
+            // so for markdown EditableFieldViews we only disable the buttons on pending save.
             cy.get('[data-cy=description-cancel-button]').should('be.disabled');
             cy.get('[data-cy=description-save-button]')
               .should('be.disabled')
@@ -179,7 +181,7 @@ describe('Plain text field in EditableFieldView', () => {
         );
       });
   });
-  it('pending save disables save and cancel buttons', () => {
+  it('pending save disables text input, save and cancel buttons', () => {
     mountComponent(pendingSaveSate);
     cy.get('button[data-cy=phs-id-edit-button]')
       .click({ force: true })
@@ -188,6 +190,7 @@ describe('Plain text field in EditableFieldView', () => {
           .first({ timeout: 5 })
           .type('change', { force: true })
           .then(() => {
+            cy.get('[data-cy=phs-id-text-field] input').should('be.disabled');
             cy.get('[data-cy=phs-id-cancel-button]').should('be.disabled');
             cy.get('[data-cy=phs-id-save-button]')
               .should('be.disabled')
