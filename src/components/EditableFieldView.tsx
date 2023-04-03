@@ -178,7 +178,6 @@ function EditableFieldView({
               <>
                 {useMarkdown && (
                   <SimpleMdeReact
-                    disabled={isPendingSave}
                     onChange={onChange}
                     options={editorOptions}
                     value={updatedFieldValue}
