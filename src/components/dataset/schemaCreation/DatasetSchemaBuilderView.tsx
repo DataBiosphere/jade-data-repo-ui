@@ -161,10 +161,13 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
     });
   }, [selectedTable, selectedColumn, datasetSchema.tables]);
 
-  const handleSetDatasetSchema = (schema: DatasetSpecificationModel) => {
-    setDatasetSchema(schema);
-    setValue('schema', schema);
-  };
+  const handleSetDatasetSchema = useCallback(
+    (schema: DatasetSpecificationModel) => {
+      setDatasetSchema(schema);
+      setValue('schema', schema);
+    },
+    [setDatasetSchema, setValue],
+  );
 
   // ----------------------------------------
   // Tables
@@ -719,7 +722,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
         // do nothing
       }
     },
-    [setValue, datasetSchema, selectedColumn, selectedTable],
+    [handleSetDatasetSchema, datasetSchema, selectedColumn, selectedTable],
   );
 
   // ----------------------------------------
