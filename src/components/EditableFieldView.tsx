@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import ReactDOMServer from 'react-dom/server';
 import { CustomTheme } from '@mui/material/styles';
-import { Button, IconButton, TextField, Typography } from '@mui/material';
+import { Button, CircularProgress, IconButton, TextField, Typography } from '@mui/material';
 import { SimpleMdeReact } from 'react-simplemde-editor';
 import SimpleMDE from 'easymde';
 import 'easymde/dist/easymde.min.css';
@@ -54,6 +54,7 @@ const UNSET_FIELD_TEXT = '(Empty)';
 
 interface EditableFieldViewProps extends WithStyles<typeof styles> {
   canEdit: boolean;
+  isPendingSave: boolean;
   fieldValue: string | undefined;
   fieldName: string;
   infoButtonText?: string;
@@ -63,6 +64,7 @@ interface EditableFieldViewProps extends WithStyles<typeof styles> {
 
 function EditableFieldView({
   canEdit,
+  isPendingSave,
   classes,
   fieldValue,
   fieldName,
@@ -73,14 +75,14 @@ function EditableFieldView({
   const [hasFieldValueChanged, setHasFieldValueChanged] = useState(false);
   const [updatedFieldValue, setUpdatedFieldValue] = useState(fieldValue);
   const [isEditing, setIsEditing] = useState(false);
-  const [isPendingSave, setIsPendingSave] = useState(false);
 
   const cypressFieldNameFormatted = fieldName.replace(' ', '-').toLowerCase();
 
   useEffect(() => {
-    if (isPendingSave && fieldValue === updatedFieldValue) {
+    const fieldUpdated = fieldValue === updatedFieldValue;
+    const fieldUnset = !(fieldValue || updatedFieldValue);
+    if (fieldUpdated || fieldUnset) {
       setHasFieldValueChanged(false);
-      setIsPendingSave(false);
       setIsEditing(false);
     }
   }, [isPendingSave, fieldValue, updatedFieldValue]);
@@ -103,7 +105,6 @@ function EditableFieldView({
   }, []);
 
   const onSaveClick = useCallback(() => {
-    setIsPendingSave(true);
     updateFieldValueFn(updatedFieldValue);
   }, [updateFieldValueFn, updatedFieldValue]);
 
@@ -133,7 +134,7 @@ function EditableFieldView({
   }, [fieldValue]);
 
   return (
-    <>
+    <div data-cy={`${cypressFieldNameFormatted}-editable-field-view`}>
       <div>
         <Typography
           className={classes.title}
@@ -187,9 +188,10 @@ function EditableFieldView({
                     id="outlined-basic"
                     className={classes.textInput}
                     data-cy={`${cypressFieldNameFormatted}-text-field`}
-                    variant="outlined"
                     defaultValue={updatedFieldValue}
+                    disabled={isPendingSave}
                     onChange={onChangeEvent}
+                    variant="outlined"
                   />
                 )}
                 <Button
@@ -197,17 +199,18 @@ function EditableFieldView({
                   className={classes.saveButton}
                   color="primary"
                   data-cy={`${cypressFieldNameFormatted}-save-button`}
-                  disabled={!hasFieldValueChanged}
+                  disabled={!hasFieldValueChanged || isPendingSave}
                   onClick={onSaveClick}
                   type="button"
                   variant="contained"
                 >
-                  SAVE
+                  {isPendingSave ? <CircularProgress size={25} /> : 'SAVE'}
                 </Button>
                 <Button
                   aria-label={`Cancel ${fieldName} changes`}
                   data-cy={`${cypressFieldNameFormatted}-cancel-button`}
                   onClick={onCancel}
+                  disabled={isPendingSave}
                   color="primary"
                   type="button"
                   variant="outlined"
@@ -220,7 +223,7 @@ function EditableFieldView({
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }
 export default withStyles(styles)(EditableFieldView);

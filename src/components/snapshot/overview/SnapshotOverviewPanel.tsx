@@ -3,7 +3,7 @@ import { Grid, Tab, Tabs, Typography } from '@mui/material';
 import { createStyles, WithStyles, withStyles } from '@mui/styles';
 import moment from 'moment';
 import { CustomTheme } from '@mui/material/styles';
-import { patchSnapshot } from 'actions';
+import { patchSnapshot, updateDuosDataset } from 'actions';
 import EditableFieldView from 'components/EditableFieldView';
 import GoogleSheetExport from 'components/common/overview/GoogleSheetExport';
 import { Link } from 'react-router-dom';
@@ -18,6 +18,7 @@ import { SnapshotModel } from '../../../generated/tdr';
 import { SnapshotRoles } from '../../../constants';
 import { AppDispatch } from '../../../store';
 import JournalEntriesView from '../../JournalEntriesView';
+import { SnapshotPendingSave } from '../../../reducers/snapshot';
 
 const styles = (theme: CustomTheme) =>
   createStyles({
@@ -48,15 +49,16 @@ function a11yProps(index: number) {
 
 interface SnapshotOverviewPanelProps extends WithStyles<typeof styles> {
   dispatch: AppDispatch;
+  pendingSave: SnapshotPendingSave;
   snapshot: SnapshotModel;
   userRoles: Array<string>;
 }
 
 function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
   const [value, setValue] = useState(0);
-  const { classes, dispatch, snapshot, userRoles } = props;
+  const { classes, dispatch, pendingSave, snapshot, userRoles } = props;
   const isSteward = userRoles.includes(SnapshotRoles.STEWARD);
-  const canViewJournalEntries = userRoles.includes(SnapshotRoles.STEWARD);
+  const canViewJournalEntries = isSteward;
   // @ts-ignore
   const sourceDataset = snapshot.source[0].dataset;
   const linkToBq = snapshot.cloudPlatform === 'gcp';
@@ -64,6 +66,12 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
   const handleChange = (_event: SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
+
+  let duosInfoButtonText =
+    'Link with a DUOS dataset ID to automatically sync DAC approved users as snapshot readers.';
+  if (isSteward) {
+    duosInfoButtonText += ' Modifying this link may take several seconds to save.';
+  }
 
   return (
     <div className={classes.root}>
@@ -96,6 +104,7 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
               fieldValue={snapshot.description}
               fieldName="Description"
               canEdit={isSteward}
+              isPendingSave={pendingSave.description}
               updateFieldValueFn={(text: string | undefined) =>
                 dispatch(patchSnapshot(snapshot.id, { description: text }))
               }
@@ -104,11 +113,17 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
           </Grid>
           <Grid item xs={12}>
             <Grid item xs={4}>
-              {renderTextFieldValue(
-                'DUOS ID',
-                snapshot.duosFirecloudGroup?.duosId,
-                'Link with a DUOS dataset ID to automatically add DAC approved users as snapshot readers',
-              )}
+              <EditableFieldView
+                fieldValue={snapshot.duosFirecloudGroup?.duosId}
+                fieldName="DUOS ID"
+                canEdit={isSteward}
+                isPendingSave={pendingSave.duosDataset}
+                updateFieldValueFn={(text: string | undefined) =>
+                  dispatch(updateDuosDataset(snapshot.id, text))
+                }
+                useMarkdown={false}
+                infoButtonText={duosInfoButtonText}
+              />
             </Grid>
           </Grid>
           <Grid item xs={4}>
@@ -150,6 +165,7 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
               fieldValue={snapshot.consentCode}
               fieldName="Consent Code"
               canEdit={isSteward}
+              isPendingSave={pendingSave.consentCode}
               infoButtonText="The Consent Code is used in conjunction with the PHS ID to determined if a user is authorized to view a snapshot based on their RAS Passport."
               updateFieldValueFn={(text: string | undefined) => {
                 dispatch(patchSnapshot(snapshot.id, { consentCode: text }));
