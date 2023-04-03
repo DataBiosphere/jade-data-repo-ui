@@ -67,6 +67,12 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
     setValue(newValue);
   };
 
+  let duosInfoButtonText =
+    'Link with a DUOS dataset ID to automatically sync DAC approved users as snapshot readers.';
+  if (isSteward) {
+    duosInfoButtonText += ' Modifying this link may take several seconds to save.';
+  }
+
   return (
     <div className={classes.root}>
       <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
@@ -116,7 +122,7 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
                   dispatch(updateDuosDataset(snapshot.id, text))
                 }
                 useMarkdown={false}
-                infoButtonText="Link with a DUOS dataset ID to automatically add DAC approved users as snapshot readers"
+                infoButtonText={duosInfoButtonText}
               />
             </Grid>
           </Grid>
