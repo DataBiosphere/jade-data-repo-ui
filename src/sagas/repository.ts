@@ -813,7 +813,7 @@ function* pollQuery(projectId: string, jobId: string): any {
         results: response,
       });
     } else {
-      yield call(delay, 100);
+      yield delay(100);
       yield call(pollQuery, projectId, jobId);
     }
   } catch (err) {
@@ -841,7 +841,7 @@ export function* runQuery({ payload }: any): any {
       yield put({
         type: ActionTypes.POLL_QUERY,
       });
-      yield call(delay, 100);
+      yield delay(100);
       yield call(pollQuery, payload.projectId, jobId);
     }
   } catch (err) {
@@ -906,7 +906,7 @@ export function* countResults({ payload }: any): any {
         resultsCount: parseInt(response.data.rows[0].f[0].v, 10),
       });
     } else {
-      yield call(delay, 100);
+      yield delay(100);
       yield call(pollQuery, payload.projectId, jobId);
     }
   } catch (err) {

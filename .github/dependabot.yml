@@ -11,7 +11,10 @@ updates:
   # newer versions of prettier seem to format the code in a way that is incompatible with eslint (DR-2953)
   - dependency-name: "prettier"
   # newer versions of material ui (MUI) cause our styling to not respect theming or straight up break the UI (DR-2952)
-  - dependency-name: "mui"
+  - dependency-name: "@mui/*"
+    update-types: ["version-update:semver-major"]
+  # the upgrade is a major breaking change that significant requires test refactoring (DR-2954)
+  - dependency-name: "cypress"
+    update-types: ["version-update:semver-major"]
   # new versions prevents unit tests from running (DR-2954)
-  - dependency-name: "cypress/react"
-
+  - dependency-name: "@cypress/react"

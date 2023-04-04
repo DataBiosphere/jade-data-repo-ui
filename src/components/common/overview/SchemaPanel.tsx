@@ -164,6 +164,7 @@ const renderColumnName = (
     if (selected) {
       retVal.push(
         <RadioButtonCheckedOutlined
+          key="radio"
           className={classes.radioIcon}
           color="primary"
           fontSize="small"
@@ -172,6 +173,7 @@ const renderColumnName = (
     } else {
       retVal.push(
         <RadioButtonUncheckedOutlined
+          key="radio"
           className={classes.radioIcon}
           color="primary"
           fontSize="small"
@@ -218,11 +220,13 @@ const renderColumnName = (
       </TerraTooltip>
       <span className={classes.columnLabelIcons}>
         {afterLabelIcons &&
-          afterLabelIcons(table, column).map((i) =>
+          afterLabelIcons(table, column).map((i, index) =>
             _.isEmpty(i.tooltip) ? (
-              i.icon
+              <span key={index}>{i.icon}</span>
             ) : (
-              <TerraTooltip title={i.tooltip || ''}>{i.icon}</TerraTooltip>
+              <TerraTooltip key={index} title={i.tooltip || ''}>
+                {i.icon}
+              </TerraTooltip>
             ),
           )}
       </span>

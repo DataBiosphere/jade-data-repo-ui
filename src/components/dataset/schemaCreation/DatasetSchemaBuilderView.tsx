@@ -161,6 +161,14 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
     });
   }, [selectedTable, selectedColumn, datasetSchema.tables]);
 
+  const handleSetDatasetSchema = useCallback(
+    (schema: DatasetSpecificationModel) => {
+      setDatasetSchema(schema);
+      setValue('schema', schema);
+    },
+    [setDatasetSchema, setValue],
+  );
+
   // ----------------------------------------
   // Tables
   // ----------------------------------------
@@ -177,7 +185,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
       datasetSchema.tables = [];
     }
     const newIndex = datasetSchema.tables.length;
-    setDatasetSchema({
+    handleSetDatasetSchema({
       ...datasetSchema,
       tables: [
         ...datasetSchema.tables,
@@ -205,7 +213,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
           relationship.from.table !== tableName && relationship.to.table !== tableName,
       );
     }
-    setDatasetSchema(newSchema);
+    handleSetDatasetSchema(newSchema);
     handleCloseDetailsMenu();
     setSelectedTable(-1);
     setSelectedColumn(-1);
@@ -214,7 +222,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
   const duplicateTable = () => {
     const copyTable = _.cloneDeep(datasetSchema.tables[selectedTable]);
     datasetSchema.tables.splice(selectedTable + 1, 0, copyTable);
-    setDatasetSchema({ ...datasetSchema });
+    handleSetDatasetSchema({ ...datasetSchema });
     handleCloseDetailsMenu();
   };
 
@@ -223,7 +231,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
     const newName = event.target.value;
     const origName = datasetSchema.tables[selectedTable].name;
     schemaCopy.tables[selectedTable].name = newName;
-    setDatasetSchema(schemaCopy);
+    handleSetDatasetSchema(schemaCopy);
 
     // Update the name if this table has a relationship
     if (schemaCopy.relationships) {
@@ -237,7 +245,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
         return rel;
       });
     }
-    setDatasetSchema(schemaCopy);
+    handleSetDatasetSchema(schemaCopy);
   };
 
   const renderTableDetails = () => (
@@ -296,7 +304,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
       array_of: false,
       required: false,
     });
-    setDatasetSchema(newSchema);
+    handleSetDatasetSchema(newSchema);
     setSelectedColumn(newSchema.tables[selectedTable].columns.length - 1);
   };
 
@@ -315,7 +323,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
           relationship.from.column !== columnName && relationship.to.column !== columnName,
       );
     }
-    setDatasetSchema(newSchema);
+    handleSetDatasetSchema(newSchema);
     handleCloseDetailsMenu();
     setSelectedColumn(-1);
   };
@@ -323,7 +331,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
   const duplicateColumn = () => {
     const copyColumn = _.cloneDeep(datasetSchema.tables[selectedTable].columns[selectedColumn]);
     datasetSchema.tables[selectedTable].columns.splice(selectedColumn + 1, 0, copyColumn);
-    setDatasetSchema({ ...datasetSchema });
+    handleSetDatasetSchema({ ...datasetSchema });
     handleCloseDetailsMenu();
   };
 
@@ -355,7 +363,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
         return rel;
       });
     }
-    setDatasetSchema(schemaCopy);
+    handleSetDatasetSchema(schemaCopy);
   };
 
   const renderColumnDetails = () => (
@@ -433,7 +441,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
                 change,
                 '',
               );
-              setDatasetSchema(schemaCopy);
+              handleSetDatasetSchema(schemaCopy);
             }
           }}
           disableClearable
@@ -471,7 +479,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
               primaryKeyArr.splice(primaryKeyIndex, 1);
             }
             schemaCopy.tables[selectedTable].primaryKey = primaryKeyArr;
-            setDatasetSchema(schemaCopy);
+            handleSetDatasetSchema(schemaCopy);
           }}
         />
 
@@ -492,7 +500,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
           onChange={(_event: any, change: boolean) => {
             const schemaCopy = _.cloneDeep(datasetSchema);
             schemaCopy.tables[selectedTable].columns[selectedColumn].required = change;
-            setDatasetSchema(schemaCopy);
+            handleSetDatasetSchema(schemaCopy);
           }}
         />
 
@@ -513,7 +521,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
           onChange={(_event: any, change: boolean) => {
             const schemaCopy = _.cloneDeep(datasetSchema);
             schemaCopy.tables[selectedTable].columns[selectedColumn].array_of = change;
-            setDatasetSchema(schemaCopy);
+            handleSetDatasetSchema(schemaCopy);
           }}
         />
       </div>
@@ -573,7 +581,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
       schemaCopy.relationships = [];
     }
     schemaCopy.relationships.push(data);
-    setDatasetSchema(schemaCopy);
+    handleSetDatasetSchema(schemaCopy);
     setRelationshipModalOpen(false);
   };
 
@@ -587,7 +595,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
         return rel;
       });
     }
-    setDatasetSchema(schemaCopy);
+    handleSetDatasetSchema(schemaCopy);
     setRelationshipModalOpen(false);
   };
 
@@ -596,7 +604,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
     schemaCopy.relationships = schemaCopy.relationships?.filter(
       (rel: RelationshipModel) => rel.name !== relationshipModalDefaultValues.name,
     );
-    setDatasetSchema(schemaCopy);
+    handleSetDatasetSchema(schemaCopy);
     setRelationshipModalOpen(false);
   };
 
@@ -650,7 +658,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
       swapArrayLocs(schemaCopy.tables, selectedTable, selectedTable - 1);
       setSelectedTable(selectedTable - 1);
     }
-    setDatasetSchema(schemaCopy);
+    handleSetDatasetSchema(schemaCopy);
   };
 
   const moveSelectedDown = () => {
@@ -665,7 +673,7 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
       swapArrayLocs(schemaCopy.tables, selectedTable, selectedTable + 1);
       setSelectedTable(selectedTable + 1);
     }
-    setDatasetSchema(schemaCopy);
+    handleSetDatasetSchema(schemaCopy);
   };
 
   // ----------------------------------------
@@ -709,13 +717,12 @@ const DatasetSchemaBuilderView = withStyles(styles)(({ classes }: any) => {
             }
           }
         }
-        setDatasetSchema(potentialSchema);
-        setValue('schema', potentialSchema);
+        handleSetDatasetSchema(potentialSchema);
       } catch (e) {
         // do nothing
       }
     },
-    [setValue, datasetSchema, selectedColumn, selectedTable],
+    [handleSetDatasetSchema, datasetSchema, selectedColumn, selectedTable],
   );
 
   // ----------------------------------------
