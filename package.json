@@ -31,7 +31,7 @@
     "@mui/icons-material": "5.11.11",
     "@mui/lab": "^5.0.0-alpha.124",
     "@mui/material": "5.10.14",
-    "@mui/styles": "5.10.14",
+    "@mui/styles": "5.11.16",
     "@mui/system": "5.10.14",
     "@reduxjs/toolkit": "^1.9.3",
     "@testing-library/jest-dom": "^5.16.5",
