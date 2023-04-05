@@ -12,7 +12,6 @@ updates:
   - dependency-name: "prettier"
   # newer versions of material ui (MUI) cause our styling to not respect theming or straight up break the UI (DR-2952)
   - dependency-name: "@mui/*"
-    update-types: ["version-update:semver-major"]
   # the upgrade is a major breaking change that significant requires test refactoring (DR-2954)
   - dependency-name: "cypress"
     update-types: ["version-update:semver-major"]
