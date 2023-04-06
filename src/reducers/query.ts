@@ -121,7 +121,7 @@ export default {
           width: columnsByName[column.name]?.width || TABLE_DEFAULT_COLUMN_WIDTH,
         }));
         const queryParams = {
-          totalRows: parseInt(action.payload.totalRowCount, 10),
+          totalRows: parseInt(action.payload.queryResults.data.totalRowCount, 10),
         };
 
         return immutable(state, {
@@ -131,7 +131,7 @@ export default {
           rows: { $set: rows },
           polling: { $set: false },
           delay: { $set: false },
-          resultsCount: { $set: parseInt(action.payload.totalRowCount, 10) },
+          resultsCount: { $set: parseInt(action.payload.queryResults.data.filteredRowCount, 10) },
         });
       },
       [ActionTypes.PAGE_QUERY]: (state) =>

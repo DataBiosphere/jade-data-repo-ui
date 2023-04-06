@@ -47,6 +47,7 @@ type DataViewProps = {
   canLink: boolean;
   classes: ClassNameMap;
   columns: Array<TableColumnType>;
+  filteredRows: number;
   filterStatement: string;
   handleChangeTable: (value: string) => void;
   handleDrawerWidth: (width: number) => void;
@@ -77,6 +78,7 @@ function DataView({
   canLink,
   classes,
   columns,
+  filteredRows,
   filterStatement,
   handleChangeTable,
   handleDrawerWidth,
@@ -153,7 +155,7 @@ function DataView({
           <div className={showPanels ? classes.scrollTableWithPadding : classes.scrollTable}>
             <LightTable
               columns={orderedColumns}
-              filteredCount={totalRows}
+              filteredCount={filteredRows}
               handleEnumeration={handleEnumeration}
               loading={polling}
               noRowsMessage={
@@ -195,7 +197,8 @@ function mapStateToProps(state: TdrState) {
     polling: state.query.polling,
     rows: state.query.rows,
     rowsPerPage: state.query.rowsPerPage,
-    totalRows: state.query.resultsCount,
+    totalRows: state.query.queryParams.totalRows,
+    filteredRows: state.query.resultsCount,
     refreshCnt: state.query.refreshCnt,
   };
 }
