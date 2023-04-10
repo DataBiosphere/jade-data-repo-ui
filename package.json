@@ -44,7 +44,7 @@
     "@types/react-dom": "^18.0.11",
     "@types/react-jss": "^10.0.0",
     "@types/react-virtualized": "^9.21.21",
-    "@uiw/codemirror-theme-okaidia": "^4.19.9",
+    "@uiw/codemirror-theme-okaidia": "^4.19.15",
     "@uiw/react-codemirror": "^4.19.11",
     "animate.css": "^4.1.1",
     "awesome-debounce-promise": "^2.1.0",
