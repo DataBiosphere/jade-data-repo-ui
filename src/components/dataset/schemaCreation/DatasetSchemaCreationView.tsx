@@ -265,8 +265,9 @@ const DatasetSchemaCreationView = withStyles(styles)(({ classes, dispatch, profi
                 <li>
                   <a
                     className={clsx(classes.jadeLink, classes.helpListLink)}
-                    href="#"
+                    href="https://support.terra.bio/hc/en-us/articles/13817865732123-Overview-Your-TDR-dataset-schema"
                     target="_blank"
+                    rel="noopener noreferrer"
                   >
                     Dataset schema overview <OpenInNew className={classes.jadeLinkIcon} />
                   </a>
@@ -274,8 +275,9 @@ const DatasetSchemaCreationView = withStyles(styles)(({ classes, dispatch, profi
                 <li>
                   <a
                     className={clsx(classes.jadeLink, classes.helpListLink)}
-                    href="#"
+                    href="https://support.terra.bio/hc/en-us/articles/4407241197979-How-to-create-dataset-assets-in-TDR"
                     target="_blank"
+                    rel="noopener noreferrer"
                   >
                     How to create dataset assets in TDR
                     <OpenInNew className={classes.jadeLinkIcon} />
