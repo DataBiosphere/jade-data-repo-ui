@@ -9,7 +9,6 @@ import history from 'modules/hist';
 
 import HelpContainer from 'components/help/HelpContainer';
 import HomeView from '../components/HomeView';
-import Features from '../components/common/Features';
 import DatasetDataView from '../components/dataset/data/DatasetDataView';
 import DatasetOverview from '../components/dataset/overview/DatasetOverview';
 import DatasetSchemaCreationView from '../components/dataset/schemaCreation/DatasetSchemaCreationView';
@@ -96,7 +95,6 @@ class Private extends React.Component {
     const { classes } = this.props;
     const locationSplit = history.location.pathname.split('/');
     const selectedTab = `/${locationSplit[1] || 'datasets'}`;
-    Features.initFeatures();
     return (
       <ConnectedRouter history={history}>
         <Router history={history}>
