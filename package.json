@@ -95,7 +95,7 @@
     "strip-markdown": "^5.0.0",
     "symbol-observable": "^4.0.0",
     "tss-react": "^4.8.2",
-    "typescript": "^5.0.2",
+    "typescript": "^5.0.4",
     "validator": "^13.9.0",
     "webfontloader": "^1.6.28",
     "xlsx": "^0.18.5"
