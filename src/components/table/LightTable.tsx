@@ -126,7 +126,6 @@ type LightTableProps<RowType> = {
   classes: ClassNameMap;
   columns: Array<TableColumnType>;
   dispatch: AppDispatch;
-  delay: boolean;
   filteredCount: number;
   handleEnumeration?: (
     rowsPerPage: number,
@@ -154,7 +153,6 @@ type LightTableProps<RowType> = {
 function LightTable({
   classes,
   columns,
-  delay,
   dispatch,
   filteredCount,
   handleEnumeration,
@@ -289,13 +287,7 @@ function LightTable({
     <div>
       {!(loading && !rows?.length) && (
         <Paper className={classes.root}>
-          {loading && (
-            <LoadingSpinner
-              delay={delay}
-              delayMessage="For large datasets, it can take a few minutes to fetch results. Thank you for your patience."
-              className={classes.overlaySpinner}
-            />
-          )}
+          {loading && <LoadingSpinner className={classes.overlaySpinner} />}
           <TableContainer className={classes.tableWrapper}>
             <Table
               className={clsx(classes.table, { [classes.nonResizableTable]: !supportsResize })}
@@ -409,19 +401,13 @@ function LightTable({
           </Dialog>
         </Paper>
       )}
-      {loading && !rows?.length && (
-        <LoadingSpinner
-          delay={delay}
-          delayMessage="For large datasets, it can take a few minutes to fetch results. Thank you for your patience."
-        />
-      )}
+      {loading && !rows?.length && <LoadingSpinner />}
     </div>
   );
 }
 
 function mapStateToProps(state: TdrState) {
   return {
-    delay: state.query.delay,
     orderDirection: state.query.orderDirection,
     orderProperty: state.query.orderProperty,
     page: state.query.page,

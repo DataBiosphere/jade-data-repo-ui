@@ -188,7 +188,6 @@ function DataView({
 function mapStateToProps(state: TdrState) {
   return {
     columns: state.query.columns,
-    delay: state.query.delay,
     error: state.query.error,
     filterData: state.query.filterData,
     filterStatement: state.query.filterStatement,
