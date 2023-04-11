@@ -75,7 +75,8 @@ export default class BigQuery {
   buildSnapshotFilterStatement = (filterMap, dataset) =>
     this.buildFilterStatement(filterMap, dataset);
 
-  buildNewFilterStatement = (filterMap, dataset) => {
+  // TEMPORARY - remove in DR-2993 - build filter statement for TDR API call
+  buildTdrApiFilterStatement = (filterMap, dataset) => {
     if (!_.isEmpty(filterMap)) {
       const tableClauses = [];
 

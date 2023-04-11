@@ -40,7 +40,7 @@ export interface QueryState {
   columns: Array<TableColumnType>;
   errMsg: string;
   error: boolean;
-  newFilterStatement: string;
+  tdrApiFilterStatement: string;
   filterData: any;
   filterStatement: string;
   joinStatement: string;
@@ -68,7 +68,7 @@ export const initialQueryState: QueryState = {
   error: false,
   filterData: {},
   filterStatement: '',
-  newFilterStatement: '',
+  tdrApiFilterStatement: '',
   joinStatement: '',
   pageSize: 0,
   projectId: '',
@@ -156,7 +156,7 @@ export default {
       [ActionTypes.APPLY_FILTERS]: (state, action: any) => {
         const bigquery = new BigQuery();
         const filterStatement = bigquery.buildFilterStatement(action.payload.filters);
-        const newFilterStatement = bigquery.buildNewFilterStatement(action.payload.filters);
+        const tdrApiFilterStatement = bigquery.buildTdrApiFilterStatement(action.payload.filters);
         const joinStatement = bigquery.buildJoinStatement(
           action.payload.filters,
           action.payload.table,
@@ -166,7 +166,7 @@ export default {
           filterData: { $set: action.payload.filters },
           filterStatement: { $set: filterStatement },
           joinStatement: { $set: joinStatement },
-          newFilterStatement: { $set: newFilterStatement },
+          tdrApiFilterStatement: { $set: tdrApiFilterStatement },
           page: { $set: 0 },
         });
       },
@@ -181,7 +181,7 @@ export default {
           columns: { $set: [] },
           filterData: { $set: {} },
           filterStatement: { $set: '' },
-          newFilterStatement: { $set: '' },
+          tdrApiFilterStatement: { $set: '' },
           joinStatement: { $set: '' },
           queryParams: { $set: defaultQueryParams },
           polling: { $set: false },
@@ -194,7 +194,7 @@ export default {
           rows: { $set: [] },
           filterData: { $set: {} },
           filterStatement: { $set: '' },
-          newFilterStatement: { $set: '' },
+          tdrApiFilterStatement: { $set: '' },
           joinStatement: { $set: '' },
           queryParams: { $set: defaultQueryParams },
           polling: { $set: false },

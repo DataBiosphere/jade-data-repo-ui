@@ -779,7 +779,9 @@ export function* previewData({ payload }: any): any {
   const sortDirection =
     queryState.orderDirection === undefined ? '' : `&direction=${queryState.orderDirection}`;
   const filter =
-    queryState.newFilterStatement === undefined ? '' : `&filter=${queryState.newFilterStatement}`;
+    queryState.tdrApiFilterStatement === undefined
+      ? ''
+      : `&filter=${queryState.tdrApiFilterStatement}`;
   const query = `/api/repository/v1/${payload.resourceType}s/${payload.resourceId}/data/${payload.table}?offset=${offset}&limit=${limit}${sort}${sortDirection}${filter}`;
   try {
     const response = yield call(authGet, query);

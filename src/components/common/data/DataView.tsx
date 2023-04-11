@@ -189,7 +189,6 @@ function mapStateToProps(state: TdrState) {
   return {
     columns: state.query.columns,
     error: state.query.error,
-    filterData: state.query.filterData,
     filterStatement: state.query.filterStatement,
     orderDirection: state.query.orderDirection,
     page: state.query.page,

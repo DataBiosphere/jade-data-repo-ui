@@ -26,10 +26,6 @@ import { DatasetIncludeOptions, ResourceType } from '../../../constants';
 type IProps = {
   dataset: DatasetModel;
   dispatch: Dispatch<Action>;
-  filterStatement: string;
-  joinStatement: string;
-  orderDirection: OrderDirectionOptions;
-  orderProperty: string;
   polling: boolean;
   profile: BillingProfileModel;
   snapshotRequest: SnapshotRequest;
@@ -174,14 +170,8 @@ function DatasetDataView({ dataset, dispatch, match, polling, profile, snapshotR
 function mapStateToProps(state: TdrState) {
   return {
     dataset: state.datasets.dataset,
-    filterStatement: state.query.filterStatement,
-    joinStatement: state.query.joinStatement,
-    orderDirection: state.query.orderDirection,
-    orderProperty: state.query.orderProperty,
-    page: state.query.page,
     polling: state.query.polling,
     profile: state.profiles.profile,
-    rowsPerPage: state.query.rowsPerPage,
     snapshotRequest: state.snapshots.snapshotRequest,
   };
 }
