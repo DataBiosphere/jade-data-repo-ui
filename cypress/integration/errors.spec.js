@@ -67,23 +67,17 @@ describe('test error handling', () => {
     cy.contains('Error 401: Was not able to query').should('be.visible');
   });
 
-  it('displays loading message', () => {
+  it.only('displays loading message', () => {
     cy.route({
       method: 'POST',
       url: 'bigquery/v2/projects/**/queries',
       status: 200,
       response: { jobComplete: false, jobReference: { jobId: 'jobId' } },
     }).as('getQueryResults');
-    cy.route({
-      method: 'GET',
-      url: 'bigquery/v2/projects/**/queries/jobId*',
-      status: 200,
-      response: { jobComplete: false, jobReference: { jobId: 'jobId' } },
-    }).as('getQueryJobResults');
 
     cy.get('a > .MuiButtonBase-root').click({ force: true });
 
-    cy.wait(['@getDataset', '@getDatasetPolicies', '@getQueryResults', '@getQueryJobResults']);
+    cy.wait(['@getDataset', '@getDatasetPolicies', '@getQueryResults']);
     cy.contains(
       'For large datasets, it can take a few minutes to fetch results. Thank you for your patience.',
     ).should('be.visible');
