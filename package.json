@@ -2,7 +2,7 @@
   "name": "jade-data-repo-ui",
   "title": "jade-data-repo-ui",
   "description": "Data Repository UI",
-  "version": "0.243.0",
+  "version": "0.245.0",
   "author": "Jade Team <jadeteam@broadinstitute.org>",
   "engines": {
     "node": ">=12.22"
@@ -104,7 +104,7 @@
     "@cypress/react": "5.12.5",
     "@cypress/webpack-dev-server": "^1.8.4",
     "@hot-loader/react-dom": "^17.0.2",
-    "@svgr/webpack": "^6.5.1",
+    "@svgr/webpack": "^7.0.0",
     "@types/lodash": "^4.14.192",
     "@types/react-redux": "^7.1.25",
     "@types/react-router-dom": "^5.3.3",
@@ -117,7 +117,7 @@
     "ajv": "^6.12.6",
     "ajv-legacy": "npm:ajv@^6.12.6",
     "customize-cra": "^1.0.0",
-    "eslint": "^8.37.0",
+    "eslint": "^8.38.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-cypress": "^0.28.0",
     "eslint-config-prettier": "^8.8.0",
