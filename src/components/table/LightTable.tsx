@@ -126,7 +126,6 @@ type LightTableProps<RowType> = {
   classes: ClassNameMap;
   columns: Array<TableColumnType>;
   dispatch: AppDispatch;
-  delay: boolean;
   filteredCount: number;
   handleEnumeration?: (
     rowsPerPage: number,
@@ -142,7 +141,6 @@ type LightTableProps<RowType> = {
   orderProperty: string;
   noRowsMessage: string;
   page: number;
-  pageBQQuery?: () => void;
   rows: Array<RowType>;
   rowsPerPage: number;
   rowKey?: string;
@@ -155,7 +153,6 @@ type LightTableProps<RowType> = {
 function LightTable({
   classes,
   columns,
-  delay,
   dispatch,
   filteredCount,
   handleEnumeration,
@@ -165,7 +162,6 @@ function LightTable({
   orderDirection,
   orderProperty,
   page,
-  pageBQQuery,
   rows,
   rowsPerPage,
   rowKey,
@@ -191,18 +187,10 @@ function LightTable({
   const handleChangeRowsPerPage = async (event: any) => {
     const newRowsPerPage = parseInt(event.target.value, 10);
     await dispatch(changeRowsPerPage(newRowsPerPage));
-    if (pageBQQuery) {
-      pageBQQuery();
-    }
   };
 
-  // Once we no longer need to support BQ Querying,
-  // we can remove the async/await call and pageBQQuery()
   const handleChangePage = async (_event: any, newPage: number) => {
     await dispatch(changePage(newPage));
-    if (pageBQQuery) {
-      pageBQQuery();
-    }
   };
 
   const handleSeeMoreOpen = (values: Array<any>, title: string) => {
@@ -299,13 +287,7 @@ function LightTable({
     <div>
       {!(loading && !rows?.length) && (
         <Paper className={classes.root}>
-          {loading && (
-            <LoadingSpinner
-              delay={delay}
-              delayMessage="For large datasets, it can take a few minutes to fetch results. Thank you for your patience."
-              className={classes.overlaySpinner}
-            />
-          )}
+          {loading && <LoadingSpinner className={classes.overlaySpinner} />}
           <TableContainer className={classes.tableWrapper}>
             <Table
               className={clsx(classes.table, { [classes.nonResizableTable]: !supportsResize })}
@@ -419,19 +401,13 @@ function LightTable({
           </Dialog>
         </Paper>
       )}
-      {loading && !rows?.length && (
-        <LoadingSpinner
-          delay={delay}
-          delayMessage="For large datasets, it can take a few minutes to fetch results. Thank you for your patience."
-        />
-      )}
+      {loading && !rows?.length && <LoadingSpinner />}
     </div>
   );
 }
 
 function mapStateToProps(state: TdrState) {
   return {
-    delay: state.query.delay,
     orderDirection: state.query.orderDirection,
     orderProperty: state.query.orderProperty,
     page: state.query.page,

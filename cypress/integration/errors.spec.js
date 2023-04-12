@@ -19,8 +19,8 @@ describe('test error handling', () => {
 
   it('displays error toasts with error detail', () => {
     cy.route({
-      method: 'POST',
-      url: 'bigquery/v2/projects/**/queries',
+      method: 'GET',
+      url: '/api/repository/v1/datasets/**/data/**',
       status: 401,
       response: {
         message: 'Was not able to query',
@@ -36,8 +36,8 @@ describe('test error handling', () => {
 
   it('displays error toasts with empty error detail', () => {
     cy.route({
-      method: 'POST',
-      url: 'bigquery/v2/projects/**/queries',
+      method: 'GET',
+      url: '/api/repository/v1/datasets/**/data/**',
       status: 401,
       response: {
         message: 'Was not able to query',
@@ -53,8 +53,8 @@ describe('test error handling', () => {
 
   it('displays error toasts with no error detail', () => {
     cy.route({
-      method: 'POST',
-      url: 'bigquery/v2/projects/**/queries',
+      method: 'GET',
+      url: '/api/repository/v1/datasets/**/data/**',
       status: 401,
       response: {
         message: 'Was not able to query',
@@ -65,21 +65,5 @@ describe('test error handling', () => {
 
     cy.wait(['@getDataset', '@getDatasetPolicies', '@getQueryResults']);
     cy.contains('Error 401: Was not able to query').should('be.visible');
-  });
-
-  it.only('displays loading message', () => {
-    cy.route({
-      method: 'POST',
-      url: 'bigquery/v2/projects/**/queries',
-      status: 200,
-      response: { jobComplete: false, jobReference: { jobId: 'jobId' } },
-    }).as('getQueryResults');
-
-    cy.get('a > .MuiButtonBase-root').click({ force: true });
-
-    cy.wait(['@getDataset', '@getDatasetPolicies', '@getQueryResults']);
-    cy.contains(
-      'For large datasets, it can take a few minutes to fetch results. Thank you for your patience.',
-    ).should('be.visible');
   });
 });

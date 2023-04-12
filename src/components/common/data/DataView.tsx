@@ -47,6 +47,7 @@ type DataViewProps = {
   canLink: boolean;
   classes: ClassNameMap;
   columns: Array<TableColumnType>;
+  filteredRows: number;
   filterStatement: string;
   handleChangeTable: (value: string) => void;
   handleDrawerWidth: (width: number) => void;
@@ -58,7 +59,6 @@ type DataViewProps = {
     searchString: string,
     refreshCnt: number,
   ) => void;
-  pageBQQuery?: () => void;
   panels: Array<object>;
   polling: boolean;
   resourceId: string;
@@ -78,11 +78,11 @@ function DataView({
   canLink,
   classes,
   columns,
+  filteredRows,
   filterStatement,
   handleChangeTable,
   handleDrawerWidth,
   handleEnumeration,
-  pageBQQuery,
   panels,
   polling,
   resourceId,
@@ -155,13 +155,12 @@ function DataView({
           <div className={showPanels ? classes.scrollTableWithPadding : classes.scrollTable}>
             <LightTable
               columns={orderedColumns}
-              filteredCount={totalRows}
+              filteredCount={filteredRows}
               handleEnumeration={handleEnumeration}
               loading={polling}
               noRowsMessage={
                 isDatasetFiltered ? 'No rows match your filter' : 'No rows exist in the table'
               }
-              pageBQQuery={pageBQQuery}
               rows={rows}
               searchString={filterStatement}
               tableName={selectedTable.name}
@@ -189,16 +188,15 @@ function DataView({
 function mapStateToProps(state: TdrState) {
   return {
     columns: state.query.columns,
-    delay: state.query.delay,
     error: state.query.error,
-    filterData: state.query.filterData,
     filterStatement: state.query.filterStatement,
     orderDirection: state.query.orderDirection,
     page: state.query.page,
     polling: state.query.polling,
     rows: state.query.rows,
     rowsPerPage: state.query.rowsPerPage,
-    totalRows: state.query.resultsCount,
+    totalRows: state.query.queryParams.totalRows,
+    filteredRows: state.query.resultsCount,
     refreshCnt: state.query.refreshCnt,
   };
 }

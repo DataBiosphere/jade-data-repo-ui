@@ -38,9 +38,9 @@ export type QueryParams = {
 export interface QueryState {
   baseQuery: string;
   columns: Array<TableColumnType>;
-  delay: boolean;
   errMsg: string;
   error: boolean;
+  tdrApiFilterStatement: string;
   filterData: any;
   filterStatement: string;
   joinStatement: string;
@@ -64,11 +64,11 @@ const defaultQueryParams = {
 export const initialQueryState: QueryState = {
   baseQuery: '',
   columns: [],
-  delay: false,
   errMsg: '',
   error: false,
   filterData: {},
   filterStatement: '',
+  tdrApiFilterStatement: '',
   joinStatement: '',
   pageSize: 0,
   projectId: '',
@@ -86,27 +86,6 @@ export const initialQueryState: QueryState = {
 export default {
   query: handleActions(
     {
-      [ActionTypes.RUN_QUERY_SUCCESS]: (state, action: any) => {
-        const bigquery = new BigQuery();
-        const queryResults = action.results.data;
-        const columnsByName = _.keyBy(state.columns, 'name');
-        const columns = bigquery.transformColumns(queryResults, columnsByName);
-        const rows = bigquery.transformRows(queryResults, columns);
-        const queryParams = {
-          pageToken: queryResults.pageToken,
-          projectId: queryResults.jobReference.projectId,
-          jobId: queryResults.jobReference.jobId,
-          totalRows: parseInt(queryResults.totalRows, 10),
-        };
-        return immutable(state, {
-          queryParams: { $set: queryParams },
-          columns: { $set: columns },
-          rows: { $set: rows },
-          polling: { $set: false },
-          delay: { $set: false },
-          page: { $set: 0 },
-        });
-      },
       [ActionTypes.PREVIEW_DATA_SUCCESS]: (state, action: any) => {
         const rows = action.payload.queryResults.data.result;
         const columnsByName = _.keyBy(state.columns, 'name');
@@ -119,7 +98,7 @@ export default {
           width: columnsByName[column.name]?.width || TABLE_DEFAULT_COLUMN_WIDTH,
         }));
         const queryParams = {
-          totalRows: parseInt(action.payload.totalRowCount, 10),
+          totalRows: parseInt(action.payload.queryResults.data.totalRowCount, 10),
         };
 
         return immutable(state, {
@@ -128,49 +107,9 @@ export default {
           columns: { $set: columns },
           rows: { $set: rows },
           polling: { $set: false },
-          delay: { $set: false },
-          resultsCount: { $set: parseInt(action.payload.totalRowCount, 10) },
+          resultsCount: { $set: parseInt(action.payload.queryResults.data.filteredRowCount, 10) },
         });
       },
-      [ActionTypes.PAGE_QUERY]: (state) =>
-        immutable(state, {
-          polling: { $set: true },
-        }),
-      [ActionTypes.PAGE_QUERY_SUCCESS]: (state, action: any) => {
-        const bigquery = new BigQuery();
-        const queryResults = action.results.data;
-
-        const columnsByName = _.keyBy(state.columns, 'name');
-        const columns = bigquery.transformColumns(queryResults, columnsByName);
-        const rows = bigquery.transformRows(queryResults, columns);
-        const queryParams = {
-          pageToken: queryResults.pageToken,
-          projectId: queryResults.jobReference.projectId,
-          jobId: queryResults.jobReference.jobId,
-          totalRows: parseInt(queryResults.totalRows, 10),
-        };
-
-        return immutable(state, {
-          queryParams: { $set: queryParams },
-          columns: { $set: columns },
-          rows: { $set: rows },
-          polling: { $set: false },
-          delay: { $set: false },
-        });
-      },
-      [ActionTypes.RUN_QUERY]: (state) =>
-        immutable(state, {
-          queryParams: { $set: defaultQueryParams },
-          polling: { $set: true },
-        }),
-      [ActionTypes.POLL_QUERY]: (state) =>
-        immutable(state, {
-          delay: { $set: true },
-        }),
-      [ActionTypes.REFRESH_QUERY]: (state) =>
-        immutable(state, {
-          refreshCnt: { $set: state.refreshCnt + 1 },
-        }),
       [ActionTypes.PREVIEW_DATA]: (state, action: any) =>
         immutable(state, {
           error: { $set: false },
@@ -217,6 +156,7 @@ export default {
       [ActionTypes.APPLY_FILTERS]: (state, action: any) => {
         const bigquery = new BigQuery();
         const filterStatement = bigquery.buildFilterStatement(action.payload.filters);
+        const tdrApiFilterStatement = bigquery.buildTdrApiFilterStatement(action.payload.filters);
         const joinStatement = bigquery.buildJoinStatement(
           action.payload.filters,
           action.payload.table,
@@ -226,6 +166,7 @@ export default {
           filterData: { $set: action.payload.filters },
           filterStatement: { $set: filterStatement },
           joinStatement: { $set: joinStatement },
+          tdrApiFilterStatement: { $set: tdrApiFilterStatement },
           page: { $set: 0 },
         });
       },
@@ -240,6 +181,7 @@ export default {
           columns: { $set: [] },
           filterData: { $set: {} },
           filterStatement: { $set: '' },
+          tdrApiFilterStatement: { $set: '' },
           joinStatement: { $set: '' },
           queryParams: { $set: defaultQueryParams },
           polling: { $set: false },
@@ -252,6 +194,7 @@ export default {
           rows: { $set: [] },
           filterData: { $set: {} },
           filterStatement: { $set: '' },
+          tdrApiFilterStatement: { $set: '' },
           joinStatement: { $set: '' },
           queryParams: { $set: defaultQueryParams },
           polling: { $set: false },
