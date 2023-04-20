@@ -1,16 +1,16 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import _ from 'lodash';
 import clsx from 'clsx';
 import { connect } from 'react-redux';
-import { withStyles } from '@mui/styles';
-import PropTypes from 'prop-types';
+import { WithStyles, withStyles,ClassNameMap, createStyles } from '@mui/styles';
+import { CustomTheme } from '@mui/material/styles';
+import { DatasetModel, TableModel, ColumnModel } from 'generated/tdr';
 import {
   Autocomplete,
   Box,
   Typography,
   Button,
   Grid,
-  InputBase,
   ListItem,
   Collapse,
   Divider,
@@ -20,11 +20,11 @@ import { ExpandMore, ExpandLess } from '@mui/icons-material';
 import TerraTooltip from 'components/common/TerraTooltip';
 import DataViewSidebarItem from '../DataViewSidebarItem';
 import DataSidebarPanel from '../DataSidebarPanel';
-import FreetextFilter from '../filter/FreetextFilter';
-
+import { TdrState } from '../../../../../reducers';
 import { applyFilters } from '../../../../../actions';
+import { AppDispatch } from '../../../../../store';
 
-const styles = (theme) => ({
+const styles = (theme: CustomTheme) => createStyles({
   root: {
     margin: theme.spacing(1),
     display: 'flex',
@@ -79,7 +79,7 @@ const styles = (theme) => ({
     paddingBottom: theme.spacing(0.5),
   },
   tooltip: {
-    pointerEvents: 'auto !important',
+    pointerEvents: 'auto !important' as any, // TS doesn't recognize !important as PointerEvent type
     color: 'red',
   },
   button: {
@@ -87,45 +87,55 @@ const styles = (theme) => ({
   },
 });
 
-export class FilterPanel extends React.PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {
-      filterMap: {},
-      searchInput: '',
-      searchStrings: [],
-      openFilter: '',
-    };
-  }
+interface FilterPanelProps extends WithStyles<typeof styles> {
+  canLink: boolean;
+  classes: ClassNameMap;
+  dataset: DatasetModel;
+  dispatch: AppDispatch;
+  filterData: any;
+  filterStatement: string;
+  handleCreateSnapshot: (isSavingSnapshot: boolean) => void;
+  joinStatement: string;
+  open: boolean;
+  selected: string;
+  table: TableModel;
+  token: string;
+}
 
-  static propTypes = {
-    canLink: PropTypes.bool,
-    classes: PropTypes.object,
-    dataset: PropTypes.object,
-    dispatch: PropTypes.func.isRequired,
-    filterData: PropTypes.object,
-    filterStatement: PropTypes.string,
-    handleCreateSnapshot: PropTypes.func,
-    joinStatement: PropTypes.string,
-    open: PropTypes.bool,
-    selected: PropTypes.string,
-    table: PropTypes.object,
-    token: PropTypes.string,
-  };
+type FilterType = {
+  exclude: any;
+  value: any;
+  type: any;
+}
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    const { filterMap } = this.state;
+type FilterMap = any;
 
-    if (!_.isEqual(nextProps.filterData, filterMap)) {
-      this.setState({
-        filterMap: nextProps.filterData,
-      });
-    }
-  }
+function FilterPanel({
+  canLink,
+  classes,
+  dataset,
+  dispatch,
+  filterData,
+  filterStatement,
+  handleCreateSnapshot,
+  joinStatement,
+  open,
+  selected,
+  table,
+  token,
+}: FilterPanelProps) {
+  const [filterMap, setFilterMap] = useState<FilterMap>({});
+  const [searchInput, setSearchInput] = useState('');
+  const [searchStrings, setSearchStrings] = useState<string[]>([]);
+  const [openFilter, setOpenFilter] = useState('');
 
-  handleChange = (column, filter, table) => {
-    const { filterMap } = this.state;
-    const clonedMap = _.cloneDeep(filterMap);
+  useEffect(() => {
+    setFilterMap(filterData)
+
+  }, [filterMap, filterData]);
+
+  const handleChange = (column: string, filter: FilterType, table: string) => {
+    const clonedMap: FilterMap = _.cloneDeep(filterMap);
     if (filter.value == null || filter.value.length === 0) {
       delete clonedMap[table][column];
       if (_.isEmpty(clonedMap[table])) {
@@ -146,81 +156,56 @@ export class FilterPanel extends React.PureComponent {
         },
       };
     }
-    this.setState({ filterMap: clonedMap }, this.handleFilters);
+    setFilterMap(clonedMap);
+    dispatch(applyFilters(clonedMap, tableName, dataset));
   };
 
-  handleFilters = () => {
-    const { dispatch, table, dataset } = this.props;
-    const { filterMap } = this.state;
-    const tableName = table.name;
-    dispatch(applyFilters(filterMap, tableName, dataset));
-  };
-
-  onPaste = (event) => {
+  const onPaste = (event: any) => {
     event.preventDefault();
-    const { searchStrings } = this.state;
     const text = event.clipboardData.getData('text');
     const selections = text.split(/[ ,\n]+/);
-    const nonEmpty = selections.filter((s) => s !== '');
+    const nonEmpty = selections.filter((s: any) => s !== '');
     const updatedValueArray = searchStrings.concat(nonEmpty);
-    this.setState({ searchStrings: updatedValueArray });
+    setSearchStrings(updatedValueArray);
   };
 
-  handleSearchString = (event) => {
-    this.setState({ searchInput: event.target.value });
+  const handleSearchString = (event: any) => {
+    setSearchInput(event.target.value);
   };
 
-  handleReturn = (event) => {
-    const { searchStrings, searchInput } = this.state;
+  const handleReturn = (event: any) => {
     if (event.key === 'Enter' && searchInput) {
-      this.setState({
-        searchInput: '',
-        searchStrings: [...searchStrings, searchInput],
-      });
+      setSearchInput('');
+      setSearchStrings([...searchStrings, searchInput]);
     }
   };
 
-  handleSearchFilter = (event, value) => {
-    this.setState({ searchStrings: value, searchInput: '' });
+  const handleSearchFilter = (_event: any, value: any) => {
+    setSearchStrings(value)
+    setSearchInput('');
   };
 
-  handleOpenFilter = (filter) => {
-    const { openFilter } = this.state;
+  const handleOpenFilter = (filter: any) => {
     if (filter.name === openFilter) {
-      this.setState({ openFilter: '' });
+      setOpenFilter('');
     } else {
-      this.setState({ openFilter: filter.name });
+      setOpenFilter(filter.name);
     }
   };
 
-  render() {
-    const {
-      classes,
-      dataset,
-      filterData,
-      filterStatement,
-      open,
-      table,
-      token,
-      joinStatement,
-      selected,
-      handleCreateSnapshot,
-      canLink,
-    } = this.props;
-    const { searchStrings, searchInput, openFilter } = this.state;
-    const filteredColumns = table.columns
-      .filter((column) => {
-        const stringsToCheck = [...searchStrings, searchInput]
-          .filter((str) => !!str)
-          .map((searchStr) => column.name.includes(searchStr))
-          .filter((hasMatch) => hasMatch);
-        return stringsToCheck.length > 0 || (searchStrings.length === 0 && !searchInput);
-      })
-      .map((column) => ({
-        dataType: column.datatype,
-        arrayOf: column.array_of,
-        name: column.name,
-      }));
+  const filteredColumns = table.columns
+    .filter((column: ColumnModel) => {
+      const stringsToCheck = [...searchStrings, searchInput]
+        .filter((str) => !!str)
+        .map((searchStr) => column.name.includes(searchStr))
+        .filter((hasMatch) => hasMatch);
+      return stringsToCheck.length > 0 || (searchStrings.length === 0 && !searchInput);
+    })
+    .map((column) => ({
+      datatype: column.datatype,
+      array_of: column.array_of,
+      name: column.name,
+    }));
 
     const billingErrorMessage =
       "You cannot create a snapshot because you do not have access to the dataset's billing profile.";
@@ -251,20 +236,20 @@ export class FilterPanel extends React.PureComponent {
                 fullWidth
                 className={classes.input}
                 placeholder="Search filters"
-                onChange={this.handleSearchString}
-                onKeyDown={this.handleReturn}
-                onPaste={this.onPaste}
+                onChange={handleSearchString}
+                onKeyDown={handleReturn}
+                onPaste={onPaste}
                 data-cy="enterEmailBox"
               />
             )}
-            onChange={this.handleSearchFilter}
+            onChange={handleSearchFilter}
             value={searchStrings}
             inputValue={searchInput}
             options={[]}
           />
           {table &&
             table.name &&
-            filteredColumns.map((c) => (
+            filteredColumns.map((c: any) => (
               <div
                 className={clsx({ [classes.highlighted]: c.name === openFilter })}
                 data-cy="filterItem"
@@ -273,7 +258,7 @@ export class FilterPanel extends React.PureComponent {
                 <ListItem
                   button
                   className={classes.filterListItem}
-                  onClick={() => this.handleOpenFilter(c)}
+                  onClick={() => handleOpenFilter(c)}
                 >
                   {c.name}
                   {c.name === openFilter ? <ExpandLess /> : <ExpandMore />}
@@ -289,8 +274,8 @@ export class FilterPanel extends React.PureComponent {
                     filterData={filterData}
                     filterStatement={filterStatement}
                     joinStatement={joinStatement}
-                    handleChange={this.handleChange}
-                    handleFilters={this.handleFilters}
+                    handleChange={handleChange}
+                    handleFilters={handleFilters}
                     tableName={table.name}
                     token={token}
                   />
@@ -306,11 +291,11 @@ export class FilterPanel extends React.PureComponent {
                 variant="contained"
                 color="primary"
                 disableElevation
-                disabled={_.isEmpty(dataset.schema.assets) || !canLink}
+                disabled={_.isEmpty(dataset?.schema?.assets) || !canLink}
                 className={clsx(
                   {
                     [classes.hide]: !open,
-                    [classes.tooltip]: _.isEmpty(dataset.schema.assets),
+                    [classes.tooltip]: _.isEmpty(dataset?.schema?.assets),
                   },
                   classes.button,
                 )}
@@ -325,9 +310,8 @@ export class FilterPanel extends React.PureComponent {
       </div>
     );
   }
-}
 
-function mapStateToProps(state) {
+function mapStateToProps(state: TdrState) {
   return {
     dataset: state.datasets.dataset,
     filterData: state.query.filterData,
