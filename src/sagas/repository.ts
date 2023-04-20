@@ -803,6 +803,36 @@ export function* previewData({ payload }: any): any {
 }
 
 /**
+ * Column Stats
+ */
+
+export function* getColumnStats({ payload }: any): any {
+  const queryState = yield select(getQuery);
+  const filter =
+    queryState.tdrApiFilterStatement === undefined
+      ? ''
+      : `?filter=${queryState.tdrApiFilterStatement}`;
+  const query = `/api/repository/v1/${payload.resourceType}s/${payload.resourceId}/data/${payload.table}/statistics/${payload.column}${filter}`;
+  try {
+    const response = yield call(authGet, query);
+    yield put({
+      type: ActionTypes.COLUMN_STATS_SUCCESS,
+      payload: {
+        queryResults: response,
+        columns: payload.columns,
+        totalRowCount: payload.totalRowCount,
+      },
+    });
+  } catch (err) {
+    showNotification(err);
+    yield put({
+      type: ActionTypes.COLUMN_STATS_FAILURE,
+      payload: err,
+    });
+  }
+}
+
+/**
  * bigquery
  */
 

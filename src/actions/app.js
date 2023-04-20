@@ -263,6 +263,20 @@ export const { previewData } = createActions({
   [ActionTypes.PREVIEW_DATA_FAILURE]: (errMsg) => ({ errMsg }),
 });
 
+export const { columnStats } = createActions({
+  [ActionTypes.COLUMN_STATS]: (resourceType, resourceId, table, column) => ({
+    resourceType,
+    resourceId,
+    table,
+    column,
+  }),
+  [ActionTypes.COLUMN_STATS_SUCCESS]: (queryResults, column) => ({
+    queryResults,
+    column,
+  }),
+  [ActionTypes.COLUMN_STATS_FAILURE]: (errMsg) => ({ errMsg }),
+});
+
 export const { applyFilters } = createActions({
   [ActionTypes.APPLY_FILTERS]: (filters, table, dataset) => ({
     filters,
