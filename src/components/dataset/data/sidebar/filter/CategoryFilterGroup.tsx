@@ -1,24 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import _ from 'lodash';
-import { ColumnModel } from 'generated/tdr';
-import { CategoryFilter } from './CategoryFilter';
-import { ColumnTextValues } from './FilterTypes';
+import CategoryFilter from './CategoryFilter';
+import { ColumnTextValues, CheckBoxType } from './FilterTypes';
 
 type CategoryFilterGroupType = {
-  column: ColumnModel;
   filterMap: any;
   handleChange: (value: ColumnTextValues) => void;
   originalValues: ColumnTextValues,
-  table: string,
   values: ColumnTextValues,
 };
 
 function CategoryFilterGroup({
-  column,
   filterMap,
   handleChange,
   originalValues,
-  table,
   values,
 }: CategoryFilterGroupType) {
   const [selected, setSelected] = useState<ColumnTextValues>({});
@@ -28,11 +23,6 @@ function CategoryFilterGroup({
     const updatedSelected = _.get(filterMap, 'value', {});
     setSelected(updatedSelected);
   }, []);
-
-  type CheckBoxType = {
-    value: any;
-    name: string;
-  }
 
   const handleCategoryChange = (box: CheckBoxType) => {
     const selectedClone: ColumnTextValues = _.clone(selected);
@@ -51,12 +41,10 @@ function CategoryFilterGroup({
       return (
         <div key={name}>
           <CategoryFilter
-            column={column}
             filterMap={filterMap}
             handleChange={handleCategoryChange}
             name={name}
             count={count}
-            table={table}
           />
         </div>
       );

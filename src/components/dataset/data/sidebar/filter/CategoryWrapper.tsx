@@ -82,12 +82,10 @@ function CategoryWrapper({
   if (values && originalValues && _.size(originalValues) <= CHECKBOX_THRESHOLD) {
     return (
       <CategoryFilterGroup
-        column={column}
         filterMap={filterMap}
         handleChange={handleChange}
         originalValues={originalValues}
         values={values}
-        table={tableName}
       />
     );
   }

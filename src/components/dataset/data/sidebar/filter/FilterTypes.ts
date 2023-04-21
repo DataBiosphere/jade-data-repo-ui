@@ -3,3 +3,8 @@ export interface ColumnTextValues {
   }
   
 export type FilterType = any;
+
+export type CheckBoxType = {
+    value: any;
+    name: string;
+  };
