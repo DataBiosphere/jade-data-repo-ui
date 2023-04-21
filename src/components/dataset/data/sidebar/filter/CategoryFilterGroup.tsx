@@ -6,8 +6,8 @@ import { ColumnTextValues, CheckBoxType } from './FilterTypes';
 type CategoryFilterGroupType = {
   filterMap: any;
   handleChange: (value: ColumnTextValues) => void;
-  originalValues: ColumnTextValues,
-  values: ColumnTextValues,
+  originalValues: ColumnTextValues;
+  values: ColumnTextValues;
 };
 
 function CategoryFilterGroup({
@@ -36,21 +36,21 @@ function CategoryFilterGroup({
     handleChange(selectedClone);
   };
 
-    const checkboxes = _.keys(originalValues).map((name) => {
-      const count = parseInt(_.get(values, name, '0'), 10);
-      return (
-        <div key={name}>
-          <CategoryFilter
-            filterMap={filterMap}
-            handleChange={handleCategoryChange}
-            name={name}
-            count={count}
-          />
-        </div>
-      );
-    });
+  const checkboxes = _.keys(originalValues).map((name) => {
+    const count = parseInt(_.get(values, name, '0'), 10);
+    return (
+      <div key={name}>
+        <CategoryFilter
+          filterMap={filterMap}
+          handleChange={handleCategoryChange}
+          name={name}
+          count={count}
+        />
+      </div>
+    );
+  });
 
-    return <div>{checkboxes}</div>;
-  }
+  return <div>{checkboxes}</div>;
+}
 
 export default CategoryFilterGroup;
