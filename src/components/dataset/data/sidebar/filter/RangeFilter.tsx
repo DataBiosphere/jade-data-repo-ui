@@ -74,7 +74,6 @@ function RangeFilter({
           <Grid container={true} spacing={2}>
             <Grid item xs={5}>
               <RangeInput
-                labelName="min"
                 value={value[0]}
                 handleChange={handleMinLabelValue}
                 handleFilters={handleFilters}
@@ -85,7 +84,6 @@ function RangeFilter({
             </Grid>
             <Grid item xs={5}>
               <RangeInput
-                labelName="max"
                 value={value[1]}
                 handleChange={handleMaxLabelValue}
                 handleFilters={handleFilters}
