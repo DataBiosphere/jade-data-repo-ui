@@ -157,7 +157,7 @@ function FilterPanel({
       };
     }
     setFilterMap(clonedMap);
-    dispatch(applyFilters(filterMap, tableName, dataset));
+    dispatch(applyFilters(clonedMap, tableName, dataset));
   };
 
   const onPaste = (event: any) => {

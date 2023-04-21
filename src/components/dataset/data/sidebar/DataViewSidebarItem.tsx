@@ -56,10 +56,9 @@ function DataViewSidebarItem({
 
   useEffect(() => {
     // disable the button when filters have just been applied
-    // const filters = _.get(filterData, [tableName, column.name], {});
-    // setFilterMap(filters);
-    // setDisableButton(true);
-    console.log(filterData);
+    setDisableButton(true);
+    const filters = _.get(filterData, [tableName, column.name], {});
+    setFilterMap(filters);
   }, [filterData, tableName, column.name]);
 
   const handleChange = (value: any) => {
