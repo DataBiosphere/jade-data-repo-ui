@@ -5,6 +5,7 @@ import { Button } from '@mui/material';
 import { DatasetModel, ColumnModel } from 'generated/tdr';
 import RangeFilter from './filter/RangeFilter';
 import CategoryWrapper from './filter/CategoryWrapper';
+import { ColumnTextValues } from './filter/FilterTypes';
 
 const styles = () =>
   createStyles({
@@ -61,7 +62,7 @@ function DataViewSidebarItem({
     setFilterMap(filters);
   }, [filterData, tableName, column.name]);
 
-  const handleChange = (value: any) => {
+  const handleChange = (value: ColumnTextValues) => {
     const type = ['string', 'text'].includes(column?.datatype) ? 'value' : 'range';
     const exclude = _.get(filterMap, 'exclude', false);
     setFilterMap({ value, type, exclude });

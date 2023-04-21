@@ -4,17 +4,16 @@ import BigQuery from 'modules/bigquery';
 import { DatasetModel, ColumnModel } from 'generated/tdr';
 import FreetextFilter from './FreetextFilter';
 import CategoryFilterGroup from './CategoryFilterGroup';
+import { ColumnTextValues } from './FilterTypes';
 
 const CHECKBOX_THRESHOLD = 30;
-
-type FilterType = any;
 
 type CategoryWrapperType = {
   column: ColumnModel;
   dataset: DatasetModel;
   filterMap: any;
   filterStatement: string;
-  handleChange: (column: string, filter: FilterType, table: string) => void;
+  handleChange: (value: ColumnTextValues) => void;
   handleFilters: () => any;
   joinStatement: string;
   tableName: string;
@@ -34,8 +33,8 @@ function CategoryWrapper({
   toggleExclude,
   token,
 }: CategoryWrapperType) {
-  const [values, setValues] = useState({});
-  const [originalValues, setOriginalValues] = useState({});
+  const [values, setValues] = useState<ColumnTextValues>({});
+  const [originalValues, setOriginalValues] = useState<ColumnTextValues>({});
 
   // Update the list of options on component mount and when table changes
   // even if you've filtered from another column, keeps all of the options in list
@@ -68,7 +67,7 @@ function CategoryWrapper({
   };
 
   const transformResponse = (response: any) => {
-    const counts: any = {};
+    const counts: ColumnTextValues = {};
     if (response) {
       // eslint-disable-next-line
       response.map((r: any) => {
