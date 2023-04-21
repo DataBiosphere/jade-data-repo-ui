@@ -3,9 +3,9 @@ import _ from 'lodash';
 import { withStyles, WithStyles, ClassNameMap, createStyles } from '@mui/styles';
 import { Button } from '@mui/material';
 import { DatasetModel, ColumnModel } from 'generated/tdr';
-import RangeFilter from './filter/RangeFilter';
-import CategoryWrapper from './filter/CategoryWrapper';
-import { ColumnTextValues } from './filter/FilterTypes';
+import RangeFilter from './RangeFilter';
+import CategoryWrapper from './CategoryWrapper';
+import { ColumnTextValues } from './FilterTypes';
 
 const styles = () =>
   createStyles({
@@ -22,7 +22,7 @@ type FilterType = {
 };
 type FilterMap = any;
 
-interface DataViewSidebarItemProps extends WithStyles<typeof styles> {
+interface FilterPanelItemProps extends WithStyles<typeof styles> {
   classes: ClassNameMap;
   column: ColumnModel;
   dataset: DatasetModel;
@@ -34,7 +34,7 @@ interface DataViewSidebarItemProps extends WithStyles<typeof styles> {
   token: string;
 }
 
-function DataViewSidebarItem({
+function FilterPanelItem({
   classes,
   column,
   dataset,
@@ -44,7 +44,7 @@ function DataViewSidebarItem({
   joinStatement,
   tableName,
   token,
-}: DataViewSidebarItemProps) {
+}: FilterPanelItemProps) {
   const [filterMap, setFilterMap] = useState<FilterMap>({});
   const [disableButton, setDisableButton] = useState(true);
 
@@ -141,4 +141,4 @@ function DataViewSidebarItem({
   );
 }
 
-export default withStyles(styles)(DataViewSidebarItem);
+export default withStyles(styles)(FilterPanelItem);

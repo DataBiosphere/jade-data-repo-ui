@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import { connect } from 'react-redux';
 import { WithStyles, withStyles, ClassNameMap, createStyles } from '@mui/styles';
 import { CustomTheme } from '@mui/material/styles';
+import { FilterMap, FilterType } from '../filter/FilterTypes';
 import { DatasetModel, TableModel, ColumnModel } from 'generated/tdr';
 import {
   Autocomplete,
@@ -18,7 +19,7 @@ import {
 } from '@mui/material';
 import { ExpandMore, ExpandLess } from '@mui/icons-material';
 import TerraTooltip from 'components/common/TerraTooltip';
-import DataViewSidebarItem from '../DataViewSidebarItem';
+import FilterPanelItem from '../filter/FilterPanelItem';
 import DataSidebarPanel from '../DataSidebarPanel';
 import { TdrState } from '../../../../../reducers';
 import { applyFilters } from '../../../../../actions';
@@ -102,14 +103,6 @@ interface FilterPanelProps extends WithStyles<typeof styles> {
   table: TableModel;
   token: string;
 }
-
-type FilterType = {
-  exclude: any;
-  value: any;
-  type: any;
-};
-
-type FilterMap = any;
 
 function FilterPanel({
   canLink,
@@ -264,7 +257,7 @@ function FilterPanel({
                 {c.name === openFilter ? <ExpandLess /> : <ExpandMore />}
               </ListItem>
               <Collapse in={c.name === openFilter} timeout="auto" className={classes.panelContent}>
-                <DataViewSidebarItem
+                <FilterPanelItem
                   column={c}
                   dataset={dataset}
                   filterData={filterData}

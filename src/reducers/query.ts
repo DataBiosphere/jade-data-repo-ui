@@ -18,6 +18,8 @@ export type TableColumnType = {
   render?: (row: object) => string | JSX.Element;
   width?: number | string;
   cellStyles?: any;
+  values?: any;
+  originalValues?: any;
 };
 
 export type TableRowType = {
@@ -110,12 +112,10 @@ export default {
           resultsCount: { $set: parseInt(action.payload.queryResults.data.filteredRowCount, 10) },
         });
       },
-      [ActionTypes.COLUMN_STATS]: (state, action: any) =>
+      [ActionTypes.COLUMN_STATS]: (state, _action: any) =>
         immutable(state, {
           error: { $set: false },
           polling: { $set: true },
-          orderProperty: { $set: action.payload.orderProperty },
-          orderDirection: { $set: action.payload.orderDirection },
         }),
       [ActionTypes.COLUMN_STATS_FAILURE]: (state, action: any) =>
         immutable(state, {
@@ -124,28 +124,26 @@ export default {
           polling: { $set: false },
         }),
       [ActionTypes.COLUMN_STATS_SUCCESS]: (state, action: any) => {
-        const rows = action.payload.queryResults.data.result;
-        const columnsByName = _.keyBy(state.columns, 'name');
-        const columns = action.payload.columns.map((column: ColumnModel) => ({
-          name: column.name,
-          dataType: column.datatype,
-          arrayOf: column.array_of,
-          allowSort: !column.array_of,
-          allowResize: true,
-          width: columnsByName[column.name]?.width || TABLE_DEFAULT_COLUMN_WIDTH,
-        }));
-        const queryParams = {
-          totalRows: parseInt(action.payload.queryResults.data.totalRowCount, 10),
-        };
-
+        const values = action.payload.queryResults.values;
+        const columnName = action.payload.queryResults.name;
+        // counting on the idea that previewData has already been run
+        // And, therefore state.columns should be populated
+        // We're just adding the column stats onto the exisiting model
+        const _columns = state.columns.map((c: TableColumnType) => 
+          {
+          if (c.name === columnName) {
+            return {... c,
+              values,
+              originalValues: values
+            }
+          }
+          return c;
+        });
         return immutable(state, {
           error: { $set: false },
-          queryParams: { $set: queryParams },
-          columns: { $set: columns },
-          rows: { $set: rows },
+          columns: { $set: _columns },
           polling: { $set: false },
-          resultsCount: { $set: parseInt(action.payload.queryResults.data.filteredRowCount, 10) },
-        });
+        })
       },
       [ActionTypes.PREVIEW_DATA]: (state, action: any) =>
         immutable(state, {
