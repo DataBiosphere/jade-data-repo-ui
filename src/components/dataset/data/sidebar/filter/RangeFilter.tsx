@@ -37,15 +37,17 @@ function RangeFilter({
       const min = response[0].v;
       const max = response[1].v;
 
-      let step = 1;
+      let _step = 1;
       if (max - min <= 1) {
-        step = 0.01;
+        _step = 0.01;
       }
 
       setMinVal(min);
       setMaxVal(max);
-      setStep(step);
+      setStep(_step);
     });
+    // TODO - will fix by moving this to redux
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleSliderValue = (_event: any, newValue: any) => {

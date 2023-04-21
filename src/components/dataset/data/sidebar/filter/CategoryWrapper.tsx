@@ -36,18 +36,6 @@ function CategoryWrapper({
   const [values, setValues] = useState<ColumnTextValues>({});
   const [originalValues, setOriginalValues] = useState<ColumnTextValues>({});
 
-  // Update the list of options on component mount and when table changes
-  // even if you've filtered from another column, keeps all of the options in list
-  useEffect(() => {
-    updateValuesList(true);
-  }, [tableName]);
-
-  // Update list of selected values
-  // We may be able to get rid of this - I think it's tracking the same thing as the filterMap
-  useEffect(() => {
-    updateValuesList(false);
-  }, [column?.array_of, column.name, dataset, filterStatement, joinStatement, token]);
-
   const updateValuesList = (updateOriginalValues: boolean) => {
     if (column?.array_of) {
       setValues({});
@@ -65,6 +53,22 @@ function CategoryWrapper({
         });
     }
   };
+
+  // Update the list of options on component mount and when table changes
+  // even if you've filtered from another column, keeps all of the options in list
+  useEffect(() => {
+    updateValuesList(true);
+    // TODO - will fix by moving this to redux
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tableName]);
+
+  // Update list of selected values
+  // We may be able to get rid of this - I think it's tracking the same thing as the filterMap
+  useEffect(() => {
+    updateValuesList(false);
+    // TODO - will fix by moving this to redux
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [column?.array_of, column.name, dataset, filterStatement, joinStatement, token]);
 
   const transformResponse = (response: any) => {
     const counts: ColumnTextValues = {};

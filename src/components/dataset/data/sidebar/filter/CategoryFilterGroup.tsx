@@ -22,6 +22,8 @@ function CategoryFilterGroup({
     // only update when filterMap is updated
     const updatedSelected = _.get(filterMap, 'value', {});
     setSelected(updatedSelected);
+    // TODO - will fix by moving this to redux
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleCategoryChange = (box: CheckBoxType) => {

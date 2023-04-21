@@ -14,7 +14,7 @@ import { ColumnTextValues } from './FilterTypes';
 type FilterMapType = {
   value: any;
   exclude: any;
-}
+};
 
 interface FreetextFilterType extends WithStyles<typeof styles> {
   classes: ClassNameMap;
@@ -58,15 +58,15 @@ function FreetextFilter({
   const [inputValue, setInputValue] = useState('');
 
   const transformResponse = (response: any) => {
-    const options: any = [];
+    const _options: any = [];
     if (response) {
       // eslint-disable-next-line
       response.map((r: any) => {
         const name = r.f[0].v;
-        options.push(name);
+        _options.push(name);
       });
     }
-    return options;
+    return _options;
   };
 
   const onInputChange = async (event: any) => {
