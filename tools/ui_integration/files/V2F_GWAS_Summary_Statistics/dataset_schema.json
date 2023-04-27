@@ -867,6 +867,114 @@
         "datePartitionOptions": null,
         "intPartitionOptions": null,
         "rowCount": null
+      },
+      {
+        "name": "all_data_types",
+        "columns": [
+          {
+            "name": "variant_id",
+            "datatype": "string",
+            "array_of": false
+          },
+          {
+            "name": "bool_column",
+            "datatype": "boolean"
+          },
+          {
+            "name": "date_column",
+            "datatype": "date"
+          },
+          {
+            "name": "date_array_column",
+            "datatype": "date",
+            "array_of":true
+          },
+          {
+            "name": "date_time_column",
+            "datatype": "datetime"
+          },
+          {
+            "name": "date_time_array_column",
+            "datatype": "datetime",
+            "array_of":true
+          },
+          {
+            "name": "dir_ref_column",
+            "datatype": "dirref"
+          },
+          {
+            "name": "file_ref_column",
+            "datatype": "dirref"
+          },
+          {
+            "name": "float_column",
+            "datatype": "float"
+          },
+          {
+            "name": "float_array_column",
+            "datatype": "float",
+            "array_of": true
+          },
+          {
+            "name": "float64_column",
+            "datatype": "float64"
+          },
+          {
+            "name": "float64_array_column",
+            "datatype": "float64",
+            "array_of": true
+          },
+          {
+            "name": "int_column",
+            "datatype": "integer"
+          },
+          {
+            "name": "int_array_column",
+            "datatype": "integer",
+            "array_of": true
+          },
+          {
+            "name": "int64_column",
+            "datatype": "int64"
+          },
+          {
+            "name": "int64_array_column",
+            "datatype": "int64",
+            "array_of": true
+          },
+          {
+            "name": "numeric_column",
+            "datatype": "numeric"
+          },
+          {
+            "name": "numeric_array_column",
+            "datatype": "numeric",
+            "array_of": true
+          },
+          {
+            "name": "time_column",
+            "datatype": "time"
+          },
+          {
+            "name": "time_array_column",
+            "datatype": "time",
+            "array_of": true
+          },
+          {
+            "name": "timestamp_column",
+            "datatype": "timestamp"
+          },
+          {
+            "name": "timestamp_array_column",
+            "datatype": "timestamp",
+            "array_of": true
+          }
+        ],
+        "primaryKey": ["variant_id"],
+        "partitionMode": "none",
+        "datePartitionOptions": null,
+        "intPartitionOptions": null,
+        "rowCount": null
       }
     ],
     "relationships": [
