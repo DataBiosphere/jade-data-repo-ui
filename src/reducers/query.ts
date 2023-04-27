@@ -96,24 +96,17 @@ export default {
           allowResize: true,
           width: columnsByName[column.name]?.width || TABLE_DEFAULT_COLUMN_WIDTH,
         }));
-        const rows = action.payload.queryResults.data.result.map((row: any) => {
-          let i = 0;
-          const res: any = {};
-          for (i = 0; i < columns.length; i++) {
-            const column = columns[i];
-            let value = row[column.name];
-            if (value !== null) {   
-              if (column.dataType === 'timestamp') {
-                if (column.arrayOf) {
-                  value = value.map((v: number) => new Date(v * 1000).toLocaleString());
-                } else {
-                  value = new Date(value * 1000).toLocaleString();
-                }
-              }
-            }
-            res[column.name] = value;
+        // We only need to re-format row data of type timestamp
+        const timestampColumnNames = columns.map((col: any) => {
+          if(col.dataType === 'timestamp') {
+            return col.name;
           }
-          return res;
+        });
+        const rows = action.payload.queryResults.data.result.map((row: any) => {
+          timestampColumnNames.forEach((timestampCol: string) => {
+            row[timestampCol] = new Date(row[timestampCol] * 1000).toLocaleString();
+          })
+          return row;
         });
         const queryParams = {
           totalRows: parseInt(action.payload.queryResults.data.totalRowCount, 10),
