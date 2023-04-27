@@ -88,7 +88,7 @@ export default {
     {
       [ActionTypes.PREVIEW_DATA_SUCCESS]: (state, action: any) => {
         const columnsByName = _.keyBy(state.columns, 'name');
-        const columns = action.payload.columns.map((column: ColumnModel) => ({
+        const columns: TableColumnType[] = action.payload.columns.map((column: ColumnModel) => ({
           name: column.name,
           dataType: column.datatype,
           arrayOf: column.array_of,
@@ -97,15 +97,20 @@ export default {
           width: columnsByName[column.name]?.width || TABLE_DEFAULT_COLUMN_WIDTH,
         }));
         // We only need to re-format row data of type timestamp
-        const timestampColumnNames = columns.map((col: any) => {
-          if(col.dataType === 'timestamp') {
-            return col.name;
+        const timestampColumns: TableColumnType[] = [];
+        columns.forEach((col: TableColumnType) => {
+          if (col.dataType === 'timestamp') {
+            timestampColumns.push(col);
           }
         });
         const rows = action.payload.queryResults.data.result.map((row: any) => {
-          timestampColumnNames.forEach((timestampCol: string) => {
-            row[timestampCol] = new Date(row[timestampCol] * 1000).toLocaleString();
-          })
+          timestampColumns.forEach((col: TableColumnType) => {
+            if (col.arrayOf) {
+              row[col.name] = row[col.name].map((v: number) => new Date(v * 1000).toLocaleString());
+            } else {
+              row[col.name] = new Date(row[col.name] * 1000).toLocaleString();
+            }
+          });
           return row;
         });
         const queryParams = {

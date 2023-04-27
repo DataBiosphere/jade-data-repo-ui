@@ -44,6 +44,29 @@ describe('test query builder', () => {
     });
   });
 
+  describe('timestamps are displayed as expected', () => {
+    beforeEach(() => {
+      cy.get('[data-cy=selectTable]').click();
+      cy.get('[data-cy=menuItem-all_data_types]').click();
+    });
+
+    it('correctly displays timestamps', () => {
+      // Click the header to make sure we don't sort or trigger an error
+      cy.get('[data-cy=columnHeader-timestamp_column]').scrollIntoView().click({ force: true });
+
+      cy.get('[data-cy=cellValue-timestamp_column-0]').should('have.text', '5/31/2023, 9:02:40 PM');
+
+      cy.get('[data-cy=columnHeader-timestamp_array_column]')
+        .scrollIntoView()
+        .click({ force: true });
+
+      cy.get('[data-cy=cellValue-timestamp_array_column-0]').should(
+        'have.text',
+        '6/1/2023, 9:04:40 PM(1 item)',
+      );
+    });
+  });
+
   describe('test filter panel', () => {
     beforeEach(() => {
       // selects the filter button in the sidebar
