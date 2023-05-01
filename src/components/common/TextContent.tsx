@@ -71,7 +71,11 @@ function TextContent({
           {text}
         </ReactMarkdown>
       )}
-      {!text && <span className={classes.nullValue}>{emptyText}</span>}
+      {!text && (
+        <span data-cy="react-markdown-empty-text" className={classes.nullValue}>
+          {emptyText}
+        </span>
+      )}
     </>
   );
 }

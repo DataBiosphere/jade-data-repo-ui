@@ -111,20 +111,30 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
               useMarkdown={true}
             />
           </Grid>
-          <Grid item xs={12}>
-            <Grid item xs={4}>
-              <EditableFieldView
-                fieldValue={snapshot.duosFirecloudGroup?.duosId}
-                fieldName="DUOS ID"
-                canEdit={isSteward}
-                isPendingSave={pendingSave.duosDataset}
-                updateFieldValueFn={(text: string | undefined) =>
-                  dispatch(updateDuosDataset(snapshot.id, text))
-                }
-                useMarkdown={false}
-                infoButtonText={duosInfoButtonText}
-              />
-            </Grid>
+          <Grid item xs={4}>
+            <EditableFieldView
+              fieldValue={snapshot.duosFirecloudGroup?.duosId}
+              fieldName="DUOS ID"
+              canEdit={isSteward}
+              isPendingSave={pendingSave.duosDataset}
+              updateFieldValueFn={(text: string | undefined) =>
+                dispatch(updateDuosDataset(snapshot.id, text))
+              }
+              useMarkdown={false}
+              infoButtonText={duosInfoButtonText}
+            />
+          </Grid>
+          <Grid item xs={8}>
+            {snapshot.duosFirecloudGroup && (
+              <Grid item xs={4}>
+                <Typography variant="h6">DUOS Users Last Synced:</Typography>
+                <Typography data-cy="snapshot-duos-last-synced">
+                  {snapshot.duosFirecloudGroup.lastSynced
+                    ? moment(snapshot.duosFirecloudGroup.lastSynced).fromNow()
+                    : 'Never'}
+                </Typography>
+              </Grid>
+            )}
           </Grid>
           <Grid item xs={4}>
             <Typography variant="h6">Root dataset:</Typography>
