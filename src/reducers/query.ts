@@ -3,7 +3,7 @@ import _ from 'lodash';
 import immutable from 'immutability-helper';
 import { LOCATION_CHANGE } from 'connected-react-router';
 import BigQuery from 'modules/bigquery';
-import { ColumnModel } from 'generated/tdr';
+import { ColumnModel, TableDataType } from 'generated/tdr';
 
 import { ActionTypes, TABLE_DEFAULT_ROWS_PER_PAGE, TABLE_DEFAULT_COLUMN_WIDTH } from '../constants';
 
@@ -99,7 +99,7 @@ export default {
         // We only need to re-format row data of type timestamp
         const timestampColumns: TableColumnType[] = [];
         columns.forEach((col: TableColumnType) => {
-          if (col.dataType === 'timestamp') {
+          if (col.dataType === TableDataType.Timestamp) {
             timestampColumns.push(col);
           }
         });
