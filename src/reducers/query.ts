@@ -61,6 +61,10 @@ const defaultQueryParams = {
   totalRows: 0,
 };
 
+const formatDate = (value: number) => {
+  return !_.isNil(value) ? new Date(value * 1000).toLocaleString() : null;
+};
+
 export const initialQueryState: QueryState = {
   baseQuery: '',
   columns: [],
@@ -103,12 +107,13 @@ export default {
             timestampColumns.push(col);
           }
         });
+        console.log(action.payload.queryResults.data.result[0]["time_column"]);
         const rows = action.payload.queryResults.data.result.map((row: any) => {
           timestampColumns.forEach((col: TableColumnType) => {
             if (col.arrayOf) {
-              row[col.name] = row[col.name].map((v: number) => new Date(v * 1000).toLocaleString());
+              row[col.name] = row[col.name].map((v: number) => formatDate(v));
             } else {
-              row[col.name] = new Date(row[col.name] * 1000).toLocaleString();
+              row[col.name] = formatDate(row[col.name]);
             }
           });
           return row;

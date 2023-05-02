@@ -212,9 +212,12 @@ function LightTable({
   const handleNullValue = () => <span className={classes.nullValue}>(empty)</span>;
 
   const handleRepeatedValues = (values: Array<string>, columnName: string) => {
-    const cleanValues = values
-      .map((v) => (_.isNil(v) ? handleNullValue() : `${v}`))
-      .map((v, i) => <span key={`val-${i}`}>{v}</span>);
+    const cleanValues =
+      _.isEmpty(values)
+        ? [handleNullValue()]
+        : values
+            .map((v) => (_.isNil(v) ? handleNullValue() : `${v}`))
+            .map((v, i) => <span key={`val-${i}`}>{v}</span>);
 
     const cellValues = cleanValues
       .map((v, i) => [v, <span key={`sep-${i}`}>, </span>])
