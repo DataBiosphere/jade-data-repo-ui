@@ -50,8 +50,6 @@ const styles = (theme: CustomTheme) =>
     },
   } as const);
 
-const UNSET_FIELD_TEXT = '(Empty)';
-
 interface EditableFieldViewProps extends WithStyles<typeof styles> {
   canEdit: boolean;
   isPendingSave: boolean;
@@ -159,7 +157,7 @@ function EditableFieldView({
       </div>
       {!canEdit && (
         <span className={classes.markdownPreview}>
-          <TextContent text={updatedFieldValue} emptyText={UNSET_FIELD_TEXT} markdown={true} />
+          <TextContent text={updatedFieldValue} markdown={true} />
         </span>
       )}
       {canEdit && (
@@ -167,11 +165,7 @@ function EditableFieldView({
           <div className={classes.textInputDiv}>
             {!isEditing && (
               <span className={classes.markdownPreview}>
-                <TextContent
-                  text={updatedFieldValue}
-                  emptyText={UNSET_FIELD_TEXT}
-                  markdown={true}
-                />
+                <TextContent text={updatedFieldValue} markdown={true} />
               </span>
             )}
             {isEditing && (
