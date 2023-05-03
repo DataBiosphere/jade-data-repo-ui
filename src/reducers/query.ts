@@ -62,7 +62,9 @@ const defaultQueryParams = {
 };
 
 const formatDate = (value: number) =>
-  !_.isNil(value) ? new Date(value * 1000).toLocaleString() : null;
+  !_.isNil(value)
+    ? new Date(value * 1000).toLocaleString('en-US', { timeZoneName: 'short' })
+    : null;
 
 export const initialQueryState: QueryState = {
   baseQuery: '',
