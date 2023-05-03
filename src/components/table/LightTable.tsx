@@ -216,11 +216,13 @@ function LightTable({
   );
 
   const handleRepeatedValues = (values: Array<string>, columnName: string) => {
+    /* eslint-disable indent */
     const cleanValues = _.isEmpty(values)
       ? [handleNullValue()]
       : values
           .map((v) => (_.isNil(v) ? handleNullValue() : `${v}`))
           .map((v, i) => <span key={`val-${i}`}>{v}</span>);
+    /* eslint-enable indent */
 
     const cellValues = cleanValues
       .map((v, i) => [v, <span key={`sep-${i}`}>, </span>])
