@@ -791,6 +791,7 @@ export function* previewData({ payload }: any): any {
         queryResults: response,
         columns: payload.columns,
         totalRowCount: payload.totalRowCount,
+        cloudPlatform: payload.cloudPlatform,
       },
     });
   } catch (err) {

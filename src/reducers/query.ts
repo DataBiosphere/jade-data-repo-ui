@@ -3,7 +3,7 @@ import _ from 'lodash';
 import immutable from 'immutability-helper';
 import { LOCATION_CHANGE } from 'connected-react-router';
 import BigQuery from 'modules/bigquery';
-import { ColumnModel, TableDataType } from 'generated/tdr';
+import { CloudPlatform, ColumnModel, TableDataType } from 'generated/tdr';
 
 import { ActionTypes, TABLE_DEFAULT_ROWS_PER_PAGE, TABLE_DEFAULT_COLUMN_WIDTH } from '../constants';
 
@@ -109,13 +109,15 @@ export default {
           }
         });
         const rows = action.payload.queryResults.data.result.map((row: any) => {
-          timestampColumns.forEach((col: TableColumnType) => {
-            if (col.arrayOf) {
-              row[col.name] = row[col.name].map((v: number) => formatDate(v));
-            } else {
-              row[col.name] = formatDate(row[col.name]);
-            }
-          });
+          if (action.payload.cloudPlatform === CloudPlatform.Gcp) {
+            timestampColumns.forEach((col: TableColumnType) => {
+              if (col.arrayOf) {
+                row[col.name] = row[col.name].map((v: number) => formatDate(v));
+              } else {
+                row[col.name] = formatDate(row[col.name]);
+              }
+            });
+          }
           return row;
         });
         const queryParams = {

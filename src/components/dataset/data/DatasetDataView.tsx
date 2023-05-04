@@ -11,7 +11,7 @@ import {
 import { FilterList, Info, People } from '@mui/icons-material';
 import DataView from 'components/common/data/DataView';
 import LoadingSpinner from 'components/common/LoadingSpinner';
-import { BillingProfileModel, DatasetModel, TableModel } from 'generated/tdr';
+import { BillingProfileModel, CloudPlatform, DatasetModel, TableModel } from 'generated/tdr';
 import { Action } from 'redux';
 import { OrderDirectionOptions } from 'reducers/query';
 import { RouteComponentProps } from 'react-router-dom';
@@ -21,7 +21,7 @@ import { SnapshotRequest } from 'reducers/snapshot';
 import DataViewSidebar from './sidebar/DataViewSidebar';
 import InfoView from './sidebar/panels/InfoView';
 import ShareSnapshot from './sidebar/panels/ShareSnapshot';
-import { DatasetIncludeOptions, ResourceType } from '../../../constants';
+import { DatasetIncludeOptions, DefaultCloudPlatform, ResourceType } from '../../../constants';
 
 type IProps = {
   dataset: DatasetModel;
@@ -120,10 +120,14 @@ function DatasetDataView({ dataset, dispatch, match, polling, profile, snapshotR
   ) => {
     const datasetId = match.params.uuid;
     if (datasetLoaded && datasetId === dataset.id && !polling) {
+      const cloudPlatform: CloudPlatform = dataset.storage
+        ? dataset.storage[0].cloudPlatform ?? DefaultCloudPlatform
+        : DefaultCloudPlatform;
       dispatch(
         previewData(
           ResourceType.DATASET,
           dataset.id,
+          cloudPlatform,
           selected,
           selectedTable?.columns,
           selectedTable?.rowCount,

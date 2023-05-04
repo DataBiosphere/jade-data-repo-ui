@@ -242,6 +242,7 @@ export const { previewData } = createActions({
   [ActionTypes.PREVIEW_DATA]: (
     resourceType,
     resourceId,
+    cloudPlatform,
     table,
     columns,
     totalRowCount,
@@ -250,15 +251,17 @@ export const { previewData } = createActions({
   ) => ({
     resourceType,
     resourceId,
+    cloudPlatform,
     table,
     columns,
     totalRowCount,
     orderDirection,
     orderProperty,
   }),
-  [ActionTypes.PREVIEW_DATA_SUCCESS]: (queryResults, columns) => ({
+  [ActionTypes.PREVIEW_DATA_SUCCESS]: (queryResults, columns, cloudPlatform) => ({
     queryResults,
     columns,
+    cloudPlatform,
   }),
   [ActionTypes.PREVIEW_DATA_FAILURE]: (errMsg) => ({ errMsg }),
 });
