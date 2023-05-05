@@ -18,7 +18,16 @@ export type TableColumnType = {
   render?: (row: object) => string | JSX.Element;
   width?: number | string;
   cellStyles?: any;
+  values?: ColumnValueType[]; // ColumnStats
+  originalValues?: ColumnValueType[]; // ColumnStats
 };
+
+export type ColumnValueType = {
+  value: string;
+  count: number;
+}
+
+export interface TableColumnWithStats extends ColumnModel {}
 
 export type TableRowType = {
   name: string;
@@ -94,6 +103,7 @@ export default {
       [ActionTypes.PREVIEW_DATA_SUCCESS]: (state, action: any) => {
         const columnsByName = _.keyBy(state.columns, 'name');
         const columns: TableColumnType[] = action.payload.columns.map((column: ColumnModel) => ({
+          ...columnsByName[column.name],
           name: column.name,
           dataType: column.datatype,
           arrayOf: column.array_of,
@@ -146,6 +156,38 @@ export default {
           errMsg: { $set: action.payload },
           polling: { $set: false },
         }),
+      [ActionTypes.COLUMN_STATS]: (state, _action: any) =>
+        immutable(state, {
+          error: { $set: false },
+          polling: { $set: true },
+        }),
+      [ActionTypes.COLUMN_STATS_FAILURE]: (state, action: any) =>
+        immutable(state, {
+          error: { $set: true },
+          errMsg: { $set: action.payload },
+          polling: { $set: false },
+        }),
+      [ActionTypes.COLUMN_STATS_SUCCESS]: (state, action: any) => {
+        const values = action.payload.queryResults.data.values;
+        const { columnName, updateOriginalValues } = action.payload;
+        // counting on the idea that previewData has already been run
+        // And, therefore state.columns should be populated
+        // We're just adding the column stats onto the exisiting model
+        const _columns = state.columns.map((c: TableColumnType) => {
+          if (c.name === columnName) {
+            if (updateOriginalValues) {
+              return { ...c, values, originalValues: values };
+            }
+            return { ...c, values };
+          }
+          return c;
+        });
+        return immutable(state, {
+          error: { $set: false },
+          columns: { $set: _columns },
+          polling: { $set: false },
+        });
+      },
       [ActionTypes.CHANGE_ROWS_PER_PAGE]: (state, action: any) =>
         immutable(state, {
           page: { $set: 0 },
@@ -160,17 +202,7 @@ export default {
           columns: {
             $set: state.columns.map((column) => {
               if (column.name === action.payload.property) {
-                return {
-                  name: column.name,
-                  dataType: column.dataType,
-                  arrayOf: column.arrayOf,
-                  allowResize: column.allowResize,
-                  allowSort: column.allowSort,
-                  label: column.label,
-                  numeric: column.numeric,
-                  render: column.render,
-                  width: action.payload.width,
-                };
+                return { ...column, width: action.payload.width };
               }
               return column;
             }),
@@ -201,7 +233,7 @@ export default {
         }),
       [ActionTypes.RESET_QUERY]: (state) =>
         immutable(state, {
-          columns: { $set: [] },
+          // columns: { $set: [] },
           filterData: { $set: {} },
           filterStatement: { $set: '' },
           tdrApiFilterStatement: { $set: '' },

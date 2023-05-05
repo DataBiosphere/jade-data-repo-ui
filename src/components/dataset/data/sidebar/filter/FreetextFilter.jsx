@@ -1,13 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-
+import { connect } from 'react-redux';
 import TextField from '@mui/material/TextField';
 import Chip from '@mui/material/Chip';
 import Autocomplete from '@mui/material/Autocomplete';
 import { withStyles } from '@mui/styles';
 import { FormControlLabel, Checkbox, Typography } from '@mui/material';
 import BigQuery from 'modules/bigquery';
+import { getColumnStats } from '../../../../../actions';
+import { ResourceType } from '../../../../../constants';
+import AwesomeDebouncePromise from 'awesome-debounce-promise';
 
 const styles = (theme) => ({
   listItem: {
@@ -24,9 +27,9 @@ export class FreetextFilter extends React.PureComponent {
     super(props);
 
     this.state = {
-      options: [],
+      // options: [],
       inputValue: '',
-      bq: new BigQuery(),
+      // bq: new BigQuery(),
     };
   }
 
@@ -35,53 +38,21 @@ export class FreetextFilter extends React.PureComponent {
     column: PropTypes.object,
     dataset: PropTypes.object,
     filterMap: PropTypes.object,
-    filterStatement: PropTypes.string,
+    // filterStatement: PropTypes.string,
     handleChange: PropTypes.func,
     handleFilters: PropTypes.func,
-    joinStatement: PropTypes.string,
-    options: PropTypes.array,
-    originalValues: PropTypes.object,
+    originalValues: PropTypes.arrayOf(PropTypes.object),
     table: PropTypes.string,
     tableName: PropTypes.string,
     toggleExclude: PropTypes.func,
-    token: PropTypes.string,
-    values: PropTypes.object,
-  };
-
-  transformResponse = (response) => {
-    const options = [];
-    if (response) {
-      // eslint-disable-next-line
-      response.map((r) => {
-        const name = r.f[0].v;
-        options.push(name);
-      });
-    }
-    return options;
+    values: PropTypes.arrayOf(PropTypes.object),
   };
 
   onInputChange = async (event) => {
-    const { column, dataset, tableName, token, filterStatement, joinStatement } = this.props;
-    const { bq } = this.state;
     const { value } = event.target;
 
     this.setState({
       inputValue: value,
-    });
-
-    const response = await bq.getAutocompleteForColumnDebounced(
-      value,
-      column.name,
-      dataset,
-      tableName,
-      token,
-      filterStatement,
-      joinStatement,
-    );
-
-    const transformedResponse = this.transformResponse(response);
-    this.setState({
-      options: transformedResponse,
     });
   };
 
@@ -115,16 +86,17 @@ export class FreetextFilter extends React.PureComponent {
   };
 
   render() {
-    const { classes, filterMap, column, toggleExclude } = this.props;
-    const { options, inputValue } = this.state;
+    const { classes, filterMap, column, toggleExclude, originalValues } = this.props;
+    const { inputValue } = this.state;
     const value = _.get(filterMap, 'value', []);
+    const valueList = originalValues?.map((val) => val.value) ?? [];
 
     return (
       <div>
         <Autocomplete
           multiple
           id={`autocomplete-${column.name}`}
-          options={options}
+          options={valueList}
           // this means the user's choice does not have to match the provided options
           freeSolo={true}
           style={{ width: '100%' }}
@@ -175,4 +147,10 @@ export class FreetextFilter extends React.PureComponent {
   }
 }
 
-export default withStyles(styles)(FreetextFilter);
+function mapStateToProps(state) {
+  return {
+    dataset: state.datasets.dataset,
+  };
+}
+
+export default connect(mapStateToProps)(withStyles(styles)(FreetextFilter));

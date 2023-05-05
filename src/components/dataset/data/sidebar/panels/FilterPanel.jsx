@@ -20,7 +20,6 @@ import { ExpandMore, ExpandLess } from '@mui/icons-material';
 import TerraTooltip from 'components/common/TerraTooltip';
 import DataViewSidebarItem from '../DataViewSidebarItem';
 import DataSidebarPanel from '../DataSidebarPanel';
-import FreetextFilter from '../filter/FreetextFilter';
 
 import { applyFilters } from '../../../../../actions';
 
@@ -101,6 +100,7 @@ export class FilterPanel extends React.PureComponent {
   static propTypes = {
     canLink: PropTypes.bool,
     classes: PropTypes.object,
+    columns: PropTypes.arrayOf(PropTypes.object),
     dataset: PropTypes.object,
     dispatch: PropTypes.func.isRequired,
     filterData: PropTypes.object,
@@ -196,6 +196,7 @@ export class FilterPanel extends React.PureComponent {
   render() {
     const {
       classes,
+      columns,
       dataset,
       filterData,
       filterStatement,
@@ -208,19 +209,13 @@ export class FilterPanel extends React.PureComponent {
       canLink,
     } = this.props;
     const { searchStrings, searchInput, openFilter } = this.state;
-    const filteredColumns = table.columns
-      .filter((column) => {
-        const stringsToCheck = [...searchStrings, searchInput]
-          .filter((str) => !!str)
-          .map((searchStr) => column.name.includes(searchStr))
-          .filter((hasMatch) => hasMatch);
-        return stringsToCheck.length > 0 || (searchStrings.length === 0 && !searchInput);
-      })
-      .map((column) => ({
-        dataType: column.datatype,
-        arrayOf: column.array_of,
-        name: column.name,
-      }));
+    const filteredColumns = columns.filter((column) => {
+      const stringsToCheck = [...searchStrings, searchInput]
+        .filter((str) => !!str)
+        .map((searchStr) => column.name.includes(searchStr))
+        .filter((hasMatch) => hasMatch);
+      return stringsToCheck.length > 0 || (searchStrings.length === 0 && !searchInput);
+    });
 
     const billingErrorMessage =
       "You cannot create a snapshot because you do not have access to the dataset's billing profile.";
@@ -330,6 +325,7 @@ export class FilterPanel extends React.PureComponent {
 function mapStateToProps(state) {
   return {
     dataset: state.datasets.dataset,
+    columns: state.query.columns,
     filterData: state.query.filterData,
     filterStatement: state.query.filterStatement,
     joinStatement: state.query.joinStatement,

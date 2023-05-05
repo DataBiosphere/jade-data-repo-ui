@@ -11,9 +11,11 @@ import {
   select,
   take,
   takeLatest,
+  takeEvery,
   delay,
 } from 'redux-saga/effects';
 import axios, { AxiosResponse } from 'axios';
+import AwesomeDebouncePromise from 'awesome-debounce-promise';
 import moment from 'moment';
 import _ from 'lodash';
 import { RouterRootState } from 'connected-react-router';
@@ -55,6 +57,10 @@ function* getTokenToUse(isDelegateToken: boolean) {
     token = yield select(getToken);
   }
   return token;
+}
+
+export function* authGetDebounced(): any {
+  AwesomeDebouncePromise(authGet, 500);
 }
 
 export function* authGet(url: string, params = {}, isDelegateToken = false) {
@@ -804,6 +810,37 @@ export function* previewData({ payload }: any): any {
 }
 
 /**
+ * Column Stats
+ */
+
+export function* getColumnStats({ payload }: any): any {
+  const { columnName, resourceId, resourceType, tableName, columnDataTypeCategory } = payload;
+  // const queryState = yield select(getQuery);
+  // const filter =
+  //   queryState.tdrApiFilterStatement === undefined
+  //     ? ''
+  //     : `?filter=${queryState.tdrApiFilterStatement}`;
+  const query = `/api/repository/v1/${resourceType}s/${resourceId}/data/${tableName}/statistics/${columnName}`;
+  try {
+    const response = yield call(authGet, query);
+    yield put({
+      type: ActionTypes.COLUMN_STATS_SUCCESS,
+      payload: {
+        queryResults: response,
+        columnName: columnName,
+        columnDataTypeCategory: columnDataTypeCategory,
+      },
+    });
+  } catch (err) {
+    showNotification(err);
+    yield put({
+      type: ActionTypes.COLUMN_STATS_FAILURE,
+      payload: err,
+    });
+  }
+}
+
+/**
  * bigquery
  */
 
@@ -910,6 +947,7 @@ export default function* root() {
     takeLatest(ActionTypes.GET_JOURNAL_ENTRIES, getJournalEntries),
     takeLatest(ActionTypes.PREVIEW_DATA, previewData),
     takeLatest(ActionTypes.GET_FEATURES, getFeatures),
+    takeEvery(ActionTypes.GET_COLUMN_STATS, getColumnStats),
     takeLatest(ActionTypes.GET_BILLING_PROFILES, getBillingProfiles),
     takeLatest(ActionTypes.GET_BILLING_PROFILE_BY_ID, getBillingProfileById),
     takeLatest(ActionTypes.GET_USER_DATASET_ROLES, getUserDatasetRoles),

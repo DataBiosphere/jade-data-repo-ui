@@ -16,24 +16,24 @@ export class RangeFilter extends React.PureComponent {
       step: 1,
     };
 
-    const { column, dataset, tableName, token } = this.props;
-    const bq = new BigQuery();
+    // const { column, dataset, tableName, token } = this.props;
+    // const bq = new BigQuery();
 
-    bq.getColumnMinMax(column.name, dataset, tableName, token).then((response) => {
-      const min = response[0].v;
-      const max = response[1].v;
+    // bq.getColumnMinMax(column.name, dataset, tableName, token).then((response) => {
+    //   const min = response[0].v;
+    //   const max = response[1].v;
 
-      let step = 1;
-      if (max - min <= 1) {
-        step = 0.01;
-      }
+    //   let step = 1;
+    //   if (max - min <= 1) {
+    //     step = 0.01;
+    //   }
 
-      this.setState({
-        minVal: min,
-        maxVal: max,
-        step,
-      });
-    });
+    //   this.setState({
+    //     minVal: min,
+    //     maxVal: max,
+    //     step,
+    //   });
+    // });
   }
 
   static propTypes = {

@@ -96,6 +96,7 @@ export class DataViewSidebarItem extends React.PureComponent {
         case 'text':
           return (
             <CategoryWrapper
+              key={column.name}
               column={column}
               dataset={dataset}
               filterMap={filterMap}
