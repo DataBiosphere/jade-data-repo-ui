@@ -9,69 +9,6 @@ export default class BigQuery {
     this.pageTokenMap = {};
   }
 
-  transformColumns = (queryResults, columnsByName) =>
-    _.get(queryResults, 'schema.fields', []).map((field) => ({
-      name: field.name,
-      dataType: field.type,
-      arrayOf: field.mode === ColumnModes.REPEATED,
-      allowSort: field.mode !== ColumnModes.REPEATED,
-      allowResize: true,
-      width: columnsByName[field.name]?.width || TABLE_DEFAULT_COLUMN_WIDTH,
-    }));
-
-  transformRows = (queryResults, columns) => {
-    const rows = _.get(queryResults, 'rows', []).map((row) =>
-      _.get(row, 'f', []).map((value) => _.get(value, 'v', '')),
-    );
-
-    return rows.map((row) => this.createData(columns, row));
-  };
-
-  createData = (columns, row) => {
-    let i = 0;
-    const res = {};
-    for (i = 0; i < columns.length; i++) {
-      const column = columns[i];
-      const columnId = column.name;
-      const columnType = column.dataType;
-      const columnArrayOf = column.arrayOf;
-
-      let value = row[i];
-      if (value !== null) {
-        // Convert into an array if it's not already one
-        if (columnArrayOf) {
-          value = value.map((v) => v.v);
-        } else {
-          value = [value];
-        }
-
-        if (columnType === 'INTEGER') {
-          value = value.map((v) => this.commaFormatted(v));
-        }
-
-        if (columnType === 'FLOAT') {
-          value = value.map((v) => this.significantDigits(v));
-        }
-
-        if (columnType === 'TIMESTAMP') {
-          value = value.map((v) => new Date(v * 1000).toLocaleString());
-        }
-      }
-      if (columnId === DbColumns.ROW_ID) {
-        res.datarepo_row_id = value;
-      } else {
-        res[columnId] = value;
-      }
-    }
-
-    return res;
-  };
-
-  commaFormatted = (amount) => new Intl.NumberFormat('en-US').format(amount);
-
-  significantDigits = (amount) =>
-    new Intl.NumberFormat('en-US', { maximumSignificantDigits: 3 }).format(amount);
-
   buildSnapshotFilterStatement = (filterMap, dataset) =>
     this.buildFilterStatement(filterMap, dataset);
 

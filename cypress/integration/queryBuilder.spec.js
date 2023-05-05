@@ -44,6 +44,41 @@ describe('test query builder', () => {
     });
   });
 
+  describe('timestamps are displayed as expected', () => {
+    beforeEach(() => {
+      cy.get('[data-cy=selectTable]').click();
+      cy.get('[data-cy=menuItem-all_data_types]').click();
+    });
+
+    it('correctly displays timestamps', () => {
+      // check that singleton timestamp is correctly displayed
+      cy.get('[data-cy=columnHeader-timestamp_column]').scrollIntoView().click({ force: true });
+
+      cy.get('[data-cy=cellValue-timestamp_column-0]').then(($val) => {
+        // dumb check to make sure this is in a timestamp format, not a long value
+        expect($val.text()).to.contain(':');
+        const timestamp = new Date($val.text());
+        const expectedTimestamp = new Date('6/1/2023, 1:02:40 AM UTC');
+        expect(timestamp.toUTCString()).to.eq(expectedTimestamp.toUTCString());
+      });
+
+      // check that array timestamp
+      cy.get('[data-cy=columnHeader-timestamp_array_column]')
+        .scrollIntoView()
+        .click({ force: true });
+
+      cy.get('[data-cy=cellValue-timestamp_array_column-0]').then(($val) => {
+        // dumb check to make sure this is in a timestamp format, not a long value
+        expect($val.text()).to.contain(':');
+        expect($val.text()).to.contain('(1 item)');
+        const timestampWithoutArrayItemList = $val.text().substring(0, $val.text().length - 8);
+        const timestamp = new Date(timestampWithoutArrayItemList);
+        const expectedTimestamp = new Date('6/2/2023, 1:04:40 AM UTC');
+        expect(timestamp.toUTCString()).to.eq(expectedTimestamp.toUTCString());
+      });
+    });
+  });
+
   describe('test filter panel', () => {
     beforeEach(() => {
       // selects the filter button in the sidebar

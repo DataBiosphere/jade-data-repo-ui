@@ -3,7 +3,7 @@ import _ from 'lodash';
 import immutable from 'immutability-helper';
 import { LOCATION_CHANGE } from 'connected-react-router';
 import BigQuery from 'modules/bigquery';
-import { ColumnModel } from 'generated/tdr';
+import { CloudPlatform, ColumnModel, TableDataType } from 'generated/tdr';
 
 import { ActionTypes, TABLE_DEFAULT_ROWS_PER_PAGE, TABLE_DEFAULT_COLUMN_WIDTH } from '../constants';
 
@@ -61,6 +61,11 @@ const defaultQueryParams = {
   totalRows: 0,
 };
 
+const formatDate = (value: number) =>
+  !_.isNil(value)
+    ? new Date(value * 1000).toLocaleString('en-US', { timeZoneName: 'short' })
+    : null;
+
 export const initialQueryState: QueryState = {
   baseQuery: '',
   columns: [],
@@ -87,9 +92,8 @@ export default {
   query: handleActions(
     {
       [ActionTypes.PREVIEW_DATA_SUCCESS]: (state, action: any) => {
-        const rows = action.payload.queryResults.data.result;
         const columnsByName = _.keyBy(state.columns, 'name');
-        const columns = action.payload.columns.map((column: ColumnModel) => ({
+        const columns: TableColumnType[] = action.payload.columns.map((column: ColumnModel) => ({
           name: column.name,
           dataType: column.datatype,
           arrayOf: column.array_of,
@@ -97,6 +101,25 @@ export default {
           allowResize: true,
           width: columnsByName[column.name]?.width || TABLE_DEFAULT_COLUMN_WIDTH,
         }));
+        // We only need to re-format row data of type timestamp
+        const timestampColumns: TableColumnType[] = [];
+        columns.forEach((col: TableColumnType) => {
+          if (col.dataType === TableDataType.Timestamp) {
+            timestampColumns.push(col);
+          }
+        });
+        const rows = action.payload.queryResults.data.result.map((row: any) => {
+          if (action.payload.cloudPlatform === CloudPlatform.Gcp) {
+            timestampColumns.forEach((col: TableColumnType) => {
+              if (col.arrayOf) {
+                row[col.name] = row[col.name].map((v: number) => formatDate(v));
+              } else {
+                row[col.name] = formatDate(row[col.name]);
+              }
+            });
+          }
+          return row;
+        });
         const queryParams = {
           totalRows: parseInt(action.payload.queryResults.data.totalRowCount, 10),
         };

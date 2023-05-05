@@ -9,7 +9,7 @@ import { SnapshotModel, TableModel } from 'generated/tdr';
 import { OrderDirectionOptions } from 'reducers/query';
 import { TdrState } from 'reducers';
 
-import { ResourceType, SnapshotIncludeOptions } from '../../../constants';
+import { DefaultCloudPlatform, ResourceType, SnapshotIncludeOptions } from '../../../constants';
 
 type IProps = {
   dispatch: Dispatch<Action>;
@@ -92,6 +92,7 @@ function SnapshotDataView({ dispatch, match, polling, snapshot }: IProps) {
         previewData(
           ResourceType.SNAPSHOT,
           snapshot.id,
+          snapshot.cloudPlatform ?? DefaultCloudPlatform,
           selected,
           selectedTable?.columns,
           selectedTable?.rowCount,
