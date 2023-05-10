@@ -22,7 +22,13 @@ import { RouterRootState } from 'connected-react-router';
 
 import { showNotification } from 'modules/notifications';
 import { JobModelJobStatusEnum } from 'generated/tdr';
-import { ActionTypes, Status, DbColumns, TABLE_DEFAULT_ROWS_PER_PAGE } from '../constants';
+import {
+  ActionTypes,
+  Status,
+  DbColumns,
+  TABLE_DEFAULT_ROWS_PER_PAGE,
+  ColumnDataTypeCategory,
+} from '../constants';
 import { TdrState } from '../reducers';
 
 /**
@@ -823,14 +829,29 @@ export function* getColumnStats({ payload }: any): any {
   const query = `/api/repository/v1/${resourceType}s/${resourceId}/data/${tableName}/statistics/${columnName}`;
   try {
     const response = yield call(authGet, query);
-    yield put({
-      type: ActionTypes.COLUMN_STATS_SUCCESS,
-      payload: {
-        queryResults: response,
-        columnName: columnName,
-        columnDataTypeCategory: columnDataTypeCategory,
-      },
-    });
+    switch (columnDataTypeCategory) {
+      case ColumnDataTypeCategory.TEXT:
+        yield put({
+          type: ActionTypes.COLUMN_STATS_TEXT_SUCCESS,
+          payload: {
+            queryResults: response,
+            columnName: columnName,
+          },
+        });
+        break;
+      case ColumnDataTypeCategory.NUMERIC:
+        yield put({
+          type: ActionTypes.COLUMN_STATS_NUMERIC_SUCCESS,
+          payload: {
+            queryResults: response,
+            columnName: columnName,
+            columnDataTypeCategory: columnDataTypeCategory,
+          },
+        });
+        break;
+      default:
+        showNotification('ERROR: Invalid column data type category');
+    }
   } catch (err) {
     showNotification(err);
     yield put({

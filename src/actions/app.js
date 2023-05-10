@@ -249,17 +249,20 @@ export const { refreshQuery } = createActions({
 });
 
 export const { columnStats } = createActions({
-  [ActionTypes.COLUMN_STATS]: (resourceType, resourceId, table, column, updateOriginalValues) => ({
+  [ActionTypes.COLUMN_STATS]: (resourceType, resourceId, table, column, columnDataTypeCategory) => ({
     resourceType,
     resourceId,
     table,
     column,
-    updateOriginalValues
+    columnDataTypeCategory
   }),
-  [ActionTypes.COLUMN_STATS_SUCCESS]: (queryResults, columnName, updateOriginalValues) => ({
+  [ActionTypes.COLUMN_STATS_TEXT_SUCCESS]: (queryResults, columnName) => ({
     queryResults,
     columnName,
-    updateOriginalValues
+  }),
+  [ActionTypes.COLUMN_STATS_NUMERIC_SUCCESS]: (queryResults, columnName) => ({
+    queryResults,
+    columnName,
   }),
   [ActionTypes.COLUMN_STATS_FAILURE]: (errMsg) => ({ errMsg }),
 });

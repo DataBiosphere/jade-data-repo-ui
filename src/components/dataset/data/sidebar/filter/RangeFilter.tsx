@@ -1,15 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, Dispatch } from 'react';
 import _ from 'lodash';
-import { DatasetModel, ColumnModel } from 'generated/tdr';
-
-import BigQuery from 'modules/bigquery';
+import { DatasetModel } from 'generated/tdr';
 
 import { Slider, Grid, Typography } from '@mui/material';
 import RangeInput from './RangeInput';
+import { getColumnStats } from 'actions';
+import { ColumnDataTypeCategory, ResourceType } from '../../../../../constants';
+import { Action } from 'redux';
+import { TableColumnType } from 'reducers/query';
+import { connect } from 'react-redux';
 
 type RangeFilterType = {
-  column: ColumnModel;
+  column: TableColumnType;
   dataset: DatasetModel;
+  dispatch: Dispatch<Action>;
   filterMap: any;
   handleChange: (value: any) => void;
   handleFilters: () => void;
@@ -20,56 +24,44 @@ type RangeFilterType = {
 function RangeFilter({
   column,
   dataset,
+  dispatch,
   filterMap,
   handleChange,
   handleFilters,
   tableName,
-  token,
 }: RangeFilterType) {
-  const [minVal, setMinVal] = useState('0');
-  const [maxVal, setMaxVal] = useState('1000');
-  const [step, setStep] = useState(1);
+  const { maxValue, minValue } = column;
+  let step = 1;
+  if (maxValue && minValue && (maxValue - minValue <= 1)) {
+    step = 0.01;
+  }
 
   useEffect(() => {
-    const bq = new BigQuery();
-
-    bq.getColumnMinMax(column.name, dataset, tableName, token).then((response) => {
-      const min = response[0].v;
-      const max = response[1].v;
-
-      let step = 1;
-      if (max - min <= 1) {
-        step = 0.01;
-      }
-
-      setMinVal(min);
-      setMaxVal(max);
-      setStep(step);
-    });
-  }, []);
+    dispatch(getColumnStats(ResourceType.DATASET, dataset.id, tableName, column.name, ColumnDataTypeCategory.NUMERIC));
+  }, [dispatch, dataset.id, tableName, column.name]);
 
   const handleSliderValue = (_event: any, newValue: any) => {
     handleChange(newValue.map(_.toString));
   };
 
   const handleMinLabelValue = (event: any) => {
-    const upper = _.get(filterMap, ['value', 1], maxVal);
+    const upper = _.get(filterMap, ['value', 1], maxValue);
     const newValue = [event.target.value, upper];
 
     handleSliderValue(null, newValue);
   };
 
   const handleMaxLabelValue = (event: any) => {
-    const lower = _.get(filterMap, ['value', 0], minVal);
+    const lower = _.get(filterMap, ['value', 0], minValue);
     const newValue = [lower, event.target.value];
 
     handleSliderValue(null, newValue);
   };
 
-  const value = _.get(filterMap, 'value', [minVal, maxVal]);
+  const value = _.get(filterMap, 'value', [minValue, maxValue]);
   return (
     <div>
-      {maxVal !== null && minVal !== null && (
+      {maxValue && minValue && (
         <>
           <Grid container={true} spacing={2}>
             <Grid item xs={5}>
@@ -96,8 +88,8 @@ function RangeFilter({
               onChange={handleSliderValue}
               valueLabelDisplay="off"
               aria-labelledby="range-slider"
-              min={parseFloat(minVal)}
-              max={parseFloat(maxVal)}
+              min={minValue}
+              max={maxValue}
               step={step}
             />
           </Grid>
@@ -107,4 +99,10 @@ function RangeFilter({
   );
 }
 
-export default RangeFilter;
+function mapStateToProps(state: any) {
+  return {
+    dataset: state.datasets.dataset,
+  };
+}
+
+export default connect(mapStateToProps)(RangeFilter);

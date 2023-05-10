@@ -20,6 +20,8 @@ export type TableColumnType = {
   cellStyles?: any;
   values?: ColumnValueType[]; // ColumnStats
   originalValues?: ColumnValueType[]; // ColumnStats
+  minValue?: number; // ColumnStats
+  maxValue?: number; // ColumnStats
 };
 
 export type ColumnValueType = {
@@ -167,18 +169,32 @@ export default {
           errMsg: { $set: action.payload },
           polling: { $set: false },
         }),
-      [ActionTypes.COLUMN_STATS_SUCCESS]: (state, action: any) => {
+      [ActionTypes.COLUMN_STATS_TEXT_SUCCESS]: (state, action: any) => {
         const values = action.payload.queryResults.data.values;
-        const { columnName, updateOriginalValues } = action.payload;
+        const { columnName } = action.payload;
         // counting on the idea that previewData has already been run
         // And, therefore state.columns should be populated
         // We're just adding the column stats onto the exisiting model
         const _columns = state.columns.map((c: TableColumnType) => {
           if (c.name === columnName) {
-            if (updateOriginalValues) {
+            // TODO: we may be able to ditch the originalValues variable
               return { ...c, values, originalValues: values };
-            }
-            return { ...c, values };
+          }
+          return c;
+        });
+        return immutable(state, {
+          error: { $set: false },
+          columns: { $set: _columns },
+          polling: { $set: false },
+        });
+      },
+      [ActionTypes.COLUMN_STATS_NUMERIC_SUCCESS]: (state, action: any) => {
+        const { minValue, maxValue } = action.payload.queryResults.data;
+        const { columnName } = action.payload;
+        const _columns = state.columns.map((c: TableColumnType) => {
+          if (c.name === columnName) {
+            // TODO: we may be able to ditch the originalValues variable
+              return { ...c, minValue, maxValue };
           }
           return c;
         });
