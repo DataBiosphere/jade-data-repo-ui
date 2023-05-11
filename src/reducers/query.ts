@@ -249,7 +249,7 @@ export default {
         }),
       [ActionTypes.RESET_QUERY]: (state) =>
         immutable(state, {
-          // columns: { $set: [] },
+          columns: { $set: [] },
           filterData: { $set: {} },
           filterStatement: { $set: '' },
           tdrApiFilterStatement: { $set: '' },

@@ -91,9 +91,12 @@ export class DataViewSidebarItem extends React.PureComponent {
     } = this.props;
     const { disableButton, filterMap } = this.state;
     const item = ((datatype) => {
+      console.log(datatype);
       switch (_.toLower(datatype)) {
         case 'string':
         case 'text':
+        case 'dirref':
+        case 'fileref':
           return (
             <CategoryWrapper
               key={column.name}
@@ -111,8 +114,12 @@ export class DataViewSidebarItem extends React.PureComponent {
           );
         case 'float':
         case 'integer':
+        case 'numeric':
+        case 'int64':
+        case 'float64':
           return (
             <RangeFilter
+              key={column.name}
               column={column}
               dataset={dataset}
               filterMap={filterMap}
@@ -123,7 +130,7 @@ export class DataViewSidebarItem extends React.PureComponent {
             />
           );
         default:
-          return <div />;
+          return <div>Filtering on data type '{datatype}' is not yet supported in the UI</div>;
       }
     })(column.dataType);
     return (
@@ -131,6 +138,7 @@ export class DataViewSidebarItem extends React.PureComponent {
         {item}
         <div className={classes.buttonContainer}>
           <Button
+            key={column.name}
             onClick={this.applyFilters}
             variant="contained"
             disableElevation

@@ -32,12 +32,20 @@ function RangeFilter({
 }: RangeFilterType) {
   const { maxValue, minValue } = column;
   let step = 1;
-  if (maxValue && minValue && (maxValue - minValue <= 1)) {
+  if (maxValue && minValue && maxValue - minValue <= 1) {
     step = 0.01;
   }
 
   useEffect(() => {
-    dispatch(getColumnStats(ResourceType.DATASET, dataset.id, tableName, column.name, ColumnDataTypeCategory.NUMERIC));
+    dispatch(
+      getColumnStats(
+        ResourceType.DATASET,
+        dataset.id,
+        tableName,
+        column.name,
+        ColumnDataTypeCategory.NUMERIC,
+      ),
+    );
   }, [dispatch, dataset.id, tableName, column.name]);
 
   const handleSliderValue = (_event: any, newValue: any) => {
