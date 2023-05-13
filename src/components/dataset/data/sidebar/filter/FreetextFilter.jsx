@@ -9,7 +9,6 @@ import { withStyles } from '@mui/styles';
 import { FormControlLabel, Checkbox, Typography } from '@mui/material';
 import BigQuery from 'modules/bigquery';
 import { ResourceType } from '../../../../../constants';
-import AwesomeDebouncePromise from 'awesome-debounce-promise';
 
 const styles = (theme) => ({
   listItem: {
@@ -26,9 +25,7 @@ export class FreetextFilter extends React.PureComponent {
     super(props);
 
     this.state = {
-      // options: [],
       inputValue: '',
-      // bq: new BigQuery(),
     };
   }
 
@@ -37,10 +34,8 @@ export class FreetextFilter extends React.PureComponent {
     column: PropTypes.object,
     dataset: PropTypes.object,
     filterMap: PropTypes.object,
-    // filterStatement: PropTypes.string,
     handleChange: PropTypes.func,
     handleFilters: PropTypes.func,
-    originalValues: PropTypes.arrayOf(PropTypes.object),
     table: PropTypes.string,
     tableName: PropTypes.string,
     toggleExclude: PropTypes.func,
@@ -85,10 +80,10 @@ export class FreetextFilter extends React.PureComponent {
   };
 
   render() {
-    const { classes, filterMap, column, toggleExclude, originalValues } = this.props;
+    const { classes, filterMap, column, toggleExclude, values } = this.props;
     const { inputValue } = this.state;
     const value = _.get(filterMap, 'value', []);
-    const valueList = originalValues?.map((val) => val.value) ?? [];
+    const valueList = values?.map((val) => val.value) ?? [];
 
     return (
       <div>

@@ -2,11 +2,11 @@ import React, { Dispatch, useEffect } from 'react';
 import _ from 'lodash';
 import { connect } from 'react-redux';
 import { Action } from 'redux';
+import { TableColumnType } from 'reducers/query';
 import FreetextFilter from './FreetextFilter';
 import CategoryFilterGroup from './CategoryFilterGroup';
 import { getColumnStats } from '../../../../../actions';
 import { ColumnDataTypeCategory, ResourceType } from '../../../../../constants';
-import { TableColumnType } from 'reducers/query';
 
 const CHECKBOX_THRESHOLD = 30;
 
@@ -15,7 +15,6 @@ type CategoryWrapperProps = {
   dataset: any;
   dispatch: Dispatch<Action>;
   filterMap: any;
-  filterStatement: string;
   handleChange: () => void;
   handleFilters: () => void;
   tableName: string;
@@ -32,20 +31,26 @@ function CategoryWrapper({
   tableName,
   toggleExclude,
 }: CategoryWrapperProps) {
-  
   useEffect(() => {
-    dispatch(getColumnStats(ResourceType.DATASET, dataset.id, tableName, column.name, ColumnDataTypeCategory.TEXT));
+    dispatch(
+      getColumnStats(
+        ResourceType.DATASET,
+        dataset.id,
+        tableName,
+        column.name,
+        ColumnDataTypeCategory.TEXT,
+      ),
+    );
   }, [dispatch, dataset.id, tableName, column.name]);
 
-  const { values, originalValues } = column;
-  if (values && originalValues) {
-    if (_.size(originalValues) <= CHECKBOX_THRESHOLD) {
+  const { values } = column;
+  if (values) {
+    if (_.size(values) <= CHECKBOX_THRESHOLD) {
       return (
         <CategoryFilterGroup
           column={column}
           filterMap={filterMap}
           handleChange={handleChange}
-          originalValues={originalValues}
           values={values}
           table={tableName}
         />
@@ -57,7 +62,6 @@ function CategoryWrapper({
         handleChange={handleChange}
         handleFilters={handleFilters}
         filterMap={filterMap}
-        originalValues={originalValues}
         values={values}
         table={tableName}
         toggleExclude={toggleExclude}

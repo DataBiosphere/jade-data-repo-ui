@@ -280,14 +280,10 @@ export class FilterPanel extends React.PureComponent {
                 >
                   <DataViewSidebarItem
                     column={c}
-                    dataset={dataset}
                     filterData={filterData}
-                    filterStatement={filterStatement}
-                    joinStatement={joinStatement}
                     handleChange={this.handleChange}
                     handleFilters={this.handleFilters}
                     tableName={table.name}
-                    token={token}
                   />
                 </Collapse>
               </div>

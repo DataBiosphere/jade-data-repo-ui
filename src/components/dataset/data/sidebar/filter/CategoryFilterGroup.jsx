@@ -15,7 +15,6 @@ export class CategoryFilterGroup extends React.PureComponent {
     column: PropTypes.object,
     filterMap: PropTypes.object,
     handleChange: PropTypes.func,
-    originalValues: PropTypes.arrayOf(PropTypes.object),
     table: PropTypes.string,
     values: PropTypes.arrayOf(PropTypes.object),
   };
@@ -45,8 +44,8 @@ export class CategoryFilterGroup extends React.PureComponent {
   };
 
   render() {
-    const { column, values, table, originalValues, filterMap } = this.props;
-    const checkboxes = originalValues.map((val) => {
+    const { column, values, table, filterMap } = this.props;
+    const checkboxes = values.map((val) => {
       const count = parseInt(val.count, 10);
       return (
         <div key={val.value}>

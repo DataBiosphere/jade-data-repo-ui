@@ -15,7 +15,6 @@ import {
   delay,
 } from 'redux-saga/effects';
 import axios, { AxiosResponse } from 'axios';
-import AwesomeDebouncePromise from 'awesome-debounce-promise';
 import moment from 'moment';
 import _ from 'lodash';
 import { RouterRootState } from 'connected-react-router';
@@ -63,10 +62,6 @@ function* getTokenToUse(isDelegateToken: boolean) {
     token = yield select(getToken);
   }
   return token;
-}
-
-export function* authGetDebounced(): any {
-  AwesomeDebouncePromise(authGet, 500);
 }
 
 export function* authGet(url: string, params = {}, isDelegateToken = false) {
@@ -821,11 +816,6 @@ export function* previewData({ payload }: any): any {
 
 export function* getColumnStats({ payload }: any): any {
   const { columnName, resourceId, resourceType, tableName, columnDataTypeCategory } = payload;
-  // const queryState = yield select(getQuery);
-  // const filter =
-  //   queryState.tdrApiFilterStatement === undefined
-  //     ? ''
-  //     : `?filter=${queryState.tdrApiFilterStatement}`;
   const query = `/api/repository/v1/${resourceType}s/${resourceId}/data/${tableName}/statistics/${columnName}`;
   try {
     const response = yield call(authGet, query);
@@ -835,7 +825,7 @@ export function* getColumnStats({ payload }: any): any {
           type: ActionTypes.COLUMN_STATS_TEXT_SUCCESS,
           payload: {
             queryResults: response,
-            columnName: columnName,
+            columnName,
           },
         });
         break;
@@ -844,8 +834,8 @@ export function* getColumnStats({ payload }: any): any {
           type: ActionTypes.COLUMN_STATS_NUMERIC_SUCCESS,
           payload: {
             queryResults: response,
-            columnName: columnName,
-            columnDataTypeCategory: columnDataTypeCategory,
+            columnName,
+            columnDataTypeCategory,
           },
         });
         break;

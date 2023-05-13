@@ -19,7 +19,6 @@ export type TableColumnType = {
   width?: number | string;
   cellStyles?: any;
   values?: ColumnValueType[]; // ColumnStats
-  originalValues?: ColumnValueType[]; // ColumnStats
   minValue?: number; // ColumnStats
   maxValue?: number; // ColumnStats
 };
@@ -27,9 +26,7 @@ export type TableColumnType = {
 export type ColumnValueType = {
   value: string;
   count: number;
-}
-
-export interface TableColumnWithStats extends ColumnModel {}
+};
 
 export type TableRowType = {
   name: string;
@@ -158,11 +155,6 @@ export default {
           errMsg: { $set: action.payload },
           polling: { $set: false },
         }),
-      [ActionTypes.COLUMN_STATS]: (state, _action: any) =>
-        immutable(state, {
-          error: { $set: false },
-          polling: { $set: true },
-        }),
       [ActionTypes.COLUMN_STATS_FAILURE]: (state, action: any) =>
         immutable(state, {
           error: { $set: true },
@@ -172,13 +164,13 @@ export default {
       [ActionTypes.COLUMN_STATS_TEXT_SUCCESS]: (state, action: any) => {
         const values = action.payload.queryResults.data.values;
         const { columnName } = action.payload;
+        const { columns } = state;
         // counting on the idea that previewData has already been run
         // And, therefore state.columns should be populated
         // We're just adding the column stats onto the exisiting model
-        const _columns = state.columns.map((c: TableColumnType) => {
+        const _columns = columns.map((c: TableColumnType) => {
           if (c.name === columnName) {
-            // TODO: we may be able to ditch the originalValues variable
-              return { ...c, values, originalValues: values };
+            return { ...c, values };
           }
           return c;
         });
@@ -193,8 +185,7 @@ export default {
         const { columnName } = action.payload;
         const _columns = state.columns.map((c: TableColumnType) => {
           if (c.name === columnName) {
-            // TODO: we may be able to ditch the originalValues variable
-              return { ...c, minValue, maxValue };
+            return { ...c, minValue, maxValue };
           }
           return c;
         });

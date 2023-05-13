@@ -25,13 +25,9 @@ export class DataViewSidebarItem extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object,
     column: PropTypes.object,
-    dataset: PropTypes.object,
     filterData: PropTypes.object,
-    filterStatement: PropTypes.string,
     handleChange: PropTypes.func,
-    joinStatement: PropTypes.string,
     tableName: PropTypes.string,
-    token: PropTypes.string,
   };
 
   // The 'apply' button should only be enabled when there are new changes to be applied.
@@ -80,13 +76,7 @@ export class DataViewSidebarItem extends React.PureComponent {
   };
 
   getFilteringComponent = () => {
-    const {
-      column,
-      dataset,
-      filterStatement,
-      joinStatement,
-      tableName,
-    } = this.props;
+    const { column, tableName } = this.props;
     const { dataType, arrayOf } = column;
     const { filterMap } = this.state;
     if (arrayOf) {
@@ -101,10 +91,7 @@ export class DataViewSidebarItem extends React.PureComponent {
           <CategoryWrapper
             key={column.name}
             column={column}
-            dataset={dataset}
             filterMap={filterMap}
-            filterStatement={filterStatement}
-            joinStatement={joinStatement}
             handleChange={this.handleChange}
             handleFilters={this.applyFilters}
             tableName={tableName}
@@ -120,7 +107,6 @@ export class DataViewSidebarItem extends React.PureComponent {
           <RangeFilter
             key={column.name}
             column={column}
-            dataset={dataset}
             filterMap={filterMap}
             handleChange={this.handleChange}
             handleFilters={this.applyFilters}
@@ -133,10 +119,7 @@ export class DataViewSidebarItem extends React.PureComponent {
   };
 
   render() {
-    const {
-      classes,
-      column,
-    } = this.props;
+    const { classes, column } = this.props;
     const { disableButton } = this.state;
     return (
       <div>

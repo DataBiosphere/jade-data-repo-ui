@@ -1,14 +1,13 @@
 import React, { useEffect, Dispatch } from 'react';
+import { connect } from 'react-redux';
 import _ from 'lodash';
 import { DatasetModel } from 'generated/tdr';
-
 import { Slider, Grid, Typography } from '@mui/material';
-import RangeInput from './RangeInput';
-import { getColumnStats } from 'actions';
-import { ColumnDataTypeCategory, ResourceType } from '../../../../../constants';
-import { Action } from 'redux';
 import { TableColumnType } from 'reducers/query';
-import { connect } from 'react-redux';
+import { getColumnStats } from 'actions';
+import { Action } from 'redux';
+import RangeInput from './RangeInput';
+import { ColumnDataTypeCategory, ResourceType } from '../../../../../constants';
 
 type RangeFilterType = {
   column: TableColumnType;
@@ -18,7 +17,6 @@ type RangeFilterType = {
   handleChange: (value: any) => void;
   handleFilters: () => void;
   tableName: string;
-  token: string;
 };
 
 function RangeFilter({

@@ -162,16 +162,6 @@ export const { addDatasetPolicyMember } = createActions({
   }),
 });
 
-export const { getColumnStats } = createActions({
-  [ActionTypes.GET_COLUMN_STATS]: (resourceType, resourceId, tableName, columnName, columnDataTypeCategory) => ({
-    resourceType,
-    resourceId,
-    tableName,
-    columnName,
-    columnDataTypeCategory,
-  }),
-});
-
 export const { patchDataset } = createActions({
   [ActionTypes.PATCH_DATASET]: (datasetId, data) => ({
     datasetId,
@@ -248,13 +238,19 @@ export const { refreshQuery } = createActions({
   [ActionTypes.REFRESH_QUERY]: () => ({}),
 });
 
-export const { columnStats } = createActions({
-  [ActionTypes.COLUMN_STATS]: (resourceType, resourceId, table, column, columnDataTypeCategory) => ({
+export const { getColumnStats } = createActions({
+  [ActionTypes.GET_COLUMN_STATS]: (
     resourceType,
     resourceId,
-    table,
-    column,
-    columnDataTypeCategory
+    tableName,
+    columnName,
+    columnDataTypeCategory,
+  ) => ({
+    resourceType,
+    resourceId,
+    tableName,
+    columnName,
+    columnDataTypeCategory,
   }),
   [ActionTypes.COLUMN_STATS_TEXT_SUCCESS]: (queryResults, columnName) => ({
     queryResults,
