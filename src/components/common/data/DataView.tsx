@@ -48,7 +48,6 @@ type DataViewProps = {
   classes: ClassNameMap;
   columns: Array<TableColumnType>;
   filteredRows: number;
-  filterStatement: string;
   handleChangeTable: (value: string) => void;
   handleDrawerWidth: (width: number) => void;
   handleEnumeration?: (
@@ -70,6 +69,7 @@ type DataViewProps = {
   selectedTable: TableModel;
   sidebarWidth: number;
   tableNames: Array<string>;
+  tdrApiFilterStatement: string;
   totalRows: number;
   refreshCnt: number;
 };
@@ -79,7 +79,7 @@ function DataView({
   classes,
   columns,
   filteredRows,
-  filterStatement,
+  tdrApiFilterStatement,
   handleChangeTable,
   handleDrawerWidth,
   handleEnumeration,
@@ -99,8 +99,7 @@ function DataView({
 }: DataViewProps) {
   // Can be removed after DR-2483
   const showPanels = panels.length > 0;
-  // Only used for Direct BQ Query
-  const isDatasetFiltered = filterStatement.length > 0;
+  const isDatasetFiltered = tdrApiFilterStatement.length > 0;
 
   const columnsByName = _.keyBy(columns, 'name');
   const orderedColumns: TableColumnType[] = [
@@ -162,7 +161,7 @@ function DataView({
                 isDatasetFiltered ? 'No rows match your filter' : 'No rows exist in the table'
               }
               rows={rows}
-              searchString={filterStatement}
+              searchString={tdrApiFilterStatement}
               tableName={selectedTable.name}
               totalCount={totalRows} // TODO - DR-2663 - instead should display total rows regardless of filtering
               refreshCnt={refreshCnt}
@@ -189,7 +188,7 @@ function mapStateToProps(state: TdrState) {
   return {
     columns: state.query.columns,
     error: state.query.error,
-    filterStatement: state.query.filterStatement,
+    tdrApiFilterStatement: state.query.tdrApiFilterStatement,
     orderDirection: state.query.orderDirection,
     page: state.query.page,
     polling: state.query.polling,

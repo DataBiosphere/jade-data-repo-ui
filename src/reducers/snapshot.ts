@@ -1,6 +1,6 @@
 import { handleActions } from 'redux-actions';
 import immutable from 'immutability-helper';
-import BigQuery from 'modules/bigquery';
+import { buildSnapshotFilterStatement, buildSnapshotJoinStatement } from 'modules/filter';
 import { LOCATION_CHANGE } from 'connected-react-router';
 
 import { ActionTypes } from '../constants';
@@ -264,20 +264,18 @@ export default {
           dialogIsOpen: { $set: action.payload },
         }),
       [ActionTypes.APPLY_FILTERS]: (state, action: any) => {
-        const bigquery = new BigQuery();
         const { filters, dataset } = action.payload;
 
-        const filterStatement = bigquery.buildSnapshotFilterStatement(filters, dataset);
+        const filterStatement = buildSnapshotFilterStatement(filters, dataset);
 
         return immutable(state, {
           snapshotRequest: { filterStatement: { $set: filterStatement } },
         });
       },
       [ActionTypes.SNAPSHOT_CREATE_DETAILS]: (state, action: any) => {
-        const bigquery = new BigQuery();
         const { name, description, assetName, filterData, dataset } = action.payload;
 
-        const joinStatement = bigquery.buildSnapshotJoinStatement(filterData, assetName, dataset);
+        const joinStatement = buildSnapshotJoinStatement(filterData, assetName, dataset);
         const snapshotRequest = {
           ...state.snapshotRequest,
           name,

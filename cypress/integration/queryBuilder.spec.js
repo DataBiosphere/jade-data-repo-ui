@@ -111,7 +111,7 @@ describe('test query builder', () => {
           .invoke('getState')
           .its('snapshots')
           .its('snapshotRequest')
-          .its('filterStatement')
+          .its('tdrApiFilterStatement')
           .should('contain', 'ancestry_specific_meta_analysis.ancestry IN ("EU")');
       });
     });

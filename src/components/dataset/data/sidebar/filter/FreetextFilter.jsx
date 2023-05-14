@@ -7,7 +7,7 @@ import Chip from '@mui/material/Chip';
 import Autocomplete from '@mui/material/Autocomplete';
 import { withStyles } from '@mui/styles';
 import { FormControlLabel, Checkbox, Typography } from '@mui/material';
-import BigQuery from 'modules/bigquery';
+import BigQuery from 'modules/filter';
 import { ResourceType } from '../../../../../constants';
 
 const styles = (theme) => ({
