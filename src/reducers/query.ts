@@ -2,7 +2,7 @@ import { handleActions } from 'redux-actions';
 import _ from 'lodash';
 import immutable from 'immutability-helper';
 import { LOCATION_CHANGE } from 'connected-react-router';
-import { buildJoinStatement, buildTdrApiFilterStatement } from 'modules/filter';
+import { buildJoinStatement, buildfilterStatement } from 'modules/filter';
 import { CloudPlatform, ColumnModel, TableDataType } from 'generated/tdr';
 
 import { ActionTypes, TABLE_DEFAULT_ROWS_PER_PAGE, TABLE_DEFAULT_COLUMN_WIDTH } from '../constants';
@@ -49,7 +49,7 @@ export interface QueryState {
   columns: Array<TableColumnType>;
   errMsg: string;
   error: boolean;
-  tdrApiFilterStatement: string;
+  filterStatement: string;
   joinStatement: string;
   filterData: any;
   pageSize: number;
@@ -82,7 +82,7 @@ export const initialQueryState: QueryState = {
   errMsg: '',
   error: false,
   filterData: {},
-  tdrApiFilterStatement: '',
+  filterStatement: '',
   joinStatement: '',
   pageSize: 0,
   projectId: '',
@@ -220,7 +220,7 @@ export default {
           },
         }),
       [ActionTypes.APPLY_FILTERS]: (state, action: any) => {
-        const tdrApiFilterStatement = buildTdrApiFilterStatement(action.payload.filters);
+        const filterStatement = buildfilterStatement(action.payload.filters);
         const joinStatement = buildJoinStatement(
           action.payload.filters,
           action.payload.table,
@@ -228,7 +228,7 @@ export default {
         );
         return immutable(state, {
           filterData: { $set: action.payload.filters },
-          tdrApiFilterStatement: { $set: tdrApiFilterStatement },
+          filterStatement: { $set: filterStatement },
           joinStatement: { $set: joinStatement },
           page: { $set: 0 },
         });
@@ -243,7 +243,7 @@ export default {
         immutable(state, {
           columns: { $set: [] },
           filterData: { $set: {} },
-          tdrApiFilterStatement: { $set: '' },
+          filterStatement: { $set: '' },
           joinStatement: { $set: '' },
           queryParams: { $set: defaultQueryParams },
           polling: { $set: false },
@@ -255,7 +255,7 @@ export default {
         immutable(state, {
           rows: { $set: [] },
           filterData: { $set: {} },
-          tdrApiFilterStatement: { $set: '' },
+          filterStatement: { $set: '' },
           joinStatement: { $set: '' },
           queryParams: { $set: defaultQueryParams },
           polling: { $set: false },

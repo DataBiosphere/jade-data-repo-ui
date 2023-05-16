@@ -786,9 +786,9 @@ export function* previewData({ payload }: any): any {
   const sortDirection =
     queryState.orderDirection === undefined ? '' : `&direction=${queryState.orderDirection}`;
   const filter =
-    queryState.tdrApiFilterStatement === undefined
+    queryState.filterStatement === undefined
       ? ''
-      : `&filter=${queryState.tdrApiFilterStatement}`;
+      : `&filter=${queryState.filterStatement}`;
   const query = `/api/repository/v1/${payload.resourceType}s/${payload.resourceId}/data/${payload.table}?offset=${offset}&limit=${limit}${sort}${sortDirection}${filter}`;
   try {
     const response = yield call(authGet, query);
@@ -816,8 +816,8 @@ export function* previewData({ payload }: any): any {
 
 export function* getColumnStats({ payload }: any): any {
   const queryState = yield select(getQuery);
-  const { tdrApiFilterStatement } = queryState;
-  const filter = tdrApiFilterStatement === undefined ? '' : `?filter=${tdrApiFilterStatement}`;
+  const { filterStatement } = queryState;
+  const filter = filterStatement === undefined ? '' : `?filter=${filterStatement}`;
   const { columnName, resourceId, resourceType, tableName, columnDataTypeCategory } = payload;
   const query = `/api/repository/v1/${resourceType}s/${resourceId}/data/${tableName}/statistics/${columnName}${filter}`;
   try {

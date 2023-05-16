@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { DatasetModel } from 'generated/tdr';
 
-export const buildTdrApiFilterStatement = (filterMap: any) => {
+export const buildfilterStatement = (filterMap: any) => {
   if (!_.isEmpty(filterMap)) {
     const tableClauses: any = [];
 
@@ -69,7 +69,7 @@ export const buildSnapshotFilterStatement = (filterMap: any, dataset: DatasetMod
   buildFilterStatement(filterMap, dataset);
 
 // TODO - this is potentially still used for the actual snapshot create request
-// Why is this different from tdrApiFilterStatement?
+// Why is this different from filterStatement?
 export const buildFilterStatement = (filterMap: any, dataset: DatasetModel) => {
   if (!_.isEmpty(filterMap)) {
     const tableClauses: any = [];

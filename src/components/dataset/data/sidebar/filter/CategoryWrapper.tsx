@@ -13,7 +13,7 @@ type CategoryWrapperProps = {
   dataset: any;
   dispatch: Dispatch<Action>;
   filterMap: any;
-  tdrApiFilterStatement: string;
+  filterStatement: string;
   handleChange: () => void;
   handleFilters: () => void;
   tableName: string;
@@ -28,7 +28,7 @@ function CategoryWrapper({
   handleChange,
   handleFilters,
   tableName,
-  tdrApiFilterStatement,
+  filterStatement,
   toggleExclude,
 }: CategoryWrapperProps) {
   const refreshColumnStats =
@@ -47,7 +47,7 @@ function CategoryWrapper({
         ),
       );
     }
-  }, [dispatch, dataset.id, tableName, column.name, tdrApiFilterStatement, refreshColumnStats]);
+  }, [dispatch, dataset.id, tableName, column.name, filterStatement, refreshColumnStats]);
 
   const { originalValues, values } = column;
   if (values) {
@@ -82,7 +82,7 @@ function CategoryWrapper({
 function mapStateToProps(state: any) {
   return {
     dataset: state.datasets.dataset,
-    tdrApiFilterStatement: state.query.tdrApiFilterStatement,
+    filterStatement: state.query.filterStatement,
   };
 }
 

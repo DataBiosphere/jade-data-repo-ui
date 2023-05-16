@@ -69,7 +69,7 @@ type DataViewProps = {
   selectedTable: TableModel;
   sidebarWidth: number;
   tableNames: Array<string>;
-  tdrApiFilterStatement: string;
+  filterStatement: string;
   totalRows: number;
   refreshCnt: number;
 };
@@ -79,7 +79,7 @@ function DataView({
   classes,
   columns,
   filteredRows,
-  tdrApiFilterStatement,
+  filterStatement,
   handleChangeTable,
   handleDrawerWidth,
   handleEnumeration,
@@ -99,7 +99,7 @@ function DataView({
 }: DataViewProps) {
   // Can be removed after DR-2483
   const showPanels = panels.length > 0;
-  const isDatasetFiltered = tdrApiFilterStatement.length > 0;
+  const isDatasetFiltered = filterStatement.length > 0;
 
   const columnsByName = _.keyBy(columns, 'name');
   const orderedColumns: TableColumnType[] = [
@@ -161,7 +161,7 @@ function DataView({
                 isDatasetFiltered ? 'No rows match your filter' : 'No rows exist in the table'
               }
               rows={rows}
-              searchString={tdrApiFilterStatement}
+              searchString={filterStatement}
               tableName={selectedTable.name}
               totalCount={totalRows} // TODO - DR-2663 - instead should display total rows regardless of filtering
               refreshCnt={refreshCnt}
@@ -188,7 +188,7 @@ function mapStateToProps(state: TdrState) {
   return {
     columns: state.query.columns,
     error: state.query.error,
-    tdrApiFilterStatement: state.query.tdrApiFilterStatement,
+    filterStatement: state.query.filterStatement,
     orderDirection: state.query.orderDirection,
     page: state.query.page,
     polling: state.query.polling,
