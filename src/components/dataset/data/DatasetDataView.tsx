@@ -63,6 +63,7 @@ function DatasetDataView({ dataset, dispatch, match, polling, profile, snapshotR
     const datasetId = match.params.uuid;
     const loaded = dataset && dataset.schema && dataset.id === datasetId;
     if (loaded) {
+      dispatch(resetQuery());
       const names = dataset.schema?.tables.map((t) => t.name) || [];
       setTableNames(names);
       setSelected(names[0]);
