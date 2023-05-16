@@ -102,6 +102,7 @@ export class FilterPanel extends React.PureComponent {
     classes: PropTypes.object,
     columns: PropTypes.arrayOf(PropTypes.object),
     dataset: PropTypes.object,
+    datasetRowCount: PropTypes.number,
     dispatch: PropTypes.func.isRequired,
     filterData: PropTypes.object,
     handleCreateSnapshot: PropTypes.func,
@@ -196,6 +197,7 @@ export class FilterPanel extends React.PureComponent {
       classes,
       columns,
       dataset,
+      datasetRowCount,
       filterData,
       open,
       table,
@@ -255,6 +257,7 @@ export class FilterPanel extends React.PureComponent {
           />
           {table &&
             table.name &&
+            datasetRowCount > 0 &&
             filteredColumns.map((c) => (
               <div
                 className={clsx({ [classes.highlighted]: c.name === openFilter })}
@@ -284,6 +287,9 @@ export class FilterPanel extends React.PureComponent {
                 </Collapse>
               </div>
             ))}
+          {table && table.name && datasetRowCount == 0 && (
+            <div>We cannot filter this table because it is empty.</div>
+          )}
         </div>
         <div className={clsx(classes.rowTwo, classes.snapshotBtnCntnr)}>
           <Divider />
@@ -317,6 +323,7 @@ export class FilterPanel extends React.PureComponent {
 function mapStateToProps(state) {
   return {
     dataset: state.datasets.dataset,
+    datasetRowCount: state.query.resultsCount,
     columns: state.query.columns,
     filterData: state.query.filterData,
     token: state.user.delegateToken,
