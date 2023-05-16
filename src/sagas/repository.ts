@@ -815,8 +815,11 @@ export function* previewData({ payload }: any): any {
  */
 
 export function* getColumnStats({ payload }: any): any {
+  const queryState = yield select(getQuery);
+  const { tdrApiFilterStatement } = queryState;
+  const filter = tdrApiFilterStatement === undefined ? '' : `?filter=${tdrApiFilterStatement}`;
   const { columnName, resourceId, resourceType, tableName, columnDataTypeCategory } = payload;
-  const query = `/api/repository/v1/${resourceType}s/${resourceId}/data/${tableName}/statistics/${columnName}`;
+  const query = `/api/repository/v1/${resourceType}s/${resourceId}/data/${tableName}/statistics/${columnName}${filter}`;
   try {
     const response = yield call(authGet, query);
     switch (columnDataTypeCategory) {

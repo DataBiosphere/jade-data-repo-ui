@@ -18,6 +18,7 @@ export type TableColumnType = {
   render?: (row: object) => string | JSX.Element;
   width?: number | string;
   cellStyles?: any;
+  originalValues?: ColumnValueType[]; // ColumnStats
   values?: ColumnValueType[]; // ColumnStats
   minValue?: number; // ColumnStats
   maxValue?: number; // ColumnStats
@@ -67,6 +68,8 @@ export interface QueryState {
 const defaultQueryParams = {
   totalRows: 0,
 };
+
+export const CHECKBOX_THRESHOLD = 30;
 
 const formatDate = (value: number) =>
   !_.isNil(value)
@@ -168,6 +171,9 @@ export default {
         // We're just adding the column stats onto the exisiting model
         const _columns = columns.map((c: TableColumnType) => {
           if (c.name === columnName) {
+            if (c.originalValues === undefined && values.length <= CHECKBOX_THRESHOLD) {
+              return { ...c, values, originalValues: values };
+            }
             return { ...c, values };
           }
           return c;
