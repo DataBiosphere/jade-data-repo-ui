@@ -237,7 +237,6 @@ describe('test query builder', () => {
         .invoke('getState')
         .its('snapshots')
         .its('snapshotRequest')
-        .its('joinStatement')
         .should('match', /FROM (V2F_GWAS_Summary_Stats|V2F_GWAS_Summary_Statistics).variant /);
     });
   });

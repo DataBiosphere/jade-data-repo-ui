@@ -2,7 +2,7 @@ import { handleActions } from 'redux-actions';
 import _ from 'lodash';
 import immutable from 'immutability-helper';
 import { LOCATION_CHANGE } from 'connected-react-router';
-import { buildJoinStatement, buildfilterStatement } from 'modules/filter';
+import { buildfilterStatement } from 'modules/filter';
 import { CloudPlatform, ColumnModel, TableDataType } from 'generated/tdr';
 
 import { ActionTypes, TABLE_DEFAULT_ROWS_PER_PAGE, TABLE_DEFAULT_COLUMN_WIDTH } from '../constants';
@@ -50,7 +50,6 @@ export interface QueryState {
   errMsg: string;
   error: boolean;
   filterStatement: string;
-  joinStatement: string;
   filterData: any;
   pageSize: number;
   projectId: string;
@@ -83,7 +82,6 @@ export const initialQueryState: QueryState = {
   error: false,
   filterData: {},
   filterStatement: '',
-  joinStatement: '',
   pageSize: 0,
   projectId: '',
   queryParams: defaultQueryParams,
@@ -221,15 +219,9 @@ export default {
         }),
       [ActionTypes.APPLY_FILTERS]: (state, action: any) => {
         const filterStatement = buildfilterStatement(action.payload.filters);
-        const joinStatement = buildJoinStatement(
-          action.payload.filters,
-          action.payload.table,
-          action.payload.dataset,
-        );
         return immutable(state, {
           filterData: { $set: action.payload.filters },
           filterStatement: { $set: filterStatement },
-          joinStatement: { $set: joinStatement },
           page: { $set: 0 },
         });
       },
@@ -244,7 +236,6 @@ export default {
           columns: { $set: [] },
           filterData: { $set: {} },
           filterStatement: { $set: '' },
-          joinStatement: { $set: '' },
           queryParams: { $set: defaultQueryParams },
           polling: { $set: false },
           page: { $set: 0 },
@@ -256,7 +247,6 @@ export default {
           rows: { $set: [] },
           filterData: { $set: {} },
           filterStatement: { $set: '' },
-          joinStatement: { $set: '' },
           queryParams: { $set: defaultQueryParams },
           polling: { $set: false },
           page: { $set: 0 },

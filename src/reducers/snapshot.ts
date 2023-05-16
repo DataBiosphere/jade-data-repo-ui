@@ -1,6 +1,7 @@
 import { handleActions } from 'redux-actions';
 import immutable from 'immutability-helper';
-import { buildSnapshotFilterStatement, buildSnapshotJoinStatement } from 'modules/filter';
+import { buildSnapshotFilterStatement } from 'modules/filter';
+import { buildSnapshotJoinStatement } from 'modules/snapshotByQuery';
 import { LOCATION_CHANGE } from 'connected-react-router';
 
 import { ActionTypes } from '../constants';
