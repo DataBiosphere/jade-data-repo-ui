@@ -171,7 +171,7 @@ export default {
         // We're just adding the column stats onto the exisiting model
         const _columns = columns.map((c: TableColumnType) => {
           if (c.name === columnName) {
-            if (c.originalValues === undefined && values.length <= CHECKBOX_THRESHOLD) {
+            if (c.originalValues === undefined) {
               return { ...c, values, originalValues: values };
             }
             return { ...c, values };

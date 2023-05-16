@@ -31,12 +31,12 @@ function CategoryWrapper({
   tdrApiFilterStatement,
   toggleExclude,
 }: CategoryWrapperProps) {
+  const refreshColumnStats =
+    column.values === undefined ||
+    (column?.originalValues && column.originalValues.length <= CHECKBOX_THRESHOLD);
   useEffect(() => {
     // only update for checkbox text columns on filtering
-    if (
-      column.values === undefined ||
-      (column?.originalValues && column.originalValues.length <= CHECKBOX_THRESHOLD)
-    ) {
+    if (refreshColumnStats) {
       dispatch(
         getColumnStats(
           ResourceType.DATASET,
@@ -47,15 +47,7 @@ function CategoryWrapper({
         ),
       );
     }
-  }, [
-    dispatch,
-    dataset.id,
-    tableName,
-    column.name,
-    tdrApiFilterStatement,
-    column.originalValues,
-    column.values,
-  ]);
+  }, [dispatch, dataset.id, tableName, column.name, tdrApiFilterStatement, refreshColumnStats]);
 
   const { originalValues, values } = column;
   if (values) {
