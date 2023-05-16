@@ -101,6 +101,9 @@ function RangeFilter({
           </Grid>
         </>
       )}
+      {(!minValue || !maxValue) && (
+        <div>This numeric column does not have any values to filter.</div>
+      )}
     </div>
   );
 }
