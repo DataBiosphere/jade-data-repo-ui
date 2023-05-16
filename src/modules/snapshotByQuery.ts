@@ -2,7 +2,7 @@ import _ from 'lodash';
 
 /*
 We can filter on any table in the dataset, but the query on snapshot create must be built
-in relation to the asset's root table. 
+in relation to the asset's root table.
 */
 
 // wrapper for snapshot creation:

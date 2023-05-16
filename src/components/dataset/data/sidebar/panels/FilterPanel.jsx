@@ -287,7 +287,7 @@ export class FilterPanel extends React.PureComponent {
                 </Collapse>
               </div>
             ))}
-          {table && table.name && datasetRowCount == 0 && (
+          {table && table.name && datasetRowCount === 0 && (
             <div>We cannot filter this table because it is empty.</div>
           )}
         </div>

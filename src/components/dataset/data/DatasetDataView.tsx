@@ -70,7 +70,7 @@ function DatasetDataView({ dataset, dispatch, match, polling, profile, snapshotR
       setSelectedTable(dataset.schema?.tables.find((t) => t.name === names[0]));
       setDatasetLoaded(true);
     }
-  }, [dataset, match]);
+  }, [dispatch, dataset, match]);
 
   useEffect(() => {
     if (datasetLoaded) {
