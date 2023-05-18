@@ -84,15 +84,15 @@ function DatasetDataView({ dataset, dispatch, match, polling, profile, snapshotR
         dataset,
       });
       // TODO - remove conditional once we support Azure snapshot create in the UI
-      if (dataset.accessInformation?.bigQuery !== null) {
-        currentPanels.push({
-          icon: FilterList,
-          width: 600,
-          component: DataViewSidebar,
-          selectedTable,
-          dataset,
-        });
-      }
+      // if (dataset.accessInformation?.bigQuery !== null) {
+      currentPanels.push({
+        icon: FilterList,
+        width: 600,
+        component: DataViewSidebar,
+        selectedTable,
+        dataset,
+      });
+      // }
       if (canLink && snapshotRequest.assetName) {
         currentPanels.push({
           icon: People,
