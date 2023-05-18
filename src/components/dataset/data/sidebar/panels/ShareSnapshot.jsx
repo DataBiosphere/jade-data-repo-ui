@@ -7,7 +7,6 @@ import { withStyles } from '@mui/styles';
 import {
   Autocomplete,
   Button,
-  Divider,
   IconButton,
   Menu,
   MenuItem,
@@ -17,7 +16,8 @@ import {
 } from '@mui/material';
 import { MoreVert } from '@mui/icons-material';
 import { isEmail } from 'validator';
-import { addReadersToSnapshot, createSnapshot } from 'actions/index';
+import { createSnapshot } from 'actions/index';
+import SnapshotAccess from 'components/snapshot/SnapshotAccess';
 
 const drawerWidth = 600;
 const sidebarWidth = 56;
@@ -25,6 +25,7 @@ const sidebarWidth = 56;
 const styles = (theme) => ({
   root: {
     padding: theme.spacing(2),
+    width: drawerWidth,
   },
   section: {
     margin: `${theme.spacing(1)} 0px`,
@@ -66,10 +67,6 @@ const styles = (theme) => ({
     alignItems: 'center',
   },
   bottom: {
-    position: 'fixed',
-    bottom: '0',
-    right: `${sidebarWidth}px`,
-    width: `${drawerWidth}px`,
     padding: `0 ${theme.spacing(1)}`,
     textAlign: 'end',
   },
@@ -106,117 +103,8 @@ export class ShareSnapshot extends React.PureComponent {
     dispatch: PropTypes.func,
     isModal: PropTypes.bool,
     onDismiss: PropTypes.func,
-    policies: PropTypes.arrayOf(PropTypes.object),
     readers: PropTypes.arrayOf(PropTypes.string),
     setIsSharing: PropTypes.func,
-    snapshot: PropTypes.object,
-  };
-
-  /**
-   * handles dropdown selection
-   */
-  setPermission = (event) => {
-    this.setState({ policyName: event.target.value });
-  };
-
-  /**
-   * handles plain text input
-   */
-  parseEmail = (event) => {
-    const currentInput = event.target.value;
-    this.setState({ currentInput });
-
-    const { usersToAdd } = this.state;
-
-    // emails may be added with the press of the comma key in addition to enter key
-    if (currentInput.includes(',')) {
-      const email = _.trim(currentInput, ', ');
-      if (email) {
-        usersToAdd.push(email);
-      }
-      this.setState({ usersToAdd, currentInput: '' });
-    }
-  };
-
-  /**
-   * adds the email as a tag to the text box
-   */
-  inputEmail = (event, value) => {
-    const nonEmptyStrings = value.map((string) => string.trim()).filter((string) => string !== '');
-    this.setState({ usersToAdd: nonEmptyStrings, currentInput: '' });
-  };
-
-  /**
-   * allows users to paste a list of emails
-   */
-  onPaste = (event) => {
-    const { usersToAdd } = this.state;
-    event.preventDefault();
-    const text = event.clipboardData.getData('text');
-    const emails = text.split(/[,\s]+/);
-    const nonEmpty = emails.filter((s) => s !== '');
-    this.setState({ usersToAdd: _.concat(usersToAdd, nonEmpty), currentInput: '' });
-  };
-
-  /**
-   * updates the snapshot readers to include users that have been entered
-   */
-  invite = () => {
-    this.setState({ hasError: false, errorMsg: '' });
-
-    const { usersToAdd, currentInput } = this.state;
-    const trimmed = currentInput.trim();
-    if (trimmed !== '' && !usersToAdd.includes(trimmed)) {
-      usersToAdd.push(trimmed);
-    }
-
-    let hasError = false;
-    let errorMsg = '';
-    const validUsrs = [];
-    const invalidUsrs = [];
-    _.forEach(usersToAdd, (user) => {
-      if (!isEmail(user)) {
-        hasError = true;
-        invalidUsrs.push(user);
-      } else {
-        validUsrs.push(user);
-      }
-    });
-    errorMsg = `Invalid email(s): ${invalidUsrs.join(', ')}`;
-    // eslint-disable-next-line no-unused-expressions
-    !_.isEmpty(validUsrs) && this.addReaders(validUsrs);
-    this.setState({ usersToAdd: [], currentInput: '', hasError, errorMsg });
-  };
-
-  /**
-   * TODO: once discoverers can be added, change this to take in the policy as a parameter
-   */
-  addReaders(users) {
-    const { dispatch, readers } = this.props;
-    if (!readers) {
-      dispatch(addReadersToSnapshot(users));
-    } else {
-      const newUsers = _.difference(users, readers);
-      dispatch(addReadersToSnapshot(_.concat(readers, newUsers)));
-    }
-  }
-
-  /**
-   * TODO: once discoverers can be added, change this to take in the policy as a parameter
-   */
-  removeReader(removeableEmail) {
-    this.closeUserMenu();
-    const { dispatch, readers } = this.props;
-    const newUsers = _.without(readers, removeableEmail);
-    dispatch(addReadersToSnapshot(newUsers));
-  }
-
-  openUserMenu = (event) => {
-    this.setState({ anchor: event.currentTarget });
-  };
-
-  closeUserMenu = () => {
-    this.setState({ anchor: null });
   };
 
   saveSnapshot = () => {
@@ -236,106 +124,9 @@ export class ShareSnapshot extends React.PureComponent {
         <Typography variant="h6" className={classes.section}>
           Share Snapshot
         </Typography>
-        <div className={classes.sharingArea}>
-          <div className={classes.emailEntryArea}>
-            <div className={classes.emailEntry}>
-              <Typography variant="subtitle2">People</Typography>
-              <Autocomplete
-                multiple
-                freeSolo
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    variant="outlined"
-                    fullWidth
-                    className={classes.input}
-                    placeholder="enter email addresses"
-                    onChange={this.parseEmail}
-                    onPaste={this.onPaste}
-                    data-cy="enterEmailBox"
-                  />
-                )}
-                onChange={this.inputEmail}
-                value={usersToAdd}
-                inputValue={currentInput}
-                options={[]}
-              />
-            </div>
-            <div>
-              <Typography variant="subtitle2">Permissions</Typography>
-              <Select
-                value={policyName}
-                variant="outlined"
-                className={classes.input}
-                fullWidth
-                onChange={this.setPermission}
-              >
-                {permissions.map((permission, i) => (
-                  <MenuItem key={i} value={policyNames[i]} disabled={permission === 'can discover'}>
-                    {permission}
-                  </MenuItem>
-                ))}
-              </Select>
-            </div>
-          </div>
-          <div>
-            {hasError && (
-              <Typography variant="subtitle2" color="error" data-cy="invalidEmailError">
-                {errorMsg}
-              </Typography>
-            )}
-          </div>
-          <div className={classes.buttonContainer}>
-            <Button
-              variant="contained"
-              color="primary"
-              disableElevation
-              disabled={!isEmail(currentInput) && !_.some(usersToAdd, (user) => isEmail(user))}
-              className={clsx(classes.button, classes.section, classes.inviteButton)}
-              onClick={this.invite}
-              data-cy="inviteButton"
-            >
-              Invite
-            </Button>
-          </div>
-        </div>
-        <Divider />
-        <div className={classes.section} data-cy="readers">
-          {readers.map((reader) => (
-            <div
-              key={reader}
-              className={clsx(classes.listItem, classes.withIcon)}
-              data-cy="specificReader"
-            >
-              <div>{reader}</div>
-              <div className={classes.withIcon} id={reader} onClick={this.openUserMenu}>
-                can read
-                <IconButton size="small" data-cy="moreButton">
-                  <MoreVert />
-                </IconButton>
-              </div>
-            </div>
-          ))}
-          <Menu anchorEl={anchor} onClose={this.closeUserMenu} open={anchor !== null}>
-            {permissions.map((permission) => (
-              <MenuItem
-                onClick={this.closeUserMenu}
-                disabled={permission === 'can discover'}
-                key={permission}
-                dense
-              >
-                {permission}
-              </MenuItem>
-            ))}
-            <Divider />
-            <MenuItem onClick={() => this.removeReader(anchor.id)} dense data-cy="removeItem">
-              remove
-            </MenuItem>
-          </Menu>
-        </div>
+        <SnapshotAccess createMode={true} />
         {!isModal && (
           <div className={classes.bottom}>
-            <Divider />
             <Button
               variant="contained"
               color="primary"

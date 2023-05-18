@@ -2,76 +2,80 @@ import React from 'react';
 import axios from 'axios';
 import _ from 'lodash';
 import AwesomeDebouncePromise from 'awesome-debounce-promise';
-import { ColumnModes, DbColumns } from '../constants';
+import { ColumnModes, DbColumns, TABLE_DEFAULT_COLUMN_WIDTH } from '../constants';
 
 export default class BigQuery {
   constructor() {
     this.pageTokenMap = {};
   }
 
-  transformColumns = (queryResults) =>
-    _.get(queryResults, 'schema.fields', []).map((field) => ({
-      name: field.name,
-      dataType: field.type,
-      arrayOf: field.mode === ColumnModes.REPEATED,
-      allowSort: field.mode !== ColumnModes.REPEATED,
-    }));
-
-  transformRows = (queryResults, columns) => {
-    const rows = _.get(queryResults, 'rows', []).map((row) =>
-      _.get(row, 'f', []).map((value) => _.get(value, 'v', '')),
-    );
-
-    return rows.map((row) => this.createData(columns, row));
-  };
-
-  createData = (columns, row) => {
-    let i = 0;
-    const res = {};
-    for (i = 0; i < columns.length; i++) {
-      const column = columns[i];
-      const columnId = column.name;
-      const columnType = column.dataType;
-      const columnArrayOf = column.arrayOf;
-
-      let value = row[i];
-      if (value !== null) {
-        // Convert into an array if it's not already one
-        if (columnArrayOf) {
-          value = value.map((v) => v.v);
-        } else {
-          value = [value];
-        }
-
-        if (columnType === 'INTEGER') {
-          value = value.map((v) => this.commaFormatted(v));
-        }
-
-        if (columnType === 'FLOAT') {
-          value = value.map((v) => this.significantDigits(v));
-        }
-
-        if (columnType === 'TIMESTAMP') {
-          value = value.map((v) => new Date(v * 1000).toLocaleString());
-        }
-      }
-      if (columnId === DbColumns.ROW_ID) {
-        res.datarepo_row_id = value;
-      } else {
-        res[columnId] = value;
-      }
-    }
-
-    return res;
-  };
-
-  commaFormatted = (amount) => new Intl.NumberFormat('en-US').format(amount);
-
-  significantDigits = (amount) =>
-    new Intl.NumberFormat('en-US', { maximumSignificantDigits: 3 }).format(amount);
-
   buildSnapshotFilterStatement = (filterMap, dataset) =>
     this.buildFilterStatement(filterMap, dataset);
+
+  // TEMPORARY - remove in DR-2993 - build filter statement for TDR API call
+  buildTdrApiFilterStatement = (filterMap, dataset) => {
+    if (!_.isEmpty(filterMap)) {
+      const tableClauses = [];
+
+      _.keys(filterMap).forEach((table) => {
+        const filters = filterMap[table];
+
+        if (!_.isEmpty(filters)) {
+          const statementClauses = [];
+
+          _.keys(filters).forEach((key) => {
+            const datasetName = !dataset ? '' : `${dataset.name}.`;
+            const property = `${key}`;
+            const keyValue = filters[key].value;
+            const isRange = filters[key].type === 'range';
+            const notClause = filters[key].exclude ? 'NOT' : '';
+
+            if (_.isArray(keyValue)) {
+              if (isRange) {
+                statementClauses.push(`${property} BETWEEN ${keyValue[0]} AND ${keyValue[1]}`);
+              } else if (_.isString(keyValue[0])) {
+                const selections = keyValue.map((selection) => `'${selection}'`).join(',');
+                statementClauses.push(`${property} ${notClause} IN (${selections})`);
+              } else {
+                statementClauses.push(
+                  `${property} = '${keyValue[0]}' OR ${property} = '${keyValue[1]}'`,
+                );
+              }
+            } else if (_.isObject(keyValue)) {
+              const checkboxes = _.keys(keyValue);
+              if (checkboxes.length > 0) {
+                const checkboxValues = [];
+                const checkboxClauses = [];
+                checkboxes.forEach((checkboxValue) => {
+                  if (checkboxValue === 'null') {
+                    checkboxClauses.push(`${property} IS NULL`);
+                  } else {
+                    checkboxValues.push(`'${checkboxValue}'`);
+                  }
+                });
+                if (checkboxValues.length > 0) {
+                  checkboxClauses.push(`${property} IN (${checkboxValues.join(',')})`);
+                }
+                statementClauses.push(`(${checkboxClauses.join(' OR ')})`);
+              }
+            } else {
+              const values = keyValue.split(',').map((val) => `${key}='${val}'`);
+              statementClauses.push(values.join(' OR '));
+            }
+          });
+
+          if (!_.isEmpty(statementClauses)) {
+            tableClauses.push(statementClauses.join(' AND '));
+          }
+        }
+      });
+
+      if (!_.isEmpty(tableClauses)) {
+        return `WHERE ${tableClauses.join(' AND ')}`;
+      }
+    }
+    return '';
+  };
 
   buildFilterStatement = (filterMap, dataset) => {
     if (!_.isEmpty(filterMap)) {
@@ -104,10 +108,19 @@ export default class BigQuery {
             } else if (_.isObject(keyValue)) {
               const checkboxes = _.keys(keyValue);
               if (checkboxes.length > 0) {
-                const checkboxValues = checkboxes
-                  .map((checkboxValue) => `"${checkboxValue}"`)
-                  .join(',');
-                statementClauses.push(`${property} IN (${checkboxValues})`);
+                const checkboxValues = [];
+                const checkboxClauses = [];
+                checkboxes.forEach((checkboxValue) => {
+                  if (checkboxValue === 'null') {
+                    checkboxClauses.push(`${property} IS NULL`);
+                  } else {
+                    checkboxValues.push(`"${checkboxValue}"`);
+                  }
+                });
+                if (checkboxValues.length > 0) {
+                  checkboxClauses.push(`${property} IN (${checkboxValues.join(',')})`);
+                }
+                statementClauses.push(`(${checkboxClauses.join(' OR ')})`);
               }
             } else {
               const values = keyValue.split(',').map((val) => `${key}='${val}'`);

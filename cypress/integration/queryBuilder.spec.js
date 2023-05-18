@@ -33,14 +33,49 @@ describe('test query builder', () => {
 
     it('does show array values', () => {
       // Click the header to make sure we don't sort or trigger an error
-      cy.get('[data-cy=columnHeader-consequence_terms]').click();
+      cy.get('[data-cy=columnHeader-consequence_terms]').scrollIntoView().click({ force: true });
 
       for (let i = 0; i < 100; i++) {
         cy.get(`[data-cy=cellValue-consequence_terms-${i}]`).should(
           'have.text',
-          '[regulatory_region_variant]',
+          'regulatory_region_variant(1 item)',
         );
       }
+    });
+  });
+
+  describe('timestamps are displayed as expected', () => {
+    beforeEach(() => {
+      cy.get('[data-cy=selectTable]').click();
+      cy.get('[data-cy=menuItem-all_data_types]').click();
+    });
+
+    it('correctly displays timestamps', () => {
+      // check that singleton timestamp is correctly displayed
+      cy.get('[data-cy=columnHeader-timestamp_column]').scrollIntoView().click({ force: true });
+
+      cy.get('[data-cy=cellValue-timestamp_column-0]').then(($val) => {
+        // dumb check to make sure this is in a timestamp format, not a long value
+        expect($val.text()).to.contain(':');
+        const timestamp = new Date($val.text());
+        const expectedTimestamp = new Date('6/1/2023, 1:02:40 AM UTC');
+        expect(timestamp.toUTCString()).to.eq(expectedTimestamp.toUTCString());
+      });
+
+      // check that array timestamp
+      cy.get('[data-cy=columnHeader-timestamp_array_column]')
+        .scrollIntoView()
+        .click({ force: true });
+
+      cy.get('[data-cy=cellValue-timestamp_array_column-0]').then(($val) => {
+        // dumb check to make sure this is in a timestamp format, not a long value
+        expect($val.text()).to.contain(':');
+        expect($val.text()).to.contain('(1 item)');
+        const timestampWithoutArrayItemList = $val.text().substring(0, $val.text().length - 8);
+        const timestamp = new Date(timestampWithoutArrayItemList);
+        const expectedTimestamp = new Date('6/2/2023, 1:04:40 AM UTC');
+        expect(timestamp.toUTCString()).to.eq(expectedTimestamp.toUTCString());
+      });
     });
   });
 
@@ -69,7 +104,7 @@ describe('test query builder', () => {
       });
 
       it('creates snapshot query', () => {
-        cy.get('[data-cy=createSnapshot]').click();
+        cy.get('[data-cy=createSnapshot]').click({ force: true });
 
         cy.window()
           .its('store')
@@ -94,14 +129,18 @@ describe('test query builder', () => {
     });
 
     it('excludes values', () => {
+      // filter down to only one page of results
+      cy.get('[data-cy=categoryFilterCheckbox-HS]').click();
+      cy.get('[data-cy="filter-ancestry-button"]').click();
+
       // table should contain these 3 variants to start
-      cy.get('[data-cy=tableBody]').contains('3:187442750:G:A').should('be.visible');
-      cy.get('[data-cy=tableBody]').contains('2:27558797:C:T').should('be.visible');
-      cy.get('[data-cy=tableBody]').contains('6:89977475:T:C').should('be.visible');
+      cy.get('[data-cy=tableBody]').contains('14:95235028:C:A').should('be.visible');
+      cy.get('[data-cy=tableBody]').contains('6:41533593:G:A').should('be.visible');
+      cy.get('[data-cy=tableBody]').contains('1:161128013:G:A').should('be.visible');
 
       // type variant ids into filter box
       cy.get('[data-cy=filterItem]').contains('variant_id').click();
-      cy.get('#autocomplete-variant_id').type('3:187442750:G:A\n2:27558797:C:T\n6:89977475:T:C\n');
+      cy.get('#autocomplete-variant_id').type('14:95235028:C:A\n6:41533593:G:A\n1:161128013:G:A\n');
 
       // click 'exclude this selection' and apply filter
       cy.get('[data-cy="exclude-variant_id"]').should('be.visible');
@@ -109,9 +148,9 @@ describe('test query builder', () => {
       cy.get('[data-cy="filter-variant_id-button"]').click();
 
       // variants should not be returned in query results
-      cy.get('[data-cy=tableBody]').should('not.contain', '3:187442750:G:A');
-      cy.get('[data-cy=tableBody]').should('not.contain', '2:27558797:C:T');
-      cy.get('[data-cy=tableBody]').should('not.contain', '6:89977475:T:C');
+      cy.get('[data-cy=tableBody]').should('not.contain', '14:95235028:C:A');
+      cy.get('[data-cy=tableBody]').should('not.contain', '6:41533593:G:A');
+      cy.get('[data-cy=tableBody]').should('not.contain', '1:161128013:G:A');
 
       // uncheck 'exclude this selection' and apply filter
       cy.get('[data-cy="exclude-variant_id"] .MuiCheckbox-root').should(
@@ -122,9 +161,9 @@ describe('test query builder', () => {
       cy.get('[data-cy="filter-variant_id-button"]').click();
 
       // variants should be included in query results
-      cy.get('[data-cy=tableBody]').contains('3:187442750:G:A').should('be.visible');
-      cy.get('[data-cy=tableBody]').contains('2:27558797:C:T').should('be.visible');
-      cy.get('[data-cy=tableBody]').contains('6:89977475:T:C').should('be.visible');
+      cy.get('[data-cy=tableBody]').contains('14:95235028:C:A').should('be.visible');
+      cy.get('[data-cy=tableBody]').contains('6:41533593:G:A').should('be.visible');
+      cy.get('[data-cy=tableBody]').contains('1:161128013:G:A').should('be.visible');
       cy.get('[data-cy="exclude-variant_id"] .MuiCheckbox-root').should(
         'not.have.class',
         'Mui-checked',
@@ -132,51 +171,41 @@ describe('test query builder', () => {
     });
   });
 
-  describe('test share panel', () => {
-    beforeEach(() => {
-      // selects the share button in the sidebar
-      cy.get('div.MuiButtonBase-root:nth-child(3) > svg:nth-child(1)').click();
-    });
+  describe('filtering on null checkbox value', () => {
+    it('filters on null', () => {
+      // Switch to variant table
+      cy.get('[data-cy=selectTable]').click();
+      cy.get('[data-cy=menuItem-variant]').click();
 
-    it('adds/removes readers', () => {
-      cy.get('[data-cy=enterEmailBox]').type(
-        'mkerwin@broadinstitute.org,myessail@broadinstitute.org',
-      );
-      cy.get('[data-cy=inviteButton]').click();
-      cy.get('[data-cy=readers]').contains('mkerwin@broadinstitute.org').should('be.visible');
-      cy.get('[data-cy=readers]').contains('myessail@broadinstitute.org').should('be.visible');
+      // selects the filter button in the sidebar
+      cy.get('div.MuiButtonBase-root:nth-child(2) > svg:nth-child(1)').click();
+      // first, let's filter down to a reasonble number of entries
+      // type variant ids into filter box
+      cy.get('[data-cy=filterItem]').contains('id').click();
+      cy.get('#autocomplete-id').type('1:65196986:A:G\n1:231395857:A:G\n');
+      cy.get('[data-cy="filter-id-button"]').click();
 
-      cy.get('[data-cy=specificReader]').contains('mkerwin@broadinstitute.org').siblings().click();
-      cy.get('[data-cy=removeItem]').click();
+      // select the "reference" field
+      cy.get('[data-cy=filterItem]').contains('reference').click();
 
-      cy.get('[data-cy=readers]').should('not.contain', 'mkerwin@broadinstitute.org');
-      cy.get('[data-cy=readers]').contains('myessail@broadinstitute.org').should('be.visible');
-    });
+      // select the "null" checkbox
+      cy.get('[data-cy=categoryFilterCheckbox-null]').click();
 
-    it('checks invalid email addresses', () => {
-      // type invalid email
-      cy.get('[data-cy=enterEmailBox]').type('maggenzi,');
-      cy.get('[data-cy=inviteButton]').should('be.disabled');
+      // Apply filtering
+      cy.get('[data-cy="filter-reference-button"]').click();
 
-      // type valid email
-      cy.get('[data-cy=enterEmailBox]').type('myessail@broadinstitute.org');
-      cy.get('[data-cy=inviteButton]').should('not.be.disabled');
-      cy.get('[data-cy=inviteButton]').click();
+      // null row should be visible, but non-null row should be hidden
+      cy.get('[data-cy=tableBody]').should('contain', '1:65196986:A:G');
+      cy.get('[data-cy=tableBody]').should('not.contain', '1:231395857:A:G');
 
-      // only valid email should be added to readers
-      cy.get('[data-cy=readers]').contains('myessail@broadinstitute.org').should('be.visible');
-      cy.get('[data-cy=invalidEmailError]').contains('maggenzi').should('be.visible');
-    });
+      // Go back and select other checkbox for reference field: "A"
+      cy.get('[data-cy=categoryFilterCheckbox-A]').click();
+      // apply new filtering
+      cy.get('[data-cy="filter-reference-button"]').click();
 
-    it('removes space characters', () => {
-      cy.get('[data-cy=enterEmailBox]').type(' ,');
-      cy.get('[data-cy=enterEmailBox]').should('not.contain', ' ,');
-      cy.get('[data-cy=inviteButton]').should('be.disabled');
-
-      cy.get('[data-cy=enterEmailBox]').type('mac@gmail.com, ken@gmail.com , zie@gmail.com');
-      cy.get('[data-cy=inviteButton]').click();
-      cy.get('[data-cy=readers]').should('not.contain', ' ken@gmail.com ');
-      cy.get('[data-cy=readers]').should('not.contain', ' zie@gmail.com');
+      // now both the null row and the row associated with "A" should be visible
+      cy.get('[data-cy=tableBody]').should('contain', '1:65196986:A:G');
+      cy.get('[data-cy=tableBody]').should('contain', '1:231395857:A:G');
     });
   });
 
@@ -186,7 +215,7 @@ describe('test query builder', () => {
       cy.get('div.MuiButtonBase-root:nth-child(2) > svg:nth-child(1)').click();
 
       // create snapshot button should open 'Add details' panel
-      cy.get('[data-cy=createSnapshot]').click();
+      cy.get('[data-cy=createSnapshot]').click({ force: true });
       // TODO: figure out why cypress gets mad about this
       // cy.contains('Add Details').should('be.visible');
       cy.get('[data-cy=next]').should('be.disabled');

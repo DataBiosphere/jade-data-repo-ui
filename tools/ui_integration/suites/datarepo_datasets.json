@@ -9,7 +9,8 @@
       "frequency_analysis",
       "trans_ethnic_meta_analysis",
       "transcript_consequence",
-      "variant"
+      "variant",
+      "all_data_types"
     ],
     "upload_prefix": "gs://jade-testdata-useastregion/V2F_GWAS_Summary_Statistics",
     "format": "json",

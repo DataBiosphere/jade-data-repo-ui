@@ -1,19 +1,23 @@
 import { handleActions } from 'redux-actions';
+import _ from 'lodash';
 import immutable from 'immutability-helper';
 import { LOCATION_CHANGE } from 'connected-react-router';
 import BigQuery from 'modules/bigquery';
-import { ColumnModel } from 'generated/tdr';
+import { CloudPlatform, ColumnModel, TableDataType } from 'generated/tdr';
 
-import { ActionTypes, TABLE_DEFAULT_ROWS_PER_PAGE } from '../constants';
+import { ActionTypes, TABLE_DEFAULT_ROWS_PER_PAGE, TABLE_DEFAULT_COLUMN_WIDTH } from '../constants';
 
 export type TableColumnType = {
   name: string;
-  dataType: string;
-  arrayOf: boolean;
-  allowSort: boolean;
+  dataType?: string;
+  arrayOf?: boolean;
+  allowResize?: boolean;
+  allowSort?: boolean;
   label: string;
-  numeric: boolean;
-  render: (row: object) => string;
+  numeric?: boolean;
+  render?: (row: object) => string | JSX.Element;
+  width?: number | string;
+  cellStyles?: any;
 };
 
 export type TableRowType = {
@@ -34,9 +38,9 @@ export type QueryParams = {
 export interface QueryState {
   baseQuery: string;
   columns: Array<TableColumnType>;
-  delay: boolean;
   errMsg: string;
   error: boolean;
+  tdrApiFilterStatement: string;
   filterData: any;
   filterStatement: string;
   joinStatement: string;
@@ -50,20 +54,26 @@ export interface QueryState {
   resultsCount: number;
   page: number;
   rowsPerPage: number;
+  refreshCnt: number;
 }
 
 const defaultQueryParams = {
   totalRows: 0,
 };
 
+const formatDate = (value: number) =>
+  !_.isNil(value)
+    ? new Date(value * 1000).toLocaleString('en-US', { timeZoneName: 'short' })
+    : null;
+
 export const initialQueryState: QueryState = {
   baseQuery: '',
   columns: [],
-  delay: false,
   errMsg: '',
   error: false,
   filterData: {},
   filterStatement: '',
+  tdrApiFilterStatement: '',
   joinStatement: '',
   pageSize: 0,
   projectId: '',
@@ -75,42 +85,43 @@ export const initialQueryState: QueryState = {
   resultsCount: 0,
   page: 0,
   rowsPerPage: TABLE_DEFAULT_ROWS_PER_PAGE,
+  refreshCnt: 0,
 };
 
 export default {
   query: handleActions(
     {
-      [ActionTypes.RUN_QUERY_SUCCESS]: (state, action: any) => {
-        const bigquery = new BigQuery();
-        const queryResults = action.results.data;
-
-        const columns = bigquery.transformColumns(queryResults);
-        const rows = bigquery.transformRows(queryResults, columns);
-        const queryParams = {
-          pageToken: queryResults.pageToken,
-          projectId: queryResults.jobReference.projectId,
-          jobId: queryResults.jobReference.jobId,
-          totalRows: parseInt(queryResults.totalRows, 10),
-        };
-        return immutable(state, {
-          queryParams: { $set: queryParams },
-          columns: { $set: columns },
-          rows: { $set: rows },
-          polling: { $set: false },
-          delay: { $set: false },
-          page: { $set: 0 },
-        });
-      },
       [ActionTypes.PREVIEW_DATA_SUCCESS]: (state, action: any) => {
-        const rows = action.payload.queryResults.data.result;
-        const columns = action.payload.columns.map((column: ColumnModel) => ({
+        const columnsByName = _.keyBy(state.columns, 'name');
+        const columns: TableColumnType[] = action.payload.columns.map((column: ColumnModel) => ({
           name: column.name,
           dataType: column.datatype,
           arrayOf: column.array_of,
           allowSort: !column.array_of,
+          allowResize: true,
+          width: columnsByName[column.name]?.width || TABLE_DEFAULT_COLUMN_WIDTH,
         }));
+        // We only need to re-format row data of type timestamp
+        const timestampColumns: TableColumnType[] = [];
+        columns.forEach((col: TableColumnType) => {
+          if (col.dataType === TableDataType.Timestamp) {
+            timestampColumns.push(col);
+          }
+        });
+        const rows = action.payload.queryResults.data.result.map((row: any) => {
+          if (action.payload.cloudPlatform === CloudPlatform.Gcp) {
+            timestampColumns.forEach((col: TableColumnType) => {
+              if (col.arrayOf) {
+                row[col.name] = row[col.name].map((v: number) => formatDate(v));
+              } else {
+                row[col.name] = formatDate(row[col.name]);
+              }
+            });
+          }
+          return row;
+        });
         const queryParams = {
-          totalRows: parseInt(action.payload.totalRowCount, 10),
+          totalRows: parseInt(action.payload.queryResults.data.totalRowCount, 10),
         };
 
         return immutable(state, {
@@ -119,42 +130,12 @@ export default {
           columns: { $set: columns },
           rows: { $set: rows },
           polling: { $set: false },
-          delay: { $set: false },
-          resultsCount: { $set: rows.length },
+          resultsCount: { $set: parseInt(action.payload.queryResults.data.filteredRowCount, 10) },
         });
       },
-      [ActionTypes.PAGE_QUERY_SUCCESS]: (state, action: any) => {
-        const bigquery = new BigQuery();
-        const queryResults = action.results.data;
-
-        const columns = bigquery.transformColumns(queryResults);
-        const rows = bigquery.transformRows(queryResults, columns);
-        const queryParams = {
-          pageToken: queryResults.pageToken,
-          projectId: queryResults.jobReference.projectId,
-          jobId: queryResults.jobReference.jobId,
-          totalRows: queryResults.totalRows,
-        };
-
-        return immutable(state, {
-          queryParams: { $set: queryParams },
-          columns: { $set: columns },
-          rows: { $set: rows },
-        });
-      },
-      [ActionTypes.RUN_QUERY]: (state) =>
-        immutable(state, {
-          queryParams: { $set: defaultQueryParams },
-          polling: { $set: true },
-        }),
-      [ActionTypes.POLL_QUERY]: (state) =>
-        immutable(state, {
-          delay: { $set: true },
-        }),
       [ActionTypes.PREVIEW_DATA]: (state, action: any) =>
         immutable(state, {
           error: { $set: false },
-          queryParams: { $set: defaultQueryParams },
           polling: { $set: true },
           orderProperty: { $set: action.payload.orderProperty },
           orderDirection: { $set: action.payload.orderDirection },
@@ -174,9 +155,31 @@ export default {
         immutable(state, {
           page: { $set: action.payload },
         }),
+      [ActionTypes.RESIZE_COLUMN]: (state, action: any) =>
+        immutable(state, {
+          columns: {
+            $set: state.columns.map((column) => {
+              if (column.name === action.payload.property) {
+                return {
+                  name: column.name,
+                  dataType: column.dataType,
+                  arrayOf: column.arrayOf,
+                  allowResize: column.allowResize,
+                  allowSort: column.allowSort,
+                  label: column.label,
+                  numeric: column.numeric,
+                  render: column.render,
+                  width: action.payload.width,
+                };
+              }
+              return column;
+            }),
+          },
+        }),
       [ActionTypes.APPLY_FILTERS]: (state, action: any) => {
         const bigquery = new BigQuery();
         const filterStatement = bigquery.buildFilterStatement(action.payload.filters);
+        const tdrApiFilterStatement = bigquery.buildTdrApiFilterStatement(action.payload.filters);
         const joinStatement = bigquery.buildJoinStatement(
           action.payload.filters,
           action.payload.table,
@@ -186,6 +189,7 @@ export default {
           filterData: { $set: action.payload.filters },
           filterStatement: { $set: filterStatement },
           joinStatement: { $set: joinStatement },
+          tdrApiFilterStatement: { $set: tdrApiFilterStatement },
           page: { $set: 0 },
         });
       },
@@ -197,8 +201,10 @@ export default {
         }),
       [ActionTypes.RESET_QUERY]: (state) =>
         immutable(state, {
+          columns: { $set: [] },
           filterData: { $set: {} },
           filterStatement: { $set: '' },
+          tdrApiFilterStatement: { $set: '' },
           joinStatement: { $set: '' },
           queryParams: { $set: defaultQueryParams },
           polling: { $set: false },
@@ -208,8 +214,10 @@ export default {
         }),
       [LOCATION_CHANGE]: (state) =>
         immutable(state, {
+          rows: { $set: [] },
           filterData: { $set: {} },
           filterStatement: { $set: '' },
+          tdrApiFilterStatement: { $set: '' },
           joinStatement: { $set: '' },
           queryParams: { $set: defaultQueryParams },
           polling: { $set: false },

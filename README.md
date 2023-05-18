@@ -3,32 +3,52 @@
 Based off of [React Redux Saga Boilerplate](https://github.com/gilbarbara/react-redux-saga-boilerplate)
 
 ### Prerequisites
+
 - install npm: `brew install npm`
-- install nvm from [nvm.sh](https://github.com/nvm-sh/nvm#install--update-script): 
+- install nvm from [nvm.sh](https://github.com/nvm-sh/nvm#install--update-script):
+
 ```
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
 ```
+
 Note: Do NOT install nvm through homebrew as that is no longer maintained
 
 - Run the following to get automatic node version switching set up:
+
 ```
-npm install -g avn avn-nvm avn-n
-avn setup
- ```
+nvm install 10.0.0
+rm -R ~/.avn (if you want to reset an existing or failed avn setup)
+nvm exec 10.0.0 npm install -g avn avn-nvm avn-n
+nvm exec 10.0.0 avn setup
+nvm install lts/erbium --default
+nvm use lts/erbium
+```
 
 - Run `npm install` to download dependencies defined in the package.json file and generate the node_modules folder with the installed modules.
+
 ```
 npm install
 ```
 
 - Make sure you have the following environment variables set:
+
   - `export PROXY_URL=https://jade.datarepo-dev.broadinstitute.org`
   - `export CYPRESS_BASE_URL=http://localhost:3000`
 
-- Before running e2e tests, make sure you grab your access token by running `gcloud auth print-access-token`, and then
-export it: 
+- For performance gains, you should disable linting (don't worry, it gets checked in GitHub actions) by setting the following environment variable:
+
+  - `export DISABLE_ESLINT_PLUGIN=true`
+
+- Before running e2e tests, set CYPRESS_GOOGLE_TOKEN to your access token
+
 ```
-export CYPRESS_GOOGLE_TOKEN=<YOUR-TOKEN-HERE>
+export CYPRESS_GOOGLE_TOKEN=$(gcloud auth print-access-token <the user you want to test with, e.g. dumbledore.admin@test.firecloud.org>)
+```
+
+you may need to log in with the test account using:
+
+```
+gcloud auth login --no-activate
 ```
 
 ### Provides
@@ -70,12 +90,31 @@ To run end-to-end tests: `npx cypress run` or `npx cypress open` (interactive mo
 To run unit tests: `npx cypress run-ct` or `npx cypress open-ct` (interactive mode)
 
 ## skaffold
+
 To render your own local skaffold.yaml run the following with your initials
+
 ```
 sed -e 's/TEMP/<initials>/g' skaffold.yaml.template > skaffold.yaml
 ```
-Run a deployment you must set env var `IMAGE_TAG`
+
+To deploy UI work to your personal environment, run the following commands
+
 ```
 npm run build --production
 skaffold run
+```
+
+To deploy the UI used in the Github e2e action, find the image tag in the output of the job and then substitute it for the <TAG> in the command below:
+
+```
+skaffold deploy --images=gcr.io/broad-jade-dev/jade-data-repo-ui:<TAG>
+```
+
+for example, if the e2e "Echo tagged image" in your action log output was:
+Pushed docker image gcr.io/broad-jade-dev/jade-data-repo-ui:abcdefg
+
+You would run:
+
+```
+skaffold deploy --images=gcr.io/broad-jade-dev/jade-data-repo-ui:abcdefg
 ```

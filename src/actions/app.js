@@ -8,6 +8,12 @@ import { createActions } from 'redux-actions';
 
 import { ActionTypes } from 'constants/index';
 
+export const { getBillingProfiles } = createActions({
+  [ActionTypes.GET_BILLING_PROFILES]: () => ({}),
+  [ActionTypes.GET_BILLING_PROFILES_SUCCESS]: (profile) => profile,
+  [ActionTypes.GET_BILLING_PROFILES_EXCEPTION]: () => ({}),
+});
+
 export const { getBillingProfileById } = createActions({
   [ActionTypes.GET_BILLING_PROFILE_BY_ID]: (profile) => profile,
   [ActionTypes.GET_BILLING_PROFILE_BY_ID_SUCCESS]: (profile) => profile,
@@ -23,7 +29,11 @@ export const { createSnapshot } = createActions({
 });
 
 export const { exportSnapshot } = createActions({
-  [ActionTypes.EXPORT_SNAPSHOT]: (snapshotId, exportGsPaths) => ({ snapshotId, exportGsPaths }),
+  [ActionTypes.EXPORT_SNAPSHOT]: (snapshotId, exportGsPaths, validatePrimaryKeyUniqueness) => ({
+    snapshotId,
+    exportGsPaths,
+    validatePrimaryKeyUniqueness,
+  }),
   [ActionTypes.EXPORT_SNAPSHOT_START]: () => ({}),
   [ActionTypes.EXPORT_SNAPSHOT_JOB]: (exportResponse) => exportResponse,
   [ActionTypes.EXPORT_SNAPSHOT_SUCCESS]: (exportResponse) => exportResponse,
@@ -48,6 +58,18 @@ export const { getSnapshots } = createActions({
     successType: ActionTypes.GET_SNAPSHOTS_SUCCESS,
     failureType: ActionTypes.GET_SNAPSHOTS_FAILURE,
   }),
+});
+
+export const { refreshSnapshots } = createActions({
+  [ActionTypes.REFRESH_SNAPSHOTS]: () => ({}),
+});
+
+export const { createDataset } = createActions({
+  [ActionTypes.CREATE_DATASET]: (payload) => payload,
+  [ActionTypes.CREATE_DATASET_JOB]: (dataset) => dataset,
+  [ActionTypes.CREATE_DATASET_SUCCESS]: (dataset) => dataset,
+  [ActionTypes.CREATE_DATASET_FAILURE]: (dataset) => dataset,
+  [ActionTypes.CREATE_DATASET_EXCEPTION]: () => ({}),
 });
 
 export const { getDatasetSnapshots } = createActions({
@@ -89,6 +111,14 @@ export const { removeSnapshotPolicyMember } = createActions({
   }),
 });
 
+export const { removeSnapshotPolicyMembers } = createActions({
+  [ActionTypes.REMOVE_SNAPSHOT_POLICY_MEMBERS]: (snapshotId, users, policy) => ({
+    snapshotId,
+    users,
+    policy,
+  }),
+});
+
 export const { getUserSnapshotRoles } = createActions({
   [ActionTypes.GET_USER_SNAPSHOT_ROLES]: (snapshotId) => snapshotId,
   [ActionTypes.GET_USER_SNAPSHOT_ROLES_SUCCESS]: (roles) => roles,
@@ -103,6 +133,10 @@ export const { getDatasets } = createActions({
     direction,
     searchString,
   }),
+});
+
+export const { refreshDatasets } = createActions({
+  [ActionTypes.REFRESH_DATASETS]: () => ({}),
 });
 
 export const { getDatasetById } = createActions({
@@ -120,25 +154,32 @@ export const { getDatasetTablePreview } = createActions({
   [ActionTypes.GET_DATASET_TABLE_PREVIEW_SUCCESS]: (_) => _,
 });
 
-export const { addCustodianToDataset } = createActions({
-  [ActionTypes.ADD_CUSTODIAN_TO_DATASET]: (datasetId, users) => ({
-    datasetId,
-    users,
-  }),
-});
-
-export const { removeCustodianFromDataset } = createActions({
-  [ActionTypes.REMOVE_CUSTODIAN_FROM_DATASET]: (datasetId, user) => ({
-    datasetId,
-    user,
-  }),
-});
-
 export const { addDatasetPolicyMember } = createActions({
   [ActionTypes.ADD_DATASET_POLICY_MEMBER]: (datasetId, user, policy) => ({
     datasetId,
     user,
     policy,
+  }),
+});
+
+export const { patchDataset } = createActions({
+  [ActionTypes.PATCH_DATASET]: (datasetId, data) => ({
+    datasetId,
+    data,
+  }),
+});
+
+export const { patchSnapshot } = createActions({
+  [ActionTypes.PATCH_SNAPSHOT]: (snapshotId, data) => ({
+    snapshotId,
+    data,
+  }),
+});
+
+export const { updateDuosDataset } = createActions({
+  [ActionTypes.UPDATE_DUOS_DATASET]: (snapshotId, duosId) => ({
+    snapshotId,
+    duosId,
   }),
 });
 
@@ -155,6 +196,18 @@ export const { getUserDatasetRoles } = createActions({
   [ActionTypes.GET_USER_DATASET_ROLES_SUCCESS]: (roles) => roles,
 });
 
+export const { getJobs } = createActions({
+  [ActionTypes.GET_JOBS_SUCCESS]: (jobs) => jobs,
+  [ActionTypes.GET_JOBS]: ({ limit, offset, sort, direction, searchString, errMessage }) => ({
+    limit,
+    offset,
+    sort,
+    direction,
+    searchString,
+    errMessage,
+  }),
+});
+
 export const { getJobById } = createActions({
   [ActionTypes.GET_JOB_BY_ID]: (job) => job,
   [ActionTypes.GET_JOB_BY_ID_SUCCESS]: (job) => job,
@@ -164,22 +217,32 @@ export const { clearJobId } = createActions({
   [ActionTypes.CLEAR_JOB_ID]: (job) => job,
 });
 
+export const { getJobResult } = createActions({
+  [ActionTypes.GET_JOB_RESULT]: (id) => id,
+});
+
+export const { getJournalEntries } = createActions({
+  [ActionTypes.GET_JOURNAL_ENTRIES]: ({ limit, offset, id, resourceType }) => ({
+    limit,
+    offset,
+    id,
+    resourceType,
+  }),
+});
+
 export const { hideAlert } = createActions({
   [ActionTypes.HIDE_ALERT]: (index) => index,
 });
 
-export const { runQuery } = createActions({
-  [ActionTypes.RUN_QUERY_SUCCESS]: (result) => result,
-  [ActionTypes.RUN_QUERY]: (projectId, query) => ({
-    projectId,
-    query,
-  }),
+export const { refreshQuery } = createActions({
+  [ActionTypes.REFRESH_QUERY]: () => ({}),
 });
 
 export const { previewData } = createActions({
   [ActionTypes.PREVIEW_DATA]: (
     resourceType,
     resourceId,
+    cloudPlatform,
     table,
     columns,
     totalRowCount,
@@ -188,26 +251,19 @@ export const { previewData } = createActions({
   ) => ({
     resourceType,
     resourceId,
+    cloudPlatform,
     table,
     columns,
     totalRowCount,
     orderDirection,
     orderProperty,
   }),
-  [ActionTypes.PREVIEW_DATA_SUCCESS]: (queryResults, columns) => ({
+  [ActionTypes.PREVIEW_DATA_SUCCESS]: (queryResults, columns, cloudPlatform) => ({
     queryResults,
     columns,
+    cloudPlatform,
   }),
   [ActionTypes.PREVIEW_DATA_FAILURE]: (errMsg) => ({ errMsg }),
-});
-
-export const { pageQuery } = createActions({
-  [ActionTypes.PAGE_QUERY]: (pageToken, projectId, jobId, location) => ({
-    pageToken,
-    projectId,
-    jobId,
-    location,
-  }),
 });
 
 export const { applyFilters } = createActions({
@@ -222,6 +278,13 @@ export const { applySort } = createActions({
   [ActionTypes.APPLY_SORT]: (property, direction) => ({
     property,
     direction,
+  }),
+});
+
+export const { resizeColumn } = createActions({
+  [ActionTypes.RESIZE_COLUMN]: (property, width) => ({
+    property,
+    width,
   }),
 });
 
@@ -241,14 +304,6 @@ export const { openSnapshotDialog } = createActions({
   [ActionTypes.OPEN_SNAPSHOT_DIALOG]: (isOpen) => isOpen,
 });
 
-export const { countResults } = createActions({
-  [ActionTypes.COUNT_RESULTS]: (projectId, query) => ({
-    projectId,
-    query,
-  }),
-  [ActionTypes.COUNT_RESULTS_SUCCESS]: (count) => count,
-});
-
 export const { snapshotCreateDetails } = createActions({
   [ActionTypes.SNAPSHOT_CREATE_DETAILS]: (name, description, assetName, filterData, dataset) => ({
     name,
@@ -259,6 +314,9 @@ export const { snapshotCreateDetails } = createActions({
   }),
 });
 
-export const { addReadersToSnapshot } = createActions({
-  [ActionTypes.ADD_READERS_TO_SNAPSHOT]: (readers) => readers,
+export const { changePolicyUsersToSnapshotRequest } = createActions({
+  [ActionTypes.CHANGE_POLICY_USERS_TO_SNAPSHOT_REQUEST]: (policy, users) => ({
+    policy,
+    users,
+  }),
 });

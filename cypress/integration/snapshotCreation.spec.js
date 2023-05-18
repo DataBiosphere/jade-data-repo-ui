@@ -71,14 +71,14 @@ describe('test snapshot creation', () => {
 
     cy.get('[placeholder="Search keyword or description"]').type('V2F_GWAS');
     cy.contains(/V2F_GWAS_Summary_Stats|V2F_GWAS_Summary_Statistics/g).should('be.visible');
-    cy.contains(/V2F_GWAS_Summary_Stats|V2F_GWAS_Summary_Statistics/g).click();
-    cy.get('a > .MuiButtonBase-root').click();
+    cy.contains(/V2F_GWAS_Summary_Stats|V2F_GWAS_Summary_Statistics/g).click({ force: true });
+    cy.get('a > .MuiButtonBase-root').click({ force: true });
     cy.wait(['@getDataset', '@getDatasetPolicies', '@getBillingProfileById']);
   });
 
   it('opens modal', () => {
-    cy.get('div.MuiButtonBase-root:nth-child(2) > svg:nth-child(1)').click();
-    cy.get('[data-cy=createSnapshot]').click();
+    cy.get('div.MuiButtonBase-root:nth-child(2) > svg:nth-child(1)').click({ force: true });
+    cy.get('[data-cy=createSnapshot]').click({ force: true });
     cy.get('[data-cy=textFieldName]').type('mock_snapshot');
     cy.get('[data-cy=selectAsset]').click();
     cy.get('[data-cy=menuItem-Variant]').click();
@@ -114,8 +114,8 @@ describe('test snapshot creation is disabled', () => {
 
     cy.get('[placeholder="Search keyword or description"]').type('V2F_GWAS');
     cy.contains(/V2F_GWAS_Summary_Stats|V2F_GWAS_Summary_Statistics/g).should('be.visible');
-    cy.contains(/V2F_GWAS_Summary_Stats|V2F_GWAS_Summary_Statistics/g).click();
-    cy.get('a > .MuiButtonBase-root').click();
+    cy.contains(/V2F_GWAS_Summary_Stats|V2F_GWAS_Summary_Statistics/g).click({ force: true });
+    cy.get('a > .MuiButtonBase-root').click({ force: true });
     cy.wait(['@getDataset', '@getDatasetPolicies']);
   });
 

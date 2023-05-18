@@ -2,7 +2,6 @@
   "extends": [
     "airbnb",
     "plugin:prettier/recommended",
-    "prettier/react",
     "react-app",
     "eslint:recommended",
     "plugin:@typescript-eslint/eslint-recommended",
@@ -224,10 +223,12 @@
     "react/no-did-mount-set-state": "warn",
     "react/no-did-update-set-state": "warn",
     "react/jsx-boolean-value": "off",
+    "react/jsx-curly-newline": "off",
     "react/jsx-fragments": "off",
     "react/jsx-no-duplicate-props": "warn",
     "react/jsx-one-expression-per-line": "off",
     "react/jsx-pascal-case": "warn",
+    "react/jsx-wrap-multilines": "off",
     "react/no-direct-mutation-state": "warn",
     "react/no-unused-prop-types": "warn",
     "react/no-unused-state": "warn",
@@ -280,7 +281,11 @@
     ],
     "import/no-anonymous-default-export": "off", // this rule doesn't make much sense to me
     "@typescript-eslint/ban-ts-comment": "off",
-    "@typescript-eslint/no-explicit-any": "off" // Leave off until we finish out initial conversion to TS
+    "@typescript-eslint/no-explicit-any": "off", // Leave off until we finish out initial conversion to TS
+    "react/no-unstable-nested-components": [
+      "warn",
+      { "allowAsProps": true }
+    ]
   },
   "settings": {
     "import/resolver": {

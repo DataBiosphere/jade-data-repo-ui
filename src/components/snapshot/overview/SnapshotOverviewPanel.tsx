@@ -1,40 +1,33 @@
-import React from 'react';
+import React, { useState, SyntheticEvent } from 'react';
 import { Grid, Tab, Tabs, Typography } from '@mui/material';
 import { createStyles, WithStyles, withStyles } from '@mui/styles';
 import moment from 'moment';
 import { CustomTheme } from '@mui/material/styles';
+import { patchSnapshot, updateDuosDataset } from 'actions';
+import EditableFieldView from 'components/EditableFieldView';
 import GoogleSheetExport from 'components/common/overview/GoogleSheetExport';
 import { Link } from 'react-router-dom';
-import { renderStorageResources } from '../../../libs/render-utils';
+import TextContent from 'components/common/TextContent';
+import { IamResourceTypeEnum } from 'generated/tdr';
+import { renderStorageResources, renderTextFieldValue } from '../../../libs/render-utils';
 import SnapshotAccess from '../SnapshotAccess';
+import SnapshotWorkspace from './SnapshotWorkspace';
 import TabPanel from '../../common/TabPanel';
 import SnapshotExport from './SnapshotExport';
 import { SnapshotModel } from '../../../generated/tdr';
+import { SnapshotRoles } from '../../../constants';
+import { AppDispatch } from '../../../store';
+import JournalEntriesView from '../../JournalEntriesView';
+import { SnapshotPendingSave } from '../../../reducers/snapshot';
 
 const styles = (theme: CustomTheme) =>
   createStyles({
     root: {
       flexGrow: 1,
     },
-    tabsRoot: {
-      fontFamily: theme.typography.fontFamily,
-      height: 18,
-      fontSize: '1rem',
-      fontWeight: 600,
-      lineHeight: 18,
-      textAlign: 'center',
-      width: '100%',
-      borderBottom: `1px solid ${theme.palette.terra.green}`,
-      paddingLeft: '28px',
-    },
-    tabSelected: {
-      fontWeight: 700,
-      color: theme.palette.secondary.dark,
-      bottomBar: '6px',
-    },
-    tabsIndicator: {
-      borderBottom: `6px solid ${theme.palette.terra.green}`,
-      transition: 'none',
+    accordionWorkspaces: {
+      padding: theme.spacing(2),
+      paddingLeft: '0px',
     },
     tabPanel: {
       padding: '1em 1em 1em 28px',
@@ -55,35 +48,37 @@ function a11yProps(index: number) {
 }
 
 interface SnapshotOverviewPanelProps extends WithStyles<typeof styles> {
+  dispatch: AppDispatch;
+  pendingSave: SnapshotPendingSave;
   snapshot: SnapshotModel;
+  userRoles: Array<string>;
 }
 
 function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
-  const [value, setValue] = React.useState(0);
-  const { classes, snapshot } = props;
+  const [value, setValue] = useState(0);
+  const { classes, dispatch, pendingSave, snapshot, userRoles } = props;
+  const isSteward = userRoles.includes(SnapshotRoles.STEWARD);
+  const canViewJournalEntries = isSteward;
   // @ts-ignore
   const sourceDataset = snapshot.source[0].dataset;
-  const linkToBq = snapshot.accessInformation?.bigQuery !== undefined;
+  const linkToBq = snapshot.cloudPlatform === 'gcp';
 
-  const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
+  const handleChange = (_event: SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 
+  let duosInfoButtonText =
+    'Link with a DUOS dataset ID to automatically sync DAC approved users as snapshot readers.';
+  if (isSteward) {
+    duosInfoButtonText += ' Modifying this link may take several seconds to save.';
+  }
+
   return (
     <div className={classes.root}>
-      <Tabs
-        classes={{
-          root: classes.tabsRoot,
-          indicator: classes.tabsIndicator,
-        }}
-        value={value}
-        onChange={handleChange}
-        aria-label="simple tabs example"
-      >
+      <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
         <Tab
           data-cy="snapshot-summary-tab"
           label="Snapshot Summary"
-          classes={{ selected: classes.tabSelected }}
           disableFocusRipple
           disableRipple
           {...a11yProps(0)}
@@ -91,27 +86,72 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
         <Tab
           data-cy="snapshot-export-tab"
           label="Export Snapshot"
-          classes={{ selected: classes.tabSelected }}
           disableFocusRipple
           disableRipple
           {...a11yProps(1)}
         />
+        {canViewJournalEntries && (
+          <Tab label="Snapshot activity" disableFocusRipple disableRipple {...a11yProps(2)} />
+        )}
+        {isSteward && (
+          <Tab label="Roles & memberships" disableFocusRipple disableRipple {...a11yProps(3)} />
+        )}
       </Tabs>
       <TabPanel value={value} index={0}>
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <Typography variant="h6">Description:</Typography>
-            <Typography data-cy="snapshot-description">{snapshot.description}</Typography>
+            <EditableFieldView
+              fieldValue={snapshot.description}
+              fieldName="Description"
+              canEdit={isSteward}
+              isPendingSave={pendingSave.description}
+              updateFieldValueFn={(text: string | undefined) =>
+                dispatch(patchSnapshot(snapshot.id, { description: text }))
+              }
+              useMarkdown={true}
+            />
+          </Grid>
+          <Grid item xs={4}>
+            <EditableFieldView
+              fieldValue={snapshot.duosFirecloudGroup?.duosId}
+              fieldName="DUOS ID"
+              canEdit={isSteward}
+              isPendingSave={pendingSave.duosDataset}
+              updateFieldValueFn={(text: string | undefined) =>
+                dispatch(updateDuosDataset(snapshot.id, text))
+              }
+              useMarkdown={false}
+              infoButtonText={duosInfoButtonText}
+            />
+          </Grid>
+          <Grid item xs={8}>
+            {snapshot.duosFirecloudGroup && (
+              <Grid item xs={4}>
+                <Typography variant="h6">DUOS Users Last Synced:</Typography>
+                <Typography data-cy="snapshot-duos-last-synced">
+                  {snapshot.duosFirecloudGroup.lastSynced
+                    ? moment(snapshot.duosFirecloudGroup.lastSynced).fromNow()
+                    : 'Never'}
+                </Typography>
+              </Grid>
+            )}
           </Grid>
           <Grid item xs={4}>
             <Typography variant="h6">Root dataset:</Typography>
-            <Typography data-cy="snapshot-source-dataset" className={classes.datasetText}>
+            <Typography
+              data-cy="snapshot-source-dataset"
+              className={classes.datasetText}
+              component="span"
+            >
               <Link to={`/datasets/${sourceDataset.id}`}>
                 <span className={classes.jadeLink} title={sourceDataset.name}>
-                  {sourceDataset.name}
+                  <TextContent text={sourceDataset.name} />
                 </span>
               </Link>
             </Typography>
+          </Grid>
+          <Grid item xs={4}>
+            {renderTextFieldValue('Snapshot ID', snapshot.id)}
           </Grid>
           <Grid item xs={4}>
             <Typography variant="h6">Date Created:</Typography>
@@ -123,10 +163,35 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
             <Typography variant="h6">Storage:</Typography>
             {renderStorageResources(sourceDataset)}
           </Grid>
+          <Grid item xs={4}>
+            {renderTextFieldValue(
+              'PHS ID',
+              sourceDataset.phsId,
+              'PHS ID is editable on the parent dataset.',
+            )}
+          </Grid>
+          <Grid item xs={4}>
+            <EditableFieldView
+              fieldValue={snapshot.consentCode}
+              fieldName="Consent Code"
+              canEdit={isSteward}
+              isPendingSave={pendingSave.consentCode}
+              infoButtonText="The Consent Code is used in conjunction with the PHS ID to determined if a user is authorized to view a snapshot based on their RAS Passport."
+              updateFieldValueFn={(text: string | undefined) => {
+                dispatch(patchSnapshot(snapshot.id, { consentCode: text }));
+              }}
+              useMarkdown={false}
+            />
+          </Grid>
+          <Grid item xs={4}>
+            {renderTextFieldValue('Billing Profile Id', snapshot.profileId)}
+          </Grid>
+          {snapshot.dataProject && (
+            <Grid item xs={4}>
+              {renderTextFieldValue('Google Data Project', snapshot.dataProject)}
+            </Grid>
+          )}
         </Grid>
-        <Typography variant="h6"> Roles and memberships: </Typography>
-        <Typography> Learn more about roles and memberships </Typography>
-        <SnapshotAccess horizontal={true} />
       </TabPanel>
       <TabPanel value={value} index={1}>
         <Grid container spacing={6}>
@@ -141,6 +206,30 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
               />
             </Grid>
           )}
+        </Grid>
+        {isSteward && (
+          <Grid item xs={12} className={classes.accordionWorkspaces}>
+            <SnapshotWorkspace />
+          </Grid>
+        )}
+      </TabPanel>
+      {canViewJournalEntries && (
+        <TabPanel value={value} index={2}>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <JournalEntriesView
+                id={snapshot.id}
+                resourceType={IamResourceTypeEnum.Datasnapshot}
+              />
+            </Grid>
+          </Grid>
+        </TabPanel>
+      )}
+      <TabPanel value={value} index={3}>
+        <Grid container spacing={2}>
+          <Grid item xs={9}>
+            <SnapshotAccess />
+          </Grid>
         </Grid>
       </TabPanel>
     </div>

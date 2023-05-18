@@ -110,9 +110,10 @@ const theme = createTheme({
       selectedTextBackground: '#F1F4F8',
     },
     lightTable: {
-      cellBackgroundDark: 'rgba(233,236,239,0.4)',
+      cellBackgroundHeader: 'rgb(244, 246, 247)',
+      cellBackgroundDark: 'rgb(251, 251, 252)',
       callBackgroundLight: 'white',
-      borderColor: '#E8EAEB',
+      borderColor: 'rgb(214, 217, 220)',
       paginationBlue: baseColors.primary,
       bottomColor: '#E0E0E0',
     },
@@ -200,6 +201,9 @@ const theme = createTheme({
             backgroundColor: LINK_HOVER,
           },
         },
+        outlined: {
+          backgroundColor: WHITE,
+        },
       },
     },
     MuiOutlinedInput: {
@@ -227,12 +231,31 @@ const theme = createTheme({
         },
       },
     },
+    MuiTabs: {
+      styleOverrides: {
+        root: {
+          height: 18,
+          fontSize: '1rem',
+          fontWeight: 600,
+          lineHeight: 18,
+          textAlign: 'center',
+          width: '100%',
+          borderBottom: `1px solid ${baseColors.success}`,
+          paddingLeft: '28px',
+        },
+        indicator: {
+          borderBottom: `6px solid ${baseColors.success}`,
+        },
+      },
+    },
     MuiTab: {
       styleOverrides: {
         root: {
           minWidth: 160,
           '&.Mui-selected': {
             color: baseColors.dark,
+            bottomBar: '6px',
+            fontWeight: 700,
           },
         },
       },
@@ -241,6 +264,7 @@ const theme = createTheme({
   mixins: {
     jadeLink: {
       color: LINK,
+      fontWeight: 500,
       '&:hover': {
         color: LINK_HOVER,
       },

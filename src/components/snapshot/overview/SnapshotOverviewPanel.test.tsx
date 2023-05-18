@@ -8,79 +8,109 @@ import moment from 'moment';
 import history from '../../../modules/hist';
 import globalTheme from '../../../modules/theme';
 import SnapshotOverviewPanel from './SnapshotOverviewPanel';
+import { DatasetModel, DuosFirecloudGroupModel, SnapshotModel } from '../../../generated/tdr';
 
-const snapshot = {
-  id: 'uuid',
-  name: 'Test snapshot',
-  description: 'Test description',
-  createdDate: '2022-04-04T18:53:45.158566Z',
-  source: [
-    {
-      dataset: {
-        id: 'datasetId',
-        name: 'SourceDataset',
-        storage: [
-          { cloudResource: 'bigquery', region: 'us-east4' },
-          { cloudResource: 'firestore', region: 'us-east4' },
-          { cloudResource: 'bucket', region: 'us-east4' },
-        ],
-      },
-    },
+const duosId = 'Test DUOS ID';
+const lastSynced = '2022-04-04T18:53:45.158566Z';
+
+const dataset: DatasetModel = {
+  id: 'datasetId',
+  name: 'SourceDataset',
+  storage: [
+    { cloudResource: 'bigquery', region: 'us-east4' },
+    { cloudResource: 'firestore', region: 'us-east4' },
+    { cloudResource: 'bucket', region: 'us-east4' },
   ],
 };
 
-const initialState = {
-  snapshots: {
-    snapshot,
-    snapshotPolicies: [
-      {
-        name: 'steward',
-        members: ['steward@gmail.com'],
+function createSnapshot(duosFirecloudGroup?: DuosFirecloudGroupModel): SnapshotModel {
+  return {
+    id: 'uuid',
+    name: 'Test snapshot',
+    description: 'Test description',
+    createdDate: '2022-04-04T18:53:45.158566Z',
+    source: [{ dataset }],
+    duosFirecloudGroup,
+  };
+}
+
+function createInitialState(snapshot?: SnapshotModel): any {
+  return {
+    snapshots: {
+      pendingSave: {
+        consentCode: false,
+        description: false,
+        duosDataset: false,
       },
-      {
-        name: 'reader',
-        members: ['reader@gmail.com'],
-      },
-      {
-        name: 'discoverer',
-        members: [],
-      },
-    ],
-    userRoles: ['steward', 'reader'],
-    exportIsProcessing: false,
-    exportIsDone: false,
-    exportResponse: {},
-  },
-  configuration: {
-    configObject: {
-      terraUrl: 'https://dev-terra.org',
+      snapshot,
+      snapshotPolicies: [
+        {
+          name: 'steward',
+          members: ['steward@gmail.com'],
+        },
+        {
+          name: 'reader',
+          members: ['reader@gmail.com'],
+        },
+        {
+          name: 'discoverer',
+          members: [],
+        },
+      ],
+      userRoles: ['steward', 'reader'],
+      exportIsProcessing: false,
+      exportIsDone: false,
+      exportResponse: {},
     },
-  },
-};
+    configuration: {
+      configObject: {
+        terraUrl: 'https://dev-terra.org',
+      },
+    },
+  };
+}
+
+function mockSnapshotOverviewPanel(snapshot: any): any {
+  const mockStore = createMockStore([]);
+  const initialState = createInitialState(snapshot);
+  const store = mockStore(initialState);
+  mount(
+    <Router history={history}>
+      <Provider store={store}>
+        <ThemeProvider theme={globalTheme}>
+          <SnapshotOverviewPanel
+            dispatch={store.dispatch}
+            pendingSave={initialState.snapshots.pendingSave}
+            snapshot={snapshot}
+            userRoles={initialState.snapshots.userRoles}
+          />
+        </ThemeProvider>
+      </Provider>
+    </Router>,
+  );
+}
 
 describe('Snapshot overview panel', () => {
-  beforeEach(() => {
-    const mockStore = createMockStore([]);
-    const store = mockStore(initialState);
-    mount(
-      <Router history={history}>
-        <Provider store={store}>
-          <ThemeProvider theme={globalTheme}>
-            <SnapshotOverviewPanel snapshot={snapshot} />
-          </ThemeProvider>
-        </Provider>
-      </Router>,
-    );
-  });
   it('Displays snapshot info', () => {
+    const duosFirecloudGroup = { duosId, lastSynced };
+    const snapshot = createSnapshot(duosFirecloudGroup);
+    mockSnapshotOverviewPanel(snapshot);
     cy.get('[data-cy="snapshot-summary-tab"]')
       .should('contain.text', 'Snapshot Summary')
       .should('have.attr', 'aria-selected', 'true');
-    cy.get('[data-cy="snapshot-description"]').should('contain.text', snapshot.description);
-    cy.get('[data-cy="snapshot-source-dataset"]').should(
+    cy.get('[data-cy="description-editable-field-view"] [data-cy="react-markdown-text"]').should(
       'contain.text',
-      snapshot.source[0].dataset.name,
+      snapshot.description,
     );
+    cy.get('[data-cy="duos-id-editable-field-view"] [data-cy="react-markdown-text"]').should(
+      'contain.text',
+      duosId,
+    );
+    cy.get('[data-cy="snapshot-duos-last-synced"]').should(
+      'contain.text',
+      moment(lastSynced).fromNow(),
+    );
+    cy.get('[data-cy="snapshot-source-dataset"]').should('contain.text', dataset.name);
     cy.get('[data-cy="snapshot-date-created"]').should(
       'contain.text',
       moment(snapshot.createdDate).fromNow(),
@@ -90,5 +120,23 @@ describe('Snapshot overview panel', () => {
       expect($resource[1]).to.contain('firestore: us-east4');
       expect($resource[2]).to.contain('bucket: us-east4');
     });
+  });
+  it('Handles missing DUOS link', () => {
+    const snapshot = createSnapshot();
+    mockSnapshotOverviewPanel(snapshot);
+    cy.get('[data-cy="duos-id-editable-field-view"] [data-cy="react-markdown-empty-text"]').should(
+      'exist',
+    );
+    cy.get('[data-cy="snapshot-duos-last-synced"]').should('not.exist');
+  });
+  it('Handles unsynced linked DUOS group', () => {
+    const unsyncedDuosFirecloudGroup = { duosId };
+    const snapshot = createSnapshot(unsyncedDuosFirecloudGroup);
+    mockSnapshotOverviewPanel(snapshot);
+    cy.get('[data-cy="duos-id-editable-field-view"] [data-cy="react-markdown-text"]').should(
+      'contain.text',
+      duosId,
+    );
+    cy.get('[data-cy="snapshot-duos-last-synced"]').should('contain.text', 'Never');
   });
 });

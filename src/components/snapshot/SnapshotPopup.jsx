@@ -18,7 +18,6 @@ import { CameraAlt, Today } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 import clsx from 'clsx';
 import { openSnapshotDialog, getSnapshotById, getSnapshotPolicy } from 'actions/index';
-import { push } from 'modules/hist';
 import { SnapshotIncludeOptions } from '../../constants';
 
 const styles = (theme) => ({
@@ -110,9 +109,6 @@ export class SnapshotPopup extends React.PureComponent {
         }),
       );
       dispatch(getSnapshotPolicy(snapshot.id));
-    }
-    if (_.isEmpty(prevProps.policies) && !_.isEmpty(policies)) {
-      push('/snapshots');
     }
   }
 

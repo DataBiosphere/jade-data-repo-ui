@@ -1,5 +1,6 @@
 import { handleActions } from 'redux-actions';
 import immutable from 'immutability-helper';
+import { LOCATION_CHANGE } from 'connected-react-router';
 
 import { ActionTypes } from '../constants';
 import {
@@ -9,8 +10,14 @@ import {
   SnapshotSummaryModel,
 } from '../generated/tdr';
 
+export interface DatasetPendingSave {
+  description: boolean;
+  phsId: boolean;
+}
+
 export interface DatasetState {
   datasets: Array<DatasetSummaryModel>;
+  datasetRoleMaps: { [key: string]: Array<string> };
   dataset: DatasetModel;
   datasetPreview: Record<string, Array<Record<string, any>>>;
   datasetsCount: number;
@@ -20,10 +27,23 @@ export interface DatasetState {
   datasetSnapshots: Array<SnapshotSummaryModel>;
   datasetSnapshotsCount: number;
   loading: boolean;
+  isAddingOrRemovingUser: boolean;
+  refreshCnt: number;
+  pendingSave: DatasetPendingSave;
+  // for dataset creation
+  dialogIsOpen: boolean;
+  creationIsProcessing: boolean;
+  exportResponse?: DatasetModel;
 }
+
+const defaultPendingSave: DatasetPendingSave = {
+  description: false,
+  phsId: false,
+};
 
 export const initialDatasetState: DatasetState = {
   datasets: [],
+  datasetRoleMaps: {},
   dataset: {},
   datasetPreview: {},
   datasetsCount: 0,
@@ -33,6 +53,11 @@ export const initialDatasetState: DatasetState = {
   datasetSnapshots: [],
   datasetSnapshotsCount: 0,
   loading: false,
+  isAddingOrRemovingUser: false,
+  refreshCnt: 0,
+  pendingSave: defaultPendingSave,
+  dialogIsOpen: false,
+  creationIsProcessing: false,
 };
 
 // We need this method to apply the response from add/remove snapshot members since the API only returns the affected group
@@ -50,6 +75,33 @@ const datasetMembershipResultApply = (action: any) => (
 export default {
   datasets: handleActions(
     {
+      [ActionTypes.CREATE_DATASET]: (state) =>
+        immutable(state, {
+          dataset: { $set: {} },
+          dialogIsOpen: { $set: true },
+          creationIsProcessing: { $set: true },
+        }),
+      [ActionTypes.CREATE_DATASET_JOB]: (state) =>
+        immutable(state, {
+          dataset: { $set: {} },
+          dialogIsOpen: { $set: true },
+          creationIsProcessing: { $set: true },
+        }),
+      [ActionTypes.CREATE_DATASET_SUCCESS]: (state, action: any) =>
+        immutable(state, {
+          dataset: { $set: action.payload.jobResult },
+          creationIsProcessing: { $set: false },
+        }),
+      [ActionTypes.CREATE_DATASET_FAILURE]: (state) =>
+        immutable(state, {
+          dialogIsOpen: { $set: false },
+          creationIsProcessing: { $set: false },
+        }),
+      [ActionTypes.CREATE_DATASET_EXCEPTION]: (state) =>
+        immutable(state, {
+          dialogIsOpen: { $set: false },
+          creationIsProcessing: { $set: false },
+        }),
       [ActionTypes.GET_DATASETS]: (state) =>
         immutable(state, {
           loading: { $set: true },
@@ -61,9 +113,14 @@ export default {
       [ActionTypes.GET_DATASETS_SUCCESS]: (state, action: any): any =>
         immutable(state, {
           datasets: { $set: action.datasets.data.data.items },
+          datasetRoleMaps: { $set: action.datasets.data.data.roleMap },
           datasetsCount: { $set: action.datasets.data.data.total },
           filteredDatasetsCount: { $set: action.datasets.data.data.filteredTotal },
           loading: { $set: false },
+        }),
+      [ActionTypes.REFRESH_DATASETS]: (state) =>
+        immutable(state, {
+          refreshCnt: { $set: state.refreshCnt + 1 },
         }),
       [ActionTypes.GET_DATASET_BY_ID]: (state) =>
         immutable(state, {
@@ -77,21 +134,63 @@ export default {
         immutable(state, {
           datasetPolicies: { $set: action.policy.data.policies },
         }),
-      [ActionTypes.ADD_CUSTODIAN_TO_DATASET_SUCCESS]: (state, action: any) =>
+      [ActionTypes.PATCH_DATASET_START]: (state, action: any) => {
+        const datasetObj: any = { pendingSave: {} };
+        if (action.data.phsId !== undefined) {
+          datasetObj.pendingSave.phsId = { $set: true };
+        }
+        if (action.data.description !== undefined) {
+          datasetObj.pendingSave.description = { $set: true };
+        }
+        return immutable(state, datasetObj);
+      },
+      [ActionTypes.PATCH_DATASET_SUCCESS]: (state, action: any) => {
+        const datasetObj: any = { dataset: {}, pendingSave: {} };
+        if (action.data.phsId !== undefined) {
+          datasetObj.dataset.phsId = { $set: action.data.phsId };
+          datasetObj.pendingSave.phsId = { $set: false };
+        }
+        if (action.data.description !== undefined) {
+          datasetObj.dataset.description = { $set: action.data.description };
+          datasetObj.pendingSave.description = { $set: false };
+        }
+        return immutable(state, datasetObj);
+      },
+      [ActionTypes.PATCH_DATASET_FAILURE]: (state, action: any) => {
+        const datasetObj: any = { pendingSave: {} };
+        if (action.data.phsId !== undefined) {
+          datasetObj.pendingSave.phsId = { $set: false };
+        }
+        if (action.data.description !== undefined) {
+          datasetObj.pendingSave.description = { $set: false };
+        }
+        return immutable(state, datasetObj);
+      },
+      [ActionTypes.ADD_DATASET_POLICY_MEMBER]: (state) =>
         immutable(state, {
-          datasetPolicies: { $set: action.policy.data.policies },
+          isAddingOrRemovingUser: { $set: true },
         }),
-      [ActionTypes.REMOVE_CUSTODIAN_FROM_DATASET_SUCCESS]: (state, action: any) =>
+      [ActionTypes.ADD_DATASET_POLICY_MEMBER_FAILURE]: (state) =>
         immutable(state, {
-          datasetPolicies: { $set: action.policy.data.policies },
+          isAddingOrRemovingUser: { $set: false },
         }),
       [ActionTypes.ADD_DATASET_POLICY_MEMBER_SUCCESS]: (state, action: any) =>
         immutable(state, {
           datasetPolicies: { $apply: datasetMembershipResultApply(action) },
+          isAddingOrRemovingUser: { $set: false },
+        }),
+      [ActionTypes.REMOVE_DATASET_POLICY_MEMBER]: (state) =>
+        immutable(state, {
+          isAddingOrRemovingUser: { $set: true },
+        }),
+      [ActionTypes.REMOVE_DATASET_POLICY_MEMBER_FAILURE]: (state) =>
+        immutable(state, {
+          isAddingOrRemovingUser: { $set: false },
         }),
       [ActionTypes.REMOVE_DATASET_POLICY_MEMBER_SUCCESS]: (state, action: any) =>
         immutable(state, {
           datasetPolicies: { $apply: datasetMembershipResultApply(action) },
+          isAddingOrRemovingUser: { $set: false },
         }),
       [ActionTypes.GET_USER_DATASET_ROLES]: (state) =>
         immutable(state, {
@@ -124,9 +223,12 @@ export default {
         }
         return immutable(state, {
           datasetPreview: { [action.tableName]: { $set: action.preview.data.rows } },
-          // datasetPreview: { schema: { tables: { [i]: { preview: { $set: action.preview.data.rows } } } } },
         });
       },
+      [LOCATION_CHANGE]: (state) =>
+        immutable(state, {
+          dialogIsOpen: { $set: false },
+        }),
       [ActionTypes.USER_LOGOUT_SUCCESS]: () => initialDatasetState,
     },
     initialDatasetState,

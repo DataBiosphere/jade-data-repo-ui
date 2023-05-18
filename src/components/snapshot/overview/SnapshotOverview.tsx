@@ -12,6 +12,7 @@ import AppBreadcrumbs from '../../AppBreadcrumbs/AppBreadcrumbs';
 import SnapshotOverviewPanel from './SnapshotOverviewPanel';
 import SnapshotRelationshipsPanel from '../../common/overview/SchemaPanel';
 import { AppDispatch } from '../../../store';
+import { SnapshotPendingSave } from '../../../reducers/snapshot';
 
 const styles = () =>
   createStyles({
@@ -59,7 +60,7 @@ type AllSnapshotProps = SnapshotProps &
   WithStyles<typeof styles>;
 
 function SnapshotOverview(props: AllSnapshotProps) {
-  const { classes, dispatch, match, snapshot, snapshotPolicies } = props;
+  const { classes, dispatch, match, pendingSave, snapshot, snapshotPolicies, userRoles } = props;
   const snapshotId = match.params.uuid;
   useOnMount(() => {
     dispatch(
@@ -71,6 +72,7 @@ function SnapshotOverview(props: AllSnapshotProps) {
           SnapshotIncludeOptions.ACCESS_INFORMATION,
           SnapshotIncludeOptions.PROFILE,
           SnapshotIncludeOptions.DATA_PROJECT,
+          SnapshotIncludeOptions.DUOS,
         ],
       }),
     );
@@ -102,7 +104,12 @@ function SnapshotOverview(props: AllSnapshotProps) {
           </div>
         </div>
         <div className={classes.mainColumn}>
-          <SnapshotOverviewPanel snapshot={snapshot} />
+          <SnapshotOverviewPanel
+            dispatch={dispatch}
+            pendingSave={pendingSave}
+            snapshot={snapshot}
+            userRoles={userRoles}
+          />
         </div>
       </div>
     </div>
@@ -112,14 +119,18 @@ function SnapshotOverview(props: AllSnapshotProps) {
 }
 
 type StateProps = {
+  pendingSave: SnapshotPendingSave;
   snapshot: SnapshotModel;
   snapshotPolicies: PolicyModel[];
+  userRoles: Array<string>;
 };
 
 function mapStateToProps(state: TdrState) {
   return {
+    pendingSave: state.snapshots.pendingSave,
     snapshot: state.snapshots.snapshot,
     snapshotPolicies: state.snapshots.snapshotPolicies,
+    userRoles: state.snapshots.userRoles,
   };
 }
 

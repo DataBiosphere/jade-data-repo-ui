@@ -11,7 +11,6 @@ import {
   Typography,
 } from '@mui/material';
 import { CustomTheme } from '@mui/material/styles';
-import TerraTooltip from '../../common/TerraTooltip';
 import { exportSnapshot, resetSnapshotExport } from '../../../actions';
 import { TdrState } from '../../../reducers';
 import { AppDispatch } from '../../../store';
@@ -56,11 +55,13 @@ const formatExportUrl = (
   window: string,
   snapshot: SnapshotModel,
   manifest: string,
+  tdrSyncPermissions: boolean,
 ) =>
-  `${terraUrl}#import-data?url=${window}&snapshotId=${snapshot.id}&format=tdrexport&snapshotName=${snapshot.name}&tdrmanifest=${manifest}`;
+  `${terraUrl}#import-data?url=${window}&snapshotId=${snapshot.id}&format=tdrexport&snapshotName=${
+    snapshot.name
+  }&tdrmanifest=${encodeURIComponent(manifest)}&tdrSyncPermissions=${tdrSyncPermissions}`;
 
 function SnapshotExport(props: SnapshotExportProps) {
-  const [exportGsPaths, setExportGsPaths] = React.useState(false);
   const {
     classes,
     dispatch,
@@ -71,35 +72,27 @@ function SnapshotExport(props: SnapshotExportProps) {
     terraUrl,
     userRoles,
   } = props;
-  const exportResponseManifest =
-    exportResponse &&
-    exportResponse.format &&
-    exportResponse.format.parquet &&
-    exportResponse.format.parquet.manifest;
+  const exportResponseManifest = exportResponse?.format?.parquet?.manifest;
 
+  const [exportGsPaths, setExportGsPaths] = React.useState(false);
   const handleExportGsPathsChanged = () => {
     setExportGsPaths(!exportGsPaths);
   };
 
+  const canSyncPermissions = userRoles.includes(SnapshotRoles.STEWARD);
+  const [tdrSyncPermissions, setTdrSyncPermissions] = React.useState(canSyncPermissions);
+  const handleTdrSyncPermissionsChanged = () => {
+    setTdrSyncPermissions(!tdrSyncPermissions);
+  };
+
   const exportToWorkspaceCopy = () => {
-    dispatch(exportSnapshot(of.id, exportGsPaths));
+    const validatePrimaryKeyUniqueness = of.cloudPlatform === 'gcp';
+    dispatch(exportSnapshot(of.id, exportGsPaths, validatePrimaryKeyUniqueness));
   };
 
   const resetExport = () => {
     dispatch(resetSnapshotExport());
   };
-
-  const gsPathsCheckbox = !isProcessing ? (
-    <Checkbox checked={exportGsPaths} onChange={handleExportGsPathsChanged} />
-  ) : (
-    <Checkbox checked={exportGsPaths} disabled />
-  );
-
-  const canExport = userRoles.includes(SnapshotRoles.STEWARD);
-  const tooltipMessage =
-    'Exporting a snapshot to a workspace means that all members of your workspace ' +
-    'will be able to have read only access to the tables and files in the snapshot';
-  const tooltipError = 'You must be a steward of this snapshot in order to export to Terra';
 
   return (
     <div>
@@ -107,35 +100,54 @@ function SnapshotExport(props: SnapshotExportProps) {
         Export to Terra
       </Typography>
       <Typography variant="body1" className={classes.section}>
-        Export a copy of the snapshot metadata to an existing or new Terra workspace
+        Export a copy of the snapshot metadata to a new or existing Terra workspace
       </Typography>
+      {of.cloudPlatform === 'gcp' && (
+        <FormGroup>
+          <FormControlLabel
+            data-cy="gs-paths-checkbox"
+            control={
+              <Checkbox
+                checked={exportGsPaths}
+                onChange={handleExportGsPathsChanged}
+                disabled={isProcessing}
+              />
+            }
+            label="Convert DRS URLs to Google Cloud Storage Paths (gs://...)"
+          />
+          <FormHelperText>
+            <i>
+              <b>Note:</b> gs-paths can change over time
+            </i>
+          </FormHelperText>
+        </FormGroup>
+      )}
       <FormGroup>
         <FormControlLabel
-          data-cy="gs-paths-checkbox"
-          control={gsPathsCheckbox}
-          label="Convert DRS URLs to Google Cloud Storage Paths (gs://...)"
+          data-cy="tdr-sync-permissions-checkbox"
+          control={
+            <Checkbox
+              checked={tdrSyncPermissions}
+              onChange={handleTdrSyncPermissionsChanged}
+              disabled={!canSyncPermissions || isProcessing}
+            />
+          }
+          label="Add workspace policy groups to snapshot readers"
         />
         <FormHelperText>
-          <i>
-            <b>Note: </b> gs-paths can change over time
-          </i>
+          <i>This will grant workspace members read access to the snapshot's tables and files</i>
         </FormHelperText>
       </FormGroup>
       {!isProcessing && !isDone && (
-        <TerraTooltip title={canExport ? tooltipMessage : tooltipError}>
-          <span>
-            <Button
-              data-cy="export-snapshot-button"
-              onClick={exportToWorkspaceCopy}
-              className={classes.exportButton}
-              variant="outlined"
-              color="primary"
-              disabled={!canExport}
-            >
-              Export snapshot
-            </Button>
-          </span>
-        </TerraTooltip>
+        <Button
+          data-cy="export-snapshot-button"
+          onClick={exportToWorkspaceCopy}
+          className={classes.exportButton}
+          variant="outlined"
+          color="primary"
+        >
+          Export snapshot
+        </Button>
       )}
       {isProcessing && !isDone && (
         <Button
@@ -159,7 +171,13 @@ function SnapshotExport(props: SnapshotExportProps) {
           <a
             target="_blank"
             rel="noopener noreferrer"
-            href={formatExportUrl(terraUrl, window.location.origin, of, exportResponseManifest)}
+            href={formatExportUrl(
+              terraUrl,
+              window.location.origin,
+              of,
+              exportResponseManifest,
+              tdrSyncPermissions,
+            )}
           >
             Snapshot ready - continue
           </a>

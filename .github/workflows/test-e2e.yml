@@ -10,16 +10,6 @@ on:
   pull_request:
     branches:
       - develop
-    paths:
-      - '!*'
-      - 'src/**'
-      - 'package.json'
-      - 'cypress.json'
-      - 'cypress/**'
-      - 'Dockerfile'
-      - 'Dockerfile.direct'
-      - 'config-overrides.js'
-      - '.github/workflows/test-e2e.yml'
   schedule:
     - cron: '0 4 * * *' # run at 4 AM UTC, 12PM EST.
 jobs:
@@ -33,34 +23,34 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
       - name: 'Whitelist Runner IP'
-        uses: broadinstitute/datarepo-actions/actions/main@0.59.0
+        uses: broadinstitute/datarepo-actions/actions/main@0.67.0
         with:
           actions_subcommand: 'gcp_whitelist'
           role_id: ${{ secrets.ROLE_ID }}
           secret_id: ${{ secrets.SECRET_ID }}
       - name: 'Check for an available namespace to deploy API to and set state lock'
         id: namespace
-        uses: broadinstitute/datarepo-actions/actions/main@0.59.0
+        uses: broadinstitute/datarepo-actions/actions/main@0.67.0
         with:
           actions_subcommand: 'k8_checknamespace'
           # Note: Integration-4 is also set up for UI testing, except that the datasets
           # have been removed. We'd need to run the "ingest.js" script to ingest the datasets
           # in order to use int-4 again.
           k8_namespaces: 'integration-4,integration-5'
-      - name: Build new ui container
+      - name: initialize npm
         env:
           DEV_PROJECT: broad-jade-dev
+          DISABLE_ESLINT_PLUGIN: true
         run: |
           GCR_TAG=$(git rev-parse --short HEAD)
           echo "GCR_TAG=$(echo ${GCR_TAG})" >> $GITHUB_ENV
           npm ci
-          npm run-script build
       - name: set npm env
         run: |
           eval $(cat env_vars)
@@ -68,13 +58,15 @@ jobs:
           HOST=localhost
           echo "HOST=$(echo ${HOST})" >> $GITHUB_ENV
       - name: check npm start
+        env:
+          DISABLE_ESLINT_PLUGIN: true
         run: |
           npm start & npx wait-on http://localhost:3000
       # Build the Docker image
       - name: Build
         run: |
           rm -rf jade-dev-account.pem
-          docker build -f Dockerfile.direct -t gcr.io/broad-jade-dev/jade-data-repo-ui:${GCR_TAG} .
+          docker build -f Dockerfile.direct -t gcr.io/broad-jade-dev/jade-data-repo-ui:${GCR_TAG} --build-arg CACHEBUST=$(date +%s) .
       # Push the Docker image to Google Container Registry
       - name: Publish
         run: |
@@ -86,17 +78,17 @@ jobs:
         run: |
           echo "Pushed docker image gcr.io/broad-jade-dev/jade-data-repo-ui:${GCR_TAG}"
       - name: 'Deploy to cluster with Helm'
-        uses: broadinstitute/datarepo-actions/actions/main@0.59.0
+        uses: broadinstitute/datarepo-actions/actions/main@0.67.0
         with:
           actions_subcommand: 'helmdeploy'
           helm_create_secret_manager_secret_version: '0.0.6'
-          helm_datarepo_api_chart_version: 0.0.391
-          helm_datarepo_ui_chart_version: 0.0.164
-          helm_gcloud_sqlproxy_chart_version: 0.19.7
-          helm_oidc_proxy_chart_version: 0.0.37
+          helm_datarepo_api_chart_version: 0.0.490
+          helm_datarepo_ui_chart_version: 0.0.274
+          helm_gcloud_sqlproxy_chart_version: 0.19.9
+          helm_oidc_proxy_chart_version: 0.0.41
           helm_imagetag_update: 'ui'
       - name: "Wait for deployment to come back online"
-        uses: broadinstitute/datarepo-actions/actions/wait-for-deployment@0.59.0
+        uses: broadinstitute/datarepo-actions/actions/wait-for-deployment@0.67.0
         env:
           DEPLOYMENT_TYPE: 'ui'
       - name: set cypresss env
@@ -109,15 +101,16 @@ jobs:
       - name: Cypress run
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          DISABLE_ESLINT_PLUGIN: true
         run: |
           npx cypress run --record
       - name: 'Clean state lock from used Namespace on API deploy'
         if: always()
-        uses: broadinstitute/datarepo-actions/actions/main@0.59.0
+        uses: broadinstitute/datarepo-actions/actions/main@0.67.0
         with:
           actions_subcommand: 'k8_checknamespace_clean'
       - name: 'Clean whitelisted Runner IP'
         if: always()
-        uses: broadinstitute/datarepo-actions/actions/main@0.59.0
+        uses: broadinstitute/datarepo-actions/actions/main@0.67.0
         with:
           actions_subcommand: 'gcp_whitelist_clean'

@@ -17,7 +17,6 @@ function AppBreadcrumbs({ context, childBreadcrumbs }: AppBreadcrumbsProps) {
   const capitalize = (str: string): string => str.charAt(0).toUpperCase() + str.slice(1);
 
   const breadcrumbs: Breadcrumb[] = [
-    { text: 'Dashboard', to: '' },
     { text: `${capitalize(type)}s`, to: `${type}s` },
     { text: name, to: id },
     ...(childBreadcrumbs || []),
@@ -31,7 +30,7 @@ function AppBreadcrumbs({ context, childBreadcrumbs }: AppBreadcrumbsProps) {
         const { text, to } = breadcrumb;
         const disabled = i === breadcrumbs.length - 1;
         hierarchy.push(to);
-        const link = `${hierarchy.join('/')}`;
+        const link = `/${hierarchy.join('/')}`;
         return (
           <BreadcrumbLink key={text.toLowerCase()} to={link} disabled={disabled}>
             {text}
