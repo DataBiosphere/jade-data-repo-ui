@@ -6,9 +6,9 @@ import { Slider, Grid, Typography } from '@mui/material';
 import { TableColumnType } from 'reducers/query';
 import { getColumnStats } from 'actions';
 import { Action } from 'redux';
+import LoadingSpinner from 'components/common/LoadingSpinner';
 import RangeInput from './RangeInput';
 import { ColumnDataTypeCategory, ResourceType } from '../../../../../constants';
-import LoadingSpinner from 'components/common/LoadingSpinner';
 
 type RangeFilterType = {
   column: TableColumnType;

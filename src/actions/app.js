@@ -256,7 +256,8 @@ export const { getFilteredColumnStats } = createActions({
     queryResults,
     columnName,
   }),
-})
+});
+
 export const { getColumnStats } = createActions({
   [ActionTypes.GET_COLUMN_STATS]: (
     resourceType,
@@ -283,7 +284,7 @@ export const { getColumnStats } = createActions({
 });
 
 export const { expandColumnFilter } = createActions({
-  [ActionTypes.EXPAND_COLUMN_FILTER]: (columnName) => ({columnName}),
+  [ActionTypes.EXPAND_COLUMN_FILTER]: (columnName) => ({ columnName }),
 });
 
 export const { previewData } = createActions({

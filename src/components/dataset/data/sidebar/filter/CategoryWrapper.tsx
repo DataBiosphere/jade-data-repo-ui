@@ -3,11 +3,11 @@ import _ from 'lodash';
 import { connect } from 'react-redux';
 import { Action } from 'redux';
 import { CHECKBOX_THRESHOLD, TableColumnType } from 'reducers/query';
+import LoadingSpinner from 'components/common/LoadingSpinner';
 import FreetextFilter from './FreetextFilter';
 import CategoryFilterGroup from './CategoryFilterGroup';
 import { getColumnStats, getFilteredColumnStats } from '../../../../../actions';
 import { ColumnDataTypeCategory, ResourceType } from '../../../../../constants';
-import LoadingSpinner from 'components/common/LoadingSpinner';
 
 type CategoryWrapperProps = {
   column: TableColumnType;
@@ -33,8 +33,7 @@ function CategoryWrapper({
   // Only runs on first expanding the column
   // Other columns could already be filtered
   useEffect(() => {
-    const { isExpanded, originalValues } = column;
-    if (isExpanded && originalValues === undefined) {
+    if (column.isExpanded && column.originalValues === undefined) {
       dispatch(
         getColumnStats(
           ResourceType.DATASET,
@@ -45,14 +44,13 @@ function CategoryWrapper({
         ),
       );
     }
-  }, [dispatch, dataset.id, tableName, column.name, column.isExpanded]);
+  }, [dispatch, dataset.id, tableName, column.name, column.isExpanded, column.originalValues]);
 
   // Run when filter has been updated
   useEffect(() => {
-    const { isExpanded, filterHasUpdated } = column;
     if (
-      isExpanded &&
-      filterHasUpdated &&
+      column.isExpanded &&
+      column.filterHasUpdated &&
       column?.originalValues &&
       column.originalValues.length <= CHECKBOX_THRESHOLD
     ) {

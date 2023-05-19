@@ -203,7 +203,7 @@ export default {
         });
       },
       [ActionTypes.COLUMN_STATS_FILTERED_TEXT_SUCCESS]: (state, action: any) => {
-        const values = action.payload.queryResults.data.values;
+        const { values } = action.payload.queryResults.data;
         const { columnName } = action.payload;
         const { columns } = state;
         const _columns = columns.map((c: TableColumnType) => {
@@ -228,11 +228,11 @@ export default {
         const _columns = columns.map((c: TableColumnType) => {
           if (c.name === columnName) {
             return {
-                ...c,
-                values,
-                originalValues: values,
-                isLoading: false,
-              };
+              ...c,
+              values,
+              originalValues: values,
+              isLoading: false,
+            };
           }
           return c;
         });
@@ -281,7 +281,7 @@ export default {
         const { columnName } = action.payload;
         const _columns = state.columns.map((c: TableColumnType) => {
           if (c.name === columnName) {
-            return { ...c, isExpanded: c.isExpanded === true ? false : true };
+            return { ...c, isExpanded: c.isExpanded };
           }
           return c;
         });

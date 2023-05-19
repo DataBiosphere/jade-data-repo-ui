@@ -267,11 +267,7 @@ export class FilterPanel extends React.PureComponent {
                   {c.name}
                   {c.isExpanded ? <ExpandLess /> : <ExpandMore />}
                 </ListItem>
-                <Collapse
-                  in={c.isExpanded}
-                  timeout="auto"
-                  className={classes.panelContent}
-                >
+                <Collapse in={c.isExpanded} timeout="auto" className={classes.panelContent}>
                   <DataViewSidebarItem
                     column={c}
                     filterData={filterData}
