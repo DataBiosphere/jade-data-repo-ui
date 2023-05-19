@@ -281,7 +281,7 @@ export default {
         const { columnName } = action.payload;
         const _columns = state.columns.map((c: TableColumnType) => {
           if (c.name === columnName) {
-            return { ...c, isExpanded: c.isExpanded };
+            return { ...c, isExpanded: !c.isExpanded };
           }
           return c;
         });
