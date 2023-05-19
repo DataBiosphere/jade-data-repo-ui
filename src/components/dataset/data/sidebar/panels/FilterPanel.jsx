@@ -314,7 +314,7 @@ export class FilterPanel extends React.PureComponent {
 function mapStateToProps(state) {
   return {
     dataset: state.datasets.dataset,
-    datasetRowCount: state.query.resultsCount,
+    datasetRowCount: state.query.queryParams.totalRows,
     columns: state.query.columns,
     filterData: state.query.filterData,
     token: state.user.delegateToken,
