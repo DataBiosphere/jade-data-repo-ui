@@ -161,7 +161,7 @@ export default {
           polling: { $set: false },
         }),
       [ActionTypes.COLUMN_STATS_TEXT_SUCCESS]: (state, action: any) => {
-        const values = action.payload.queryResults.data.values;
+        const { values } = action.payload.queryResults.data;
         const { columnName } = action.payload;
         const { columns } = state;
         // counting on the idea that previewData has already been run
