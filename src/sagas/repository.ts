@@ -813,11 +813,8 @@ export function* previewData({ payload }: any): any {
  */
 
 export function* getColumnStats({ payload }: any): any {
-  const queryState = yield select(getQuery);
-  const { filterStatement } = queryState;
-  const filter = filterStatement === undefined ? '' : `?filter=${filterStatement}`;
   const { columnName, resourceId, resourceType, tableName, columnDataTypeCategory } = payload;
-  const query = `/api/repository/v1/${resourceType}s/${resourceId}/data/${tableName}/statistics/${columnName}${filter}`;
+  const query = `/api/repository/v1/${resourceType}s/${resourceId}/data/${tableName}/statistics/${columnName}`;
   try {
     const response = yield call(authGet, query);
     switch (columnDataTypeCategory) {
@@ -847,7 +844,46 @@ export function* getColumnStats({ payload }: any): any {
     showNotification(err);
     yield put({
       type: ActionTypes.COLUMN_STATS_FAILURE,
-      payload: err,
+      payload: {
+        err,
+        columnName,
+      },
+    });
+  }
+}
+
+export function* getFilteredColumnStats({ payload }: any): any {
+  const queryState = yield select(getQuery);
+  const { filterStatement } = queryState;
+  const filter = filterStatement === undefined ? '' : `?filter=${filterStatement}`;
+  const { columnName, resourceId, resourceType, tableName, columnDataTypeCategory } = payload;
+  const query = `/api/repository/v1/${resourceType}s/${resourceId}/data/${tableName}/statistics/${columnName}${filter}`;
+  try {
+    const response = yield call(authGet, query);
+    switch (columnDataTypeCategory) {
+      case ColumnDataTypeCategory.TEXT:
+        yield put({
+          type: ActionTypes.COLUMN_STATS_FILTERED_TEXT_SUCCESS,
+          payload: {
+            queryResults: response,
+            columnName,
+          },
+        });
+        break;
+      case ColumnDataTypeCategory.NUMERIC:
+        showNotification('ERROR: Numeric column stats cannot be filtered');
+        break;
+      default:
+        showNotification('ERROR: Invalid column data type category');
+    }
+  } catch (err) {
+    showNotification(err);
+    yield put({
+      type: ActionTypes.COLUMN_STATS_FAILURE,
+      payload: {
+        err,
+        columnName,
+      },
     });
   }
 }
@@ -959,6 +995,7 @@ export default function* root() {
     takeLatest(ActionTypes.GET_JOURNAL_ENTRIES, getJournalEntries),
     takeLatest(ActionTypes.PREVIEW_DATA, previewData),
     takeLatest(ActionTypes.GET_FEATURES, getFeatures),
+    takeEvery(ActionTypes.GET_FILTERED_COLUMN_STATS, getFilteredColumnStats),
     takeEvery(ActionTypes.GET_COLUMN_STATS, getColumnStats),
     takeLatest(ActionTypes.GET_BILLING_PROFILES, getBillingProfiles),
     takeLatest(ActionTypes.GET_BILLING_PROFILE_BY_ID, getBillingProfileById),

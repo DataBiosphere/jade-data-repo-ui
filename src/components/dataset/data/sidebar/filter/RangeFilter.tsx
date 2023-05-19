@@ -8,6 +8,7 @@ import { getColumnStats } from 'actions';
 import { Action } from 'redux';
 import RangeInput from './RangeInput';
 import { ColumnDataTypeCategory, ResourceType } from '../../../../../constants';
+import LoadingSpinner from 'components/common/LoadingSpinner';
 
 type RangeFilterType = {
   column: TableColumnType;
@@ -35,16 +36,18 @@ function RangeFilter({
   }
 
   useEffect(() => {
-    dispatch(
-      getColumnStats(
-        ResourceType.DATASET,
-        dataset.id,
-        tableName,
-        column.name,
-        ColumnDataTypeCategory.NUMERIC,
-      ),
-    );
-  }, [dispatch, dataset.id, tableName, column.name]);
+    if (column.isExpanded) {
+      dispatch(
+        getColumnStats(
+          ResourceType.DATASET,
+          dataset.id,
+          tableName,
+          column.name,
+          ColumnDataTypeCategory.NUMERIC,
+        ),
+      );
+    }
+  }, [dispatch, dataset.id, tableName, column.name, column.isExpanded]);
 
   const handleSliderValue = (_event: any, newValue: any) => {
     handleChange(newValue.map(_.toString));
@@ -65,6 +68,10 @@ function RangeFilter({
   };
 
   const value = _.get(filterMap, 'value', [minValue, maxValue]);
+  const { isLoading } = column;
+  if (isLoading) {
+    return <LoadingSpinner />;
+  }
   return (
     <div>
       {maxValue && minValue && (

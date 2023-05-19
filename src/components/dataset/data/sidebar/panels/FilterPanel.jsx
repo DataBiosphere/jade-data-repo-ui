@@ -21,7 +21,7 @@ import TerraTooltip from 'components/common/TerraTooltip';
 import DataViewSidebarItem from '../DataViewSidebarItem';
 import DataSidebarPanel from '../DataSidebarPanel';
 
-import { applyFilters } from '../../../../../actions';
+import { applyFilters, expandColumnFilter } from '../../../../../actions';
 
 const styles = (theme) => ({
   root: {
@@ -93,7 +93,6 @@ export class FilterPanel extends React.PureComponent {
       filterMap: {},
       searchInput: '',
       searchStrings: [],
-      openFilter: '',
     };
   }
 
@@ -184,12 +183,8 @@ export class FilterPanel extends React.PureComponent {
   };
 
   handleOpenFilter = (filter) => {
-    const { openFilter } = this.state;
-    if (filter.name === openFilter) {
-      this.setState({ openFilter: '' });
-    } else {
-      this.setState({ openFilter: filter.name });
-    }
+    const { dispatch } = this.props;
+    dispatch(expandColumnFilter(filter.name));
   };
 
   render() {
@@ -206,7 +201,7 @@ export class FilterPanel extends React.PureComponent {
       handleCreateSnapshot,
       canLink,
     } = this.props;
-    const { searchStrings, searchInput, openFilter } = this.state;
+    const { searchStrings, searchInput } = this.state;
     const filteredColumns = columns.filter((column) => {
       const stringsToCheck = [...searchStrings, searchInput]
         .filter((str) => !!str)
@@ -260,7 +255,7 @@ export class FilterPanel extends React.PureComponent {
             datasetRowCount > 0 &&
             filteredColumns.map((c) => (
               <div
-                className={clsx({ [classes.highlighted]: c.name === openFilter })}
+                className={clsx({ [classes.highlighted]: c.isExpanded })}
                 data-cy="filterItem"
                 key={c.name}
               >
@@ -270,10 +265,10 @@ export class FilterPanel extends React.PureComponent {
                   onClick={() => this.handleOpenFilter(c)}
                 >
                   {c.name}
-                  {c.name === openFilter ? <ExpandLess /> : <ExpandMore />}
+                  {c.isExpanded ? <ExpandLess /> : <ExpandMore />}
                 </ListItem>
                 <Collapse
-                  in={c.name === openFilter}
+                  in={c.isExpanded}
                   timeout="auto"
                   className={classes.panelContent}
                 >

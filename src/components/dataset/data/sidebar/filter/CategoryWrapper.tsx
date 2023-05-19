@@ -5,15 +5,15 @@ import { Action } from 'redux';
 import { CHECKBOX_THRESHOLD, TableColumnType } from 'reducers/query';
 import FreetextFilter from './FreetextFilter';
 import CategoryFilterGroup from './CategoryFilterGroup';
-import { getColumnStats } from '../../../../../actions';
+import { getColumnStats, getFilteredColumnStats } from '../../../../../actions';
 import { ColumnDataTypeCategory, ResourceType } from '../../../../../constants';
+import LoadingSpinner from 'components/common/LoadingSpinner';
 
 type CategoryWrapperProps = {
   column: TableColumnType;
   dataset: any;
   dispatch: Dispatch<Action>;
   filterMap: any;
-  filterStatement: string;
   handleChange: () => void;
   handleFilters: () => void;
   tableName: string;
@@ -28,15 +28,13 @@ function CategoryWrapper({
   handleChange,
   handleFilters,
   tableName,
-  filterStatement,
   toggleExclude,
 }: CategoryWrapperProps) {
-  const refreshColumnStats =
-    column.values === undefined ||
-    (column?.originalValues && column.originalValues.length <= CHECKBOX_THRESHOLD);
+  // Only runs on first expanding the column
+  // Other columns could already be filtered
   useEffect(() => {
-    // only update for checkbox text columns on filtering
-    if (refreshColumnStats) {
+    const { isExpanded, originalValues } = column;
+    if (isExpanded && originalValues === undefined) {
       dispatch(
         getColumnStats(
           ResourceType.DATASET,
@@ -47,9 +45,41 @@ function CategoryWrapper({
         ),
       );
     }
-  }, [dispatch, dataset.id, tableName, column.name, filterStatement, refreshColumnStats]);
+  }, [dispatch, dataset.id, tableName, column.name, column.isExpanded]);
 
-  const { originalValues, values } = column;
+  // Run when filter has been updated
+  useEffect(() => {
+    const { isExpanded, filterHasUpdated } = column;
+    if (
+      isExpanded &&
+      filterHasUpdated &&
+      column?.originalValues &&
+      column.originalValues.length <= CHECKBOX_THRESHOLD
+    ) {
+      dispatch(
+        getFilteredColumnStats(
+          ResourceType.DATASET,
+          dataset.id,
+          tableName,
+          column.name,
+          ColumnDataTypeCategory.TEXT,
+        ),
+      );
+    }
+  }, [
+    dispatch,
+    dataset.id,
+    tableName,
+    column.name,
+    column.isExpanded,
+    column.filterHasUpdated,
+    column.originalValues,
+  ]);
+
+  const { originalValues, values, isLoading } = column;
+  if (isLoading) {
+    return <LoadingSpinner />;
+  }
   if (values) {
     if (originalValues && _.size(originalValues) <= CHECKBOX_THRESHOLD) {
       return (
@@ -82,7 +112,6 @@ function CategoryWrapper({
 function mapStateToProps(state: any) {
   return {
     dataset: state.datasets.dataset,
-    filterStatement: state.query.filterStatement,
   };
 }
 

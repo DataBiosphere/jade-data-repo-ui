@@ -22,6 +22,9 @@ export type TableColumnType = {
   values?: ColumnValueType[]; // ColumnStats
   minValue?: number; // ColumnStats
   maxValue?: number; // ColumnStats
+  isLoading?: boolean; // ColumnStats
+  isExpanded?: boolean; // Filter panel
+  filterHasUpdated?: boolean; // Filter panel
 };
 
 export type ColumnValueType = {
@@ -108,6 +111,9 @@ export default {
           allowSort: !column.array_of,
           allowResize: true,
           width: columnsByName[column.name]?.width || TABLE_DEFAULT_COLUMN_WIDTH,
+          isExpanded: false,
+          isLoading: false,
+          filterHasUpdated: true,
         }));
         // We only need to re-format row data of type timestamp
         const timestampColumns: TableColumnType[] = [];
@@ -154,12 +160,64 @@ export default {
           errMsg: { $set: action.payload },
           polling: { $set: false },
         }),
-      [ActionTypes.COLUMN_STATS_FAILURE]: (state, action: any) =>
-        immutable(state, {
+      [ActionTypes.GET_FILTERED_COLUMN_STATS]: (state, action: any) => {
+        const { columnName } = action.payload;
+        const { columns } = state;
+        const _columns = columns.map((c: TableColumnType) => {
+          if (c.name === columnName) {
+            return { ...c, isLoading: true };
+          }
+          return c;
+        });
+        return immutable(state, {
+          columns: { $set: _columns },
+        });
+      },
+      [ActionTypes.GET_COLUMN_STATS]: (state, action: any) => {
+        const { columnName } = action.payload;
+        const { columns } = state;
+        const _columns = columns.map((c: TableColumnType) => {
+          if (c.name === columnName) {
+            return { ...c, isLoading: true };
+          }
+          return c;
+        });
+        return immutable(state, {
+          columns: { $set: _columns },
+        });
+      },
+      [ActionTypes.COLUMN_STATS_FAILURE]: (state, action: any) => {
+        const { columnName } = action.payload;
+        const { columns } = state;
+        const _columns = columns.map((c: TableColumnType) => {
+          if (c.name === columnName) {
+            return { ...c, isLoading: false };
+          }
+          return c;
+        });
+        return immutable(state, {
           error: { $set: true },
           errMsg: { $set: action.payload },
           polling: { $set: false },
-        }),
+          columns: { $set: _columns },
+        });
+      },
+      [ActionTypes.COLUMN_STATS_FILTERED_TEXT_SUCCESS]: (state, action: any) => {
+        const values = action.payload.queryResults.data.values;
+        const { columnName } = action.payload;
+        const { columns } = state;
+        const _columns = columns.map((c: TableColumnType) => {
+          if (c.name === columnName) {
+            return { ...c, values, isLoading: false, filterHasUpdated: false };
+          }
+          return c;
+        });
+        return immutable(state, {
+          error: { $set: false },
+          columns: { $set: _columns },
+          polling: { $set: false },
+        });
+      },
       [ActionTypes.COLUMN_STATS_TEXT_SUCCESS]: (state, action: any) => {
         const { values } = action.payload.queryResults.data;
         const { columnName } = action.payload;
@@ -169,10 +227,12 @@ export default {
         // We're just adding the column stats onto the exisiting model
         const _columns = columns.map((c: TableColumnType) => {
           if (c.name === columnName) {
-            if (c.originalValues === undefined) {
-              return { ...c, values, originalValues: values };
-            }
-            return { ...c, values };
+            return {
+                ...c,
+                values,
+                originalValues: values,
+                isLoading: false,
+              };
           }
           return c;
         });
@@ -187,7 +247,7 @@ export default {
         const { columnName } = action.payload;
         const _columns = state.columns.map((c: TableColumnType) => {
           if (c.name === columnName) {
-            return { ...c, minValue, maxValue };
+            return { ...c, minValue, maxValue, isLoading: false, filterHasUpdated: false };
           }
           return c;
         });
@@ -217,12 +277,28 @@ export default {
             }),
           },
         }),
+      [ActionTypes.EXPAND_COLUMN_FILTER]: (state, action: any) => {
+        const { columnName } = action.payload;
+        const _columns = state.columns.map((c: TableColumnType) => {
+          if (c.name === columnName) {
+            return { ...c, isExpanded: c.isExpanded === true ? false : true };
+          }
+          return c;
+        });
+        return immutable(state, {
+          columns: { $set: _columns },
+        });
+      },
       [ActionTypes.APPLY_FILTERS]: (state, action: any) => {
         const filterStatement = buildfilterStatement(action.payload.filters);
+        const _columns = state.columns.map((c: TableColumnType) => {
+          return { ...c, isExpanded: false, filterHasUpdated: true };
+        });
         return immutable(state, {
           filterData: { $set: action.payload.filters },
           filterStatement: { $set: filterStatement },
           page: { $set: 0 },
+          columns: { $set: _columns },
         });
       },
       [ActionTypes.APPLY_SORT]: (state, action: any) =>

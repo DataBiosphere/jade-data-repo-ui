@@ -238,6 +238,25 @@ export const { refreshQuery } = createActions({
   [ActionTypes.REFRESH_QUERY]: () => ({}),
 });
 
+export const { getFilteredColumnStats } = createActions({
+  [ActionTypes.GET_FILTERED_COLUMN_STATS]: (
+    resourceType,
+    resourceId,
+    tableName,
+    columnName,
+    columnDataTypeCategory,
+  ) => ({
+    resourceType,
+    resourceId,
+    tableName,
+    columnName,
+    columnDataTypeCategory,
+  }),
+  [ActionTypes.COLUMN_STATS_FILTERED_TEXT_SUCCESS]: (queryResults, columnName) => ({
+    queryResults,
+    columnName,
+  }),
+})
 export const { getColumnStats } = createActions({
   [ActionTypes.GET_COLUMN_STATS]: (
     resourceType,
@@ -260,7 +279,11 @@ export const { getColumnStats } = createActions({
     queryResults,
     columnName,
   }),
-  [ActionTypes.COLUMN_STATS_FAILURE]: (errMsg) => ({ errMsg }),
+  [ActionTypes.COLUMN_STATS_FAILURE]: (errMsg, columnName) => ({ errMsg, columnName }),
+});
+
+export const { expandColumnFilter } = createActions({
+  [ActionTypes.EXPAND_COLUMN_FILTER]: (columnName) => ({columnName}),
 });
 
 export const { previewData } = createActions({
