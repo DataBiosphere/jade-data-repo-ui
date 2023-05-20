@@ -8,7 +8,7 @@ import { getColumnStats } from 'actions';
 import { Action } from 'redux';
 import LoadingSpinner from 'components/common/LoadingSpinner';
 import RangeInput from './RangeInput';
-import { ColumnDataTypeCategory, ResourceType } from '../../../../../constants';
+import { ColumnStatsRetrievalType, ResourceType } from '../../../../../constants';
 
 type RangeFilterType = {
   column: TableColumnType;
@@ -43,7 +43,7 @@ function RangeFilter({
           dataset.id,
           tableName,
           column.name,
-          ColumnDataTypeCategory.NUMERIC,
+          ColumnStatsRetrievalType.RETRIEVE_ALL_NUMERIC,
         ),
       );
     }

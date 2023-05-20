@@ -111,9 +111,7 @@ export default {
           allowSort: !column.array_of,
           allowResize: true,
           width: columnsByName[column.name]?.width || TABLE_DEFAULT_COLUMN_WIDTH,
-          isExpanded: false,
           isLoading: false,
-          filterHasUpdated: true,
         }));
         // We only need to re-format row data of type timestamp
         const timestampColumns: TableColumnType[] = [];
@@ -160,19 +158,6 @@ export default {
           errMsg: { $set: action.payload },
           polling: { $set: false },
         }),
-      [ActionTypes.GET_FILTERED_COLUMN_STATS]: (state, action: any) => {
-        const { columnName } = action.payload;
-        const { columns } = state;
-        const _columns = columns.map((c: TableColumnType) => {
-          if (c.name === columnName) {
-            return { ...c, isLoading: true };
-          }
-          return c;
-        });
-        return immutable(state, {
-          columns: { $set: _columns },
-        });
-      },
       [ActionTypes.GET_COLUMN_STATS]: (state, action: any) => {
         const { columnName } = action.payload;
         const { columns } = state;
@@ -242,6 +227,28 @@ export default {
           polling: { $set: false },
         });
       },
+      [ActionTypes.COLUMN_STATS_ALL_AND_FILTERED_TEXT_SUCCESS]: (state, action: any) => {
+        const originalValues = action.payload.queryResults.data.values;
+        const { values } = action.payload.filteredQueryResults.data;
+        const { columnName } = action.payload;
+        const { columns } = state;
+        const _columns = columns.map((c: TableColumnType) => {
+          if (c.name === columnName) {
+            return {
+              ...c,
+              values,
+              originalValues,
+              isLoading: false,
+            };
+          }
+          return c;
+        });
+        return immutable(state, {
+          error: { $set: false },
+          columns: { $set: _columns },
+          polling: { $set: false },
+        });
+      },
       [ActionTypes.COLUMN_STATS_NUMERIC_SUCCESS]: (state, action: any) => {
         const { minValue, maxValue } = action.payload.queryResults.data;
         const { columnName } = action.payload;
@@ -292,7 +299,7 @@ export default {
       [ActionTypes.APPLY_FILTERS]: (state, action: any) => {
         const filterStatement = buildfilterStatement(action.payload.filters);
         const _columns = state.columns.map((c: TableColumnType) => {
-          return { ...c, isExpanded: false, filterHasUpdated: true };
+          return { ...c, filterHasUpdated: true };
         });
         return immutable(state, {
           filterData: { $set: action.payload.filters },

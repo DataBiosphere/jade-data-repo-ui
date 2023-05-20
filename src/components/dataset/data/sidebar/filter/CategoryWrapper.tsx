@@ -6,8 +6,8 @@ import { CHECKBOX_THRESHOLD, TableColumnType } from 'reducers/query';
 import LoadingSpinner from 'components/common/LoadingSpinner';
 import FreetextFilter from './FreetextFilter';
 import CategoryFilterGroup from './CategoryFilterGroup';
-import { getColumnStats, getFilteredColumnStats } from '../../../../../actions';
-import { ColumnDataTypeCategory, ResourceType } from '../../../../../constants';
+import { getColumnStats } from '../../../../../actions';
+import { ColumnStatsRetrievalType, ResourceType } from '../../../../../constants';
 
 type CategoryWrapperProps = {
   column: TableColumnType;
@@ -30,37 +30,30 @@ function CategoryWrapper({
   tableName,
   toggleExclude,
 }: CategoryWrapperProps) {
-  // Only runs on first expanding the column
-  // Other columns could already be filtered
   useEffect(() => {
-    if (column.isExpanded && column.originalValues === undefined) {
+    const firstColumnStatsLoad = column.isExpanded && column.originalValues === undefined;
+    const filterHasUpdatedForCheckboxFields =
+      column.isExpanded &&
+      column.filterHasUpdated &&
+      column?.originalValues &&
+      column.originalValues.length <= CHECKBOX_THRESHOLD;
+    let columnStatsRetrievalType = null;
+    if (firstColumnStatsLoad && column.filterHasUpdated) {
+      columnStatsRetrievalType = ColumnStatsRetrievalType.RETRIEVE_ALL_AND_FILTERED_TEXT;
+    } else if (filterHasUpdatedForCheckboxFields) {
+      columnStatsRetrievalType = ColumnStatsRetrievalType.RETRIEVE_FILTERED_TEXT;
+    } else if (firstColumnStatsLoad) {
+      columnStatsRetrievalType = ColumnStatsRetrievalType.RETRIEVE_ALL_TEXT;
+    }
+    console.log(`${column.name} ${columnStatsRetrievalType}`);
+    if (columnStatsRetrievalType !== null) {
       dispatch(
         getColumnStats(
           ResourceType.DATASET,
           dataset.id,
           tableName,
           column.name,
-          ColumnDataTypeCategory.TEXT,
-        ),
-      );
-    }
-  }, [dispatch, dataset.id, tableName, column.name, column.isExpanded, column.originalValues]);
-
-  // Run when filter has been updated
-  useEffect(() => {
-    if (
-      column.isExpanded &&
-      column.filterHasUpdated &&
-      column?.originalValues &&
-      column.originalValues.length <= CHECKBOX_THRESHOLD
-    ) {
-      dispatch(
-        getFilteredColumnStats(
-          ResourceType.DATASET,
-          dataset.id,
-          tableName,
-          column.name,
-          ColumnDataTypeCategory.TEXT,
+          columnStatsRetrievalType,
         ),
       );
     }
@@ -70,8 +63,8 @@ function CategoryWrapper({
     tableName,
     column.name,
     column.isExpanded,
-    column.filterHasUpdated,
     column.originalValues,
+    column.filterHasUpdated,
   ]);
 
   const { originalValues, values, isLoading } = column;
