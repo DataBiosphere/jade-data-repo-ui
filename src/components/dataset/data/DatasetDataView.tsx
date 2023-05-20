@@ -2,6 +2,7 @@ import React, { useState, useEffect, Dispatch } from 'react';
 import { connect } from 'react-redux';
 
 import {
+  resetColumns,
   resetQuery,
   getDatasetById,
   getDatasetPolicy,
@@ -63,7 +64,7 @@ function DatasetDataView({ dataset, dispatch, match, polling, profile, snapshotR
     const datasetId = match.params.uuid;
     const loaded = dataset && dataset.schema && dataset.id === datasetId;
     if (loaded) {
-      dispatch(resetQuery());
+      dispatch(resetColumns());
       const names = dataset.schema?.tables.map((t) => t.name) || [];
       setTableNames(names);
       setSelected(names[0]);

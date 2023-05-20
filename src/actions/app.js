@@ -329,6 +329,10 @@ export const { resetQuery } = createActions({
   [ActionTypes.RESET_QUERY]: () => ({}),
 });
 
+export const { resetColumns } = createActions({
+  [ActionTypes.RESET_COLUMNS]: () => ({}),
+});
+
 export const { changeRowsPerPage } = createActions({
   [ActionTypes.CHANGE_ROWS_PER_PAGE]: (rowsPerPage) => rowsPerPage,
 });

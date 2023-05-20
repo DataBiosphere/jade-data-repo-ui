@@ -45,7 +45,6 @@ function CategoryWrapper({
     } else if (firstColumnStatsLoad) {
       columnStatsRetrievalType = ColumnStatsRetrievalType.RETRIEVE_ALL_TEXT;
     }
-    console.log(`${column.name} ${columnStatsRetrievalType}`);
     if (columnStatsRetrievalType !== null) {
       dispatch(
         getColumnStats(

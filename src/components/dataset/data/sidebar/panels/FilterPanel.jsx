@@ -106,6 +106,7 @@ export class FilterPanel extends React.PureComponent {
     filterData: PropTypes.object,
     handleCreateSnapshot: PropTypes.func,
     open: PropTypes.bool,
+    polling: PropTypes.bool,
     selected: PropTypes.string,
     table: PropTypes.object,
     token: PropTypes.string,
@@ -195,6 +196,7 @@ export class FilterPanel extends React.PureComponent {
       datasetRowCount,
       filterData,
       open,
+      polling,
       table,
       token,
       selected,
@@ -278,7 +280,7 @@ export class FilterPanel extends React.PureComponent {
                 </Collapse>
               </div>
             ))}
-          {table && table.name && datasetRowCount === 0 && (
+          {!polling && table && table.name && datasetRowCount === 0 && (
             <div>We cannot filter this table because it is empty.</div>
           )}
         </div>
@@ -317,6 +319,7 @@ function mapStateToProps(state) {
     datasetRowCount: state.query.queryParams.totalRows,
     columns: state.query.columns,
     filterData: state.query.filterData,
+    polling: state.query.polling,
     token: state.user.delegateToken,
   };
 }

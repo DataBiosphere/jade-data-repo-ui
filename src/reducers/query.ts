@@ -325,6 +325,10 @@ export default {
           orderProperty: { $set: '' },
           orderDirection: { $set: 'desc' },
         }),
+        [ActionTypes.RESET_COLUMNS]: (state) =>
+        immutable(state, {
+          columns: { $set: [] },
+        }),
       [LOCATION_CHANGE]: (state) =>
         immutable(state, {
           rows: { $set: [] },
