@@ -217,6 +217,7 @@ export default {
               values,
               originalValues: values,
               isLoading: false,
+              filterHasUpdated: false,
             };
           }
           return c;
@@ -239,6 +240,7 @@ export default {
               values,
               originalValues,
               isLoading: false,
+              filterHasUpdated: false,
             };
           }
           return c;
