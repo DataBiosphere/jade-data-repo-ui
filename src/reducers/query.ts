@@ -298,9 +298,10 @@ export default {
       },
       [ActionTypes.APPLY_FILTERS]: (state, action: any) => {
         const filterStatement = buildfilterStatement(action.payload.filters);
-        const _columns = state.columns.map((c: TableColumnType) => {
-          return { ...c, filterHasUpdated: true };
-        });
+        const _columns = state.columns.map((c: TableColumnType) => ({
+          ...c,
+          filterHasUpdated: true,
+        }));
         return immutable(state, {
           filterData: { $set: action.payload.filters },
           filterStatement: { $set: filterStatement },
@@ -325,7 +326,7 @@ export default {
           orderProperty: { $set: '' },
           orderDirection: { $set: 'desc' },
         }),
-        [ActionTypes.RESET_COLUMNS]: (state) =>
+      [ActionTypes.RESET_COLUMNS]: (state) =>
         immutable(state, {
           columns: { $set: [] },
         }),

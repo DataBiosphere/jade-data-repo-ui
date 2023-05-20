@@ -821,7 +821,7 @@ export function* getColumnStats({ payload }: any): any {
   const filteredQuery = `${baseQuery}${filter}`;
   try {
     switch (columnStatsRetrievalType) {
-      case ColumnStatsRetrievalType.RETRIEVE_ALL_TEXT:
+      case ColumnStatsRetrievalType.RETRIEVE_ALL_TEXT: {
         const response = yield call(authGet, baseQuery);
         yield put({
           type: ActionTypes.COLUMN_STATS_TEXT_SUCCESS,
@@ -831,7 +831,8 @@ export function* getColumnStats({ payload }: any): any {
           },
         });
         break;
-      case ColumnStatsRetrievalType.RETRIEVE_ALL_NUMERIC:
+      }
+      case ColumnStatsRetrievalType.RETRIEVE_ALL_NUMERIC: {
         const numericResponse = yield call(authGet, baseQuery);
         yield put({
           type: ActionTypes.COLUMN_STATS_NUMERIC_SUCCESS,
@@ -841,7 +842,8 @@ export function* getColumnStats({ payload }: any): any {
           },
         });
         break;
-      case ColumnStatsRetrievalType.RETRIEVE_FILTERED_TEXT:
+      }
+      case ColumnStatsRetrievalType.RETRIEVE_FILTERED_TEXT: {
         const filteredResponse = yield call(authGet, filteredQuery);
         yield put({
           type: ActionTypes.COLUMN_STATS_FILTERED_TEXT_SUCCESS,
@@ -851,7 +853,8 @@ export function* getColumnStats({ payload }: any): any {
           },
         });
         break;
-      case ColumnStatsRetrievalType.RETRIEVE_ALL_AND_FILTERED_TEXT:
+      }
+      case ColumnStatsRetrievalType.RETRIEVE_ALL_AND_FILTERED_TEXT: {
         const queries = [baseQuery, filteredQuery];
         const responses = yield all(queries.map((q) => call(authGet, q)));
         yield put({
@@ -863,8 +866,10 @@ export function* getColumnStats({ payload }: any): any {
           },
         });
         break;
-      default:
+      }
+      default: {
         showNotification('ERROR: Invalid column data type category');
+      }
     }
   } catch (err) {
     showNotification(err);

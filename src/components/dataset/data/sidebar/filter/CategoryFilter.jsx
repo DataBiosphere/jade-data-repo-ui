@@ -33,7 +33,7 @@ export class CategoryFilter extends React.PureComponent {
           <Checkbox
             checked={checked}
             onChange={this.handleChange}
-            value={name ?? "null"}
+            value={name ?? 'null'}
             color="primary"
             size="small"
             data-cy={`categoryFilterCheckbox-${name}`}
