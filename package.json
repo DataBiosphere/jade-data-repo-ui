@@ -97,8 +97,7 @@
     "tss-react": "^4.8.2",
     "typescript": "^5.0.4",
     "validator": "^13.9.0",
-    "webfontloader": "^1.6.28",
-    "xlsx": "^0.18.5"
+    "webfontloader": "^1.6.28"
   },
   "devDependencies": {
     "@cypress/react": "5.12.5",
