@@ -47,7 +47,7 @@ function RangeFilter({
         ),
       );
     }
-  }, [dispatch, dataset.id, tableName, column.name, column.isExpanded, column.maxValue]);
+  }, [dispatch, dataset.id, tableName, column.name, column.isExpanded, column.minValue]);
 
   const handleSliderValue = (_event: any, newValue: any) => {
     handleChange(newValue.map(_.toString));
