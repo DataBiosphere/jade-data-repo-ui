@@ -36,7 +36,7 @@ function RangeFilter({
   }
 
   useEffect(() => {
-    if (column.isExpanded) {
+    if (column.isExpanded && column.minValue === undefined) {
       dispatch(
         getColumnStats(
           ResourceType.DATASET,
