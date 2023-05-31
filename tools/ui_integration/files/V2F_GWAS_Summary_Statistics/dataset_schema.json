@@ -1256,7 +1256,5 @@
         ]
       }
     ]
-  },
-  "cloudPlatform": "gcp",
-  "region": "us-east4"
+  }
 }

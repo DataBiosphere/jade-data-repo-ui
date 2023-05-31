@@ -2,6 +2,7 @@
   {
     "name": "CatalogTestDataset",
     "schema": "CatalogTestDataset",
+    "cloud_platform": "gcp",
     "tables": [
       "participant",
       "sample"
