@@ -89,7 +89,7 @@ function CategoryWrapper({
         handleChange={handleChange}
         handleFilters={handleFilters}
         filterMap={filterMap}
-        values={values}
+        values={originalValues}
         table={tableName}
         toggleExclude={toggleExclude}
         tableName={tableName}
