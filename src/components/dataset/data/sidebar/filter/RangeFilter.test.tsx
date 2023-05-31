@@ -6,7 +6,7 @@ import { routerMiddleware } from 'connected-react-router';
 import createMockStore, { MockStoreEnhanced } from 'redux-mock-store';
 import React from 'react';
 import { TableColumnType } from 'reducers/query';
-import CategoryWrapper from './CategoryWrapper';
+import RangeFilter from './RangeFilter';
 import globalTheme from '../../../../../modules/theme';
 import history from '../../../../../modules/hist';
 import { ActionTypes } from '../../../../../constants';
@@ -24,11 +24,12 @@ function createState(column: TableColumnType): any {
 }
 
 const baseStringColumn = {
-  name: 'variant_id',
-  label: 'variant_id',
+  name: 'p_value',
+  label: 'p_value',
 };
 
 let store: MockStoreEnhanced<unknown, unknown>;
+const filterMap = { type: 'range', value: [0, 534] };
 
 function mountComponent(state: any) {
   const mockStore = createMockStore([routerMiddleware(history)]);
@@ -37,14 +38,13 @@ function mountComponent(state: any) {
     <Provider store={store}>
       <Router history={history}>
         <ThemeProvider theme={globalTheme}>
-          <CategoryWrapper
+          <RangeFilter
             key={state.column.name}
             column={state.column}
-            filterMap={{}}
+            filterMap={filterMap}
             handleChange={() => null}
             handleFilters={() => null}
             tableName="tableName"
-            toggleExclude={() => null}
           />
         </ThemeProvider>
       </Router>
@@ -52,7 +52,7 @@ function mountComponent(state: any) {
   );
 }
 
-describe('Initial load of CategoryWrapper', () => {
+describe('Initial load of RangeFilter', () => {
   beforeEach(() => {
     const initialState = createState({ ...baseStringColumn, isExpanded: false });
     mountComponent(initialState);
@@ -61,8 +61,6 @@ describe('Initial load of CategoryWrapper', () => {
     assertGetColumnStatsWasNotCalled();
   });
   it('No values are returned, so component should not be displayed', () => {
-    cy.get('[data-cy="categoryFilterCheckbox-a"]').should('not.exist');
-    cy.get('[id="autocomplete-variant_id"]').should('not.exist');
     cy.get('circle').should('not.exist');
   });
 });
@@ -77,76 +75,35 @@ describe('First expansion of column', () => {
   });
 });
 
-describe('Expanded column after another column has updated - Checkbox', () => {
+describe('Handle empty field', () => {
   beforeEach(() => {
-    const state = createState({
-      ...baseStringColumn,
-      isExpanded: true,
-      filterHasUpdated: true,
-      values: [{ value: 'a', count: 1 }],
-      originalValues: [
-        { value: 'a', count: 1 },
-        { value: 'b', count: 2 },
-      ],
-    });
+    const state = createState({ ...baseStringColumn, isExpanded: true, isLoading: false });
     mountComponent(state);
   });
-  it('Load column stats after filter has changed for checkbox fields', () => {
+  it('should have have attempted to load column stats', () => {
     assertGetColumnStatsWasCalled();
   });
-  it('Checkbox component is displayed', () => {
-    cy.get('[data-cy="categoryFilterCheckbox-a"]').should('exist');
+  it('Empty column text should appear', () => {
+    cy.get('[data-cy="empty-column-message"]').should('exist');
   });
 });
 
-describe('Expanded column after another column has updated - Freetext', () => {
+describe('Expanded column after another column has updated', () => {
   beforeEach(() => {
     const state = createState({
       ...baseStringColumn,
       isExpanded: true,
       filterHasUpdated: true,
-      values: [{ value: 'a', count: 1 }],
-      originalValues: [
-        { value: 'a', count: 1 },
-        { value: 'b', count: 2 },
-        { value: 'b', count: 2 },
-        { value: 'b', count: 2 },
-        { value: 'b', count: 2 },
-        { value: 'b', count: 2 },
-        { value: 'b', count: 2 },
-        { value: 'b', count: 2 },
-        { value: 'b', count: 2 },
-        { value: 'b', count: 2 },
-        { value: 'b', count: 2 },
-        { value: 'b', count: 2 },
-        { value: 'b', count: 2 },
-        { value: 'b', count: 2 },
-        { value: 'b', count: 2 },
-        { value: 'b', count: 2 },
-        { value: 'b', count: 2 },
-        { value: 'b', count: 2 },
-        { value: 'b', count: 2 },
-        { value: 'b', count: 2 },
-        { value: 'b', count: 2 },
-        { value: 'b', count: 2 },
-        { value: 'b', count: 2 },
-        { value: 'b', count: 2 },
-        { value: 'b', count: 2 },
-        { value: 'b', count: 2 },
-        { value: 'b', count: 2 },
-        { value: 'b', count: 2 },
-        { value: 'b', count: 2 },
-        { value: 'b', count: 2 },
-        { value: 'b', count: 2 },
-      ],
+      minValue: 1,
+      maxValue: 534,
     });
     mountComponent(state);
   });
-  it('Load column stats should NOT run after filter has changed for Free text fields', () => {
+  it('Do not reload column stats after filter has changed for numeric range field', () => {
     assertGetColumnStatsWasNotCalled();
   });
-  it('Freetext dropdown component is displayed', () => {
-    cy.get('[id="autocomplete-variant_id"]').should('exist');
+  it('Range component is displayed', () => {
+    cy.get('[aria-labelledby="range-slider"]').should('exist');
   });
 });
 
@@ -157,11 +114,6 @@ describe('Loading component is correctly displayed', () => {
       isLoading: true,
       isExpanded: true,
       filterHasUpdated: true,
-      values: [{ value: 'a', count: 1 }],
-      originalValues: [
-        { value: 'a', count: 1 },
-        { value: 'b', count: 2 },
-      ],
     });
     mountComponent(state);
   });

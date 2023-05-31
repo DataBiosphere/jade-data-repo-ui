@@ -109,7 +109,9 @@ function RangeFilter({
         </>
       )}
       {(!minValue || !maxValue) && (
-        <div>This numeric column does not have any values to filter.</div>
+        <div data-cy="empty-column-message">
+          This numeric column does not have any values to filter.
+        </div>
       )}
     </div>
   );
