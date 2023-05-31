@@ -38,9 +38,35 @@ def wait_for_job(clients, job_model):
         else:
             raise "Unrecognized job state %s" % result.job_status
 
+# For dataset_ingest requests, each line in file is a json object
+# We need to convert to this to an array of json objects
+def convert_to_json_array(table_csv):
+    records = ""
+    for row in table_csv.readlines():
+        records += row.strip("\n") + ","
+    return json.loads("[" + records.strip(",") + "]")
 
-def create_billing_profile(clients, add_jade_stewards):
-    with open(os.path.join("files", "billing_profile.json")) as billing_profile_json:
+def dataset_ingest_array(clients, dataset_id, dataset_to_upload):
+    for table in dataset_to_upload['tables']:
+        with open(os.path.join("files", dataset_to_upload["schema"],
+                               f"{table}.json")) as table_csv:
+            recordsArray = convert_to_json_array(table_csv)
+            if len(recordsArray) > 0:
+                ingest_request = {
+                    "format": "array",
+                    "records":recordsArray,
+                    "table": table
+                }
+                print(f"Ingesting data into {dataset_to_upload['name']}/{table}")
+                wait_for_job(clients, clients.datasets_api.ingest_dataset(dataset_id, ingest=ingest_request))
+            else:
+                print(f"Skipping ingest of {dataset_to_upload['name']}/{table} because it is empty")
+
+def create_billing_profile(clients, add_jade_stewards, cloud_platform):
+    billing_profile_file_name = "billing_profile.json"
+    if cloud_platform == "azure":
+        billing_profile_file_name = "azure_billing_profile.json"
+    with open(os.path.join("files", billing_profile_file_name)) as billing_profile_json:
         billing_profile_request = json.load(billing_profile_json)
         profile_id = str(uuid.uuid4())
         billing_profile_request['id'] = profile_id
@@ -71,7 +97,6 @@ def dataset_ingest_json(clients, dataset_id, dataset_to_upload):
             print(f"Ingesting data into {dataset_to_upload['name']}/{table}")
             wait_for_job(clients, clients.datasets_api.ingest_dataset(dataset_id, ingest=ingest_request))
 
-
 def add_dataset_policy_members(clients, dataset_id, dataset_to_upload):
     for steward in dataset_to_upload['stewards']:
         print(f"Adding {steward} as a steward")
@@ -90,6 +115,7 @@ def create_dataset(clients, dataset_to_upload, profile_id):
     dataset = None
     with open(os.path.join("files", dataset_to_upload["schema"], "dataset_schema.json")) as dataset_schema_json:
         dataset_request = json.load(dataset_schema_json)
+        dataset_request['cloudPlatform'] = dataset_to_upload["cloud_platform"]
         dataset_request['name'] = dataset_name
         dataset_request['defaultProfileId'] = profile_id
         print(f"Creating dataset {dataset_name}")
@@ -98,6 +124,10 @@ def create_dataset(clients, dataset_to_upload, profile_id):
 
     if dataset_to_upload['format'] == "json":
         dataset_ingest_json(clients, dataset['id'], dataset_to_upload)
+    elif dataset_to_upload['format'] == "array":
+        dataset_ingest_array(clients, dataset['id'], dataset_to_upload)
+    else:
+        raise Exception("Must specify the ingest format. Right now we support json and array")
 
     add_dataset_policy_members(clients, dataset['id'], dataset_to_upload)
     return dataset
@@ -144,18 +174,27 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--host', default='https://jade-4.datarepo-integration.broadinstitute.org')
     parser.add_argument('--datasets', default='./suites/datarepo_datasets.json')
-    parser.add_argument('--profile_id')
+    parser.add_argument('--gcp_profile_id')
+    parser.add_argument('--azure_profile_id')
     args = parser.parse_args()
     clients = Clients(args.host)
 
     add_jade_stewards = 'dev' in args.host or 'integration' in args.host
-    profile_id = args.profile_id
-    if profile_id is None:
-        profile_job_response = create_billing_profile(clients, add_jade_stewards)
-        profile_id = profile_job_response['id']
+    gcp_profile_id = args.gcp_profile_id
+    azure_profile_id = args.azure_profile_id
 
     outputs = []
     for dataset_to_upload in get_datasets_to_upload(args.datasets):
+        dataset_cloud_platform = dataset_to_upload['cloud_platform']
+        if dataset_cloud_platform == 'gcp':
+            profile_id = gcp_profile_id
+        elif dataset_cloud_platform == 'azure':
+            profile_id = azure_profile_id
+        else:
+            raise Exception("Billing profile create not yet supported for cloud platform: " + dataset_cloud_platform)
+        if profile_id is None:
+            profile_job_response = create_billing_profile(clients, add_jade_stewards, dataset_cloud_platform)
+            profile_id = profile_job_response['id']
         created_dataset = create_dataset(clients, dataset_to_upload, profile_id)
         dataset_name = created_dataset['name']
         output_ids = {dataset_name: {'dataset_id': created_dataset['id']}}
