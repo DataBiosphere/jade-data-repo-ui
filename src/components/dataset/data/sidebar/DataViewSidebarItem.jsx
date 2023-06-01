@@ -49,19 +49,19 @@ export class DataViewSidebarItem extends React.PureComponent {
   handleChange = (value) => {
     const { column } = this.props;
     const { filterMap } = this.state;
-    let type = undefined;
+    let type;
     switch (_.toLower(column.dataType)) {
       case 'string':
       case 'text':
       case 'dirref':
       case 'fileref':
         type = 'value';
-        break
+        break;
       case 'float':
       case 'integer':
       case 'numeric':
       case 'int64':
-      case 'float64': 
+      case 'float64':
         type = 'range';
         break;
       default:
