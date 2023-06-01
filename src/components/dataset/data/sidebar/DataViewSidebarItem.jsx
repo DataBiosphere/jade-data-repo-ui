@@ -89,7 +89,7 @@ export class DataViewSidebarItem extends React.PureComponent {
       const badNumber = (number) => number === '' || number.endsWith('.') || isNaN(number);
       return _.some(value, badNumber) || parseFloat(value[0]) > parseFloat(value[1]);
     }
-    return _.isEmpty(value);
+    return false;
   };
 
   getFilteringComponent = () => {
