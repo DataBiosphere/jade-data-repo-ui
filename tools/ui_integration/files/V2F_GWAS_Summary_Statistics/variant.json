@@ -999,3 +999,6 @@
 {"id":"1:231395857:A:G","alt":"G","chromosome":"1","position":"231395857","reference":"A"}
 {"id":"1:65196986:A:G","alt":"G","chromosome":"1","position":"65196986","reference":"A"}
 {"id":"1:65196986:A:G","alt":"G","chromosome":"1","position":"65196986"}
+{"id":"13:52895123:G:T","alt":"G","chromosome":"1","position":"231395857","reference":"A"}
+{"id":"6:32085278:C:T","alt":"G","chromosome":"2","position":"65196986","reference":"A"}
+{"id":"4:97820191:G:C","alt":"G","chromosome":"3","position":"65196986"}

@@ -998,3 +998,6 @@
 {"variant_id":"3:194248674:T:TTC","biotype":"enhancer","consequence_terms":["regulatory_region_variant"],"impact":"MODIFIER","pick":"false","regulatory_feature_id":"ENSR00000398865","variant_allele":"TTC"}
 {"variant_id":"3:194248181:C:CAAA","biotype":"enhancer","consequence_terms":["regulatory_region_variant"],"impact":"MODIFIER","pick":"false","regulatory_feature_id":"ENSR00000398865","variant_allele":"CAAA"}
 {"variant_id":"3:194248225:C:CTTT","biotype":"enhancer","consequence_terms":["regulatory_region_variant"],"impact":"MODIFIER","pick":"false","regulatory_feature_id":"ENSR00000398865","variant_allele":"CTTT"}
+{"variant_id":"13:52895123:G:T","biotype":"enhancer","consequence_terms":["regulatory_region_variant"],"impact":"MODIFIER","pick":"false","regulatory_feature_id":"ENSR00000398865","variant_allele":"CTTT"}
+{"variant_id":"6:32085278:C:T","biotype":"enhancer","consequence_terms":["regulatory_region_variant"],"impact":"MODIFIER","pick":"false","regulatory_feature_id":"ENSR00000398865","variant_allele":"CTTT"}
+{"variant_id":"4:97820191:G:C","biotype":"enhancer","consequence_terms":["regulatory_region_variant"],"impact":"MODIFIER","pick":"false","regulatory_feature_id":"ENSR00000398865","variant_allele":"CTTT"}
