@@ -49,7 +49,24 @@ export class DataViewSidebarItem extends React.PureComponent {
   handleChange = (value) => {
     const { column } = this.props;
     const { filterMap } = this.state;
-    const type = ['string', 'text'].includes(column.dataType) ? 'value' : 'range';
+    let type = undefined;
+    switch (_.toLower(column.dataType)) {
+      case 'string':
+      case 'text':
+      case 'dirref':
+      case 'fileref':
+        type = 'value';
+        break
+      case 'float':
+      case 'integer':
+      case 'numeric':
+      case 'int64':
+      case 'float64': 
+        type = 'range';
+        break;
+      default:
+        break;
+    }
     const exclude = _.get(filterMap, 'exclude', false);
     this.setState({ filterMap: { value, type, exclude } });
   };
