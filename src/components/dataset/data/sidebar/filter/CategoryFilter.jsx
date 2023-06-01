@@ -24,6 +24,7 @@ export class CategoryFilter extends React.PureComponent {
 
   render() {
     const { filterMap, name, filteredCount, totalCount } = this.props;
+    const formattedName = name ?? "(empty)";
     const formattedCount =
       filteredCount === totalCount ? totalCount : `${filteredCount} filtered, ${totalCount} total`;
     const checked = _.get(filterMap, ['value', name], false);
@@ -33,13 +34,13 @@ export class CategoryFilter extends React.PureComponent {
           <Checkbox
             checked={checked}
             onChange={this.handleChange}
-            value={name ?? 'null'}
+            value={name}
             color="primary"
             size="small"
             data-cy={`categoryFilterCheckbox-${name}`}
           />
         }
-        label={`${name} (${formattedCount})`}
+        label={`${formattedName} (${formattedCount})`}
       />
     );
   }
