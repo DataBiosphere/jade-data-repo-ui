@@ -25,13 +25,9 @@ export class DataViewSidebarItem extends React.PureComponent {
   static propTypes = {
     classes: PropTypes.object,
     column: PropTypes.object,
-    dataset: PropTypes.object,
     filterData: PropTypes.object,
-    filterStatement: PropTypes.string,
     handleChange: PropTypes.func,
-    joinStatement: PropTypes.string,
     tableName: PropTypes.string,
-    token: PropTypes.string,
   };
 
   // The 'apply' button should only be enabled when there are new changes to be applied.
@@ -79,57 +75,58 @@ export class DataViewSidebarItem extends React.PureComponent {
     return _.isEmpty(value);
   };
 
+  getFilteringComponent = () => {
+    const { column, tableName } = this.props;
+    const { dataType, arrayOf } = column;
+    const { filterMap } = this.state;
+    if (arrayOf) {
+      return <div>Filtering on array fields is not yet supported in the UI</div>;
+    }
+    switch (_.toLower(dataType)) {
+      case 'string':
+      case 'text':
+      case 'dirref':
+      case 'fileref':
+        return (
+          <CategoryWrapper
+            key={column.name}
+            column={column}
+            filterMap={filterMap}
+            handleChange={this.handleChange}
+            handleFilters={this.applyFilters}
+            tableName={tableName}
+            toggleExclude={this.toggleExclude}
+          />
+        );
+      case 'float':
+      case 'integer':
+      case 'numeric':
+      case 'int64':
+      case 'float64':
+        return (
+          <RangeFilter
+            key={column.name}
+            column={column}
+            filterMap={filterMap}
+            handleChange={this.handleChange}
+            handleFilters={this.applyFilters}
+            tableName={tableName}
+          />
+        );
+      default:
+        return <div>Filtering on data type '{dataType}' is not yet supported in the UI</div>;
+    }
+  };
+
   render() {
-    const {
-      classes,
-      column,
-      dataset,
-      filterStatement,
-      joinStatement,
-      tableName,
-      token,
-    } = this.props;
-    const { disableButton, filterMap } = this.state;
-    const item = ((datatype) => {
-      switch (_.toLower(datatype)) {
-        case 'string':
-        case 'text':
-          return (
-            <CategoryWrapper
-              column={column}
-              dataset={dataset}
-              filterMap={filterMap}
-              filterStatement={filterStatement}
-              joinStatement={joinStatement}
-              handleChange={this.handleChange}
-              handleFilters={this.applyFilters}
-              tableName={tableName}
-              token={token}
-              toggleExclude={this.toggleExclude}
-            />
-          );
-        case 'float':
-        case 'integer':
-          return (
-            <RangeFilter
-              column={column}
-              dataset={dataset}
-              filterMap={filterMap}
-              handleChange={this.handleChange}
-              handleFilters={this.applyFilters}
-              tableName={tableName}
-              token={token}
-            />
-          );
-        default:
-          return <div />;
-      }
-    })(column.dataType);
+    const { classes, column } = this.props;
+    const { disableButton } = this.state;
     return (
       <div>
-        {item}
+        {this.getFilteringComponent()}
         <div className={classes.buttonContainer}>
           <Button
+            key={column.name}
             onClick={this.applyFilters}
             variant="contained"
             disableElevation

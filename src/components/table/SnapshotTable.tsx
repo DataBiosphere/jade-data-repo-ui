@@ -1,7 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import { WithStyles, withStyles } from '@mui/styles';
-import { OrderDirectionOptions } from 'reducers/query';
+import { OrderDirectionOptions, TableColumnType } from 'reducers/query';
 import { DatasetSummaryModel, SnapshotSummaryModel } from 'generated/tdr/api';
 import { CustomTheme } from '@mui/material/styles';
 
@@ -49,7 +49,7 @@ const SnapshotTable = withStyles(styles)(
     searchString,
     refreshCnt,
   }: IProps) => {
-    const columns = [
+    const columns: Array<TableColumnType> = [
       {
         label: 'Snapshot Name',
         name: 'name',

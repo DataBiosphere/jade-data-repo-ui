@@ -238,6 +238,43 @@ export const { refreshQuery } = createActions({
   [ActionTypes.REFRESH_QUERY]: () => ({}),
 });
 
+export const { getColumnStats } = createActions({
+  [ActionTypes.GET_COLUMN_STATS]: (
+    resourceType,
+    resourceId,
+    tableName,
+    columnName,
+    columnStatsRetrievalType,
+  ) => ({
+    resourceType,
+    resourceId,
+    tableName,
+    columnName,
+    columnStatsRetrievalType,
+  }),
+  [ActionTypes.COLUMN_STATS_TEXT_SUCCESS]: (queryResults, columnName) => ({
+    queryResults,
+    columnName,
+  }),
+  [ActionTypes.COLUMN_STATS_FILTERED_TEXT_SUCCESS]: (queryResults, columnName) => ({
+    queryResults,
+    columnName,
+  }),
+  [ActionTypes.COLUMN_STATS_ALL_AND_FILTERED_TEXT_SUCCESS]: (queryResults, columnName) => ({
+    queryResults,
+    columnName,
+  }),
+  [ActionTypes.COLUMN_STATS_NUMERIC_SUCCESS]: (queryResults, columnName) => ({
+    queryResults,
+    columnName,
+  }),
+  [ActionTypes.COLUMN_STATS_FAILURE]: (errMsg, columnName) => ({ errMsg, columnName }),
+});
+
+export const { expandColumnFilter } = createActions({
+  [ActionTypes.EXPAND_COLUMN_FILTER]: (columnName) => ({ columnName }),
+});
+
 export const { previewData } = createActions({
   [ActionTypes.PREVIEW_DATA]: (
     resourceType,
@@ -290,6 +327,10 @@ export const { resizeColumn } = createActions({
 
 export const { resetQuery } = createActions({
   [ActionTypes.RESET_QUERY]: () => ({}),
+});
+
+export const { resetColumns } = createActions({
+  [ActionTypes.RESET_COLUMNS]: () => ({}),
 });
 
 export const { changeRowsPerPage } = createActions({

@@ -20,9 +20,8 @@ import { ExpandMore, ExpandLess } from '@mui/icons-material';
 import TerraTooltip from 'components/common/TerraTooltip';
 import DataViewSidebarItem from '../DataViewSidebarItem';
 import DataSidebarPanel from '../DataSidebarPanel';
-import FreetextFilter from '../filter/FreetextFilter';
 
-import { applyFilters } from '../../../../../actions';
+import { applyFilters, expandColumnFilter } from '../../../../../actions';
 
 const styles = (theme) => ({
   root: {
@@ -94,20 +93,20 @@ export class FilterPanel extends React.PureComponent {
       filterMap: {},
       searchInput: '',
       searchStrings: [],
-      openFilter: '',
     };
   }
 
   static propTypes = {
     canLink: PropTypes.bool,
     classes: PropTypes.object,
+    columns: PropTypes.arrayOf(PropTypes.object),
     dataset: PropTypes.object,
+    datasetRowCount: PropTypes.number,
     dispatch: PropTypes.func.isRequired,
     filterData: PropTypes.object,
-    filterStatement: PropTypes.string,
     handleCreateSnapshot: PropTypes.func,
-    joinStatement: PropTypes.string,
     open: PropTypes.bool,
+    polling: PropTypes.bool,
     selected: PropTypes.string,
     table: PropTypes.object,
     token: PropTypes.string,
@@ -185,42 +184,33 @@ export class FilterPanel extends React.PureComponent {
   };
 
   handleOpenFilter = (filter) => {
-    const { openFilter } = this.state;
-    if (filter.name === openFilter) {
-      this.setState({ openFilter: '' });
-    } else {
-      this.setState({ openFilter: filter.name });
-    }
+    const { dispatch } = this.props;
+    dispatch(expandColumnFilter(filter.name));
   };
 
   render() {
     const {
       classes,
+      columns,
       dataset,
+      datasetRowCount,
       filterData,
-      filterStatement,
       open,
+      polling,
       table,
       token,
-      joinStatement,
       selected,
       handleCreateSnapshot,
       canLink,
     } = this.props;
-    const { searchStrings, searchInput, openFilter } = this.state;
-    const filteredColumns = table.columns
-      .filter((column) => {
-        const stringsToCheck = [...searchStrings, searchInput]
-          .filter((str) => !!str)
-          .map((searchStr) => column.name.includes(searchStr))
-          .filter((hasMatch) => hasMatch);
-        return stringsToCheck.length > 0 || (searchStrings.length === 0 && !searchInput);
-      })
-      .map((column) => ({
-        dataType: column.datatype,
-        arrayOf: column.array_of,
-        name: column.name,
-      }));
+    const { searchStrings, searchInput } = this.state;
+    const filteredColumns = columns.filter((column) => {
+      const stringsToCheck = [...searchStrings, searchInput]
+        .filter((str) => !!str)
+        .map((searchStr) => column.name.includes(searchStr))
+        .filter((hasMatch) => hasMatch);
+      return stringsToCheck.length > 0 || (searchStrings.length === 0 && !searchInput);
+    });
 
     const billingErrorMessage =
       "You cannot create a snapshot because you do not have access to the dataset's billing profile.";
@@ -264,9 +254,10 @@ export class FilterPanel extends React.PureComponent {
           />
           {table &&
             table.name &&
+            datasetRowCount > 0 &&
             filteredColumns.map((c) => (
               <div
-                className={clsx({ [classes.highlighted]: c.name === openFilter })}
+                className={clsx({ [classes.highlighted]: c.isExpanded })}
                 data-cy="filterItem"
                 key={c.name}
               >
@@ -276,27 +267,22 @@ export class FilterPanel extends React.PureComponent {
                   onClick={() => this.handleOpenFilter(c)}
                 >
                   {c.name}
-                  {c.name === openFilter ? <ExpandLess /> : <ExpandMore />}
+                  {c.isExpanded ? <ExpandLess /> : <ExpandMore />}
                 </ListItem>
-                <Collapse
-                  in={c.name === openFilter}
-                  timeout="auto"
-                  className={classes.panelContent}
-                >
+                <Collapse in={c.isExpanded} timeout="auto" className={classes.panelContent}>
                   <DataViewSidebarItem
                     column={c}
-                    dataset={dataset}
                     filterData={filterData}
-                    filterStatement={filterStatement}
-                    joinStatement={joinStatement}
                     handleChange={this.handleChange}
                     handleFilters={this.handleFilters}
                     tableName={table.name}
-                    token={token}
                   />
                 </Collapse>
               </div>
             ))}
+          {!polling && table && table.name && datasetRowCount === 0 && (
+            <div>We cannot filter this table because it is empty.</div>
+          )}
         </div>
         <div className={clsx(classes.rowTwo, classes.snapshotBtnCntnr)}>
           <Divider />
@@ -330,9 +316,10 @@ export class FilterPanel extends React.PureComponent {
 function mapStateToProps(state) {
   return {
     dataset: state.datasets.dataset,
+    datasetRowCount: state.query.queryParams.totalRows,
+    columns: state.query.columns,
     filterData: state.query.filterData,
-    filterStatement: state.query.filterStatement,
-    joinStatement: state.query.joinStatement,
+    polling: state.query.polling,
     token: state.user.delegateToken,
   };
 }

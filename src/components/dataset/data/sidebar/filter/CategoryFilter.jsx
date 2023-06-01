@@ -7,10 +7,11 @@ import Checkbox from '@mui/material/Checkbox';
 
 export class CategoryFilter extends React.PureComponent {
   static propTypes = {
-    count: PropTypes.number,
+    filteredCount: PropTypes.number,
     filterMap: PropTypes.object,
     handleChange: PropTypes.func,
     name: PropTypes.string,
+    totalCount: PropTypes.number,
   };
 
   handleChange = (event) => {
@@ -22,7 +23,9 @@ export class CategoryFilter extends React.PureComponent {
   };
 
   render() {
-    const { filterMap, name, count } = this.props;
+    const { filterMap, name, filteredCount, totalCount } = this.props;
+    const formattedCount =
+      filteredCount === totalCount ? totalCount : `${filteredCount} filtered, ${totalCount} total`;
     const checked = _.get(filterMap, ['value', name], false);
     return (
       <FormControlLabel
@@ -30,13 +33,13 @@ export class CategoryFilter extends React.PureComponent {
           <Checkbox
             checked={checked}
             onChange={this.handleChange}
-            value={name}
+            value={name ?? 'null'}
             color="primary"
             size="small"
             data-cy={`categoryFilterCheckbox-${name}`}
           />
         }
-        label={`${name} (${count})`}
+        label={`${name} (${formattedCount})`}
       />
     );
   }

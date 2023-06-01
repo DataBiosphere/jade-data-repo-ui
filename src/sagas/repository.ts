@@ -11,6 +11,7 @@ import {
   select,
   take,
   takeLatest,
+  takeEvery,
   delay,
 } from 'redux-saga/effects';
 import axios, { AxiosResponse } from 'axios';
@@ -20,7 +21,13 @@ import { RouterRootState } from 'connected-react-router';
 
 import { showNotification } from 'modules/notifications';
 import { JobModelJobStatusEnum } from 'generated/tdr';
-import { ActionTypes, Status, DbColumns, TABLE_DEFAULT_ROWS_PER_PAGE } from '../constants';
+import {
+  ActionTypes,
+  Status,
+  DbColumns,
+  TABLE_DEFAULT_ROWS_PER_PAGE,
+  ColumnStatsRetrievalType,
+} from '../constants';
 import { TdrState } from '../reducers';
 
 /**
@@ -779,9 +786,7 @@ export function* previewData({ payload }: any): any {
   const sortDirection =
     queryState.orderDirection === undefined ? '' : `&direction=${queryState.orderDirection}`;
   const filter =
-    queryState.tdrApiFilterStatement === undefined
-      ? ''
-      : `&filter=${queryState.tdrApiFilterStatement}`;
+    queryState.filterStatement === undefined ? '' : `&filter=${queryState.filterStatement}`;
   const query = `/api/repository/v1/${payload.resourceType}s/${payload.resourceId}/data/${payload.table}?offset=${offset}&limit=${limit}${sort}${sortDirection}${filter}`;
   try {
     const response = yield call(authGet, query);
@@ -799,6 +804,81 @@ export function* previewData({ payload }: any): any {
     yield put({
       type: ActionTypes.PREVIEW_DATA_FAILURE,
       payload: err,
+    });
+  }
+}
+
+/**
+ * Column Stats
+ */
+
+export function* getColumnStats({ payload }: any): any {
+  const { columnName, resourceId, resourceType, tableName, columnStatsRetrievalType } = payload;
+  const baseQuery = `/api/repository/v1/${resourceType}s/${resourceId}/data/${tableName}/statistics/${columnName}`;
+  const queryState = yield select(getQuery);
+  const { filterStatement } = queryState;
+  const filter = filterStatement === undefined ? '' : `?filter=${filterStatement}`;
+  const filteredQuery = `${baseQuery}${filter}`;
+  try {
+    switch (columnStatsRetrievalType) {
+      case ColumnStatsRetrievalType.RETRIEVE_ALL_TEXT: {
+        const response = yield call(authGet, baseQuery);
+        yield put({
+          type: ActionTypes.COLUMN_STATS_TEXT_SUCCESS,
+          payload: {
+            queryResults: response,
+            columnName,
+          },
+        });
+        break;
+      }
+      case ColumnStatsRetrievalType.RETRIEVE_ALL_NUMERIC: {
+        const numericResponse = yield call(authGet, baseQuery);
+        yield put({
+          type: ActionTypes.COLUMN_STATS_NUMERIC_SUCCESS,
+          payload: {
+            queryResults: numericResponse,
+            columnName,
+          },
+        });
+        break;
+      }
+      case ColumnStatsRetrievalType.RETRIEVE_FILTERED_TEXT: {
+        const filteredResponse = yield call(authGet, filteredQuery);
+        yield put({
+          type: ActionTypes.COLUMN_STATS_FILTERED_TEXT_SUCCESS,
+          payload: {
+            queryResults: filteredResponse,
+            columnName,
+          },
+        });
+        break;
+      }
+      case ColumnStatsRetrievalType.RETRIEVE_ALL_AND_FILTERED_TEXT: {
+        const queries = [baseQuery, filteredQuery];
+        const responses = yield all(queries.map((q) => call(authGet, q)));
+        yield put({
+          type: ActionTypes.COLUMN_STATS_ALL_AND_FILTERED_TEXT_SUCCESS,
+          payload: {
+            queryResults: responses[0],
+            filteredQueryResults: responses[1],
+            columnName,
+          },
+        });
+        break;
+      }
+      default: {
+        showNotification('ERROR: Invalid column data type category');
+      }
+    }
+  } catch (err) {
+    showNotification(err);
+    yield put({
+      type: ActionTypes.COLUMN_STATS_FAILURE,
+      payload: {
+        err,
+        columnName,
+      },
     });
   }
 }
@@ -910,6 +990,7 @@ export default function* root() {
     takeLatest(ActionTypes.GET_JOURNAL_ENTRIES, getJournalEntries),
     takeLatest(ActionTypes.PREVIEW_DATA, previewData),
     takeLatest(ActionTypes.GET_FEATURES, getFeatures),
+    takeEvery(ActionTypes.GET_COLUMN_STATS, getColumnStats),
     takeLatest(ActionTypes.GET_BILLING_PROFILES, getBillingProfiles),
     takeLatest(ActionTypes.GET_BILLING_PROFILE_BY_ID, getBillingProfileById),
     takeLatest(ActionTypes.GET_USER_DATASET_ROLES, getUserDatasetRoles),

@@ -48,7 +48,6 @@ type DataViewProps = {
   classes: ClassNameMap;
   columns: Array<TableColumnType>;
   filteredRows: number;
-  filterStatement: string;
   handleChangeTable: (value: string) => void;
   handleDrawerWidth: (width: number) => void;
   handleEnumeration?: (
@@ -70,6 +69,7 @@ type DataViewProps = {
   selectedTable: TableModel;
   sidebarWidth: number;
   tableNames: Array<string>;
+  filterStatement: string;
   totalRows: number;
   refreshCnt: number;
 };
@@ -99,7 +99,6 @@ function DataView({
 }: DataViewProps) {
   // Can be removed after DR-2483
   const showPanels = panels.length > 0;
-  // Only used for Direct BQ Query
   const isDatasetFiltered = filterStatement.length > 0;
 
   const columnsByName = _.keyBy(columns, 'name');

@@ -2,7 +2,7 @@ import { handleActions } from 'redux-actions';
 import _ from 'lodash';
 import immutable from 'immutability-helper';
 import { LOCATION_CHANGE } from 'connected-react-router';
-import BigQuery from 'modules/bigquery';
+import { buildfilterStatement } from 'modules/filter';
 import { CloudPlatform, ColumnModel, TableDataType } from 'generated/tdr';
 
 import { ActionTypes, TABLE_DEFAULT_ROWS_PER_PAGE, TABLE_DEFAULT_COLUMN_WIDTH } from '../constants';
@@ -18,6 +18,18 @@ export type TableColumnType = {
   render?: (row: object) => string | JSX.Element;
   width?: number | string;
   cellStyles?: any;
+  originalValues?: ColumnValueType[]; // ColumnStats
+  values?: ColumnValueType[]; // ColumnStats
+  minValue?: number; // ColumnStats
+  maxValue?: number; // ColumnStats
+  isLoading?: boolean; // ColumnStats
+  isExpanded?: boolean; // Filter panel
+  filterHasUpdated?: boolean; // Filter panel
+};
+
+export type ColumnValueType = {
+  value: string;
+  count: number;
 };
 
 export type TableRowType = {
@@ -40,10 +52,8 @@ export interface QueryState {
   columns: Array<TableColumnType>;
   errMsg: string;
   error: boolean;
-  tdrApiFilterStatement: string;
-  filterData: any;
   filterStatement: string;
-  joinStatement: string;
+  filterData: any;
   pageSize: number;
   projectId: string;
   queryParams: QueryParams;
@@ -61,6 +71,8 @@ const defaultQueryParams = {
   totalRows: 0,
 };
 
+export const CHECKBOX_THRESHOLD = 30;
+
 const formatDate = (value: number) =>
   !_.isNil(value)
     ? new Date(value * 1000).toLocaleString('en-US', { timeZoneName: 'short' })
@@ -73,8 +85,6 @@ export const initialQueryState: QueryState = {
   error: false,
   filterData: {},
   filterStatement: '',
-  tdrApiFilterStatement: '',
-  joinStatement: '',
   pageSize: 0,
   projectId: '',
   queryParams: defaultQueryParams,
@@ -94,12 +104,14 @@ export default {
       [ActionTypes.PREVIEW_DATA_SUCCESS]: (state, action: any) => {
         const columnsByName = _.keyBy(state.columns, 'name');
         const columns: TableColumnType[] = action.payload.columns.map((column: ColumnModel) => ({
+          ...columnsByName[column.name],
           name: column.name,
           dataType: column.datatype,
           arrayOf: column.array_of,
           allowSort: !column.array_of,
           allowResize: true,
           width: columnsByName[column.name]?.width || TABLE_DEFAULT_COLUMN_WIDTH,
+          isLoading: false,
         }));
         // We only need to re-format row data of type timestamp
         const timestampColumns: TableColumnType[] = [];
@@ -146,6 +158,114 @@ export default {
           errMsg: { $set: action.payload },
           polling: { $set: false },
         }),
+      [ActionTypes.GET_COLUMN_STATS]: (state, action: any) => {
+        const { columnName } = action.payload;
+        const { columns } = state;
+        const _columns = columns.map((c: TableColumnType) => {
+          if (c.name === columnName) {
+            return { ...c, isLoading: true };
+          }
+          return c;
+        });
+        return immutable(state, {
+          columns: { $set: _columns },
+        });
+      },
+      [ActionTypes.COLUMN_STATS_FAILURE]: (state, action: any) => {
+        const { columnName } = action.payload;
+        const { columns } = state;
+        const _columns = columns.map((c: TableColumnType) => {
+          if (c.name === columnName) {
+            return { ...c, isLoading: false };
+          }
+          return c;
+        });
+        return immutable(state, {
+          error: { $set: true },
+          errMsg: { $set: action.payload },
+          polling: { $set: false },
+          columns: { $set: _columns },
+        });
+      },
+      [ActionTypes.COLUMN_STATS_FILTERED_TEXT_SUCCESS]: (state, action: any) => {
+        const { values } = action.payload.queryResults.data;
+        const { columnName } = action.payload;
+        const { columns } = state;
+        const _columns = columns.map((c: TableColumnType) => {
+          if (c.name === columnName) {
+            return { ...c, values, isLoading: false, filterHasUpdated: false };
+          }
+          return c;
+        });
+        return immutable(state, {
+          error: { $set: false },
+          columns: { $set: _columns },
+          polling: { $set: false },
+        });
+      },
+      [ActionTypes.COLUMN_STATS_TEXT_SUCCESS]: (state, action: any) => {
+        const { values } = action.payload.queryResults.data;
+        const { columnName } = action.payload;
+        const { columns } = state;
+        // counting on the idea that previewData has already been run
+        // And, therefore state.columns should be populated
+        // We're just adding the column stats onto the exisiting model
+        const _columns = columns.map((c: TableColumnType) => {
+          if (c.name === columnName) {
+            return {
+              ...c,
+              values,
+              originalValues: values,
+              isLoading: false,
+              filterHasUpdated: false,
+            };
+          }
+          return c;
+        });
+        return immutable(state, {
+          error: { $set: false },
+          columns: { $set: _columns },
+          polling: { $set: false },
+        });
+      },
+      [ActionTypes.COLUMN_STATS_ALL_AND_FILTERED_TEXT_SUCCESS]: (state, action: any) => {
+        const originalValues = action.payload.queryResults.data.values;
+        const { values } = action.payload.filteredQueryResults.data;
+        const { columnName } = action.payload;
+        const { columns } = state;
+        const _columns = columns.map((c: TableColumnType) => {
+          if (c.name === columnName) {
+            return {
+              ...c,
+              values,
+              originalValues,
+              isLoading: false,
+              filterHasUpdated: false,
+            };
+          }
+          return c;
+        });
+        return immutable(state, {
+          error: { $set: false },
+          columns: { $set: _columns },
+          polling: { $set: false },
+        });
+      },
+      [ActionTypes.COLUMN_STATS_NUMERIC_SUCCESS]: (state, action: any) => {
+        const { minValue, maxValue } = action.payload.queryResults.data;
+        const { columnName } = action.payload;
+        const _columns = state.columns.map((c: TableColumnType) => {
+          if (c.name === columnName) {
+            return { ...c, minValue, maxValue, isLoading: false, filterHasUpdated: false };
+          }
+          return c;
+        });
+        return immutable(state, {
+          error: { $set: false },
+          columns: { $set: _columns },
+          polling: { $set: false },
+        });
+      },
       [ActionTypes.CHANGE_ROWS_PER_PAGE]: (state, action: any) =>
         immutable(state, {
           page: { $set: 0 },
@@ -160,37 +280,35 @@ export default {
           columns: {
             $set: state.columns.map((column) => {
               if (column.name === action.payload.property) {
-                return {
-                  name: column.name,
-                  dataType: column.dataType,
-                  arrayOf: column.arrayOf,
-                  allowResize: column.allowResize,
-                  allowSort: column.allowSort,
-                  label: column.label,
-                  numeric: column.numeric,
-                  render: column.render,
-                  width: action.payload.width,
-                };
+                return { ...column, width: action.payload.width };
               }
               return column;
             }),
           },
         }),
+      [ActionTypes.EXPAND_COLUMN_FILTER]: (state, action: any) => {
+        const { columnName } = action.payload;
+        const _columns = state.columns.map((c: TableColumnType) => {
+          if (c.name === columnName) {
+            return { ...c, isExpanded: !c.isExpanded };
+          }
+          return c;
+        });
+        return immutable(state, {
+          columns: { $set: _columns },
+        });
+      },
       [ActionTypes.APPLY_FILTERS]: (state, action: any) => {
-        const bigquery = new BigQuery();
-        const filterStatement = bigquery.buildFilterStatement(action.payload.filters);
-        const tdrApiFilterStatement = bigquery.buildTdrApiFilterStatement(action.payload.filters);
-        const joinStatement = bigquery.buildJoinStatement(
-          action.payload.filters,
-          action.payload.table,
-          action.payload.dataset,
-        );
+        const filterStatement = buildfilterStatement(action.payload.filters);
+        const _columns = state.columns.map((c: TableColumnType) => ({
+          ...c,
+          filterHasUpdated: true,
+        }));
         return immutable(state, {
           filterData: { $set: action.payload.filters },
           filterStatement: { $set: filterStatement },
-          joinStatement: { $set: joinStatement },
-          tdrApiFilterStatement: { $set: tdrApiFilterStatement },
           page: { $set: 0 },
+          columns: { $set: _columns },
         });
       },
       [ActionTypes.APPLY_SORT]: (state, action: any) =>
@@ -204,21 +322,21 @@ export default {
           columns: { $set: [] },
           filterData: { $set: {} },
           filterStatement: { $set: '' },
-          tdrApiFilterStatement: { $set: '' },
-          joinStatement: { $set: '' },
           queryParams: { $set: defaultQueryParams },
           polling: { $set: false },
           page: { $set: 0 },
           orderProperty: { $set: '' },
           orderDirection: { $set: 'desc' },
         }),
+      [ActionTypes.RESET_COLUMNS]: (state) =>
+        immutable(state, {
+          columns: { $set: [] },
+        }),
       [LOCATION_CHANGE]: (state) =>
         immutable(state, {
           rows: { $set: [] },
           filterData: { $set: {} },
           filterStatement: { $set: '' },
-          tdrApiFilterStatement: { $set: '' },
-          joinStatement: { $set: '' },
           queryParams: { $set: defaultQueryParams },
           polling: { $set: false },
           page: { $set: 0 },
