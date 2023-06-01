@@ -998,3 +998,6 @@
 {"variant_id":"3:189742534:C:A","eaf":"0.020578431372549","maf":"0.020578","ancestry":"SA","phenotype":"T2D"}
 {"variant_id":"12:133454278:G:C","maf":"0.00158","ancestry":"SA","phenotype":"CHOL"}
 {"variant_id":"1:239597345:G:T","eaf":"0.7390000000000001","maf":"0.261","ancestry":"SA","phenotype":"HBA1C"}
+{"variant_id":"13:52895123:G:T","eaf":"0.020578431372549","maf":"0.020578","ancestry":"EU","phenotype":"toastCE"}
+{"variant_id":"6:32085278:C:T","maf":"0.00158","ancestry":"SA","phenotype":"AHI"}
+{"variant_id":"4:97820191:G:C","eaf":"0.7390000000000001","maf":"0.261","ancestry":"EU","phenotype":"ESRDvNonESRD"}
