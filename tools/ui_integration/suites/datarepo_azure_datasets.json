@@ -1,6 +1,6 @@
 [
   {
-    "name": "Azure_V2F_GWAS_Summary_Statistics",
+    "name": "Azure_V2F_Stats",
     "schema": "V2F_GWAS_Summary_Statistics",
     "cloud_platform": "azure",
     "tables": [
