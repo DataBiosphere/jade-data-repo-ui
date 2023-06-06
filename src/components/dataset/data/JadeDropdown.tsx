@@ -3,16 +3,17 @@ import _ from 'lodash';
 import { MenuItem, FormControl, Select, SelectChangeEvent } from '@mui/material';
 
 type IProps<T> = {
+  disabled: boolean;
   name: string;
   onSelectedItem: (e: SelectChangeEvent) => void;
   options: T[];
   value: T;
 };
 
-function JadeDropdown({ name, onSelectedItem, options, value }: IProps<string>) {
+function JadeDropdown({ disabled, name, onSelectedItem, options, value }: IProps<string>) {
   return (
     <form autoComplete="off">
-      <FormControl variant="outlined" fullWidth>
+      <FormControl disabled={disabled} variant="outlined" fullWidth>
         <Select
           value={value}
           onChange={(event) => onSelectedItem(event)}

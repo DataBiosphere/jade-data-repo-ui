@@ -15,6 +15,7 @@ export class CreateSnapshotDropdown extends React.PureComponent {
 
     return (
       <JadeDropdown
+        disabled={false}  
         options={assetNames}
         onSelectedItem={onSelectedItem}
         value={value}

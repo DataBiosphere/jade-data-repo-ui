@@ -133,6 +133,7 @@ function DataView({
           <div className={classes.controls}>
             <div className={classes.dropdown}>
               <JadeDropdown
+                disabled={polling}
                 onSelectedItem={(e) => handleChangeTable(e.target.value)}
                 options={tableNames}
                 value={selectedTable.name}
