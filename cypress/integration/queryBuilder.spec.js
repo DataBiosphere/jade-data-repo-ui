@@ -27,6 +27,7 @@ describe('test query builder', () => {
 
   describe('arrays work as expected', () => {
     beforeEach(() => {
+      cy.get('[data-cy=columnHeader-variant_id]').should('be.visible');
       cy.get('[data-cy=selectTable]').click();
       cy.get('[data-cy=menuItem-feature_consequence]').click();
     });
@@ -46,6 +47,7 @@ describe('test query builder', () => {
 
   describe('timestamps are displayed as expected', () => {
     beforeEach(() => {
+      cy.get('[data-cy=columnHeader-variant_id]').should('be.visible');
       cy.get('[data-cy=selectTable]').click();
       cy.get('[data-cy=menuItem-all_data_types]').click();
     });
@@ -173,6 +175,8 @@ describe('test query builder', () => {
 
   describe('filtering on null checkbox value', () => {
     it('filters on null', () => {
+      // Wait for initial table to load
+      cy.get('[data-cy=columnHeader-variant_id]').should('be.visible');
       // Switch to variant table
       cy.get('[data-cy=selectTable]').click();
       cy.get('[data-cy=menuItem-variant]').click();
