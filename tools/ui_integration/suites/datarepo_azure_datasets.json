@@ -20,7 +20,7 @@
     "snapshot_creators": [],
     "snapshots": [
       {
-        "name": "AzureV2FGWASSummaryStatisticsSnapshot",
+        "name": "AzureV2FStats",
         "description": "Test Azure Snapshot",
         "readers": ["JadeStewards-dev@dev.test.firecloud.org"]
       }
