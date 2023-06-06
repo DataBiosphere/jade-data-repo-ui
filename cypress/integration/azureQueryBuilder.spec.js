@@ -60,7 +60,7 @@ describe('test query builder on Azure', () => {
         // dumb check to make sure this is in a timestamp format, not a long value
         expect($val.text()).to.contain(':');
         // Azure timestamps do not include a timezone, so we add "UTC" so that "toUTCString" will correctly parse it
-        const timestamp = new Date($val.text() + " UTC");
+        const timestamp = new Date(`${$val.text()} UTC`);
         const expectedTimestamp = new Date('6/1/2023, 1:02:40 AM UTC');
         expect(timestamp.toUTCString()).to.eq(expectedTimestamp.toUTCString());
       });
@@ -76,7 +76,7 @@ describe('test query builder on Azure', () => {
         expect($val.text()).to.contain('(1 item)');
         const timestampWithoutArrayItemList = $val.text().substring(0, $val.text().length - 8);
         // Azure timestamps do not include a timezone, so we add "UTC" so that "toUTCString" will correctly parse it
-        const timestamp = new Date(timestampWithoutArrayItemList + " UTC");
+        const timestamp = new Date(`${timestampWithoutArrayItemList} UTC`);
         const expectedTimestamp = new Date('6/2/2023, 1:04:40 AM UTC');
         expect(timestamp.toUTCString()).to.eq(expectedTimestamp.toUTCString());
       });
