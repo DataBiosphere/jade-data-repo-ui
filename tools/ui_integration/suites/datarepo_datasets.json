@@ -14,7 +14,7 @@
       "all_data_types"
     ],
     "upload_prefix": "gs://jade-testdata-useastregion/V2F_GWAS_Summary_Statistics",
-    "format": "json",
+    "format": "array",
     "stewards": ["JadeStewards-dev@dev.test.firecloud.org"],
     "custodians": [],
     "snapshot_creators": [],
@@ -29,8 +29,9 @@
   {
     "name": "NonStewardDataset",
     "schema": "V2F_GWAS_Summary_Statistics",
+    "cloud_platform": "gcp",
     "tables": [],
-    "format": "json",
+    "format": "array",
     "stewards": [],
     "custodians": [],
     "snapshot_creators": ["JadeStewards-dev@dev.test.firecloud.org"]
