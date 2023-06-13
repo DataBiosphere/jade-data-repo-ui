@@ -66,8 +66,12 @@ testPlatforms.forEach((testPlatform) => {
 
       it('correctly displays timestamps', () => {
         const appendTimezoneForAzure = testPlatform.platform === 'Azure' ? ' UTC' : '';
+        // sort by variant_id
+        cy.get('[data-cy=columnSort-variant_id]').click({ force: true });
+        cy.get('[data-cy="cellValue-variant_id-0"]').should('contain', '12:101976753:T:C');
+
         // check that singleton timestamp is correctly displayed
-        cy.get('[data-cy=columnHeader-timestamp_column]').scrollIntoView().click({ force: true });
+        cy.get('[data-cy=columnHeader-timestamp_column]').scrollIntoView();
 
         cy.get('[data-cy=cellValue-timestamp_column-0]').then(($val) => {
           // dumb check to make sure this is in a timestamp format, not a long value
