@@ -887,7 +887,7 @@
           {
             "name": "date_array_column",
             "datatype": "date",
-            "array_of":true
+            "array_of": true
           },
           {
             "name": "date_time_column",
@@ -896,7 +896,7 @@
           {
             "name": "date_time_array_column",
             "datatype": "datetime",
-            "array_of":true
+            "array_of": true
           },
           {
             "name": "dir_ref_column",
@@ -1043,6 +1043,50 @@
           "table": "variant",
           "column": "id"
         }
+      },
+      {
+        "name": "ancestry_specific_meta_analysis_to_frequency_analysis",
+        "from": {
+          "table": "ancestry_specific_meta_analysis",
+          "column": "phenotype"
+        },
+        "to": {
+          "table": "frequency_analysis",
+          "column": "phenotype"
+        }
+      },
+      {
+        "name": "frequency_analysis_to_trans_ethnic_meta_analysis",
+        "from": {
+          "table": "frequency_analysis",
+          "column": "phenotype"
+        },
+        "to": {
+          "table": "trans_ethnic_meta_analysis",
+          "column": "phenotype"
+        }
+      },
+      {
+        "name": "trans_ethnic_meta_analysis_to_transcript_consequence",
+        "from": {
+          "table": "trans_ethnic_meta_analysis",
+          "column": "variant_id"
+        },
+        "to": {
+          "table": "transcript_consequence",
+          "column": "variant_id"
+        }
+      },
+      {
+        "name": "variant_to_feature_consequence",
+        "from": {
+          "table": "variant",
+          "column": "id"
+        },
+        "to": {
+          "table": "feature_consequence",
+          "column": "variant_id"
+        }
       }
     ],
     "assets": [
@@ -1051,13 +1095,7 @@
         "tables": [
           {
             "name": "variant",
-            "columns": [
-              "reference",
-              "chromosome",
-              "alt",
-              "id",
-              "position"
-            ]
+            "columns": ["reference", "chromosome", "alt", "id", "position"]
           },
           {
             "name": "dataset_specific_analysis",
@@ -1079,25 +1117,11 @@
           },
           {
             "name": "frequency_analysis",
-            "columns": [
-              "phenotype",
-              "variant_id",
-              "maf",
-              "ancestry",
-              "eaf"
-            ]
+            "columns": ["phenotype", "variant_id", "maf", "ancestry", "eaf"]
           },
           {
             "name": "ancestry_specific_meta_analysis",
-            "columns": [
-              "phenotype",
-              "p_value",
-              "variant_id",
-              "ancestry",
-              "std_err",
-              "beta",
-              "n"
-            ]
+            "columns": ["phenotype", "p_value", "variant_id", "ancestry", "std_err", "beta", "n"]
           },
           {
             "name": "feature_consequence",
@@ -1113,15 +1137,7 @@
           },
           {
             "name": "trans_ethnic_meta_analysis",
-            "columns": [
-              "phenotype",
-              "p_value",
-              "variant_id",
-              "top",
-              "std_err",
-              "beta",
-              "n"
-            ]
+            "columns": ["phenotype", "p_value", "variant_id", "std_err", "beta", "n"]
           },
           {
             "name": "transcript_consequence",
@@ -1254,9 +1270,192 @@
           "ancestry_specific_meta_analysis_to_variant",
           "dataset_specific_analysis_to_variant"
         ]
+      },
+      {
+        "name": "AncestryWalkAllTables",
+        "tables": [
+          {
+            "name": "variant",
+            "columns": ["reference", "chromosome", "alt", "id", "position"]
+          },
+          {
+            "name": "frequency_analysis",
+            "columns": ["phenotype", "variant_id", "maf", "ancestry", "eaf"]
+          },
+          {
+            "name": "ancestry_specific_meta_analysis",
+            "columns": ["phenotype", "p_value", "variant_id", "ancestry", "std_err", "beta", "n"]
+          },
+          {
+            "name": "feature_consequence",
+            "columns": [
+              "biotype",
+              "variant_allele",
+              "variant_id",
+              "regulatory_feature_id",
+              "pick",
+              "impact",
+              "consequence_terms"
+            ]
+          },
+          {
+            "name": "trans_ethnic_meta_analysis",
+            "columns": ["phenotype", "p_value", "variant_id", "std_err", "beta", "n"]
+          },
+          {
+            "name": "transcript_consequence",
+            "columns": [
+              "eigen_raw",
+              "gerp_rs_rankscore",
+              "lof_converted_rankscore",
+              "eigen_pc_raw",
+              "metasvm_pred",
+              "pick",
+              "transcript_var_vest_3",
+              "sift_converted_rankscore",
+              "amino_acids",
+              "gm_12878_fitcons_score",
+              "mutationaccessor_score_rankscore",
+              "gm_12878_fitcons_score_rankscore",
+              "impact",
+              "lof_filter",
+              "mutationaccessor_uniprot_id",
+              "vest_3_rankscore",
+              "genocanyon_score_rankscore",
+              "polyphen_prediction",
+              "dann_score",
+              "phylop_100_way_vertebrate",
+              "lof",
+              "mutationaccessor_variant",
+              "mutationtaster_converted_rankscore",
+              "fathmm_mkl_coding_group",
+              "h_1_hesc_fitcons_score_rankscore",
+              "flags",
+              "interpro_domain",
+              "provean_score",
+              "huvec_fitcons_score_rankscore",
+              "clinvar_rs",
+              "mutationaccessor_pred",
+              "variant_id",
+              "metalr_pred",
+              "gerp_plus_plus_nr",
+              "sift_prediction",
+              "metalr_rankscore",
+              "cds_end",
+              "cadd_raw",
+              "phylop_20_way_mammalian",
+              "eigen_pc_raw_rankscore",
+              "lof_info",
+              "phylop_100_way_vertebrate_rankscore",
+              "protein_start",
+              "phylop_20_way_mammalian_rankscore",
+              "mutationtaster_model",
+              "lrt_omega",
+              "polyphen_score",
+              "clinvar_trait",
+              "gtex_v_6_p_tissue",
+              "provean_pred",
+              "huvec_confidence_value",
+              "polyphen_2_hdiv_score",
+              "clinvar_clinsig",
+              "huvec_fitcons_score",
+              "polyphen_2_hvar_rankscore",
+              "sift_score",
+              "cds_start",
+              "polyphen_2_hdiv_rankscore",
+              "integrated_confidence_value",
+              "fathmm_mkl_coding_pred",
+              "metasvm_score",
+              "siphy_29_way_pi",
+              "reliability_index",
+              "lof_flags",
+              "metalr_score",
+              "fathmm_score",
+              "h_1_hesc_confidence_value",
+              "phastcons_100_way_vertebrate",
+              "integrated_fitcons_score",
+              "canonical",
+              "protein_end",
+              "fathmm_mkl_coding_score",
+              "mutationaccessor_score",
+              "genocanyon_score",
+              "phastcons_100_way_vertebrate_rankscore",
+              "polyphen_2_hvar_score",
+              "integrated_fitcons_score_rankscore",
+              "gene_id",
+              "gm_12878_confidence_value",
+              "h_1_hesc_fitcons_score",
+              "cadd_raw_rankscore",
+              "vest_3_score",
+              "gtex_v_6_p_gene",
+              "ccds",
+              "polyphen_2_hdiv_pred",
+              "clinvar_golden_stars",
+              "distance",
+              "phastcons_20_way_mammalian",
+              "codons",
+              "mutationtaster_score",
+              "cadd_phred",
+              "cdna_end",
+              "phastcons_20_way_mammalian_rankscore",
+              "dann_rankscore",
+              "transcript_id",
+              "transcript_id_vest_3",
+              "strand",
+              "mutationtaster_aae",
+              "lrt_score",
+              "eigen_phred",
+              "fathmm_mkl_coding_rankscore",
+              "mutationtaster_pred",
+              "gerp_plus_plus_rs",
+              "siphy_29_way_logodds",
+              "biotype",
+              "sift_pred",
+              "metasvm_rankscore",
+              "polyphen_2_hvar_pred",
+              "siphy_29_way_logodds_rankscore",
+              "cdna_start",
+              "lrt_pred",
+              "fathmm_pred",
+              "fathmm_converted_rankscore",
+              "provean_converted_rankscore",
+              "consequence_terms"
+            ]
+          }
+        ],
+        "rootTable": "ancestry_specific_meta_analysis",
+        "rootColumn": "phenotype",
+        "follow": [
+          "ancestry_specific_meta_analysis_to_frequency_analysis",
+          "frequency_analysis_to_trans_ethnic_meta_analysis",
+          "trans_ethnic_meta_analysis_to_transcript_consequence",
+          "transcript_consequence_to_variant",
+          "variant_to_feature_consequence"
+        ]
+      },
+      {
+        "name": "AncestrySimple",
+        "tables": [
+          {
+            "name": "frequency_analysis",
+            "columns": ["phenotype", "variant_id", "maf", "ancestry", "eaf"]
+          },
+          {
+            "name": "ancestry_specific_meta_analysis",
+            "columns": ["phenotype", "p_value", "variant_id", "ancestry", "std_err", "beta", "n"]
+          },
+          {
+            "name": "trans_ethnic_meta_analysis",
+            "columns": ["phenotype", "p_value", "variant_id", "std_err", "beta", "n"]
+          }
+        ],
+        "rootTable": "ancestry_specific_meta_analysis",
+        "rootColumn": "phenotype",
+        "follow": [
+          "ancestry_specific_meta_analysis_to_frequency_analysis",
+          "frequency_analysis_to_trans_ethnic_meta_analysis"
+        ]
       }
     ]
-  },
-  "cloudPlatform": "gcp",
-  "region": "us-east4"
+  }
 }

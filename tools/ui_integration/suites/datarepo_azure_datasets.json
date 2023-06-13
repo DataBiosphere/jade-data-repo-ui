@@ -1,8 +1,8 @@
 [
   {
-    "name": "V2F_GWAS_Summary_Statistics",
-    "cloud_platform": "gcp",
+    "name": "Azure_V2F_Stats",
     "schema": "V2F_GWAS_Summary_Statistics",
+    "cloud_platform": "azure",
     "tables": [
       "ancestry_specific_meta_analysis",
       "feature_consequence",
@@ -20,20 +20,10 @@
     "snapshot_creators": [],
     "snapshots": [
       {
-        "name": "V2FGWASSummaryStatisticsSnapshot",
-        "description": "Test Sansphot",
+        "name": "AzureV2FStats",
+        "description": "Test Azure Snapshot",
         "readers": ["JadeStewards-dev@dev.test.firecloud.org"]
       }
     ]
-  },
-  {
-    "name": "NonStewardDataset",
-    "schema": "V2F_GWAS_Summary_Statistics",
-    "cloud_platform": "gcp",
-    "tables": [],
-    "format": "array",
-    "stewards": [],
-    "custodians": [],
-    "snapshot_creators": ["JadeStewards-dev@dev.test.firecloud.org"]
   }
 ]

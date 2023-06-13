@@ -183,6 +183,7 @@ function LightTableHead({
                   <div className={classes.cellInner}>
                     <TableSortLabel
                       active={orderProperty === col.name}
+                      data-cy={`columnSort-${col.name}`}
                       direction={sortDir || TABLE_DEFAULT_SORT_ORDER}
                       onClick={createSortHandler(col.name)}
                       IconComponent={({ className }) => (

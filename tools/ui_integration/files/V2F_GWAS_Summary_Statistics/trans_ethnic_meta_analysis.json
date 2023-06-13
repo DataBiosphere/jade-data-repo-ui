@@ -998,3 +998,6 @@
 {"variant_id":"3:119133664:G:A","phenotype":"T2D","p_value":"0.4622","beta":"-1.7012","std_err":"2.3138","n":"15863","top":"false"}
 {"variant_id":"6:34069859:G:A","phenotype":"T2D","p_value":"0.4311","beta":"-0.6756","std_err":"0.8581","n":"15863","top":"false"}
 {"variant_id":"1:158390361:A:G","phenotype":"T2D","p_value":"0.2853","beta":"-0.1759","std_err":"0.1646","n":"15863","top":"false"}
+{"variant_id":"13:52895123:G:T","phenotype":"toastCE","ancestry":"EU","p_value":"0.9958","beta":"1.00050012502084","std_err":"190.06664672151055","n":"247206","top":"false"}
+{"variant_id":"6:32085278:C:T","phenotype":"AHI","ancestry":"EU","p_value":"0.5675","beta":"-0.0288","std_err":"0.0504","n":"5020"}
+{"variant_id":"4:97820191:G:C","phenotype":"ESRDvNonESRD","ancestry":"EU","p_value":"0.1973","beta":"0.0096","std_err":"0.0132","n":"37793"}

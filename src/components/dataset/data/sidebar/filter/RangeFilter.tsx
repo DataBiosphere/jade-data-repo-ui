@@ -101,8 +101,8 @@ function RangeFilter({
               onChange={handleSliderValue}
               valueLabelDisplay="off"
               aria-labelledby="range-slider"
-              min={minValue}
-              max={maxValue}
+              min={minValue === maxValue ? minValue - step : minValue}
+              max={minValue === maxValue ? maxValue + step : maxValue}
               step={step}
             />
           </Grid>
