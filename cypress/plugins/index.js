@@ -12,12 +12,12 @@
 // This function is called when a project is opened or re-opened (e.g. due to
 // the project's config changing)
 //eslint-disable-next-line @typescript-eslint/no-var-requires
-const injectDevServer = require('@cypress/react/plugins/react-scripts');
+const { startDevServer } = require('@cypress/vite-dev-server');
 
 /**
  * @type {Cypress.PluginConfig}
  */
 module.exports = (on, config) => {
-  injectDevServer(on, config);
+  on('dev-server:start', (options) => startDevServer({ options }));
   return config;
 };
