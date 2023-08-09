@@ -2,13 +2,13 @@ import { handleActions } from 'redux-actions';
 import immutable from 'immutability-helper';
 import { LOCATION_CHANGE } from 'connected-react-router';
 
-import { ActionTypes } from '../constants';
+import { ActionTypes } from 'constants';
 import {
   DatasetModel,
   DatasetSummaryModel,
   PolicyModel,
   SnapshotSummaryModel,
-} from '../generated/tdr';
+} from 'generated/tdr';
 
 export interface DatasetPendingSave {
   description: boolean;
@@ -228,7 +228,7 @@ export default {
       [LOCATION_CHANGE]: (state) =>
         immutable(state, {
           dialogIsOpen: { $set: false },
-        }),
+        } as DatasetState),
       [ActionTypes.USER_LOGOUT_SUCCESS]: () => initialDatasetState,
     },
     initialDatasetState,

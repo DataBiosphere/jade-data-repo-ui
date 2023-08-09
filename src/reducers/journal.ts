@@ -2,7 +2,7 @@ import { handleActions } from 'redux-actions';
 import immutable from 'immutability-helper';
 import { JournalEntryModel } from 'generated/tdr';
 
-import { ActionTypes } from '../constants';
+import { ActionTypes } from 'constants';
 
 export interface JournalState {
   journalEntries: Array<JournalEntryModel>;

@@ -1,4 +1,5 @@
 // Polyfills
+import './init';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Helmet from 'react-helmet';
@@ -16,7 +17,7 @@ import createCache from '@emotion/cache';
 //eslint-disable-next-line import/no-extraneous-dependencies
 import { CacheProvider } from '@emotion/react';
 
-import config from 'config';
+import config from './config';
 import App from 'containers/App';
 
 import { ActionTypes } from './constants';

@@ -2,7 +2,7 @@ import { handleActions } from 'redux-actions';
 import immutable from 'immutability-helper';
 import { JobModel, JobModelJobStatusEnum } from 'generated/tdr';
 
-import { ActionTypes, Status } from '../constants';
+import { ActionTypes, Status } from 'constants';
 
 export interface JobState {
   finished: string;

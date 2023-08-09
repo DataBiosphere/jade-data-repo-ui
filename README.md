@@ -62,7 +62,6 @@ gcloud auth login --no-activate
 ### Development
 
 - webpack-dev-server 3.x
-- react-hot-loader 4.x
 - redux-devtools (with browser plugin)
 
 `npm start`

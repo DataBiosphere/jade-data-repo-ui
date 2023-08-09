@@ -3,7 +3,7 @@ import { AuthContextProps } from 'react-oidc-context';
 import { User } from 'oidc-client-ts';
 import { PayloadAction } from '@reduxjs/toolkit';
 
-import { ActionTypes } from '../constants';
+import { ActionTypes } from 'constants';
 
 function* userLogin({ payload }: PayloadAction<AuthContextProps>) {
   try {
