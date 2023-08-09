@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite';
+import eslint from 'vite-plugin-eslint';
 import react from '@vitejs/plugin-react';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import svgr from 'vite-plugin-svgr';
@@ -24,6 +25,7 @@ export default defineConfig(() => ({
     }),
     svgr(),
     tsconfigPaths(),
+    eslint(),
   ],
   server: {
     port: 3000,

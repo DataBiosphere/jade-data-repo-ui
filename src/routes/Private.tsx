@@ -7,6 +7,8 @@ import { createStyles, WithStyles, withStyles } from '@mui/styles';
 import { ConnectedRouter } from 'connected-react-router';
 import history from 'modules/hist';
 
+import { TabClasses } from '@mui/material/Tab/tabClasses';
+import { History, LocationState } from 'history';
 import HelpContainer from '../components/help/HelpContainer';
 import HomeView from '../components/HomeView';
 import DatasetDataView from '../components/dataset/data/DatasetDataView';
@@ -14,9 +16,7 @@ import DatasetOverview from '../components/dataset/overview/DatasetOverview';
 import DatasetSchemaCreationView from '../components/dataset/schemaCreation/DatasetSchemaCreationView';
 import SnapshotDataView from '../components/snapshot/data/SnapshotDataView';
 import SnapshotOverview from '../components/snapshot/overview/SnapshotOverview';
-import { TabClasses } from '@mui/material/Tab/tabClasses';
 import NotFound from './NotFound';
-import { History, LocationState } from 'history';
 
 const styles = (theme: CustomTheme) =>
   createStyles({

@@ -138,12 +138,13 @@
     "react-dom": "^17.0.2",
     "redux-mock-store": "^1.5.4",
     "vite": "^4.4.9",
+    "vite-plugin-eslint": "^1.8.1",
     "vite-tsconfig-paths": "^4.2.0",
     "yargs": "^17.7.2"
   },
   "scripts": {
     "serve": "vite preview",
-    "start": "npm run codegen && EXTEND_ESLINT=false && vite",
+    "start": "npm run codegen && EXTEND_ESLINT=true && vite",
     "build": "npm run codegen && vite build",
     "build-no-code-gen": "vite build",
     "lint": "npm run codegen && eslint  --ext .js --ext .jsx --ext .ts --ext .tsx src cypress tools",
