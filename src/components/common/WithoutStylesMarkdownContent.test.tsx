@@ -1,5 +1,5 @@
 import React from 'react';
-import { mount } from '@cypress/react';
+import { mount } from 'cypress/react';
 import { Router } from 'react-router-dom';
 import { ThemeProvider } from '@mui/styles';
 import { Provider } from 'react-redux';
@@ -23,10 +23,10 @@ describe('WithoutStylesMarkdownContent', () => {
         </Provider>
       </Router>,
     );
-    cy.get('div#__cy_root > div').children().should('have.length', 2);
-    cy.get('div#__cy_root > div > h1').should('contain.text', 'Lorem Ipsum');
-    cy.get('div#__cy_root > div > p').children().should('have.length', 1);
-    cy.get('div#__cy_root > div > p > a').should('have.attr', 'href').and('include', 'broad');
+    cy.root().children().should('have.length', 2);
+    cy.root().get('h1').should('contain.text', 'Lorem Ipsum');
+    cy.root().get('p').children().should('have.length', 1);
+    cy.root().get('p').get('a').should('have.attr', 'href').and('include', 'broad');
   });
   it('should render as text', () => {
     const htmlText = '<a href="www.badsite.com">A bad day</a>';
@@ -39,9 +39,9 @@ describe('WithoutStylesMarkdownContent', () => {
         </Provider>
       </Router>,
     );
-    cy.get('div#__cy_root > div').children().should('have.length', 1);
-    cy.get('div#__cy_root > div > p').should('contain.text', 'A bad day');
-    cy.get('div#__cy_root > div > p').children().should('have.length', 0);
+    cy.root().should('have.length', 1);
+    cy.root().get('p').should('contain.text', 'A bad day');
+    cy.root().get('p').children().should('have.length', 0);
   });
   it('should contain no text', () => {
     mount(

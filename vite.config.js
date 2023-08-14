@@ -9,7 +9,7 @@ const bigQueryApi = 'https://bigquery.googleapis.com';
 const googleSheetsApi = 'https://sheets.googleapis.com';
 const driveApi = 'https://www.googleapis.com';
 
-export default defineConfig(() => ({
+export default defineConfig({
   build: {
     outDir: 'build',
   },
@@ -61,4 +61,4 @@ export default defineConfig(() => ({
       },
     },
   },
-}));
+});

@@ -1,4 +1,4 @@
-import { mount } from '@cypress/react';
+import { mount } from 'cypress/react';
 import { Router } from 'react-router-dom';
 import { ThemeProvider } from '@mui/styles';
 import React from 'react';

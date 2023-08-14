@@ -1,5 +1,5 @@
 import React from 'react';
-import { mount } from '@cypress/react';
+import { mount } from 'cypress/react';
 import { Router } from 'react-router-dom';
 import { ThemeProvider } from '@mui/styles';
 import { Provider } from 'react-redux';
@@ -13,7 +13,7 @@ const markdownText = '# Lorem Ipsum \n\n[Link](https://broadinstitute.org)';
 
 const htmlText = '<a href="www.badsite.com">A bad day</a>';
 
-describe('WithoutStylesMarkdownContent', () => {
+describe('TextContent', () => {
   const mockStore = createMockStore([]);
   const store = mockStore({});
   it('should render markdown', () => {
@@ -26,10 +26,10 @@ describe('WithoutStylesMarkdownContent', () => {
         </Provider>
       </Router>,
     );
-    cy.get('div#__cy_root > div').children().should('have.length', 2);
-    cy.get('div#__cy_root > div > h1').should('contain.text', 'Lorem Ipsum');
-    cy.get('div#__cy_root > div > p').children().should('have.length', 1);
-    cy.get('div#__cy_root > div > p > a').should('have.attr', 'href').and('include', 'broad');
+    cy.root().children().should('have.length', 2);
+    cy.root().get('h1').should('contain.text', 'Lorem Ipsum');
+    cy.root().get('p').children().should('have.length', 1);
+    cy.root().get('p').get('a').should('have.attr', 'href').and('include', 'broad');
   });
   it('should render as text', () => {
     mount(
@@ -41,9 +41,10 @@ describe('WithoutStylesMarkdownContent', () => {
         </Provider>
       </Router>,
     );
-    cy.get('div#__cy_root > div').children().should('have.length', 1);
-    cy.get('div#__cy_root > div > p').should('contain.text', 'A bad day');
-    cy.get('div#__cy_root > div > p').children().should('have.length', 0);
+    const markDownText = cy.get('[data-cy="react-markdown-text"]');
+    markDownText.children().should('have.length', 1);
+    markDownText.get('p').should('contain.text', 'A bad day');
+    markDownText.get('p').children().should('have.length', 0);
   });
   it('should contain empty text', () => {
     mount(
@@ -55,8 +56,8 @@ describe('WithoutStylesMarkdownContent', () => {
         </Provider>
       </Router>,
     );
-    cy.get('div#__cy_root').children().should('have.length', 1);
-    cy.get('div#__cy_root').children().should('have.text', '(empty)');
+    cy.get('[data-cy-root=""]').children().should('have.length', 1);
+    cy.get('[data-cy="react-markdown-empty-text"]').should('have.text', '(empty)');
   });
   it('should contain custom empty text', () => {
     mount(
@@ -68,8 +69,8 @@ describe('WithoutStylesMarkdownContent', () => {
         </Provider>
       </Router>,
     );
-    cy.get('div#__cy_root').children().should('have.length', 1);
-    cy.get('div#__cy_root').children().should('have.text', 'custom');
+    cy.get('[data-cy-root=""]').children().should('have.length', 1);
+    cy.get('[data-cy="react-markdown-empty-text"]').should('have.text', 'custom');
   });
 
   it('should strip markdown', () => {
@@ -82,7 +83,7 @@ describe('WithoutStylesMarkdownContent', () => {
         </Provider>
       </Router>,
     );
-    cy.get('div#__cy_root').children().should('have.length', 0);
-    cy.get('div#__cy_root').should('have.text', 'Lorem Ipsum\nLink');
+    cy.get('[data-cy-root=""]').children().should('have.length', 0);
+    cy.get('[data-cy-root=""]').should('have.text', 'Lorem Ipsum\nLink');
   });
 });

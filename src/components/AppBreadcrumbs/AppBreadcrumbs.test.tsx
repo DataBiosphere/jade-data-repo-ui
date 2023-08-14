@@ -1,5 +1,5 @@
 import React from 'react';
-import { mount } from '@cypress/react';
+import { mount } from 'cypress/react';
 import { Router } from 'react-router-dom';
 import history from 'modules/hist';
 import globalTheme from 'modules/theme';
