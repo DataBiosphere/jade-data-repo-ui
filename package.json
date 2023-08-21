@@ -142,7 +142,7 @@
   },
   "scripts": {
     "serve": "vite preview",
-    "start": "npm run codegen && EXTEND_ESLINT=false && vite",
+    "start": "npm run codegen && EXTEND_ESLINT=true && vite",
     "build": "npm run codegen && vite build",
     "build-no-code-gen": "vite build",
     "lint": "npm run codegen && eslint  --ext .js --ext .jsx --ext .ts --ext .tsx src cypress tools",

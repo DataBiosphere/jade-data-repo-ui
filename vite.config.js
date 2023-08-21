@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite';
+import dns from 'dns';
 import eslint from 'vite-plugin-eslint';
 import react from '@vitejs/plugin-react';
 import tsconfigPaths from 'vite-tsconfig-paths';
@@ -8,6 +9,8 @@ const proxyUrl = process.env.PROXY_URL || 'https://jade.datarepo-dev.broadinstit
 const bigQueryApi = 'https://bigquery.googleapis.com';
 const googleSheetsApi = 'https://sheets.googleapis.com';
 const driveApi = 'https://www.googleapis.com';
+
+dns.setDefaultResultOrder('verbatim');
 
 export default defineConfig({
   build: {
@@ -29,6 +32,7 @@ export default defineConfig({
   ],
   server: {
     port: 3000,
+    host: 'localhost',
     proxy: {
       '/api': {
         target: proxyUrl,
