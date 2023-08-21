@@ -61,7 +61,7 @@ jobs:
         env:
           DISABLE_ESLINT_PLUGIN: true
         run: |
-          npm start & npx wait-on http://localhost:3000 --verbose
+          npm start & timeout 600 bash -c "until nc -z localhost 3000; do sleep 5; done"
       # Build the Docker image
       - name: Build
         run: |
