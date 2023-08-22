@@ -7,7 +7,7 @@ export const sagaMiddleware = createSagaMiddleware();
 const middleware = [sagaMiddleware];
 
 /* istanbul ignore next */
-if (process.env.NODE_ENV === 'development') {
+if (import.meta.env.DEV) {
   middleware.push(immutableStateInvariantMiddleware() as SagaMiddleware);
   middleware.push(createLogger({ collapsed: true }) as SagaMiddleware);
 }

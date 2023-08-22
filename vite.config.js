@@ -17,7 +17,7 @@ export default defineConfig({
     outDir: 'build',
   },
   define: {
-    'process.env': {},
+    'process.env': process.env,
   },
   plugins: [
     react({

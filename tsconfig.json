@@ -47,7 +47,8 @@
       "sagas": ["./src/sagas"]
     },
     "noUnusedLocals": true,
-    "noUnusedParameters": true
+    "noUnusedParameters": true,
+    "types": ["node", "vite/client"],
   },
   "include": [
     "src",
