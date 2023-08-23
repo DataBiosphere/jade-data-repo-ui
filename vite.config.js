@@ -19,17 +19,7 @@ export default defineConfig({
   define: {
     'process.env': process.env,
   },
-  plugins: [
-    react({
-      jsxImportSource: '@emotion/react',
-      babel: {
-        plugins: ['@emotion/babel-plugin'],
-      },
-    }),
-    svgr(),
-    tsconfigPaths(),
-    eslint(),
-  ],
+  plugins: [react(), svgr(), tsconfigPaths(), eslint()],
   server: {
     port: 3000,
     host: 'localhost',
