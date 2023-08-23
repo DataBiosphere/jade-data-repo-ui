@@ -18,7 +18,7 @@ COPY --from=codegen /local /
 # Run the build
 RUN export DISABLE_ESLINT_PLUGIN=true && \
   npm ci && \
-  npm run build-no-code-gen --production
+  npm run build-no-code-gen
 
 ## Step 3. Copy the static UI artifacts into an nginx image to host
 FROM nginxinc/nginx-unprivileged:stable-alpine

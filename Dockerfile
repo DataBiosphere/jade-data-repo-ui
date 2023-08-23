@@ -23,7 +23,7 @@ COPY --from=codegen /local /jade-data-repo-ui
 RUN cd jade-data-repo-ui \
   && export DISABLE_ESLINT_PLUGIN=true \
   && npm ci \
-  && npm run build-no-code-gen --production
+  && npm run build-no-code-gen
 
 ## Step 3. Copy the static UI artifacts into an nginx image to host
 FROM us.gcr.io/broad-dsp-gcr-public/base/nginx:stable-alpine
