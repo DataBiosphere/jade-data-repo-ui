@@ -17,7 +17,7 @@ export default defineConfig({
     outDir: 'build',
   },
   define: {
-    'process.env': process.env,
+    process,
   },
   plugins: [react(), svgr(), tsconfigPaths(), eslint()],
   server: {
