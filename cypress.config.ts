@@ -5,12 +5,10 @@ import customViteConfig from './vite.config';
 
 export default defineConfig({
   component: {
-    src: ['./src/components'],
     devServer(devServerConfig) {
       return devServer({
         ...devServerConfig,
         framework: 'react',
-        bundler: 'vite',
         viteConfig: customViteConfig,
       });
     },
