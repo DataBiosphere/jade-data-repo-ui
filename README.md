@@ -20,7 +20,7 @@ nvm install 10.0.0
 rm -R ~/.avn (if you want to reset an existing or failed avn setup)
 nvm exec 10.0.0 npm install -g avn avn-nvm avn-n
 nvm exec 10.0.0 avn setup
-nvm install lts/erbium --default
+nvm install lts/gallium --default
 nvm use lts/gallium
 ```
 
