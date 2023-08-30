@@ -12,11 +12,9 @@ const testPlatforms = [
 testPlatforms.forEach((testPlatform) => {
   describe(`test query builder on ${testPlatform.platform} dataset`, () => {
     beforeEach(() => {
-      cy.server();
-
-      cy.route('GET', 'api/repository/v1/datasets/**').as('getDataset');
-      cy.route('GET', 'api/repository/v1/datasets/**/policies').as('getDatasetPolicies');
-      cy.route('GET', 'api/resources/v1/profiles/**').as('getBillingProfileById');
+      cy.intercept('GET', 'api/repository/v1/datasets/**').as('getDataset');
+      cy.intercept('GET', 'api/repository/v1/datasets/**/policies').as('getDatasetPolicies');
+      cy.intercept('GET', 'api/resources/v1/profiles/**').as('getBillingProfileById');
 
       cy.visit('/login/e2e');
       cy.get('#tokenInput').type(Cypress.env('GOOGLE_TOKEN'), {

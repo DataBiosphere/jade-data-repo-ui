@@ -4,7 +4,7 @@ import { buildSnapshotFilterStatement } from 'modules/filter';
 import { buildSnapshotJoinStatement } from 'modules/snapshotByQuery';
 import { LOCATION_CHANGE } from 'connected-react-router';
 
-import { ActionTypes } from '../constants';
+import { ActionTypes } from 'constants';
 import {
   DatasetModel,
   InaccessibleWorkspacePolicyModel,
@@ -14,7 +14,7 @@ import {
   SnapshotRequestModelPolicies,
   SnapshotSummaryModel,
   WorkspacePolicyModel,
-} from '../generated/tdr';
+} from 'generated/tdr';
 
 // TODO: convert to autogenned SnapshotRequestModel
 export interface SnapshotRequest {
@@ -352,13 +352,13 @@ export default {
           pendingSave: { duosDataset: { $set: false } },
         }),
 
-      [LOCATION_CHANGE]: (state, action: any) => {
+      [LOCATION_CHANGE]: (state: SnapshotState, action: any) => {
         // Don't reset state if the only change was query parameters
         const path = action.payload?.location?.pathname;
         if (path === state.lastPath) {
           return immutable(state, {
-            lastPath: { $set: path },
-          });
+            lastPath: { $set: path as string },
+          } as SnapshotState);
         }
         return immutable(state, {
           snapshotRequest: { $set: defaultSnapshotRequest },

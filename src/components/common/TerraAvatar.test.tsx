@@ -1,5 +1,5 @@
 import React from 'react';
-import { mount } from '@cypress/react';
+import { mount } from 'cypress/react';
 import { Router } from 'react-router-dom';
 import { ThemeProvider } from '@mui/styles';
 import { Provider } from 'react-redux';

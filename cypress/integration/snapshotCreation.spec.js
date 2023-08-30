@@ -1,32 +1,26 @@
 describe('test snapshot creation', () => {
   beforeEach(() => {
-    cy.server();
-
-    cy.route('GET', 'api/repository/v1/datasets/**').as('getDataset');
-    cy.route('GET', 'api/repository/v1/datasets/**/policies').as('getDatasetPolicies');
-    cy.route({ method: 'GET', url: 'api/resources/v1/profiles/**' }).as('getBillingProfileById');
-    cy.route({
-      method: 'POST',
-      url: '/api/repository/v1/snapshots',
-      status: 200,
-      response: {
+    cy.intercept('GET', 'api/repository/v1/datasets/**').as('getDataset');
+    cy.intercept('GET', 'api/repository/v1/datasets/**/policies').as('getDatasetPolicies');
+    cy.intercept({ method: 'GET', url: 'api/resources/v1/profiles/**' }).as(
+      'getBillingProfileById',
+    );
+    cy.intercept('POST', '/api/repository/v1/snapshots', {
+      statusCode: 200,
+      body: {
         id: 'jobId',
       },
     });
-    cy.route({
-      method: 'GET',
-      url: '/api/repository/v1/jobs/jobId',
-      status: 200,
-      response: {
+    cy.intercept('GET', '/api/repository/v1/jobs/jobId', {
+      statusCpde: 200,
+      body: {
         id: 'jobId',
         job_status: 'succeeded',
       },
     });
-    cy.route({
-      method: 'GET',
-      url: '/api/repository/v1/jobs/jobId/result',
-      status: 200,
-      response: {
+    cy.intercept('GET', '/api/repository/v1/jobs/jobId/result', {
+      statusCode: 200,
+      body: {
         name: 'mock_snapshot',
         description: '',
         id: 'snapshotId',
@@ -34,11 +28,9 @@ describe('test snapshot creation', () => {
         profileId: 'profileId',
       },
     });
-    cy.route({
-      method: 'GET',
-      url: '/api/repository/v1/snapshots/snapshotId**',
-      status: 200,
-      response: {
+    cy.intercept('GET', '/api/repository/v1/snapshots/snapshotId**', {
+      statusCode: 200,
+      body: {
         name: 'mock_snapshot',
         description: '',
         id: 'snapshotId',
@@ -48,11 +40,9 @@ describe('test snapshot creation', () => {
         tables: [{ rowCount: 2 }],
       },
     });
-    cy.route({
-      method: 'GET',
-      url: '/api/repository/v1/snapshots/snapshotId/policies',
-      status: 200,
-      response: {
+    cy.intercept('GET', '/api/repository/v1/snapshots/snapshotId/policies', {
+      statusCode: 200,
+      body: {
         policies: [
           {
             name: 'reader',
@@ -92,13 +82,9 @@ describe('test snapshot creation', () => {
 
 describe('test snapshot creation is disabled', () => {
   beforeEach(() => {
-    cy.server();
-
-    cy.route('GET', 'api/repository/v1/datasets/**').as('getDataset');
-    cy.route('GET', 'api/repository/v1/datasets/**/policies').as('getDatasetPolicies');
-    cy.route({
-      method: 'GET',
-      url: '/api/resources/v1/profiles/**',
+    cy.intercept('GET', 'api/repository/v1/datasets/**').as('getDataset');
+    cy.intercept('GET', 'api/repository/v1/datasets/**/policies').as('getDatasetPolicies');
+    cy.intercept('GET', '/api/resources/v1/profiles/**', {
       status: 401,
       response: {
         message: 'unauthorized',

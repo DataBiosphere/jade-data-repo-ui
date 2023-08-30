@@ -1,8 +1,6 @@
 describe('test export snapshot', () => {
   beforeEach(() => {
-    cy.server();
-
-    cy.route('GET', 'api/repository/v1/snapshots/**').as('getSnapshot');
+    cy.intercept('GET', 'api/repository/v1/snapshots/**').as('getSnapshot');
 
     cy.visit('/login/e2e');
     cy.get('#tokenInput').type(Cypress.env('GOOGLE_TOKEN'), {
@@ -21,22 +19,18 @@ describe('test export snapshot', () => {
 
   it('exports to google sheets', () => {
     cy.contains(/Export Snapshot/g).click();
-    cy.route({
-      method: 'POST',
-      url: 'drive/v3/files',
-      status: 200,
-      response: {
+    cy.intercept('POST', 'drive/v3/files', {
+      statusCode: 200,
+      body: {
         kind: 'drive#file',
         id: '1dn_K-ehwE3SoVl-HzcUO0GuN3sYXAlKTfv5JF7RuTTU',
         name: 'V2FGWASSummaryStatisticsSnapshot1',
         mimeType: 'application/vnd.google-apps.spreadsheet',
       },
     }).as('createSpreadsheet');
-    cy.route({
-      method: 'POST',
-      url: 'googlesheets/v4/spreadsheets/**:batchUpdate',
-      status: 200,
-      response: {
+    cy.intercept('POST', 'googlesheets/v4/spreadsheets/**:batchUpdate', {
+      statusCode: 200,
+      body: {
         spreadsheetId: '1dn_K-ehwE3SoVl-HzcUO0GuN3sYXAlKTfv5JF7RuTTU',
         replies: [
           {

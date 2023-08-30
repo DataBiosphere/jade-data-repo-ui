@@ -1,9 +1,7 @@
 describe('test error handling', () => {
   beforeEach(() => {
-    cy.server();
-
-    cy.route('GET', 'api/repository/v1/datasets/**').as('getDataset');
-    cy.route('GET', 'api/repository/v1/datasets/**/policies').as('getDatasetPolicies');
+    cy.intercept('GET', 'api/repository/v1/datasets/**').as('getDataset');
+    cy.intercept('GET', 'api/repository/v1/datasets/**/policies').as('getDatasetPolicies');
 
     cy.visit('/login/e2e');
     cy.get('#tokenInput').type(Cypress.env('GOOGLE_TOKEN'), {
@@ -18,11 +16,9 @@ describe('test error handling', () => {
   });
 
   it('displays error toasts with error detail', () => {
-    cy.route({
-      method: 'GET',
-      url: '/api/repository/v1/datasets/**/data/**',
-      status: 401,
-      response: {
+    cy.intercept('GET', '/api/repository/v1/datasets/**/data/**', {
+      statusCode: 401,
+      body: {
         message: 'Was not able to query',
         errorDetail: ['This is the reason for the error'],
       },
@@ -35,11 +31,9 @@ describe('test error handling', () => {
   });
 
   it('displays error toasts with empty error detail', () => {
-    cy.route({
-      method: 'GET',
-      url: '/api/repository/v1/datasets/**/data/**',
-      status: 401,
-      response: {
+    cy.intercept('GET', '/api/repository/v1/datasets/**/data/**', {
+      statusCode: 401,
+      body: {
         message: 'Was not able to query',
         errorDetail: [],
       },
@@ -52,11 +46,9 @@ describe('test error handling', () => {
   });
 
   it('displays error toasts with no error detail', () => {
-    cy.route({
-      method: 'GET',
-      url: '/api/repository/v1/datasets/**/data/**',
-      status: 401,
-      response: {
+    cy.intercept('GET', '/api/repository/v1/datasets/**/data/**', {
+      statusCode: 401,
+      body: {
         message: 'Was not able to query',
       },
     }).as('getQueryResults');

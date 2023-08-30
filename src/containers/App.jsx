@@ -1,4 +1,3 @@
-import { hot } from 'react-hot-loader/root';
 import React, { useState, useEffect, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -29,7 +28,7 @@ import { useAuth } from 'react-oidc-context';
 import TerraAvatar from 'components/common/TerraAvatar';
 import LoadingSpinner from 'components/common/LoadingSpinner';
 
-import { logOut, logInSuccess, getUserStatus, userRefresh } from '../actions';
+import { logOut, logInSuccess, getUserStatus, userRefresh } from 'actions';
 
 const drawerWidth = 240;
 
@@ -301,4 +300,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default hot(connect(mapStateToProps)(withStyles(App, styles)));
+export default connect(mapStateToProps)(withStyles(App, styles));

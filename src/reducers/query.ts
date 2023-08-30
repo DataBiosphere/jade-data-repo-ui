@@ -5,7 +5,7 @@ import { LOCATION_CHANGE } from 'connected-react-router';
 import { buildfilterStatement } from 'modules/filter';
 import { CloudPlatform, ColumnModel, TableDataType } from 'generated/tdr';
 
-import { ActionTypes, TABLE_DEFAULT_ROWS_PER_PAGE, TABLE_DEFAULT_COLUMN_WIDTH } from '../constants';
+import { ActionTypes, TABLE_DEFAULT_ROWS_PER_PAGE, TABLE_DEFAULT_COLUMN_WIDTH } from 'constants';
 
 export type TableColumnType = {
   name: string;

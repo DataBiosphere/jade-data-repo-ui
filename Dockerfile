@@ -11,7 +11,7 @@ RUN /usr/local/bin/docker-entrypoint.sh generate -g typescript-axios -i $TDR_OPE
 
 
 ## Step 2. Build the deployable UI artifacts
-FROM node:14.0-buster as build
+FROM node:16.20.2-buster as build
 # Check out the build
 RUN set -x \
   && git clone https://github.com/DataBiosphere/jade-data-repo-ui \
@@ -23,7 +23,7 @@ COPY --from=codegen /local /jade-data-repo-ui
 RUN cd jade-data-repo-ui \
   && export DISABLE_ESLINT_PLUGIN=true \
   && npm ci \
-  && npm run build-no-code-gen --production
+  && npm run build-no-code-gen
 
 ## Step 3. Copy the static UI artifacts into an nginx image to host
 FROM us.gcr.io/broad-dsp-gcr-public/base/nginx:stable-alpine

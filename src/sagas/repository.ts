@@ -27,8 +27,8 @@ import {
   DbColumns,
   TABLE_DEFAULT_ROWS_PER_PAGE,
   ColumnStatsRetrievalType,
-} from '../constants';
-import { TdrState } from '../reducers';
+} from 'constants';
+import { TdrState } from 'reducers';
 
 /**
  * Switch Menu

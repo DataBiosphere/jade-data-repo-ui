@@ -1,11 +1,11 @@
 describe('test dataset sharing', () => {
   beforeEach(() => {
-    cy.server();
-    cy.route('GET', 'api/repository/v1/datasets/**').as('getDataset');
-    cy.route('GET', 'api/repository/v1/datasets/**/policies').as('getDatasetPolicies');
-    cy.route('GET', 'api/repository/v1/datasets/**/roles').as('getDatasetRoles');
-
-    cy.route({ method: 'GET', url: 'api/resources/v1/profiles/**' }).as('getBillingProfileById');
+    cy.intercept('GET', 'api/repository/v1/datasets/**').as('getDataset');
+    cy.intercept('GET', 'api/repository/v1/datasets/**/policies').as('getDatasetPolicies');
+    cy.intercept('GET', 'api/repository/v1/datasets/**/roles').as('getDatasetRoles');
+    cy.intercept({ method: 'GET', url: 'api/resources/v1/profiles/**' }).as(
+      'getBillingProfileById',
+    );
 
     cy.visit('/login/e2e');
     cy.get('#tokenInput').type(Cypress.env('GOOGLE_TOKEN'), {

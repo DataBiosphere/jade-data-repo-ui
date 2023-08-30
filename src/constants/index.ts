@@ -1,5 +1,4 @@
 import { CloudPlatform } from 'generated/tdr';
-import _ from 'lodash';
 
 /**
  * @namespace Constants

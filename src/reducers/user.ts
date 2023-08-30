@@ -6,8 +6,8 @@ import moment from 'moment';
 import { User } from 'oidc-client-ts';
 import { PayloadAction } from '@reduxjs/toolkit';
 
-import { ActionTypes, Status } from '../constants';
-import { ManagedGroupMembershipEntry } from '../models/group';
+import { ActionTypes, Status } from 'constants';
+import { ManagedGroupMembershipEntry } from 'models/group';
 
 const JADE_FEATURE_PREFIX = 'jade-feature-';
 

@@ -1,8 +1,8 @@
 import { handleActions } from 'redux-actions';
 import immutable from 'immutability-helper';
 
-import { ActionTypes } from '../constants';
-import { RepositoryStatusModel } from '../generated/tdr';
+import { ActionTypes } from 'constants';
+import { RepositoryStatusModel } from 'generated/tdr';
 
 export interface StatusState {
   tdrOperational: boolean;

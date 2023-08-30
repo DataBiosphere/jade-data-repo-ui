@@ -20,8 +20,8 @@ nvm install 10.0.0
 rm -R ~/.avn (if you want to reset an existing or failed avn setup)
 nvm exec 10.0.0 npm install -g avn avn-nvm avn-n
 nvm exec 10.0.0 avn setup
-nvm install lts/erbium --default
-nvm use lts/erbium
+nvm install lts/gallium --default
+nvm use lts/gallium
 ```
 
 - Run `npm install` to download dependencies defined in the package.json file and generate the node_modules folder with the installed modules.
@@ -61,15 +61,14 @@ gcloud auth login --no-activate
 
 ### Development
 
-- webpack-dev-server 3.x
-- react-hot-loader 4.x
+- vite-dev-server 5.x
 - redux-devtools (with browser plugin)
 
 `npm start`
 
 ### Building
 
-- webpack 4.x
+- vite 4.x
 - babel 7.x
 
 `npm run build`
@@ -83,7 +82,7 @@ gcloud auth login --no-activate
 
 ### Testing
 
-- cypress 9.x
+- cypress 12.x
 
 To run end-to-end tests: `npx cypress run` or `npx cypress open` (interactive mode)
 

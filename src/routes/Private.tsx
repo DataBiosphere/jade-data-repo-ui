@@ -2,12 +2,14 @@ import React, { Fragment } from 'react';
 import { Link, Redirect, Route, Router, Switch } from 'react-router-dom';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
+import { CustomTheme } from '@mui/material/styles';
 import { createStyles, WithStyles, withStyles } from '@mui/styles';
 import { ConnectedRouter } from 'connected-react-router';
 import history from 'modules/hist';
 
-import HelpContainer from 'components/help/HelpContainer';
-import { CustomTheme } from '@mui/material/styles';
+import { TabClasses } from '@mui/material/Tab/tabClasses';
+import { History, LocationState } from 'history';
+import HelpContainer from '../components/help/HelpContainer';
 import HomeView from '../components/HomeView';
 import DatasetDataView from '../components/dataset/data/DatasetDataView';
 import DatasetOverview from '../components/dataset/overview/DatasetOverview';
@@ -95,7 +97,7 @@ function Private({ classes }: WithStyles<typeof styles>) {
   const locationSplit = history.location.pathname.split('/');
   const selectedTab = `/${locationSplit[1] || 'datasets'}`;
   return (
-    <ConnectedRouter history={history}>
+    <ConnectedRouter history={history as History<LocationState>}>
       <Router history={history}>
         <div className={classes.wrapper}>
           <Route
@@ -105,7 +107,12 @@ function Private({ classes }: WithStyles<typeof styles>) {
                 <div className={classes.tabWrapper}>
                   <Tabs
                     value={selectedTab}
-                    classes={{ root: classes.tabsRoot, indicator: classes.tabsIndicator }}
+                    classes={
+                      {
+                        root: classes.tabsRoot,
+                        indicator: classes.tabsIndicator,
+                      } as Partial<TabClasses>
+                    }
                   >
                     {tabConfigs
                       .filter(
@@ -119,7 +126,7 @@ function Private({ classes }: WithStyles<typeof styles>) {
                           component={Link}
                           value={config.path}
                           to={config.path}
-                          classes={{ selected: classes.tabSelected }}
+                          classes={{ selected: classes.tabSelected } as Partial<TabClasses>}
                           disableFocusRipple
                           disableRipple
                         />

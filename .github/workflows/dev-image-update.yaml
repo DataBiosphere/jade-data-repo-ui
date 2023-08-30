@@ -11,7 +11,6 @@ on:
       - 'cypress.json'
       - 'cypress/**'
       - 'Dockerfile'
-      - 'config-overrides.js'
       - '.github/workflows/dev-image-update.yaml'
 env:
   gcr_google_project: 'broad-jade-dev'

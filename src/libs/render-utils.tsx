@@ -1,5 +1,4 @@
 import React from 'react';
-import _ from 'lodash';
 import { Box, Typography } from '@mui/material';
 import TextContent from 'components/common/TextContent';
 import CopyTextButton from 'components/common/CopyTextButton';
