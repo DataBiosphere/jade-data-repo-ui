@@ -19,7 +19,7 @@ import moment from 'moment';
 import clsx from 'clsx';
 import { patchDataset } from 'actions';
 import GoogleSheetExport from 'components/common/overview/GoogleSheetExport';
-import { IamResourceTypeEnum } from 'generated/tdr';
+import { IamResourceTypeEnum, CloudPlatform } from 'generated/tdr';
 import {
   renderCloudPlatforms,
   renderStorageResources,
@@ -31,6 +31,7 @@ import EditableFieldView from '../../EditableFieldView';
 import TabPanel from '../../common/TabPanel';
 import { DatasetRoles } from '../../../constants';
 import JournalEntriesView from '../../JournalEntriesView';
+import { getCloudPlatform } from '../../../libs/utilsTs';
 
 const styles = (theme) => ({
   root: {
@@ -183,15 +184,23 @@ function DatasetOverviewPanel(props) {
             {renderStorageResources(dataset)}
           </Grid>
           <Grid item xs={4}>
-            <Typography variant="h6">Cloud Platforms:</Typography>
+            <Typography variant="h6">Cloud Platform:</Typography>
             {renderCloudPlatforms(dataset)}
           </Grid>
           <Grid item xs={4}>
-            {renderTextFieldValue('Google Data Project', dataset.dataProject)}
+            {getCloudPlatform(dataset) === CloudPlatform.Gcp &&
+              renderTextFieldValue('Google Data Project', dataset.dataProject)}
+            {getCloudPlatform(dataset) === CloudPlatform.Azure &&
+              renderTextFieldValue(
+                'Azure Storage Account',
+                `${dataset.accessInformation?.parquet?.datasetId}`.split('.')[0],
+              )}
           </Grid>
-          <Grid item xs={4}>
-            {renderTextFieldValue('Ingest Service Account', dataset.ingestServiceAccount)}
-          </Grid>
+          {getCloudPlatform(dataset) === CloudPlatform.Gcp && (
+            <Grid item xs={4}>
+              {renderTextFieldValue('Ingest Service Account', dataset.ingestServiceAccount)}
+            </Grid>
+          )}
           <Grid item xs={4}>
             <Typography variant="h6">Secure Monitoring Enabled?</Typography>
             {dataset.secureMonitoringEnabled ? 'Yes' : 'No'}

@@ -9,7 +9,11 @@ import GoogleSheetExport from 'components/common/overview/GoogleSheetExport';
 import { Link } from 'react-router-dom';
 import TextContent from 'components/common/TextContent';
 import { IamResourceTypeEnum } from 'generated/tdr';
-import { renderStorageResources, renderTextFieldValue } from '../../../libs/render-utils';
+import {
+  renderCloudPlatforms,
+  renderStorageResources,
+  renderTextFieldValue,
+} from '../../../libs/render-utils';
 import SnapshotAccess from '../SnapshotAccess';
 import SnapshotWorkspace from './SnapshotWorkspace';
 import TabPanel from '../../common/TabPanel';
@@ -162,6 +166,14 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
           <Grid item xs={4}>
             <Typography variant="h6">Storage:</Typography>
             {renderStorageResources(sourceDataset)}
+          </Grid>
+          <Grid item xs={4}>
+            <Typography variant="h6">Cloud Platform:</Typography>
+            {renderCloudPlatforms(sourceDataset)}
+          </Grid>
+          <Grid item xs={4}>
+            <Typography variant="h6">Secure Monitoring Enabled?</Typography>
+            {sourceDataset.secureMonitoringEnabled ? 'Yes' : 'No'}
           </Grid>
           <Grid item xs={4}>
             {renderTextFieldValue(
