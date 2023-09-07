@@ -367,6 +367,9 @@ export function* getSnapshotById({ payload }: any): any {
       snapshot: { data: response },
     });
   } catch (err) {
+    yield put({
+      type: ActionTypes.GET_SNAPSHOT_BY_ID_FAILURE,
+    });
     showNotification(err);
   }
 }
@@ -519,6 +522,9 @@ export function* getDatasetById({ payload }: any): any {
       dataset: { data: response },
     });
   } catch (err) {
+    yield put({
+      type: ActionTypes.GET_DATASET_BY_ID_FAILURE,
+    });
     showNotification(err);
   }
 }

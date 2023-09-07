@@ -88,6 +88,7 @@ export const { getDatasetSnapshots } = createActions({
 export const { getSnapshotById } = createActions({
   [ActionTypes.GET_SNAPSHOT_BY_ID]: (snapshot) => snapshot,
   [ActionTypes.GET_SNAPSHOT_BY_ID_SUCCESS]: (snapshot) => snapshot,
+  [ActionTypes.GET_SNAPSHOT_BY_ID_FAILURE]: () => ({}),
 });
 
 export const { getSnapshotPolicy } = createActions({
@@ -142,6 +143,7 @@ export const { refreshDatasets } = createActions({
 export const { getDatasetById } = createActions({
   [ActionTypes.GET_DATASET_BY_ID]: (dataset) => dataset,
   [ActionTypes.GET_DATASET_BY_ID_SUCCESS]: (dataset) => dataset,
+  [ActionTypes.GET_DATASET_BY_ID_FAILURE]: () => ({}),
 });
 
 export const { getDatasetPolicy } = createActions({

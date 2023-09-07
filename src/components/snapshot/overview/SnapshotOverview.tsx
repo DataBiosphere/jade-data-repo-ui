@@ -11,6 +11,7 @@ import { PolicyModel, SnapshotModel } from '../../../generated/tdr';
 import AppBreadcrumbs from '../../AppBreadcrumbs/AppBreadcrumbs';
 import SnapshotOverviewPanel from './SnapshotOverviewPanel';
 import SnapshotRelationshipsPanel from '../../common/overview/SchemaPanel';
+import LoadingSpinner from '../../common/LoadingSpinner';
 import { AppDispatch } from '../../../store';
 import { SnapshotPendingSave } from '../../../reducers/snapshot';
 
@@ -60,7 +61,16 @@ type AllSnapshotProps = SnapshotProps &
   WithStyles<typeof styles>;
 
 function SnapshotOverview(props: AllSnapshotProps) {
-  const { classes, dispatch, match, pendingSave, snapshot, snapshotPolicies, userRoles } = props;
+  const {
+    classes,
+    dispatch,
+    match,
+    pendingSave,
+    snapshot,
+    snapshotByIdLoading,
+    snapshotPolicies,
+    userRoles,
+  } = props;
   const snapshotId = match.params.uuid;
   useOnMount(() => {
     dispatch(
@@ -79,6 +89,10 @@ function SnapshotOverview(props: AllSnapshotProps) {
     dispatch(getSnapshotPolicy(snapshotId));
     dispatch(getUserSnapshotRoles(snapshotId));
   });
+
+  if (snapshotByIdLoading) {
+    return <LoadingSpinner />;
+  }
 
   return snapshotPolicies && snapshot && snapshot.tables && snapshot.id === snapshotId ? (
     <div className={classes.pageRoot}>
@@ -121,6 +135,7 @@ function SnapshotOverview(props: AllSnapshotProps) {
 type StateProps = {
   pendingSave: SnapshotPendingSave;
   snapshot: SnapshotModel;
+  snapshotByIdLoading: boolean;
   snapshotPolicies: PolicyModel[];
   userRoles: Array<string>;
 };
@@ -129,6 +144,7 @@ function mapStateToProps(state: TdrState) {
   return {
     pendingSave: state.snapshots.pendingSave,
     snapshot: state.snapshots.snapshot,
+    snapshotByIdLoading: state.snapshots.snapshotByIdLoading,
     snapshotPolicies: state.snapshots.snapshotPolicies,
     userRoles: state.snapshots.userRoles,
   };
