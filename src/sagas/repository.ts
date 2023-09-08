@@ -45,6 +45,7 @@ export const getSnapshotState = (state: TdrState) => state.snapshots;
 export const getQuery = (state: TdrState) => state.query;
 export const getDataset = (state: TdrState) => state.datasets.dataset;
 export const getSamUrl = (state: TdrState) => state.configuration.configObject.samUrl;
+export const getDuosUrl = (state: TdrState) => state.configuration.configObject.duosUrl;
 export const getLocation = (state: TdrState & RouterRootState) => state.router.location;
 export const timeoutMsg = 'Your session has timed out. Please refresh the page.';
 
@@ -916,6 +917,26 @@ export function* changePage(page: number): any {
 }
 
 /**
+ * DUOS
+ */
+export function* getDuosDatasets(): any {
+  try {
+    const duosUrl = yield select(getDuosUrl);
+    const url = `${duosUrl}/api/dataset/v2`;
+    const response = yield call(authGet, url);
+    yield put({
+      type: ActionTypes.GET_DUOS_DATASETS_SUCCESS,
+      datasets: { data: response },
+    });
+  } catch (err) {
+    yield put({
+      type: ActionTypes.GET_DUOS_DATASETS_FAILURE,
+    });
+    showNotification(err);
+  }
+}
+
+/**
  * feature flag stuff
  */
 
@@ -1005,6 +1026,7 @@ export default function* root() {
     takeLatest(ActionTypes.PATCH_DATASET, patchDataset),
     takeLatest(ActionTypes.PATCH_SNAPSHOT, patchSnapshot),
     takeLatest(ActionTypes.UPDATE_DUOS_DATASET, updateDuosDataset),
+    takeLatest(ActionTypes.GET_DUOS_DATASETS, getDuosDatasets),
     fork(watchGetDatasetByIdSuccess),
   ]);
 }

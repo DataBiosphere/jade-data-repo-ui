@@ -24,7 +24,6 @@ const styles = (theme: CustomTheme) =>
     },
     textInputDiv: {
       width: '100%',
-      zIndex: '9998',
     },
     textInput: {
       width: '100%',
@@ -32,6 +31,8 @@ const styles = (theme: CustomTheme) =>
     editIconButton: {
       boxShadow: 'none',
       color: theme.palette.primary.main,
+      marginTop: '-8px',
+      marginBottom: '-6px',
       '&:hover': {
         color: theme.palette.primary.hover,
       },

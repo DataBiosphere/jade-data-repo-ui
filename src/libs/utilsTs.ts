@@ -16,6 +16,5 @@ export const urlEncodeParams = (params: Record<string, string | number | boolean
  * @param dataset Given a dataset, return the cloud platform it is hosted on
  * @returns The cloud platform or undefined if the dataset has no storage object
  */
-export const getCloudPlatform = (dataset: DatasetModel): CloudPlatform | undefined => {
-  return _.first(dataset.storage?.map((s) => s.cloudPlatform));
-};
+export const getCloudPlatform = (dataset: DatasetModel): CloudPlatform | undefined =>
+  _.first(dataset.storage?.map((s) => s.cloudPlatform));

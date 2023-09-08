@@ -10,6 +10,7 @@ import queryReducer, { QueryState, initialQueryState } from './query';
 import statusReducer, { StatusState, initialStatusState } from './status';
 import profileReducer, { ProfileState, initialProfileState } from './profile';
 import journalReducer, { initialJournalState, JournalState } from './journal';
+import duosReducer, { DuosState, initialDuosState } from './duos';
 
 export interface TdrState {
   user: UserState;
@@ -21,6 +22,7 @@ export interface TdrState {
   query: QueryState;
   status: StatusState;
   profiles: ProfileState;
+  duos: DuosState;
 }
 
 /**
@@ -36,6 +38,7 @@ export const initialTdrState: TdrState = {
   query: initialQueryState,
   status: initialStatusState,
   profiles: initialProfileState,
+  duos: initialDuosState,
 };
 
 export default {
@@ -48,4 +51,5 @@ export default {
   ...queryReducer,
   ...statusReducer,
   ...profileReducer,
+  ...duosReducer,
 };

@@ -6,7 +6,12 @@ import { createStyles, WithStyles, withStyles } from '@mui/styles';
 import { TdrState } from '../../../reducers';
 import { BreadcrumbType, SnapshotIncludeOptions } from '../../../constants';
 import { useOnMount } from '../../../libs/utils';
-import { getSnapshotById, getSnapshotPolicy, getUserSnapshotRoles } from '../../../actions';
+import {
+  getDuosDatasets,
+  getSnapshotById,
+  getSnapshotPolicy,
+  getUserSnapshotRoles,
+} from '../../../actions';
 import { PolicyModel, SnapshotModel } from '../../../generated/tdr';
 import AppBreadcrumbs from '../../AppBreadcrumbs/AppBreadcrumbs';
 import SnapshotOverviewPanel from './SnapshotOverviewPanel';
@@ -14,6 +19,7 @@ import SnapshotRelationshipsPanel from '../../common/overview/SchemaPanel';
 import LoadingSpinner from '../../common/LoadingSpinner';
 import { AppDispatch } from '../../../store';
 import { SnapshotPendingSave } from '../../../reducers/snapshot';
+import { DuosDatasetModel } from '../../../reducers/duos';
 
 const styles = () =>
   createStyles({
@@ -22,6 +28,7 @@ const styles = () =>
       display: 'flex',
       flexDirection: 'column',
       height: '100%',
+      position: 'relative',
     },
     root: {
       // TODO: expect this to change as more components are added
@@ -64,6 +71,8 @@ function SnapshotOverview(props: AllSnapshotProps) {
   const {
     classes,
     dispatch,
+    duosDatasets,
+    duosDatasetsLoading,
     match,
     pendingSave,
     snapshot,
@@ -88,13 +97,20 @@ function SnapshotOverview(props: AllSnapshotProps) {
     );
     dispatch(getSnapshotPolicy(snapshotId));
     dispatch(getUserSnapshotRoles(snapshotId));
+    dispatch(getDuosDatasets());
   });
 
   if (snapshotByIdLoading) {
     return <LoadingSpinner />;
   }
 
-  return snapshotPolicies && snapshot && snapshot.tables && snapshot.id === snapshotId ? (
+  const renderPage =
+    snapshotPolicies &&
+    snapshot &&
+    snapshot.tables &&
+    snapshot.id === snapshotId &&
+    !duosDatasetsLoading;
+  return renderPage ? (
     <div className={classes.pageRoot}>
       <AppBreadcrumbs
         context={{
@@ -120,6 +136,7 @@ function SnapshotOverview(props: AllSnapshotProps) {
         <div className={classes.mainColumn}>
           <SnapshotOverviewPanel
             dispatch={dispatch}
+            duosDatasets={duosDatasets}
             pendingSave={pendingSave}
             snapshot={snapshot}
             userRoles={userRoles}
@@ -133,6 +150,8 @@ function SnapshotOverview(props: AllSnapshotProps) {
 }
 
 type StateProps = {
+  duosDatasets: Array<DuosDatasetModel>;
+  duosDatasetsLoading: boolean;
   pendingSave: SnapshotPendingSave;
   snapshot: SnapshotModel;
   snapshotByIdLoading: boolean;
@@ -142,6 +161,8 @@ type StateProps = {
 
 function mapStateToProps(state: TdrState) {
   return {
+    duosDatasets: state.duos.datasets,
+    duosDatasetsLoading: state.duos.loading,
     pendingSave: state.snapshots.pendingSave,
     snapshot: state.snapshots.snapshot,
     snapshotByIdLoading: state.snapshots.snapshotByIdLoading,

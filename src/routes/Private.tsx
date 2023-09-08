@@ -57,7 +57,7 @@ const styles = (theme: CustomTheme) =>
     },
     tabWrapper: {
       display: 'flex',
-      zIndex: 11,
+      zIndex: 1400,
     },
     helpIconDiv: {
       borderBottom: `2px solid ${theme.palette.terra.green}`,

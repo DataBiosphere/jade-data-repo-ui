@@ -363,3 +363,11 @@ export const { changePolicyUsersToSnapshotRequest } = createActions({
     users,
   }),
 });
+
+export const { getDuosDatasets } = createActions({
+  [ActionTypes.GET_DUOS_DATASETS]: (datasets) => ({
+    datasets,
+  }),
+  [ActionTypes.GET_DUOS_DATASETS_SUCCESS]: () => ({}),
+  [ActionTypes.GET_DUOS_DATASETS_FAILURE]: () => ({}),
+});
