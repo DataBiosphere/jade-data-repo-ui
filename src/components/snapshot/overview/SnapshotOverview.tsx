@@ -100,7 +100,7 @@ function SnapshotOverview(props: AllSnapshotProps) {
     dispatch(getDuosDatasets());
   });
 
-  if (snapshotByIdLoading) {
+  if (snapshotByIdLoading || duosDatasetsLoading) {
     return <LoadingSpinner />;
   }
 

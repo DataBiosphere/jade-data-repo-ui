@@ -183,7 +183,7 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
                   }}
                   options={duosDatasets}
                   // Setting to null instead of undefined if unset to make sure that this is always a controlled component
-                  value={selectedDuosDataset || null}
+                  value={selectedDuosDataset ?? null}
                   isOptionEqualToValue={(option, val) =>
                     option?.datasetIdentifier === val?.datasetIdentifier
                   }

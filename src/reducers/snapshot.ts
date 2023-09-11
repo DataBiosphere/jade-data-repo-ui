@@ -192,7 +192,7 @@ export default {
         }),
       [ActionTypes.GET_SNAPSHOT_BY_ID]: (state) =>
         immutable(state, {
-          snapshot: { $set: {} },
+          snapshot: {},
           snapshotByIdLoading: { $set: true },
         }),
       [ActionTypes.GET_SNAPSHOT_BY_ID_SUCCESS]: (state, action: any) =>
@@ -202,8 +202,8 @@ export default {
         }),
       [ActionTypes.GET_SNAPSHOT_BY_ID_FAILURE]: (state) =>
         immutable(state, {
+          snapshot: {},
           snapshotByIdLoading: { $set: false },
-          snapshot: { $set: {} },
         }),
       [ActionTypes.GET_SNAPSHOT_POLICY_SUCCESS]: (state, action: any) =>
         immutable(state, {

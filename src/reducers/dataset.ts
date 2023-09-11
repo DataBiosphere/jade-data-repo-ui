@@ -126,7 +126,7 @@ export default {
         }),
       [ActionTypes.GET_DATASET_BY_ID]: (state) =>
         immutable(state, {
-          dataset: { $set: {} },
+          dataset: {},
           datasetByIdLoading: { $set: true },
         }),
       [ActionTypes.GET_DATASET_BY_ID_SUCCESS]: (state, action: any) =>
@@ -136,7 +136,7 @@ export default {
         }),
       [ActionTypes.GET_DATASET_BY_ID_FAILURE]: (state) =>
         immutable(state, {
-          dataset: { $set: {} },
+          dataset: {},
           datasetByIdLoading: { $set: false },
         }),
       [ActionTypes.GET_DATASET_POLICY_SUCCESS]: (state, action: any) =>
