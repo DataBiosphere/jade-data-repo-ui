@@ -79,6 +79,7 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
   // @ts-ignore
   const sourceDataset = snapshot.source[0].dataset;
   const linkToBq = snapshot.cloudPlatform === 'gcp';
+  const duosDatasetsLoaded = !_.isEmpty(duosDatasets);
 
   const selectedDuosDataset = duosDatasets.find(
     (ds) => ds.datasetIdentifier === snapshot.duosFirecloudGroup?.duosId,
@@ -89,8 +90,11 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
 
   let duosInfoButtonText =
     'Link with a DUOS dataset ID to automatically sync DAC approved users as snapshot readers.';
-  if (isSteward) {
+  if (isSteward && duosDatasetsLoaded) {
     duosInfoButtonText += ' Modifying this link may take several seconds to save.';
+  } else if (!duosDatasetsLoaded) {
+    duosInfoButtonText +=
+      ' You do not appear to have access to any DUOS datasets.  You must have access to at least one in order to link a snapshot to a DUOS dataset.';
   }
 
   return (
@@ -155,9 +159,13 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
             </Typography>
           </Grid>
           <Grid item xs={4}>
-            {_.isEmpty(duosDatasets) &&
-              renderTextFieldValue('DUOS Dataset', snapshot.duosFirecloudGroup?.duosId)}
-            {!_.isEmpty(duosDatasets) && (
+            {!duosDatasetsLoaded &&
+              renderTextFieldValue(
+                'DUOS Dataset',
+                snapshot.duosFirecloudGroup?.duosId,
+                duosInfoButtonText,
+              )}
+            {duosDatasetsLoaded && (
               <>
                 <Typography variant="h6">
                   DUOS Dataset:
