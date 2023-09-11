@@ -932,7 +932,7 @@ export function* getDuosDatasets(): any {
     yield put({
       type: ActionTypes.GET_DUOS_DATASETS_FAILURE,
     });
-    showNotification(err);
+    // Don't throw an error since it is entirely appropriate for a user to not have access to DUOS 
   }
 }
 

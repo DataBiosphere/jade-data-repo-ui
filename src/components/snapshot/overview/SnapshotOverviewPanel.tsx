@@ -1,4 +1,5 @@
 import React, { useState, SyntheticEvent } from 'react';
+import _ from 'lodash';
 import { Autocomplete, Grid, Tab, Tabs, TextField, Typography } from '@mui/material';
 import { createStyles, WithStyles, withStyles } from '@mui/styles';
 import moment from 'moment';
@@ -56,6 +57,10 @@ function a11yProps(index: number) {
     id: `simple-tab-${index}`,
     'aria-controls': `simple-tabpanel-${index}`,
   };
+}
+
+function getDuosDatasetValue(option?: DuosDatasetModel) {
+  return option ? `${option.datasetIdentifier} - ${option.datasetName}` : '';
 }
 
 interface SnapshotOverviewPanelProps extends WithStyles<typeof styles> {
@@ -150,44 +155,53 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
             </Typography>
           </Grid>
           <Grid item xs={4}>
-            <Typography variant="h6">
-              DUOS Dataset:
-              <InfoHoverButton infoText={duosInfoButtonText} fieldName="DUOS ID" />
-            </Typography>
-            <Autocomplete
-              data-cy="duos-id-editable-field-view"
-              disabled={pendingSave?.duosDataset}
-              className={classes.duosDropdown}
-              componentsProps={{
-                popper: {
-                  style: { width: '600px' },
-                  placement: 'bottom-start',
-                },
-              }}
-              options={duosDatasets}
-              // Setting to null instead of undefined if unset to make sure that this is always a controlled component
-              value={selectedDuosDataset || null}
-              isOptionEqualToValue={(option, val) =>
-                option?.datasetIdentifier === val?.datasetIdentifier
-              }
-              renderInput={(params: any) => (
-                <TextField
-                  {...params}
-                  inputProps={{
-                    ...params.inputProps,
-                    value: pendingSave?.duosDataset ? 'Saving...' : params.inputProps.value,
+            {_.isEmpty(duosDatasets) &&
+              renderTextFieldValue('DUOS Dataset', snapshot.duosFirecloudGroup?.duosId)}
+            {!_.isEmpty(duosDatasets) && (
+              <>
+                <Typography variant="h6">
+                  DUOS Dataset:
+                  <InfoHoverButton infoText={duosInfoButtonText} fieldName="DUOS ID" />
+                </Typography>
+                <Autocomplete
+                  data-cy="duos-id-editable-field-view"
+                  disabled={pendingSave?.duosDataset}
+                  className={classes.duosDropdown}
+                  componentsProps={{
+                    popper: {
+                      style: { width: '600px' },
+                      placement: 'bottom-start',
+                    },
                   }}
-                  placeholder="DUOS ID"
+                  options={duosDatasets}
+                  // Setting to null instead of undefined if unset to make sure that this is always a controlled component
+                  value={selectedDuosDataset || null}
+                  isOptionEqualToValue={(option, val) =>
+                    option?.datasetIdentifier === val?.datasetIdentifier
+                  }
+                  renderInput={(params: any) => (
+                    <TextField
+                      {...params}
+                      inputProps={{
+                        ...params.inputProps,
+                        value: pendingSave?.duosDataset ? 'Saving...' : params.inputProps.value,
+                      }}
+                      placeholder="DUOS ID"
+                    />
+                  )}
+                  getOptionLabel={getDuosDatasetValue}
+                  onChange={(_event: any, change) => {
+                    dispatch(updateDuosDataset(snapshot.id, change?.datasetIdentifier));
+                  }}
+                  title={
+                    pendingSave?.duosDataset
+                      ? 'Saving...'
+                      : getDuosDatasetValue(selectedDuosDataset)
+                  }
+                  disablePortal
                 />
-              )}
-              getOptionLabel={(option) =>
-                option ? `${option.datasetIdentifier} - ${option.datasetName}` : ''
-              }
-              onChange={(_event: any, change) => {
-                dispatch(updateDuosDataset(snapshot.id, change?.datasetIdentifier));
-              }}
-              disablePortal
-            />
+              </>
+            )}
           </Grid>
           <Grid item xs={4}>
             {snapshot.duosFirecloudGroup && (

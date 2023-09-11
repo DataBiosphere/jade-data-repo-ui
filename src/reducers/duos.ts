@@ -11,7 +11,7 @@ export interface DuosDatasetModel {
   datasetIdentifier: string;
 }
 export interface DuosState {
-  datasets: Array<DuosDatasetModel>;
+  datasets: Array<DuosDatasetModel>; // Assume an empty list means that the user could not read from DUOS
   loading: boolean;
 }
 
@@ -34,6 +34,7 @@ export default {
         }),
       [ActionTypes.GET_DUOS_DATASETS_FAILURE]: (state) =>
         immutable(state, {
+          datasets: { $set: [] },
           loading: { $set: false },
         }),
     },
