@@ -7,6 +7,7 @@ import { Typography } from '@mui/material';
 import DatasetRelationshipsPanel from '../../common/overview/SchemaPanel';
 import { useOnMount } from '../../../libs/utils';
 import { BreadcrumbType, DatasetIncludeOptions } from '../../../constants';
+import LoadingSpinner from '../../common/LoadingSpinner';
 import DatasetOverviewPanel from './DatasetOverviewPanel';
 import AppBreadcrumbs from '../../AppBreadcrumbs/AppBreadcrumbs';
 
@@ -51,7 +52,7 @@ const styles = (theme) => ({
 });
 
 function DatasetOverview(props) {
-  const { classes, dataset, datasetPolicies, dispatch, match } = props;
+  const { classes, dataset, datasetPolicies, datasetByIdLoading, dispatch, match } = props;
   const datasetId = match.params.uuid;
   useOnMount(() => {
     dispatch(
@@ -70,6 +71,9 @@ function DatasetOverview(props) {
     dispatch(getUserDatasetRoles(datasetId));
   });
 
+  if (datasetByIdLoading) {
+    return <LoadingSpinner />;
+  }
   return datasetPolicies && dataset && dataset.schema && dataset.id === datasetId ? (
     <div className={classes.pageRoot}>
       <AppBreadcrumbs
@@ -102,14 +106,19 @@ function DatasetOverview(props) {
 DatasetOverview.propTypes = {
   classes: PropTypes.object,
   dataset: PropTypes.object,
+  datasetByIdLoading: PropTypes.bool,
   datasetPolicies: PropTypes.array,
   dispatch: PropTypes.func.isRequired,
   match: PropTypes.object,
 };
 
-const mapStateToProps = ({ datasets: { dataset, datasetPolicies }, dispatch }) => ({
+const mapStateToProps = ({
+  datasets: { dataset, datasetPolicies, datasetByIdLoading },
+  dispatch,
+}) => ({
   dataset,
   datasetPolicies,
+  datasetByIdLoading,
   dispatch,
 });
 

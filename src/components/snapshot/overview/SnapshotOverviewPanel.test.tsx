@@ -9,8 +9,9 @@ import history from '../../../modules/hist';
 import globalTheme from '../../../modules/theme';
 import SnapshotOverviewPanel from './SnapshotOverviewPanel';
 import { DatasetModel, DuosFirecloudGroupModel, SnapshotModel } from '../../../generated/tdr';
+import { DuosDatasetModel } from '../../../reducers/duos';
 
-const duosId = 'Test DUOS ID';
+const duosId = 'DUOS-0002';
 const lastSynced = '2022-04-04T18:53:45.158566Z';
 
 const dataset: DatasetModel = {
@@ -22,6 +23,12 @@ const dataset: DatasetModel = {
     { cloudResource: 'bucket', region: 'us-east4' },
   ],
 };
+
+const duosDatasets: Array<DuosDatasetModel> = [
+  { dataSetId: 1, datasetName: 'DS1', datasetIdentifier: 'DUOS-0001' },
+  { dataSetId: 2, datasetName: 'DS2', datasetIdentifier: 'DUOS-0002' },
+  { dataSetId: 3, datasetName: 'DS3', datasetIdentifier: 'DUOS-0003' },
+];
 
 function createSnapshot(duosFirecloudGroup?: DuosFirecloudGroupModel): SnapshotModel {
   return {
@@ -80,6 +87,7 @@ function mockSnapshotOverviewPanel(snapshot: any): any {
         <ThemeProvider theme={globalTheme}>
           <SnapshotOverviewPanel
             dispatch={store.dispatch}
+            duosDatasets={duosDatasets}
             pendingSave={initialState.snapshots.pendingSave}
             snapshot={snapshot}
             userRoles={initialState.snapshots.userRoles}
@@ -102,9 +110,9 @@ describe('Snapshot overview panel', () => {
       'contain.text',
       snapshot.description,
     );
-    cy.get('[data-cy="duos-id-editable-field-view"] [data-cy="react-markdown-text"]').should(
-      'contain.text',
-      duosId,
+    cy.get('[data-cy="duos-id-editable-field-view"] input').should(
+      'contain.value',
+      'DUOS-0002 - DS2',
     );
     cy.get('[data-cy="snapshot-duos-last-synced"]').should(
       'contain.text',
@@ -124,18 +132,16 @@ describe('Snapshot overview panel', () => {
   it('Handles missing DUOS link', () => {
     const snapshot = createSnapshot();
     mockSnapshotOverviewPanel(snapshot);
-    cy.get('[data-cy="duos-id-editable-field-view"] [data-cy="react-markdown-empty-text"]').should(
-      'exist',
-    );
+    cy.get('[data-cy="duos-id-editable-field-view"] input').should('contain.value', '');
     cy.get('[data-cy="snapshot-duos-last-synced"]').should('not.exist');
   });
   it('Handles unsynced linked DUOS group', () => {
     const unsyncedDuosFirecloudGroup = { duosId };
     const snapshot = createSnapshot(unsyncedDuosFirecloudGroup);
     mockSnapshotOverviewPanel(snapshot);
-    cy.get('[data-cy="duos-id-editable-field-view"] [data-cy="react-markdown-text"]').should(
-      'contain.text',
-      duosId,
+    cy.get('[data-cy="duos-id-editable-field-view"] input').should(
+      'contain.value',
+      'DUOS-0002 - DS2',
     );
     cy.get('[data-cy="snapshot-duos-last-synced"]').should('contain.text', 'Never');
   });

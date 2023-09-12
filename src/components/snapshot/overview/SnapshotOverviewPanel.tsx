@@ -1,5 +1,6 @@
 import React, { useState, SyntheticEvent } from 'react';
-import { Grid, Tab, Tabs, Typography } from '@mui/material';
+import _ from 'lodash';
+import { Autocomplete, Grid, Tab, Tabs, TextField, Typography } from '@mui/material';
 import { createStyles, WithStyles, withStyles } from '@mui/styles';
 import moment from 'moment';
 import { CustomTheme } from '@mui/material/styles';
@@ -8,8 +9,13 @@ import EditableFieldView from 'components/EditableFieldView';
 import GoogleSheetExport from 'components/common/overview/GoogleSheetExport';
 import { Link } from 'react-router-dom';
 import TextContent from 'components/common/TextContent';
+import InfoHoverButton from 'components/common/InfoHoverButton';
 import { IamResourceTypeEnum } from 'generated/tdr';
-import { renderStorageResources, renderTextFieldValue } from '../../../libs/render-utils';
+import {
+  renderCloudPlatforms,
+  renderStorageResources,
+  renderTextFieldValue,
+} from '../../../libs/render-utils';
 import SnapshotAccess from '../SnapshotAccess';
 import SnapshotWorkspace from './SnapshotWorkspace';
 import TabPanel from '../../common/TabPanel';
@@ -19,6 +25,7 @@ import { SnapshotRoles } from '../../../constants';
 import { AppDispatch } from '../../../store';
 import JournalEntriesView from '../../JournalEntriesView';
 import { SnapshotPendingSave } from '../../../reducers/snapshot';
+import { DuosDatasetModel } from '../../../reducers/duos';
 
 const styles = (theme: CustomTheme) =>
   createStyles({
@@ -38,6 +45,11 @@ const styles = (theme: CustomTheme) =>
     jadeLink: {
       ...theme.mixins.jadeLink,
     },
+    duosDropdown: {
+      '& .MuiAutocomplete-popper': {
+        backgroundColor: 'red',
+      },
+    },
   });
 
 function a11yProps(index: number) {
@@ -47,30 +59,42 @@ function a11yProps(index: number) {
   };
 }
 
+function getDuosDatasetValue(option?: DuosDatasetModel) {
+  return option ? `${option.datasetIdentifier} - ${option.datasetName}` : '';
+}
+
 interface SnapshotOverviewPanelProps extends WithStyles<typeof styles> {
   dispatch: AppDispatch;
   pendingSave: SnapshotPendingSave;
   snapshot: SnapshotModel;
   userRoles: Array<string>;
+  duosDatasets: Array<DuosDatasetModel>;
 }
 
 function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
   const [value, setValue] = useState(0);
-  const { classes, dispatch, pendingSave, snapshot, userRoles } = props;
+  const { classes, dispatch, duosDatasets, pendingSave, snapshot, userRoles } = props;
   const isSteward = userRoles.includes(SnapshotRoles.STEWARD);
   const canViewJournalEntries = isSteward;
   // @ts-ignore
   const sourceDataset = snapshot.source[0].dataset;
   const linkToBq = snapshot.cloudPlatform === 'gcp';
+  const duosDatasetsLoaded = !_.isEmpty(duosDatasets);
 
+  const selectedDuosDataset = duosDatasets.find(
+    (ds) => ds.datasetIdentifier === snapshot.duosFirecloudGroup?.duosId,
+  );
   const handleChange = (_event: SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 
   let duosInfoButtonText =
     'Link with a DUOS dataset ID to automatically sync DAC approved users as snapshot readers.';
-  if (isSteward) {
+  if (isSteward && duosDatasetsLoaded) {
     duosInfoButtonText += ' Modifying this link may take several seconds to save.';
+  } else if (!duosDatasetsLoaded) {
+    duosInfoButtonText +=
+      ' You do not appear to have access to any DUOS datasets.  You must have access to at least one in order to link a snapshot to a DUOS dataset.';
   }
 
   return (
@@ -112,31 +136,6 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
             />
           </Grid>
           <Grid item xs={4}>
-            <EditableFieldView
-              fieldValue={snapshot.duosFirecloudGroup?.duosId}
-              fieldName="DUOS ID"
-              canEdit={isSteward}
-              isPendingSave={pendingSave.duosDataset}
-              updateFieldValueFn={(text: string | undefined) =>
-                dispatch(updateDuosDataset(snapshot.id, text))
-              }
-              useMarkdown={false}
-              infoButtonText={duosInfoButtonText}
-            />
-          </Grid>
-          <Grid item xs={8}>
-            {snapshot.duosFirecloudGroup && (
-              <Grid item xs={4}>
-                <Typography variant="h6">DUOS Users Last Synced:</Typography>
-                <Typography data-cy="snapshot-duos-last-synced">
-                  {snapshot.duosFirecloudGroup.lastSynced
-                    ? moment(snapshot.duosFirecloudGroup.lastSynced).fromNow()
-                    : 'Never'}
-                </Typography>
-              </Grid>
-            )}
-          </Grid>
-          <Grid item xs={4}>
             <Typography variant="h6">Root dataset:</Typography>
             <Typography
               data-cy="snapshot-source-dataset"
@@ -160,8 +159,81 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
             </Typography>
           </Grid>
           <Grid item xs={4}>
+            {!duosDatasetsLoaded &&
+              renderTextFieldValue(
+                'DUOS Dataset',
+                snapshot.duosFirecloudGroup?.duosId,
+                duosInfoButtonText,
+              )}
+            {duosDatasetsLoaded && (
+              <>
+                <Typography variant="h6">
+                  DUOS Dataset:
+                  <InfoHoverButton infoText={duosInfoButtonText} fieldName="DUOS ID" />
+                </Typography>
+                <Autocomplete
+                  data-cy="duos-id-editable-field-view"
+                  disabled={pendingSave?.duosDataset}
+                  className={classes.duosDropdown}
+                  componentsProps={{
+                    popper: {
+                      style: { width: '600px' },
+                      placement: 'bottom-start',
+                    },
+                  }}
+                  options={duosDatasets}
+                  // Setting to null instead of undefined if unset to make sure that this is always a controlled component
+                  value={selectedDuosDataset ?? null}
+                  isOptionEqualToValue={(option, val) =>
+                    option?.datasetIdentifier === val?.datasetIdentifier
+                  }
+                  renderInput={(params: any) => (
+                    <TextField
+                      {...params}
+                      inputProps={{
+                        ...params.inputProps,
+                        value: pendingSave?.duosDataset ? 'Saving...' : params.inputProps.value,
+                      }}
+                      placeholder="DUOS ID"
+                    />
+                  )}
+                  getOptionLabel={getDuosDatasetValue}
+                  onChange={(_event: any, change) => {
+                    dispatch(updateDuosDataset(snapshot.id, change?.datasetIdentifier));
+                  }}
+                  title={
+                    pendingSave?.duosDataset
+                      ? 'Saving...'
+                      : getDuosDatasetValue(selectedDuosDataset)
+                  }
+                  disablePortal
+                />
+              </>
+            )}
+          </Grid>
+          <Grid item xs={4}>
+            {snapshot.duosFirecloudGroup && (
+              <>
+                <Typography variant="h6">DUOS Users Last Synced:</Typography>
+                <Typography data-cy="snapshot-duos-last-synced">
+                  {snapshot.duosFirecloudGroup.lastSynced
+                    ? moment(snapshot.duosFirecloudGroup.lastSynced).fromNow()
+                    : 'Never'}
+                </Typography>
+              </>
+            )}
+          </Grid>
+          <Grid item xs={4}>
             <Typography variant="h6">Storage:</Typography>
             {renderStorageResources(sourceDataset)}
+          </Grid>
+          <Grid item xs={4}>
+            <Typography variant="h6">Cloud Platform:</Typography>
+            {renderCloudPlatforms(sourceDataset)}
+          </Grid>
+          <Grid item xs={4}>
+            <Typography variant="h6">Secure Monitoring Enabled?</Typography>
+            {sourceDataset.secureMonitoringEnabled ? 'Yes' : 'No'}
           </Grid>
           <Grid item xs={4}>
             {renderTextFieldValue(

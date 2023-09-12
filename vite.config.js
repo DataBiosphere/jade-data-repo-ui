@@ -12,6 +12,14 @@ const driveApi = 'https://www.googleapis.com';
 
 dns.setDefaultResultOrder('verbatim');
 
+const getPluggins = () => {
+  const plugins = [react(), svgr(), tsconfigPaths()];
+  if (process.env.DISABLE_ESLINT_PLUGIN !== 'true') {
+    plugins.push(eslint({ lintOnStart: false }));
+  }
+  return plugins;
+};
+
 export default defineConfig({
   build: {
     outDir: 'build',
@@ -19,11 +27,14 @@ export default defineConfig({
   define: {
     'process.env': process.env,
   },
-  plugins: [react(), svgr(), tsconfigPaths(), eslint()],
+  plugins: getPluggins(),
   server: {
     port: 3000,
     host: 'localhost',
     open: true,
+    watch: {
+      ignored: ['!**/node_modules/**'],
+    },
     proxy: {
       '/api': {
         target: proxyUrl,

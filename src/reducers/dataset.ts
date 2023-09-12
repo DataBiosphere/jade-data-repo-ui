@@ -19,6 +19,7 @@ export interface DatasetState {
   datasets: Array<DatasetSummaryModel>;
   datasetRoleMaps: { [key: string]: Array<string> };
   dataset: DatasetModel;
+  datasetByIdLoading: boolean;
   datasetPreview: Record<string, Array<Record<string, any>>>;
   datasetsCount: number;
   filteredDatasetsCount: number;
@@ -45,6 +46,7 @@ export const initialDatasetState: DatasetState = {
   datasets: [],
   datasetRoleMaps: {},
   dataset: {},
+  datasetByIdLoading: false,
   datasetPreview: {},
   datasetsCount: 0,
   filteredDatasetsCount: 0,
@@ -125,10 +127,17 @@ export default {
       [ActionTypes.GET_DATASET_BY_ID]: (state) =>
         immutable(state, {
           dataset: {},
+          datasetByIdLoading: { $set: true },
         }),
       [ActionTypes.GET_DATASET_BY_ID_SUCCESS]: (state, action: any) =>
         immutable(state, {
           dataset: { $set: action.dataset.data.data },
+          datasetByIdLoading: { $set: false },
+        }),
+      [ActionTypes.GET_DATASET_BY_ID_FAILURE]: (state) =>
+        immutable(state, {
+          dataset: {},
+          datasetByIdLoading: { $set: false },
         }),
       [ActionTypes.GET_DATASET_POLICY_SUCCESS]: (state, action: any) =>
         immutable(state, {
@@ -228,7 +237,7 @@ export default {
       [LOCATION_CHANGE]: (state) =>
         immutable(state, {
           dialogIsOpen: { $set: false },
-        } as DatasetState),
+        }),
       [ActionTypes.USER_LOGOUT_SUCCESS]: () => initialDatasetState,
     },
     initialDatasetState,

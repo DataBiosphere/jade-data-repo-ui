@@ -34,6 +34,7 @@ export interface SnapshotPendingSave {
 
 export interface SnapshotState {
   snapshot: SnapshotModel;
+  snapshotByIdLoading: boolean;
   snapshots: Array<SnapshotSummaryModel>;
   snapshotRoleMaps: { [key: string]: Array<string> };
   snapshotPolicies: Array<PolicyModel>;
@@ -77,6 +78,7 @@ const defaultPendingSave: SnapshotPendingSave = {
 
 export const initialSnapshotState: SnapshotState = {
   snapshot: {},
+  snapshotByIdLoading: false,
   snapshots: [],
   snapshotRoleMaps: {},
   snapshotPolicies: [],
@@ -188,9 +190,20 @@ export default {
           exportIsProcessing: { $set: false },
           exportIsDone: { $set: false },
         }),
+      [ActionTypes.GET_SNAPSHOT_BY_ID]: (state) =>
+        immutable(state, {
+          snapshot: {},
+          snapshotByIdLoading: { $set: true },
+        }),
       [ActionTypes.GET_SNAPSHOT_BY_ID_SUCCESS]: (state, action: any) =>
         immutable(state, {
           snapshot: { $set: action.snapshot.data.data },
+          snapshotByIdLoading: { $set: false },
+        }),
+      [ActionTypes.GET_SNAPSHOT_BY_ID_FAILURE]: (state) =>
+        immutable(state, {
+          snapshot: {},
+          snapshotByIdLoading: { $set: false },
         }),
       [ActionTypes.GET_SNAPSHOT_POLICY_SUCCESS]: (state, action: any) =>
         immutable(state, {
@@ -358,7 +371,7 @@ export default {
         if (path === state.lastPath) {
           return immutable(state, {
             lastPath: { $set: path as string },
-          } as SnapshotState);
+          });
         }
         return immutable(state, {
           snapshotRequest: { $set: defaultSnapshotRequest },

@@ -49,15 +49,18 @@ const styles = (theme: CustomTheme) =>
       color: theme.palette.secondary.dark,
       fontWeight: '700 !important',
     },
+    tabWrapper: {
+      display: 'flex',
+      position: 'relative',
+      zIndex: 2,
+    },
     component: {
       overflow: 'auto',
       height: '100%',
       display: 'flex',
       flexDirection: 'column',
-    },
-    tabWrapper: {
-      display: 'flex',
-      zIndex: 11,
+      position: 'relative',
+      zIndex: 1,
     },
     helpIconDiv: {
       borderBottom: `2px solid ${theme.palette.terra.green}`,
