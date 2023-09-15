@@ -88,7 +88,7 @@ export const buildSnapshotFilterStatement = (filterMap: any, dataset: DatasetMod
             if (isRange) {
               statementClauses.push(`${property} BETWEEN ${keyValue[0]} AND ${keyValue[1]}`);
             } else if (_.isString(keyValue[0])) {
-              const selections = keyValue.map((selection) => `"${selection}"`).join(',');
+              const selections = keyValue.map((selection) => `'${selection}'`).join(',');
               statementClauses.push(`${property} ${notClause} IN (${selections})`);
             } else {
               statementClauses.push(
@@ -104,7 +104,7 @@ export const buildSnapshotFilterStatement = (filterMap: any, dataset: DatasetMod
                 if (checkboxValue === 'null') {
                   checkboxClauses.push(`${property} IS NULL`);
                 } else {
-                  checkboxValues.push(`"${checkboxValue}"`);
+                  checkboxValues.push(`'${checkboxValue}'`);
                 }
               });
               if (checkboxValues.length > 0) {
