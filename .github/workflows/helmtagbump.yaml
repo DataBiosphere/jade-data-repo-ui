@@ -106,7 +106,7 @@ jobs:
           ((a[2]++))
           printf "increase default ui version: ${a[2]}\n\n"
           new_version="${a[0]}.${a[1]}.${a[2]}"
-          echo "::set-output name=new_version::$new_version"
+          echo "new_version=${new_version}" >> $GITHUB_OUTPUT
       - name: "bump ui chart Version"
         uses: docker://mikefarah/yq:3
         with:
