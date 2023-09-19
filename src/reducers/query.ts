@@ -299,7 +299,7 @@ export default {
         });
       },
       [ActionTypes.APPLY_FILTERS]: (state, action: any) => {
-        const filterStatement = buildfilterStatement(action.payload.filters);
+        const filterStatement = buildfilterStatement(action.payload.filters, undefined);
         const _columns = state.columns.map((c: TableColumnType) => ({
           ...c,
           filterHasUpdated: true,

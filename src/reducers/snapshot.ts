@@ -1,6 +1,6 @@
 import { handleActions } from 'redux-actions';
 import immutable from 'immutability-helper';
-import { buildSnapshotFilterStatement } from 'modules/filter';
+import { buildfilterStatement } from 'modules/filter';
 import { buildSnapshotJoinStatement } from 'modules/snapshotByQuery';
 import { LOCATION_CHANGE } from 'connected-react-router';
 
@@ -280,7 +280,7 @@ export default {
       [ActionTypes.APPLY_FILTERS]: (state, action: any) => {
         const { filters, dataset } = action.payload;
 
-        const filterStatement = buildSnapshotFilterStatement(filters, dataset);
+        const filterStatement = buildfilterStatement(filters, dataset);
 
         return immutable(state, {
           snapshotRequest: { filterStatement: { $set: filterStatement } },

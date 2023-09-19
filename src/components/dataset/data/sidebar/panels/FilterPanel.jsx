@@ -159,7 +159,7 @@ export class FilterPanel extends React.PureComponent {
     event.preventDefault();
     const { searchStrings } = this.state;
     const text = event.clipboardData.getData('text');
-    const selections = text.split(/[ ,\n]+/);
+    const selections = text.split(/[ ,\r\n]+/);
     const nonEmpty = selections.filter((s) => s !== '');
     const updatedValueArray = searchStrings.concat(nonEmpty);
     this.setState({ searchStrings: updatedValueArray });

@@ -66,7 +66,7 @@ export class FreetextFilter extends React.PureComponent {
     const { handleChange, filterMap } = this.props;
     event.preventDefault();
     const text = event.clipboardData.getData('text');
-    const selections = text.split(/[ ,\n]+/);
+    const selections = text.split(/[ ,\r\n]+/);
     const nonEmpty = selections.filter((s) => s !== '');
     const updatedValueArray = _.get(filterMap, 'value', []).concat(nonEmpty);
     handleChange(updatedValueArray);
