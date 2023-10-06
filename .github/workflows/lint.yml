@@ -22,3 +22,10 @@ jobs:
         run: npm ci
       - name: Run ESLint
         run: npm run lint
+  cherry_pick_image_to_production_gcr:
+    uses: DataBiosphere/jade-data-repo/.github/workflows/cherry-pick-image.yaml@1.536.0
+    secrets: inherit
+    with:
+      gcr_tag: '0bcb377'
+      source_gcr_url: 'gcr.io/broad-jade-dev/jade-data-repo-ui'
+      target_gcr_url: 'gcr.io/datarepo-public-gcr/jade-data-repo-ui'
