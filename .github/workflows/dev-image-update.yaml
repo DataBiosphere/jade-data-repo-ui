@@ -23,6 +23,8 @@ env:
 
 jobs:
   update_image:
+    outputs:
+      ui_image_tag: ${{ steps.bumperstep.outputs.tag }}
     strategy:
       matrix:
         os: [ubuntu-latest]
@@ -43,6 +45,7 @@ jobs:
           path: datarepo-helm-definitions
       - name: 'Bump the tag to a new version'
         uses: broadinstitute/datarepo-actions/actions/main@0.67.0
+        id: bumperstep
         with:
           actions_subcommand: 'bumper'
           role_id: ${{ secrets.ROLE_ID }}
@@ -95,12 +98,21 @@ jobs:
     needs: update_image
     uses: ./.github/workflows/helmtagbump.yaml
     secrets: inherit
+  cherry_pick_image_to_production_gcr:
+    needs: update_image
+    uses: DataBiosphere/jade-data-repo/.github/workflows/cherry-pick-image.yaml@1.536.0
+    secrets: inherit
+    with:
+      gcr_tag: ${{ needs.update_image.outputs.ui_image_tag }}
+      source_gcr_url: 'gcr.io/broad-jade-dev/jade-data-repo-ui'
+      target_gcr_url: 'gcr.io/datarepo-public-gcr/jade-data-repo-ui'
   action_notify:
     runs-on: ubuntu-latest
     if: always()
     needs:
       - update_image
       - helm_tag_bump
+      - cherry_pick_image_to_production_gcr
     steps:
     - name: Slack job status
       uses: broadinstitute/action-slack@v3.15.0
