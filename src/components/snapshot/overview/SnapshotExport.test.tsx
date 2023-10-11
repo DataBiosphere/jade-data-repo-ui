@@ -15,6 +15,12 @@ const snapshot: SnapshotModel = {
   cloudPlatform: 'gcp',
 };
 
+const azureSnapshot: SnapshotModel = {
+  id: 'uuid',
+  name: 'AzureSnapshot',
+  cloudPlatform: 'azure',
+};
+
 const configuration = {
   configObject: {
     terraUrl: 'https://bvdp-saturn-dev.appspot.com/',
@@ -134,5 +140,47 @@ describe('SnapshotExport', () => {
           .and('include', configuration.configObject.terraUrl)
           .and('include', 'tdrSyncPermissions=true');
       });
+  });
+  it('Test note for Azure snapshot', () => {
+    const initialAzureState = {
+      snapshots: {
+        exportIsProcessing: false,
+        exportIsDone: false,
+        userRoles: ['steward'],
+      },
+      configuration,
+    };
+    const store = mockStore(initialAzureState);
+    mount(
+      <Router history={history}>
+        <Provider store={store}>
+          <ThemeProvider theme={globalTheme}>
+            <SnapshotExport of={azureSnapshot} />
+          </ThemeProvider>
+        </Provider>
+      </Router>,
+    );
+    cy.get('[data-cy="azure-warning-note"]').should('contain.text', 'not yet fully supported');
+  });
+  it('No test note for Gcp snapshot', () => {
+    const initialGcpState = {
+      snapshots: {
+        exportIsProcessing: false,
+        exportIsDone: false,
+        userRoles: ['steward'],
+      },
+      configuration,
+    };
+    const store = mockStore(initialGcpState);
+    mount(
+      <Router history={history}>
+        <Provider store={store}>
+          <ThemeProvider theme={globalTheme}>
+            <SnapshotExport of={snapshot} />
+          </ThemeProvider>
+        </Provider>
+      </Router>,
+    );
+    cy.get('[data-cy="azure-warning-note"]').should('not.exist');
   });
 });

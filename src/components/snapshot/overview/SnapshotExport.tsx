@@ -14,7 +14,7 @@ import { CustomTheme } from '@mui/material/styles';
 import { exportSnapshot, resetSnapshotExport } from '../../../actions';
 import { TdrState } from '../../../reducers';
 import { AppDispatch } from '../../../store';
-import { SnapshotExportResponseModel, SnapshotModel } from '../../../generated/tdr';
+import { CloudPlatform, SnapshotExportResponseModel, SnapshotModel } from '../../../generated/tdr';
 import { SnapshotRoles } from '../../../constants';
 
 const styles = (theme: CustomTheme) =>
@@ -86,7 +86,7 @@ function SnapshotExport(props: SnapshotExportProps) {
   };
 
   const exportToWorkspaceCopy = () => {
-    const validatePrimaryKeyUniqueness = of.cloudPlatform === 'gcp';
+    const validatePrimaryKeyUniqueness = of.cloudPlatform === CloudPlatform.Gcp;
     dispatch(exportSnapshot(of.id, exportGsPaths, validatePrimaryKeyUniqueness));
   };
 
@@ -99,10 +99,15 @@ function SnapshotExport(props: SnapshotExportProps) {
       <Typography variant="h6" className={classes.section}>
         Export to Terra
       </Typography>
+      {of.cloudPlatform === CloudPlatform.Azure && (
+        <Typography variant="h6" className={classes.section} data-cy="azure-warning-note">
+          Note: Azure snapshot import into Terra is not yet fully supported.
+        </Typography>
+      )}
       <Typography variant="body1" className={classes.section}>
         Export a copy of the snapshot metadata to a new or existing Terra workspace
       </Typography>
-      {of.cloudPlatform === 'gcp' && (
+      {of.cloudPlatform === CloudPlatform.Gcp && (
         <FormGroup>
           <FormControlLabel
             data-cy="gs-paths-checkbox"
