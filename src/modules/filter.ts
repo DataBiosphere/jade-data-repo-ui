@@ -29,7 +29,8 @@ export const buildfilterStatement = (filterMap: any, dataset: DatasetModel | und
                   keyValueClauses.push(`${property} IS NULL`);
                 } else {
                   arrayListValues.push(`'${selection}'`);
-                }});
+                }
+              });
               if (!_.isEmpty(arrayListValues)) {
                 keyValueClauses.push(`${property} ${notClause} IN (${arrayListValues.join(',')})`);
               }
