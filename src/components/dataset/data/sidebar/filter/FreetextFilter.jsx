@@ -90,6 +90,7 @@ export class FreetextFilter extends React.PureComponent {
           multiple
           id={`autocomplete-${column.name}`}
           options={valueList}
+          getOptionLabel={(option) => option ?? '(empty)'}
           // this means the user's choice does not have to match the provided options
           freeSolo={true}
           style={{ width: '100%' }}
@@ -115,7 +116,7 @@ export class FreetextFilter extends React.PureComponent {
         {value.map((option, index) => (
           <div key={index} className={classes.listItem}>
             <Chip
-              label={option}
+              label={option ?? '(empty)'}
               onDelete={() => this.deleteChip(option)}
               variant="outlined"
               className={classes.chip}
