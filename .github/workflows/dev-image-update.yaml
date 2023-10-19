@@ -37,12 +37,6 @@ jobs:
           fetch-depth: 0
           ref: develop
           token: ${{ secrets.BROADBOT_TOKEN }}
-      - name: 'Checkout datarepo-helm-definitions repo'
-        uses: actions/checkout@v3
-        with:
-          repository: 'broadinstitute/datarepo-helm-definitions'
-          token: ${{ secrets.BROADBOT_TOKEN }}
-          path: datarepo-helm-definitions
       - name: 'Bump the tag to a new version'
         uses: broadinstitute/datarepo-actions/actions/main@0.67.0
         id: bumperstep
@@ -88,12 +82,6 @@ jobs:
           add-tag \
           gcr.io/${{ env.gcr_google_project }}/jade-data-repo-ui:"${GCR_TAG}" \
           gcr.io/${{ env.gcr_google_project }}/jade-data-repo-ui:"${{ steps.uiprevioustag.outputs.tag }}" --quiet
-      - name: 'Check and edit Helm definition for dev'
-        uses: broadinstitute/datarepo-actions/actions/main@0.67.0
-        with:
-          actions_subcommand: 'deploytagupdate'
-          helm_env_prefix: dev
-          helm_imagetag_update: ui
   helm_tag_bump:
     needs: update_image
     uses: ./.github/workflows/helmtagbump.yaml
