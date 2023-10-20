@@ -21,13 +21,20 @@ export const buildfilterStatement = (filterMap: any, dataset: DatasetModel | und
           if (_.isArray(keyValue)) {
             if (isRange) {
               statementClauses.push(`${property} BETWEEN ${keyValue[0]} AND ${keyValue[1]}`);
-            } else if (_.isString(keyValue[0])) {
-              const selections = keyValue.map((selection) => `'${selection}'`).join(',');
-              statementClauses.push(`${property} ${notClause} IN (${selections})`);
             } else {
-              statementClauses.push(
-                `${property} = '${keyValue[0]}' OR ${property} = '${keyValue[1]}'`,
-              );
+              const keyValueClauses: any[] = [];
+              const arrayListValues: any[] = [];
+              keyValue.forEach((selection) => {
+                if (_.isNil(selection)) {
+                  keyValueClauses.push(`${property} IS NULL`);
+                } else {
+                  arrayListValues.push(`'${selection}'`);
+                }
+              });
+              if (!_.isEmpty(arrayListValues)) {
+                keyValueClauses.push(`${property} ${notClause} IN (${arrayListValues.join(',')})`);
+              }
+              statementClauses.push(keyValueClauses.join(' OR '));
             }
           } else if (_.isObject(keyValue)) {
             const checkboxes = _.keys(keyValue);

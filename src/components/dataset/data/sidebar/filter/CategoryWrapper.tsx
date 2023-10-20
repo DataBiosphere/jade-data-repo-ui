@@ -14,10 +14,10 @@ type CategoryWrapperProps = {
   dataset: any;
   dispatch: Dispatch<Action>;
   filterMap: any;
-  handleChange: () => void;
+  handleChange: (value: any) => void;
   handleFilters: () => void;
   tableName: string;
-  toggleExclude: () => void;
+  toggleExclude: (boxIsChecked: boolean) => void;
 };
 
 function CategoryWrapper({
@@ -90,9 +90,7 @@ function CategoryWrapper({
         handleFilters={handleFilters}
         filterMap={filterMap}
         values={originalValues}
-        table={tableName}
         toggleExclude={toggleExclude}
-        tableName={tableName}
       />
     );
   }

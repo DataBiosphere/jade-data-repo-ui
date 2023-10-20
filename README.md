@@ -86,7 +86,7 @@ gcloud auth login --no-activate
 
 To run end-to-end tests: `npx cypress run` or `npx cypress open` (interactive mode)
 
-To run unit tests: `npx cypress run-ct` or `npx cypress open-ct` (interactive mode)
+To run unit tests: `npx cypress run --component` or `npx cypress open --component` (interactive mode)
 
 ## skaffold
 
