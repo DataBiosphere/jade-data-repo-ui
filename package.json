@@ -113,7 +113,7 @@
     "@vitejs/plugin-react": "^4.0.4",
     "ajv": "^6.12.6",
     "ajv-legacy": "npm:ajv@^6.12.6",
-    "cypress": "^12.17.3",
+    "cypress": "^13.4.0",
     "cypress-vite": "^1.4.2",
     "eslint": "^8.41.0",
     "eslint-config-airbnb": "^19.0.4",
