@@ -790,8 +790,8 @@ export function* previewData({ payload }: any): any {
   const queryDataRequest = {
     offset: queryState.page * queryState.rowsPerPage,
     limit: queryState.rowsPerPage,
-    sort: queryState.orderProperty === undefined ? DbColumns.ROW_ID : `${queryState.orderProperty}`,
-    sortDirection:
+    sort: _.isEmpty(queryState.orderProperty) ? DbColumns.ROW_ID : `${queryState.orderProperty}`,
+    direction:
       queryState.orderDirection === undefined
         ? SqlSortDirection.Asc
         : `${queryState.orderDirection}`,
