@@ -787,16 +787,19 @@ export function* watchGetDatasetByIdSuccess(): any {
 
 export function* previewData({ payload }: any): any {
   const queryState = yield select(getQuery);
-  const lookupDataRequest = {
+  const queryDataRequest = {
     offset: queryState.page * queryState.rowsPerPage,
     limit: queryState.rowsPerPage,
     sort: queryState.orderProperty === undefined ? DbColumns.ROW_ID : `${queryState.orderProperty}`,
-    sortDirection: queryState.orderDirection === undefined ? SqlSortDirection.Asc : `${queryState.orderDirection}`,
-    filter: queryState.filterStatement === undefined ? '' : `${queryState.filterStatement}`
-  }
+    sortDirection:
+      queryState.orderDirection === undefined
+        ? SqlSortDirection.Asc
+        : `${queryState.orderDirection}`,
+    filter: queryState.filterStatement === undefined ? '' : `${queryState.filterStatement}`,
+  };
   const query = `/api/repository/v1/${payload.resourceType}s/${payload.resourceId}/data/${payload.table}`;
   try {
-    const response = yield call(authPost, query, lookupDataRequest);
+    const response = yield call(authPost, query, queryDataRequest);
     yield put({
       type: ActionTypes.PREVIEW_DATA_SUCCESS,
       payload: {
@@ -860,8 +863,8 @@ export function* getColumnStats({ payload }: any): any {
         break;
       }
       case ColumnStatsRetrievalType.RETRIEVE_ALL_AND_FILTERED_TEXT: {
-        const payloads = [{ filter: ''}, { filter: filterStatement }];
-        const responses = yield all(payloads.map((p) => call(authPost, baseQuery, p)));
+        const payloads = ['', filterStatement];
+        const responses = yield all(payloads.map((p) => call(authPost, baseQuery, { filter: p })));
         yield put({
           type: ActionTypes.COLUMN_STATS_ALL_AND_FILTERED_TEXT_SUCCESS,
           payload: {
