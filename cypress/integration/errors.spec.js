@@ -16,7 +16,7 @@ describe('test error handling', () => {
   });
 
   it('displays error toasts with error detail', () => {
-    cy.intercept('GET', '/api/repository/v1/datasets/**/data/**', {
+    cy.intercept('POST', '/api/repository/v1/datasets/**/data/**', {
       statusCode: 401,
       body: {
         message: 'Was not able to query',
@@ -31,7 +31,7 @@ describe('test error handling', () => {
   });
 
   it('displays error toasts with empty error detail', () => {
-    cy.intercept('GET', '/api/repository/v1/datasets/**/data/**', {
+    cy.intercept('POST', '/api/repository/v1/datasets/**/data/**', {
       statusCode: 401,
       body: {
         message: 'Was not able to query',
@@ -46,7 +46,7 @@ describe('test error handling', () => {
   });
 
   it('displays error toasts with no error detail', () => {
-    cy.intercept('GET', '/api/repository/v1/datasets/**/data/**', {
+    cy.intercept('POST', '/api/repository/v1/datasets/**/data/**', {
       statusCode: 401,
       body: {
         message: 'Was not able to query',
