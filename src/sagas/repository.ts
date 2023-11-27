@@ -791,11 +791,10 @@ export function* previewData({ payload }: any): any {
     offset: queryState.page * queryState.rowsPerPage,
     limit: queryState.rowsPerPage,
     sort: _.isEmpty(queryState.orderProperty) ? DbColumns.ROW_ID : `${queryState.orderProperty}`,
-    direction:
-      queryState.orderDirection === undefined
-        ? SqlSortDirection.Asc
-        : `${queryState.orderDirection}`,
-    filter: queryState.filterStatement === undefined ? '' : `${queryState.filterStatement}`,
+    direction: _.isEmpty(queryState.orderDirection)
+      ? SqlSortDirection.Asc
+      : `${queryState.orderDirection}`,
+    filter: _.isEmpty(queryState.filterStatement) ? '' : `${queryState.filterStatement}`,
   };
   const query = `/api/repository/v1/${payload.resourceType}s/${payload.resourceId}/data/${payload.table}`;
   try {
@@ -827,6 +826,7 @@ export function* getColumnStats({ payload }: any): any {
   const baseQuery = `/api/repository/v1/${resourceType}s/${resourceId}/data/${tableName}/statistics/${columnName}`;
   const queryState = yield select(getQuery);
   const { filterStatement } = queryState;
+  const filter = _.isEmpty(filterStatement) ? '' : filterStatement;
   try {
     switch (columnStatsRetrievalType) {
       case ColumnStatsRetrievalType.RETRIEVE_ALL_TEXT: {
@@ -852,7 +852,7 @@ export function* getColumnStats({ payload }: any): any {
         break;
       }
       case ColumnStatsRetrievalType.RETRIEVE_FILTERED_TEXT: {
-        const filteredResponse = yield call(authPost, baseQuery, { filter: filterStatement });
+        const filteredResponse = yield call(authPost, baseQuery, { filter });
         yield put({
           type: ActionTypes.COLUMN_STATS_FILTERED_TEXT_SUCCESS,
           payload: {
