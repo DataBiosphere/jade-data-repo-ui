@@ -20,7 +20,7 @@ import _ from 'lodash';
 import { RouterRootState } from 'connected-react-router';
 
 import { showNotification } from 'modules/notifications';
-import { JobModelJobStatusEnum } from 'generated/tdr';
+import { JobModelJobStatusEnum, SqlSortDirection } from 'generated/tdr';
 import {
   ActionTypes,
   Status,
@@ -787,16 +787,18 @@ export function* watchGetDatasetByIdSuccess(): any {
 
 export function* previewData({ payload }: any): any {
   const queryState = yield select(getQuery);
-  const offset = queryState.page * queryState.rowsPerPage;
-  const limit = queryState.rowsPerPage;
-  const sort = queryState.orderProperty === undefined ? '' : `&sort=${queryState.orderProperty}`;
-  const sortDirection =
-    queryState.orderDirection === undefined ? '' : `&direction=${queryState.orderDirection}`;
-  const filter =
-    queryState.filterStatement === undefined ? '' : `&filter=${queryState.filterStatement}`;
-  const query = `/api/repository/v1/${payload.resourceType}s/${payload.resourceId}/data/${payload.table}?offset=${offset}&limit=${limit}${sort}${sortDirection}${filter}`;
+  const queryDataRequest = {
+    offset: queryState.page * queryState.rowsPerPage,
+    limit: queryState.rowsPerPage,
+    sort: _.isEmpty(queryState.orderProperty) ? DbColumns.ROW_ID : `${queryState.orderProperty}`,
+    direction: _.isEmpty(queryState.orderDirection)
+      ? SqlSortDirection.Asc
+      : `${queryState.orderDirection}`,
+    filter: _.isEmpty(queryState.filterStatement) ? '' : `${queryState.filterStatement}`,
+  };
+  const query = `/api/repository/v1/${payload.resourceType}s/${payload.resourceId}/data/${payload.table}`;
   try {
-    const response = yield call(authGet, query);
+    const response = yield call(authPost, query, queryDataRequest);
     yield put({
       type: ActionTypes.PREVIEW_DATA_SUCCESS,
       payload: {
@@ -824,12 +826,11 @@ export function* getColumnStats({ payload }: any): any {
   const baseQuery = `/api/repository/v1/${resourceType}s/${resourceId}/data/${tableName}/statistics/${columnName}`;
   const queryState = yield select(getQuery);
   const { filterStatement } = queryState;
-  const filter = filterStatement === undefined ? '' : `?filter=${filterStatement}`;
-  const filteredQuery = `${baseQuery}${filter}`;
+  const filter = _.isEmpty(filterStatement) ? '' : filterStatement;
   try {
     switch (columnStatsRetrievalType) {
       case ColumnStatsRetrievalType.RETRIEVE_ALL_TEXT: {
-        const response = yield call(authGet, baseQuery);
+        const response = yield call(authPost, baseQuery);
         yield put({
           type: ActionTypes.COLUMN_STATS_TEXT_SUCCESS,
           payload: {
@@ -840,7 +841,7 @@ export function* getColumnStats({ payload }: any): any {
         break;
       }
       case ColumnStatsRetrievalType.RETRIEVE_ALL_NUMERIC: {
-        const numericResponse = yield call(authGet, baseQuery);
+        const numericResponse = yield call(authPost, baseQuery);
         yield put({
           type: ActionTypes.COLUMN_STATS_NUMERIC_SUCCESS,
           payload: {
@@ -851,7 +852,7 @@ export function* getColumnStats({ payload }: any): any {
         break;
       }
       case ColumnStatsRetrievalType.RETRIEVE_FILTERED_TEXT: {
-        const filteredResponse = yield call(authGet, filteredQuery);
+        const filteredResponse = yield call(authPost, baseQuery, { filter });
         yield put({
           type: ActionTypes.COLUMN_STATS_FILTERED_TEXT_SUCCESS,
           payload: {
@@ -862,8 +863,8 @@ export function* getColumnStats({ payload }: any): any {
         break;
       }
       case ColumnStatsRetrievalType.RETRIEVE_ALL_AND_FILTERED_TEXT: {
-        const queries = [baseQuery, filteredQuery];
-        const responses = yield all(queries.map((q) => call(authGet, q)));
+        const payloads = ['', filterStatement];
+        const responses = yield all(payloads.map((p) => call(authPost, baseQuery, { filter: p })));
         yield put({
           type: ActionTypes.COLUMN_STATS_ALL_AND_FILTERED_TEXT_SUCCESS,
           payload: {
