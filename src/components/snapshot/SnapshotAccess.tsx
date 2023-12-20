@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import { withStyles } from '@mui/styles';
-import { Grid } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 import UserList from '../UserList';
 import { SnapshotRoles } from '../../constants';
 import { getRoleMembersFromPolicies } from '../../libs/utils';
@@ -89,6 +89,7 @@ function SnapshotAccess(props: SnapshotAccessProps) {
 
   return (
     <Grid container spacing={1}>
+      <Typography variant="h6">Roles</Typography>
       {canManageUsers && (
         <Grid item xs={12}>
           <AddUserAccess permissions={permissions} onAdd={addUsers} />

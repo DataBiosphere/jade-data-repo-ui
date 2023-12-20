@@ -26,6 +26,7 @@ import { AppDispatch } from '../../../store';
 import JournalEntriesView from '../../JournalEntriesView';
 import { SnapshotPendingSave } from '../../../reducers/snapshot';
 import { DuosDatasetModel } from '../../../reducers/duos';
+import DataAccessControlGroup from '../DataAccessControlGroup';
 
 const styles = (theme: CustomTheme) =>
   createStyles({
@@ -299,6 +300,9 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
       )}
       <TabPanel value={value} index={3}>
         <Grid container spacing={2}>
+          <Grid item xs={9}>
+            <DataAccessControlGroup />
+          </Grid>
           <Grid item xs={9}>
             <SnapshotAccess />
           </Grid>

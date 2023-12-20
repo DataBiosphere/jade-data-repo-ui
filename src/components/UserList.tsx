@@ -37,7 +37,7 @@ const styles = (theme: CustomTheme) =>
 interface UserListProps extends WithStyles<typeof styles> {
   canManageUsers: boolean;
   defaultOpen?: boolean;
-  removeUser: any;
+  removeUser?: any;
   typeOfUsers: string;
   users: Array<string>;
 }

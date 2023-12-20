@@ -38,6 +38,7 @@ export interface SnapshotState {
   snapshots: Array<SnapshotSummaryModel>;
   snapshotRoleMaps: { [key: string]: Array<string> };
   snapshotPolicies: Array<PolicyModel>;
+  snapshotAuthDomains: Array<string>;
   snapshotWorkspaces: Array<WorkspacePolicyModel>;
   snapshotInaccessibleWorkspaces: Array<InaccessibleWorkspacePolicyModel>;
   canReadPolicies: boolean;
@@ -82,6 +83,7 @@ export const initialSnapshotState: SnapshotState = {
   snapshots: [],
   snapshotRoleMaps: {},
   snapshotPolicies: [],
+  snapshotAuthDomains: [],
   snapshotWorkspaces: [],
   snapshotInaccessibleWorkspaces: [],
   canReadPolicies: false,
@@ -208,6 +210,7 @@ export default {
       [ActionTypes.GET_SNAPSHOT_POLICY_SUCCESS]: (state, action: any) =>
         immutable(state, {
           snapshotPolicies: { $set: action.snapshot.data.data.policies },
+          snapshotAuthDomains: { $set: action.snapshot.data.data.authDomain },
           snapshotWorkspaces: { $set: action.snapshot.data.data.workspaces },
           snapshotInaccessibleWorkspaces: {
             $set: action.snapshot.data.data.inaccessibleWorkspaces,
@@ -218,6 +221,7 @@ export default {
       [ActionTypes.GET_SNAPSHOT_POLICY_FAILURE]: (state) =>
         immutable(state, {
           snapshotPolicies: { $set: [] },
+          snapshotAuthDomains: { $set: [] },
           snapshotWorkspaces: { $set: [] },
           snapshotInaccessibleWorkspaces: { $set: [] },
           snapshotWorkspaceManagerEditInProgress: { $set: false },
