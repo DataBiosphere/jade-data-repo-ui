@@ -20,7 +20,7 @@ import _ from 'lodash';
 import { RouterRootState } from 'connected-react-router';
 
 import { showNotification } from 'modules/notifications';
-import { JobModelJobStatusEnum, SqlSortDirection } from 'generated/tdr';
+import { JobModelJobStatusEnum, SqlSortDirectionAscDefault } from 'generated/tdr';
 import {
   ActionTypes,
   Status,
@@ -792,7 +792,7 @@ export function* previewData({ payload }: any): any {
     limit: queryState.rowsPerPage,
     sort: _.isEmpty(queryState.orderProperty) ? DbColumns.ROW_ID : `${queryState.orderProperty}`,
     direction: _.isEmpty(queryState.orderDirection)
-      ? SqlSortDirection.Asc
+      ? SqlSortDirectionAscDefault.Asc
       : `${queryState.orderDirection}`,
     filter: _.isEmpty(queryState.filterStatement) ? '' : `${queryState.filterStatement}`,
   };
