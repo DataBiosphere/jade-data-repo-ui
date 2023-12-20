@@ -791,7 +791,7 @@ export function* previewData({ payload }: any): any {
     offset: queryState.page * queryState.rowsPerPage,
     limit: queryState.rowsPerPage,
     sort: _.isEmpty(queryState.orderProperty) ? DbColumns.ROW_ID : `${queryState.orderProperty}`,
-    direction: queryState.orderDirection, // query data enndpoint defaults sort direction to asc
+    direction: queryState.orderDirection, // query data endpoint defaults sort direction to asc
     filter: _.isEmpty(queryState.filterStatement) ? '' : `${queryState.filterStatement}`,
   };
   const query = `/api/repository/v1/${payload.resourceType}s/${payload.resourceId}/data/${payload.table}`;
