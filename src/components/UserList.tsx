@@ -60,14 +60,8 @@ class UserList extends React.PureComponent<UserListProps> {
             [classes.canManageUsers]: canManageUsers,
           })}
         >
-          {canManageUsers && <ManageUsersView removeUser={removeUser} users={users} />}
+          <ManageUsersView removeUser={canManageUsers ? removeUser : undefined} users={users} />
           {users.length === 0 && <Typography className={classes.noUsers}>(None)</Typography>}
-          {!canManageUsers &&
-            users.map((user) => (
-              <Typography noWrap key={user}>
-                {user}
-              </Typography>
-            ))}
         </AccordionDetails>
       </Accordion>
     );

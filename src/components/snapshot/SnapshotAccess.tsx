@@ -32,10 +32,15 @@ type SnapshotAccessProps = {
   createMode?: boolean;
 };
 
-function SnapshotAccess(props: SnapshotAccessProps) {
+function SnapshotAccess({
+  dispatch,
+  policies,
+  snapshot,
+  snapshotRequest,
+  userRoles,
+  createMode,
+}: SnapshotAccessProps) {
   const addUsers = (role: string, usersToAdd: string[]) => {
-    const { snapshot, snapshotRequest, dispatch } = props;
-
     if (createMode) {
       const existingEmails = _.get(snapshotRequest, ['policies', `${role}s`], []);
       const uniqEmails = _.uniq([...existingEmails, ...usersToAdd]);
@@ -53,8 +58,6 @@ function SnapshotAccess(props: SnapshotAccessProps) {
   };
 
   const removeUser = (role: string) => {
-    const { snapshot, snapshotRequest, dispatch } = props;
-
     if (createMode) {
       return (removeableEmail: string) => {
         const existingEmails = _.get(snapshotRequest, ['policies', `${role}s`], []);
@@ -75,7 +78,6 @@ function SnapshotAccess(props: SnapshotAccessProps) {
       : getRoleMembersFromPolicies(policies, role);
   };
 
-  const { policies, snapshotRequest, userRoles, createMode } = props;
   const stewards = getUsers(SnapshotRoles.STEWARD);
   const readers = getUsers(SnapshotRoles.READER);
   const discoverers = getUsers(SnapshotRoles.DISCOVERER);

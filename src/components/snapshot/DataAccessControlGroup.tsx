@@ -15,21 +15,17 @@ type DataAccessControlGroupProps = {
 function DataAccessControlGroup(props: DataAccessControlGroupProps) {
   const { authDomains } = props;
   return (
-    <>
-      {!_.isEmpty(authDomains) && (
-        <Grid container spacing={1}>
-          <Typography variant="h6">Data Access Control Groups</Typography>
-          <Grid item xs={12} data-cy="data-access-controls">
-          <UserList
-            canManageUsers={false}
-            defaultOpen={false}
-            typeOfUsers="Data Access Controls"
-            users={authDomains}
-          />
-        </Grid>
-        </Grid>
-      )}
-    </>
+    <Grid container spacing={1}>
+      <Typography variant="h6">Data Access Control Groups</Typography>
+      <Grid item xs={12} data-cy="data-access-controls">
+        <UserList
+          canManageUsers={false}
+          defaultOpen={false}
+          typeOfUsers="Data Access Controls"
+          users={authDomains}
+        />
+      </Grid>
+    </Grid>
   );
 }
 
