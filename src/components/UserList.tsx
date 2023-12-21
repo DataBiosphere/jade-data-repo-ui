@@ -42,30 +42,33 @@ interface UserListProps extends WithStyles<typeof styles> {
   users: Array<string>;
 }
 
-class UserList extends React.PureComponent<UserListProps> {
-  render() {
-    const { canManageUsers, classes, defaultOpen, removeUser, typeOfUsers, users } = this.props;
-
-    return (
-      <Accordion defaultExpanded={defaultOpen}>
-        <AccordionSummary
-          expandIcon={<ExpandMore className={classes.expandIcon} />}
-          className={classes.header}
-        >
-          {typeOfUsers}
-        </AccordionSummary>
-        <AccordionDetails
-          data-cy="user-email"
-          className={clsx({
-            [classes.canManageUsers]: canManageUsers,
-          })}
-        >
-          <ManageUsersView removeUser={canManageUsers ? removeUser : undefined} users={users} />
-          {users.length === 0 && <Typography className={classes.noUsers}>(None)</Typography>}
-        </AccordionDetails>
-      </Accordion>
-    );
-  }
+function UserList({
+  classes,
+  canManageUsers,
+  defaultOpen,
+  removeUser,
+  typeOfUsers,
+  users,
+}: UserListProps) {
+  return (
+    <Accordion defaultExpanded={defaultOpen}>
+      <AccordionSummary
+        expandIcon={<ExpandMore className={classes.expandIcon} />}
+        className={classes.header}
+      >
+        {typeOfUsers}
+      </AccordionSummary>
+      <AccordionDetails
+        data-cy="user-email"
+        className={clsx({
+          [classes.canManageUsers]: canManageUsers,
+        })}
+      >
+        <ManageUsersView removeUser={canManageUsers ? removeUser : undefined} users={users} />
+        {users.length === 0 && <Typography className={classes.noUsers}>(None)</Typography>}
+      </AccordionDetails>
+    </Accordion>
+  );
 }
 
 export default withStyles(styles)(UserList);

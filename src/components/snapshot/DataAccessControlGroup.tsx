@@ -1,12 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-import { withStyles } from '@mui/styles';
 import { Typography, Grid } from '@mui/material';
 import { TdrState } from '../../reducers';
 import UserList from '../UserList';
-
-const styles = () => ({});
 
 type DataAccessControlGroupProps = {
   authDomains: Array<string>;
@@ -15,15 +12,10 @@ type DataAccessControlGroupProps = {
 function DataAccessControlGroup(props: DataAccessControlGroupProps) {
   const { authDomains } = props;
   return (
-    <Grid container spacing={1}>
+    <Grid container spacing={1} data-cy="data-access-control-container">
       <Typography variant="h6">Data Access Control Groups</Typography>
       <Grid item xs={12} data-cy="data-access-controls">
-        <UserList
-          canManageUsers={false}
-          defaultOpen={false}
-          typeOfUsers="Data Access Controls"
-          users={authDomains}
-        />
+        <UserList canManageUsers={false} typeOfUsers="Data Access Controls" users={authDomains} />
       </Grid>
     </Grid>
   );
@@ -35,4 +27,4 @@ function mapStateToProps(state: TdrState) {
   };
 }
 
-export default connect(mapStateToProps)(withStyles(styles)(DataAccessControlGroup));
+export default connect(mapStateToProps)(DataAccessControlGroup);

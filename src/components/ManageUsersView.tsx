@@ -22,7 +22,7 @@ function ManageUsersView({ classes, removeUser, users }: ManageUsersProps) {
   const userChips =
     !!users &&
     users.map((user) => (
-      <div key={user}>
+      <div data-cy="chip-item" key={user}>
         <Chip
           className={classes.chip}
           color="primary"
@@ -35,7 +35,7 @@ function ManageUsersView({ classes, removeUser, users }: ManageUsersProps) {
     ));
 
   return (
-    <div>
+    <div data-cy="chip-container">
       {users && users.length > 0 && <div className={classes.chipContainer}>{userChips}</div>}
     </div>
   );
