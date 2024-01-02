@@ -17,6 +17,11 @@ const initialState = {
     snapshot,
     snapshotAuthDomains: ['authdomain1', 'authdomain2', 'authdomain3'],
   },
+  configuration: {
+    configObject: {
+      terraUrl: 'https://dev-terra.org',
+    },
+  },
 };
 
 describe('DataAccessControlGroup', () => {
@@ -46,4 +51,11 @@ describe('DataAccessControlGroup', () => {
         });
       });
   });
+  it('Correctly opens new tab with terra groups page', () => {
+    cy.get('[data-cy="data-access-control-description"]')
+      .should('contain.text', 'groups')
+      .within(() => {
+        cy.get('a').should('have.attr', 'href', 'https://dev-terra.org/#groups');
+      });
+  })
 });

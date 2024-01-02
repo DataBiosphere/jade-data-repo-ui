@@ -18,7 +18,7 @@ const styles = (theme: CustomTheme) => ({
 type DataAccessControlGroupProps = {
   classes: ClassNameMap;
   authDomains: Array<string>;
-  terraUrl: string;
+  terraUrl: string | undefined;
 };
 
 function DataAccessControlGroup({ classes, authDomains, terraUrl }: DataAccessControlGroupProps) {
@@ -28,9 +28,13 @@ function DataAccessControlGroup({ classes, authDomains, terraUrl }: DataAccessCo
       <Grid item xs={12} data-cy="data-access-control-description">
         <Typography variant="body1">
           Collaborators must be a member of all of these{' '}
-          <a href={`${terraUrl}/#groups`} target="_blank" rel="noopener noreferrer">
-            <span className={classes.terraLink}>groups</span>
-          </a>{' '}
+          { _.isUndefined(terraUrl) ? (
+            'groups'
+          ) : (
+            <a href={`${terraUrl}/#groups`} target="_blank" rel="noopener noreferrer">
+              <span className={classes.terraLink}>groups</span>
+            </a>
+          )}{' '}
           to access this snapshot.
         </Typography>
       </Grid>
