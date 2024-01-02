@@ -6,7 +6,6 @@ import React from 'react';
 import createMockStore from 'redux-mock-store';
 import history from '../../modules/hist';
 import globalTheme from '../../modules/theme';
-import SnapshotAccess from './SnapshotAccess';
 import DataAccessControlGroup from './DataAccessControlGroup';
 
 const snapshot = {
