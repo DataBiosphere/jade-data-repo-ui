@@ -37,41 +37,38 @@ const styles = (theme: CustomTheme) =>
 interface UserListProps extends WithStyles<typeof styles> {
   canManageUsers: boolean;
   defaultOpen?: boolean;
-  removeUser: any;
+  removeUser?: any;
   typeOfUsers: string;
   users: Array<string>;
 }
 
-class UserList extends React.PureComponent<UserListProps> {
-  render() {
-    const { canManageUsers, classes, defaultOpen, removeUser, typeOfUsers, users } = this.props;
-
-    return (
-      <Accordion defaultExpanded={defaultOpen}>
-        <AccordionSummary
-          expandIcon={<ExpandMore className={classes.expandIcon} />}
-          className={classes.header}
-        >
-          {typeOfUsers}
-        </AccordionSummary>
-        <AccordionDetails
-          data-cy="user-email"
-          className={clsx({
-            [classes.canManageUsers]: canManageUsers,
-          })}
-        >
-          {canManageUsers && <ManageUsersView removeUser={removeUser} users={users} />}
-          {users.length === 0 && <Typography className={classes.noUsers}>(None)</Typography>}
-          {!canManageUsers &&
-            users.map((user) => (
-              <Typography noWrap key={user}>
-                {user}
-              </Typography>
-            ))}
-        </AccordionDetails>
-      </Accordion>
-    );
-  }
+function UserList({
+  classes,
+  canManageUsers,
+  defaultOpen,
+  removeUser,
+  typeOfUsers,
+  users,
+}: UserListProps) {
+  return (
+    <Accordion defaultExpanded={defaultOpen}>
+      <AccordionSummary
+        expandIcon={<ExpandMore className={classes.expandIcon} />}
+        className={classes.header}
+      >
+        {typeOfUsers}
+      </AccordionSummary>
+      <AccordionDetails
+        data-cy="user-email"
+        className={clsx({
+          [classes.canManageUsers]: canManageUsers,
+        })}
+      >
+        <ManageUsersView removeUser={canManageUsers ? removeUser : undefined} users={users} />
+        {users.length === 0 && <Typography className={classes.noUsers}>(None)</Typography>}
+      </AccordionDetails>
+    </Accordion>
+  );
 }
 
 export default withStyles(styles)(UserList);

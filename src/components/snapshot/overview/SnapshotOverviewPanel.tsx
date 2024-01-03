@@ -1,5 +1,6 @@
 import React, { useState, SyntheticEvent } from 'react';
 import _ from 'lodash';
+import { connect } from 'react-redux';
 import { Autocomplete, Grid, Tab, Tabs, TextField, Typography } from '@mui/material';
 import { createStyles, WithStyles, withStyles } from '@mui/styles';
 import moment from 'moment';
@@ -11,6 +12,7 @@ import { Link } from 'react-router-dom';
 import TextContent from 'components/common/TextContent';
 import InfoHoverButton from 'components/common/InfoHoverButton';
 import { IamResourceTypeEnum } from 'generated/tdr';
+import { TdrState } from 'reducers';
 import {
   renderCloudPlatforms,
   renderStorageResources,
@@ -26,6 +28,7 @@ import { AppDispatch } from '../../../store';
 import JournalEntriesView from '../../JournalEntriesView';
 import { SnapshotPendingSave } from '../../../reducers/snapshot';
 import { DuosDatasetModel } from '../../../reducers/duos';
+import DataAccessControlGroup from '../DataAccessControlGroup';
 
 const styles = (theme: CustomTheme) =>
   createStyles({
@@ -64,6 +67,7 @@ function getDuosDatasetValue(option?: DuosDatasetModel) {
 }
 
 interface SnapshotOverviewPanelProps extends WithStyles<typeof styles> {
+  authDomains: Array<string>;
   dispatch: AppDispatch;
   pendingSave: SnapshotPendingSave;
   snapshot: SnapshotModel;
@@ -73,7 +77,7 @@ interface SnapshotOverviewPanelProps extends WithStyles<typeof styles> {
 
 function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
   const [value, setValue] = useState(0);
-  const { classes, dispatch, duosDatasets, pendingSave, snapshot, userRoles } = props;
+  const { authDomains, classes, dispatch, duosDatasets, pendingSave, snapshot, userRoles } = props;
   const isSteward = userRoles.includes(SnapshotRoles.STEWARD);
   const canViewJournalEntries = isSteward;
   // @ts-ignore
@@ -299,6 +303,11 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
       )}
       <TabPanel value={value} index={3}>
         <Grid container spacing={2}>
+          {authDomains.length > 0 && (
+            <Grid item xs={9}>
+              <DataAccessControlGroup />
+            </Grid>
+          )}
           <Grid item xs={9}>
             <SnapshotAccess />
           </Grid>
@@ -308,4 +317,10 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
   );
 }
 
-export default withStyles(styles)(SnapshotOverviewPanel);
+function mapStateToProps(state: TdrState) {
+  return {
+    authDomains: state.snapshots.snapshotAuthDomains,
+  };
+}
+
+export default connect(mapStateToProps)(withStyles(styles)(SnapshotOverviewPanel));
