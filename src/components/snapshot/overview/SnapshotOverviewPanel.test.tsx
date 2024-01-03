@@ -44,6 +44,7 @@ function createSnapshot(duosFirecloudGroup?: DuosFirecloudGroupModel): SnapshotM
 function createInitialState(snapshot?: SnapshotModel): any {
   return {
     snapshots: {
+      snapshotAuthDomains: ['authdomain1', 'authdomain2', 'authdomain3'],
       pendingSave: {
         consentCode: false,
         description: false,
