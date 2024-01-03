@@ -46,9 +46,12 @@ describe('DataAccessControlGroup', () => {
     cy.get('[data-cy="data-access-controls"]')
       .should('contain.text', 'Data Access Controls')
       .within(() => {
-        cy.get('[data-cy="user-email"]').then((user) => {
-          cy.wrap(user[0]).should('contain.text', 'authdomain1');
-        });
+        cy.get('[data-cy="user-email"]').get('[data-cy="chip-item"]').should('have.length', 3);
+        cy.get('[data-cy="user-email"]')
+          .get('[data-cy="chip-item"]')
+          .each(($el, index) => {
+            expect($el).to.contain.text(`authdomain${index + 1}`);
+          });
       });
   });
   it('Correctly opens new tab with terra groups page', () => {
@@ -57,5 +60,5 @@ describe('DataAccessControlGroup', () => {
       .within(() => {
         cy.get('a').should('have.attr', 'href', 'https://dev-terra.org/#groups');
       });
-  })
+  });
 });

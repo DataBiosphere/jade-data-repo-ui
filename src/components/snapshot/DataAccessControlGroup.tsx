@@ -28,7 +28,7 @@ function DataAccessControlGroup({ classes, authDomains, terraUrl }: DataAccessCo
       <Grid item xs={12} data-cy="data-access-control-description">
         <Typography variant="body1">
           Collaborators must be a member of all of these{' '}
-          { _.isUndefined(terraUrl) ? (
+          {_.isUndefined(terraUrl) ? (
             'groups'
           ) : (
             <a href={`${terraUrl}/#groups`} target="_blank" rel="noopener noreferrer">
