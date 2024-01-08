@@ -39,3 +39,5 @@ jobs:
     secrets: inherit
     with:
       workflow_name: Nightly Unit Tests
+      # UNDO BEFORE MERGE
+      notify_on_success: true
