@@ -1,0 +1,74 @@
+name: notify-slack
+env:
+  SLACK_BOT_TOKEN: ${{ secrets.TEST_SLACK_BOT_TOKEN}}
+  SLACK_CHANNEL_ID: "CMYTGJVFY"
+  REPO_NAME: "Data Repo UI"
+on:
+    workflow_call:
+      inputs:
+        workflow_name:
+          required: true
+          type: string
+        notify_on_failure:
+            required: false
+            type: boolean
+            default: true
+        notify_on_success:
+          required: false
+          type: boolean
+          default: false
+jobs:
+    notify-slack:
+        runs-on: ubuntu-latest
+        if: github.ref == 'refs/heads/dev' && (inputs.notify_on_failure || inputs.notify_on_success)
+        steps:
+          - name: Notify slack on failure
+            if: inputs.notify_on_failure && failure()
+            uses: slackapi/slack-github-action@v1.24.0
+            with:
+              channel-id: ${{ env.SLACK_CHANNEL_ID }}
+              payload: |
+                {
+                  "text": "${{ env.REPO_NAME }} ${{ inputs.workflow_name }}",
+                  "attachments": [
+                    {
+                      "title": "${{ inputs.workflow_name }} Failed",
+                      "title_link" : "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
+                      "color": "e51313",
+                      "fields": [
+                        {
+                          "title": "Status",
+                          "short": true,
+                          "value": "Failed"
+                        }
+                      ]
+                    }
+                  ]
+                }
+            env:
+              SLACK_BOT_TOKEN: ${{ env.SLACK_BOT_TOKEN}}
+          - name: Notify slack on Success
+            if: inputs.notify_on_success && success()
+            uses: slackapi/slack-github-action@v1.24.0
+            with:
+              channel-id: ${{ env.SLACK_CHANNEL_ID }}
+              payload: |
+                {
+                  "text": "${{ env.REPO_NAME }} ${{ inputs.workflow_name }}",
+                  "attachments": [
+                    {
+                      "title": "${{ inputs.workflow_name }} Succeeded",
+                      "title_link" : "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
+                      "color": "008000",
+                      "fields": [
+                        {
+                          "title": "Status",
+                          "short": true,
+                          "value": "Success"
+                        }
+                      ]
+                    }
+                  ]
+                }
+            env:
+              SLACK_BOT_TOKEN: ${{ env.SLACK_BOT_TOKEN}}
