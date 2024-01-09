@@ -27,12 +27,10 @@ on:
 jobs:
     notify-slack:
         runs-on: ubuntu-latest
-        ## Run if success or failure, but not cancelled
-        if: ${{ !cancelled() }}
-        #if: !cancelled() && github.ref == 'refs/heads/dev' && (inputs.notify_on_failure || inputs.notify_on_success)
+        if: ${{ !cancelled() }} && github.ref == 'refs/heads/dev' && (inputs.notify_on_failure || inputs.notify_on_success)
         steps:
           - name: Notify slack on failure
-            #if: inputs.notify_on_failure && failure()
+            if: inputs.notify_on_failure && failure()
             uses: slackapi/slack-github-action@v1.24.0
             with:
               channel-id: ${{ inputs.failure_slack_channel_id }}
@@ -57,7 +55,7 @@ jobs:
             env:
               SLACK_BOT_TOKEN: ${{ env.SLACK_BOT_TOKEN}}
           - name: Notify slack on Success
-            #if: inputs.notify_on_success && success()
+            if: inputs.notify_on_success && success()
             uses: slackapi/slack-github-action@v1.24.0
             with:
               channel-id: ${{ inputs.success_slack_channel_id }}
