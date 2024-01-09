@@ -27,7 +27,7 @@ on:
 jobs:
     notify-slack:
         runs-on: ubuntu-latest
-        if: ${{ !cancelled() && github.ref == 'refs/heads/dev' }}
+        if: ${{ !cancelled() && github.ref == 'refs/heads/develop' }}
         steps:
           - name: Notify slack on failure
             if: inputs.notify_on_failure && failure()
