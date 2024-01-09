@@ -1,7 +1,8 @@
 name: notify-slack
 env:
-  SLACK_BOT_TOKEN: ${{ secrets.TEST_SLACK_BOT_TOKEN}}
-  SLACK_CHANNEL_ID: "CMYTGJVFY"
+  SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN}}
+  FAILURE_SLACK_CHANNEL_ID: "CMYTGJVFY" # #jade-alerts
+  SUCCESS_SLACK_CHANNEL_ID: "CK9M0ENRJ" # #jade-spam
   REPO_NAME: "Data Repo UI"
 on:
     workflow_call:
@@ -26,7 +27,7 @@ jobs:
             if: inputs.notify_on_failure && failure()
             uses: slackapi/slack-github-action@v1.24.0
             with:
-              channel-id: ${{ env.SLACK_CHANNEL_ID }}
+              channel-id: ${{ env.FAILURE_SLACK_CHANNEL_ID }}
               payload: |
                 {
                   "text": "${{ env.REPO_NAME }} ${{ inputs.workflow_name }}",
@@ -51,7 +52,7 @@ jobs:
             if: inputs.notify_on_success && success()
             uses: slackapi/slack-github-action@v1.24.0
             with:
-              channel-id: ${{ env.SLACK_CHANNEL_ID }}
+              channel-id: ${{ env.SUCCESS_SLACK_CHANNEL_ID }}
               payload: |
                 {
                   "text": "${{ env.REPO_NAME }} ${{ inputs.workflow_name }}",
