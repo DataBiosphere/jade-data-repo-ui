@@ -35,7 +35,7 @@ jobs:
             #if: inputs.notify_on_failure && failure()
             uses: slackapi/slack-github-action@v1.24.0
             with:
-              channel-id: ${{ env.FAILURE_SLACK_CHANNEL_ID }}
+              channel-id: ${{ inputs.failure_slack_channel_id }}
               payload: |
                 {
                   "text": "${{ env.REPO_NAME }} ${{ inputs.workflow_name }}",
@@ -60,7 +60,7 @@ jobs:
             #if: inputs.notify_on_success && success()
             uses: slackapi/slack-github-action@v1.24.0
             with:
-              channel-id: ${{ env.SUCCESS_SLACK_CHANNEL_ID }}
+              channel-id: ${{ inputs.success_slack_channel_id }}
               payload: |
                 {
                   "text": "${{ env.REPO_NAME }} ${{ inputs.workflow_name }}",
