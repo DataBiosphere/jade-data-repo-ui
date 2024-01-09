@@ -120,3 +120,6 @@ jobs:
     secrets: inherit
     with:
       workflow_name: Nightly E2E Tests
+      notify_on_success: true
+      failure_slack_channel_id: "CMYTGJVFY,C53JYBV9A" # #jade-alerts & #dsde-qa
+      success_slack_channel_id: "CK9M0ENRJ,C53JYBV9A" # #jade-spam & #dsde-qa

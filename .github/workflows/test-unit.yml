@@ -39,3 +39,4 @@ jobs:
     secrets: inherit
     with:
       workflow_name: Nightly Unit Tests
+      notify_on_success: true

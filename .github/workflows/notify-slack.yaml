@@ -1,8 +1,6 @@
 name: notify-slack
 env:
   SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN}}
-  FAILURE_SLACK_CHANNEL_ID: "CMYTGJVFY" # #jade-alerts
-  SUCCESS_SLACK_CHANNEL_ID: "CK9M0ENRJ" # #jade-spam
   REPO_NAME: "Data Repo UI"
 on:
     workflow_call:
@@ -18,6 +16,14 @@ on:
           required: false
           type: boolean
           default: false
+        failure_slack_channel_id:
+          required: false
+          type: string
+          default: "CMYTGJVFY" # #jade-alerts
+        success_slack_channel_id:
+          required: false
+          type: string
+          default: "CK9M0ENRJ" # #jade-spam
 jobs:
     notify-slack:
         runs-on: ubuntu-latest
