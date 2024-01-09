@@ -83,7 +83,7 @@ jobs:
           actions_subcommand: 'helmdeploy'
           helm_create_secret_manager_secret_version: '0.0.6'
           helm_datarepo_api_chart_version: 0.0.579
-          helm_datarepo_ui_chart_version: 0.0.291
+          helm_datarepo_ui_chart_version: 0.0.292
           helm_gcloud_sqlproxy_chart_version: 0.19.9
           helm_oidc_proxy_chart_version: 0.0.42
           helm_imagetag_update: 'ui'
@@ -115,7 +115,7 @@ jobs:
         with:
           actions_subcommand: 'gcp_whitelist_clean'
   notify-slack:
-    needs: [ e2e_test ]
+    needs: [e2e_test]
     uses: ./.github/workflows/notify-slack.yaml
     secrets: inherit
     with:
