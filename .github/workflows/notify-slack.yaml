@@ -21,11 +21,10 @@ on:
 jobs:
     notify-slack:
         runs-on: ubuntu-latest
-        # if: github.ref == 'refs/heads/dev' && (inputs.notify_on_failure || inputs.notify_on_success)
+        if: github.ref == 'refs/heads/dev' && (inputs.notify_on_failure || inputs.notify_on_success)
         steps:
           - name: Notify slack on failure
-            #if: inputs.notify_on_failure && failure()
-            if: inputs.notify_on_success && success()
+            if: inputs.notify_on_failure && failure()
             uses: slackapi/slack-github-action@v1.24.0
             with:
               channel-id: ${{ env.FAILURE_SLACK_CHANNEL_ID }}
@@ -50,7 +49,7 @@ jobs:
             env:
               SLACK_BOT_TOKEN: ${{ env.SLACK_BOT_TOKEN}}
           - name: Notify slack on Success
-            #if: inputs.notify_on_success && success()
+            if: inputs.notify_on_success && success()
             uses: slackapi/slack-github-action@v1.24.0
             with:
               channel-id: ${{ env.SUCCESS_SLACK_CHANNEL_ID }}
