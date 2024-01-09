@@ -102,6 +102,8 @@ jobs:
     needs: [ update_image, helm_tag_bump, cherry_pick_image_to_production_gcr ]
     uses: ./.github/workflows/notify-slack.yaml
     secrets: inherit
+    if: ${{ !cancelled() }}
     with:
       workflow_name: Dev Image Update
       notify_on_success: true
+      success: ${{ needs.update_image.result == 'success' && needs.helm_tag_bump.result == 'success' && needs.cherry_pick_image_to_production_gcr.result == 'success' }}

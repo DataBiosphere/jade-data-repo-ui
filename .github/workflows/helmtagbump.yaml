@@ -113,8 +113,10 @@ jobs:
     needs: [ integration_helm_tag_update, ui_helm_default_chart_tag ]
     uses: ./.github/workflows/notify-slack.yaml
     secrets: inherit
+    if: ${{ !cancelled() }}
     with:
       workflow_name: Helm Tag Bump
       notify_on_failure: ${{ inputs.notify-slack }}
       notify_on_success: ${{ inputs.notify-slack }}
+      success: ${{ needs.integration_helm_tag_update.result == 'success' && needs.ui_helm_default_chart_tag.result == 'success' }}
 
