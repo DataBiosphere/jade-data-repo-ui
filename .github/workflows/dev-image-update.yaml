@@ -98,19 +98,10 @@ jobs:
       gcr_tag: ${{ needs.update_image.outputs.ui_image_tag }}
       source_gcr_url: 'gcr.io/broad-jade-dev/jade-data-repo-ui'
       target_gcr_url: 'gcr.io/datarepo-public-gcr/jade-data-repo-ui'
-  action_notify:
-    runs-on: ubuntu-latest
-    if: always()
-    needs:
-      - update_image
-      - helm_tag_bump
-      - cherry_pick_image_to_production_gcr
-    steps:
-    - name: Slack job status
-      uses: broadinstitute/action-slack@v3.15.0
-      with:
-        status: ${{ contains(needs.*.result, 'failure') && 'failure' || 'success' }}
-        author_name: Integration Test
-      env:
-        GITHUB_TOKEN: ${{ secrets.BROADBOT_TOKEN }}
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+  notify-slack:
+    needs: [ update_image, helm_tag_bump, cherry_pick_image_to_production_gcr ]
+    uses: ./.github/workflows/notify-slack.yaml
+    secrets: inherit
+    with:
+      workflow_name: Dev Image Update
+      notify_on_success: true

@@ -62,15 +62,6 @@ jobs:
           GITHUB_REPO: datarepo-helm-definitions
           SWITCH_DIRECTORIES: true
           MERGE_BRANCH: master
-      - name: Slack job status
-        if: ${{ inputs.notify-slack && always() }}
-        uses: broadinstitute/action-slack@v2
-        with:
-          status: ${{ job.status }}
-          author_name: ui_helm_bumper
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
   ui_helm_default_chart_tag:
     runs-on: ubuntu-20.04
     steps:
@@ -118,12 +109,12 @@ jobs:
           GITHUB_REPO: datarepo-helm
           SWITCH_DIRECTORIES: true
           MERGE_BRANCH: master
-      - name: Slack job status
-        if: ${{ inputs.notify-slack && always() }}
-        uses: broadinstitute/action-slack@v2
-        with:
-          status: ${{ job.status }}
-          author_name: ui_helm_bumper
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+  notify-slack:
+    needs: [ integration_helm_tag_update, ui_helm_default_chart_tag ]
+    uses: ./.github/workflows/notify-slack.yaml
+    secrets: inherit
+    with:
+      workflow_name: Helm Tag Bump
+      notify_on_failure: ${{ inputs.notify-slack }}
+      notify_on_success: ${{ inputs.notify-slack }}
+
