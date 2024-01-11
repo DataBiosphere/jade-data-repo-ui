@@ -118,7 +118,7 @@ jobs:
     needs: [e2e_test]
     uses: ./.github/workflows/notify-slack.yaml
     secrets: inherit
-    if: ${{ !cancelled() }}
+    if: ${{ always() }}
     with:
       workflow_name: Nightly E2E Tests
       notify_on_success: true
