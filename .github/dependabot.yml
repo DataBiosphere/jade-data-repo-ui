@@ -3,10 +3,24 @@ updates:
 - package-ecosystem: npm
   directory: "/"
   schedule:
-    interval: daily
-  # Disable automatic rebasing to avoid tests kicking off all at once
-  rebase-strategy: "disabled"
-  open-pull-requests-limit: 10
+    interval: weekly
+  # See workflows/test-e2e.yml for the current list of k8s namespaces available for integration testing.
+  # Presently, there are only 2.
+  # Keeping the open PR limit low at 4 so that when automatically rebasing, 4 concurrent Dependabot PR integration test
+  # runs all stand a chance at success rather than some being guaranteed to time out waiting for an available namespace.
+  open-pull-requests-limit: 4
+  groups:
+    npm-major-dependencies:
+      patterns:
+        - "*"
+      update-types:
+        - "major"
+    npm-minor-patch-dependencies:
+      patterns:
+        - "*"
+      update-types:
+        - "minor"
+        - "patch"
   ignore:
   # newer versions of prettier seem to format the code in a way that is incompatible with eslint (DR-2953)
   - dependency-name: "prettier"
