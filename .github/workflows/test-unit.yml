@@ -37,6 +37,8 @@ jobs:
     needs: [ unit_test ]
     uses: ./.github/workflows/notify-slack.yaml
     secrets: inherit
+    if: ${{ always() }}
     with:
       workflow_name: Nightly Unit Tests
       notify_on_success: true
+      success: ${{ needs.unit_test.result == 'success' }}

@@ -5,6 +5,9 @@ env:
 on:
     workflow_call:
       inputs:
+        success:
+          required: true
+          type: boolean
         workflow_name:
           required: true
           type: string
@@ -27,10 +30,10 @@ on:
 jobs:
     notify-slack:
         runs-on: ubuntu-latest
-        if: ${{ !cancelled() && github.ref == 'refs/heads/dev' }}
+        if: ${{ github.ref == 'refs/heads/develop' }}
         steps:
           - name: Notify slack on failure
-            if: inputs.notify_on_failure && failure()
+            if: ${{ inputs.notify_on_failure && !inputs.success }}
             uses: slackapi/slack-github-action@v1.24.0
             with:
               channel-id: ${{ inputs.failure_slack_channel_id }}
@@ -55,7 +58,7 @@ jobs:
             env:
               SLACK_BOT_TOKEN: ${{ env.SLACK_BOT_TOKEN}}
           - name: Notify slack on Success
-            if: inputs.notify_on_success && success()
+            if: ${{ inputs.notify_on_success && inputs.success }}
             uses: slackapi/slack-github-action@v1.24.0
             with:
               channel-id: ${{ inputs.success_slack_channel_id }}
