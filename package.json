@@ -82,7 +82,7 @@
     "react-select": "^5.7.2",
     "react-side-effect": "^2.1.2",
     "react-simplemde-editor": "^5.2.0",
-    "react-window": "^1.8.8",
+    "react-window": "^1.8.10",
     "redux": "^4.2.1",
     "redux-actions": "^3.0.0",
     "redux-immutable-state-invariant": "^2.1.0",
