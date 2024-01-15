@@ -13,13 +13,13 @@ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
 
 Note: Do NOT install nvm through homebrew as that is no longer maintained
 
-- Run the following to get automatic node version switching set up:
+- Run the following to get automatic node version switching set up (see [.node-version](.node-version) for latest version to use):
 
 ```
-nvm install 10.0.0
+nvm install 20.11.0
 rm -R ~/.avn (if you want to reset an existing or failed avn setup)
-nvm exec 10.0.0 npm install -g avn avn-nvm avn-n
-nvm exec 10.0.0 avn setup
+nvm exec 20.11.0 npm install -g avn avn-nvm avn-n
+nvm exec 20.11.0 avn setup
 nvm install lts/gallium --default
 nvm use lts/gallium
 ```
@@ -53,36 +53,35 @@ gcloud auth login --no-activate
 
 ### Provides
 
-- react ^16.x
-- react-router 4.x
-- react-helmet 5.x
-- redux 4.x
-- redux-saga 0.16.x
+- react ^17.x
+- react-router ^6.x
+- react-helmet ^6.x
+- redux ^4.x
+- redux-saga ^1.x
 
 ### Development
 
-- vite-dev-server 5.x
+- vite-dev-server ^5.x
 - redux-devtools (with browser plugin)
 
 `npm start`
 
 ### Building
 
-- vite 4.x
-- babel 7.x
+- vite ^4.x
+- babel ^7.x
 
 `npm run build`
 
 ### Code Quality
 
-- eslint 5.x
-- stylelint 9.x
+- eslint ^8.x
 
 `npm run lint` / `npm run lint:styles`
 
 ### Testing
 
-- cypress 12.x
+- cypress 13.x
 
 To run end-to-end tests: `npx cypress run` or `npx cypress open` (interactive mode)
 
