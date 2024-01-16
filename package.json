@@ -59,7 +59,7 @@
     "immutability-helper": "^3.1.1",
     "js-combinatorics": "^2.1.2",
     "jsondiffpatch": "^0.6.0",
-    "jwt-decode": "^3.1.2",
+    "jwt-decode": "^4.0.0",
     "lodash": "^4.17.21",
     "mini-create-react-context": "^0.4.1",
     "mobile-detect": "^1.4.5",
