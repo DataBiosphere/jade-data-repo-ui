@@ -26,3 +26,6 @@ updates:
   - dependency-name: "prettier"
   # newer versions of material ui (MUI) cause our styling to not respect theming or straight up break the UI (DR-2952)
   - dependency-name: "@mui/*"
+  # @mui/styles is incompatible with react 18, we should replace @mui/styles with tss-react (DR-3428)
+  - dependency-name: "@types/react"
+    update-types: [ "version-update:semver-major" ]
