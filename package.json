@@ -110,8 +110,6 @@
     "@types/webfontloader": "^1.6.38",
     "@typescript-eslint/eslint-plugin": "^5.59.7",
     "@vitejs/plugin-react": "^4.2.1",
-    "ajv": "^6.12.6",
-    "ajv-legacy": "npm:ajv@^6.12.6",
     "cypress": "^13.6.2",
     "cypress-vite": "^1.5.0",
     "eslint": "^8.56.0",
@@ -132,8 +130,8 @@
     "react-dom": "^17.0.2",
     "redux-mock-store": "^1.5.4",
     "vite": "^4.4.12",
-    "vite-plugin-svgr": "^3.2.0",
     "vite-plugin-eslint": "^1.8.1",
+    "vite-plugin-svgr": "^3.2.0",
     "vite-tsconfig-paths": "^4.2.3",
     "yargs": "^17.7.2"
   },
