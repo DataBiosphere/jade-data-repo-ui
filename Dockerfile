@@ -11,7 +11,7 @@ RUN /usr/local/bin/docker-entrypoint.sh generate -g typescript-axios -i $TDR_OPE
 
 
 ## Step 2. Build the deployable UI artifacts
-FROM node:16.20.2-buster as build
+FROM node:20.11.0-buster as build
 # Check out the build
 RUN set -x \
   && git clone https://github.com/DataBiosphere/jade-data-repo-ui \
