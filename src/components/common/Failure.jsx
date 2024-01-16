@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@mui/styles';
 
-import { ReactComponent as ErrorIcon } from 'media/icons/warning-standard-solid.svg';
+import ErrorIcon from 'media/icons/warning-standard-solid.svg';
 
 const styles = (theme) => ({
   text: {

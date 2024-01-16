@@ -17,8 +17,8 @@ import JobResultModal from 'components/job/JobResultModal';
 
 import RoutePublic from 'components/RoutePublic';
 import RoutePrivate from 'components/RoutePrivate';
-import { ReactComponent as CarrotSVG } from 'media/icons/angle-line.svg';
-import { ReactComponent as SignOutSVG } from 'media/icons/logout-line.svg';
+import CarrotSVG from 'media/icons/angle-line.svg';
+import SignOutSVG from 'media/icons/logout-line.svg';
 import HeaderLeft from 'media/images/header-left-hexes.svg';
 import HeaderRight from 'media/images/header-right-hexes.svg';
 import 'react-notifications-component/dist/theme.css';
