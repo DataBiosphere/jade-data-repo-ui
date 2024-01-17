@@ -98,12 +98,9 @@ jobs:
       gcr_tag: ${{ needs.update_image.outputs.ui_image_tag }}
       source_gcr_url: 'gcr.io/broad-jade-dev/jade-data-repo-ui'
       target_gcr_url: 'gcr.io/datarepo-public-gcr/jade-data-repo-ui'
-  notify-slack:
-    needs: [ update_image, helm_tag_bump, cherry_pick_image_to_production_gcr ]
-    uses: ./.github/workflows/notify-slack.yaml
-    secrets: inherit
-    if: ${{ always() }}
+  report-workflow:
+    uses: broadinstitute/sherlock/.github/workflows/client-report-workflow.yaml@main
     with:
-      workflow_name: Dev Image Update
-      notify_on_success: true
-      success: ${{ needs.update_image.result == 'success' && needs.helm_tag_bump.result == 'success' && needs.cherry_pick_image_to_production_gcr.result == 'success' }}
+      notify-slack-channels-upon-workflow-completion: "#jade-alerts"
+    permissions:
+      id-token: write

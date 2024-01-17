@@ -113,14 +113,11 @@ jobs:
         uses: broadinstitute/datarepo-actions/actions/main@0.67.0
         with:
           actions_subcommand: 'gcp_whitelist_clean'
-  notify-slack:
-    needs: [e2e_test]
-    uses: ./.github/workflows/notify-slack.yaml
-    secrets: inherit
-    if: ${{ always() }}
+  report-workflow:
+    uses: broadinstitute/sherlock/.github/workflows/client-report-workflow.yaml@main
+    if: ${{ github.ref == 'refs/heads/develop' }}
     with:
-      workflow_name: Nightly E2E Tests
-      notify_on_success: true
-      failure_slack_channel_id: "CMYTGJVFY,C53JYBV9A" # #jade-alerts & #dsde-qa
-      success_slack_channel_id: "CK9M0ENRJ,C53JYBV9A" # #jade-spam & #dsde-qa
-      success: ${{ needs.e2e_test.result == 'success' }}
+      notify-slack-channels-upon-workflow-success: "#jade-spam"
+      notify-slack-channels-upon-workflow-failure: "#jade-alerts"
+    permissions:
+      id-token: write
