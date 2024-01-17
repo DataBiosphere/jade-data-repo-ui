@@ -68,7 +68,7 @@ gcloud auth login --no-activate
 
 ### Building
 
-- vite ^5.x
+- vite ^4.x
 - babel ^7.x
 
 `npm run build`
