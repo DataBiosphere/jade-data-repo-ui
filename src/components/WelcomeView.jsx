@@ -5,7 +5,7 @@ import { withStyles } from '@mui/styles';
 import { LaunchOutlined } from '@mui/icons-material';
 
 import Hero from 'media/images/hero.png';
-import LogoGrey from 'media/brand/logo-grey.svg';
+import LogoGrey from 'media/brand/logo-grey.svg?react';
 
 import LoginButton from './auth/LoginButton';
 

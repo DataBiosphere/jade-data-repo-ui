@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import OopsISpilledMyTerra from 'media/images/terra404_mug.svg';
+import OopsISpilledMyTerra from 'media/images/terra404_mug.svg?react';
 import { withStyles, ClassNameMap } from '@mui/styles';
 import { Button, Grid, Typography } from '@mui/material';
 import { CustomTheme } from '@mui/material/styles';

@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@mui/styles';
-import ExitSVG from 'media/icons/times-light.svg';
-import QuestionCircleSVG from 'media/icons/question-circle-solid.svg';
+import ExitSVG from 'media/icons/times-light.svg?react';
+import QuestionCircleSVG from 'media/icons/question-circle-solid.svg?react';
 import HelpFooter from './HelpFooter';
 import HelpContent from './HelpContent';
 

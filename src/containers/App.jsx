@@ -17,10 +17,10 @@ import JobResultModal from 'components/job/JobResultModal';
 
 import RoutePublic from 'components/RoutePublic';
 import RoutePrivate from 'components/RoutePrivate';
-import CarrotSVG from 'media/icons/angle-line.svg';
-import SignOutSVG from 'media/icons/logout-line.svg';
-import HeaderLeft from 'media/images/header-left-hexes.svg';
-import HeaderRight from 'media/images/header-right-hexes.svg';
+import CarrotSVG from 'media/icons/angle-line.svg?react';
+import SignOutSVG from 'media/icons/logout-line.svg?react';
+import HeaderLeft from 'media/images/header-left-hexes.svg?react';
+import HeaderRight from 'media/images/header-right-hexes.svg?react';
 import 'react-notifications-component/dist/theme.css';
 import ServerErrorView from 'components/ServerErrorView';
 import { LogoutIframe, IdleStatusMonitor } from 'components/IdleStatusMonitor';

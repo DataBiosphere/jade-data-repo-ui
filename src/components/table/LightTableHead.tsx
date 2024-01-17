@@ -14,7 +14,7 @@ import clsx from 'clsx';
 import { TableColumnType, OrderDirectionOptions } from '../../reducers/query';
 import { TdrState } from '../../reducers';
 import { TABLE_DEFAULT_SORT_ORDER } from '../../constants';
-import ColumnGrabberIcon from '../../media/icons/column_grabber.svg';
+import ColumnGrabberIcon from '../../media/icons/column_grabber.svg?react';
 
 const styles = (theme: CustomTheme) => ({
   head: {
