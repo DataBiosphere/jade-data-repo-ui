@@ -18,24 +18,24 @@ jobs:
     steps:
       - name: Check out the repository
         uses: actions/checkout@v3
-#      - name: Use Node.js ${{ matrix.node-version }}
-#        uses: actions/setup-node@v3
-#        with:
-#          node-version: ${{ matrix.node-version }}
-#      - name: npm ci
-#        run: npm ci
-#      - name: Run codegen
-#        run: npm run codegen
-#      - name: Cypress Run Component Tests
-#        uses: cypress-io/github-action@v5
-#        env:
-#          DISABLE_ESLINT_PLUGIN: true
-#        with:
-#          command: |
-#            npx cypress run-ct
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: npm ci
+        run: npm ci
+      - name: Run codegen
+        run: npm run codegen
+      - name: Cypress Run Component Tests
+        uses: cypress-io/github-action@v5
+        env:
+          DISABLE_ESLINT_PLUGIN: true
+        with:
+          command: |
+            npx cypress run-ct
   report-workflow:
     uses: broadinstitute/sherlock/.github/workflows/client-report-workflow.yaml@main
-    # if: ${{ github.ref == 'refs/heads/develop' }}
+    if: ${{ github.ref == 'refs/heads/develop' }}
     with:
       notify-slack-channels-upon-workflow-success: "#jade-spam"
       notify-slack-channels-upon-workflow-failure: "#jade-alerts"
