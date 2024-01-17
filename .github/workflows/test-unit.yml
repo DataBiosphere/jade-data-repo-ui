@@ -18,6 +18,8 @@ jobs:
     steps:
       - name: Check out the repository
         uses: actions/checkout@v3
+      - name: force failure
+        run: exit 1
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
@@ -35,7 +37,7 @@ jobs:
             npx cypress run-ct
   report-workflow:
     uses: broadinstitute/sherlock/.github/workflows/client-report-workflow.yaml@main
-    if: ${{ github.ref == 'refs/heads/develop' }}
+    # if: ${{ github.ref == 'refs/heads/develop' }}
     with:
       notify-slack-channels-upon-workflow-success: "#jade-spam"
       notify-slack-channels-upon-workflow-failure: "#jade-alerts"
