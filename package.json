@@ -99,7 +99,7 @@
   "devDependencies": {
     "@cypress/vite-dev-server": "^5.0.7",
     "@types/lodash": "^4.14.202",
-    "@types/node": "^20.11.1",
+    "@types/node": "^20.11.5",
     "@types/react-redux": "^7.1.25",
     "@types/react-router-dom": "^5.3.3",
     "@types/redux-actions": "^2.6.5",
@@ -113,7 +113,7 @@
     "@vitejs/plugin-react": "^4.2.1",
     "ajv": "^6.12.6",
     "ajv-legacy": "npm:ajv@^6.12.6",
-    "cypress": "^13.6.2",
+    "cypress": "^13.6.3",
     "cypress-vite": "^1.5.0",
     "eslint": "^8.56.0",
     "eslint-config-airbnb": "^19.0.4",
@@ -132,10 +132,10 @@
     "prettier": "2.2.1",
     "react-dom": "^17.0.2",
     "redux-mock-store": "^1.5.4",
-    "vite": "^4.4.12",
+    "vite": "^4.5.1",
     "vite-plugin-svgr": "^3.2.0",
     "vite-plugin-eslint": "^1.8.1",
-    "vite-tsconfig-paths": "^4.2.3",
+    "vite-tsconfig-paths": "^4.3.1",
     "yargs": "^17.7.2"
   },
   "scripts": {
