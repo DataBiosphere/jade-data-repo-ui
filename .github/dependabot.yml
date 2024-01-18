@@ -23,9 +23,28 @@ updates:
         - "patch"
   ignore:
   # newer versions of prettier seem to format the code in a way that is incompatible with eslint (DR-2953)
+  # more generally, eslint and prettier upgrades are likely to need developer intervention
+  - dependency-name: "@typescript-eslint/eslint-plugin"
+  - dependency-name: "eslint-config-prettier"
+  - dependency-name: "eslint-plugin-prettier"
   - dependency-name: "prettier"
   # newer versions of material ui (MUI) cause our styling to not respect theming or straight up break the UI (DR-2952)
   - dependency-name: "@mui/*"
   # @mui/styles is incompatible with react 18, we should replace @mui/styles with tss-react (DR-3428)
-  - dependency-name: "@types/react"
+  # more generally, react 18 / redux 8 upgrades are a large lift (DR-2799)
+  - dependency-name: "@reduxjs/tookit"
+    update-types: [ "version-update:semver-major" ]
+  - dependency-name: "@testing-library/react"
+    update-types: [ "version-update:semver-major" ]
+  - dependency-name: "@types/react*"                # @types/react, @types/react-dom, etc.
+    update-types: [ "version-update:semver-major" ]
+  - dependency-name: "react*"                       # react, react-dom, etc.
+    update-types: [ "version-update:semver-major" ]
+  - dependency-name: "redux"
+    update-types: [ "version-update:semver-major" ]
+  # later versions of history yield a warning on npm install (DR-3432)
+  - dependency-name: "history"
+    update-types: [ "version-update:semver-major" ]
+  # later versions of vite break e2e tests (DR-3433)
+  - dependency-name: "vite"
     update-types: [ "version-update:semver-major" ]
