@@ -5,7 +5,7 @@
   "version": "0.279.0",
   "author": "Jade Team <jadeteam@broadinstitute.org>",
   "engines": {
-    "node": ">=12.22"
+    "node": ">=20.11"
   },
   "repository": {
     "type": "git",
@@ -98,7 +98,7 @@
   "devDependencies": {
     "@cypress/vite-dev-server": "^5.0.7",
     "@types/lodash": "^4.14.202",
-    "@types/node": "^20.11.5",
+    "@types/node": "^20.11.0",
     "@types/react-redux": "^7.1.25",
     "@types/react-router-dom": "^5.3.3",
     "@types/redux-actions": "^2.6.5",

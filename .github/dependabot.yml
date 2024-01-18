@@ -19,6 +19,8 @@ updates:
         - "minor"
         - "patch"
   ignore:
+  # @types/node version should stay in sync with .node_version and our Dockerfiles
+  - dependency-name: "@types/node"
   # newer versions of prettier seem to format the code in a way that is incompatible with eslint (DR-2953)
   # more generally, eslint and prettier upgrades are likely to need developer intervention
   - dependency-name: "@typescript-eslint/eslint-plugin"
