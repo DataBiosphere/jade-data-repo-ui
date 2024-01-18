@@ -113,6 +113,6 @@ jobs:
     uses: broadinstitute/sherlock/.github/workflows/client-report-workflow.yaml@main
     if: ${{ inputs.notify-slack }}
     with:
-      notify-slack-channels-upon-workflow-completion: "#jade-alerts"
+      notify-slack-channels-upon-workflow-completion: "#jade-spam"
     permissions:
       id-token: write
