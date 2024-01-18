@@ -1,5 +1,5 @@
 import React from 'react';
-import { ReactComponent as AddSVG } from '../../media/icons/plus-circle-solid.svg';
+import AddSVG from '../../media/icons/plus-circle-solid.svg?react';
 
 export default React.forwardRef((props, ref) => (
   <span ref={ref}>

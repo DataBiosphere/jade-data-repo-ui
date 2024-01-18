@@ -1,7 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import { ReactComponent as ExitSVG } from 'media/icons/times-light.svg';
+import ExitSVG from 'media/icons/times-light.svg?react';
 import { connect } from 'react-redux';
 import { withStyles } from '@mui/styles';
 import {

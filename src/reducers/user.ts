@@ -1,7 +1,7 @@
 import { handleActions } from 'redux-actions';
 import immutable from 'immutability-helper';
 import _ from 'lodash';
-import jwt_decode, { JwtPayload } from 'jwt-decode';
+import { jwtDecode, JwtPayload } from 'jwt-decode';
 import moment from 'moment';
 import { User } from 'oidc-client-ts';
 import { PayloadAction } from '@reduxjs/toolkit';
@@ -56,7 +56,7 @@ function adaptTimestamp(timestamp?: number) {
 
 function extractExpiration(id_token?: string) {
   try {
-    const jwt: JwtPayload = jwt_decode(`${id_token}`);
+    const jwt: JwtPayload = jwtDecode(`${id_token}`);
     return jwt.exp;
   } catch (e) {
     return 0;

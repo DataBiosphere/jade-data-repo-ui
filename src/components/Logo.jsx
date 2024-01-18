@@ -3,7 +3,7 @@ import { withStyles } from '@mui/styles';
 import PropTypes from 'prop-types';
 import { push } from 'modules/hist';
 
-import { ReactComponent as TerraIcon } from 'media/brand/logo-wShadow.svg';
+import TerraIcon from 'media/brand/logo-wShadow.svg?react';
 
 const styles = (theme) => ({
   logoContainer: {

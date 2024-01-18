@@ -1,7 +1,7 @@
 import React from 'react';
 import InputBase from '@mui/material/InputBase';
-import { ReactComponent as ExitSVG } from 'media/icons/times-light.svg';
-import { ReactComponent as SearchSVG } from 'media/icons/search_icon.svg';
+import ExitSVG from 'media/icons/times-light.svg?react';
+import SearchSVG from 'media/icons/search_icon.svg?react';
 import { alpha, CustomTheme } from '@mui/material/styles';
 import { WithStyles, createStyles, withStyles } from '@mui/styles';
 
