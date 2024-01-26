@@ -38,5 +38,6 @@ jobs:
     if: ${{ github.ref == 'refs/heads/develop' }}
     with:
       notify-slack-channels-upon-workflow-completion: "#jade-spam"
+      notify-slack-custom-icon: ":terra-horse:"
     permissions:
       id-token: write

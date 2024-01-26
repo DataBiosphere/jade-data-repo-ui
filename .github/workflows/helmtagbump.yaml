@@ -114,5 +114,6 @@ jobs:
     if: ${{ inputs.notify-slack }}
     with:
       notify-slack-channels-upon-workflow-completion: "#jade-spam"
+      notify-slack-custom-icon: ":github_merged:"
     permissions:
       id-token: write
