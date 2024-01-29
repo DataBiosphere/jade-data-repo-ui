@@ -34,7 +34,7 @@
     "@mui/material": "5.10.14",
     "@mui/styles": "5.10.14",
     "@mui/system": "5.10.14",
-    "@reduxjs/toolkit": "^1.9.5",
+    "@reduxjs/toolkit": "^2.1.0",
     "@testing-library/react": "^12.1.5",
     "@testing-library/user-event": "^14.5.2",
     "@types/jest": "^29.5.11",
