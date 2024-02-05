@@ -13,18 +13,20 @@ const styles = (theme) => ({
   containerWrapper: {
     display: 'flex',
     flexDirection: 'column',
+    height: '100%',
   },
   container: {
     display: 'flex',
     flexDirection: 'row',
     fontFamily: theme.typography.fontFamily,
     justifyContent: 'space-between',
-    flex: 1,
+    overflow: 'auto',
     background: `url(${Hero})`,
     backgroundPositionX: 'right',
     backgroundPositionY: 'top',
     backgroundRepeat: 'no-repeat',
     backgroundSize: '750px',
+    flexGrow: 1,
   },
   title: {
     fontSize: '54px',
@@ -38,10 +40,10 @@ const styles = (theme) => ({
   mainContent: {
     display: 'inline-block',
     color: theme.typography.color,
-    overflow: 'hidden',
     marginTop: theme.spacing(5),
     padding: theme.spacing(10),
     paddingRight: '650px',
+    paddingBottom: '40px',
   },
   jadeLink: {
     ...theme.mixins.jadeLink,
@@ -59,6 +61,9 @@ const styles = (theme) => ({
     lineHeight: '24px',
   },
   warning: {
+    paddingBottom: theme.spacing(2),
+  },
+  warningTitle: {
     fontWeight: '900',
     paddingBottom: theme.spacing(2),
   },
@@ -67,7 +72,7 @@ const styles = (theme) => ({
     width: '100%',
     background: 'rgb(109 110 112)',
     color: '#FFFFFF',
-    padding: `0 ${theme.spacing(2)}`,
+    padding: `${theme.spacing(2)}`,
     display: 'flex',
     alignItems: 'center',
   },
@@ -84,9 +89,6 @@ const styles = (theme) => ({
   },
   footerSeparator: {
     flexGrow: 1,
-  },
-  copyright: {
-    fontSize: 10,
   },
 });
 
@@ -132,8 +134,8 @@ export class WelcomeView extends React.PureComponent {
             </a>
             <hr />
             <div>
-              <div>
-                <div className={classes.warning}>WARNING NOTICE</div>
+              <div className={classes.warning}>
+                <div className={classes.warningTitle}>WARNING NOTICE</div>
                 <div>
                   <p>
                     You are accessing a US Government web site which may contain information that
@@ -185,7 +187,7 @@ export class WelcomeView extends React.PureComponent {
             <LaunchOutlined className={classes.footerLaunch} />
           </a>
           <div className={classes.footerSeparator} />
-          <span className={classes.copyright}>Copyright ©2024</span>
+          <span>Copyright ©2024</span>
         </div>
       </div>
     );

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import clsx from 'clsx';
 
 import { Switch, Route } from 'react-router-dom';
 import { ReactNotifications } from 'react-notifications-component';
@@ -127,6 +128,9 @@ const styles = (theme) => ({
   content: {
     height: '100%',
   },
+  loggingIn: {
+    display: 'flex',
+  },
   userName: {
     height: 15,
     fontSize: 12,
@@ -182,6 +186,8 @@ export function App(props) {
     }
   };
 
+  const loggingIn = status.tdrOperational && configuration.configObject.clientId && auth.isLoading;
+
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -235,7 +241,7 @@ export function App(props) {
           )}
         </Toolbar>
       </AppBar>
-      <div className={classes.content}>
+      <div className={clsx(classes.content, { [classes.loggingIn]: loggingIn })}>
         {!status.tdrOperational && <ServerErrorView />}
         {status.tdrOperational && configuration.configObject.clientId && !auth.isLoading && (
           <Switch>
@@ -271,7 +277,7 @@ export function App(props) {
           </Switch>
         )}
         {/* Show the welcome page with an overlay while the login dialog is open */}
-        {status.tdrOperational && configuration.configObject.clientId && auth.isLoading && (
+        {loggingIn && (
           <Fragment>
             <Home key="home" />
             <Backdrop key="backdrop" className={classes.backdrop} open={true} />
