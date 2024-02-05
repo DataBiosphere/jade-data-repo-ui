@@ -164,7 +164,7 @@ export class WelcomeView extends React.PureComponent {
         </div>
         <div className={classes.footer}>
           <a href={terraUrl} className={classes.logoGrey} target="_blank" rel="noopener noreferrer">
-            <img alt="Terra" className={classes.logoGrey} src={LogoGrey} />
+            <LogoGrey alt="Terra" className={classes.logoGrey} />
           </a>
           <a href={`${terraUrl}/#privacy`} target="_blank" rel="noopener noreferrer">
             Privacy Policy
@@ -185,7 +185,7 @@ export class WelcomeView extends React.PureComponent {
             <LaunchOutlined className={classes.footerLaunch} />
           </a>
           <div className={classes.footerSeparator} />
-          <span className={classes.copyright}>Copyright ©2022</span>
+          <span className={classes.copyright}>Copyright ©2024</span>
         </div>
       </div>
     );
