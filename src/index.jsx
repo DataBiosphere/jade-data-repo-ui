@@ -11,6 +11,8 @@ import { ThemeProvider } from '@mui/material/styles';
 import axios from 'axios';
 import { WebStorageStateStore, Log } from 'oidc-client-ts';
 import { AuthProvider } from 'react-oidc-context';
+import moment from 'moment';
+import momentDurationFormatSetup from 'moment-duration-format';
 // For some reason, @emotion package doesn't register with linter.  Ignoring for now
 //eslint-disable-next-line import/no-extraneous-dependencies
 import createCache from '@emotion/cache';
@@ -51,6 +53,9 @@ function getConfig() {
 }
 
 function bootstrap() {
+  // initialize the moment library to use the duration format plugin
+  momentDurationFormatSetup(moment);
+
   return new Promise((resolve, reject) => {
     // We need to do this (in order) before bothering to render:
     // 1. Check status of the server

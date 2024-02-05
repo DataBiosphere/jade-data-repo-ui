@@ -5,6 +5,8 @@ import { ThemeProvider } from '@mui/styles';
 import createMockStore from 'redux-mock-store';
 import React from 'react';
 import _ from 'lodash';
+import moment from 'moment';
+import momentDurationFormatSetup from 'moment-duration-format';
 import { initialUserState } from 'reducers/user';
 import { initialQueryState } from 'reducers/query';
 import { JobModelJobStatusEnum } from 'generated/tdr';
@@ -20,12 +22,13 @@ const initialState = {
   jobs: {
     jobs: [
       {
-        id: 'testingId',
+        id: 'testingId1',
         job_status: JobModelJobStatusEnum.Failed,
         status_code: 200,
         description: 'the first pancake always burns',
-        class_name: 'this.is.fake.class',
+        class_name: 'this.is.fake.class1',
         submitted: testDate.toISOString(),
+        completed: moment(testDate).add(2, 'seconds').toISOString(),
       },
       {
         id: 'testingId2',
@@ -33,14 +36,16 @@ const initialState = {
         status_code: 200,
         description: 'Ingest from source.json to ArraysInputsTable in dataset id (uuid)',
         class_name: 'this.is.fake.class2',
-        submitted: new Date(testDate.valueOf() - 2 * 60000).toISOString(),
+        submitted: moment(testDate).subtract(2, 'minutes').toISOString(),
+        completed: moment(testDate).subtract(1, 'minutes').toISOString(),
       },
       {
         id: 'testingId3',
         job_status: JobModelJobStatusEnum.Running,
         status_code: 200,
-        class_name: 'this.is.fake.class2',
-        submitted: new Date(testDate.valueOf() - 2 * 120000).toISOString(),
+        class_name: 'this.is.fake.class3',
+        submitted: moment(testDate).subtract(4, 'minutes').toISOString(),
+        completed: undefined,
       },
     ],
   },
@@ -52,6 +57,7 @@ const initialState = {
 beforeEach(() => {
   const mockStore = createMockStore([routerMiddleware(history)]);
   const store = mockStore(initialState);
+  momentDurationFormatSetup(moment as any);
   mount(
     <Provider store={store}>
       <Router history={history}>
@@ -75,12 +81,13 @@ describe('JobView', () => {
     cy.get('th[data-cy="columnHeader-description"]').should('exist');
     cy.get('th[data-cy="columnHeader-submitted"]').should('exist');
     cy.get('th[data-cy="columnHeader-job_status"]').should('exist');
+    cy.get('th[data-cy="columnHeader-job_duration"]').should('exist');
   });
 
-  it('should show successful jobs', () => {
-    cy.get('tbody tr').eq(0).children().should('have.length', 5);
-    cy.get('tbody tr').eq(0).children().eq(0).should('have.text', initialState.jobs.jobs[0].id);
-    cy.get('tbody tr').eq(0).children().eq(1).should('have.text', 'class');
+  it('should show failed jobs', () => {
+    cy.get('tbody tr').eq(0).children().should('have.length', 6);
+    cy.get('tbody tr').eq(0).children().eq(0).should('have.text', 'testingId1');
+    cy.get('tbody tr').eq(0).children().eq(1).should('have.text', 'class1');
     cy.get('tbody tr')
       .eq(0)
       .children()
@@ -88,28 +95,31 @@ describe('JobView', () => {
       .should('have.text', initialState.jobs.jobs[0].description);
     cy.get('tbody tr').eq(0).children().eq(3).should('have.text', 'a few seconds ago');
     cy.get('tbody tr').eq(0).children().eq(4).should('have.text', 'Failed');
+    cy.get('tbody tr').eq(0).children().eq(5).should('have.text', '2 secs');
   });
 
-  it('should show failed jobs', () => {
-    cy.get('tbody tr').eq(1).children().should('have.length', 5);
-    cy.get('tbody tr').eq(1).children().eq(0).should('have.text', initialState.jobs.jobs[1].id);
+  it('should show successful jobs', () => {
+    cy.get('tbody tr').eq(1).children().should('have.length', 6);
+    cy.get('tbody tr').eq(1).children().eq(0).should('have.text', 'testingId2');
     cy.get('tbody tr').eq(1).children().eq(1).should('have.text', 'class2');
     cy.get('tbody tr')
       .eq(1)
       .children()
       .eq(2)
       .should('have.text', initialState.jobs.jobs[1].description);
-    cy.get('tbody tr').eq(1).children().eq(3).contains('minutes ago');
+    cy.get('tbody tr').eq(1).children().eq(3).contains('2 minutes ago');
     cy.get('tbody tr').eq(1).children().eq(4).should('have.text', 'Completed');
+    cy.get('tbody tr').eq(1).children().eq(5).should('have.text', '1 min 0 secs');
   });
 
   it('should show in progress jobs', () => {
-    cy.get('tbody tr').eq(2).children().should('have.length', 5);
-    cy.get('tbody tr').eq(2).children().eq(0).should('have.text', initialState.jobs.jobs[2].id);
-    cy.get('tbody tr').eq(2).children().eq(1).should('have.text', 'class2');
+    cy.get('tbody tr').eq(2).children().should('have.length', 6);
+    cy.get('tbody tr').eq(2).children().eq(0).should('have.text', 'testingId3');
+    cy.get('tbody tr').eq(2).children().eq(1).should('have.text', 'class3');
     cy.get('tbody tr').eq(2).children().eq(2).should('have.text', '(empty)');
     cy.get('tbody tr').eq(2).children().eq(3).contains('minutes ago');
     cy.get('tbody tr').eq(2).children().eq(4).should('have.text', 'In Progress');
+    cy.get('tbody tr').eq(2).children().eq(5).should('have.text', '--');
   });
 
   it('should show the dialog modal to see more details', () => {
@@ -152,7 +162,7 @@ describe('JobView', () => {
       .eq(0)
       .children()
       .eq(1)
-      .should('have.text', initialState.jobs.jobs[0].id);
+      .should('have.text', 'testingId1');
     cy.get('#see-more-dialog-content-text > div > div')
       .eq(1)
       .children()
@@ -162,7 +172,7 @@ describe('JobView', () => {
       .eq(1)
       .children()
       .eq(1)
-      .should('have.text', initialState.jobs.jobs[0].class_name);
+      .should('have.text', 'this.is.fake.class1');
     cy.get('#see-more-dialog-content-text > div > div')
       .eq(2)
       .children()

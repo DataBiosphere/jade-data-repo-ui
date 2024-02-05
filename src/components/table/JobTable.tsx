@@ -108,7 +108,9 @@ const JobTable = withStyles(styles)(
         label: 'Date',
         name: 'submitted',
         allowSort: true,
-        render: (row: any) => moment(row?.submitted).fromNow(),
+        render: (row: any) => (
+          <span title={row?.submitted}>{moment(row?.submitted).fromNow()}</span>
+        ),
         width: '10%',
       },
       {
@@ -122,6 +124,19 @@ const JobTable = withStyles(styles)(
             {statusMap[row.job_status].label}
           </span>
         ),
+      },
+      {
+        label: 'Duration',
+        name: 'job_duration',
+        allowSort: false,
+        width: '10%',
+        render: (row: any) => {
+          if (row.submitted && row.completed) {
+            const duration = moment(row.completed).diff(moment(row.submitted), 'seconds');
+            return moment.duration(duration, 'seconds').format('h [hrs] m [min] s [sec]');
+          }
+          return '--';
+        },
       },
     ];
     return (
