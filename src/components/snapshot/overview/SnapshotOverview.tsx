@@ -100,16 +100,11 @@ function SnapshotOverview(props: AllSnapshotProps) {
     dispatch(getDuosDatasets());
   });
 
-  if (snapshotByIdLoading || duosDatasetsLoading) {
+  if (snapshotByIdLoading) {
     return <LoadingSpinner />;
   }
 
-  const renderPage =
-    snapshotPolicies &&
-    snapshot &&
-    snapshot.tables &&
-    snapshot.id === snapshotId &&
-    !duosDatasetsLoading;
+  const renderPage = snapshotPolicies && snapshot && snapshot.tables && snapshot.id === snapshotId;
   return renderPage ? (
     <div className={classes.pageRoot}>
       <AppBreadcrumbs
@@ -137,6 +132,7 @@ function SnapshotOverview(props: AllSnapshotProps) {
           <SnapshotOverviewPanel
             dispatch={dispatch}
             duosDatasets={duosDatasets}
+            duosDatasetsLoading={duosDatasetsLoading}
             pendingSave={pendingSave}
             snapshot={snapshot}
             userRoles={userRoles}

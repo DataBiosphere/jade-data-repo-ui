@@ -73,11 +73,21 @@ interface SnapshotOverviewPanelProps extends WithStyles<typeof styles> {
   snapshot: SnapshotModel;
   userRoles: Array<string>;
   duosDatasets: Array<DuosDatasetModel>;
+  duosDatasetsLoading: boolean;
 }
 
 function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
   const [value, setValue] = useState(0);
-  const { authDomains, classes, dispatch, duosDatasets, pendingSave, snapshot, userRoles } = props;
+  const {
+    authDomains,
+    classes,
+    dispatch,
+    duosDatasets,
+    duosDatasetsLoading,
+    pendingSave,
+    snapshot,
+    userRoles,
+  } = props;
   const isSteward = userRoles.includes(SnapshotRoles.STEWARD);
   const canViewJournalEntries = isSteward;
   // @ts-ignore
@@ -163,13 +173,13 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
             </Typography>
           </Grid>
           <Grid item xs={4}>
-            {!duosDatasetsLoaded &&
+            {!(duosDatasetsLoaded || duosDatasetsLoading) &&
               renderTextFieldValue(
                 'DUOS Dataset',
                 snapshot.duosFirecloudGroup?.duosId,
                 duosInfoButtonText,
               )}
-            {duosDatasetsLoaded && (
+            {duosDatasetsLoaded && !duosDatasetsLoading && (
               <>
                 <Typography variant="h6">
                   DUOS Dataset:
