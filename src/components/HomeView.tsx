@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
+import React, { Dispatch, useState } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { Action } from 'redux';
 
 import { Button } from '@mui/material';
-import { AddCircle } from '@mui/icons-material';
+import { AddCircle, Refresh } from '@mui/icons-material';
 import { createStyles, WithStyles, withStyles } from '@mui/styles';
 import { CustomTheme } from '@mui/material/styles';
 import { RouterLocation, RouterRootState } from 'connected-react-router';
 import { LocationState } from 'history';
+import { refreshDatasets, refreshJobs, refreshSnapshots } from 'src/actions';
 import DatasetView from './DatasetView';
 import SnapshotView from './SnapshotView';
 import JobView from './JobView';
@@ -52,6 +54,9 @@ const styles = (theme: CustomTheme) =>
       'padding-right': '2em',
       display: 'flex',
     },
+    titleText: {
+      width: '150px',
+    },
     titleAndSearch: {
       display: 'flex',
       'margin-top': '1.25em',
@@ -59,7 +64,8 @@ const styles = (theme: CustomTheme) =>
     },
     headerButton: {
       padding: 10,
-      marginLeft: 30,
+      marginLeft: theme.spacing(2),
+      height: '45px',
       textTransform: 'none',
     },
     buttonIcon: {
@@ -69,10 +75,11 @@ const styles = (theme: CustomTheme) =>
   });
 
 interface IProps extends WithStyles<typeof styles> {
+  dispatch: Dispatch<Action>;
   location: RouterLocation<LocationState>;
 }
 
-function HomeView({ classes, location }: IProps) {
+function HomeView({ classes, dispatch, location }: IProps) {
   const [searchString, setSearchString] = useState('');
   const prefixMatcher = /\/[^/]*/;
   const tabValue = prefixMatcher.exec(location.pathname)?.[0];
@@ -80,22 +87,38 @@ function HomeView({ classes, location }: IProps) {
   let pageTitle = 'Terra Data Repository';
   let searchable = true;
   let tableValue = <div />;
+  let refresh;
   if (tabValue === '/datasets') {
     pageTitle = 'Datasets';
     tableValue = <DatasetView searchString={searchString} />;
+    refresh = () => dispatch(refreshDatasets());
   } else if (tabValue === '/snapshots') {
     pageTitle = 'Snapshots';
     tableValue = <SnapshotView searchString={searchString} />;
+    refresh = () => dispatch(refreshSnapshots());
   } else if (tabValue === '/activity') {
     pageTitle = 'Activity';
     searchable = false;
     tableValue = <JobView searchString={searchString} />;
+    refresh = () => dispatch(refreshJobs());
   }
-
+  const refreshButton = (
+    <Button
+      aria-label="refresh page"
+      size="medium"
+      className={classes.headerButton}
+      onClick={refresh}
+      variant="outlined"
+      startIcon={<Refresh />}
+    >
+      Refresh
+    </Button>
+  );
   const pageHeader =
     tabValue === '/datasets' ? (
       <div className={classes.title}>
-        <div>{pageTitle}</div>
+        <span className={classes.titleText}>{pageTitle}</span>
+        {refreshButton}
         <Link to="datasets/new" data-cy="create-dataset-link">
           <Button
             className={classes.headerButton}
@@ -109,7 +132,10 @@ function HomeView({ classes, location }: IProps) {
         </Link>
       </div>
     ) : (
-      <div className={classes.title}>{pageTitle}</div>
+      <div className={classes.title}>
+        <span className={classes.titleText}>{pageTitle}</span>
+        {refreshButton}
+      </div>
     );
 
   return (
