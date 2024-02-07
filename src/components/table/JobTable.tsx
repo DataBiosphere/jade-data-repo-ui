@@ -18,8 +18,7 @@ const styles = (theme: CustomTheme) => ({
     ...theme.mixins.ellipsis,
   },
   statusContainer: {
-    display: 'flex',
-    alignItems: 'center',
+    width: '100%',
   },
   statusIcon: {
     fontSize: '1rem',
@@ -36,8 +35,13 @@ const styles = (theme: CustomTheme) => ({
     border: 'none',
     backgroundColor: 'transparent',
     color: theme.palette.primary.main,
+    width: '100%',
+    ...theme.mixins.ellipsis,
     '&:hover': {
       color: theme.palette.primary.hover,
+    },
+    '& span': {
+      ...theme.mixins.ellipsis,
     },
   },
 });
@@ -87,7 +91,7 @@ const JobTable = withStyles(styles)(
             onClick={() => handleSeeMoreOpen(row.id)}
             className={classes.seeMoreLink}
           >
-            {`${row.id || 'See More'}`}
+            <span>{`${row.id || 'See More'}`}</span>
           </button>
         ),
       },
@@ -96,7 +100,9 @@ const JobTable = withStyles(styles)(
         name: 'class_name',
         allowSort: false,
         width: '15%',
-        render: (row: any) => <div>{_.last(row.class_name?.split('.'))}</div>,
+        render: (row: any) => (
+          <span title={row.class_name}>{_.last(row.class_name?.split('.'))}</span>
+        ),
       },
       {
         label: 'Description',
@@ -119,9 +125,9 @@ const JobTable = withStyles(styles)(
         allowSort: false,
         width: '10%',
         render: (row: any) => (
-          <span className={classes.statusContainer}>
+          <span className={classes.statusContainer} title={statusMap[row.job_status].label}>
             <i className={clsx(classes.statusIcon, statusMap[row.job_status].icon)} />
-            {statusMap[row.job_status].label}
+            <span>{statusMap[row.job_status].label}</span>
           </span>
         ),
       },
@@ -133,7 +139,10 @@ const JobTable = withStyles(styles)(
         render: (row: any) => {
           if (row.submitted && row.completed) {
             const duration = moment(row.completed).diff(moment(row.submitted), 'seconds');
-            return moment.duration(duration, 'seconds').format('h [hrs] m [min] s [sec]');
+            const durationStr = moment
+              .duration(duration, 'seconds')
+              .format('h [hrs] m [min] s [sec]');
+            return <span title={durationStr}>{durationStr}</span>;
           }
           return '--';
         },
