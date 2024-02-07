@@ -18,7 +18,7 @@ const styles = (theme: CustomTheme) =>
       position: 'relative',
       borderRadius: '35px',
       marginLeft: 0,
-      flex: '2 1 0',
+      flex: '1 1 0',
       display: 'flex',
     },
     searchIcon: {

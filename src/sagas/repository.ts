@@ -921,7 +921,7 @@ export function* changePage(page: number): any {
 export function* getDuosDatasets(): any {
   try {
     const duosUrl = yield select(getDuosUrl);
-    const url = `${duosUrl}/api/dataset/v2`;
+    const url = `${duosUrl}/api/dataset/autocomplete`;
     const response = yield call(authGet, url);
     yield put({
       type: ActionTypes.GET_DUOS_DATASETS_SUCCESS,

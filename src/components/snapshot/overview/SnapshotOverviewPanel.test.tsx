@@ -25,9 +25,9 @@ const dataset: DatasetModel = {
 };
 
 const duosDatasets: Array<DuosDatasetModel> = [
-  { dataSetId: 1, datasetName: 'DS1', datasetIdentifier: 'DUOS-0001' },
-  { dataSetId: 2, datasetName: 'DS2', datasetIdentifier: 'DUOS-0002' },
-  { dataSetId: 3, datasetName: 'DS3', datasetIdentifier: 'DUOS-0003' },
+  { id: 1, name: 'DS1', identifier: 'DUOS-0001' },
+  { id: 2, name: 'DS2', identifier: 'DUOS-0002' },
+  { id: 3, name: 'DS3', identifier: 'DUOS-0003' },
 ];
 
 function createSnapshot(duosFirecloudGroup?: DuosFirecloudGroupModel): SnapshotModel {

@@ -66,7 +66,7 @@ function NotFound(props: { classes: ClassNameMap }) {
         </Button>
       </Grid>
       <Grid item xs={6}>
-        <img alt="404NotFound" src={OopsISpilledMyTerra} />
+        <OopsISpilledMyTerra />
       </Grid>
     </Grid>
   );

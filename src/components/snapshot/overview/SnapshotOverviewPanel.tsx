@@ -63,7 +63,7 @@ function a11yProps(index: number) {
 }
 
 function getDuosDatasetValue(option?: DuosDatasetModel) {
-  return option ? `${option.datasetIdentifier} - ${option.datasetName}` : '';
+  return option ? `${option.identifier} - ${option.name}` : '';
 }
 
 interface SnapshotOverviewPanelProps extends WithStyles<typeof styles> {
@@ -73,11 +73,21 @@ interface SnapshotOverviewPanelProps extends WithStyles<typeof styles> {
   snapshot: SnapshotModel;
   userRoles: Array<string>;
   duosDatasets: Array<DuosDatasetModel>;
+  duosDatasetsLoading: boolean;
 }
 
 function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
   const [value, setValue] = useState(0);
-  const { authDomains, classes, dispatch, duosDatasets, pendingSave, snapshot, userRoles } = props;
+  const {
+    authDomains,
+    classes,
+    dispatch,
+    duosDatasets,
+    duosDatasetsLoading,
+    pendingSave,
+    snapshot,
+    userRoles,
+  } = props;
   const isSteward = userRoles.includes(SnapshotRoles.STEWARD);
   const canViewJournalEntries = isSteward;
   // @ts-ignore
@@ -86,7 +96,7 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
   const duosDatasetsLoaded = !_.isEmpty(duosDatasets);
 
   const selectedDuosDataset = duosDatasets.find(
-    (ds) => ds.datasetIdentifier === snapshot.duosFirecloudGroup?.duosId,
+    (ds) => ds.identifier === snapshot.duosFirecloudGroup?.duosId,
   );
   const handleChange = (_event: SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -163,13 +173,13 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
             </Typography>
           </Grid>
           <Grid item xs={4}>
-            {!duosDatasetsLoaded &&
+            {!(duosDatasetsLoaded || duosDatasetsLoading) &&
               renderTextFieldValue(
                 'DUOS Dataset',
                 snapshot.duosFirecloudGroup?.duosId,
                 duosInfoButtonText,
               )}
-            {duosDatasetsLoaded && (
+            {duosDatasetsLoaded && !duosDatasetsLoading && (
               <>
                 <Typography variant="h6">
                   DUOS Dataset:
@@ -188,9 +198,7 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
                   options={duosDatasets}
                   // Setting to null instead of undefined if unset to make sure that this is always a controlled component
                   value={selectedDuosDataset ?? null}
-                  isOptionEqualToValue={(option, val) =>
-                    option?.datasetIdentifier === val?.datasetIdentifier
-                  }
+                  isOptionEqualToValue={(option, val) => option?.identifier === val?.identifier}
                   renderInput={(params: any) => (
                     <TextField
                       {...params}
@@ -203,7 +211,7 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
                   )}
                   getOptionLabel={getDuosDatasetValue}
                   onChange={(_event: any, change) => {
-                    dispatch(updateDuosDataset(snapshot.id, change?.datasetIdentifier));
+                    dispatch(updateDuosDataset(snapshot.id, change?.identifier));
                   }}
                   title={
                     pendingSave?.duosDataset

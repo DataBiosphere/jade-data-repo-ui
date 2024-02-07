@@ -6,9 +6,9 @@ import { ActionTypes } from '../constants/index';
 // Note: this is a subset of the full DUOS dataset object
 // https://github.com/DataBiosphere/consent/blob/develop/src/main/resources/assets/schemas/Dataset.yaml
 export interface DuosDatasetModel {
-  dataSetId: number;
-  datasetName: string;
-  datasetIdentifier: string;
+  id: number;
+  name: string;
+  identifier: string;
 }
 export interface DuosState {
   datasets: Array<DuosDatasetModel>; // Assume an empty list means that the user could not read from DUOS

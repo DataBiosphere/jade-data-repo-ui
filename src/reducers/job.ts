@@ -116,6 +116,10 @@ export default {
         immutable(state, {
           jobId: { $set: '' },
         }),
+      [ActionTypes.REFRESH_JOBS]: (state) =>
+        immutable(state, {
+          refreshCnt: { $set: state.refreshCnt + 1 },
+        }),
       [ActionTypes.USER_LOGOUT_SUCCESS]: () => initialJobState,
     },
     initialJobState,

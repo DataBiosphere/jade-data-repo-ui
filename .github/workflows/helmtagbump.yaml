@@ -11,7 +11,7 @@ on:
         default: false
         type: boolean
 jobs:
-# new integration image updater
+  # new integration image updater
   integration_helm_tag_update:
     runs-on: ubuntu-20.04
     steps:
@@ -31,34 +31,34 @@ jobs:
           repository: 'broadinstitute/datarepo-helm-definitions'
           token: ${{ secrets.BROADBOT_TOKEN}}
           path: datarepo-helm-definitions
-      - name: "integration-1 find and replace"
+      - name: 'integration-1 find and replace'
         uses: docker://mikefarah/yq:3
         with:
           args: yq w -i datarepo-helm-definitions/integration/integration-1/datarepo-ui.yaml image.tag ${{ steps.uiprevioustag.outputs.tag }}"
-      - name: "integration-2 find and replace"
+      - name: 'integration-2 find and replace'
         uses: docker://mikefarah/yq:3
         with:
           args: yq w -i datarepo-helm-definitions/integration/integration-2/datarepo-ui.yaml image.tag ${{ steps.uiprevioustag.outputs.tag }}"
-      - name: "integration-3 find and replace"
+      - name: 'integration-3 find and replace'
         uses: docker://mikefarah/yq:3
         with:
           args: yq w -i datarepo-helm-definitions/integration/integration-3/datarepo-ui.yaml image.tag ${{ steps.uiprevioustag.outputs.tag }}"
-      - name: "integration-4 find and replace"
+      - name: 'integration-4 find and replace'
         uses: docker://mikefarah/yq:3
         with:
           args: yq w -i datarepo-helm-definitions/integration/integration-4/datarepo-ui.yaml image.tag ${{ steps.uiprevioustag.outputs.tag }}"
-      - name: "integration-5 find and replace"
+      - name: 'integration-5 find and replace'
         uses: docker://mikefarah/yq:3
         with:
           args: yq w -i datarepo-helm-definitions/integration/integration-5/datarepo-ui.yaml image.tag ${{ steps.uiprevioustag.outputs.tag }}"
-      - name: "integration-6 find and replace"
+      - name: 'integration-6 find and replace'
         uses: docker://mikefarah/yq:3
         with:
           args: yq w -i datarepo-helm-definitions/integration/integration-6/datarepo-ui.yaml image.tag ${{ steps.uiprevioustag.outputs.tag }}"
-      - name: "[datarepo-helm-definitions] Merge chart version update"
-        uses: broadinstitute/datarepo-actions/actions/merger@0.67.0
+      - name: '[datarepo-helm-definitions] Merge chart version update'
+        uses: broadinstitute/datarepo-actions/actions/merger@0.70.0
         env:
-          COMMIT_MESSAGE: "Datarepo ui tag version update: ${{ steps.uiprevioustag.outputs.tag }}"
+          COMMIT_MESSAGE: 'Datarepo ui tag version update: ${{ steps.uiprevioustag.outputs.tag }}'
           GITHUB_REPO: datarepo-helm-definitions
           SWITCH_DIRECTORIES: true
           MERGE_BRANCH: master
@@ -81,15 +81,15 @@ jobs:
           repository: 'broadinstitute/datarepo-helm'
           token: ${{ secrets.BROADBOT_TOKEN }}
           path: datarepo-helm
-      - name: "ui chart default tag find and replace"
+      - name: 'ui chart default tag find and replace'
         uses: docker://mikefarah/yq:3
         with:
           args: yq w -i datarepo-helm/charts/datarepo-ui/values.yaml image.tag ${{ steps.uiprevioustag.outputs.tag }}"
-      - name: "bump ui chart appVersion"
+      - name: 'bump ui chart appVersion'
         uses: docker://mikefarah/yq:3
         with:
           args: yq w -i datarepo-helm/charts/datarepo-ui/Chart.yaml appVersion ${{ steps.uiprevioustag.outputs.tag }}"
-      - name: "get new chart verion"
+      - name: 'get new chart verion'
         id: new_version
         run: |
           version=$(docker run --rm -v ${PWD}:/workdir mikefarah/yq:3 yq r datarepo-helm/charts/datarepo-ui/Chart.yaml 'version')
@@ -98,14 +98,14 @@ jobs:
           printf "increase default ui version: ${a[2]}\n\n"
           new_version="${a[0]}.${a[1]}.${a[2]}"
           echo "new_version=${new_version}" >> $GITHUB_OUTPUT
-      - name: "bump ui chart Version"
+      - name: 'bump ui chart Version'
         uses: docker://mikefarah/yq:3
         with:
           args: yq w -i datarepo-helm/charts/datarepo-ui/Chart.yaml version ${{ steps.new_version.outputs.new_version }}"
-      - name: "[datarepo-helm] Merge chart version update"
-        uses: broadinstitute/datarepo-actions/actions/merger@0.67.0
+      - name: '[datarepo-helm] Merge chart version update'
+        uses: broadinstitute/datarepo-actions/actions/merger@0.70.0
         env:
-          COMMIT_MESSAGE: "Datarepo ui tag version update: ${{ steps.uiprevioustag.outputs.tag }}"
+          COMMIT_MESSAGE: 'Datarepo ui tag version update: ${{ steps.uiprevioustag.outputs.tag }}'
           GITHUB_REPO: datarepo-helm
           SWITCH_DIRECTORIES: true
           MERGE_BRANCH: master
@@ -113,7 +113,7 @@ jobs:
     uses: broadinstitute/sherlock/.github/workflows/client-report-workflow.yaml@main
     if: ${{ inputs.notify-slack }}
     with:
-      notify-slack-channels-upon-workflow-completion: "#jade-spam"
-      notify-slack-custom-icon: ":github_merged:"
+      notify-slack-channels-upon-workflow-completion: '#jade-spam'
+      notify-slack-custom-icon: ':github_merged:'
     permissions:
       id-token: write

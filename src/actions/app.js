@@ -210,6 +210,10 @@ export const { getJobs } = createActions({
   }),
 });
 
+export const { refreshJobs } = createActions({
+  [ActionTypes.REFRESH_JOBS]: () => ({}),
+});
+
 export const { getJobById } = createActions({
   [ActionTypes.GET_JOB_BY_ID]: (job) => job,
   [ActionTypes.GET_JOB_BY_ID_SUCCESS]: (job) => job,
