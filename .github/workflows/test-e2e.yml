@@ -117,7 +117,7 @@ jobs:
     uses: broadinstitute/sherlock/.github/workflows/client-report-workflow.yaml@main
     if: ${{ github.ref == 'refs/heads/develop' }}
     with:
-      notify-slack-channels-upon-workflow-completion: '#jade-alerts,#dsde-qa'
+      notify-slack-channels-upon-workflow-completion: '#jade-spam'
       notify-slack-custom-icon: ':terra-horse:'
     permissions:
       id-token: write
