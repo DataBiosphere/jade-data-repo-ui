@@ -172,10 +172,10 @@ def create_snapshots(clients, dataset_name, snapshots, profile_id):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--host', default='https://jade-4.datarepo-integration.broadinstitute.org')
-    parser.add_argument('--datasets', default='./suites/datarepo_datasets.json')
+    parser.add_argument('--host', default='https://jade-sh.datarepo-dev.broadinstitute.org')
+    parser.add_argument('--datasets', default='./suites/datarepo_omop_datasets.json')
     parser.add_argument('--gcp_profile_id')
-    parser.add_argument('--azure_profile_id')
+    parser.add_argument('--azure_profile_id', default='356f4c1a-dd7c-468b-bf24-66ad91f2a2c4')
     args = parser.parse_args()
     clients = Clients(args.host)
 

@@ -1,0 +1,39 @@
+{"domain_id": "Condition", "domain_name": "Condition", "domain_concept_id": 19}
+{"domain_id": "Condition/Device", "domain_name": "Condition/Device", "domain_concept_id": 235}
+{"domain_id": "Condition/Drug", "domain_name": "Condition/Drug", "domain_concept_id": 53}
+{"domain_id": "Condition/Meas", "domain_name": "Condition/Measurement", "domain_concept_id": 47}
+{"domain_id": "Condition/Obs", "domain_name": "Condition/Observation", "domain_concept_id": 48}
+{"domain_id": "Condition/Procedure", "domain_name": "Condition/Procedure", "domain_concept_id": 49}
+{"domain_id": "Currency", "domain_name": "Currency", "domain_concept_id": 34}
+{"domain_id": "Device", "domain_name": "Device", "domain_concept_id": 17}
+{"domain_id": "Device/Drug", "domain_name": "Device/Drug", "domain_concept_id": 50}
+{"domain_id": "Device/Obs", "domain_name": "Device/Observation", "domain_concept_id": 45}
+{"domain_id": "Device/Procedure", "domain_name": "Device/Procedure", "domain_concept_id": 41}
+{"domain_id": "Drug", "domain_name": "Drug", "domain_concept_id": 13}
+{"domain_id": "Drug/Measurement", "domain_name": "Drug/Measurement", "domain_concept_id": 51}
+{"domain_id": "Drug/Obs", "domain_name": "Drug/Observation", "domain_concept_id": 52}
+{"domain_id": "Drug/Procedure", "domain_name": "Drug/Procedure", "domain_concept_id": 54}
+{"domain_id": "Ethnicity", "domain_name": "Ethnicity", "domain_concept_id": 4}
+{"domain_id": "Gender", "domain_name": "Gender", "domain_concept_id": 2}
+{"domain_id": "Meas/Procedure", "domain_name": "Measurement/Procedure", "domain_concept_id": 43}
+{"domain_id": "Measurement", "domain_name": "Measurement", "domain_concept_id": 21}
+{"domain_id": "Measurement/Obs", "domain_name": "Measurement/Observation", "domain_concept_id": 44}
+{"domain_id": "Meas Value", "domain_name": "Measurement Value", "domain_concept_id": 24}
+{"domain_id": "Meas Value Operator", "domain_name": "Measurement Value Operator", "domain_concept_id": 23}
+{"domain_id": "Metadata", "domain_name": "Metadata", "domain_concept_id": 7}
+{"domain_id": "Modifier", "domain_name": "Modifier", "domain_concept_id": 12}
+{"domain_id": "Observation", "domain_name": "Observation", "domain_concept_id": 27}
+{"domain_id": "Obs/Procedure", "domain_name": "Observation/Procedure", "domain_concept_id": 42}
+{"domain_id": "Place of Service", "domain_name": "Place of Service", "domain_concept_id": 32}
+{"domain_id": "Procedure", "domain_name": "Procedure", "domain_concept_id": 10}
+{"domain_id": "Provider Specialty", "domain_name": "Provider Specialty", "domain_concept_id": 33}
+{"domain_id": "Race", "domain_name": "Race", "domain_concept_id": 3}
+{"domain_id": "Relationship", "domain_name": "Relationship", "domain_concept_id": 31}
+{"domain_id": "Revenue Code", "domain_name": "Revenue Code", "domain_concept_id": 35}
+{"domain_id": "Route", "domain_name": "Route Of Administration", "domain_concept_id": 15}
+{"domain_id": "Spec Anatomic Site", "domain_name": "Specimen Anatomic Site", "domain_concept_id": 38}
+{"domain_id": "Spec Disease Status", "domain_name": "Specimen Disease Status", "domain_concept_id": 39}
+{"domain_id": "Specimen", "domain_name": "Specimen", "domain_concept_id": 36}
+{"domain_id": "Type Concept", "domain_name": "Type Concept", "domain_concept_id": 58}
+{"domain_id": "Unit", "domain_name": "Unit", "domain_concept_id": 16}
+{"domain_id": "Visit", "domain_name": "Visit", "domain_concept_id": 8}
