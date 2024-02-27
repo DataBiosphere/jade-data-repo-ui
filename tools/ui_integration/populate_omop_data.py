@@ -75,8 +75,8 @@ def query_table_where_person_id_record_concepts(client, table_name, domain_id):
                     concept_ids.add(record[i])
     with open(concept_ancestor_file_path, "a") as file:
         for concept_id in table_concept_ids:
-            file.write(str({"ancestor_concept_id": domain_id, "descendant_concept_id": concept_id, "min_levels_of_separation": 1, "max_levels_of_separation": 1}) + "\n")
-
+            json_obj_formatted = format_json(str({"ancestor_concept_id": domain_id, "descendant_concept_id": concept_id, "min_levels_of_separation": 1, "max_levels_of_separation": 1}) + "\n")
+            file.write(json_obj_formatted)
 
 def query_table_where_concepts(client, table_name, concept_id_field):
     concept_ids_str = ', '.join(str(id) for id in concept_ids)
@@ -89,15 +89,20 @@ def query_table(client, query, table_name):
 
     records = [dict(row) for row in rows]
     json_obj = json.dumps(str(records))
-    # regex to match "datetime.date(2009, 7, 15)" and replace with "2009-07-15"
-    json_obj_with_dates = re.sub(r"datetime.date\((\d+), (\d+), (\d+)\)", r"'\1-\2-\3'", json_obj)
-    json_obj_formatted = json_obj_with_dates.replace("'", "\"").replace("}, {", "}\n{").replace("\"[", "").replace("]\"", "").replace("None", "null")
-
+    json_obj_formatted = format_json(json_obj)
 
     # Write rows to json file
     with open(f"files/OMOPDataset/{table_name}.json", "w") as file:
         file.write(json_obj_formatted)
     return records
+
+def format_json(json_obj):
+    # regex to match "datetime.date(2009, 7, 15)" and replace with "2009-07-15"
+    json_obj_with_dates = re.sub(r"datetime.date\((\d+), (\d+), (\d+)\)", r"'\1-\2-\3'", json_obj)
+    # Switch to double quotes
+    # Remove brackets around list
+    # Replace "None" with "null"
+    return json_obj_with_dates.replace("'", "\"").replace("}, {", "}\n{").replace("\"[", "").replace("]\"", "").replace("None", "null")
 
 
 if __name__ == "__main__":
