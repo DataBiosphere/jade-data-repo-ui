@@ -75,7 +75,7 @@ def query_table_where_person_id_record_concepts(client, table_name, domain_id):
                     concept_ids.add(record[i])
     with open(concept_ancestor_file_path, "a") as file:
         for concept_id in table_concept_ids:
-            json_obj_formatted = format_json(str({"ancestor_concept_id": domain_id, "descendant_concept_id": concept_id, "min_levels_of_separation": 1, "max_levels_of_separation": 1}) + "\n")
+            json_obj_formatted = format_content(str({"ancestor_concept_id": domain_id, "descendant_concept_id": concept_id, "min_levels_of_separation": 1, "max_levels_of_separation": 1}) + "\n")
             file.write(json_obj_formatted)
 
 def query_table_where_concepts(client, table_name, concept_id_field):
@@ -97,13 +97,21 @@ def query_table(client, query, table_name):
     return records
 
 def format_json(json_obj):
+    json_obj_formatted = format_content(json_obj)
+    # Remove outer list brackets and quotes
+    json_obj_no_brackets = json_obj_formatted[2:-2]
+    # Add newlines between json objects instead of commas
+    return json_obj_no_brackets.replace("}, {", "}\n{")
+
+def format_content(json_obj):
     # regex to match "datetime.date(2009, 7, 15)" and replace with "2009-07-15"
     json_obj_with_dates = re.sub(r"datetime.date\((\d+), (\d+), (\d+)\)", r"'\1-\2-\3'", json_obj)
+    # Handle \" in json
+    json_obj_switch_to_single_quotes = json_obj_with_dates.replace("\\\"", "'")
     # Switch to double quotes
-    # Remove brackets around list
+    json_obj_correctly_quoted = json_obj_switch_to_single_quotes.replace("{'", "{\"").replace("'}", "\"}").replace(", '", ", \"").replace("',", "\",").replace("':", "\":").replace(": '", ": \"")
     # Replace "None" with "null"
-    return json_obj_with_dates.replace("'", "\"").replace("}, {", "}\n{").replace("\"[", "").replace("]\"", "").replace("None", "null")
-
+    return json_obj_correctly_quoted.replace("None", "null")
 
 if __name__ == "__main__":
     main()
