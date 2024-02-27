@@ -1,6 +1,7 @@
 from google.cloud import bigquery
 import json
 import re
+import os
 
 # TODO - fix auth flow for this script
 # https://developers.google.com/people/quickstart/python
@@ -17,11 +18,16 @@ gcp_with_access = "terra-datarepo-alpha"
 gcp_project = "bigquery-public-data"
 gcp_dataset = "cms_synthetic_patient_data_omop"
 
+concept_ancestor_file_path = "files/OMOPDataset/concept_ancestor.json"
+
 person_limit = 2
 person_ids = set()
 concept_ids = set()
 
 def main():
+    # Manually remove existing concept_ancestor file since we just append to it
+    if os.path.isfile(concept_ancestor_file_path):
+        os.remove(concept_ancestor_file_path)
 
     client = bigquery.Client(project=gcp_with_access)
     # person
@@ -67,7 +73,7 @@ def query_table_where_person_id_record_concepts(client, table_name, domain_id):
                 if item is not None:
                     table_concept_ids.add(record[i])
                     concept_ids.add(record[i])
-    with open(f"files/OMOPDataset/concept_ancestor.json", "a") as file:
+    with open(concept_ancestor_file_path, "a") as file:
         for concept_id in table_concept_ids:
             file.write(str({"ancestor_concept_id": domain_id, "descendant_concept_id": concept_id, "min_levels_of_separation": 1, "max_levels_of_separation": 1}) + "\n")
 
@@ -84,8 +90,8 @@ def query_table(client, query, table_name):
     records = [dict(row) for row in rows]
     json_obj = json.dumps(str(records))
     # regex to match "datetime.date(2009, 7, 15)" and replace with "2009-07-15"
-    #json_obj_with_dates = re.sub(r"datetime.date\((\d+), (\d+), (\d+)\)", r"'\1-\2-\3'", json_obj)
-    json_obj_formatted = json_obj.replace("'", "\"").replace("}, {", "}\n{").replace("\"[", "").replace("]\"", "").replace("None", "null")
+    json_obj_with_dates = re.sub(r"datetime.date\((\d+), (\d+), (\d+)\)", r"'\1-\2-\3'", json_obj)
+    json_obj_formatted = json_obj_with_dates.replace("'", "\"").replace("}, {", "}\n{").replace("\"[", "").replace("]\"", "").replace("None", "null")
 
 
     # Write rows to json file
