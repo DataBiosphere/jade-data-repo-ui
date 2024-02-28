@@ -1,28 +1,52 @@
+###
+# This script is used to generate JSON files with tabular OMOP data with a small test subset of OMOP data
+# It queries the BigQuery dataset and writes the results to json files to be used in the setup_ui_integration.py script
+# (1) We start with the person table and pull a small subset of person ids
+# (2) Then we retrieve entries the occurrence tables (procedure_occurrence, condition_occurrence, drug_exposure) that map to the selected person ids,
+#       noting the referenced concept_ids in these entries
+# (3) We pull all the records from some of the reference tables (right now, just the domain table, but we could include others)
+# (4) We pull entries from the concept table that match referenced concept_ids from the occurrence tables
+# (5) We populate the concept_ancestor table with the ancestor_concept_id pulled from occurrence table's domain id and
+#       then the descendant_concept_id contains all the concepts form the concept table.
+#       This is the only table that we are fabricating.
+# (6) We write the results to json files
+# (7) We use the json files in the setup_ui_integration.py script to populate a test environment with the OMOP data
+#
+# How to use this script
+# (1) Set the gcp_with_access variable to a google project that you have job big query access on
+# (2) Set the gcp_project and gcp_dataset variables to the project and dataset that you want to pull data from
+# (3) Set the person_limit variable to the number of person records you want to pull.
+#       Note: Increasing this will very quickly increase the size of the tables, especially the concept table.
+# (3) Run the script with the following command:
+
+
+# Troubleshooting
+# If you run into an authenticating issue, you may need to set the GOOGLE_APPLICATION_CREDENTIALS environment variable
+# to the path of your application default credentials file. You can do this by running the following command:
+# gcloud auth application-default login
+# export GOOGLE_APPLICATION_CREDENTIALS=/path/to/your/credentials.json
+
+# Future improvement - We could add more a more automatic way to authenticate before running this app. Some relevant links are below:
+# https://developers.google.com/people/quickstart/python
+# https://google-auth.readthedocs.io/en/master/user-guide.html
+
+
 from google.cloud import bigquery
 import json
 import re
 import os
 
-# TODO - fix auth flow for this script
-# https://developers.google.com/people/quickstart/python
-# https://google-auth.readthedocs.io/en/master/user-guide.html
-
-
-# Note for Users
-# manual workflow for authenticating
-# gcloud auth application-default login
-# GOOGLE_APPLICATION_CREDENTIALS=/Users/sholden/.config/gcloud/application_default_credentials.json
 
 ## You'll need to set this to a DSP google project that you have job big query access on
 gcp_with_access = "terra-datarepo-alpha"
+## Location of the source OMOP data
 gcp_project = "bigquery-public-data"
 gcp_dataset = "cms_synthetic_patient_data_omop"
-
-concept_ancestor_file_path = "files/OMOPDataset/concept_ancestor.json"
 
 person_limit = 2
 person_ids = set()
 concept_ids = set()
+concept_ancestor_file_path = "concept_ancestor.json"
 
 def main():
     # Manually remove existing concept_ancestor file since we just append to it
@@ -43,11 +67,8 @@ def main():
     query_table_all_results(client, "domain")
     # Tables to add later - another reference table - "vocabulary", "relationship", "concept_class"
 
-    # Concept tables
+    # Concept
     query_table_where_concepts(client, "concept", "concept_id")
-    #query_table_where_concepts(client, "concept_relationship", "concept_id_1")
-    # Populate based on concepts where the concept id is the descendant_concept_id and domain id is the ancestor_concept_id
-    #query_table_where_concepts(client, "concept_ancestor", "ancestor_concept_id") # TODO - deal with descendant_concept_id field
 
 def query_table_all_results(client, table_name):
     query = f"Select * FROM `{gcp_project}.{gcp_dataset}.{table_name}`;"
@@ -92,7 +113,7 @@ def query_table(client, query, table_name):
     json_obj_formatted = format_json(json_obj)
 
     # Write rows to json file
-    with open(f"files/OMOPDataset/{table_name}.json", "w") as file:
+    with open(f"{table_name}.json", "w") as file:
         file.write(json_obj_formatted)
     return records
 
