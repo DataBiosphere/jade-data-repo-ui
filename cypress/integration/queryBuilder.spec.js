@@ -100,6 +100,12 @@ testPlatforms.forEach((testPlatform) => {
       beforeEach(() => {
         // make sure table is loaded
         cy.get('[data-cy=columnHeader-variant_id]').should('be.visible');
+        // select the drop-down menu
+        cy.get('[data-cy=selectTable]').click();
+        // select the table
+        cy.get('[data-cy=menuItem-ancestry_specific_meta_analysis]').click();
+        // make sure table is loaded
+        cy.get('[data-cy=columnHeader-variant_id]').should('be.visible');
         // selects the filter button in the sidebar
         cy.get('div.MuiButtonBase-root:nth-child(2) > svg:nth-child(1)').click();
         cy.get('[data-cy=filterItem]').contains('ancestry').click();
