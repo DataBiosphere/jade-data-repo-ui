@@ -34,6 +34,10 @@ npm install
 
   - `export PROXY_URL=https://jade.datarepo-dev.broadinstitute.org`
   - `export CYPRESS_BASE_URL=http://localhost:3000`
+    
+- If running E2E tests and/or you want to replicate the conditions of a run on GitHub, you may want to change PROXY_URL. You can see what environment was used on a GitHub run by viewing the test error and then the "Check for an available namespace to deploy API to and set state lock" step. In the final lines, this will include a namespace such as integration-N where N is some number. Then, you can set the PROXY_URL accordingly:
+  
+  - `export PROXY_URL=https://jade-N.datarepo-integration.broadinstitute.org`
 
 - For performance gains, you should disable linting (don't worry, it gets checked in GitHub actions) by setting the following environment variable:
 
