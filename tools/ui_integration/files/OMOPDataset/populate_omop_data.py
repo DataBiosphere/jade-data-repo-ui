@@ -13,11 +13,11 @@
 # (7) We use the json files in the setup_ui_integration.py script to populate a test environment with the OMOP data
 #
 # How to use this script
+# Note: this script overwrites the json files each time it is run
 # (1) Set the gcp_with_access variable to a google project that you have job big query access on
 # (2) Set the gcp_project and gcp_dataset variables to the project and dataset that you want to pull data from
 # (3) Set the person_limit variable to the number of person records you want to pull.
 #       Note: Increasing this will very quickly increase the size of the tables, especially the concept table.
-# (3) Run the script with the following command:
 
 
 # Troubleshooting
@@ -38,10 +38,11 @@ import os
 
 
 ## You'll need to set this to a DSP google project that you have job big query access on
-gcp_with_access = "terra-datarepo-alpha"
+## If you have steward access on the TDR dataset, then that should be sufficient
+gcp_with_access = "datarepo-dev-8c33d3b5"
 ## Location of the source OMOP data
-gcp_project = "bigquery-public-data"
-gcp_dataset = "cms_synthetic_patient_data_omop"
+gcp_project = "datarepo-dev-8c33d3b5"
+gcp_dataset = "datarepo_AXIN_OMOP_Data_20230810"
 
 person_limit = 2
 person_ids = set()

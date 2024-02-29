@@ -175,7 +175,7 @@ def main():
     parser.add_argument('--host', default='https://data.shelbee.bee.envs-terra.bio/')
     parser.add_argument('--datasets', default='./suites/datarepo_omop_datasets.json')
     parser.add_argument('--gcp_profile_id')
-    parser.add_argument('--azure_profile_id')
+    parser.add_argument('--azure_profile_id', default='e14b3b8a-54a7-4878-969b-fc4c0478cb9c')
     args = parser.parse_args()
     clients = Clients(args.host)
 
