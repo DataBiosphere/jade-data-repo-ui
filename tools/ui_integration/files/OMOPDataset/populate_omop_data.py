@@ -19,6 +19,19 @@
 # (3) Set the person_limit variable to the number of person records you want to pull.
 #       Note: Increasing this will very quickly increase the size of the tables, especially the concept table.
 
+# Running the script
+#1. If you need to set up a virtual python environment, you can run the following commands:
+#    * `python3 -m venv c:/path/to/myenv`
+#    * `source c:/path/to/myenv/bin/activate`
+#2. `cd jade-data-repo-ui/tools/ui_integration`
+#3. `pip3 install -r requirements.txt`
+#4. `gcloud auth login <user>`
+#5. `cd files/OMOPDataset'
+#6  `python3 populate_omop_data.py`
+#7  `cd ../..` (go back to the ui_integration directory)
+#5. `python3 setup_ui_integration.py --host <datarepo_url> --datasets datarepo_omop_datasets.json --profile_id <profile_id>`
+
+
 
 # Troubleshooting
 # If you run into an authenticating issue, you may need to set the GOOGLE_APPLICATION_CREDENTIALS environment variable
