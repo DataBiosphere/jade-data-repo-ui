@@ -38,7 +38,7 @@ jobs:
           ref: develop
           token: ${{ secrets.BROADBOT_TOKEN }}
       - name: 'Bump the tag to a new version'
-        uses: broadinstitute/datarepo-actions/actions/main@0.70.0
+        uses: broadinstitute/datarepo-actions/actions/main@0.71.0
         id: bumperstep
         with:
           actions_subcommand: 'bumper'
@@ -48,7 +48,7 @@ jobs:
           version_variable_name: version
           GITHUB_TOKEN: ${{ secrets.BROADBOT_TOKEN }}
       - name: 'Get gcp credentials'
-        uses: broadinstitute/datarepo-actions/actions/main@0.70.0
+        uses: broadinstitute/datarepo-actions/actions/main@0.71.0
         with:
           actions_subcommand: 'skip'
           role_id: ${{ secrets.ROLE_ID }}
