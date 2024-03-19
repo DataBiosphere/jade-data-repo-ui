@@ -37,7 +37,7 @@ testPlatforms.forEach((testPlatform) => {
 
     describe('arrays work as expected', () => {
       beforeEach(() => {
-        cy.get('[data-cy=columnHeader-variant_id]').should('be.visible');
+        cy.get('[data-cy=tableBody]').should('be.visible');
         cy.get('[data-cy=selectTable]').click();
         cy.get('[data-cy=menuItem-feature_consequence]').click();
       });
@@ -57,7 +57,7 @@ testPlatforms.forEach((testPlatform) => {
 
     describe('timestamps are displayed as expected', () => {
       beforeEach(() => {
-        cy.get('[data-cy=columnHeader-variant_id]').should('be.visible');
+        cy.get('[data-cy=tableBody]').should('be.visible');
         cy.get('[data-cy=selectTable]').click();
         cy.get('[data-cy=menuItem-all_data_types]').click();
       });
@@ -99,7 +99,7 @@ testPlatforms.forEach((testPlatform) => {
     describe('test filter panel', () => {
       beforeEach(() => {
         // make sure table is loaded
-        cy.get('[data-cy=columnHeader-variant_id]').should('be.visible');
+        cy.get('[data-cy=tableBody]').should('be.visible');
         // select the drop-down menu
         cy.get('[data-cy=selectTable]').click();
         // select the table
@@ -203,7 +203,7 @@ testPlatforms.forEach((testPlatform) => {
     describe('filtering on null checkbox value', () => {
       it('filters on null', () => {
         // Wait for initial table to load
-        cy.get('[data-cy=columnHeader-variant_id]').should('be.visible');
+        cy.get('[data-cy=tableBody]').should('be.visible');
         // Switch to variant table
         cy.get('[data-cy=selectTable]').click();
         cy.get('[data-cy=menuItem-variant]').click();
