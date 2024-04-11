@@ -14,7 +14,7 @@ const styles = (theme: CustomTheme) => ({
 });
 
 interface ManageUsersProps extends WithStyles<typeof styles> {
-  removeUser?: () => void;
+  removeUser?: (removableEmail: string) => void;
   users: Array<string>;
 }
 
@@ -28,7 +28,7 @@ function ManageUsersView({ classes, removeUser, users }: ManageUsersProps) {
           color="primary"
           label={user}
           key={user}
-          onDelete={removeUser}
+          onDelete={() => (removeUser ? removeUser(user) : null)}
           variant="outlined"
         />
       </div>
