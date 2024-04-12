@@ -56,7 +56,6 @@
     "events-polyfill": "^2.1.2",
     "fbjs": "^3.0.5",
     "history": "^4.10.1",
-    "http-proxy-middleware": "^2.0.6",
     "immutability-helper": "^3.1.1",
     "js-combinatorics": "^2.1.2",
     "jsondiffpatch": "^0.6.0",
