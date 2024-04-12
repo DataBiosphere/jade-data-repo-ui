@@ -30,6 +30,7 @@ function ManageUsersView({ classes, removeUser, users }: ManageUsersProps) {
           key={user}
           onDelete={() => (removeUser ? removeUser(user) : null)}
           variant="outlined"
+          data-cy={`chip-${user}`}
         />
       </div>
     ));

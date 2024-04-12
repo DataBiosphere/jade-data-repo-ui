@@ -55,6 +55,7 @@ function UserList({
       <AccordionSummary
         expandIcon={<ExpandMore className={classes.expandIcon} />}
         className={classes.header}
+        data-cy={`user-list-${typeOfUsers}`}
       >
         {typeOfUsers}
       </AccordionSummary>
