@@ -154,12 +154,14 @@ function AddUserAccess({ classes, permissions, onAdd }: AddUserAccessProps) {
             className={classes.input}
             fullWidth
             onChange={(event: SelectChangeEvent) => setPolicyName(event.target.value)}
+            data-cy="roleSelect"
           >
             {permissions.map((permission: any, i: number) => (
               <MenuItem
                 key={`${i}-${permission.policy}`}
                 value={permission.policy}
                 disabled={permission.disabled}
+                data-cy={`roleOption-${permission.policy}`}
               >
                 {permissionDisplays[i]}
               </MenuItem>

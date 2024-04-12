@@ -37,7 +37,7 @@ const styles = (theme: CustomTheme) =>
 interface UserListProps extends WithStyles<typeof styles> {
   canManageUsers: boolean;
   defaultOpen?: boolean;
-  removeUser?: any;
+  removeUser?: (removableEmail: string) => void;
   typeOfUsers: string;
   users: Array<string>;
 }
@@ -55,6 +55,7 @@ function UserList({
       <AccordionSummary
         expandIcon={<ExpandMore className={classes.expandIcon} />}
         className={classes.header}
+        data-cy={`user-list-${typeOfUsers}`}
       >
         {typeOfUsers}
       </AccordionSummary>

@@ -10,7 +10,7 @@ import ManageUsersView from './ManageUsersView';
 
 describe('ManageUsersView', () => {
   [true, false].forEach((canManageUsers) => {
-    it('Renders user list indepedent of whether you can manage users', () => {
+    it('Renders user list independent of whether you can manage users', () => {
       const mockStore = createMockStore([]);
       const store = mockStore({});
       mount(
