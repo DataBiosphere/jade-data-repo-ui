@@ -98,11 +98,3 @@ jobs:
       gcr_tag: ${{ needs.update_image.outputs.ui_image_tag }}
       source_gcr_url: 'gcr.io/broad-jade-dev/jade-data-repo-ui'
       target_gcr_url: 'gcr.io/datarepo-public-gcr/jade-data-repo-ui'
-  report-workflow:
-    needs: update_image
-    uses: broadinstitute/sherlock/.github/workflows/client-report-workflow.yaml@main
-    with:
-      notify-slack-channels-upon-workflow-completion: '#jade-spam'
-      notify-slack-custom-icon: ':github_merged:'
-    permissions:
-      id-token: write

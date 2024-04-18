@@ -37,7 +37,9 @@ jobs:
     uses: broadinstitute/sherlock/.github/workflows/client-report-workflow.yaml@main
     if: ${{ github.ref == 'refs/heads/develop' }}
     with:
-      notify-slack-channels-upon-workflow-completion: "#jade-spam"
+      relates-to-chart-releases: 'datarepo-dev'
+      notify-slack-channels-upon-workflow-failure: ${{ vars.SLACK_NOTIFICATION_CHANNELS }}
+      notify-slack-channels-upon-workflow-retry: ${{ vars.SLACK_NOTIFICATION_CHANNELS }}
       notify-slack-custom-icon: ":terra-horse:"
     permissions:
       id-token: write
