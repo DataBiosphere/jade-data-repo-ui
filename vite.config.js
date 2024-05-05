@@ -27,6 +27,9 @@ export default defineConfig({
   define: {
     'process.env': process.env,
   },
+  optimizeDeps: {
+    entries: ['cypress/**/*'],
+  },
   plugins: getPluggins(),
   server: {
     port: 3000,
