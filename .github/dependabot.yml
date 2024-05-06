@@ -9,6 +9,8 @@ updates:
   # Keeping the open PR limit low at 4 so that when automatically rebasing, 4 concurrent Dependabot PR integration test
   # runs all stand a chance at success rather than some being guaranteed to time out waiting for an available namespace.
   open-pull-requests-limit: 4
+  commit-message:
+    prefix: "[DCJ-308-npm]"
   groups:
     # We group minor and patch updates together because they are unexpected to break things.
     # Major updates will be PR-ed individually: they are more likely to need developer intervention.
