@@ -12,7 +12,7 @@ const driveApi = 'https://www.googleapis.com';
 
 dns.setDefaultResultOrder('verbatim');
 
-const getPluggins = () => {
+const getPlugins = () => {
   const plugins = [react(), svgr(), tsconfigPaths()];
   if (process.env.DISABLE_ESLINT_PLUGIN !== 'true') {
     plugins.push(eslint({ lintOnStart: false }));
@@ -27,7 +27,10 @@ export default defineConfig({
   define: {
     'process.env': process.env,
   },
-  plugins: getPluggins(),
+  optimizeDeps: {
+    entries: ['cypress/**/*'],
+  },
+  plugins: getPlugins(),
   server: {
     port: 3000,
     host: 'localhost',
