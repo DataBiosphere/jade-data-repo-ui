@@ -990,6 +990,21 @@ export function* patchDataset({ payload }: any): any {
   }
 }
 
+export function* getSnapshotAccessRequests(): any {
+  try {
+    const response = yield call(authGet, '/api/repository/v1/snapshotAccessRequests');
+    yield put({
+      type: ActionTypes.GET_SNAPSHOT_ACCESS_REQUESTS_SUCCESS,
+      snapshotAccessRequests: { data: response },
+    });
+  } catch (err) {
+    showNotification(err);
+    yield put({
+      type: ActionTypes.GET_SNAPSHOT_ACCESS_REQUESTS_FAILURE,
+    });
+  }
+}
+
 /**
  * App Sagas
  */
@@ -1026,6 +1041,7 @@ export default function* root() {
     takeLatest(ActionTypes.PATCH_SNAPSHOT, patchSnapshot),
     takeLatest(ActionTypes.UPDATE_DUOS_DATASET, updateDuosDataset),
     takeLatest(ActionTypes.GET_DUOS_DATASETS, getDuosDatasets),
+    takeLatest(ActionTypes.GET_SNAPSHOT_ACCESS_REQUESTS, getSnapshotAccessRequests),
     fork(watchGetDatasetByIdSuccess),
   ]);
 }

@@ -375,3 +375,13 @@ export const { getDuosDatasets } = createActions({
   [ActionTypes.GET_DUOS_DATASETS_SUCCESS]: () => ({}),
   [ActionTypes.GET_DUOS_DATASETS_FAILURE]: () => ({}),
 });
+
+export const { getSnapshotAccessRequests } = createActions({
+  [ActionTypes.GET_SNAPSHOT_ACCESS_REQUESTS]: () => ({}),
+  [ActionTypes.GET_SNAPSHOT_ACCESS_REQUESTS_SUCCESS]: () => ({}),
+  [ActionTypes.GET_SNAPSHOT_ACCESS_REQUESTS_FAILURE]: () => ({}),
+});
+
+export const { refreshSnapshotAccessRequests } = createActions({
+  [ActionTypes.REFRESH_SNAPSHOT_ACCESS_REQUESTS]: () => ({}),
+});
