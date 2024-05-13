@@ -109,7 +109,7 @@ function HomeView({ classes, dispatch, location }: IProps) {
     searchable = false;
     tableValue = <JobView searchString={searchString} />;
     refresh = () => dispatch(refreshJobs());
-  } else if (tabValue === '/snapshot-access-requests') {
+  } else if (tabValue === '/requests') {
     pageTitle = 'Requests';
     tableValue = <SnapshotAccessRequestView />;
     refresh = () => dispatch(refreshSnapshotAccessRequests());

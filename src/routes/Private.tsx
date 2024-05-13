@@ -38,7 +38,7 @@ export interface IRoute {
   path: string;
   component: any;
 }
-const routes: Array<IRoute> = [
+export const routes: Array<IRoute> = [
   { path: '/datasets', component: HomeView },
   { path: '/snapshots', component: HomeView },
   { path: '/datasets/new', component: DatasetSchemaCreationView },
@@ -47,7 +47,7 @@ const routes: Array<IRoute> = [
   { path: '/snapshots/:uuid', component: SnapshotOverview },
   { path: '/snapshots/:uuid/data', component: SnapshotDataView },
   { path: '/activity', component: HomeView },
-  { path: '/snapshot-access-requests', component: HomeView },
+  { path: '/requests', component: HomeView },
 ];
 
 function Private({ classes }: WithStyles<typeof styles>) {

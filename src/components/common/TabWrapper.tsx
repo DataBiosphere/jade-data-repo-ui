@@ -75,7 +75,7 @@ function TabWrapper(props: TabWrapperProps) {
     { label: 'Ingest Data', path: '/ingestdata' },
     {
       label: 'Requests',
-      path: '/snapshot-access-requests',
+      path: '/requests',
       hidden: snapshotAccessRequests && snapshotAccessRequests.length < 1,
     },
   ];
