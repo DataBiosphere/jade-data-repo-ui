@@ -10,8 +10,8 @@ interface IProps {
 function SnapshotAccessRequestView({ snapshotAccessRequests }: IProps) {
   return (
     <ul>
-      {snapshotAccessRequests.map((accessRequest, index) => (
-        <li key={index}>{accessRequest.id}</li>
+      {snapshotAccessRequests.map((accessRequest) => (
+        <li key={accessRequest.id}>{accessRequest.id}</li>
       ))}
     </ul>
   );

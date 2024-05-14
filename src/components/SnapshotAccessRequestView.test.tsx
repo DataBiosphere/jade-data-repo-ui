@@ -1,8 +1,6 @@
 import { mount } from 'cypress/react';
 import SnapshotAccessRequestView from 'components/SnapshotAccessRequestView';
-import { SnapshotAccessRequestResponse } from 'generated/tdr';
 import _ from 'lodash';
-import { TdrState } from 'reducers';
 import { initialUserState } from 'reducers/user';
 import { initialQueryState } from 'reducers/query';
 import createMockStore from 'redux-mock-store';
@@ -12,7 +10,6 @@ import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
 import { ThemeProvider } from '@mui/styles';
 import globalTheme from 'modules/theme';
-import JobView from 'components/JobView';
 import React from 'react';
 
 const initialState = {
