@@ -1,6 +1,10 @@
 import userReducer, { UserState, initialUserState } from './user';
 import snapshotReducer, { SnapshotState, initialSnapshotState } from './snapshot';
 import datasetReducer, { DatasetState, initialDatasetState } from './dataset';
+import snapshotAccessRequestReducer, {
+  SnapshotAccessRequestState,
+  initialSnapshotAccessRequestState,
+} from './snapshot-access-request';
 import jobReducer, { JobState, initialJobState } from './job';
 import configurationReducer, {
   ConfigurationState,
@@ -16,6 +20,7 @@ export interface TdrState {
   user: UserState;
   snapshots: SnapshotState;
   datasets: DatasetState;
+  snapshotAccessRequests: SnapshotAccessRequestState;
   jobs: JobState;
   journals: JournalState;
   configuration: ConfigurationState;
@@ -32,6 +37,7 @@ export const initialTdrState: TdrState = {
   user: initialUserState,
   snapshots: initialSnapshotState,
   datasets: initialDatasetState,
+  snapshotAccessRequests: initialSnapshotAccessRequestState,
   jobs: initialJobState,
   journals: initialJournalState,
   configuration: initialConfigurationState,
@@ -45,6 +51,7 @@ export default {
   ...userReducer,
   ...snapshotReducer,
   ...datasetReducer,
+  ...snapshotAccessRequestReducer,
   ...jobReducer,
   ...journalReducer,
   ...configurationReducer,

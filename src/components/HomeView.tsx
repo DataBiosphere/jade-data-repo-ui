@@ -9,12 +9,20 @@ import { createStyles, WithStyles, withStyles } from '@mui/styles';
 import { CustomTheme } from '@mui/material/styles';
 import { RouterLocation, RouterRootState } from 'connected-react-router';
 import { LocationState } from 'history';
-import { refreshDatasets, refreshJobs, refreshSnapshots } from 'src/actions';
+import {
+  getSnapshotAccessRequests,
+  refreshDatasets,
+  refreshJobs,
+  refreshSnapshotAccessRequests,
+  refreshSnapshots,
+} from 'src/actions';
+import { TdrState } from 'reducers';
+import { useOnMount } from 'libs/utils';
 import DatasetView from './DatasetView';
 import SnapshotView from './SnapshotView';
 import JobView from './JobView';
 import SearchTable from './table/SearchTable';
-import { TdrState } from '../reducers';
+import SnapshotAccessRequestView from './SnapshotAccessRequestView';
 
 const styles = (theme: CustomTheme) =>
   createStyles({
@@ -101,6 +109,10 @@ function HomeView({ classes, dispatch, location }: IProps) {
     searchable = false;
     tableValue = <JobView searchString={searchString} />;
     refresh = () => dispatch(refreshJobs());
+  } else if (tabValue === '/requests') {
+    pageTitle = 'Requests';
+    tableValue = <SnapshotAccessRequestView />;
+    refresh = () => dispatch(refreshSnapshotAccessRequests());
   }
   const refreshButton = (
     <Button
@@ -137,6 +149,10 @@ function HomeView({ classes, dispatch, location }: IProps) {
         {refreshButton}
       </div>
     );
+
+  useOnMount(() => {
+    dispatch(getSnapshotAccessRequests());
+  });
 
   return (
     <div className={classes.pageRoot}>
