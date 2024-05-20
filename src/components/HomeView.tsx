@@ -111,7 +111,7 @@ function HomeView({ classes, dispatch, location }: IProps) {
     refresh = () => dispatch(refreshJobs());
   } else if (tabValue === '/requests') {
     pageTitle = 'Requests';
-    tableValue = <SnapshotAccessRequestView />;
+    tableValue = <SnapshotAccessRequestView searchString={searchString} />;
     refresh = () => dispatch(refreshSnapshotAccessRequests());
   }
   const refreshButton = (

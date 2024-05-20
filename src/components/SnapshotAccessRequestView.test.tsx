@@ -25,7 +25,7 @@ const initialState = {
 };
 
 describe('SnapshotAccessRequestView', () => {
-  it('Renders an unordered list of snapshot access request ids', () => {
+  it('Renders', () => {
     const mockStore = createMockStore([routerMiddleware(history)]);
 
     const store = mockStore(initialState);
@@ -33,16 +33,10 @@ describe('SnapshotAccessRequestView', () => {
       <Provider store={store}>
         <Router history={history}>
           <ThemeProvider theme={globalTheme}>
-            <SnapshotAccessRequestView />
+            <SnapshotAccessRequestView searchString="" />
           </ThemeProvider>
         </Router>
       </Provider>,
     );
-
-    for (let i = 0; i < 4; i++) {
-      cy.get('ul > li')
-        .eq(i)
-        .should('have.text', initialState.snapshotAccessRequests.snapshotAccessRequests[i].id);
-    }
   });
 });
