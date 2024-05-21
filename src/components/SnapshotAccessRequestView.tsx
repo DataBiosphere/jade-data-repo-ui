@@ -1,19 +1,33 @@
 import { TdrState } from 'reducers';
 import { connect } from 'react-redux';
 import { SnapshotAccessRequestResponse } from 'generated/tdr';
-import React from 'react';
+import React, { Dispatch } from 'react';
+import SnapshotAccessRequestTable from 'components/table/SnapshotAccessRequestTable';
+import { Action } from 'redux';
 
 interface IProps {
+  dispatch: Dispatch<Action>;
   snapshotAccessRequests: Array<SnapshotAccessRequestResponse>;
+  loading: boolean;
+  refreshCnt: number;
+  searchString: string;
 }
 
-function SnapshotAccessRequestView({ snapshotAccessRequests }: IProps) {
+function SnapshotAccessRequestView({
+  dispatch,
+  snapshotAccessRequests,
+  loading,
+  refreshCnt,
+  searchString,
+}: IProps) {
   return (
-    <ul>
-      {snapshotAccessRequests.map((accessRequest) => (
-        <li key={accessRequest.id}>{accessRequest.id}</li>
-      ))}
-    </ul>
+    <SnapshotAccessRequestTable
+      dispatch={dispatch}
+      snapshotAccessRequests={snapshotAccessRequests}
+      loading={loading}
+      refreshCnt={refreshCnt}
+      searchString={searchString}
+    />
   );
 }
 

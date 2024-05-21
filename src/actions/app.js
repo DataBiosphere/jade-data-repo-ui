@@ -382,6 +382,14 @@ export const { getSnapshotAccessRequests } = createActions({
   [ActionTypes.GET_SNAPSHOT_ACCESS_REQUESTS_FAILURE]: () => ({}),
 });
 
+export const { rejectSnapshotAccessRequest } = createActions({
+  [ActionTypes.REJECT_SNAPSHOT_ACCESS_REQUEST]: (id) => ({
+    id,
+  }),
+  [ActionTypes.REJECT_SNAPSHOT_ACCESS_REQUEST_SUCCESS]: () => ({}),
+  [ActionTypes.REJECT_SNAPSHOT_ACCESS_REQUEST_FAILURE]: () => ({}),
+});
+
 export const { refreshSnapshotAccessRequests } = createActions({
   [ActionTypes.REFRESH_SNAPSHOT_ACCESS_REQUESTS]: () => ({}),
 });

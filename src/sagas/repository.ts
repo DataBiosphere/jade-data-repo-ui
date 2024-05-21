@@ -1005,6 +1005,24 @@ export function* getSnapshotAccessRequests(): any {
   }
 }
 
+export function* rejectSnapshotAccessRequest({ payload }: any): any {
+  try {
+    const { id } = payload;
+    yield call(authPut, `/api/repository/v1/snapshotAccessRequests/${id}/reject`);
+    yield put({
+      type: ActionTypes.REJECT_SNAPSHOT_ACCESS_REQUEST_SUCCESS,
+    });
+    yield put({
+      type: ActionTypes.GET_SNAPSHOT_ACCESS_REQUESTS,
+    });
+  } catch (err) {
+    showNotification(err);
+    yield put({
+      type: ActionTypes.REJECT_SNAPSHOT_ACCESS_REQUEST_FAILURE,
+    });
+  }
+}
+
 /**
  * App Sagas
  */
@@ -1042,6 +1060,7 @@ export default function* root() {
     takeLatest(ActionTypes.UPDATE_DUOS_DATASET, updateDuosDataset),
     takeLatest(ActionTypes.GET_DUOS_DATASETS, getDuosDatasets),
     takeLatest(ActionTypes.GET_SNAPSHOT_ACCESS_REQUESTS, getSnapshotAccessRequests),
+    takeLatest(ActionTypes.REJECT_SNAPSHOT_ACCESS_REQUEST, rejectSnapshotAccessRequest),
     fork(watchGetDatasetByIdSuccess),
   ]);
 }
