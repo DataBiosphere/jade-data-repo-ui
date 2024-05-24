@@ -120,11 +120,6 @@ function SnapshotExport(props: SnapshotExportProps) {
             }
             label="Convert DRS URLs to Google Cloud Storage Paths (gs://...)"
           />
-          <FormHelperText>
-            <i>
-              <b>Note:</b> gs-paths can change over time
-            </i>
-          </FormHelperText>
         </FormGroup>
       )}
       <FormGroup>
