@@ -124,6 +124,7 @@ const DatasetSchemaCreationView = withStyles(styles)(({ classes, dispatch, profi
       description: null,
       terraProject: null,
       enableSecureMonitoring: false,
+      enablePhiTracking: false,
       cloudPlatform: CLOUD_PLATFORMS.gcp.key,
       defaultProfileId: null,
       region: null,

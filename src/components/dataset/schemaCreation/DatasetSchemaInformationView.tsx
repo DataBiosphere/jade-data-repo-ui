@@ -225,20 +225,48 @@ const DatasetSchemaInformationView = withStyles(styles)(({ classes, profiles }: 
         />
       </Grid>
 
-      <Grid item xs={6}>
-        <label htmlFor="dataset-enableSecureMonitoring" className={classes.formLabel}>
-          Secure monitoring
-        </label>
-        <Controller
-          name="enableSecureMonitoring"
-          control={control}
-          render={({ field }) => (
-            <Select id="dataset-enableSecureMonitoring" className={classes.formInput} {...field}>
-              <MenuItem value="true">Yes</MenuItem>
-              <MenuItem value="false">No</MenuItem>
-            </Select>
-          )}
-        />
+      <Grid item xs={12}>
+        <div className={classes.formLabel}>Security and Controls</div>
+        <Grid container rowSpacing={0} columnSpacing={5} className={classes.contentContainer}>
+          <Grid item xs={6}>
+            <label
+              htmlFor="dataset-enableSecureMonitoring"
+              className={classes.formFieldDescription}
+            >
+              Additional Security Monitoring
+            </label>
+            <Controller
+              name="enableSecureMonitoring"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  id="dataset-enableSecureMonitoring"
+                  className={classes.formInput}
+                  {...field}
+                >
+                  <MenuItem value="true">Yes</MenuItem>
+                  <MenuItem value="false">No</MenuItem>
+                </Select>
+              )}
+            />
+          </Grid>
+          {/* TODO: only show PHI tracking enabled if selected cloud platform is Azure */}
+          <Grid item xs={6}>
+            <label htmlFor="dataset-enablePhiTracking" className={classes.formFieldDescription}>
+              PHI Tracking
+            </label>
+            <Controller
+              name="enablePhiTracking"
+              control={control}
+              render={({ field }) => (
+                <Select id="dataset-enablePhiTracking" className={classes.formInput} {...field}>
+                  <MenuItem value="true">Yes</MenuItem>
+                  <MenuItem value="false">No</MenuItem>
+                </Select>
+              )}
+            />
+          </Grid>
+        </Grid>
       </Grid>
 
       <Grid item xs={12} className={classes.formFieldContainer}>

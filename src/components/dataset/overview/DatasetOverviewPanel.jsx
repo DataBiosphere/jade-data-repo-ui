@@ -202,10 +202,6 @@ function DatasetOverviewPanel(props) {
             </Grid>
           )}
           <Grid item xs={4}>
-            <Typography variant="h6">Secure Monitoring Enabled?</Typography>
-            {dataset.secureMonitoringEnabled ? 'Yes' : 'No'}
-          </Grid>
-          <Grid item xs={4}>
             <Typography variant="h6">Self Hosted?</Typography>
             {dataset.selfHosted ? 'Yes' : 'No'}
           </Grid>
@@ -258,6 +254,18 @@ function DatasetOverviewPanel(props) {
                   ))}
                 </AccordionDetails>
               </Accordion>
+            </Grid>
+          )}
+          {/* TODO: figure out how to enforce the desired row position and
+          reorder all grid elements so that they make sense when conditionally displayed */}
+          <Grid item xs={4}>
+            <Typography variant="h6">Additional Security Monitoring</Typography>
+            {dataset.secureMonitoringEnabled ? 'Yes' : 'No'}
+          </Grid>
+          {getCloudPlatform(dataset) === CloudPlatform.Azure && (
+            <Grid item xs={4}>
+              <Typography variant="h6">PHI Tracking</Typography>
+              {dataset.phiTrackingEnabled ? 'Yes' : 'No'}
             </Grid>
           )}
         </Grid>

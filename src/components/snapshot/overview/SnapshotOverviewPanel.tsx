@@ -11,7 +11,7 @@ import GoogleSheetExport from 'components/common/overview/GoogleSheetExport';
 import { Link } from 'react-router-dom';
 import TextContent from 'components/common/TextContent';
 import InfoHoverButton from 'components/common/InfoHoverButton';
-import { IamResourceTypeEnum } from 'generated/tdr';
+import { IamResourceTypeEnum } from "generated/tdr";
 import { TdrState } from 'reducers';
 import {
   renderCloudPlatforms,
@@ -244,10 +244,6 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
             {renderCloudPlatforms(sourceDataset)}
           </Grid>
           <Grid item xs={4}>
-            <Typography variant="h6">Secure Monitoring Enabled?</Typography>
-            {sourceDataset.secureMonitoringEnabled ? 'Yes' : 'No'}
-          </Grid>
-          <Grid item xs={4}>
             {renderTextFieldValue(
               'PHS ID',
               sourceDataset.phsId,
@@ -275,6 +271,15 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
               {renderTextFieldValue('Google Data Project', snapshot.dataProject)}
             </Grid>
           )}
+          <Grid item xs={4}>
+            <Typography variant="h6">Additional Security Monitoring</Typography>
+            {sourceDataset.secureMonitoringEnabled ? 'Yes' : 'No'}
+          </Grid>
+          {/* TODO: only want to display if Azure  */}
+          <Grid item xs={4}>
+            <Typography variant="h6">PHI Tracking</Typography>
+            {sourceDataset.phiTrackingEnabled ? 'Yes' : 'No'}
+          </Grid>
         </Grid>
       </TabPanel>
       <TabPanel value={value} index={1}>
