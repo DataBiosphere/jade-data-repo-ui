@@ -2,7 +2,7 @@ import { CloudPlatform, DatasetModel } from 'generated/tdr';
 import {
   generateSnapshotNameFromAccessRequestInformation,
   getCloudPlatform,
-  urlEncodeParams
+  urlEncodeParams,
 } from './utilsTs';
 
 describe('utilsTs', () => {
@@ -29,19 +29,19 @@ describe('utilsTs', () => {
     it('joins id and name', () => {
       const id = 'abc';
       const name = 'name';
-      const expected = 'abc_name';
+      const expected = 'name_abc';
       expect(generateSnapshotNameFromAccessRequestInformation(id, name)).to.equal(expected);
     });
     it('converts dashes and spaces to underscores', () => {
       const id = 'a-b-c';
       const name = 'na me';
-      const expected = 'a_b_c_na_me';
+      const expected = 'na_me_a_b_c';
       expect(generateSnapshotNameFromAccessRequestInformation(id, name)).to.equal(expected);
     });
     it('removes disallowed characters', () => {
       const id = 'a&b;c';
       const name = 'name';
-      const expected = 'abc_name';
+      const expected = 'name_abc';
       expect(generateSnapshotNameFromAccessRequestInformation(id, name)).to.equal(expected);
     });
   });
