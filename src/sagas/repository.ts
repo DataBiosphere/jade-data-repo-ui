@@ -20,7 +20,11 @@ import _ from 'lodash';
 import { RouterRootState } from 'connected-react-router';
 
 import { showNotification } from 'modules/notifications';
-import { JobModelJobStatusEnum } from 'generated/tdr';
+import {
+  JobModelJobStatusEnum,
+  SnapshotRequestContentsModelModeEnum,
+  SnapshotRequestModel,
+} from 'generated/tdr';
 import {
   ActionTypes,
   Status,
@@ -1024,6 +1028,59 @@ export function* rejectSnapshotAccessRequest({ payload }: any): any {
 }
 
 /**
+ * @param id {string} the id of the snapshot access request
+ * @param snapshotName {string} the user specified name of the snapshot access request
+ *
+ * @return {string} An underscore joined name and id with all dashes and spaces converted to
+ * underscores and all non-alphanumeric or underscore character stripped out.
+ * It also trims all leading underscores
+ */
+const generateSnapshotName = (id: string, snapshotName: string): string => {
+  const dashesAndSpacesRegExp = /[- ]+/g;
+  const nonAlphaNumericRegExp = /^[^_a-zA-Z0-9]*$/g;
+  return _.trim(
+    `${snapshotName}_${id}`
+      .replaceAll(dashesAndSpacesRegExp, '_')
+      .replaceAll(nonAlphaNumericRegExp, ''),
+    '_',
+  );
+};
+
+export function* approveSnapshotAccessRequest({ payload }: any): any {
+  const {
+    snapshotAccessRequestResponse: { id, snapshotName },
+  } = payload;
+  const snapshotRequest: SnapshotRequestModel = {
+    name: generateSnapshotName(id, snapshotName),
+    description: `Snapshot created from ${snapshotName}`,
+    contents: [
+      {
+        datasetName: 'unused',
+        mode: SnapshotRequestContentsModelModeEnum.ByRequestId,
+        requestIdSpec: {
+          snapshotRequestId: id,
+        },
+      },
+    ],
+  };
+  try {
+    yield call(authPut, `/api/repository/v1/snapshotAccessRequests/${id}/approve`);
+    yield call(authPost, '/api/repository/v1/snapshots', snapshotRequest);
+    yield put({
+      type: ActionTypes.APPROVE_SNAPSHOT_ACCESS_REQUEST_SUCCESS,
+    });
+    yield put({
+      type: ActionTypes.GET_SNAPSHOT_ACCESS_REQUESTS,
+    });
+  } catch (err) {
+    showNotification(err);
+    yield put({
+      type: ActionTypes.APPROVE_SNAPSHOT_ACCESS_REQUEST_FAILURE,
+    });
+  }
+}
+
+/**
  * App Sagas
  */
 export default function* root() {
@@ -1060,6 +1117,7 @@ export default function* root() {
     takeLatest(ActionTypes.UPDATE_DUOS_DATASET, updateDuosDataset),
     takeLatest(ActionTypes.GET_DUOS_DATASETS, getDuosDatasets),
     takeLatest(ActionTypes.GET_SNAPSHOT_ACCESS_REQUESTS, getSnapshotAccessRequests),
+    takeLatest(ActionTypes.APPROVE_SNAPSHOT_ACCESS_REQUEST, approveSnapshotAccessRequest),
     takeLatest(ActionTypes.REJECT_SNAPSHOT_ACCESS_REQUEST, rejectSnapshotAccessRequest),
     fork(watchGetDatasetByIdSuccess),
   ]);

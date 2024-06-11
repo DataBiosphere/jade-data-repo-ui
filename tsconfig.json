@@ -1,9 +1,10 @@
 {
   "compilerOptions": {
-    "target": "es2016",
+    "target": "es2021",
     "lib": [
       "ES6",
-      "DOM"
+      "DOM",
+      "ES2021.String"
     ],
     "module": "esnext",
     "allowJs": true,

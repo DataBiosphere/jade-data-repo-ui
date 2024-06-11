@@ -36,6 +36,18 @@ export default {
         immutable(state, {
           refreshCnt: { $set: state.refreshCnt + 1 },
         }),
+      [ActionTypes.APPROVE_SNAPSHOT_ACCESS_REQUEST]: (state) =>
+        immutable(state, {
+          loading: { $set: true },
+        }),
+      [ActionTypes.APPROVE_SNAPSHOT_ACCESS_REQUEST_FAILURE]: (state) =>
+        immutable(state, {
+          loading: { $set: false },
+        }),
+      [ActionTypes.APPROVE_SNAPSHOT_ACCESS_REQUEST_SUCCESS]: (state): any =>
+        immutable(state, {
+          loading: { $set: false },
+        }),
       [ActionTypes.REJECT_SNAPSHOT_ACCESS_REQUEST]: (state) =>
         immutable(state, {
           loading: { $set: true },
