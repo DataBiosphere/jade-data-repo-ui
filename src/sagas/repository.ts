@@ -33,6 +33,7 @@ import {
   ColumnStatsRetrievalType,
 } from 'constants';
 import { TdrState } from 'reducers';
+import { generateSnapshotNameFromAccessRequestInformation } from 'libs/utilsTs';
 
 /**
  * Switch Menu
@@ -1027,31 +1028,12 @@ export function* rejectSnapshotAccessRequest({ payload }: any): any {
   }
 }
 
-/**
- * @param id {string} the id of the snapshot access request
- * @param snapshotName {string} the user specified name of the snapshot access request
- *
- * @return {string} An underscore joined name and id with all dashes and spaces converted to
- * underscores and all non-alphanumeric or underscore character stripped out.
- * It also trims all leading underscores
- */
-const generateSnapshotName = (id: string, snapshotName: string): string => {
-  const dashesAndSpacesRegExp = /[- ]+/g;
-  const nonAlphaNumericRegExp = /^[^_a-zA-Z0-9]*$/g;
-  return _.trim(
-    `${snapshotName}_${id}`
-      .replaceAll(dashesAndSpacesRegExp, '_')
-      .replaceAll(nonAlphaNumericRegExp, ''),
-    '_',
-  );
-};
-
 export function* approveSnapshotAccessRequest({ payload }: any): any {
   const {
     snapshotAccessRequestResponse: { id, snapshotName },
   } = payload;
   const snapshotRequest: SnapshotRequestModel = {
-    name: generateSnapshotName(id, snapshotName),
+    name: generateSnapshotNameFromAccessRequestInformation(id, snapshotName),
     description: `Snapshot created from ${snapshotName}`,
     contents: [
       {

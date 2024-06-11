@@ -1,5 +1,9 @@
 import { CloudPlatform, DatasetModel } from 'generated/tdr';
-import { getCloudPlatform, urlEncodeParams } from './utilsTs';
+import {
+  generateSnapshotNameFromAccessRequestInformation,
+  getCloudPlatform,
+  urlEncodeParams
+} from './utilsTs';
 
 describe('utilsTs', () => {
   it('should render a simple url parameter correctly', () => {
@@ -20,5 +24,25 @@ describe('utilsTs', () => {
       storage: [{ cloudPlatform: 'azure' }],
     } as DatasetModel;
     expect(getCloudPlatform(dataset)).to.equal(CloudPlatform.Azure);
+  });
+  describe('generateSnapshotNameFromAccessRequestInformation', () => {
+    it('joins id and name', () => {
+      const id = 'abc';
+      const name = 'name';
+      const expected = 'abc_name';
+      expect(generateSnapshotNameFromAccessRequestInformation(id, name)).to.equal(expected);
+    });
+    it('converts dashes to underscores', () => {
+      const id = 'a-b-c';
+      const name = 'name';
+      const expected = 'a_b_c_name';
+      expect(generateSnapshotNameFromAccessRequestInformation(id, name)).to.equal(expected);
+    });
+    it('removes disallowed characters', () => {
+      const id = 'a&b;c';
+      const name = 'name';
+      const expected = 'abc_name';
+      expect(generateSnapshotNameFromAccessRequestInformation(id, name)).to.equal(expected);
+    });
   });
 });

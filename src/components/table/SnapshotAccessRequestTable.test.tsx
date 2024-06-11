@@ -102,4 +102,33 @@ describe('SnapshotAccessRequestTable', () => {
     );
     cy.get('tbody tr').should('have.length', 1);
   });
+
+  it('submits ', () => {
+    // Arrange
+    const mockStore = createMockStore([routerMiddleware(history)]);
+
+    const store = mockStore(initialState);
+    // Act
+    mount(
+      <Provider store={store}>
+        <Router history={history}>
+          <ThemeProvider theme={globalTheme}>
+            <SnapshotAccessRequestTable
+              searchString="abc"
+              dispatch={store.dispatch}
+              loading={false}
+              refreshCnt={0}
+              snapshotAccessRequests={snapshotAccessRequests}
+            />
+          </ThemeProvider>
+        </Router>
+      </Provider>,
+    );
+    // Assert
+    cy.get('[data-cy=cellValue-snapshotName-0]').should(
+      'have.text',
+      snapshotAccessRequests[0].snapshotName,
+    );
+    cy.get('tbody tr').should('have.length', 1);
+  });
 });
