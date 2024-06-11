@@ -32,10 +32,10 @@ describe('utilsTs', () => {
       const expected = 'abc_name';
       expect(generateSnapshotNameFromAccessRequestInformation(id, name)).to.equal(expected);
     });
-    it('converts dashes to underscores', () => {
+    it('converts dashes and spaces to underscores', () => {
       const id = 'a-b-c';
-      const name = 'name';
-      const expected = 'a_b_c_name';
+      const name = 'na me';
+      const expected = 'a_b_c_na_me';
       expect(generateSnapshotNameFromAccessRequestInformation(id, name)).to.equal(expected);
     });
     it('removes disallowed characters', () => {
