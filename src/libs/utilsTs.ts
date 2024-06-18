@@ -18,3 +18,25 @@ export const urlEncodeParams = (params: Record<string, string | number | boolean
  */
 export const getCloudPlatform = (dataset: DatasetModel): CloudPlatform | undefined =>
   _.first(dataset.storage?.map((s) => s.cloudPlatform));
+
+/**
+ * @param id {string} the id of the snapshot access request
+ * @param snapshotName {string} the user specified name of the snapshot access request
+ *
+ * @return {string} An underscore joined name and id with all dashes and spaces converted to
+ * underscores and all non-alphanumeric or underscore character stripped out.
+ * It also trims all leading underscores
+ */
+export const generateSnapshotNameFromAccessRequestInformation = (
+  id: string,
+  snapshotName: string,
+): string => {
+  const dashesAndSpacesRegExp = /[- ]+/g;
+  const nonAlphaNumericRegExp = /\W/g;
+  return _.trim(
+    `${snapshotName}_${id}`
+      .replaceAll(dashesAndSpacesRegExp, '_')
+      .replaceAll(nonAlphaNumericRegExp, ''),
+    '_',
+  );
+};

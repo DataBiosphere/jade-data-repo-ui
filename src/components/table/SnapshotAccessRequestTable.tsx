@@ -5,7 +5,7 @@ import LightTable from 'components/table/LightTable';
 import moment from 'moment/moment';
 import { Button } from '@mui/material';
 import _ from 'lodash';
-import { rejectSnapshotAccessRequest } from 'actions';
+import { approveSnapshotAccessRequest, rejectSnapshotAccessRequest } from 'actions';
 import { Action } from 'redux';
 
 interface IProps {
@@ -91,7 +91,12 @@ function SnapshotAccessRequestTable({
           >
             Reject
           </Button>
-          <Button color="primary">Approve</Button>
+          <Button
+            color="primary"
+            onClick={() => row.id && dispatch(approveSnapshotAccessRequest(row))}
+          >
+            Approve
+          </Button>
         </div>
       ),
       width: '10%',

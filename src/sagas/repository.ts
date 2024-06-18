@@ -20,7 +20,11 @@ import _ from 'lodash';
 import { RouterRootState } from 'connected-react-router';
 
 import { showNotification } from 'modules/notifications';
-import { JobModelJobStatusEnum } from 'generated/tdr';
+import {
+  JobModelJobStatusEnum,
+  SnapshotRequestContentsModelModeEnum,
+  SnapshotRequestModel,
+} from 'generated/tdr';
 import {
   ActionTypes,
   Status,
@@ -29,6 +33,7 @@ import {
   ColumnStatsRetrievalType,
 } from 'constants';
 import { TdrState } from 'reducers';
+import { generateSnapshotNameFromAccessRequestInformation } from 'libs/utilsTs';
 
 /**
  * Switch Menu
@@ -1023,6 +1028,41 @@ export function* rejectSnapshotAccessRequest({ payload }: any): any {
   }
 }
 
+export function* approveSnapshotAccessRequest({ payload }: any): any {
+  const {
+    snapshotAccessRequestResponse: { id, snapshotName },
+  } = payload;
+  const snapshotRequest: SnapshotRequestModel = {
+    name: generateSnapshotNameFromAccessRequestInformation(id, snapshotName),
+    description: `Snapshot created from ${snapshotName}`,
+    contents: [
+      {
+        datasetName: 'unused',
+        mode: SnapshotRequestContentsModelModeEnum.ByRequestId,
+        requestIdSpec: {
+          snapshotRequestId: id,
+        },
+      },
+    ],
+  };
+  try {
+    yield call(authPut, `/api/repository/v1/snapshotAccessRequests/${id}/approve`);
+    yield call(authPost, '/api/repository/v1/snapshots', snapshotRequest);
+    yield put({
+      type: ActionTypes.APPROVE_SNAPSHOT_ACCESS_REQUEST_SUCCESS,
+    });
+  } catch (err) {
+    showNotification(err);
+    yield put({
+      type: ActionTypes.APPROVE_SNAPSHOT_ACCESS_REQUEST_FAILURE,
+    });
+  }
+  // Refresh when done
+  yield put({
+    type: ActionTypes.GET_SNAPSHOT_ACCESS_REQUESTS,
+  });
+}
+
 /**
  * App Sagas
  */
@@ -1060,6 +1100,7 @@ export default function* root() {
     takeLatest(ActionTypes.UPDATE_DUOS_DATASET, updateDuosDataset),
     takeLatest(ActionTypes.GET_DUOS_DATASETS, getDuosDatasets),
     takeLatest(ActionTypes.GET_SNAPSHOT_ACCESS_REQUESTS, getSnapshotAccessRequests),
+    takeLatest(ActionTypes.APPROVE_SNAPSHOT_ACCESS_REQUEST, approveSnapshotAccessRequest),
     takeLatest(ActionTypes.REJECT_SNAPSHOT_ACCESS_REQUEST, rejectSnapshotAccessRequest),
     fork(watchGetDatasetByIdSuccess),
   ]);
