@@ -32,7 +32,7 @@ export const generateSnapshotNameFromAccessRequestInformation = (
   snapshotName: string,
 ): string => {
   const dashesAndSpacesRegExp = /[- ]+/g;
-  const nonAlphaNumericRegExp = /^\W*$/g;
+  const nonAlphaNumericRegExp = /\W/g;
   return _.trim(
     `${snapshotName}_${id}`
       .replaceAll(dashesAndSpacesRegExp, '_')

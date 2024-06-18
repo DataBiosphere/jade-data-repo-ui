@@ -1051,15 +1051,16 @@ export function* approveSnapshotAccessRequest({ payload }: any): any {
     yield put({
       type: ActionTypes.APPROVE_SNAPSHOT_ACCESS_REQUEST_SUCCESS,
     });
-    yield put({
-      type: ActionTypes.GET_SNAPSHOT_ACCESS_REQUESTS,
-    });
   } catch (err) {
     showNotification(err);
     yield put({
       type: ActionTypes.APPROVE_SNAPSHOT_ACCESS_REQUEST_FAILURE,
     });
   }
+  // Refresh when done
+  yield put({
+    type: ActionTypes.GET_SNAPSHOT_ACCESS_REQUESTS,
+  });
 }
 
 /**
