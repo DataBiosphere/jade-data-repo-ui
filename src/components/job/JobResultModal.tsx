@@ -21,6 +21,7 @@ import { RouterLocation, RouterRootState } from 'connected-react-router';
 import { LocationState } from 'history';
 import { push } from 'modules/hist';
 import LoadingSpinner from '../common/LoadingSpinner';
+import CopyTextButton from '../common/CopyTextButton';
 
 const styles = () => ({
   dialog: {
@@ -109,7 +110,10 @@ function JobResultModal({ classes, dispatch, loading, jobResult, location }: Job
               <div>
                 <div className={classes.dialogInfo}>
                   <div className={classes.dialogLabel}>ID</div>
-                  <div className={classes.dialogContent}>{expandedJob}</div>
+                  <div className={classes.dialogContent}>
+                    <span style={{ marginRight: '10px' }}>{expandedJob}</span>
+                    <CopyTextButton valueToCopy={expandedJob} nameOfValue="Job ID" />
+                  </div>
                 </div>
 
                 <div className={classes.dialogInfo}>

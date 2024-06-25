@@ -11,6 +11,7 @@ import { RouterRootState } from 'connected-react-router';
 import { connect } from 'react-redux';
 import { push } from 'modules/hist';
 import { urlEncodeParams } from 'libs/utilsTs';
+import CopyTextButton from '../common/CopyTextButton';
 import LightTable from './LightTable';
 
 const styles = (theme: CustomTheme) => ({
@@ -35,7 +36,7 @@ const styles = (theme: CustomTheme) => ({
     border: 'none',
     backgroundColor: 'transparent',
     color: theme.palette.primary.main,
-    width: '100%',
+    width: '80%',
     ...theme.mixins.ellipsis,
     '&:hover': {
       color: theme.palette.primary.hover,
@@ -86,13 +87,16 @@ const JobTable = withStyles(styles)(
         allowSort: false,
         width: '20%',
         render: (row: any) => (
-          <button
-            type="button"
-            onClick={() => handleSeeMoreOpen(row.id)}
-            className={classes.seeMoreLink}
-          >
-            <span>{`${row.id || 'See More'}`}</span>
-          </button>
+          <div>
+            <button
+              type="button"
+              onClick={() => handleSeeMoreOpen(row.id)}
+              className={classes.seeMoreLink}
+            >
+              <span>{`${row.id || 'See More'}`}</span>
+            </button>
+            <CopyTextButton valueToCopy={row.id} nameOfValue="Job ID" />
+          </div>
         ),
       },
       {
