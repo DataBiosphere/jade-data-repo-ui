@@ -33,7 +33,6 @@ import {
   ColumnStatsRetrievalType,
 } from 'constants';
 import { TdrState } from 'reducers';
-import { generateSnapshotNameFromAccessRequestInformation } from 'libs/utilsTs';
 
 /**
  * Switch Menu
@@ -1033,7 +1032,7 @@ export function* approveSnapshotAccessRequest({ payload }: any): any {
     snapshotAccessRequestResponse: { id, snapshotName },
   } = payload;
   const snapshotRequest: SnapshotRequestModel = {
-    name: generateSnapshotNameFromAccessRequestInformation(id, snapshotName),
+    name: 'unused',
     description: `Snapshot created from ${snapshotName}`,
     contents: [
       {
