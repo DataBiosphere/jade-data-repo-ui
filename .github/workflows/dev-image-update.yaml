@@ -42,6 +42,7 @@ jobs:
         id: bumperstep
         with:
           actions_subcommand: 'bumper'
+          sa_b64_credentials: ${{ secrets.SA_B64_CREDENTIALS }}
           role_id: ${{ secrets.ROLE_ID }}
           secret_id: ${{ secrets.SECRET_ID }}
           version_file_path: package.json
@@ -51,6 +52,7 @@ jobs:
         uses: broadinstitute/datarepo-actions/actions/main@0.73.0
         with:
           actions_subcommand: 'skip'
+          sa_b64_credentials: ${{ secrets.SA_B64_CREDENTIALS }}
           role_id: ${{ secrets.ROLE_ID }}
           secret_id: ${{ secrets.SECRET_ID }}
       - name: 'Pull down new tags'
