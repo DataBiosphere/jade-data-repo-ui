@@ -94,7 +94,7 @@ jobs:
     secrets: inherit
   cherry_pick_image_to_production_gcr:
     needs: update_image
-    uses: DataBiosphere/jade-data-repo/.github/workflows/cherry-pick-image.yaml@2.92.0
+    uses: DataBiosphere/jade-data-repo/.github/workflows/cherry-pick-image.yaml@1.536.0
     secrets: inherit
     with:
       gcr_tag: ${{ needs.update_image.outputs.ui_image_tag }}
