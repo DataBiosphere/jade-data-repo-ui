@@ -43,8 +43,6 @@ jobs:
         with:
           actions_subcommand: 'bumper'
           sa_b64_credentials: ${{ secrets.SA_B64_CREDENTIALS }}
-          role_id: ${{ secrets.ROLE_ID }}
-          secret_id: ${{ secrets.SECRET_ID }}
           version_file_path: package.json
           version_variable_name: version
           GITHUB_TOKEN: ${{ secrets.BROADBOT_TOKEN }}
@@ -53,8 +51,6 @@ jobs:
         with:
           actions_subcommand: 'skip'
           sa_b64_credentials: ${{ secrets.SA_B64_CREDENTIALS }}
-          role_id: ${{ secrets.ROLE_ID }}
-          secret_id: ${{ secrets.SECRET_ID }}
       - name: 'Pull down new tags'
         run: git fetch --all --tags
       - name: 'Get Previous tag'
