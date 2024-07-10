@@ -29,19 +29,19 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - name: 'Whitelist Runner IP'
-        uses: broadinstitute/datarepo-actions/actions/main@0.73.0
+        uses: broadinstitute/datarepo-actions/actions/main@0.74.0
         with:
           actions_subcommand: 'gcp_whitelist'
-          role_id: ${{ secrets.ROLE_ID }}
-          secret_id: ${{ secrets.SECRET_ID }}
+          sa_b64_credentials: ${{ secrets.SA_B64_CREDENTIALS }}
       - name: 'Check for an available namespace to deploy API to and set state lock'
         id: namespace
-        uses: broadinstitute/datarepo-actions/actions/main@0.73.0
+        uses: broadinstitute/datarepo-actions/actions/main@0.74.0
         with:
           actions_subcommand: 'k8_checknamespace'
           # See https://github.com/DataBiosphere/jade-data-repo-ui/blob/develop/tools/ui_integration/README.md
           # if setting up a new namespace for testing.
           k8_namespaces: 'integration-4,integration-5'
+          sa_b64_credentials: ${{ secrets.SA_B64_CREDENTIALS }}
       - name: initialize npm
         env:
           DEV_PROJECT: broad-jade-dev
@@ -77,7 +77,7 @@ jobs:
         run: |
           echo "Pushed docker image gcr.io/broad-jade-dev/jade-data-repo-ui:${GCR_TAG}"
       - name: 'Deploy to cluster with Helm'
-        uses: broadinstitute/datarepo-actions/actions/main@0.73.0
+        uses: broadinstitute/datarepo-actions/actions/main@0.74.0
         with:
           actions_subcommand: 'helmdeploy'
           helm_create_secret_manager_secret_version: 0.0.8
@@ -86,8 +86,9 @@ jobs:
           helm_gcloud_sqlproxy_chart_version: 0.19.13
           helm_oidc_proxy_chart_version: 0.0.44
           helm_imagetag_update: 'ui'
+          sa_b64_credentials: ${{ secrets.SA_B64_CREDENTIALS }}
       - name: 'Wait for deployment to come back online'
-        uses: broadinstitute/datarepo-actions/actions/wait-for-deployment@0.73.0
+        uses: broadinstitute/datarepo-actions/actions/wait-for-deployment@0.74.0
         env:
           DEPLOYMENT_TYPE: 'ui'
       - name: set cypresss env
@@ -105,14 +106,16 @@ jobs:
           npx cypress run --record
       - name: 'Clean state lock from used Namespace on API deploy'
         if: always()
-        uses: broadinstitute/datarepo-actions/actions/main@0.73.0
+        uses: broadinstitute/datarepo-actions/actions/main@0.74.0
         with:
           actions_subcommand: 'k8_checknamespace_clean'
+          sa_b64_credentials: ${{ secrets.SA_B64_CREDENTIALS }}
       - name: 'Clean whitelisted Runner IP'
         if: always()
-        uses: broadinstitute/datarepo-actions/actions/main@0.73.0
+        uses: broadinstitute/datarepo-actions/actions/main@0.74.0
         with:
           actions_subcommand: 'gcp_whitelist_clean'
+          sa_b64_credentials: ${{ secrets.SA_B64_CREDENTIALS }}
   report-workflow:
     uses: broadinstitute/sherlock/.github/workflows/client-report-workflow.yaml@main
     if: ${{ github.ref == 'refs/heads/develop' }}

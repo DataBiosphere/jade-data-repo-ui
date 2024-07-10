@@ -38,21 +38,19 @@ jobs:
           ref: develop
           token: ${{ secrets.BROADBOT_TOKEN }}
       - name: 'Bump the tag to a new version'
-        uses: broadinstitute/datarepo-actions/actions/main@0.73.0
+        uses: broadinstitute/datarepo-actions/actions/main@0.74.0
         id: bumperstep
         with:
           actions_subcommand: 'bumper'
-          role_id: ${{ secrets.ROLE_ID }}
-          secret_id: ${{ secrets.SECRET_ID }}
+          sa_b64_credentials: ${{ secrets.SA_B64_CREDENTIALS }}
           version_file_path: package.json
           version_variable_name: version
           GITHUB_TOKEN: ${{ secrets.BROADBOT_TOKEN }}
       - name: 'Get gcp credentials'
-        uses: broadinstitute/datarepo-actions/actions/main@0.73.0
+        uses: broadinstitute/datarepo-actions/actions/main@0.74.0
         with:
           actions_subcommand: 'skip'
-          role_id: ${{ secrets.ROLE_ID }}
-          secret_id: ${{ secrets.SECRET_ID }}
+          sa_b64_credentials: ${{ secrets.SA_B64_CREDENTIALS }}
       - name: 'Pull down new tags'
         run: git fetch --all --tags
       - name: 'Get Previous tag'
@@ -92,7 +90,7 @@ jobs:
     secrets: inherit
   cherry_pick_image_to_production_gcr:
     needs: update_image
-    uses: DataBiosphere/jade-data-repo/.github/workflows/cherry-pick-image.yaml@1.536.0
+    uses: DataBiosphere/jade-data-repo/.github/workflows/cherry-pick-image.yaml@2.98.0
     secrets: inherit
     with:
       gcr_tag: ${{ needs.update_image.outputs.ui_image_tag }}
