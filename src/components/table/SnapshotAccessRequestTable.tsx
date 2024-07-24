@@ -7,8 +7,18 @@ import { Button } from '@mui/material';
 import _ from 'lodash';
 import { approveSnapshotAccessRequest, rejectSnapshotAccessRequest } from 'actions';
 import { Action } from 'redux';
+import { Link } from 'react-router-dom';
+import { ClassNameMap, withStyles } from '@mui/styles';
+import { CustomTheme } from '@mui/material/styles';
+
+const styles = (theme: CustomTheme) => ({
+  jadeLink: {
+    ...theme.mixins.jadeLink,
+  },
+});
 
 interface IProps {
+  classes: ClassNameMap;
   dispatch: Dispatch<Action>;
   snapshotAccessRequests: Array<SnapshotAccessRequestResponse>;
   loading: boolean;
@@ -17,6 +27,7 @@ interface IProps {
 }
 
 function SnapshotAccessRequestTable({
+  classes,
   dispatch,
   snapshotAccessRequests,
   loading,
@@ -48,19 +59,29 @@ function SnapshotAccessRequestTable({
       label: 'Request Name',
       name: 'snapshotName',
       render: (row: SnapshotAccessRequestResponse) => row.snapshotName || '',
-      width: '19%',
+      width: '16%',
     },
     {
       label: 'Request Id',
       name: 'id',
       render: (row: SnapshotAccessRequestResponse) => row.id || '',
-      width: '19%',
+      width: '12%',
     },
     {
       label: 'Source Snapshot Id',
       name: 'sourceSnapshotId',
       render: (row: SnapshotAccessRequestResponse) => row.sourceSnapshotId || '',
-      width: '19%',
+      width: '12%',
+    },
+    {
+      label: 'Created Snapshot Id',
+      name: 'createdSnapshotId',
+      render: (row: SnapshotAccessRequestResponse) => (
+        <Link to={`/snapshots/${row.createdSnapshotId}`}>
+          <span className={classes.jadeLink}>{row.createdSnapshotId}</span>
+        </Link>
+      ),
+      width: '12%',
     },
     {
       label: 'Created By',
@@ -99,7 +120,7 @@ function SnapshotAccessRequestTable({
           </Button>
         </div>
       ),
-      width: '10%',
+      width: '15%',
     },
   ];
   return (
@@ -117,4 +138,4 @@ function SnapshotAccessRequestTable({
   );
 }
 
-export default SnapshotAccessRequestTable;
+export default withStyles(styles)(SnapshotAccessRequestTable);
