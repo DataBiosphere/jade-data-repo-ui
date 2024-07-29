@@ -28,8 +28,12 @@ const initialState = {
         name: 'discoverer',
         members: [],
       },
+      {
+        name: 'aggregate_data_reader',
+        members: ['datareader@gmail.com'],
+      },
     ],
-    userRoles: ['steward', 'reader'],
+    userRoles: ['steward', 'reader', 'discoverer', 'aggregate_data_reader'],
   },
 };
 
@@ -67,6 +71,13 @@ describe('Snapshot access info', () => {
       .within(() => {
         cy.get('[data-cy="user-email"]').then((user) => {
           cy.wrap(user[0]).should('contain.text', '(None)');
+        });
+      });
+    cy.get('[data-cy="snapshot-aggregate-data-readers"]')
+      .should('contain.text', 'Aggregate Data Readers')
+      .within(() => {
+        cy.get('[data-cy="user-email"]').then((user) => {
+          cy.wrap(user[0]).should('contain.text', 'datareader@gmail.com');
         });
       });
   });
