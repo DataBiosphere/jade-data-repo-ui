@@ -47,7 +47,12 @@ function SnapshotAccess({
 
       // needs this manual conversion because the permissions are different for
       // editing existing snapshot policies vs creating a new snapshot
-      if (role === 'steward' || role === 'reader' || role === 'discoverer') {
+      if (
+        role === 'steward' ||
+        role === 'reader' ||
+        role === 'discoverer' ||
+        role === 'aggregate_data_reader'
+      ) {
         dispatch(changePolicyUsersToSnapshotRequest(`${role}s`, uniqEmails));
       }
     } else {
@@ -81,12 +86,14 @@ function SnapshotAccess({
   const stewards = getUsers(SnapshotRoles.STEWARD);
   const readers = getUsers(SnapshotRoles.READER);
   const discoverers = getUsers(SnapshotRoles.DISCOVERER);
+  const aggregateDataReaders = getUsers(SnapshotRoles.AGGREGATE_DATA_READER);
 
   const canManageUsers = userRoles.includes(SnapshotRoles.STEWARD) || !!createMode;
   const permissions: AccessPermission[] = [
     { policy: 'steward', disabled: !canManageUsers },
     { policy: 'reader', disabled: !canManageUsers },
     { policy: 'discoverer', disabled: !canManageUsers },
+    { policy: 'aggregate_data_reader', disabled: !canManageUsers },
   ];
 
   return (
@@ -120,6 +127,15 @@ function SnapshotAccess({
           typeOfUsers="Discoverers"
           canManageUsers={canManageUsers}
           removeUser={removeUser(SnapshotRoles.DISCOVERER)}
+          defaultOpen={createMode}
+        />
+      </Grid>
+      <Grid item xs={12} data-cy="snapshot-aggregate-data-readers">
+        <UserList
+          users={aggregateDataReaders}
+          typeOfUsers="Aggregate Data Readers"
+          canManageUsers={canManageUsers}
+          removeUser={removeUser(SnapshotRoles.AGGREGATE_DATA_READER)}
           defaultOpen={createMode}
         />
       </Grid>
