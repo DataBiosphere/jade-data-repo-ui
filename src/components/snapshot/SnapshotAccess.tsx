@@ -40,6 +40,8 @@ function SnapshotAccess({
   userRoles,
   createMode,
 }: SnapshotAccessProps) {
+  const transformRoleToCreatePolicy = (role: string): string => `${_.camelCase(role)}s`;
+
   const addUsers = (role: string, usersToAdd: string[]) => {
     if (createMode) {
       const existingEmails = _.get(snapshotRequest, ['policies', `${role}s`], []);
@@ -47,13 +49,8 @@ function SnapshotAccess({
 
       // needs this manual conversion because the permissions are different for
       // editing existing snapshot policies vs creating a new snapshot
-      if (
-        role === 'steward' ||
-        role === 'reader' ||
-        role === 'discoverer' ||
-        role === 'aggregate_data_reader'
-      ) {
-        dispatch(changePolicyUsersToSnapshotRequest(`${role}s`, uniqEmails));
+      if (Object.values(SnapshotRoles).includes(role)) {
+        dispatch(changePolicyUsersToSnapshotRequest(transformRoleToCreatePolicy(role), uniqEmails));
       }
     } else {
       usersToAdd.forEach((user) => {
@@ -67,7 +64,9 @@ function SnapshotAccess({
       return (removeableEmail: string) => {
         const existingEmails = _.get(snapshotRequest, ['policies', `${role}s`], []);
         const filteredEmails = _.filter(existingEmails, (user: string) => user !== removeableEmail);
-        dispatch(changePolicyUsersToSnapshotRequest(`${role}s`, filteredEmails));
+        dispatch(
+          changePolicyUsersToSnapshotRequest(transformRoleToCreatePolicy(role), filteredEmails),
+        );
       };
     }
 
@@ -76,12 +75,10 @@ function SnapshotAccess({
     };
   };
 
-  const getUsers = (role: string): string[] => {
-    const pluralizedRole = `${role}s`;
-    return createMode
-      ? (snapshotRequest.policies as any)[pluralizedRole] || []
+  const getUsers = (role: string): string[] =>
+    createMode
+      ? (snapshotRequest.policies as any)[transformRoleToCreatePolicy(role)] || []
       : getRoleMembersFromPolicies(policies, role);
-  };
 
   const stewards = getUsers(SnapshotRoles.STEWARD);
   const readers = getUsers(SnapshotRoles.READER);
