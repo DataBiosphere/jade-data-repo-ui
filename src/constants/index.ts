@@ -205,6 +205,7 @@ export enum SnapshotRoles {
   STEWARD = 'steward',
   READER = 'reader',
   DISCOVERER = 'discoverer',
+  AGGREGATE_DATA_READER = 'aggregate_data_reader',
 }
 
 export enum DatasetRoles {
