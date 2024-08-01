@@ -71,7 +71,7 @@ function TabWrapper(props: TabWrapperProps) {
   const tabConfigs: Array<ITabConfig> = [
     { label: 'Datasets', path: '/datasets' },
     { label: 'Snapshots', path: '/snapshots' },
-    { label: 'Activity', path: '/activity' },
+    { label: 'Activity', path: '/activity', hidden: true },
     { label: 'Ingest Data', path: '/ingestdata' },
     {
       label: 'Requests',
