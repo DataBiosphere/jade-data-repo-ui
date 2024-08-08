@@ -79,8 +79,8 @@ const styles = (theme: CustomTheme) =>
   });
 
 interface ManageWorkspaceModalProps extends WithStyles<typeof styles> {
-  modalText: string | undefined;
-  modalContent: string | undefined;
+  modalText: string;
+  modalContent: string;
   modalHeading: string;
   isLoading: boolean;
 }
