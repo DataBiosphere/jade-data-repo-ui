@@ -12,8 +12,6 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import LoadingSpinner from 'components/common/LoadingSpinner';
-import { TdrState } from 'reducers';
-import { connect } from 'react-redux';
 
 const styles = (theme: CustomTheme) =>
   createStyles({
@@ -78,26 +76,23 @@ const styles = (theme: CustomTheme) =>
     },
   });
 
-interface ManageWorkspaceModalProps extends WithStyles<typeof styles> {
+interface ModalProps extends WithStyles<typeof styles> {
   modalText: string;
   modalContent: string;
   modalHeading: string;
   isLoading: boolean;
 }
 
-type ManageWorkspaceModalState = {
+type ModalState = {
   open: boolean;
 };
 
-const initialState: ManageWorkspaceModalState = {
+const initialState: ModalState = {
   open: false,
 };
 
-export class Modal extends React.PureComponent<
-  ManageWorkspaceModalProps,
-  ManageWorkspaceModalState
-> {
-  constructor(props: ManageWorkspaceModalProps) {
+export class Modal extends React.PureComponent<ModalProps, ModalState> {
+  constructor(props: ModalProps) {
     super(props);
     this.state = initialState;
   }
@@ -168,10 +163,5 @@ export class Modal extends React.PureComponent<
   }
 }
 
-function mapStateToProps(state: TdrState) {
-  return {
-    isLoading: state.snapshots.snapshotWorkspaceManagerEditInProgress,
-  };
-}
 
-export default connect(mapStateToProps)(withStyles(styles)(Modal));
+export default withStyles(styles)(Modal);
