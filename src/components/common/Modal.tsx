@@ -163,5 +163,4 @@ export class Modal extends React.PureComponent<ModalProps, ModalState> {
   }
 }
 
-
 export default withStyles(styles)(Modal);
