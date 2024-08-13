@@ -32,6 +32,8 @@ const styles = (theme: CustomTheme) =>
       margin: 0,
       padding: `${theme.spacing(2)} !important`,
       whiteSpace: 'pre-wrap',
+      maxHeight: '24rem',
+      overflowY: 'scroll',
     },
     dialogActions: {
       borderTop: `1px solid ${theme.palette.divider}`,
@@ -70,13 +72,13 @@ const styles = (theme: CustomTheme) =>
     },
   });
 
-interface ModalTriggerProps extends WithStyles<typeof styles> {
+interface TextWithModalDetailsProps extends WithStyles<typeof styles> {
   modalText: string;
   modalContent: string;
   modalHeading: string;
 }
 
-export function ModalTrigger(props: ModalTriggerProps) {
+export function TextWithModalDetails(props: TextWithModalDetailsProps) {
   const [open, setOpen] = useState(false);
   const { classes, modalText, modalContent, modalHeading } = props;
 
@@ -119,7 +121,7 @@ export function ModalTrigger(props: ModalTriggerProps) {
         <Typography className={classes.dialogInstructions}>{modalContent}</Typography>
         <DialogActions className={classes.dialogActions}>
           <Button onClick={handleClose} color="primary">
-            Done
+            OK
           </Button>
         </DialogActions>
       </Dialog>
@@ -127,4 +129,4 @@ export function ModalTrigger(props: ModalTriggerProps) {
   );
 }
 
-export default withStyles(styles)(ModalTrigger);
+export default withStyles(styles)(TextWithModalDetails);

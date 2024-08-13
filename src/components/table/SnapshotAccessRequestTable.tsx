@@ -10,7 +10,7 @@ import { Action } from 'redux';
 import { Link } from 'react-router-dom';
 import { ClassNameMap, withStyles } from '@mui/styles';
 import { CustomTheme } from '@mui/material/styles';
-import ModalTrigger from 'components/common/ModalTrigger';
+import TextWithModalDetails from 'components/common/TextWithModalDetails';
 
 const styles = (theme: CustomTheme) => ({
   jadeLink: {
@@ -60,7 +60,7 @@ function SnapshotAccessRequestTable({
       label: 'Request Name',
       name: 'snapshotName',
       render: (row: SnapshotAccessRequestResponse) => (
-        <ModalTrigger
+        <TextWithModalDetails
           modalText={row.snapshotName}
           modalHeading={`Summary for: ${row.snapshotName}`}
           modalContent={row.summary}
