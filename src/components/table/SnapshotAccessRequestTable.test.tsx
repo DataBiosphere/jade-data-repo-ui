@@ -46,6 +46,7 @@ describe('SnapshotAccessRequestTable', () => {
             <SnapshotAccessRequestTable
               searchString=""
               dispatch={store.dispatch}
+              loadingSnapshotAccessRequestDetails={false}
               loading={false}
               refreshCnt={0}
               snapshotAccessRequests={snapshotAccessRequests}
@@ -90,6 +91,7 @@ describe('SnapshotAccessRequestTable', () => {
               loading={false}
               refreshCnt={0}
               snapshotAccessRequests={snapshotAccessRequests}
+              loadingSnapshotAccessRequestDetails={false}
             />
           </ThemeProvider>
         </Router>
