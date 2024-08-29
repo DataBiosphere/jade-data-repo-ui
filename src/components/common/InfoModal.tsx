@@ -73,12 +73,12 @@ const styles = (theme: CustomTheme) =>
   });
 
 interface InfoModalProps extends WithStyles<typeof styles> {
-  modalContent: string;
-  modalHeading: string;
-  onDismiss: () => void;
+  readonly modalContent: string;
+  readonly modalHeading: string;
+  readonly onDismiss: () => void;
 }
 
-export function InfoModal(readonly props: InfoModalProps) {
+export function InfoModal(props: InfoModalProps) {
   const { classes, modalContent, modalHeading, onDismiss } = props;
 
   return (
