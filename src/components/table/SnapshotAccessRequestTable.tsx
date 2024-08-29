@@ -14,7 +14,7 @@ import { Action } from 'redux';
 import { Link } from 'react-router-dom';
 import { ClassNameMap, createStyles, withStyles } from '@mui/styles';
 import { CustomTheme } from '@mui/material/styles';
-import TextWithModalDetails from 'components/common/TextWithModalDetails';
+import TextWithModalDetails from 'components/common/InfoModal';
 import LoadingSpinner from 'components/common/LoadingSpinner';
 
 const styles = (theme: CustomTheme) =>
