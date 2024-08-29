@@ -78,7 +78,7 @@ interface InfoModalProps extends WithStyles<typeof styles> {
   onDismiss: () => void;
 }
 
-export function InfoModal(props: InfoModalProps) {
+export function InfoModal(readonly props: InfoModalProps) {
   const { classes, modalContent, modalHeading, onDismiss } = props;
 
   return (
