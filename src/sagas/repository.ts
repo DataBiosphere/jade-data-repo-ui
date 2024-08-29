@@ -1009,6 +1009,22 @@ export function* getSnapshotAccessRequests(): any {
   }
 }
 
+export function* getSnapshotAccessRequestDetails({ payload }: any): any {
+  const { id } = payload;
+  try {
+    const response = yield call(authGet, `/api/repository/v1/snapshotAccessRequests/${id}/details`);
+    yield put({
+      type: ActionTypes.GET_SNAPSHOT_ACCESS_REQUEST_DETAILS_SUCCESS,
+      snapshotAccessRequestDetails: { data: response },
+    });
+  } catch (err) {
+    showNotification(err);
+    yield put({
+      type: ActionTypes.GET_SNAPSHOT_ACCESS_REQUEST_DETAILS_FAILURE,
+    });
+  }
+}
+
 export function* rejectSnapshotAccessRequest({ payload }: any): any {
   try {
     const { id } = payload;
@@ -1099,6 +1115,7 @@ export default function* root() {
     takeLatest(ActionTypes.UPDATE_DUOS_DATASET, updateDuosDataset),
     takeLatest(ActionTypes.GET_DUOS_DATASETS, getDuosDatasets),
     takeLatest(ActionTypes.GET_SNAPSHOT_ACCESS_REQUESTS, getSnapshotAccessRequests),
+    takeLatest(ActionTypes.GET_SNAPSHOT_ACCESS_REQUEST_DETAILS, getSnapshotAccessRequestDetails),
     takeLatest(ActionTypes.APPROVE_SNAPSHOT_ACCESS_REQUEST, approveSnapshotAccessRequest),
     takeLatest(ActionTypes.REJECT_SNAPSHOT_ACCESS_REQUEST, rejectSnapshotAccessRequest),
     fork(watchGetDatasetByIdSuccess),
