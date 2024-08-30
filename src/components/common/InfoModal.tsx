@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import {
   Button,
@@ -72,55 +72,27 @@ const styles = (theme: CustomTheme) =>
     },
   });
 
-interface TextWithModalDetailsProps extends WithStyles<typeof styles> {
-  modalText: string;
-  modalContent: string;
-  modalHeading: string;
+interface InfoModalProps extends WithStyles<typeof styles> {
+  readonly modalContent: string;
+  readonly modalHeading: string;
+  readonly onDismiss: () => void;
 }
 
-export function TextWithModalDetails(props: TextWithModalDetailsProps) {
-  const [open, setOpen] = useState(false);
-  const { classes, modalText, modalContent, modalHeading } = props;
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const button = (
-    <Button
-      className={classes.openButton}
-      aria-label={modalText}
-      onClick={handleClickOpen}
-      disableFocusRipple={true}
-      disableRipple={true}
-    >
-      {modalText}
-    </Button>
-  );
+export function InfoModal(props: InfoModalProps) {
+  const { classes, modalContent, modalHeading, onDismiss } = props;
 
   return (
     <span>
-      {button}
-      <Dialog
-        fullWidth
-        maxWidth="md"
-        onClose={handleClose}
-        aria-labelledby="customized-dialog-title"
-        open={open}
-      >
+      <Dialog fullWidth maxWidth="md" onClose={onDismiss} open={true}>
         <DialogTitle className={classes.dialogTitle} id="customized-dialog-title">
           {modalHeading}
-          <IconButton aria-label="Close" className={classes.closeButton} onClick={handleClose}>
+          <IconButton aria-label="Close" className={classes.closeButton} onClick={onDismiss}>
             <CloseIcon />
           </IconButton>
         </DialogTitle>
         <Typography className={classes.dialogInstructions}>{modalContent}</Typography>
         <DialogActions className={classes.dialogActions}>
-          <Button onClick={handleClose} color="primary">
+          <Button onClick={onDismiss} color="primary">
             OK
           </Button>
         </DialogActions>
@@ -129,4 +101,4 @@ export function TextWithModalDetails(props: TextWithModalDetailsProps) {
   );
 }
 
-export default withStyles(styles)(TextWithModalDetails);
+export default withStyles(styles)(InfoModal);
