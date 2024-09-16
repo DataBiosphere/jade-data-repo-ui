@@ -126,7 +126,7 @@
     "eslint-plugin-react": "^7.35.2",
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-redux-saga": "^1.3.2",
-    "inquirer": "^10.2.2",
+    "inquirer": "^11.0.1",
     "prettier": "2.2.1",
     "react-dom": "^17.0.2",
     "redux-mock-store": "^1.5.4",
