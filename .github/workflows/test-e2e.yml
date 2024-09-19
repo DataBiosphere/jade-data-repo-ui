@@ -1,6 +1,5 @@
 name: e2e
 env:
-  K8_CLUSTER: 'integration-master'
   # This must be defined for the bash redirection
   GOOGLE_APPLICATION_CREDENTIALS: 'jade-dev-account.json'
   # This must be defined for the bash redirection
@@ -12,6 +11,9 @@ on:
       - develop
   schedule:
     - cron: '0 4 * * *' # run at 4 AM UTC, 12PM EST.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 jobs:
   e2e_test:
     name: Cypress End-to-end Tests
@@ -28,20 +30,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - name: 'Whitelist Runner IP'
-        uses: broadinstitute/datarepo-actions/actions/main@0.74.0
-        with:
-          actions_subcommand: 'gcp_whitelist'
-          sa_b64_credentials: ${{ secrets.SA_B64_CREDENTIALS }}
-      - name: 'Check for an available namespace to deploy API to and set state lock'
-        id: namespace
-        uses: broadinstitute/datarepo-actions/actions/main@0.74.0
-        with:
-          actions_subcommand: 'k8_checknamespace'
-          # See https://github.com/DataBiosphere/jade-data-repo-ui/blob/develop/tools/ui_integration/README.md
-          # if setting up a new namespace for testing.
-          k8_namespaces: 'integration-4,integration-5'
-          sa_b64_credentials: ${{ secrets.SA_B64_CREDENTIALS }}
       - name: initialize npm
         env:
           DEV_PROJECT: broad-jade-dev
@@ -61,36 +49,6 @@ jobs:
           DISABLE_ESLINT_PLUGIN: true
         run: |
           npm start & timeout 600 bash -c "until nc -z localhost 3000; do sleep 5; done"
-      # Build the Docker image
-      - name: Build
-        run: |
-          rm -rf jade-dev-account.pem
-          docker build -f Dockerfile.direct -t gcr.io/broad-jade-dev/jade-data-repo-ui:${GCR_TAG} --build-arg CACHEBUST=$(date +%s) .
-      # Push the Docker image to Google Container Registry
-      - name: Publish
-        run: |
-          gcloud auth activate-service-account --key-file jade-dev-account.json
-          gcloud auth configure-docker --quiet
-          docker push gcr.io/broad-jade-dev/jade-data-repo-ui:${GCR_TAG}
-      # Echo what the image deployed was (useful for running skaffold deploy --image ... )
-      - name: Echo tagged image
-        run: |
-          echo "Pushed docker image gcr.io/broad-jade-dev/jade-data-repo-ui:${GCR_TAG}"
-      - name: 'Deploy to cluster with Helm'
-        uses: broadinstitute/datarepo-actions/actions/main@0.74.0
-        with:
-          actions_subcommand: 'helmdeploy'
-          helm_create_secret_manager_secret_version: 0.0.8
-          helm_datarepo_api_chart_version: 0.0.765
-          helm_datarepo_ui_chart_version: 0.0.369
-          helm_gcloud_sqlproxy_chart_version: 0.19.13
-          helm_oidc_proxy_chart_version: 0.0.44
-          helm_imagetag_update: 'ui'
-          sa_b64_credentials: ${{ secrets.SA_B64_CREDENTIALS }}
-      - name: 'Wait for deployment to come back online'
-        uses: broadinstitute/datarepo-actions/actions/wait-for-deployment@0.74.0
-        env:
-          DEPLOYMENT_TYPE: 'ui'
       - name: set cypresss env
         run: |
           eval $(cat env_vars)
@@ -104,25 +62,13 @@ jobs:
           DISABLE_ESLINT_PLUGIN: true
         run: |
           npx cypress run --record
-      - name: 'Clean state lock from used Namespace on API deploy'
-        if: always()
-        uses: broadinstitute/datarepo-actions/actions/main@0.74.0
-        with:
-          actions_subcommand: 'k8_checknamespace_clean'
-          sa_b64_credentials: ${{ secrets.SA_B64_CREDENTIALS }}
-      - name: 'Clean whitelisted Runner IP'
-        if: always()
-        uses: broadinstitute/datarepo-actions/actions/main@0.74.0
-        with:
-          actions_subcommand: 'gcp_whitelist_clean'
-          sa_b64_credentials: ${{ secrets.SA_B64_CREDENTIALS }}
-  report-workflow:
-    uses: broadinstitute/sherlock/.github/workflows/client-report-workflow.yaml@main
-    if: ${{ github.ref == 'refs/heads/develop' }}
-    with:
-      relates-to-chart-releases: 'datarepo-dev'
-      notify-slack-channels-upon-workflow-failure: ${{ vars.SLACK_NOTIFICATION_CHANNELS }}
-      notify-slack-channels-upon-workflow-retry: ${{ vars.SLACK_NOTIFICATION_CHANNELS }}
-      notify-slack-custom-icon: ':terra-horse:'
-    permissions:
-      id-token: write
+#  report-workflow:
+#    uses: broadinstitute/sherlock/.github/workflows/client-report-workflow.yaml@main
+#    if: ${{ github.ref == 'refs/heads/develop' }}
+#    with:
+#      relates-to-chart-releases: 'datarepo-dev'
+#      notify-slack-channels-upon-workflow-failure: ${{ vars.SLACK_NOTIFICATION_CHANNELS }}
+#      notify-slack-channels-upon-workflow-retry: ${{ vars.SLACK_NOTIFICATION_CHANNELS }}
+#      notify-slack-custom-icon: ':terra-horse:'
+#    permissions:
+#      id-token: write
