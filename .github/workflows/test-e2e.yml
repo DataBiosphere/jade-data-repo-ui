@@ -42,12 +42,6 @@ jobs:
         run: |
           base64 --decode <<< ${{ secrets.SA_B64_CREDENTIALS }} > ${GOOGLE_APPLICATION_CREDENTIALS}
           gcloud auth activate-service-account --key-file ${GOOGLE_APPLICATION_CREDENTIALS}
-      - name: set npm env
-        run: |
-          eval $(cat env_vars)
-          echo "HOST=$(echo ${localhost})" >> $GITHUB_ENV
-          HOST=localhost
-          echo "HOST=$(echo ${HOST})" >> $GITHUB_ENV
       - name: check npm start
         env:
           DISABLE_ESLINT_PLUGIN: true
@@ -55,7 +49,6 @@ jobs:
           npm start & timeout 600 bash -c "until nc -z localhost 3000; do sleep 5; done"
       - name: set cypresss env
         run: |
-          eval $(cat env_vars)
           echo "CYPRESS_BASE_URL=$(echo ${IT_JADE_API_URL})" >> $GITHUB_ENV
           CYPRESS_GOOGLE_TOKEN=$(gcloud auth print-access-token)
           echo ::add-mask::${CYPRESS_GOOGLE_TOKEN}
