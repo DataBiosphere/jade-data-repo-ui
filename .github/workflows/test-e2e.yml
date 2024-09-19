@@ -30,34 +30,19 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - name: initialize npm
-        env:
-          DEV_PROJECT: broad-jade-dev
-          DISABLE_ESLINT_PLUGIN: true
-        run: |
-          GCR_TAG=$(git rev-parse --short HEAD)
-          echo "GCR_TAG=$(echo ${GCR_TAG})" >> $GITHUB_ENV
-          npm ci
-      - name: generate credentials
-        run: |
-          base64 --decode <<< ${{ secrets.SA_B64_CREDENTIALS }} > ${GOOGLE_APPLICATION_CREDENTIALS}
-          gcloud auth activate-service-account --key-file ${GOOGLE_APPLICATION_CREDENTIALS}
-      - name: check npm start
-        env:
-          DISABLE_ESLINT_PLUGIN: true
-        run: |
-          npm start & timeout 600 bash -c "until nc -z localhost 3000; do sleep 5; done"
-      - name: set cypresss env
-        run: |
-          echo "CYPRESS_BASE_URL=$(echo ${IT_JADE_API_URL})" >> $GITHUB_ENV
-          CYPRESS_GOOGLE_TOKEN=$(gcloud auth print-access-token)
-          echo ::add-mask::${CYPRESS_GOOGLE_TOKEN}
-          echo "CYPRESS_GOOGLE_TOKEN=$(echo ${CYPRESS_GOOGLE_TOKEN})" >> $GITHUB_ENV
       - name: Cypress run
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           DISABLE_ESLINT_PLUGIN: true
         run: |
+          npm ci
+          base64 --decode <<< ${{ secrets.SA_B64_CREDENTIALS }} > ${GOOGLE_APPLICATION_CREDENTIALS}
+          gcloud auth activate-service-account --key-file ${GOOGLE_APPLICATION_CREDENTIALS}
+          echo "CYPRESS_BASE_URL=$(echo ${IT_JADE_API_URL})" >> $GITHUB_ENV
+          CYPRESS_GOOGLE_TOKEN=$(gcloud auth print-access-token)
+          echo ::add-mask::${CYPRESS_GOOGLE_TOKEN}
+          echo "CYPRESS_GOOGLE_TOKEN=$(echo ${CYPRESS_GOOGLE_TOKEN})" >> $GITHUB_ENV
+          npm start & timeout 600 bash -c "until nc -z localhost 3000; do sleep 5; done"
           npx cypress run --record
 #  report-workflow:
 #    uses: broadinstitute/sherlock/.github/workflows/client-report-workflow.yaml@main
