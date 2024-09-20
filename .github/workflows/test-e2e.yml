@@ -38,7 +38,8 @@ jobs:
           PROXY_URL=https://jade.datarepo-dev.broadinstitute.org
           echo "PROXY_URL=$(echo ${PROXY_URL})" >> $GITHUB_ENV
           npm ci
-          gcloud auth activate-service-account --key-file jade-dev-account.json
+          base64 --decode <<< ${{ secrets.TEST_RUNNER_B64_CREDENTIALS }} > ${GOOGLE_APPLICATION_CREDENTIALS}
+          gcloud auth activate-service-account --key-file ${GOOGLE_APPLICATION_CREDENTIALS}
           export CYPRESS_GOOGLE_TOKEN=$(gcloud auth print-access-token)
           echo ::add-mask::${CYPRESS_GOOGLE_TOKEN}
           echo "CYPRESS_GOOGLE_TOKEN=$(echo ${CYPRESS_GOOGLE_TOKEN})" >> $GITHUB_ENV
