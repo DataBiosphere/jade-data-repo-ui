@@ -35,6 +35,7 @@ jobs:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           DISABLE_ESLINT_PLUGIN: true
         run: |
+          PROXY_URL=https://jade.datarepo-dev.broadinstitute.org
           npm ci
           base64 --decode <<< ${{ secrets.SA_B64_CREDENTIALS }} > ${GOOGLE_APPLICATION_CREDENTIALS}
           gcloud auth activate-service-account --key-file ${GOOGLE_APPLICATION_CREDENTIALS}
@@ -42,7 +43,6 @@ jobs:
           CYPRESS_GOOGLE_TOKEN=$(gcloud auth print-access-token)
           echo ::add-mask::${CYPRESS_GOOGLE_TOKEN}
           echo "CYPRESS_GOOGLE_TOKEN=$(echo ${CYPRESS_GOOGLE_TOKEN})" >> $GITHUB_ENV
-          PROXY_URL=https://jade.datarepo-dev.broadinstitute.org`
           npm start & timeout 600 bash -c "until nc -z localhost 3000; do sleep 5; done"
           npx cypress run --record
 #  report-workflow:
