@@ -42,6 +42,7 @@ jobs:
           CYPRESS_GOOGLE_TOKEN=$(gcloud auth print-access-token)
           echo ::add-mask::${CYPRESS_GOOGLE_TOKEN}
           echo "CYPRESS_GOOGLE_TOKEN=$(echo ${CYPRESS_GOOGLE_TOKEN})" >> $GITHUB_ENV
+          PROXY_URL=https://jade.datarepo-dev.broadinstitute.org`
           npm start & timeout 600 bash -c "until nc -z localhost 3000; do sleep 5; done"
           npx cypress run --record
 #  report-workflow:
