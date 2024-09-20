@@ -36,6 +36,7 @@ jobs:
           DISABLE_ESLINT_PLUGIN: true
         run: |
           PROXY_URL=https://jade.datarepo-dev.broadinstitute.org
+          echo "PROXY_URL=$(echo ${PROXY_URL})" >> $GITHUB_ENV
           npm ci
           base64 --decode <<< ${{ secrets.SA_B64_CREDENTIALS }} > ${GOOGLE_APPLICATION_CREDENTIALS}
           gcloud auth activate-service-account --key-file ${GOOGLE_APPLICATION_CREDENTIALS}
