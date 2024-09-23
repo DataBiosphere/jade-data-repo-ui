@@ -42,7 +42,7 @@ npm install
 - Before running e2e tests, set CYPRESS_GOOGLE_TOKEN to your access token
 
 ```
-export CYPRESS_GOOGLE_TOKEN=$(gcloud auth print-access-token <the user you want to test with, e.g. dumbledore.admin@test.firecloud.org>)
+export CYPRESS_GOOGLE_TOKEN=$(gcloud auth print-access-token <any user in the group 'DataRepoTestResourceAccess'>)
 ```
 
 you may need to log in with the test account using:
@@ -50,6 +50,8 @@ you may need to log in with the test account using:
 ```
 gcloud auth login --no-activate
 ```
+
+you may also need to ensure that the test resources are created in dev. See the setupResourceScripts readme in https://github.com/DataBiosphere/jade-data-repo
 
 ### Provides
 
