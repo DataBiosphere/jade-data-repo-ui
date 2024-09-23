@@ -46,13 +46,13 @@ jobs:
           echo "CYPRESS_GOOGLE_TOKEN=$(echo ${CYPRESS_GOOGLE_TOKEN})" >> $GITHUB_ENV
           npm start & timeout 600 bash -c "until nc -z localhost 3000; do sleep 5; done"
           npx cypress run --record
-#  report-workflow:
-#    uses: broadinstitute/sherlock/.github/workflows/client-report-workflow.yaml@main
-#    if: ${{ github.ref == 'refs/heads/develop' }}
-#    with:
-#      relates-to-chart-releases: 'datarepo-dev'
-#      notify-slack-channels-upon-workflow-failure: ${{ vars.SLACK_NOTIFICATION_CHANNELS }}
-#      notify-slack-channels-upon-workflow-retry: ${{ vars.SLACK_NOTIFICATION_CHANNELS }}
-#      notify-slack-custom-icon: ':terra-horse:'
-#    permissions:
-#      id-token: write
+  report-workflow:
+    uses: broadinstitute/sherlock/.github/workflows/client-report-workflow.yaml@main
+    if: ${{ github.ref == 'refs/heads/develop' }}
+    with:
+      relates-to-chart-releases: 'datarepo-dev'
+      notify-slack-channels-upon-workflow-failure: ${{ vars.SLACK_NOTIFICATION_CHANNELS }}
+      notify-slack-channels-upon-workflow-retry: ${{ vars.SLACK_NOTIFICATION_CHANNELS }}
+      notify-slack-custom-icon: ':terra-horse:'
+    permissions:
+      id-token: write
