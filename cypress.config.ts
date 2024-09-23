@@ -16,6 +16,7 @@ export default defineConfig({
     supportFile: 'cypress/support/index.js',
   },
   e2e: {
+    baseUrl: 'http://localhost:3000',
     setupNodeEvents(on) {
       on('file:preprocessor', vitePreprocessor());
     },
