@@ -95,6 +95,7 @@ jobs:
         run: |
           eval $(cat env_vars)
           echo "CYPRESS_BASE_URL=$(echo ${IT_JADE_API_URL})" >> $GITHUB_ENV
+          gcloud auth list
           CYPRESS_GOOGLE_TOKEN=$(gcloud auth print-access-token)
           echo ::add-mask::${CYPRESS_GOOGLE_TOKEN}
           echo "CYPRESS_GOOGLE_TOKEN=$(echo ${CYPRESS_GOOGLE_TOKEN})" >> $GITHUB_ENV
