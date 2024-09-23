@@ -1,9 +1,8 @@
 name: e2e
 env:
+  PROXY_URL: 'https://jade.datarepo-dev.broadinstitute.org'
   # This must be defined for the bash redirection
   GOOGLE_APPLICATION_CREDENTIALS: 'jade-dev-account.json'
-  # This must be defined for the bash redirection
-  GOOGLE_SA_CERT: 'jade-dev-account.pem'
 on:
   workflow_dispatch: {}
   pull_request:
@@ -35,12 +34,10 @@ jobs:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           DISABLE_ESLINT_PLUGIN: true
         run: |
-          PROXY_URL=https://jade.datarepo-dev.broadinstitute.org
           echo "PROXY_URL=$(echo ${PROXY_URL})" >> $GITHUB_ENV
           npm ci
           base64 --decode <<< ${{ secrets.SA_B64_CREDENTIALS }} > ${GOOGLE_APPLICATION_CREDENTIALS}
           gcloud auth activate-service-account --key-file ${GOOGLE_APPLICATION_CREDENTIALS}
-          gcloud auth list
           export CYPRESS_GOOGLE_TOKEN=$(gcloud auth print-access-token)
           echo ::add-mask::${CYPRESS_GOOGLE_TOKEN}
           echo "CYPRESS_GOOGLE_TOKEN=$(echo ${CYPRESS_GOOGLE_TOKEN})" >> $GITHUB_ENV
