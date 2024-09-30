@@ -4,11 +4,6 @@ updates:
   directory: "/"
   schedule:
     interval: weekly
-  # See workflows/test-e2e.yml for the current list of k8s namespaces available for integration testing.
-  # Presently, there are only 2.
-  # Keeping the open PR limit low at 4 so that when automatically rebasing, 4 concurrent Dependabot PR integration test
-  # runs all stand a chance at success rather than some being guaranteed to time out waiting for an available namespace.
-  open-pull-requests-limit: 4
   commit-message:
     prefix: "[DCJ-400-npm]"
   groups:
