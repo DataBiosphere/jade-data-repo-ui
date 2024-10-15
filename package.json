@@ -93,7 +93,7 @@
     "strip-markdown": "^6.0.0",
     "symbol-observable": "^4.0.0",
     "tss-react": "^4.9.13",
-    "typescript": "^5.6.2",
+    "typescript": "^5.6.3",
     "validator": "^13.12.0",
     "webfontloader": "^1.6.28"
   },
