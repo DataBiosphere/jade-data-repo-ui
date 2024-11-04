@@ -112,7 +112,7 @@ export class WelcomeView extends React.PureComponent {
             </p>
             <p className={classes.subtitle}>
               <a
-                href="https://support.terra.bio/hc/en-us"
+                href="https://support.terra.bio/hc/en-us/sections/4407099323675-Terra-Data-Repository"
                 target="_blank"
                 rel="noopener noreferrer"
               >
