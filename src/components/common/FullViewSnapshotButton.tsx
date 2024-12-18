@@ -1,13 +1,18 @@
-import { createFullViewSnapshot, getBillingProfiles } from 'actions/index';
+import { createSnapshot, getBillingProfiles, snapshotCreateDetails } from 'actions/index';
 import { TdrState } from 'reducers';
 import TerraTooltip from 'components/common/TerraTooltip';
 import { Button } from '@mui/material';
 import React, { Dispatch } from 'react';
-import { BillingProfileModel, DatasetModel } from 'generated/tdr';
+import {
+  BillingProfileModel,
+  DatasetModel,
+  SnapshotRequestContentsModelModeEnum,
+} from 'generated/tdr';
 import { ClassNameMap, WithStyles, withStyles } from '@mui/styles';
 import { Action } from 'redux';
 import { CustomTheme } from '@mui/material/styles';
 import { connect } from 'react-redux';
+import { now } from 'lodash';
 import { useOnMount } from '../../libs/utils';
 
 const styles = (theme: CustomTheme) => ({
@@ -36,6 +41,22 @@ const FullViewSnapshotButton = withStyles(styles)(
     const tooltipText =
       'You do not have access to the billing profile associated with this dataset.';
 
+    const handleCreateFullViewSnapshot = () => {
+      const name = `Full_View_Snapshot_of_${dataset.name}_${now()}`;
+      const description = `Full-View Snapshot of Dataset with Dataset name ${dataset.name}, and Dataset id ${dataset.id}.`;
+      dispatch(
+        snapshotCreateDetails(
+          name,
+          description,
+          SnapshotRequestContentsModelModeEnum.ByFullView,
+          null,
+          null,
+          dataset,
+        ),
+      );
+      dispatch(createSnapshot());
+    };
+
     return (
       <TerraTooltip title={isDisabled ? tooltipText : ''}>
         <span className={classes.buttonContainer}>
@@ -43,7 +64,7 @@ const FullViewSnapshotButton = withStyles(styles)(
             className={classes.button}
             variant="outlined"
             disableElevation
-            onClick={() => dispatch(createFullViewSnapshot())}
+            onClick={() => handleCreateFullViewSnapshot()}
             disabled={isDisabled}
           >
             Create Full-View Snapshot
@@ -57,6 +78,7 @@ const FullViewSnapshotButton = withStyles(styles)(
 function mapStateToProps(state: TdrState) {
   return {
     billingProfiles: state.profiles.profiles,
+    snapshot: state.snapshots.snapshot,
   };
 }
 

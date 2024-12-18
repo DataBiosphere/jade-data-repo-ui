@@ -16,7 +16,7 @@ import {
 } from 'redux-saga/effects';
 import axios, { AxiosResponse } from 'axios';
 import moment from 'moment';
-import _, { now } from 'lodash';
+import _ from 'lodash';
 import { RouterRootState } from 'connected-react-router';
 
 import { showNotification } from 'modules/notifications';
@@ -228,6 +228,7 @@ export function* createSnapshot(): any {
   const {
     name,
     description,
+    mode,
     assetName,
     filterStatement,
     joinStatement,
@@ -235,27 +236,41 @@ export function* createSnapshot(): any {
   } = snapshots.snapshotRequest;
 
   const datasetName = dataset.name;
-  const mode = 'byQuery';
-  const selectedAsset = _.find(dataset.schema.assets, (asset) => asset.name === assetName);
-
-  const { rootTable } = selectedAsset;
-
-  const snapshotRequest = {
-    name,
-    profileId: dataset.defaultProfileId,
-    description,
-    policies,
-    contents: [
-      {
-        datasetName,
-        mode,
-        querySpec: {
-          assetName,
-          query: `SELECT ${datasetName}.${rootTable}.${DbColumns.ROW_ID} ${joinStatement} ${filterStatement}`,
+  let snapshotRequest;
+  if (mode === SnapshotRequestContentsModelModeEnum.ByFullView) {
+    snapshotRequest = {
+      name,
+      profileId: dataset.defaultProfileId,
+      description,
+      contents: [
+        {
+          datasetName,
+          mode,
         },
-      },
-    ],
-  };
+      ],
+    };
+  } else if (mode === SnapshotRequestContentsModelModeEnum.ByQuery) {
+    const selectedAsset = _.find(dataset.schema.assets, (asset) => asset.name === assetName);
+
+    const { rootTable } = selectedAsset;
+
+    snapshotRequest = {
+      name,
+      profileId: dataset.defaultProfileId,
+      description,
+      policies,
+      contents: [
+        {
+          datasetName,
+          mode,
+          querySpec: {
+            assetName,
+            query: `SELECT ${datasetName}.${rootTable}.${DbColumns.ROW_ID} ${joinStatement} ${filterStatement}`,
+          },
+        },
+      ],
+    };
+  }
   try {
     const response = yield call(authPost, '/api/repository/v1/snapshots', snapshotRequest);
     const jobId = response.data.id;
@@ -274,46 +289,6 @@ export function* createSnapshot(): any {
     showNotification(err);
     yield put({
       type: ActionTypes.CREATE_SNAPSHOT_EXCEPTION,
-    });
-  }
-}
-
-export function* createFullViewSnapshot(): any {
-  console.log('createFullViewSnapshot');
-  const dataset = yield select(getDataset);
-
-  const datasetName = dataset.name;
-  const mode = 'byFullView';
-  const snapshotRequest = {
-    name: `Full-View Snapshot of ${dataset.name}, ${now()}`,
-    profileId: dataset.defaultProfileId,
-    description: `Full-View Snapshot of Dataset with name ${datasetName}, and id ${dataset.id}.`,
-    contents: [
-      {
-        datasetName,
-        mode,
-      },
-    ],
-  };
-
-  try {
-    const response = yield call(authPost, '/api/repository/v1/snapshots', snapshotRequest);
-    const jobId = response.data.id;
-    yield put({
-      type: ActionTypes.CREATE_SNAPSHOT_FULLVIEW_JOB,
-      payload: { data: response, jobId, snapshotRequest },
-    });
-    yield call(
-      pollJobWorker,
-      jobId,
-      ActionTypes.CREATE_SNAPSHOT_FULLVIEW_SUCCESS,
-      ActionTypes.CREATE_SNAPSHOT_FULLVIEW_FAILURE,
-      ActionTypes.CREATE_SNAPSHOT_FULLVIEW_EXCEPTION,
-    );
-  } catch (err) {
-    showNotification(err);
-    yield put({
-      type: ActionTypes.CREATE_SNAPSHOT_FULLVIEW_EXCEPTION,
     });
   }
 }
@@ -1124,7 +1099,6 @@ export function* approveSnapshotAccessRequest({ payload }: any): any {
 export default function* root() {
   yield all([
     takeLatest(ActionTypes.CREATE_SNAPSHOT, createSnapshot),
-    takeLatest(ActionTypes.CREATE_SNAPSHOT_FULLVIEW, createFullViewSnapshot),
     takeLatest(ActionTypes.EXPORT_SNAPSHOT, exportSnapshot),
     takeLatest(ActionTypes.RESET_SNAPSHOT_EXPORT, resetSnapshotExport),
     takeLatest(ActionTypes.GET_SNAPSHOTS, getSnapshots),
