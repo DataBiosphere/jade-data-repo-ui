@@ -20,6 +20,7 @@ import clsx from 'clsx';
 import { patchDataset } from 'actions';
 import GoogleSheetExport from 'components/common/overview/GoogleSheetExport';
 import { IamResourceTypeEnum, CloudPlatform } from 'generated/tdr';
+import FullViewSnapshotButton from 'components/common/FullViewSnapshotButton';
 import {
   renderCloudPlatforms,
   renderStorageResources,
@@ -90,6 +91,9 @@ const styles = (theme) => ({
   },
   divider: {
     marginTop: '14px',
+    marginBottom: '14px',
+  },
+  fullViewContainer: {
     marginBottom: '14px',
   },
 });
@@ -263,6 +267,10 @@ function DatasetOverviewPanel(props) {
         </Grid>
       </TabPanel>
       <TabPanel value={value} index={1}>
+        <span style={styles.fullViewContainer}>
+          Use the dataset as is to create a full-view snapshot
+          <FullViewSnapshotButton dataset={dataset} dispatch={dispatch} />
+        </span>
         <DatasetSnapshotsTable />
       </TabPanel>
       {linkToBq && (

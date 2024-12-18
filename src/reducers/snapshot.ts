@@ -159,6 +159,23 @@ export default {
         immutable(state, {
           dialogIsOpen: { $set: false },
         }),
+      [ActionTypes.CREATE_SNAPSHOT_FULLVIEW_JOB]: (state) =>
+        immutable(state, {
+          snapshot: { $set: {} },
+          dialogIsOpen: { $set: true },
+        }),
+      [ActionTypes.CREATE_SNAPSHOT_FULLVIEW_SUCCESS]: (state, action: any) =>
+        immutable(state, {
+          snapshot: { $set: action.payload.jobResult },
+        }),
+      [ActionTypes.CREATE_SNAPSHOT_FULLVIEW_FAILURE]: (state) =>
+        immutable(state, {
+          dialogIsOpen: { $set: false },
+        }),
+      [ActionTypes.CREATE_SNAPSHOT_FULLVIEW_EXCEPTION]: (state) =>
+        immutable(state, {
+          dialogIsOpen: { $set: false },
+        }),
       [ActionTypes.EXPORT_SNAPSHOT_START]: (state) =>
         immutable(state, {
           exportIsProcessing: { $set: true },

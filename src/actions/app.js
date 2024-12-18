@@ -28,6 +28,14 @@ export const { createSnapshot } = createActions({
   [ActionTypes.CREATE_SNAPSHOT_EXCEPTION]: () => ({}),
 });
 
+export const { createFullViewSnapshot } = createActions({
+  [ActionTypes.CREATE_SNAPSHOT_FULLVIEW]: () => ({}),
+  [ActionTypes.CREATE_SNAPSHOT_FULLVIEW_JOB]: (snapshot) => snapshot,
+  [ActionTypes.CREATE_SNAPSHOT_FULLVIEW_SUCCESS]: (snapshot) => snapshot,
+  [ActionTypes.CREATE_SNAPSHOT_FULLVIEW_FAILURE]: (snapshot) => snapshot,
+  [ActionTypes.CREATE_SNAPSHOT_FULLVIEW_EXCEPTION]: () => ({}),
+});
+
 export const { exportSnapshot } = createActions({
   [ActionTypes.EXPORT_SNAPSHOT]: (snapshotId, exportGsPaths, validatePrimaryKeyUniqueness) => ({
     snapshotId,

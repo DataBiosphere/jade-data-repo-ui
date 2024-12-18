@@ -16,7 +16,7 @@ import {
 } from 'redux-saga/effects';
 import axios, { AxiosResponse } from 'axios';
 import moment from 'moment';
-import _ from 'lodash';
+import _, { now } from 'lodash';
 import { RouterRootState } from 'connected-react-router';
 
 import { showNotification } from 'modules/notifications';
@@ -274,6 +274,46 @@ export function* createSnapshot(): any {
     showNotification(err);
     yield put({
       type: ActionTypes.CREATE_SNAPSHOT_EXCEPTION,
+    });
+  }
+}
+
+export function* createFullViewSnapshot(): any {
+  console.log('createFullViewSnapshot');
+  const dataset = yield select(getDataset);
+
+  const datasetName = dataset.name;
+  const mode = 'byFullView';
+  const snapshotRequest = {
+    name: `Full-View Snapshot of ${dataset.name}, ${now()}`,
+    profileId: dataset.defaultProfileId,
+    description: `Full-View Snapshot of Dataset with name ${datasetName}, and id ${dataset.id}.`,
+    contents: [
+      {
+        datasetName,
+        mode,
+      },
+    ],
+  };
+
+  try {
+    const response = yield call(authPost, '/api/repository/v1/snapshots', snapshotRequest);
+    const jobId = response.data.id;
+    yield put({
+      type: ActionTypes.CREATE_SNAPSHOT_FULLVIEW_JOB,
+      payload: { data: response, jobId, snapshotRequest },
+    });
+    yield call(
+      pollJobWorker,
+      jobId,
+      ActionTypes.CREATE_SNAPSHOT_FULLVIEW_SUCCESS,
+      ActionTypes.CREATE_SNAPSHOT_FULLVIEW_FAILURE,
+      ActionTypes.CREATE_SNAPSHOT_FULLVIEW_EXCEPTION,
+    );
+  } catch (err) {
+    showNotification(err);
+    yield put({
+      type: ActionTypes.CREATE_SNAPSHOT_FULLVIEW_EXCEPTION,
     });
   }
 }
@@ -1084,6 +1124,7 @@ export function* approveSnapshotAccessRequest({ payload }: any): any {
 export default function* root() {
   yield all([
     takeLatest(ActionTypes.CREATE_SNAPSHOT, createSnapshot),
+    takeLatest(ActionTypes.CREATE_SNAPSHOT_FULLVIEW, createFullViewSnapshot),
     takeLatest(ActionTypes.EXPORT_SNAPSHOT, exportSnapshot),
     takeLatest(ActionTypes.RESET_SNAPSHOT_EXPORT, resetSnapshotExport),
     takeLatest(ActionTypes.GET_SNAPSHOTS, getSnapshots),
