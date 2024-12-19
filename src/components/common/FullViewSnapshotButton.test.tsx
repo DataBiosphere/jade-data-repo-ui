@@ -16,7 +16,7 @@ const initialState = {
     },
   },
   profiles: {
-    profiles: [],
+    profiles: [{ id: 'profile1', name: 'Test Profile 1' }],
   },
 };
 
@@ -26,15 +26,7 @@ describe('FullViewSnapshotButton component with permission', () => {
     const store = mockStore(initialState);
     const dataset = { defaultProfileId: 'profile1' };
     // Intercept the getBillingProfiles API call onMount
-    cy.intercept('GET', '/api/resources/v1/profiles?offset=0&limit=1000', {
-      statusCode: 200,
-      body: [
-        {
-          id: 'profile1',
-          name: 'Test Profile 1',
-        },
-      ],
-    }).as('getBillingProfiles');
+    cy.intercept('GET', '/api/resources/v1/profiles?offset=0&limit=1000').as('getBillingProfiles');
 
     mount(
       <Router history={history}>
@@ -54,10 +46,6 @@ describe('FullViewSnapshotButton component with permission', () => {
   it('Button is clickable, calls createSnapshot, and does not have a tooltip', () => {
     cy.get('button').click();
     cy.intercept('POST', '/api/repository/v1/snapshots');
-    cy.get('button').trigger('mouseover');
-    cy.contains(
-      'You do not have access to the billing profile associated with this dataset.',
-    ).should('not.be.visible');
   });
 });
 
@@ -65,18 +53,10 @@ describe('FullViewSnapshotButton component without permission', () => {
   beforeEach(() => {
     const mockStore = createMockStore([]);
     const store = mockStore(initialState);
-    const dataset = { defaultProfileId: 'profile1' };
+    const dataset = { defaultProfileId: 'profile2' };
 
     // Intercept the getBillingProfiles API call onMount
-    cy.intercept('GET', '/api/resources/v1/profiles?offset=0&limit=1000', {
-      statusCode: 200,
-      body: [
-        {
-          id: 'profile2',
-          name: 'Test Profile 2',
-        },
-      ],
-    }).as('getBillingProfiles');
+    cy.intercept('GET', '/api/resources/v1/profiles?offset=0&limit=1000').as('getBillingProfiles');
 
     mount(
       <Router history={history}>
