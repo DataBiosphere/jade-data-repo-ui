@@ -7,9 +7,9 @@ import history from 'modules/hist';
 
 import { History, LocationState } from 'history';
 import TabWrapper from 'components/common/TabWrapper';
+import DatasetOverview from 'components/dataset/overview/DatasetOverview';
 import HomeView from '../components/HomeView';
 import DatasetDataView from '../components/dataset/data/DatasetDataView';
-import DatasetOverview from '../components/dataset/overview/DatasetOverview';
 import DatasetSchemaCreationView from '../components/dataset/schemaCreation/DatasetSchemaCreationView';
 import SnapshotDataView from '../components/snapshot/data/SnapshotDataView';
 import SnapshotOverview from '../components/snapshot/overview/SnapshotOverview';
