@@ -12,7 +12,7 @@ import {
   Typography,
 } from '@mui/material';
 import { withStyles } from '@mui/styles';
-import { ExpandMore, Close, Info } from '@mui/icons-material';
+import { ExpandMore, Close } from '@mui/icons-material';
 import IconButton from '@mui/material/IconButton';
 import { connect } from 'react-redux';
 import moment from 'moment';
@@ -93,8 +93,11 @@ const styles = (theme) => ({
     marginTop: '14px',
     marginBottom: '14px',
   },
-  fullViewContainer: {
-    marginBottom: '14px',
+  fullViewButton: {
+    marginLeft: theme.spacing(2),
+  },
+  fullViewText: {
+    paddingBottom: '14px',
   },
 });
 
@@ -267,10 +270,12 @@ function DatasetOverviewPanel(props) {
         </Grid>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <span style={styles.fullViewContainer}>
+        <Grid className={classes.fullViewText}>
           Use the dataset as is to create a full-view snapshot
-          <FullViewSnapshotButton dataset={dataset} dispatch={dispatch} />
-        </span>
+          <span className={classes.fullViewButton}>
+            <FullViewSnapshotButton dataset={dataset} dispatch={dispatch} />
+          </span>
+        </Grid>
         <DatasetSnapshotsTable />
       </TabPanel>
       {linkToBq && (

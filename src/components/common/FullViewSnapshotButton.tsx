@@ -8,72 +8,62 @@ import {
   DatasetModel,
   SnapshotRequestContentsModelModeEnum,
 } from 'generated/tdr';
-import { ClassNameMap, WithStyles, withStyles } from '@mui/styles';
 import { Action } from 'redux';
-import { CustomTheme } from '@mui/material/styles';
 import { connect } from 'react-redux';
 import { now } from 'lodash';
 import { useOnMount } from '../../libs/utils';
 
-const styles = (theme: CustomTheme) => ({
-  button: {
-    margin: theme.spacing(2),
-  },
-  buttonContainer: {},
-});
-
-interface FullViewSnapshotButtonProps extends WithStyles<typeof styles> {
-  classes: ClassNameMap;
+interface FullViewSnapshotButtonProps {
   dispatch: Dispatch<Action>;
   dataset: DatasetModel;
   billingProfiles: Array<BillingProfileModel>;
 }
 
-const FullViewSnapshotButton = withStyles(styles)(
-  ({ classes, dataset, dispatch, billingProfiles }: FullViewSnapshotButtonProps) => {
-    useOnMount(() => {
-      dispatch(getBillingProfiles());
-    });
+function FullViewSnapshotButton({
+  dataset,
+  dispatch,
+  billingProfiles,
+}: FullViewSnapshotButtonProps) {
+  useOnMount(() => {
+    dispatch(getBillingProfiles());
+  });
 
-    const defaultBillingProfile = dataset.defaultProfileId;
-    // if user does not have permission on billing profile, disable button and show tooltip
-    const isDisabled = !billingProfiles.map((model) => model.id).includes(defaultBillingProfile);
-    const tooltipText =
-      'You do not have access to the billing profile associated with this dataset.';
+  const defaultBillingProfile = dataset.defaultProfileId;
+  // if user does not have permission on billing profile, disable button and show tooltip
+  const isDisabled = !billingProfiles.map((model) => model.id).includes(defaultBillingProfile);
+  const tooltipText = 'You do not have access to the billing profile associated with this dataset.';
 
-    const handleCreateFullViewSnapshot = () => {
-      const name = `Full_View_Snapshot_of_${dataset.name}_${now()}`;
-      const description = `Full-View Snapshot of Dataset with Dataset name ${dataset.name}, and Dataset id ${dataset.id}.`;
-      dispatch(
-        snapshotCreateDetails(
-          name,
-          description,
-          SnapshotRequestContentsModelModeEnum.ByFullView,
-          null,
-          null,
-          dataset,
-        ),
-      );
-      dispatch(createSnapshot());
-    };
-
-    return (
-      <TerraTooltip title={isDisabled ? tooltipText : ''}>
-        <span className={classes.buttonContainer}>
-          <Button
-            className={classes.button}
-            variant="outlined"
-            disableElevation
-            onClick={() => handleCreateFullViewSnapshot()}
-            disabled={isDisabled}
-          >
-            Create Full-View Snapshot
-          </Button>
-        </span>
-      </TerraTooltip>
+  const handleCreateFullViewSnapshot = () => {
+    const name = `Full_View_Snapshot_of_${dataset.name}_${now()}`;
+    const description = `Full-View Snapshot of Dataset with Dataset name ${dataset.name}, and Dataset id ${dataset.id}.`;
+    dispatch(
+      snapshotCreateDetails(
+        name,
+        description,
+        SnapshotRequestContentsModelModeEnum.ByFullView,
+        null,
+        null,
+        dataset,
+      ),
     );
-  },
-);
+    dispatch(createSnapshot());
+  };
+
+  return (
+    <TerraTooltip title={isDisabled ? tooltipText : ''}>
+      <span>
+        <Button
+          variant="outlined"
+          disableElevation
+          onClick={() => handleCreateFullViewSnapshot()}
+          disabled={isDisabled}
+        >
+          Create Full-View Snapshot
+        </Button>
+      </span>
+    </TerraTooltip>
+  );
+}
 
 function mapStateToProps(state: TdrState) {
   return {
