@@ -20,6 +20,7 @@ import { openSnapshotDialog, getSnapshotById, getSnapshotPolicy } from 'actions/
 import { CustomTheme } from '@mui/material/styles';
 import { Action } from 'redux';
 import { TdrState } from 'reducers';
+import { PolicyModel, SnapshotModel } from 'generated/tdr';
 import { SnapshotIncludeOptions } from '../../constants';
 
 const styles = (theme: CustomTheme) =>
@@ -86,8 +87,8 @@ interface SnapshotPopupProps {
   dispatch: Dispatch<Action>;
   filterData: any;
   isOpen: boolean;
-  policies: Array<any>;
-  snapshot: any;
+  policies: Array<PolicyModel>;
+  snapshot: SnapshotModel;
 }
 
 function SnapshotPopup({
@@ -141,7 +142,7 @@ function SnapshotPopup({
   }
 
   // this number represents the total rows in the snapshot, i.e. the sum over all tables
-  const rows = snapshot.tables.map((t) => t.rowCount).reduce((a, b) => a + b);
+  const rows = snapshot.tables?.map((t) => t.rowCount).reduce((a, b) => a + b);
   const rowLabel = rows === 1 ? 'Row' : 'Rows';
 
   const tables = _.keys(filterData).map((table, i) => {
@@ -174,7 +175,7 @@ function SnapshotPopup({
     );
   });
 
-  const readers = policies.find((p) => p.name === 'reader').members;
+  const readers = policies.find((p) => p.name === 'reader')?.members;
 
   return (
     <Dialog open={isOpen} onClose={handleClose}>
@@ -210,7 +211,7 @@ function SnapshotPopup({
               </Typography>
             )}
             <div className={classes.bodyText} data-cy="snapshotReaders">
-              {readers.map((r) => (
+              {readers?.map((r) => (
                 <li key={r} className={classes.listItem}>
                   {r}
                 </li>
@@ -218,7 +219,7 @@ function SnapshotPopup({
             </div>
             <div className={clsx(classes.light, classes.withIcon)}>
               <Today className={classes.inline} />
-              {new Date(snapshot.createdDate).toLocaleString()}
+              {new Date(String(snapshot.createdDate)).toLocaleString()}
             </div>
           </div>
         </Paper>
