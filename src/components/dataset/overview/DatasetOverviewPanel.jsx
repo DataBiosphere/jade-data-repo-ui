@@ -20,6 +20,7 @@ import clsx from 'clsx';
 import { patchDataset } from 'actions';
 import GoogleSheetExport from 'components/common/overview/GoogleSheetExport';
 import { IamResourceTypeEnum, CloudPlatform } from 'generated/tdr';
+import SnapshotPopup from 'components/snapshot/SnapshotPopup';
 import {
   renderCloudPlatforms,
   renderStorageResources,
@@ -263,6 +264,7 @@ function DatasetOverviewPanel(props) {
         </Grid>
       </TabPanel>
       <TabPanel value={value} index={1}>
+        <SnapshotPopup />
         <DatasetSnapshotsTable />
       </TabPanel>
       {linkToBq && (
