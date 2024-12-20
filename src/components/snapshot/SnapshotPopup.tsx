@@ -1,4 +1,4 @@
-import React, { Dispatch, useEffect } from 'react';
+import React, { Dispatch, useEffect, useRef } from 'react';
 import _ from 'lodash';
 import ExitSVG from 'media/icons/times-light.svg?react';
 import { connect } from 'react-redux';
@@ -103,8 +103,10 @@ function SnapshotPopup({
    * When a snapshot gets created, the empty snapshot prop gets populated with a brief summary.
    * We want to use that snapshot id to get the full object and the policies for the dialog.
    */
+  const prevSnapshotRef = useRef<SnapshotModel>(snapshot);
   useEffect(() => {
-    if (_.isEmpty(snapshot) && !_.isEmpty(snapshot)) {
+    if (prevSnapshotRef.current && _.isEmpty(prevSnapshotRef.current) && !_.isEmpty(snapshot)) {
+      prevSnapshotRef.current = snapshot;
       dispatch(
         getSnapshotById({
           snapshotId: snapshot.id,
