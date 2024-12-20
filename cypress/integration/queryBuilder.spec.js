@@ -3,10 +3,11 @@ const testPlatforms = [
     platform: 'Gcp',
     datasetName: 'V2F_GWAS_Summary_Statistics',
   },
-  {
-    platform: 'Azure',
-    datasetName: 'Azure_V2F_Stats',
-  },
+  // Ignoring due to highly variable performance of Synapse
+  // {
+  //   platform: 'Azure',
+  //   datasetName: 'Azure_V2F_Stats',
+  // },
 ];
 
 testPlatforms.forEach((testPlatform) => {
