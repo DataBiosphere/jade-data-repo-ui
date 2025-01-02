@@ -2,11 +2,9 @@ import React, { Dispatch, useState } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Action } from 'redux';
-
 import { Button } from '@mui/material';
 import { AddCircle, Refresh } from '@mui/icons-material';
-import { createStyles, WithStyles, withStyles } from '@mui/styles';
-import { CustomTheme } from '@mui/material/styles';
+import { styled } from '@mui/system';
 import { RouterLocation, RouterRootState } from 'connected-react-router';
 import { LocationState } from 'history';
 import {
@@ -24,70 +22,75 @@ import JobView from './JobView';
 import SearchTable from './table/SearchTable';
 import SnapshotAccessRequestView from './SnapshotAccessRequestView';
 
-const styles = (theme: CustomTheme) =>
-  createStyles({
-    pageRoot: {
-      padding: '16px 24px',
-      display: 'flex',
-      flexDirection: 'column',
-      height: '100%',
-    },
-    header: {
-      alignItems: 'center',
-      color: theme.typography.color,
-      display: 'flex',
-      fontWeight: 500,
-      fontSize: 16,
-      height: 21,
-      letterSpacing: 1,
-    },
-    jadeTableSpacer: {
-      paddingBottom: theme.spacing(12),
-    },
-    jadeLink: {
-      ...theme.mixins.jadeLink,
-      float: 'right',
-      fontSize: 16,
-      fontWeight: 500,
-      height: 20,
-      letterSpacing: 0.3,
-      paddingLeft: theme.spacing(4),
-      paddingTop: theme.spacing(4),
-    },
-    title: {
-      color: theme.palette.secondary.dark,
-      fontSize: '1.5rem',
-      fontWeight: 700,
-      flex: '1 1 0',
-      'padding-right': '2em',
-      display: 'flex',
-    },
-    titleText: {
-      width: '150px',
-    },
-    titleAndSearch: {
-      display: 'flex',
-      'margin-top': '1.25em',
-      'margin-bottom': '1.25em',
-    },
-    headerButton: {
-      padding: 10,
-      marginLeft: theme.spacing(2),
-      height: '45px',
-      textTransform: 'none',
-    },
-    buttonIcon: {
-      marginRight: 6,
-      fontSize: '1.5rem',
-    },
-  });
+const PageRoot = styled('div')(({ theme }) => ({
+  padding: '16px 24px',
+  display: 'flex',
+  flexDirection: 'column',
+  height: '100%',
+}));
 
-interface IProps extends WithStyles<typeof styles> {
+const Header = styled('div')(({ theme }) => ({
+  alignItems: 'center',
+  color: theme.typography.color,
+  display: 'flex',
+  fontWeight: 500,
+  fontSize: 16,
+  height: 21,
+  letterSpacing: 1,
+}));
+
+const JadeTableSpacer = styled('div')(({ theme }) => ({
+  paddingBottom: theme.spacing(12),
+}));
+
+const JadeLink = styled(Link)(({ theme }) => ({
+  ...theme.mixins.jadeLink,
+  float: 'right',
+  fontSize: 16,
+  fontWeight: 500,
+  height: 20,
+  letterSpacing: 0.3,
+  paddingLeft: theme.spacing(4),
+  paddingTop: theme.spacing(4),
+}));
+
+const Title = styled('div')(({ theme }) => ({
+  color: theme.palette.secondary.dark,
+  fontSize: '1.5rem',
+  fontWeight: 700,
+  flex: '1 1 0',
+  paddingRight: '2em',
+  display: 'flex',
+}));
+
+const TitleText = styled('span')({
+  width: '150px',
+});
+
+const TitleAndSearch = styled('div')({
+  display: 'flex',
+  marginTop: '1.25em',
+  marginBottom: '1.25em',
+});
+
+const HeaderButton = styled(Button)(({ theme }) => ({
+  padding: 10,
+  marginLeft: theme.spacing(2),
+  height: '45px',
+  textTransform: 'none',
+}));
+
+const ButtonIcon = styled(AddCircle)({
+  marginRight: 6,
+  fontSize: '1.5rem',
+});
+
+interface IProps {
   dispatch: Dispatch<Action>;
   location: RouterLocation<LocationState>;
 }
 
-function HomeView({ classes, dispatch, location }: IProps) {
+function HomeView({ dispatch, location }: IProps) {
   const [searchString, setSearchString] = useState('');
   const prefixMatcher = /\/[^/]*/;
   const tabValue = prefixMatcher.exec(location.pathname)?.[0];
@@ -115,39 +118,32 @@ function HomeView({ classes, dispatch, location }: IProps) {
     refresh = () => dispatch(refreshSnapshotAccessRequests());
   }
   const refreshButton = (
-    <Button
+    <HeaderButton
       aria-label="refresh page"
       size="medium"
-      className={classes.headerButton}
       onClick={refresh}
       variant="outlined"
       startIcon={<Refresh />}
     >
       Refresh
-    </Button>
+    </HeaderButton>
   );
   const pageHeader =
     tabValue === '/datasets' ? (
-      <div className={classes.title}>
-        <span className={classes.titleText}>{pageTitle}</span>
+      <Title>
+        <TitleText>{pageTitle}</TitleText>
         {refreshButton}
-        <Link to="datasets/new" data-cy="create-dataset-link">
-          <Button
-            className={classes.headerButton}
-            color="primary"
-            variant="outlined"
-            disableElevation
-            size="medium"
-          >
-            <AddCircle className={classes.buttonIcon} /> Create Dataset
-          </Button>
-        </Link>
-      </div>
+        <JadeLink to="datasets/new" data-cy="create-dataset-link">
+          <HeaderButton color="primary" variant="outlined" disableElevation size="medium">
+            <ButtonIcon /> Create Dataset
+          </HeaderButton>
+        </JadeLink>
+      </Title>
     ) : (
-      <div className={classes.title}>
-        <span className={classes.titleText}>{pageTitle}</span>
+      <Title>
+        <TitleText>{pageTitle}</TitleText>
         {refreshButton}
-      </div>
+      </Title>
     );
 
   useOnMount(() => {
@@ -155,8 +151,8 @@ function HomeView({ classes, dispatch, location }: IProps) {
   });
 
   return (
-    <div className={classes.pageRoot}>
-      <div className={classes.titleAndSearch}>
+    <PageRoot>
+      <TitleAndSearch>
         {pageHeader}
         {searchable && (
           <SearchTable
@@ -165,9 +161,9 @@ function HomeView({ classes, dispatch, location }: IProps) {
             clearSearchString={() => setSearchString('')}
           />
         )}
-      </div>
+      </TitleAndSearch>
       {tableValue}
-    </div>
+    </PageRoot>
   );
 }
 
@@ -177,4 +173,4 @@ function mapStateToProps(state: TdrState & RouterRootState) {
   };
 }
 
-export default connect(mapStateToProps)(withStyles(styles)(HomeView));
+export default connect(mapStateToProps)(HomeView);
