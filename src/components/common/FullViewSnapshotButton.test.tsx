@@ -20,60 +20,53 @@ const initialState = {
   },
 };
 
-describe('FullViewSnapshotButton component with permission', () => {
-  beforeEach(() => {
-    const mockStore = createMockStore([]);
-    const store = mockStore(initialState);
-    const dataset = { defaultProfileId: 'profile1' };
-    // Intercept the getBillingProfiles API call onMount
-    cy.intercept('GET', '/api/resources/v1/profiles?offset=0&limit=1000').as('getBillingProfiles');
+const mountFullViewSnapshotButton = (dataset) => {
+  const mockStore = createMockStore([]);
+  const store = mockStore(initialState);
 
-    mount(
-      <Router history={history}>
-        <Provider store={store}>
-          <ThemeProvider theme={globalTheme}>
-            <FullViewSnapshotButton dataset={dataset} />
-          </ThemeProvider>
-        </Provider>
-      </Router>,
-    );
+  // Intercept the getBillingProfiles API call onMount
+  cy.intercept('GET', '/api/resources/v1/profiles?offset=0&limit=1000').as('getBillingProfiles');
+
+  mount(
+    <Router history={history}>
+      <Provider store={store}>
+        <ThemeProvider theme={globalTheme}>
+          <FullViewSnapshotButton dataset={dataset} />
+        </ThemeProvider>
+      </Provider>
+    </Router>,
+  );
+};
+
+describe('FullViewSnapshotButton', () => {
+  describe('FullViewSnapshotButton component with permission', () => {
+    beforeEach(() => {
+      const dataset = { defaultProfileId: 'profile1' };
+      mountFullViewSnapshotButton(dataset);
+    });
+
+    it('Displays the button with correct text', () => {
+      cy.get('button').should('contain.text', 'Create Full-View Snapshot');
+    });
+
+    it('Button is clickable, calls createSnapshot, and does not have a tooltip', () => {
+      cy.get('button').click();
+      cy.intercept('POST', '/api/repository/v1/snapshots');
+    });
   });
 
-  it('Displays the button with correct text', () => {
-    cy.get('button').should('contain.text', 'Create Full-View Snapshot');
-  });
+  describe('FullViewSnapshotButton component without permission', () => {
+    beforeEach(() => {
+      const dataset = { defaultProfileId: 'profile2' };
+      mountFullViewSnapshotButton(dataset);
+    });
 
-  it('Button is clickable, calls createSnapshot, and does not have a tooltip', () => {
-    cy.get('button').click();
-    cy.intercept('POST', '/api/repository/v1/snapshots');
-  });
-});
-
-describe('FullViewSnapshotButton component without permission', () => {
-  beforeEach(() => {
-    const mockStore = createMockStore([]);
-    const store = mockStore(initialState);
-    const dataset = { defaultProfileId: 'profile2' };
-
-    // Intercept the getBillingProfiles API call onMount
-    cy.intercept('GET', '/api/resources/v1/profiles?offset=0&limit=1000').as('getBillingProfiles');
-
-    mount(
-      <Router history={history}>
-        <Provider store={store}>
-          <ThemeProvider theme={globalTheme}>
-            <FullViewSnapshotButton dataset={dataset} />
-          </ThemeProvider>
-        </Provider>
-      </Router>,
-    );
-  });
-
-  it('Button is disabled and has tooltip', () => {
-    cy.get('button').should('be.disabled');
-    cy.get('button').trigger('mouseover', { force: true });
-    cy.contains(
-      'You do not have access to the billing profile associated with this dataset.',
-    ).should('be.visible');
+    it('Button is disabled and has tooltip', () => {
+      cy.get('button').should('be.disabled');
+      cy.get('button').trigger('mouseover', { force: true });
+      cy.contains(
+        'You do not have access to the billing profile associated with this dataset.',
+      ).should('be.visible');
+    });
   });
 });
