@@ -22,10 +22,6 @@ const styles = (theme) => ({
     gridTemplateColumns: '1fr 3fr',
     flex: 1,
   },
-  headerText: {
-    textTransform: 'uppercase',
-    marginBottom: '0.5rem',
-  },
   infoColumn: {
     display: 'flex',
     flexDirection: 'column',
@@ -37,18 +33,6 @@ const styles = (theme) => ({
     display: 'flex',
     flexDirection: 'column',
     marginLeft: 40,
-  },
-  snapshotsArea: {
-    flexGrow: 1,
-    marginTop: '1.5rem',
-  },
-  spacer: {
-    height: '4rem',
-  },
-  snapshotCardsContainer: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(360px, 32%))',
-    gridGap: '1rem',
   },
 });
 
