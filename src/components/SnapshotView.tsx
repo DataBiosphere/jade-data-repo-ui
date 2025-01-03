@@ -21,12 +21,6 @@ const styles = (theme: CustomTheme) => ({
   width: {
     ...theme.mixins.containerWidth,
   },
-  title: {
-    color: theme.palette.primary.main,
-    fontSize: 54,
-    lineHeight: '66px',
-    paddingBottom: theme.spacing(8),
-  },
 });
 
 interface IProps extends WithStyles<typeof styles> {
