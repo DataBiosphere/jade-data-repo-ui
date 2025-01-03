@@ -2,11 +2,9 @@ import React, { Dispatch, useState } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Action } from 'redux';
-
-import { Button } from '@mui/material';
-import { AddCircle, Refresh } from '@mui/icons-material';
-import { createStyles, WithStyles, withStyles } from '@mui/styles';
+import { Button, Box, Typography } from '@mui/material';
 import { CustomTheme } from '@mui/material/styles';
+import { AddCircle, Refresh } from '@mui/icons-material';
 import { RouterLocation, RouterRootState } from 'connected-react-router';
 import { LocationState } from 'history';
 import {
@@ -24,77 +22,20 @@ import JobView from './JobView';
 import SearchTable from './table/SearchTable';
 import SnapshotAccessRequestView from './SnapshotAccessRequestView';
 
-const styles = (theme: CustomTheme) =>
-  createStyles({
-    pageRoot: {
-      padding: '16px 24px',
-      display: 'flex',
-      flexDirection: 'column',
-      height: '100%',
-    },
-    header: {
-      alignItems: 'center',
-      color: theme.typography.color,
-      display: 'flex',
-      fontWeight: 500,
-      fontSize: 16,
-      height: 21,
-      letterSpacing: 1,
-    },
-    jadeTableSpacer: {
-      paddingBottom: theme.spacing(12),
-    },
-    jadeLink: {
-      ...theme.mixins.jadeLink,
-      float: 'right',
-      fontSize: 16,
-      fontWeight: 500,
-      height: 20,
-      letterSpacing: 0.3,
-      paddingLeft: theme.spacing(4),
-      paddingTop: theme.spacing(4),
-    },
-    title: {
-      color: theme.palette.secondary.dark,
-      fontSize: '1.5rem',
-      fontWeight: 700,
-      flex: '1 1 0',
-      'padding-right': '2em',
-      display: 'flex',
-    },
-    titleText: {
-      width: '150px',
-    },
-    titleAndSearch: {
-      display: 'flex',
-      'margin-top': '1.25em',
-      'margin-bottom': '1.25em',
-    },
-    headerButton: {
-      padding: 10,
-      marginLeft: theme.spacing(2),
-      height: '45px',
-      textTransform: 'none',
-    },
-    buttonIcon: {
-      marginRight: 6,
-      fontSize: '1.5rem',
-    },
-  });
-
-interface IProps extends WithStyles<typeof styles> {
+interface IProps {
   dispatch: Dispatch<Action>;
   location: RouterLocation<LocationState>;
+  theme: CustomTheme;
 }
 
-function HomeView({ classes, dispatch, location }: IProps) {
+function HomeView({ dispatch, location, theme }: IProps) {
   const [searchString, setSearchString] = useState('');
   const prefixMatcher = /\/[^/]*/;
   const tabValue = prefixMatcher.exec(location.pathname)?.[0];
 
   let pageTitle = 'Terra Data Repository';
   let searchable = true;
-  let tableValue = <div />;
+  let tableValue = <Box />;
   let refresh;
   if (tabValue === '/datasets') {
     pageTitle = 'Datasets';
@@ -118,7 +59,7 @@ function HomeView({ classes, dispatch, location }: IProps) {
     <Button
       aria-label="refresh page"
       size="medium"
-      className={classes.headerButton}
+      sx={{ padding: '10px', marginLeft: '16px', height: '45px', textTransform: 'none' }}
       onClick={refresh}
       variant="outlined"
       startIcon={<Refresh />}
@@ -128,26 +69,45 @@ function HomeView({ classes, dispatch, location }: IProps) {
   );
   const pageHeader =
     tabValue === '/datasets' ? (
-      <div className={classes.title}>
-        <span className={classes.titleText}>{pageTitle}</span>
+      <Box
+        sx={{
+          flex: '1 1 0',
+          paddingRight: '2em',
+          display: 'flex',
+        }}
+      >
+        <Typography
+          sx={{ width: '150px', color: 'secondary.dark', fontSize: '1.5rem', fontWeight: 700 }}
+        >
+          {pageTitle}
+        </Typography>
         {refreshButton}
         <Link to="datasets/new" data-cy="create-dataset-link">
           <Button
-            className={classes.headerButton}
+            sx={{ padding: '10px', marginLeft: '16px', height: '45px', textTransform: 'none' }}
             color="primary"
             variant="outlined"
             disableElevation
             size="medium"
           >
-            <AddCircle className={classes.buttonIcon} /> Create Dataset
+            <AddCircle sx={{ marginRight: '1px', fontSize: '1.5rem' }} /> Create Dataset
           </Button>
         </Link>
-      </div>
+      </Box>
     ) : (
-      <div className={classes.title}>
-        <span className={classes.titleText}>{pageTitle}</span>
+      <Box
+        sx={{
+          color: 'secondary.dark',
+          fontSize: '1.5rem',
+          fontWeight: 700,
+          flex: '1 1 0',
+          paddingRight: '2em',
+          display: 'flex',
+        }}
+      >
+        <Typography sx={{ width: '150px' }}>{pageTitle}</Typography>
         {refreshButton}
-      </div>
+      </Box>
     );
 
   useOnMount(() => {
@@ -155,8 +115,21 @@ function HomeView({ classes, dispatch, location }: IProps) {
   });
 
   return (
-    <div className={classes.pageRoot}>
-      <div className={classes.titleAndSearch}>
+    <Box
+      sx={{
+        padding: '16px 24px',
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+      }}
+    >
+      <Box
+        sx={{
+          display: 'flex',
+          marginTop: '1.25em',
+          marginBottom: '1.25em',
+        }}
+      >
         {pageHeader}
         {searchable && (
           <SearchTable
@@ -165,9 +138,9 @@ function HomeView({ classes, dispatch, location }: IProps) {
             clearSearchString={() => setSearchString('')}
           />
         )}
-      </div>
+      </Box>
       {tableValue}
-    </div>
+    </Box>
   );
 }
 
@@ -177,4 +150,4 @@ function mapStateToProps(state: TdrState & RouterRootState) {
   };
 }
 
-export default connect(mapStateToProps)(withStyles(styles)(HomeView));
+export default connect(mapStateToProps)(HomeView);
