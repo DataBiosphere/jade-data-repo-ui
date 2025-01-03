@@ -72,9 +72,9 @@ export class CreateSnapshotPanel extends React.PureComponent {
         name,
         description,
         SnapshotRequestContentsModelModeEnum.ByQuery,
+        dataset,
         assetName,
         filterData,
-        dataset,
       ),
     );
     switchPanels(ShareSnapshot);

@@ -23,15 +23,21 @@ function FullViewSnapshotButton({
   dataset,
   dispatch,
   billingProfiles,
-}: FullViewSnapshotButtonProps) {
+}: Readonly<FullViewSnapshotButtonProps>) {
   useOnMount(() => {
     dispatch(getBillingProfiles());
   });
 
   const defaultBillingProfile = dataset.defaultProfileId;
-  // if user does not have permission on billing profile, disable button and show tooltip
-  const isDisabled = !billingProfiles.map((model) => model.id).includes(defaultBillingProfile);
-  const tooltipText = 'You do not have access to the billing profile associated with this dataset.';
+  // if the default billing profile is undefined or the user does not have permission on it, disable button and show tooltip
+  const hasAccess = billingProfiles.some((model) => model.id === defaultBillingProfile);
+  let tooltipText = '';
+  if (!defaultBillingProfile) {
+    tooltipText = 'There is no default billing profile associated with this dataset.';
+  } else if (!hasAccess) {
+    tooltipText = 'You do not have access to the billing profile associated with this dataset.';
+  }
+  const isDisabled = !defaultBillingProfile || !hasAccess;
 
   const handleCreateFullViewSnapshot = () => {
     const name = `Full_View_Snapshot_of_${dataset.name}_${now()}`;
@@ -41,8 +47,6 @@ function FullViewSnapshotButton({
         name,
         description,
         SnapshotRequestContentsModelModeEnum.ByFullView,
-        null,
-        null,
         dataset,
       ),
     );

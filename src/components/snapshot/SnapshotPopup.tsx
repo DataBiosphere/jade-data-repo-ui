@@ -98,7 +98,7 @@ function SnapshotPopup({
   isOpen,
   policies,
   snapshot,
-}: SnapshotPopupProps) {
+}: Readonly<SnapshotPopupProps>) {
   /**
    * When a snapshot gets created, the empty snapshot prop gets populated with a brief summary.
    * We want to use that snapshot id to get the full object and the policies for the dialog.
@@ -144,7 +144,7 @@ function SnapshotPopup({
   }
 
   // this number represents the total rows in the snapshot, i.e. the sum over all tables
-  const rows = snapshot.tables?.map((t) => t.rowCount).reduce((a, b) => a + b);
+  const rows = snapshot.tables?.map((t) => t.rowCount ?? 0).reduce((a, b) => a + b) ?? 0;
   const rowLabel = rows === 1 ? 'Row' : 'Rows';
 
   const tables = _.keys(filterData).map((table, i) => {

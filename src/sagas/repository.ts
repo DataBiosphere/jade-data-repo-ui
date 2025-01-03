@@ -236,30 +236,26 @@ export function* createSnapshot(): any {
   } = snapshots.snapshotRequest;
 
   const datasetName = dataset.name;
-  let snapshotRequest;
-  if (mode === SnapshotRequestContentsModelModeEnum.ByFullView) {
-    snapshotRequest = {
-      name,
-      profileId: dataset.defaultProfileId,
-      description,
-      contents: [
+  const snapshotRequest = {
+    name,
+    profileId: dataset.defaultProfileId,
+    description,
+    policies,
+    contents: [],
+  };
+  switch (mode) {
+    case SnapshotRequestContentsModelModeEnum.ByFullView:
+      snapshotRequest.contents = [
         {
           datasetName,
           mode,
         },
-      ],
-    };
-  } else if (mode === SnapshotRequestContentsModelModeEnum.ByQuery) {
-    const selectedAsset = _.find(dataset.schema.assets, (asset) => asset.name === assetName);
-
-    const { rootTable } = selectedAsset;
-
-    snapshotRequest = {
-      name,
-      profileId: dataset.defaultProfileId,
-      description,
-      policies,
-      contents: [
+      ];
+      break;
+    case SnapshotRequestContentsModelModeEnum.ByQuery:
+      const selectedAsset = _.find(dataset.schema.assets, (asset) => asset.name === assetName);
+      const { rootTable } = selectedAsset;
+      snapshotRequest.contents = [
         {
           datasetName,
           mode,
@@ -268,8 +264,8 @@ export function* createSnapshot(): any {
             query: `SELECT ${datasetName}.${rootTable}.${DbColumns.ROW_ID} ${joinStatement} ${filterStatement}`,
           },
         },
-      ],
-    };
+      ];
+      break;
   }
   try {
     const response = yield call(authPost, '/api/repository/v1/snapshots', snapshotRequest);

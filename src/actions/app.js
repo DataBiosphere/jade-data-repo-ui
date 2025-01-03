@@ -356,9 +356,9 @@ export const { snapshotCreateDetails } = createActions({
     name,
     description,
     mode,
+    dataset,
     assetName,
     filterData,
-    dataset,
   ) => ({
     name,
     description,

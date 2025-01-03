@@ -49,7 +49,7 @@ describe('FullViewSnapshotButton', () => {
       cy.get('button').should('contain.text', 'Create Full-View Snapshot');
     });
 
-    it('Button is clickable, calls createSnapshot, and does not have a tooltip', () => {
+    it('Button is clickable and calls createSnapshot', () => {
       cy.get('button').click();
       cy.intercept('POST', '/api/repository/v1/snapshots');
     });
@@ -61,12 +61,27 @@ describe('FullViewSnapshotButton', () => {
       mountFullViewSnapshotButton(dataset);
     });
 
-    it('Button is disabled and has tooltip', () => {
+    it('Button is disabled and has tooltip with the no access message', () => {
       cy.get('button').should('be.disabled');
       cy.get('button').trigger('mouseover', { force: true });
       cy.contains(
         'You do not have access to the billing profile associated with this dataset.',
       ).should('be.visible');
+    });
+  });
+
+  describe('FullViewSnapshotButton component without default billing profile', () => {
+    beforeEach(() => {
+      const dataset = { defaultProfileId: null };
+      mountFullViewSnapshotButton(dataset);
+    });
+
+    it('Button is disabled and has tooltip with the no billing profile message', () => {
+      cy.get('button').should('be.disabled');
+      cy.get('button').trigger('mouseover', { force: true });
+      cy.contains('There is no default billing profile associated with this dataset.').should(
+        'be.visible',
+      );
     });
   });
 });

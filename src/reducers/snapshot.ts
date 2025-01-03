@@ -295,19 +295,19 @@ export default {
       },
       [ActionTypes.SNAPSHOT_CREATE_DETAILS]: (state, action: any) => {
         const { name, description, mode, assetName, filterData, dataset } = action.payload;
-        let snapshotRequest = {
+        const snapshotRequest = {
           ...state.snapshotRequest,
           name,
           description,
           mode,
         };
         if (mode === SnapshotRequestContentsModelModeEnum.ByQuery) {
-          const joinStatement = buildSnapshotJoinStatement(filterData, assetName, dataset);
-          snapshotRequest = {
-            ...state.snapshotRequest,
+          snapshotRequest.assetName = assetName;
+          snapshotRequest.joinStatement = buildSnapshotJoinStatement(
+            filterData,
             assetName,
-            joinStatement,
-          };
+            dataset,
+          );
         }
 
         return immutable(state, {
