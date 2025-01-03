@@ -147,9 +147,9 @@ function SnapshotPopup({
   const rows = snapshot.tables?.map((t) => t.rowCount ?? 0).reduce((a, b) => a + b) ?? 0;
   const rowLabel = rows === 1 ? 'Row' : 'Rows';
 
-  const tables = _.keys(filterData).map((table, i) => {
+  const tables = _.keys(filterData).map((table) => {
     const filters = _.get(filterData, table);
-    const properties = _.keys(filters).map((filter, j) => {
+    const properties = _.keys(filters).map((filter) => {
       const data: any = _.get(filters, filter);
       let dataString = data.value;
       let dataDisplay;
@@ -157,20 +157,20 @@ function SnapshotPopup({
         const enDash = ' \u2013 ';
         dataString = _.join(data.value, enDash);
         const label = `${filter}: ${dataString}`;
-        dataDisplay = <Chip key={j} className={classes.chip} label={label} />;
+        dataDisplay = <Chip key={label} className={classes.chip} label={label} />;
       } else {
         if (_.isPlainObject(data.value)) {
           dataString = _.keys(data.value);
         }
-        dataDisplay = dataString.map((selection, k) => {
+        dataDisplay = dataString.map((selection) => {
           const label = `${filter}: ${selection}`;
-          return <Chip key={k} className={classes.chip} label={label} />;
+          return <Chip key={label} className={classes.chip} label={label} />;
         });
       }
       return dataDisplay;
     });
     return (
-      <div className={classes.bodyText} key={i}>
+      <div className={classes.bodyText} key={table}>
         <div className={classes.light}>{table}</div>
         <div>{properties}</div>
       </div>
