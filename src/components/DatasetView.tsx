@@ -1,11 +1,12 @@
 import React, { Dispatch } from 'react';
 import { connect } from 'react-redux';
 import { Action } from 'redux';
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import { getDatasets, addDatasetPolicyMember } from 'actions/index';
 import { DatasetSummaryModel } from 'generated/tdr';
 import { TdrState } from 'reducers';
 import { OrderDirectionOptions } from 'reducers/query';
+import theme from 'modules/theme';
 import DatasetTable from './table/DatasetTable';
 
 import { DatasetRoles } from '../constants';
@@ -49,7 +50,7 @@ function DatasetView({
 
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '1em' }}>
-      <Box sx={{ width: '100%', maxWidth: '1200px' }}>
+      <Box sx={{ ...theme.mixins.containerWidth }}>
         {datasets && (
           <DatasetTable
             datasets={datasets}
