@@ -7,6 +7,7 @@ import { Action } from 'redux';
 import { TdrState } from 'reducers';
 import { OrderDirectionOptions } from 'reducers/query';
 
+import theme from 'modules/theme';
 import SnapshotTable from './table/SnapshotTable';
 import SnapshotPopup from './snapshot/SnapshotPopup';
 import { SnapshotRoles } from '../constants';
@@ -51,8 +52,8 @@ function SnapshotView({
 
   return (
     <Box id="snapshots" sx={{ display: 'flex', justifyContent: 'center', marginTop: '1em' }}>
-      <Box sx={{ width: '100%', maxWidth: '1200px' }}>
-        <Box>
+      <Box sx={{ ...theme.mixins.containerWidth }}>
+        <div>
           <SnapshotTable
             snapshotCount={snapshotCount}
             snapshotRoleMaps={snapshotRoleMaps}
@@ -64,7 +65,7 @@ function SnapshotView({
             loading={loading}
             refreshCnt={refreshCnt}
           />
-        </Box>
+        </div>
         <SnapshotPopup />
       </Box>
     </Box>
