@@ -50,16 +50,6 @@ function DatasetView({
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '1em' }}>
       <Box sx={{ width: '100%', maxWidth: '1200px' }}>
-        <Typography
-          sx={{
-            color: 'primary.main',
-            fontSize: '54px',
-            lineHeight: '66px',
-            paddingBottom: '64px',
-          }}
-        >
-          Datasets
-        </Typography>
         {datasets && (
           <DatasetTable
             datasets={datasets}
