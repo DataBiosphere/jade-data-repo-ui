@@ -129,6 +129,11 @@ function SnapshotPopup({
   };
 
   const notReady = _.some([snapshot, policies, snapshot.source, snapshot.tables], _.isEmpty);
+  console.log(snapshot);
+  console.log(policies);
+  console.log(notReady);
+  console.log(snapshot.source);
+  console.log(snapshot.tables);
   if (notReady) {
     return (
       <Dialog open={isOpen}>
@@ -181,9 +186,9 @@ function SnapshotPopup({
 
   return (
     <Dialog open={isOpen} onClose={handleClose}>
-      <div className={classes.exitButton} onClick={handleClose}>
+      <Button className={classes.exitButton} onClick={handleClose}>
         <ExitSVG />
-      </div>
+      </Button>
       <DialogContent>
         <Typography variant="h4" className={classes.title}>
           Snapshot Successfully Created
@@ -191,7 +196,7 @@ function SnapshotPopup({
         <Paper variant="outlined">
           <div className={clsx(classes.snapshotName, classes.content, classes.withIcon)}>
             <CameraAlt className={classes.inline} />
-            <Typography variant="h6" data-cy="snapshotName">
+            <Typography variant="h6" data-cy="snapshotName" sx={{ wordBreak: 'break-word' }}>
               {snapshot.name}
             </Typography>
           </div>
