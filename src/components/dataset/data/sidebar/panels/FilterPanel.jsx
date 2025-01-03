@@ -233,7 +233,7 @@ export class FilterPanel extends React.PureComponent {
                 <Typography variant="h5" display="block">
                   Option 1:
                 </Typography>
-                Use the dataset as is to create a full-view snapshot
+                Use the dataset as is to create a full view snapshot
                 <span className={classes.paddingBottom}>
                   <FullViewSnapshotButton dataset={dataset} dispatch={dispatch} />
                 </span>

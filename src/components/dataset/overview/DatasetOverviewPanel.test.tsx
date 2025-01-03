@@ -46,9 +46,9 @@ describe('DatasetOverviewPanel', () => {
       </Router>,
     );
   });
-  it('shows the button "Create Full-View Snapshot" appears on the Snapshots page', () => {
+  it('shows the button "Create Full View Snapshot" appears on the Snapshots page', () => {
     const snapshotsTab = cy.contains('Snapshots');
     snapshotsTab.click();
-    cy.contains('Create Full-View Snapshot').should('be.visible');
+    cy.contains('Create Full View Snapshot').should('be.visible');
   });
 });

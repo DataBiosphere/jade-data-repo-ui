@@ -41,7 +41,7 @@ function FullViewSnapshotButton({
 
   const handleCreateFullViewSnapshot = () => {
     const name = `Full_View_Snapshot_of_${dataset.name}_${now()}`;
-    const description = `Full-View Snapshot of Dataset with Dataset name ${dataset.name}, and Dataset id ${dataset.id}.`;
+    const description = `Full View Snapshot of Dataset with Dataset name ${dataset.name}, and Dataset id ${dataset.id}.`;
     dispatch(
       snapshotCreateDetails(
         name,
@@ -62,7 +62,7 @@ function FullViewSnapshotButton({
           onClick={() => handleCreateFullViewSnapshot()}
           disabled={isDisabled}
         >
-          Create Full-View Snapshot
+          Create Full View Snapshot
         </Button>
       </span>
     </TerraTooltip>

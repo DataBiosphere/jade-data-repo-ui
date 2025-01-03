@@ -36,7 +36,7 @@ describe('FilterPanel', () => {
       </Router>,
     );
   });
-  it('shows the button "Create Full-View Snapshot" appears on the FilterPanel', () => {
-    cy.contains('Create Full-View Snapshot').should('be.visible');
+  it('shows the button "Create Full View Snapshot" appears on the FilterPanel', () => {
+    cy.contains('Create Full View Snapshot').should('be.visible');
   });
 });

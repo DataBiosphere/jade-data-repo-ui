@@ -271,7 +271,7 @@ function DatasetOverviewPanel(props) {
       </TabPanel>
       <TabPanel value={value} index={1}>
         <Grid className={classes.fullViewText}>
-          Use the dataset as is to create a full-view snapshot
+          Use the dataset as is to create a full view snapshot
           <span className={classes.fullViewButton}>
             <FullViewSnapshotButton dataset={dataset} dispatch={dispatch} />
           </span>

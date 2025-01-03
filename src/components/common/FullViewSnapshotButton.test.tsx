@@ -46,7 +46,7 @@ describe('FullViewSnapshotButton', () => {
     });
 
     it('Displays the button with correct text', () => {
-      cy.get('button').should('contain.text', 'Create Full-View Snapshot');
+      cy.get('button').should('contain.text', 'Create Full View Snapshot');
     });
 
     it('Button is clickable and calls createSnapshot', () => {
