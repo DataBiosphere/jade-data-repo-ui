@@ -246,7 +246,7 @@ function DatasetOverviewPanel(props) {
         </Grid>
       </TabPanel>
       <Drawer
-        variant="permanent"
+        variant="temporary"
         anchor="right"
         className={isHelpVisible ? 'drawerOpen' : 'drawerClose'}
         sx={{
