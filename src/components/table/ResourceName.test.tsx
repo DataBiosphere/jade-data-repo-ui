@@ -3,7 +3,7 @@ import createMockStore from 'redux-mock-store';
 import { mount } from 'cypress/react';
 import { Router } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import { ThemeProvider } from '@mui/styles';
+import { ThemeProvider } from '@mui/system';
 
 import history from '../../modules/hist';
 import globalTheme from '../../modules/theme';

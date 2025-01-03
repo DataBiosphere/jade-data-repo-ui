@@ -7,7 +7,7 @@ import { routerMiddleware } from 'connected-react-router';
 import history from 'modules/hist';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
-import { ThemeProvider } from '@mui/styles';
+import { ThemeProvider } from '@mui/system';
 import globalTheme from 'modules/theme';
 import React from 'react';
 import TabWrapper from 'components/common/TabWrapper';
