@@ -129,11 +129,6 @@ function SnapshotPopup({
   };
 
   const notReady = _.some([snapshot, policies, snapshot.source, snapshot.tables], _.isEmpty);
-  console.log(snapshot);
-  console.log(policies);
-  console.log(notReady);
-  console.log(snapshot.source);
-  console.log(snapshot.tables);
   if (notReady) {
     return (
       <Dialog open={isOpen}>
