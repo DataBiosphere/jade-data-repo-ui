@@ -3,7 +3,7 @@ import { mount } from 'cypress/react';
 import { Router } from 'react-router-dom';
 import history from 'modules/hist';
 import globalTheme from 'modules/theme';
-import { ThemeProvider } from '@mui/system';
+import { ThemeProvider } from '@mui/material/styles';
 import AppBreadcrumbs from './AppBreadcrumbs';
 import { BreadcrumbType } from '../../constants';
 

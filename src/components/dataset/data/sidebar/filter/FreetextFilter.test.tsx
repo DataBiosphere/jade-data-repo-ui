@@ -1,7 +1,7 @@
 import { Provider } from 'react-redux';
 import { mount } from 'cypress/react';
 import { Router } from 'react-router-dom';
-import { ThemeProvider } from '@mui/system';
+import { ThemeProvider } from '@mui/material/styles';
 import { routerMiddleware } from 'connected-react-router';
 import createMockStore, { MockStoreEnhanced } from 'redux-mock-store';
 import React from 'react';
