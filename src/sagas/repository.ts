@@ -244,7 +244,7 @@ export function* createSnapshot(): any {
     contents: [],
   };
   switch (mode) {
-    case SnapshotRequestContentsModelModeEnum.ByFullView:
+    case SnapshotRequestContentsModelModeEnum.ByFullView: {
       snapshotRequest.contents = [
         {
           datasetName,
@@ -252,7 +252,8 @@ export function* createSnapshot(): any {
         },
       ];
       break;
-    case SnapshotRequestContentsModelModeEnum.ByQuery:
+    }
+    case SnapshotRequestContentsModelModeEnum.ByQuery: {
       const selectedAsset = _.find(dataset.schema.assets, (asset) => asset.name === assetName);
       const { rootTable } = selectedAsset;
       snapshotRequest.contents = [
@@ -266,6 +267,7 @@ export function* createSnapshot(): any {
         },
       ];
       break;
+    }
   }
   try {
     const response = yield call(authPost, '/api/repository/v1/snapshots', snapshotRequest);
