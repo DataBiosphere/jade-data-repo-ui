@@ -3,7 +3,7 @@ import { SnapshotAccessRequestResponse, SnapshotAccessRequestDetailsResponse } f
 import { TableColumnType } from 'reducers/query';
 import LightTable from 'components/table/LightTable';
 import moment from 'moment/moment';
-import { Button } from '@mui/material';
+import { Button, Box } from '@mui/material';
 import _ from 'lodash';
 import {
   approveSnapshotAccessRequest,
@@ -12,43 +12,10 @@ import {
 } from 'actions';
 import { Action } from 'redux';
 import { Link } from 'react-router-dom';
-import { ClassNameMap, createStyles, withStyles } from '@mui/styles';
-import { CustomTheme } from '@mui/material/styles';
 import TextWithModalDetails from 'components/common/InfoModal';
 import LoadingSpinner from 'components/common/LoadingSpinner';
 
-const styles = (theme: CustomTheme) =>
-  createStyles({
-    jadeLink: {
-      ...theme.mixins.jadeLink,
-    },
-    openButton: {
-      width: '100%',
-      border: 0,
-      justifyContent: 'left',
-      textTransform: 'none',
-      paddingTop: theme.spacing(1),
-      paddingBottom: theme.spacing(1),
-      '&:hover': {
-        border: 0,
-      },
-    },
-    overlaySpinner: {
-      opacity: 0.9,
-      position: 'absolute',
-      right: 0,
-      bottom: 0,
-      left: 0,
-      width: '100vw',
-      height: '100vh',
-      overflow: 'clip',
-      backgroundColor: theme.palette.common.white,
-      zIndex: 100,
-    },
-  });
-
 interface IProps {
-  classes: ClassNameMap;
   dispatch: Dispatch<Action>;
   snapshotAccessRequests: Array<SnapshotAccessRequestResponse>;
   snapshotAccessRequestDetails?: SnapshotAccessRequestDetailsResponse;
@@ -59,7 +26,6 @@ interface IProps {
 }
 
 function SnapshotAccessRequestTable({
-  classes,
   dispatch,
   snapshotAccessRequests,
   snapshotAccessRequestDetails,
@@ -107,7 +73,15 @@ function SnapshotAccessRequestTable({
       name: 'snapshotName',
       render: (row: SnapshotAccessRequestResponse) => (
         <Button
-          className={classes.openButton}
+          sx={{
+            width: '100%',
+            border: 0,
+            justifyContent: 'left',
+            textTransform: 'none',
+            paddingTop: '8px',
+            paddingBottom: '8px',
+            '&:hover': { border: 0 },
+          }}
           aria-label={row.snapshotName}
           onClick={() => openDetailsModal(row)}
           disableFocusRipple={true}
@@ -135,7 +109,9 @@ function SnapshotAccessRequestTable({
       name: 'createdSnapshotId',
       render: (row: SnapshotAccessRequestResponse) => (
         <Link to={`/snapshots/${row.createdSnapshotId}`}>
-          <span className={classes.jadeLink}>{row.createdSnapshotId}</span>
+          <Box sx={{ color: 'primary.main', textDecoration: 'underline' }}>
+            {row.createdSnapshotId}
+          </Box>
         </Link>
       ),
       width: '12%',
@@ -162,7 +138,7 @@ function SnapshotAccessRequestTable({
       label: '',
       name: 'Actions',
       render: (row: SnapshotAccessRequestResponse) => (
-        <div>
+        <Box>
           <Button
             color="primary"
             onClick={() => row.id && dispatch(rejectSnapshotAccessRequest(row.id))}
@@ -175,14 +151,14 @@ function SnapshotAccessRequestTable({
           >
             Approve
           </Button>
-        </div>
+        </Box>
       ),
       width: '15%',
     },
   ];
   return (
     <>
-      <div>
+      <Box>
         <LightTable
           columns={columns}
           noRowsMessage="No requests are pending review"
@@ -192,9 +168,22 @@ function SnapshotAccessRequestTable({
           refreshCnt={refreshCnt}
           totalCount={snapshotAccessRequests.length}
         />
-      </div>
+      </Box>
       {loadingSnapshotAccessRequestDetails ? (
-        <LoadingSpinner className={classes.overlaySpinner} />
+        <LoadingSpinner
+          sx={{
+            opacity: 0.9,
+            position: 'absolute',
+            right: 0,
+            bottom: 0,
+            left: 0,
+            width: '100vw',
+            height: '100vh',
+            overflow: 'clip',
+            backgroundColor: 'common.white',
+            zIndex: 100,
+          }}
+        />
       ) : (
         selectedAccessRequest &&
         snapshotAccessRequestDetails && (
@@ -209,4 +198,4 @@ function SnapshotAccessRequestTable({
   );
 }
 
-export default withStyles(styles)(SnapshotAccessRequestTable);
+export default SnapshotAccessRequestTable;
