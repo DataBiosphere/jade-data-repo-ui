@@ -121,7 +121,8 @@ function SnapshotPopup({
       );
       dispatch(getSnapshotPolicy(snapshotId));
     }
-  }, [snapshot.id, dispatch]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [snapshot.id]);
 
   const handleClose = () => {
     dispatch(openSnapshotDialog(false));
