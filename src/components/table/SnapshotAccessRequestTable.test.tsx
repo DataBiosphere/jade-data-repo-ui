@@ -7,7 +7,7 @@ import { routerMiddleware } from 'connected-react-router';
 import history from 'modules/hist';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
-import { ThemeProvider } from '@mui/styles';
+import { ThemeProvider } from '@mui/material/styles';
 import globalTheme from 'modules/theme';
 import React from 'react';
 import SnapshotAccessRequestTable from 'components/table/SnapshotAccessRequestTable';

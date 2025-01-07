@@ -1,7 +1,7 @@
 import { mount } from 'cypress/react';
 import { Router } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import { ThemeProvider } from '@mui/styles';
+import { ThemeProvider } from '@mui/material/styles';
 import { initialUserState } from 'reducers/user';
 import { initialQueryState } from 'reducers/query';
 import _ from 'lodash';
