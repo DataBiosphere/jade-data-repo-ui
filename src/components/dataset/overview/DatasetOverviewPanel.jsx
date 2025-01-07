@@ -33,6 +33,7 @@ import TabPanel from '../../common/TabPanel';
 import { DatasetRoles } from '../../../constants';
 import JournalEntriesView from '../../JournalEntriesView';
 import { getCloudPlatform } from '../../../libs/utilsTs';
+
 function a11yProps(index) {
   return {
     id: `simple-tab-${index}`,
@@ -209,11 +210,11 @@ function DatasetOverviewPanel(props) {
         </Grid>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <Grid className={classes.fullViewText}>
+        <Grid sx={{ paddingBottom: '14px' }}>
           Use the dataset as is to create a full view snapshot
-          <span className={classes.fullViewButton}>
+          <Box sx={{ marginLeft: theme.spacing(2) }}>
             <FullViewSnapshotButton dataset={dataset} dispatch={dispatch} />
-          </span>
+          </Box>
         </Grid>
         <DatasetSnapshotsTable />
       </TabPanel>
