@@ -73,6 +73,11 @@ describe('SnapshotPopup Component', () => {
   });
 
   it('shows created snapshot information when ready', () => {
+    cy.intercept(
+      'GET',
+      '/api/repository/v1/snapshots/1?include=SOURCES&include=TABLES&include=RELATIONSHIPS&include=ACCESS_INFORMATION&include=PROFILE&include=DATA_PROJECT',
+    );
+    cy.intercept('GET', '/api/repository/v1/snapshots/1/policy');
     mountSnapshotPopup(initialStateReady);
     cy.get('div').contains('Snapshot Successfully Created').should('be.visible');
     cy.get('div').contains('Test Snapshot').should('be.visible');
