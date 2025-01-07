@@ -1,4 +1,4 @@
-import React, { Dispatch, useEffect, useState } from 'react';
+import React, { Dispatch, useEffect } from 'react';
 import _ from 'lodash';
 import ExitSVG from 'media/icons/times-light.svg?react';
 import { connect } from 'react-redux';
@@ -103,9 +103,9 @@ function SnapshotPopup({
    * When a snapshot gets created, the empty snapshot prop gets populated with a brief summary.
    * We want to use that snapshot id to get the full object and the policies for the dialog.
    */
-  const [hasLoadedSnapshot, setHasLoadedSnapshot] = useState(false);
   useEffect(() => {
-    if (!hasLoadedSnapshot && !_.isEmpty(snapshot)) {
+    const snapshotId = snapshot.id;
+    if (!_.isEmpty(snapshotId)) {
       dispatch(
         getSnapshotById({
           snapshotId: snapshot.id,
@@ -119,13 +119,9 @@ function SnapshotPopup({
           ],
         }),
       );
-      dispatch(getSnapshotPolicy(snapshot.id));
-      setHasLoadedSnapshot(true);
-    } else {
-      setHasLoadedSnapshot(false);
+      dispatch(getSnapshotPolicy(snapshotId));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [snapshot, dispatch]);
+  }, [snapshot.id, dispatch]);
 
   const handleClose = () => {
     dispatch(openSnapshotDialog(false));

@@ -280,10 +280,18 @@ export default {
         immutable(state, {
           dialogIsOpen: { $set: false },
         }),
-      [ActionTypes.OPEN_SNAPSHOT_DIALOG]: (state, action: any) =>
-        immutable(state, {
-          dialogIsOpen: { $set: action.payload },
-        }),
+      [ActionTypes.OPEN_SNAPSHOT_DIALOG]: (state, action: any) => {
+        if (action.payload === false) {
+          immutable(state, {
+            snapshot: { $set: {} },
+            dialogIsOpen: { $set: false },
+          });
+        } else {
+          immutable(state, {
+            dialogIsOpen: { $set: action.payload },
+          });
+        }
+      },
       [ActionTypes.APPLY_FILTERS]: (state, action: any) => {
         const { filters, dataset } = action.payload;
 
