@@ -20,12 +20,6 @@ const styles = (theme: CustomTheme) =>
     canManageUsers: {
       paddingTop: 0,
     },
-    values: {
-      paddingBottom: theme.spacing(1),
-    },
-    root: {
-      marginTop: theme.spacing(3),
-    },
     noUsers: {
       fontStyle: 'italic',
       colorPrimary: theme.palette.error.contrastText,
