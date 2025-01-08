@@ -1,35 +1,25 @@
 import React, { Dispatch } from 'react';
 import { connect } from 'react-redux';
-import { WithStyles, withStyles } from '@mui/styles';
-import { CustomTheme } from '@mui/material';
+import { Action } from 'redux';
+import { Box, Typography } from '@mui/material';
 import { addSnapshotPolicyMember, getSnapshots } from 'actions/index';
 import { SnapshotSummaryModel } from 'generated/tdr';
-import { Action } from 'redux';
 import { TdrState } from 'reducers';
 import { OrderDirectionOptions } from 'reducers/query';
-
+import { styled } from '@mui/system';
+import theme from 'modules/theme';
 import SnapshotTable from './table/SnapshotTable';
 import SnapshotPopup from './snapshot/SnapshotPopup';
 import { SnapshotRoles } from '../constants';
 
-const styles = (theme: CustomTheme) => ({
-  wrapper: {
-    display: 'flex',
-    justifyContent: 'center',
-    marginTop: '1em',
-  },
-  width: {
-    ...theme.mixins.containerWidth,
-  },
-  title: {
-    color: theme.palette.primary.main,
-    fontSize: 54,
-    lineHeight: '66px',
-    paddingBottom: theme.spacing(8),
-  },
-});
+const Title = styled(Typography)(({ theme2 }) => ({
+  color: theme2.palette.primary.main,
+  fontSize: '54px',
+  lineHeight: '66px',
+  paddingBottom: theme2.spacing(8),
+}));
 
-interface IProps extends WithStyles<typeof styles> {
+interface IProps {
   snapshots: Array<SnapshotSummaryModel>;
   snapshotRoleMaps: { [key: string]: Array<string> };
   snapshotCount: number;
@@ -41,57 +31,54 @@ interface IProps extends WithStyles<typeof styles> {
   userEmail: string;
 }
 
-const SnapshotView = withStyles(styles)(
-  ({
-    classes,
-    snapshots,
-    snapshotRoleMaps,
-    snapshotCount,
-    dispatch,
-    filteredSnapshotCount,
-    loading,
-    searchString,
-    refreshCnt,
-    userEmail,
-  }: IProps) => {
-    const handleFilterSnapshots = (
-      limit: number,
-      offset: number,
-      sort: string,
-      sortDirection: OrderDirectionOptions,
-      search: string,
-    ) => {
-      // TODO: should we allow filtering on dataset id here?
-      const datasetIds: string[] = [];
-      dispatch(getSnapshots(limit, offset, sort, sortDirection, search, datasetIds));
-    };
+function SnapshotView({
+  snapshots,
+  snapshotRoleMaps,
+  snapshotCount,
+  dispatch,
+  filteredSnapshotCount,
+  loading,
+  searchString,
+  refreshCnt,
+  userEmail,
+}: IProps) {
+  const handleFilterSnapshots = (
+    limit: number,
+    offset: number,
+    sort: string,
+    sortDirection: OrderDirectionOptions,
+    search: string,
+  ) => {
+    const datasetIds: string[] = [];
+    dispatch(getSnapshots(limit, offset, sort, sortDirection, search, datasetIds));
+  };
 
-    const handleMakeSteward = (snapshotID: string) => {
-      dispatch(addSnapshotPolicyMember(snapshotID, userEmail, SnapshotRoles.STEWARD));
-    };
+  const handleMakeSteward = (snapshotID: string) => {
+    dispatch(addSnapshotPolicyMember(snapshotID, userEmail, SnapshotRoles.STEWARD));
+  };
 
-    return (
-      <div id="snapshots" className={classes.wrapper}>
-        <div className={classes.width}>
-          <div>
-            <SnapshotTable
-              snapshotCount={snapshotCount}
-              snapshotRoleMaps={snapshotRoleMaps}
-              filteredSnapshotCount={filteredSnapshotCount}
-              snapshots={snapshots}
-              handleFilterSnapshots={handleFilterSnapshots}
-              handleMakeSteward={handleMakeSteward}
-              searchString={searchString}
-              loading={loading}
-              refreshCnt={refreshCnt}
-            />
-          </div>
-        </div>
-        <SnapshotPopup />
-      </div>
-    );
-  },
-);
+  return (
+    <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '1em' }}>
+      <Box sx={{ ...theme.mixins.containerWidth }}>
+        <Title>Snapshots</Title>
+        {snapshots && (
+          <SnapshotTable
+            snapshotCount={snapshotCount}
+            snapshotRoleMaps={snapshotRoleMaps}
+            filteredSnapshotCount={filteredSnapshotCount}
+            snapshots={snapshots}
+            handleFilterSnapshots={handleFilterSnapshots}
+            handleMakeSteward={handleMakeSteward}
+            searchString={searchString}
+            loading={loading}
+            refreshCnt={refreshCnt}
+          />
+        )}
+      </Box>
+      <SnapshotPopup />
+    </Box>
+  );
+}
 
 function mapStateToProps(state: TdrState) {
   return {
