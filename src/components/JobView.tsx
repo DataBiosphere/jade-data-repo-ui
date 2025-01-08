@@ -6,11 +6,12 @@ import { JobModel } from 'generated/tdr';
 import { TdrState } from 'reducers';
 import { OrderDirectionOptions } from 'reducers/query';
 import theme from 'modules/theme';
+import { Action } from 'redux';
 import JobTable from './table/JobTable';
 
 interface IProps {
   jobs: Array<JobModel>;
-  dispatch: Dispatch<any>;
+  dispatch: Dispatch<Action>;
   loading: boolean;
   searchString: string;
   refreshCnt: number;
