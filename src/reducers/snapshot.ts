@@ -11,6 +11,7 @@ import {
   PolicyModel,
   SnapshotExportResponseModel,
   SnapshotModel,
+  SnapshotRequestContentsModelModeEnum,
   SnapshotRequestModelPolicies,
   SnapshotSummaryModel,
   WorkspacePolicyModel,
@@ -20,6 +21,7 @@ import {
 export interface SnapshotRequest {
   name: string;
   description: string;
+  mode: SnapshotRequestContentsModelModeEnum;
   assetName: string;
   filterStatement: string;
   joinStatement: string;
@@ -65,6 +67,7 @@ export interface SnapshotState {
 const defaultSnapshotRequest: SnapshotRequest = {
   name: '',
   description: '',
+  mode: SnapshotRequestContentsModelModeEnum.ByQuery,
   assetName: '',
   filterStatement: '',
   joinStatement: '',
@@ -277,10 +280,18 @@ export default {
         immutable(state, {
           dialogIsOpen: { $set: false },
         }),
-      [ActionTypes.OPEN_SNAPSHOT_DIALOG]: (state, action: any) =>
-        immutable(state, {
-          dialogIsOpen: { $set: action.payload },
-        }),
+      [ActionTypes.OPEN_SNAPSHOT_DIALOG]: (state, action: any) => {
+        if (action.payload === false) {
+          immutable(state, {
+            snapshot: { $set: {} },
+            dialogIsOpen: { $set: false },
+          });
+        } else {
+          immutable(state, {
+            dialogIsOpen: { $set: action.payload },
+          });
+        }
+      },
       [ActionTypes.APPLY_FILTERS]: (state, action: any) => {
         const { filters, dataset } = action.payload;
 
@@ -291,16 +302,21 @@ export default {
         });
       },
       [ActionTypes.SNAPSHOT_CREATE_DETAILS]: (state, action: any) => {
-        const { name, description, assetName, filterData, dataset } = action.payload;
-
-        const joinStatement = buildSnapshotJoinStatement(filterData, assetName, dataset);
+        const { name, description, mode, assetName, filterData, dataset } = action.payload;
         const snapshotRequest = {
           ...state.snapshotRequest,
           name,
           description,
-          assetName,
-          joinStatement,
+          mode,
         };
+        if (mode === SnapshotRequestContentsModelModeEnum.ByQuery) {
+          snapshotRequest.assetName = assetName;
+          snapshotRequest.joinStatement = buildSnapshotJoinStatement(
+            filterData,
+            assetName,
+            dataset,
+          );
+        }
 
         return immutable(state, {
           snapshotRequest: { $set: snapshotRequest },

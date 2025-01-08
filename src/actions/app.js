@@ -352,9 +352,17 @@ export const { openSnapshotDialog } = createActions({
 });
 
 export const { snapshotCreateDetails } = createActions({
-  [ActionTypes.SNAPSHOT_CREATE_DETAILS]: (name, description, assetName, filterData, dataset) => ({
+  [ActionTypes.SNAPSHOT_CREATE_DETAILS]: (
     name,
     description,
+    mode,
+    dataset,
+    assetName,
+    filterData,
+  ) => ({
+    name,
+    description,
+    mode,
     assetName,
     filterData,
     dataset,

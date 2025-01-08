@@ -228,6 +228,7 @@ export function* createSnapshot(): any {
   const {
     name,
     description,
+    mode,
     assetName,
     filterStatement,
     joinStatement,
@@ -235,27 +236,39 @@ export function* createSnapshot(): any {
   } = snapshots.snapshotRequest;
 
   const datasetName = dataset.name;
-  const mode = 'byQuery';
-  const selectedAsset = _.find(dataset.schema.assets, (asset) => asset.name === assetName);
-
-  const { rootTable } = selectedAsset;
-
   const snapshotRequest = {
     name,
     profileId: dataset.defaultProfileId,
     description,
     policies,
-    contents: [
-      {
-        datasetName,
-        mode,
-        querySpec: {
-          assetName,
-          query: `SELECT ${datasetName}.${rootTable}.${DbColumns.ROW_ID} ${joinStatement} ${filterStatement}`,
-        },
-      },
-    ],
+    contents: [],
   };
+  switch (mode) {
+    case SnapshotRequestContentsModelModeEnum.ByFullView: {
+      snapshotRequest.contents = [
+        {
+          datasetName,
+          mode,
+        },
+      ];
+      break;
+    }
+    case SnapshotRequestContentsModelModeEnum.ByQuery: {
+      const selectedAsset = _.find(dataset.schema.assets, (asset) => asset.name === assetName);
+      const { rootTable } = selectedAsset;
+      snapshotRequest.contents = [
+        {
+          datasetName,
+          mode,
+          querySpec: {
+            assetName,
+            query: `SELECT ${datasetName}.${rootTable}.${DbColumns.ROW_ID} ${joinStatement} ${filterStatement}`,
+          },
+        },
+      ];
+      break;
+    }
+  }
   try {
     const response = yield call(authPost, '/api/repository/v1/snapshots', snapshotRequest);
     const jobId = response.data.id;

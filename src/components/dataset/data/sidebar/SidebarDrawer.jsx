@@ -8,13 +8,13 @@ const styles = (theme) => ({
   root: {
     backgroundColor: theme.palette.primary.lightContrast,
     position: 'absolute',
-    top: '112px',
+    top: '0px',
     right: '0px',
     bottom: '0px',
     zIndex: 10,
   },
   drawer: {
-    top: '112px',
+    top: '0px',
     right: '56px',
     bottom: '0px',
     flexShrink: 0,

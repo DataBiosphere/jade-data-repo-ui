@@ -12,7 +12,7 @@ import {
   Typography,
 } from '@mui/material';
 import { withStyles } from '@mui/styles';
-import { ExpandMore, Close, Info } from '@mui/icons-material';
+import { ExpandMore, Close } from '@mui/icons-material';
 import IconButton from '@mui/material/IconButton';
 import { connect } from 'react-redux';
 import moment from 'moment';
@@ -20,6 +20,7 @@ import clsx from 'clsx';
 import { patchDataset } from 'actions';
 import GoogleSheetExport from 'components/common/overview/GoogleSheetExport';
 import { IamResourceTypeEnum, CloudPlatform } from 'generated/tdr';
+import FullViewSnapshotButton from 'components/common/FullViewSnapshotButton';
 import {
   renderCloudPlatforms,
   renderStorageResources,
@@ -91,6 +92,12 @@ const styles = (theme) => ({
   divider: {
     marginTop: '14px',
     marginBottom: '14px',
+  },
+  fullViewButton: {
+    marginLeft: theme.spacing(2),
+  },
+  fullViewText: {
+    paddingBottom: '14px',
   },
 });
 
@@ -263,6 +270,12 @@ function DatasetOverviewPanel(props) {
         </Grid>
       </TabPanel>
       <TabPanel value={value} index={1}>
+        <Grid className={classes.fullViewText}>
+          Use the dataset as is to create a full view snapshot
+          <span className={classes.fullViewButton}>
+            <FullViewSnapshotButton dataset={dataset} dispatch={dispatch} />
+          </span>
+        </Grid>
         <DatasetSnapshotsTable />
       </TabPanel>
       {linkToBq && (

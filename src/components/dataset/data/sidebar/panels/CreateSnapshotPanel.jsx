@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 
 import { Button, Divider, TextField, Typography } from '@mui/material';
 import { snapshotCreateDetails } from 'actions/index';
+import { SnapshotRequestContentsModelModeEnum } from 'generated/tdr';
 import CreateSnapshotDropdown from '../CreateSnapshotDropdown';
 import ShareSnapshot from './ShareSnapshot';
 
@@ -66,7 +67,16 @@ export class CreateSnapshotPanel extends React.PureComponent {
   saveNameAndDescription = () => {
     const { dispatch, switchPanels, filterData, dataset } = this.props;
     const { name, description, assetName } = this.state;
-    dispatch(snapshotCreateDetails(name, description, assetName, filterData, dataset));
+    dispatch(
+      snapshotCreateDetails(
+        name,
+        description,
+        SnapshotRequestContentsModelModeEnum.ByQuery,
+        dataset,
+        assetName,
+        filterData,
+      ),
+    );
     switchPanels(ShareSnapshot);
   };
 

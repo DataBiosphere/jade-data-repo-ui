@@ -10,7 +10,6 @@ import {
   Typography,
   Button,
   Grid,
-  InputBase,
   ListItem,
   Collapse,
   Divider,
@@ -18,6 +17,7 @@ import {
 } from '@mui/material';
 import { ExpandMore, ExpandLess } from '@mui/icons-material';
 import TerraTooltip from 'components/common/TerraTooltip';
+import FullViewSnapshotButton from 'components/common/FullViewSnapshotButton';
 import DataViewSidebarItem from '../DataViewSidebarItem';
 import DataSidebarPanel from '../DataSidebarPanel';
 
@@ -40,10 +40,13 @@ const styles = (theme) => ({
   filterPanel: {
     marginBottom: '8px',
   },
-  sidebarTitle: {
+  sidebarText: {
     flexDirection: 'column',
     display: 'flex',
     justifyContent: 'center',
+  },
+  sidebarTitle: {
+    padding: '1rem 0',
   },
   snapshotBtnCntnr: {
     textAlign: 'end',
@@ -83,6 +86,9 @@ const styles = (theme) => ({
   },
   button: {
     marginTop: theme.spacing(1),
+  },
+  paddingBottom: {
+    paddingBottom: theme.spacing(3),
   },
 });
 
@@ -198,10 +204,10 @@ export class FilterPanel extends React.PureComponent {
       open,
       polling,
       table,
-      token,
       selected,
       handleCreateSnapshot,
       canLink,
+      dispatch,
     } = this.props;
     const { searchStrings, searchInput } = this.state;
     const filteredColumns = columns.filter((column) => {
@@ -220,7 +226,23 @@ export class FilterPanel extends React.PureComponent {
         <div className={classes.rowOne}>
           <Box className={!open ? classes.hide : ''}>
             <Grid container={true} spacing={1}>
-              <Grid item xs={10} className={classes.sidebarTitle}>
+              <Grid item xs={10} className={classes.sidebarText}>
+                <Typography variant="h4" display="block" className={classes.sidebarTitle}>
+                  Create a Snapshot
+                </Typography>
+                <Typography variant="h5" display="block">
+                  Option 1:
+                </Typography>
+                Use the dataset as is to create a full view snapshot
+                <span className={classes.paddingBottom}>
+                  <FullViewSnapshotButton dataset={dataset} dispatch={dispatch} />
+                </span>
+                <Typography variant="h5" display="block">
+                  Option 2:
+                </Typography>
+                <Typography display="block" className={classes.paddingBottom}>
+                  Use the filters below to create a custom snapshot
+                </Typography>
                 <Typography variant="h6" display="block">
                   Select Data
                 </Typography>
