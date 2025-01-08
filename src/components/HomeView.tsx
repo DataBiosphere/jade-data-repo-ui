@@ -1,180 +1,93 @@
-import React, { Dispatch, useState } from 'react';
+import React, { Dispatch } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 import { Action } from 'redux';
-
-import { Button } from '@mui/material';
-import { AddCircle, Refresh } from '@mui/icons-material';
-import { createStyles, WithStyles, withStyles } from '@mui/styles';
-import { CustomTheme } from '@mui/material/styles';
-import { RouterLocation, RouterRootState } from 'connected-react-router';
-import { LocationState } from 'history';
-import {
-  getSnapshotAccessRequests,
-  refreshDatasets,
-  refreshJobs,
-  refreshSnapshotAccessRequests,
-  refreshSnapshots,
-} from 'src/actions';
+import { Box, Typography } from '@mui/material';
+import { getDatasets, addDatasetPolicyMember } from 'actions/index';
+import { DatasetSummaryModel } from 'generated/tdr';
 import { TdrState } from 'reducers';
-import { useOnMount } from 'libs/utils';
-import DatasetView from './DatasetView';
-import SnapshotView from './SnapshotView';
-import JobView from './JobView';
-import SearchTable from './table/SearchTable';
-import SnapshotAccessRequestView from './SnapshotAccessRequestView';
+import { OrderDirectionOptions } from 'reducers/query';
+import { styled } from '@mui/system';
+import theme from 'modules/theme';
+import DatasetTable from './table/DatasetTable';
+import { DatasetRoles } from '../constants';
 
-const styles = (theme: CustomTheme) =>
-  createStyles({
-    pageRoot: {
-      padding: '16px 24px',
-      display: 'flex',
-      flexDirection: 'column',
-      height: '100%',
-    },
-    header: {
-      alignItems: 'center',
-      color: theme.typography.color,
-      display: 'flex',
-      fontWeight: 500,
-      fontSize: 16,
-      height: 21,
-      letterSpacing: 1,
-    },
-    jadeTableSpacer: {
-      paddingBottom: theme.spacing(12),
-    },
-    jadeLink: {
-      ...theme.mixins.jadeLink,
-      float: 'right',
-      fontSize: 16,
-      fontWeight: 500,
-      height: 20,
-      letterSpacing: 0.3,
-      paddingLeft: theme.spacing(4),
-      paddingTop: theme.spacing(4),
-    },
-    title: {
-      color: theme.palette.secondary.dark,
-      fontSize: '1.5rem',
-      fontWeight: 700,
-      flex: '1 1 0',
-      'padding-right': '2em',
-      display: 'flex',
-    },
-    titleText: {
-      width: '150px',
-    },
-    titleAndSearch: {
-      display: 'flex',
-      'margin-top': '1.25em',
-      'margin-bottom': '1.25em',
-    },
-    headerButton: {
-      padding: 10,
-      marginLeft: theme.spacing(2),
-      height: '45px',
-      textTransform: 'none',
-    },
-    buttonIcon: {
-      marginRight: 6,
-      fontSize: '1.5rem',
-    },
-  });
+const Title = styled(Typography)(({ theme }) => ({
+  color: theme.palette.primary.main,
+  fontSize: '54px',
+  lineHeight: '66px',
+  paddingBottom: theme.spacing(8),
+}));
 
-interface IProps extends WithStyles<typeof styles> {
+interface IProps {
+  datasets: Array<DatasetSummaryModel>;
+  datasetRoleMaps: { [key: string]: Array<string> };
+  datasetsCount: number;
   dispatch: Dispatch<Action>;
-  location: RouterLocation<LocationState>;
+  filteredDatasetsCount: number;
+  loading: boolean;
+  searchString: string;
+  refreshCnt: number;
+  userEmail: string;
 }
 
-function HomeView({ classes, dispatch, location }: IProps) {
-  const [searchString, setSearchString] = useState('');
-  const prefixMatcher = /\/[^/]*/;
-  const tabValue = prefixMatcher.exec(location.pathname)?.[0];
+function DatasetView({
+  datasets,
+  datasetRoleMaps,
+  datasetsCount,
+  dispatch,
+  filteredDatasetsCount,
+  loading,
+  searchString,
+  refreshCnt,
+  userEmail,
+}: IProps) {
+  const handleFilterDatasets = (
+    limit: number,
+    offset: number,
+    sort: string,
+    sortDirection: OrderDirectionOptions,
+    search: string,
+  ) => {
+    dispatch(getDatasets(limit, offset, sort, sortDirection, search));
+  };
 
-  let pageTitle = 'Terra Data Repository';
-  let searchable = true;
-  let tableValue = <div />;
-  let refresh;
-  if (tabValue === '/datasets') {
-    pageTitle = 'Datasets';
-    tableValue = <DatasetView searchString={searchString} />;
-    refresh = () => dispatch(refreshDatasets());
-  } else if (tabValue === '/snapshots') {
-    pageTitle = 'Snapshots';
-    tableValue = <SnapshotView searchString={searchString} />;
-    refresh = () => dispatch(refreshSnapshots());
-  } else if (tabValue === '/activity') {
-    pageTitle = 'Activity';
-    searchable = false;
-    tableValue = <JobView searchString={searchString} />;
-    refresh = () => dispatch(refreshJobs());
-  } else if (tabValue === '/requests') {
-    pageTitle = 'Requests';
-    tableValue = <SnapshotAccessRequestView searchString={searchString} />;
-    refresh = () => dispatch(refreshSnapshotAccessRequests());
-  }
-  const refreshButton = (
-    <Button
-      aria-label="refresh page"
-      size="medium"
-      className={classes.headerButton}
-      onClick={refresh}
-      variant="outlined"
-      startIcon={<Refresh />}
-    >
-      Refresh
-    </Button>
-  );
-  const pageHeader =
-    tabValue === '/datasets' ? (
-      <div className={classes.title}>
-        <span className={classes.titleText}>{pageTitle}</span>
-        {refreshButton}
-        <Link to="datasets/new" data-cy="create-dataset-link">
-          <Button
-            className={classes.headerButton}
-            color="primary"
-            variant="outlined"
-            disableElevation
-            size="medium"
-          >
-            <AddCircle className={classes.buttonIcon} /> Create Dataset
-          </Button>
-        </Link>
-      </div>
-    ) : (
-      <div className={classes.title}>
-        <span className={classes.titleText}>{pageTitle}</span>
-        {refreshButton}
-      </div>
-    );
-
-  useOnMount(() => {
-    dispatch(getSnapshotAccessRequests());
-  });
+  const handleMakeSteward = (datasetId: string) => {
+    dispatch(addDatasetPolicyMember(datasetId, userEmail, DatasetRoles.STEWARD));
+  };
 
   return (
-    <div className={classes.pageRoot}>
-      <div className={classes.titleAndSearch}>
-        {pageHeader}
-        {searchable && (
-          <SearchTable
+    <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '1em' }}>
+      <Box sx={{ ...theme.mixins.containerWidth }}>
+        <Title>Datasets</Title>
+        {datasets && (
+          <DatasetTable
+            datasets={datasets}
+            datasetRoleMaps={datasetRoleMaps}
+            datasetsCount={datasetsCount}
+            handleFilterDatasets={handleFilterDatasets}
+            handleMakeSteward={handleMakeSteward}
+            filteredDatasetsCount={filteredDatasetsCount}
             searchString={searchString}
-            onSearchStringChange={(event: any) => setSearchString(event.target.value)}
-            clearSearchString={() => setSearchString('')}
+            loading={loading}
+            refreshCnt={refreshCnt}
           />
         )}
-      </div>
-      {tableValue}
-    </div>
+      </Box>
+    </Box>
   );
 }
 
-function mapStateToProps(state: TdrState & RouterRootState) {
+function mapStateToProps(state: TdrState) {
   return {
-    location: state.router.location,
+    datasets: state.datasets.datasets,
+    datasetRoleMaps: state.datasets.datasetRoleMaps,
+    datasetsCount: state.datasets.datasetsCount,
+    filteredDatasetsCount: state.datasets.filteredDatasetsCount,
+    features: state.user.features,
+    loading: state.datasets.loading,
+    userEmail: state.user.email,
+    refreshCnt: state.datasets.refreshCnt,
   };
 }
 
-export default connect(mapStateToProps)(withStyles(styles)(HomeView));
+export default connect(mapStateToProps)(DatasetView);
