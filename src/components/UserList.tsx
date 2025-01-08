@@ -1,40 +1,16 @@
 import React from 'react';
-import clsx from 'clsx';
-import { createStyles, WithStyles, withStyles } from '@mui/styles';
-import { Accordion, AccordionDetails, AccordionSummary, CustomTheme } from '@mui/material';
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Box,
+  Typography,
+  styled,
+} from '@mui/material';
 import { ExpandMore } from '@mui/icons-material';
-import Typography from '@mui/material/Typography';
 import ManageUsersView from './ManageUsersView';
 
-const styles = (theme: CustomTheme) =>
-  createStyles({
-    header: {
-      fontSize: '14px',
-      lineHeight: '22px',
-      fontWeight: '600',
-      color: theme.palette.primary.main,
-    },
-    expandIcon: {
-      color: theme.palette.primary.main,
-    },
-    canManageUsers: {
-      paddingTop: 0,
-    },
-    values: {
-      paddingBottom: theme.spacing(1),
-    },
-    root: {
-      marginTop: theme.spacing(3),
-    },
-    noUsers: {
-      fontStyle: 'italic',
-      colorPrimary: theme.palette.error.contrastText,
-      color: theme.palette.error.contrastText,
-      paddingBottom: theme.spacing(1),
-    },
-  });
-
-interface UserListProps extends WithStyles<typeof styles> {
+interface UserListProps {
   canManageUsers: boolean;
   defaultOpen?: boolean;
   removeUser?: (removableEmail: string) => void;
@@ -42,34 +18,39 @@ interface UserListProps extends WithStyles<typeof styles> {
   users: Array<string>;
 }
 
-function UserList({
-  classes,
-  canManageUsers,
-  defaultOpen,
-  removeUser,
-  typeOfUsers,
-  users,
-}: UserListProps) {
+const UserTypeAccordionHeader = styled(AccordionSummary)(({ theme }) => ({
+  fontSize: '14px',
+  lineHeight: '22px',
+  fontWeight: '600',
+  color: theme.palette.primary.main,
+}));
+
+const NoUsersLabel = styled(Typography)(({ theme }) => ({
+  fontStyle: 'italic',
+  color: theme.palette.error.contrastText,
+  paddingBottom: '8px',
+}));
+
+function UserList({ canManageUsers, defaultOpen, removeUser, typeOfUsers, users }: UserListProps) {
   return (
     <Accordion defaultExpanded={defaultOpen}>
-      <AccordionSummary
-        expandIcon={<ExpandMore className={classes.expandIcon} />}
-        className={classes.header}
+      <UserTypeAccordionHeader
+        expandIcon={<ExpandMore sx={{ color: 'primary.main' }} />}
         data-cy={`user-list-${typeOfUsers}`}
       >
         {typeOfUsers}
-      </AccordionSummary>
+      </UserTypeAccordionHeader>
       <AccordionDetails
         data-cy="user-email"
-        className={clsx({
-          [classes.canManageUsers]: canManageUsers,
-        })}
+        sx={{
+          paddingTop: canManageUsers ? '0px' : undefined,
+        }}
       >
         <ManageUsersView removeUser={canManageUsers ? removeUser : undefined} users={users} />
-        {users.length === 0 && <Typography className={classes.noUsers}>(None)</Typography>}
+        {users.length === 0 && <NoUsersLabel>(None)</NoUsersLabel>}
       </AccordionDetails>
     </Accordion>
   );
 }
 
-export default withStyles(styles)(UserList);
+export default UserList;
