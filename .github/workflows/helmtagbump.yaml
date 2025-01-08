@@ -12,6 +12,7 @@ jobs:
         with:
           fetch-depth: 0
           ref: develop
+          persist-credentials: false
       - name: 'Get Previous tag'
         id: uiprevioustag
         run: |
@@ -23,6 +24,7 @@ jobs:
           repository: 'broadinstitute/datarepo-helm'
           token: ${{ secrets.BROADBOT_TOKEN }}
           path: datarepo-helm
+          persist-credentials: false
       - name: 'ui chart default tag find and replace'
         uses: docker://mikefarah/yq:3
         with:
