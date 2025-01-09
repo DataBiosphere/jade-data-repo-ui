@@ -1,12 +1,12 @@
 import React, { Dispatch } from 'react';
 import { connect } from 'react-redux';
+import { Action } from 'redux';
 import { Box } from '@mui/material';
 import { getJobs } from 'actions/index';
 import { JobModel } from 'generated/tdr';
 import { TdrState } from 'reducers';
 import { OrderDirectionOptions } from 'reducers/query';
 import theme from 'modules/theme';
-import { Action } from 'redux';
 import JobTable from './table/JobTable';
 
 interface IProps {
@@ -15,6 +15,7 @@ interface IProps {
   loading: boolean;
   searchString: string;
   refreshCnt: number;
+  userEmail: string;
 }
 
 function JobView({ jobs, dispatch, loading, searchString, refreshCnt }: IProps) {
@@ -32,13 +33,19 @@ function JobView({ jobs, dispatch, loading, searchString, refreshCnt }: IProps) 
         sort,
         direction: sortDirection,
         search,
-        errMessage: 'An error occurred loading jobs. Please reload the page to try again.',
+        errMessage: 'An error occured loading jobs. Please reload the page to try again.',
       }),
     );
   };
 
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '1em' }}>
+    <Box
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        mt: '1em',
+      }}
+    >
       <Box sx={{ ...theme.mixins.containerWidth }}>
         <Box>
           {jobs && (
@@ -60,6 +67,7 @@ function mapStateToProps(state: TdrState) {
   return {
     jobs: state.jobs.jobs,
     loading: state.jobs.loading,
+    userEmail: state.user.email,
     refreshCnt: state.jobs.refreshCnt,
   };
 }
