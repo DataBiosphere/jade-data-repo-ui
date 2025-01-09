@@ -2,15 +2,42 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Box, Typography } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { getDatasetById, getDatasetPolicy, getUserDatasetRoles } from 'actions';
 import SnapshotPopup from 'components/snapshot/SnapshotPopup';
-import theme from 'modules/theme';
 import DatasetRelationshipsPanel from '../../common/overview/SchemaPanel';
 import { useOnMount } from '../../../libs/utils';
 import { BreadcrumbType, DatasetIncludeOptions } from '../../../constants';
 import LoadingSpinner from '../../common/LoadingSpinner';
 import DatasetOverviewPanel from './DatasetOverviewPanel';
 import AppBreadcrumbs from '../../AppBreadcrumbs/AppBreadcrumbs';
+
+const Root = styled(Box)(({ theme }) => ({
+  ...theme.mixins.pageRoot,
+}));
+
+const PageTitle = styled(Typography)(({ theme }) => ({
+  ...theme.mixins.pageTitle,
+}));
+
+const ContentContainer = styled(Box)({
+  height: '100%',
+  display: 'grid',
+  gridTemplateColumns: '1fr 3fr',
+  flex: 1,
+});
+
+const MainColumn = styled(Box)({
+  display: 'flex',
+  flexDirection: 'column',
+  marginLeft: 40,
+});
+
+const SnapshotGrid = styled(Box)({
+  display: 'grid',
+  gridTemplateColumns: 'repeat(auto-fill, minmax(360px, 32%))',
+  gridGap: '1rem',
+});
 
 function DatasetOverview(props) {
   const { dataset, datasetPolicies, datasetByIdLoading, dispatch, match } = props;
@@ -36,15 +63,13 @@ function DatasetOverview(props) {
     return <LoadingSpinner />;
   }
   return datasetPolicies && dataset && dataset.schema && dataset.id === datasetId ? (
-    <Box sx={{ ...theme.mixins.pageRoot }}>
+    <Root>
       <AppBreadcrumbs
         context={{ type: BreadcrumbType.DATASET, id: datasetId, name: dataset.name }}
         childBreadcrumbs={[]}
       />
-      <Typography variant="h3" sx={{ ...theme.mixins.pageTitle }}>
-        {dataset.name}
-      </Typography>
-      <Box sx={{ height: '100%', display: 'grid', gridTemplateColumns: '1fr 3fr', flex: 1 }}>
+      <PageTitle variant="h3">{dataset.name}</PageTitle>
+      <ContentContainer>
         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
           <Box sx={{ flexGrow: 1 }}>
             <DatasetRelationshipsPanel
@@ -54,18 +79,19 @@ function DatasetOverview(props) {
             />
           </Box>
         </Box>
-        <Box sx={{ display: 'flex', flexDirection: 'column', marginLeft: '40px' }}>
+        <MainColumn>
           <DatasetOverviewPanel dataset={dataset} />
-        </Box>
-      </Box>
+        </MainColumn>
+      </ContentContainer>
       <SnapshotPopup />
-    </Box>
+    </Root>
   ) : (
     <Box />
   );
 }
 
 DatasetOverview.propTypes = {
+  classes: PropTypes.object,
   dataset: PropTypes.object,
   datasetByIdLoading: PropTypes.bool,
   datasetPolicies: PropTypes.array,
