@@ -1,7 +1,7 @@
 import React from 'react';
-import clsx from 'clsx';
-import { Box, Accordion, AccordionDetails, AccordionSummary, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Box } from '@mui/material';
 import { ExpandMore } from '@mui/icons-material';
+import Typography from '@mui/material/Typography';
 import ManageUsersView from './ManageUsersView';
 
 interface UserListProps {
@@ -27,19 +27,14 @@ function UserList({ canManageUsers, defaultOpen, removeUser, typeOfUsers, users 
       >
         {typeOfUsers}
       </AccordionSummary>
-      <AccordionDetails
-        data-cy="user-email"
-        sx={{
-          paddingTop: canManageUsers ? 0 : undefined,
-        }}
-      >
+      <AccordionDetails data-cy="user-email" sx={canManageUsers ? { pt: 0 } : undefined}>
         <ManageUsersView removeUser={canManageUsers ? removeUser : undefined} users={users} />
         {users.length === 0 && (
           <Typography
             sx={{
               fontStyle: 'italic',
               color: 'error.contrastText',
-              paddingBottom: '8px',
+              pb: '8px',
             }}
           >
             (None)
