@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withStyles } from '@mui/styles';
+import { Box, Typography } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { getDatasetById, getDatasetPolicy, getUserDatasetRoles } from 'actions';
-import { Typography } from '@mui/material';
 import SnapshotPopup from 'components/snapshot/SnapshotPopup';
 import DatasetRelationshipsPanel from '../../common/overview/SchemaPanel';
 import { useOnMount } from '../../../libs/utils';
@@ -12,48 +12,35 @@ import LoadingSpinner from '../../common/LoadingSpinner';
 import DatasetOverviewPanel from './DatasetOverviewPanel';
 import AppBreadcrumbs from '../../AppBreadcrumbs/AppBreadcrumbs';
 
-const styles = (theme) => ({
-  pageRoot: { ...theme.mixins.pageRoot },
-  pageTitle: { ...theme.mixins.pageTitle },
-  root: {
-    // TODO: expect this to change as more components are added
-    height: '100%',
-    display: 'grid',
-    gridTemplateColumns: '1fr 3fr',
-    flex: 1,
-  },
-  headerText: {
-    textTransform: 'uppercase',
-    marginBottom: '0.5rem',
-  },
-  infoColumn: {
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  infoColumnPanel: {
-    flexGrow: 1,
-  },
-  mainColumn: {
-    display: 'flex',
-    flexDirection: 'column',
-    marginLeft: 40,
-  },
-  snapshotsArea: {
-    flexGrow: 1,
-    marginTop: '1.5rem',
-  },
-  spacer: {
-    height: '4rem',
-  },
-  snapshotCardsContainer: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(360px, 32%))',
-    gridGap: '1rem',
-  },
+const Root = styled(Box)(({ theme }) => ({
+  ...theme.mixins.pageRoot,
+}));
+
+const PageTitle = styled(Typography)(({ theme }) => ({
+  ...theme.mixins.pageTitle,
+}));
+
+const ContentContainer = styled(Box)({
+  height: '100%',
+  display: 'grid',
+  gridTemplateColumns: '1fr 3fr',
+  flex: 1,
+});
+
+const MainColumn = styled(Box)({
+  display: 'flex',
+  flexDirection: 'column',
+  marginLeft: 40,
+});
+
+const SnapshotGrid = styled(Box)({
+  display: 'grid',
+  gridTemplateColumns: 'repeat(auto-fill, minmax(360px, 32%))',
+  gridGap: '1rem',
 });
 
 function DatasetOverview(props) {
-  const { classes, dataset, datasetPolicies, datasetByIdLoading, dispatch, match } = props;
+  const { dataset, datasetPolicies, datasetByIdLoading, dispatch, match } = props;
   const datasetId = match.params.uuid;
   useOnMount(() => {
     dispatch(
@@ -76,32 +63,30 @@ function DatasetOverview(props) {
     return <LoadingSpinner />;
   }
   return datasetPolicies && dataset && dataset.schema && dataset.id === datasetId ? (
-    <div className={classes.pageRoot}>
+    <Root>
       <AppBreadcrumbs
         context={{ type: BreadcrumbType.DATASET, id: datasetId, name: dataset.name }}
         childBreadcrumbs={[]}
       />
-      <Typography variant="h3" className={classes.pageTitle}>
-        {dataset.name}
-      </Typography>
-      <div className={classes.root}>
-        <div className={classes.infoColumn}>
-          <div className={classes.infoColumnPanel}>
+      <PageTitle variant="h3">{dataset.name}</PageTitle>
+      <ContentContainer>
+        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+          <Box sx={{ flexGrow: 1 }}>
             <DatasetRelationshipsPanel
               tables={dataset.schema.tables}
               resourceType="Dataset"
               resourceId={dataset.id}
             />
-          </div>
-        </div>
-        <div className={classes.mainColumn}>
+          </Box>
+        </Box>
+        <MainColumn>
           <DatasetOverviewPanel dataset={dataset} />
-        </div>
-      </div>
+        </MainColumn>
+      </ContentContainer>
       <SnapshotPopup />
-    </div>
+    </Root>
   ) : (
-    <div />
+    <Box />
   );
 }
 
@@ -124,4 +109,4 @@ const mapStateToProps = ({
   dispatch,
 });
 
-export default connect(mapStateToProps)(withStyles(styles)(DatasetOverview));
+export default connect(mapStateToProps)(DatasetOverview);
