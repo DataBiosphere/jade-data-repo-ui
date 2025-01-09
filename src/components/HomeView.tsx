@@ -2,12 +2,10 @@ import React, { Dispatch, useState } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Action } from 'redux';
-
 import { Button, Box } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { AddCircle, Refresh } from '@mui/icons-material';
-import { CustomTheme } from '@mui/material/styles';
 import { RouterLocation, RouterRootState } from 'connected-react-router';
-import { LocationState } from 'history';
 import {
   getSnapshotAccessRequests,
   refreshDatasets,
@@ -17,11 +15,35 @@ import {
 } from 'src/actions';
 import { TdrState } from 'reducers';
 import { useOnMount } from 'libs/utils';
+import { LocationState } from 'history';
 import DatasetView from './DatasetView';
 import SnapshotView from './SnapshotView';
 import JobView from './JobView';
 import SearchTable from './table/SearchTable';
 import SnapshotAccessRequestView from './SnapshotAccessRequestView';
+
+const RootContainer = styled(Box)({
+  padding: '16px 24px',
+  display: 'flex',
+  flexDirection: 'column',
+  height: '100%',
+});
+
+const TitleContainer = styled(Box)(({ theme }) => ({
+  color: theme.palette.secondary.dark,
+  fontSize: '1.5rem',
+  fontWeight: 700,
+  flex: '1 1 0',
+  paddingRight: '2em',
+  display: 'flex',
+}));
+
+const HeaderButton = styled(Button)({
+  padding: '10px',
+  marginLeft: '16px',
+  height: '45px',
+  textTransform: 'none',
+});
 
 interface IProps {
   dispatch: Dispatch<Action>;
@@ -35,7 +57,7 @@ function HomeView({ dispatch, location }: IProps) {
 
   let pageTitle = 'Terra Data Repository';
   let searchable = true;
-  let tableValue = <Box />;
+  let tableValue = <div />;
   let refresh;
   if (tabValue === '/datasets') {
     pageTitle = 'Datasets';
@@ -56,57 +78,32 @@ function HomeView({ dispatch, location }: IProps) {
     refresh = () => dispatch(refreshSnapshotAccessRequests());
   }
   const refreshButton = (
-    <Button
+    <HeaderButton
       aria-label="refresh page"
       size="medium"
-      sx={{ padding: '10px', marginLeft: '16px', height: '45px', textTransform: 'none' }}
       onClick={refresh}
       variant="outlined"
       startIcon={<Refresh />}
     >
       Refresh
-    </Button>
+    </HeaderButton>
   );
   const pageHeader =
     tabValue === '/datasets' ? (
-      <Box
-        sx={{
-          display: 'flex',
-          color: 'secondary.dark',
-          fontSize: '1.5rem',
-          fontWeight: 700,
-          flex: '1 1 0',
-          paddingRight: '2em',
-        }}
-      >
+      <TitleContainer>
         <Box sx={{ width: '150px' }}>{pageTitle}</Box>
         {refreshButton}
         <Link to="datasets/new" data-cy="create-dataset-link">
-          <Button
-            sx={{ padding: '10px', marginLeft: '16px', height: '45px', textTransform: 'none' }}
-            color="primary"
-            variant="outlined"
-            disableElevation
-            size="medium"
-          >
+          <HeaderButton color="primary" variant="outlined" disableElevation size="medium">
             <AddCircle sx={{ marginRight: '6px', fontSize: '1.5rem' }} /> Create Dataset
-          </Button>
+          </HeaderButton>
         </Link>
-      </Box>
+      </TitleContainer>
     ) : (
-      <Box
-        sx={{
-          display: 'flex',
-          color: 'secondary.dark',
-          fontSize: '1.5rem',
-          fontWeight: 700,
-          flex: '1 1 0',
-          paddingRight: '2em',
-        }}
-      >
+      <TitleContainer>
         <Box sx={{ width: '150px' }}>{pageTitle}</Box>
         {refreshButton}
-      </Box>
+      </TitleContainer>
     );
 
   useOnMount(() => {
@@ -114,8 +111,8 @@ function HomeView({ dispatch, location }: IProps) {
   });
 
   return (
-    <Box sx={{ padding: '16px 24px', display: 'flex', flexDirection: 'column', height: '100%' }}>
-      <Box sx={{ display: 'flex', marginTop: '1.25em', marginBottom: '1.25em' }}>
+    <RootContainer>
+      <Box sx={{ display: 'flex', mt: '1.25em', mb: '1.25em' }}>
         {pageHeader}
         {searchable && (
           <SearchTable
@@ -126,7 +123,7 @@ function HomeView({ dispatch, location }: IProps) {
         )}
       </Box>
       {tableValue}
-    </Box>
+    </RootContainer>
   );
 }
 
