@@ -6,8 +6,8 @@ import { SnapshotSummaryModel } from 'generated/tdr';
 import { Action } from 'redux';
 import { TdrState } from 'reducers';
 import { OrderDirectionOptions } from 'reducers/query';
-
 import theme from 'modules/theme';
+
 import SnapshotTable from './table/SnapshotTable';
 import SnapshotPopup from './snapshot/SnapshotPopup';
 import { SnapshotRoles } from '../constants';
@@ -42,6 +42,7 @@ function SnapshotView({
     sortDirection: OrderDirectionOptions,
     search: string,
   ) => {
+    // TODO: should we allow filtering on dataset id here?
     const datasetIds: string[] = [];
     dispatch(getSnapshots(limit, offset, sort, sortDirection, search, datasetIds));
   };
@@ -51,8 +52,19 @@ function SnapshotView({
   };
 
   return (
-    <Box id="snapshots" sx={{ display: 'flex', justifyContent: 'center', marginTop: '1em' }}>
-      <Box sx={{ ...theme.mixins.containerWidth }}>
+    <Box
+      id="snapshots"
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        marginTop: '1em',
+      }}
+    >
+      <Box
+        sx={{
+          ...theme.mixins.containerWidth,
+        }}
+      >
         <div>
           <SnapshotTable
             snapshotCount={snapshotCount}
@@ -66,8 +78,8 @@ function SnapshotView({
             refreshCnt={refreshCnt}
           />
         </div>
-        <SnapshotPopup />
       </Box>
+      <SnapshotPopup />
     </Box>
   );
 }
