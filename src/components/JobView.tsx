@@ -1,32 +1,15 @@
 import React, { Dispatch } from 'react';
 import { connect } from 'react-redux';
 import { Action } from 'redux';
-import { WithStyles, withStyles } from '@mui/styles';
+import { Box } from '@mui/material';
 import { getJobs } from 'actions/index';
 import { JobModel } from 'generated/tdr';
-import { CustomTheme } from '@mui/material';
 import { TdrState } from 'reducers';
 import { OrderDirectionOptions } from 'reducers/query';
+import theme from 'modules/theme';
 import JobTable from './table/JobTable';
 
-const styles = (theme: CustomTheme) => ({
-  wrapper: {
-    display: 'flex',
-    justifyContent: 'center',
-    marginTop: '1em',
-  },
-  width: {
-    ...theme.mixins.containerWidth,
-  },
-  title: {
-    color: theme.palette.primary.main,
-    fontSize: '54px',
-    lineHeight: '66px',
-    paddingBottom: theme.spacing(8),
-  },
-});
-
-interface IProps extends WithStyles<typeof styles> {
+interface IProps {
   jobs: Array<JobModel>;
   dispatch: Dispatch<Action>;
   loading: boolean;
@@ -35,46 +18,50 @@ interface IProps extends WithStyles<typeof styles> {
   userEmail: string;
 }
 
-const JobView = withStyles(styles)(
-  ({ classes, jobs, dispatch, loading, searchString, refreshCnt }: IProps) => {
-    const handleFilterJobs = (
-      limit: number,
-      offset: number,
-      sort: string,
-      sortDirection: OrderDirectionOptions,
-      search: string,
-    ) => {
-      dispatch(
-        getJobs({
-          limit,
-          offset,
-          sort,
-          direction: sortDirection,
-          search,
-          errMessage: 'An error occured loading jobs. Please reload the page to try again.',
-        }),
-      );
-    };
-
-    return (
-      <div className={classes.wrapper}>
-        <div className={classes.width}>
-          <div>
-            {jobs && (
-              <JobTable
-                jobs={jobs}
-                handleFilterJobs={handleFilterJobs}
-                searchString={searchString}
-                loading={loading}
-                refreshCnt={refreshCnt}
-              />
-            )}
-          </div>
-        </div>
-      </div>
+function JobView({ jobs, dispatch, loading, searchString, refreshCnt }: IProps) {
+  const handleFilterJobs = (
+    limit: number,
+    offset: number,
+    sort: string,
+    sortDirection: OrderDirectionOptions,
+    search: string,
+  ) => {
+    dispatch(
+      getJobs({
+        limit,
+        offset,
+        sort,
+        direction: sortDirection,
+        search,
+        errMessage: 'An error occured loading jobs. Please reload the page to try again.',
+      }),
     );
-  },
-);
+  };
+
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        mt: '1em',
+      }}
+    >
+      <Box sx={{ ...theme.mixins.containerWidth }}>
+        <Box>
+          {jobs && (
+            <JobTable
+              jobs={jobs}
+              handleFilterJobs={handleFilterJobs}
+              searchString={searchString}
+              loading={loading}
+              refreshCnt={refreshCnt}
+            />
+          )}
+        </Box>
+      </Box>
+    </Box>
+  );
+}
 
 function mapStateToProps(state: TdrState) {
   return {
