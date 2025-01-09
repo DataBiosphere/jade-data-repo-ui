@@ -8,7 +8,6 @@ import { TdrState } from 'reducers';
 import { OrderDirectionOptions } from 'reducers/query';
 import theme from 'modules/theme';
 import DatasetTable from './table/DatasetTable';
-
 import { DatasetRoles } from '../constants';
 
 interface IProps {
@@ -49,21 +48,29 @@ function DatasetView({
   };
 
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '1em' }}>
+    <Box
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        mt: '1em',
+      }}
+    >
       <Box sx={{ ...theme.mixins.containerWidth }}>
-        {datasets && (
-          <DatasetTable
-            datasets={datasets}
-            datasetRoleMaps={datasetRoleMaps}
-            datasetsCount={datasetsCount}
-            handleFilterDatasets={handleFilterDatasets}
-            handleMakeSteward={handleMakeSteward}
-            filteredDatasetsCount={filteredDatasetsCount}
-            searchString={searchString}
-            loading={loading}
-            refreshCnt={refreshCnt}
-          />
-        )}
+        <Box>
+          {datasets && (
+            <DatasetTable
+              datasets={datasets}
+              datasetRoleMaps={datasetRoleMaps}
+              datasetsCount={datasetsCount}
+              handleFilterDatasets={handleFilterDatasets}
+              handleMakeSteward={handleMakeSteward}
+              filteredDatasetsCount={filteredDatasetsCount}
+              searchString={searchString}
+              loading={loading}
+              refreshCnt={refreshCnt}
+            />
+          )}
+        </Box>
       </Box>
     </Box>
   );
