@@ -1,7 +1,6 @@
 import { createSnapshot, getBillingProfiles, snapshotCreateDetails } from 'actions/index';
 import { TdrState } from 'reducers';
-import TerraTooltip from 'components/common/TerraTooltip';
-import { Button } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogTitle, Typography, FormLabel } from '@mui/material';
 import React, { Dispatch } from 'react';
 import {
   BillingProfileModel,
@@ -10,7 +9,9 @@ import {
 } from 'generated/tdr';
 import { Action } from 'redux';
 import { connect } from 'react-redux';
-import { now } from 'lodash';
+import { now, uniq } from 'lodash';
+import TerraTooltip from './TerraTooltip';
+import JadeDropdown from '../dataset/data/JadeDropdown';
 import { useOnMount } from '../../libs/utils';
 
 interface FullViewSnapshotButtonProps {
@@ -28,16 +29,19 @@ function FullViewSnapshotButton({
     dispatch(getBillingProfiles());
   });
 
-  const defaultBillingProfile = dataset.defaultProfileId;
+  const defaultBillingProfile = billingProfiles.find(
+    (billingProfile) => billingProfile.id === dataset.defaultProfileId,
+  );
+
+  const [modalOpen, setModalOpen] = React.useState(false);
+  const [selectedBillingProfile, setSelectedBillingProfile] = React.useState(defaultBillingProfile);
+
   // if the default billing profile is undefined or the user does not have permission on it, disable button and show tooltip
-  const hasAccess = billingProfiles.some((model) => model.id === defaultBillingProfile);
+  const isDisabled = billingProfiles.length === 0;
   let tooltipText = '';
-  if (!defaultBillingProfile) {
-    tooltipText = 'There is no default billing profile associated with this dataset.';
-  } else if (!hasAccess) {
-    tooltipText = 'You do not have access to the billing profile associated with this dataset.';
+  if (isDisabled) {
+    tooltipText = 'You do not have access to any billing profiles to create a snapshot';
   }
-  const isDisabled = !defaultBillingProfile || !hasAccess;
 
   const handleCreateFullViewSnapshot = () => {
     const name = `Full_View_Snapshot_of_${dataset.name}_${now()}`;
@@ -50,22 +54,86 @@ function FullViewSnapshotButton({
         dataset,
       ),
     );
-    dispatch(createSnapshot());
+    dispatch(createSnapshot(selectedBillingProfile?.id));
+  };
+
+  const onDismiss = () => setModalOpen(false);
+
+  const onSelect = () => {
+    handleCreateFullViewSnapshot();
+    setModalOpen(false);
   };
 
   return (
-    <TerraTooltip title={isDisabled ? tooltipText : ''}>
-      <span>
-        <Button
-          variant="outlined"
-          disableElevation
-          onClick={() => handleCreateFullViewSnapshot()}
-          disabled={isDisabled}
-        >
-          Create Full View Snapshot
-        </Button>
-      </span>
-    </TerraTooltip>
+    <>
+      <TerraTooltip title={isDisabled ? tooltipText : ''}>
+        <span>
+          <Button
+            variant="outlined"
+            disableElevation
+            onClick={() => {
+              setSelectedBillingProfile(defaultBillingProfile || billingProfiles[0]);
+              setModalOpen(true);
+            }}
+            disabled={isDisabled}
+          >
+            Create Full View Snapshot
+          </Button>
+        </span>
+      </TerraTooltip>
+      <Dialog fullWidth maxWidth="sm" onClose={onDismiss} open={modalOpen}>
+        <DialogTitle id="customized-dialog-title" sx={{ fontSize: '1rem' }}>
+          Creating snapshot - select a billing project
+        </DialogTitle>
+        <div style={{ padding: '0px 24px 16px 24px' }}>
+          <Typography sx={{ color: 'black' }}>
+            Do you want to use the Google Billing Project associated with this dataset or would you
+            like to select a different one?
+          </Typography>
+          <div style={{ marginTop: 8 }}>
+            <FormLabel
+              sx={{ fontWeight: 600, color: 'black' }}
+              htmlFor="billing-profile-select"
+              required
+            >
+              Google Billing Project
+            </FormLabel>
+          </div>
+          <JadeDropdown
+            sx={{ height: '2.5rem' }}
+            disabled={billingProfiles.length <= 1}
+            options={uniq(
+              billingProfiles
+                .filter((billingProfile) => billingProfile.profileName !== undefined)
+                .map((billingProfile) => billingProfile.profileName) as string[],
+            )}
+            name="billing-profile"
+            onSelectedItem={(event) =>
+              setSelectedBillingProfile(
+                billingProfiles.find(
+                  (billingProfile) => billingProfile.profileName === event.target.value,
+                ),
+              )
+            }
+            value={selectedBillingProfile?.profileName || ''}
+          />
+          <Typography>If this is the correct billing project - just click select</Typography>
+          <DialogActions sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <Button onClick={onDismiss} variant="outlined">
+              Cancel
+            </Button>
+            <Button
+              onClick={onSelect}
+              disabled={selectedBillingProfile?.id === undefined}
+              variant="contained"
+              data-cy="select-billing-profile-button"
+            >
+              Select
+            </Button>
+          </DialogActions>
+        </div>
+      </Dialog>
+    </>
   );
 }
 

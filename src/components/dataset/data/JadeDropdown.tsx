@@ -8,9 +8,10 @@ type IProps<T> = {
   onSelectedItem: (e: SelectChangeEvent) => void;
   options: T[];
   value: T;
+  sx?: React.CSSProperties;
 };
 
-function JadeDropdown({ disabled, name, onSelectedItem, options, value }: IProps<string>) {
+function JadeDropdown({ disabled, name, onSelectedItem, options, value, sx }: IProps<string>) {
   return (
     <form autoComplete="off">
       <FormControl disabled={disabled} variant="outlined" fullWidth>
@@ -24,6 +25,7 @@ function JadeDropdown({ disabled, name, onSelectedItem, options, value }: IProps
           displayEmpty
           renderValue={(val) => (!val ? name : val)}
           data-cy={_.camelCase(name)}
+          sx={sx}
         >
           {options.map((opt) => (
             <MenuItem key={opt} value={opt} data-cy={`menuItem-${opt}`}>
