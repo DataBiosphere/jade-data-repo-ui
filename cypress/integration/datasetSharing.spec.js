@@ -1,6 +1,7 @@
 const newUser = 'voldemort.admin@test.firecloud.org';
 describe(
   'test dataset sharing',
+  // this is the first integration test suite run, and it occasionally fails on setup
   {
     retries: 2,
   },
