@@ -10,28 +10,22 @@ describe('test dataset sharing', () => {
 
     cy.visit('/login/e2e');
     cy.get('#tokenInput').type(Cypress.env('GOOGLE_TOKEN'), {
+      timeout: 10000,
       log: false,
       delay: 0,
     });
     cy.get('#e2eLoginButton').click();
   });
 
-  it(
-    'does not have manage users buttons when the user is not a steward',
-    // this is the first integration test run, and it occasionally fails on setup
-    {
-      retries: 2,
-    },
-    () => {
-      cy.get('[placeholder="Search keyword or description"]').type('NonStewardDataset');
-      cy.contains(/NonStewardDataset/g).should('be.visible');
-      cy.contains(/NonStewardDataset/g).click();
-      cy.get('a > .MuiButtonBase-root').click();
+  it('does not have manage users buttons when the user is not a steward', () => {
+    cy.get('[placeholder="Search keyword or description"]').type('NonStewardDataset');
+    cy.contains(/NonStewardDataset/g).should('be.visible');
+    cy.contains(/NonStewardDataset/g).click();
+    cy.get('a > .MuiButtonBase-root').click();
 
-      cy.wait(['@getDataset', '@getDatasetPolicies', '@getBillingProfileById']);
-      cy.get('[data-cy="roles-tab"]').should('not.exist');
-    },
-  );
+    cy.wait(['@getDataset', '@getDatasetPolicies', '@getBillingProfileById']);
+    cy.get('[data-cy="roles-tab"]').should('not.exist');
+  });
   it('A steward can add and remove a user to a dataset', () => {
     cy.get('[placeholder="Search keyword or description"]').type('V2F_GWAS');
     cy.contains(/V2F_GWAS_Summary_Stats|V2F_GWAS_Summary_Statistics/g).should('be.visible');
