@@ -284,7 +284,7 @@ function DatasetOverviewPanel(props) {
         </Grid>
       </TabPanel>
       <StyledDrawer
-        variant="permanent"
+        variant="temporary"
         anchor="right"
         open={isHelpVisible}
         isVisible={isHelpVisible}
