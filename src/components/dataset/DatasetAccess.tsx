@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { CustomTheme, Grid } from '@mui/material';
-import { createStyles, WithStyles, withStyles } from '@mui/styles';
+import { Grid } from '@mui/material';
 import { TdrState } from 'reducers';
 import { DatasetModel, PolicyModel } from 'generated/tdr';
 import { Action, Dispatch } from 'redux';
@@ -11,18 +10,7 @@ import { getRoleMembersFromPolicies } from '../../libs/utils';
 import { addDatasetPolicyMember, removeDatasetPolicyMember } from '../../actions';
 import AddUserAccess, { AccessPermission } from '../common/AddUserAccess';
 
-const styles = (theme: CustomTheme) =>
-  createStyles({
-    helpContainer: {
-      padding: '30px 0 10px',
-    },
-    genericLink: {
-      color: theme.palette.primary.main,
-      textDecoration: 'underline',
-    },
-  });
-
-interface DatasetAccessProps extends WithStyles<typeof styles> {
+interface DatasetAccessProps {
   dataset: DatasetModel;
   dispatch: Dispatch<Action>;
   policies: Array<PolicyModel>;
@@ -101,4 +89,4 @@ function mapStateToProps(state: TdrState) {
   };
 }
 
-export default connect(mapStateToProps)(withStyles(styles)(DatasetAccess));
+export default connect(mapStateToProps)(DatasetAccess);
