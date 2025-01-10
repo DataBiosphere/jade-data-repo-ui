@@ -6,8 +6,10 @@ import { getJobs } from 'actions/index';
 import { JobModel } from 'generated/tdr';
 import { TdrState } from 'reducers';
 import { OrderDirectionOptions } from 'reducers/query';
-import theme from 'modules/theme';
+import { styled } from '@mui/system';
 import JobTable from './table/JobTable';
+
+const Container = styled('div')(({ theme }) => theme.mixins.containerWidth);
 
 interface IProps {
   jobs: Array<JobModel>;
@@ -15,7 +17,6 @@ interface IProps {
   loading: boolean;
   searchString: string;
   refreshCnt: number;
-  userEmail: string;
 }
 
 function JobView({ jobs, dispatch, loading, searchString, refreshCnt }: IProps) {
@@ -46,7 +47,7 @@ function JobView({ jobs, dispatch, loading, searchString, refreshCnt }: IProps) 
         mt: '1em',
       }}
     >
-      <Box sx={{ ...theme.mixins.containerWidth }}>
+      <Container>
         <Box>
           {jobs && (
             <JobTable
@@ -58,7 +59,7 @@ function JobView({ jobs, dispatch, loading, searchString, refreshCnt }: IProps) 
             />
           )}
         </Box>
-      </Box>
+      </Container>
     </Box>
   );
 }
@@ -67,7 +68,6 @@ function mapStateToProps(state: TdrState) {
   return {
     jobs: state.jobs.jobs,
     loading: state.jobs.loading,
-    userEmail: state.user.email,
     refreshCnt: state.jobs.refreshCnt,
   };
 }

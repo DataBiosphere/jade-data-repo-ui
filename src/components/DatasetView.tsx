@@ -2,13 +2,15 @@ import React, { Dispatch } from 'react';
 import { connect } from 'react-redux';
 import { Action } from 'redux';
 import { Box } from '@mui/material';
+import { styled } from '@mui/system';
 import { getDatasets, addDatasetPolicyMember } from 'actions/index';
 import { DatasetSummaryModel } from 'generated/tdr';
 import { TdrState } from 'reducers';
 import { OrderDirectionOptions } from 'reducers/query';
-import theme from 'modules/theme';
 import DatasetTable from './table/DatasetTable';
 import { DatasetRoles } from '../constants';
+
+const Container = styled('div')(({ theme }) => theme.mixins.containerWidth);
 
 interface IProps {
   datasets: Array<DatasetSummaryModel>;
@@ -55,7 +57,7 @@ function DatasetView({
         mt: '1em',
       }}
     >
-      <Box sx={{ ...theme.mixins.containerWidth }}>
+      <Container>
         <Box>
           {datasets && (
             <DatasetTable
@@ -71,7 +73,7 @@ function DatasetView({
             />
           )}
         </Box>
-      </Box>
+      </Container>
     </Box>
   );
 }

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Box, Typography } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { styled } from '@mui/system';
 import { getDatasetById, getDatasetPolicy, getUserDatasetRoles } from 'actions';
 import SnapshotPopup from 'components/snapshot/SnapshotPopup';
 import DatasetRelationshipsPanel from '../../common/overview/SchemaPanel';
@@ -31,12 +31,6 @@ const MainColumn = styled(Box)({
   display: 'flex',
   flexDirection: 'column',
   marginLeft: 40,
-});
-
-const SnapshotGrid = styled(Box)({
-  display: 'grid',
-  gridTemplateColumns: 'repeat(auto-fill, minmax(360px, 32%))',
-  gridGap: '1rem',
 });
 
 function DatasetOverview(props) {
@@ -91,7 +85,6 @@ function DatasetOverview(props) {
 }
 
 DatasetOverview.propTypes = {
-  classes: PropTypes.object,
   dataset: PropTypes.object,
   datasetByIdLoading: PropTypes.bool,
   datasetPolicies: PropTypes.array,
