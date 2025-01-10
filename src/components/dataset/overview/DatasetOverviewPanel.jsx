@@ -1,21 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import {
-  Box,
-  Typography,
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Box,
   Divider,
   Drawer,
   Grid,
   Tab,
   Tabs,
-  IconButton,
+  Typography,
 } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { ExpandMore, Close } from '@mui/icons-material';
-import theme from 'modules/theme';
+import IconButton from '@mui/material/IconButton';
+import { connect } from 'react-redux';
 import moment from 'moment';
 import { patchDataset } from 'actions';
 import GoogleSheetExport from 'components/common/overview/GoogleSheetExport';
@@ -33,6 +33,38 @@ import TabPanel from '../../common/TabPanel';
 import { DatasetRoles } from '../../../constants';
 import JournalEntriesView from '../../JournalEntriesView';
 import { getCloudPlatform } from '../../../libs/utilsTs';
+
+const StyledDrawer = styled(Drawer, {
+  shouldForwardProp: (prop) => !['isVisible'].includes(prop),
+})(({ theme, isVisible }) => ({
+  top: '112px',
+  bottom: '0px',
+  flexShrink: 0,
+  height: 'initial',
+  zIndex: 10,
+  minWidth: 300,
+  position: 'absolute',
+  width: isVisible ? '40%' : 0,
+  transition: theme.transitions.create('width', {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration[isVisible ? 'enteringScreen' : 'leavingScreen'],
+  }),
+  overflowX: 'hidden',
+  '& .MuiDrawer-paper': {
+    top: '112px',
+    bottom: '0px',
+    flexShrink: 0,
+    height: 'initial',
+    zIndex: 10,
+    minWidth: isVisible ? 300 : 0,
+    width: isVisible ? '40%' : 0,
+    position: 'absolute',
+    transition: theme.transitions.create('width', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration[isVisible ? 'enteringScreen' : 'leavingScreen'],
+    }),
+  },
+}));
 
 function a11yProps(index) {
   return {
@@ -176,12 +208,17 @@ function DatasetOverviewPanel(props) {
                 </AccordionSummary>
                 <AccordionDetails data-cy="relationship">
                   {dataset.schema.relationships.length === 0 && (
-                    <Typography sx={{ fontStyle: 'italic', color: 'error.contrastText' }}>
+                    <Typography
+                      sx={{
+                        fontStyle: 'italic',
+                        color: 'error.contrastText',
+                      }}
+                    >
                       (None)
                     </Typography>
                   )}
                   {dataset.schema.relationships.map((rel, i) => (
-                    <Box key={rel.name}>
+                    <div key={rel.name}>
                       <Typography variant="h6">{rel.name}</Typography>
                       <dl>
                         <dt>
@@ -199,9 +236,9 @@ function DatasetOverviewPanel(props) {
                         </dt>
                       </dl>
                       {i < dataset.schema.relationships.length - 1 && (
-                        <Divider sx={{ marginTop: '14px', marginBottom: '14px' }} />
+                        <Divider sx={{ mt: '14px', mb: '14px' }} />
                       )}
-                    </Box>
+                    </div>
                   ))}
                 </AccordionDetails>
               </Accordion>
@@ -212,7 +249,7 @@ function DatasetOverviewPanel(props) {
       <TabPanel value={value} index={1}>
         <Grid sx={{ paddingBottom: '14px' }}>
           Use the dataset as is to create a full view snapshot
-          <Box sx={{ marginLeft: theme.spacing(2) }}>
+          <Box sx={{ marginLeft: 2 }}>
             <FullViewSnapshotButton dataset={dataset} dispatch={dispatch} />
           </Box>
         </Grid>
@@ -246,46 +283,18 @@ function DatasetOverviewPanel(props) {
           </Grid>
         </Grid>
       </TabPanel>
-      <Drawer
-        variant="temporary"
+      <StyledDrawer
+        variant="permanent"
         anchor="right"
-        className={isHelpVisible ? 'drawerOpen' : 'drawerClose'}
-        sx={{
-          top: '112px',
-          bottom: '0px',
-          flexShrink: 0,
-          height: 'initial',
-          zIndex: 10,
-          minWidth: 300,
-          width: '40%',
-          position: 'absolute',
-          transition: () =>
-            theme.transitions.create('width', {
-              easing: theme.transitions.easing.sharp,
-              duration: theme.transitions.duration.enteringScreen,
-            }),
-          '&.drawerClose': {
-            transition: () =>
-              theme.transitions.create('width', {
-                easing: theme.transitions.easing.sharp,
-                duration: theme.transitions.duration.leavingScreen,
-              }),
-            overflowX: 'hidden',
-            width: '0px',
-            minWidth: '0px',
-            [theme.breakpoints.up('sm')]: {
-              width: '0px',
-            },
-          },
-        }}
         open={isHelpVisible}
+        isVisible={isHelpVisible}
       >
-        <Grid key="help-drawer" container spacing={1} sx={{ padding: '30px' }}>
+        <Grid container spacing={1} sx={{ p: '30px' }}>
           <Grid item xs={11}>
             {helpTitle}
           </Grid>
           <Grid item xs={1}>
-            <IconButton sx={{ color: 'common.link' }} onClick={closeHelpOverlay}>
+            <IconButton onClick={closeHelpOverlay} sx={{ color: 'common.link' }}>
               <Close />
             </IconButton>
           </Grid>
@@ -293,7 +302,7 @@ function DatasetOverviewPanel(props) {
             {helpContent}
           </Grid>
         </Grid>
-      </Drawer>
+      </StyledDrawer>
     </Box>
   );
 }
