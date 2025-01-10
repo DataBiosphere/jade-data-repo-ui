@@ -24,7 +24,6 @@ jobs:
           repository: 'broadinstitute/datarepo-helm'
           token: ${{ secrets.BROADBOT_TOKEN }}
           path: datarepo-helm
-          persist-credentials: false
       - name: 'ui chart default tag find and replace'
         uses: docker://mikefarah/yq:3
         with:
