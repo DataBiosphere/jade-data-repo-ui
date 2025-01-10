@@ -12,8 +12,36 @@ import {
 } from 'actions';
 import { Action } from 'redux';
 import { Link } from 'react-router-dom';
+import { styled } from '@mui/system';
 import TextWithModalDetails from 'components/common/InfoModal';
 import LoadingSpinner from 'components/common/LoadingSpinner';
+
+const OverlaySpinner = styled(Box)(({ theme }) => ({
+  opacity: 0.9,
+  position: 'absolute',
+  right: 0,
+  bottom: 0,
+  left: 0,
+  width: '100vw',
+  height: '100vh',
+  overflow: 'clip',
+  backgroundColor: theme.palette.common.white,
+  zIndex: 100,
+}));
+
+const RequestButton = styled(Button)(({ theme }) => ({
+  width: '100%',
+  border: 0,
+  justifyContent: 'left',
+  textTransform: 'none',
+  paddingTop: theme.spacing(1),
+  paddingBottom: theme.spacing(1),
+  '&:hover': {
+    border: 0,
+  },
+}));
+
+const SnapshotIdLinkLabel = styled('span')(({ theme }) => theme.mixins.jadeLink);
 
 interface IProps {
   dispatch: Dispatch<Action>;
@@ -72,23 +100,14 @@ function SnapshotAccessRequestTable({
       label: 'Request Name',
       name: 'snapshotName',
       render: (row: SnapshotAccessRequestResponse) => (
-        <Button
-          sx={{
-            width: '100%',
-            border: 0,
-            justifyContent: 'left',
-            textTransform: 'none',
-            paddingTop: '8px',
-            paddingBottom: '8px',
-            '&:hover': { border: 0 },
-          }}
+        <RequestButton
           aria-label={row.snapshotName}
           onClick={() => openDetailsModal(row)}
           disableFocusRipple={true}
           disableRipple={true}
         >
           {row.snapshotName}
-        </Button>
+        </RequestButton>
       ),
       width: '16%',
     },
@@ -109,9 +128,7 @@ function SnapshotAccessRequestTable({
       name: 'createdSnapshotId',
       render: (row: SnapshotAccessRequestResponse) => (
         <Link to={`/snapshots/${row.createdSnapshotId}`}>
-          <Box sx={{ color: 'primary.main', textDecoration: 'underline' }}>
-            {row.createdSnapshotId}
-          </Box>
+          <SnapshotIdLinkLabel>{row.createdSnapshotId}</SnapshotIdLinkLabel>
         </Link>
       ),
       width: '12%',
@@ -138,7 +155,7 @@ function SnapshotAccessRequestTable({
       label: '',
       name: 'Actions',
       render: (row: SnapshotAccessRequestResponse) => (
-        <Box>
+        <div>
           <Button
             color="primary"
             onClick={() => row.id && dispatch(rejectSnapshotAccessRequest(row.id))}
@@ -151,14 +168,14 @@ function SnapshotAccessRequestTable({
           >
             Approve
           </Button>
-        </Box>
+        </div>
       ),
       width: '15%',
     },
   ];
   return (
     <>
-      <Box>
+      <div>
         <LightTable
           columns={columns}
           noRowsMessage="No requests are pending review"
@@ -168,22 +185,9 @@ function SnapshotAccessRequestTable({
           refreshCnt={refreshCnt}
           totalCount={snapshotAccessRequests.length}
         />
-      </Box>
+      </div>
       {loadingSnapshotAccessRequestDetails ? (
-        <LoadingSpinner
-          sx={{
-            opacity: 0.9,
-            position: 'absolute',
-            right: 0,
-            bottom: 0,
-            left: 0,
-            width: '100vw',
-            height: '100vh',
-            overflow: 'clip',
-            backgroundColor: 'common.white',
-            zIndex: 100,
-          }}
-        />
+        <LoadingSpinner component={OverlaySpinner} />
       ) : (
         selectedAccessRequest &&
         snapshotAccessRequestDetails && (
