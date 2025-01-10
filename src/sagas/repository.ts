@@ -224,7 +224,6 @@ export function* resetSnapshotExport() {
 
 export function* createSnapshot({ payload }: any): any {
   const { billingProfileId } = payload;
-  console.log(payload);
   const snapshots = yield select(getSnapshotState);
   const dataset = yield select(getDataset);
   const {
