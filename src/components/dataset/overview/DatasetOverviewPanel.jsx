@@ -247,9 +247,9 @@ function DatasetOverviewPanel(props) {
         </Grid>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <Grid sx={{ paddingBottom: '14px' }}>
+        <Grid sx={{ pb: '14px' }}>
           Use the dataset as is to create a full view snapshot
-          <Box sx={{ marginLeft: 2 }}>
+          <Box component="span" sx={{ ml: 2 }}>
             <FullViewSnapshotButton dataset={dataset} dispatch={dispatch} />
           </Box>
         </Grid>
