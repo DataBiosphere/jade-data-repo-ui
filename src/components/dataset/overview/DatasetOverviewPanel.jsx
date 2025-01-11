@@ -12,7 +12,7 @@ import {
   Tabs,
   Typography,
 } from '@mui/material';
-import { styled } from '@mui/system';
+import { styled } from '@mui/material/styles';
 import { ExpandMore, Close } from '@mui/icons-material';
 import IconButton from '@mui/material/IconButton';
 import { connect } from 'react-redux';

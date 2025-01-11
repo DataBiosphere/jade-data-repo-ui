@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Box, Typography } from '@mui/material';
-import { styled } from '@mui/system';
+import { styled } from '@mui/material/styles';
 import { getDatasetById, getDatasetPolicy, getUserDatasetRoles } from 'actions';
 import SnapshotPopup from 'components/snapshot/SnapshotPopup';
 import DatasetRelationshipsPanel from '../../common/overview/SchemaPanel';
@@ -12,6 +12,10 @@ import LoadingSpinner from '../../common/LoadingSpinner';
 import DatasetOverviewPanel from './DatasetOverviewPanel';
 import AppBreadcrumbs from '../../AppBreadcrumbs/AppBreadcrumbs';
 
+// When we switch to Typescript, we can use the following type definition to
+// fix the unresolved variable warning
+// import { CustomTheme, styled } from '@mui/material/styles';
+// const Root = styled(Box)(({ theme }: { theme: CustomTheme }) => ({
 const Root = styled(Box)(({ theme }) => ({
   ...theme.mixins.pageRoot,
 }));

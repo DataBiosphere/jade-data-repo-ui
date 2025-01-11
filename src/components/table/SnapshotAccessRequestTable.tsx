@@ -12,11 +12,11 @@ import {
 } from 'actions';
 import { Action } from 'redux';
 import { Link } from 'react-router-dom';
-import { styled } from '@mui/system';
+import { CustomTheme, styled } from '@mui/material/styles';
 import TextWithModalDetails from 'components/common/InfoModal';
 import LoadingSpinner from 'components/common/LoadingSpinner';
 
-const OverlaySpinner = styled(Box)(({ theme }) => ({
+const OverlaySpinner = styled(Box)(({ theme }: { theme: CustomTheme }) => ({
   opacity: 0.9,
   position: 'absolute',
   right: 0,
@@ -29,7 +29,7 @@ const OverlaySpinner = styled(Box)(({ theme }) => ({
   zIndex: 100,
 }));
 
-const RequestButton = styled(Button)(({ theme }) => ({
+const RequestButton = styled(Button)(({ theme }: { theme: CustomTheme }) => ({
   width: '100%',
   border: 0,
   justifyContent: 'left',

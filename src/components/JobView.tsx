@@ -6,10 +6,10 @@ import { getJobs } from 'actions/index';
 import { JobModel } from 'generated/tdr';
 import { TdrState } from 'reducers';
 import { OrderDirectionOptions } from 'reducers/query';
-import { styled } from '@mui/system';
+import { CustomTheme, styled } from '@mui/material/styles';
 import JobTable from './table/JobTable';
 
-const Container = styled('div')(({ theme }) => theme.mixins.containerWidth);
+const Container = styled('div')(({ theme }: { theme: CustomTheme }) => theme.mixins.containerWidth);
 
 interface IProps {
   jobs: Array<JobModel>;

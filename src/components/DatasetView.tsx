@@ -2,7 +2,7 @@ import React, { Dispatch } from 'react';
 import { connect } from 'react-redux';
 import { Action } from 'redux';
 import { Box } from '@mui/material';
-import { styled } from '@mui/system';
+import { CustomTheme, styled } from '@mui/material/styles';
 import { getDatasets, addDatasetPolicyMember } from 'actions/index';
 import { DatasetSummaryModel } from 'generated/tdr';
 import { TdrState } from 'reducers';
@@ -10,7 +10,7 @@ import { OrderDirectionOptions } from 'reducers/query';
 import DatasetTable from './table/DatasetTable';
 import { DatasetRoles } from '../constants';
 
-const Container = styled('div')(({ theme }) => theme.mixins.containerWidth);
+const Container = styled('div')(({ theme }: { theme: CustomTheme }) => theme.mixins.containerWidth);
 
 interface IProps {
   datasets: Array<DatasetSummaryModel>;

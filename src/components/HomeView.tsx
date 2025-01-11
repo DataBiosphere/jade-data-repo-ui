@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Action } from 'redux';
 import { Button, Box } from '@mui/material';
-import { styled } from '@mui/system';
+import { styled } from '@mui/material/styles';
 import { AddCircle, Refresh } from '@mui/icons-material';
 import { RouterLocation, RouterRootState } from 'connected-react-router';
 import {
