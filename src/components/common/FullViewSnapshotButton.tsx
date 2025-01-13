@@ -1,6 +1,14 @@
 import { createSnapshot, getBillingProfiles, snapshotCreateDetails } from 'actions/index';
 import { TdrState } from 'reducers';
-import { Button, Dialog, DialogActions, DialogTitle, Typography, FormLabel } from '@mui/material';
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogTitle,
+  Typography,
+  FormLabel,
+  TextField,
+} from '@mui/material';
 import React, { Dispatch } from 'react';
 import {
   BillingProfileModel,
@@ -9,7 +17,7 @@ import {
 } from 'generated/tdr';
 import { Action } from 'redux';
 import { connect } from 'react-redux';
-import { now, uniq } from 'lodash';
+import { isEmpty, now, uniq } from 'lodash';
 import TerraTooltip from './TerraTooltip';
 import JadeDropdown from '../dataset/data/JadeDropdown';
 import { useOnMount } from '../../libs/utils';
@@ -35,6 +43,12 @@ function FullViewSnapshotButton({
 
   const [modalOpen, setModalOpen] = React.useState(false);
   const [selectedBillingProfile, setSelectedBillingProfile] = React.useState(defaultBillingProfile);
+  const [snapshotName, setSnapshotName] = React.useState(
+    `Full_View_Snapshot_of_${dataset.name}_${now()}`,
+  );
+  const [snapshotDescription, setSnapshotDescription] = React.useState(
+    `Full View Snapshot of Dataset with Dataset name ${dataset.name}, and Dataset id ${dataset.id}.`,
+  );
 
   // if the default billing profile is undefined or the user does not have permission on it, disable button and show tooltip
   const isDisabled = billingProfiles.length === 0;
@@ -44,12 +58,10 @@ function FullViewSnapshotButton({
   }
 
   const handleCreateFullViewSnapshot = () => {
-    const name = `Full_View_Snapshot_of_${dataset.name}_${now()}`;
-    const description = `Full View Snapshot of Dataset with Dataset name ${dataset.name}, and Dataset id ${dataset.id}.`;
     dispatch(
       snapshotCreateDetails(
-        name,
-        description,
+        snapshotName,
+        snapshotDescription,
         SnapshotRequestContentsModelModeEnum.ByFullView,
         dataset,
       ),
@@ -86,6 +98,32 @@ function FullViewSnapshotButton({
           Creating snapshot - select a billing project
         </DialogTitle>
         <div style={{ padding: '0px 24px 16px 24px' }}>
+          <FormLabel sx={{ fontWeight: 600, color: 'black' }} htmlFor="snapshot-name" required>
+            Snapshot Name
+          </FormLabel>
+          <TextField
+            fullWidth
+            margin="normal"
+            id="snapshot-name"
+            label="Snapshot Name"
+            value={snapshotName}
+            onChange={(e) => setSnapshotName(e.target.value)}
+          />
+          <FormLabel
+            sx={{ fontWeight: 600, color: 'black' }}
+            htmlFor="snapshot-description"
+            required
+          >
+            Snapshot Description
+          </FormLabel>
+          <TextField
+            fullWidth
+            margin="normal"
+            id="snapshot-description"
+            label="Snapshot Description"
+            value={snapshotDescription}
+            onChange={(e) => setSnapshotDescription(e.target.value)}
+          />
           <Typography sx={{ color: 'black' }}>
             Do you want to use the Google Billing Project associated with this dataset or would you
             like to select a different one?
@@ -124,11 +162,15 @@ function FullViewSnapshotButton({
             </Button>
             <Button
               onClick={onSelect}
-              disabled={selectedBillingProfile?.id === undefined}
+              disabled={
+                selectedBillingProfile?.id === undefined ||
+                isEmpty(snapshotName) ||
+                isEmpty(snapshotDescription)
+              }
               variant="contained"
               data-cy="select-billing-profile-button"
             >
-              Select
+              Create
             </Button>
           </DialogActions>
         </div>
