@@ -9,7 +9,7 @@ describe('test dataset sharing', () => {
     );
 
     cy.visit('/login/e2e');
-    cy.get('#tokenInput').type(Cypress.env('GOOGLE_TOKEN'), {
+    cy.get('#tokenInput', { timeout: 60000 }).type(Cypress.env('GOOGLE_TOKEN'), {
       log: false,
       delay: 0,
     });
