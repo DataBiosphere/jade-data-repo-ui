@@ -19,9 +19,6 @@ const initialState = {
       name: 'Test Snapshot',
     },
   },
-  profiles: {
-    profiles: [{ id: 'profile1', name: 'Test Profile 1' }],
-  },
   user: _.cloneDeep(initialUserState),
   query: _.cloneDeep(initialQueryState),
   router: { location: {} },
