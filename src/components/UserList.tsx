@@ -27,14 +27,14 @@ function UserList({ canManageUsers, defaultOpen, removeUser, typeOfUsers, users 
       >
         {typeOfUsers}
       </AccordionSummary>
-      <AccordionDetails data-cy="user-email" sx={canManageUsers ? { pt: 0 } : undefined}>
+      <AccordionDetails data-cy="user-email" sx={canManageUsers ? { paddingTop: 0 } : undefined}>
         <ManageUsersView removeUser={canManageUsers ? removeUser : undefined} users={users} />
         {users.length === 0 && (
           <Typography
             sx={{
               fontStyle: 'italic',
               color: 'error.contrastText',
-              pb: '8px',
+              paddingBottom: '8px',
             }}
           >
             (None)

@@ -112,7 +112,7 @@ function HomeView({ dispatch, location }: IProps) {
 
   return (
     <RootContainer>
-      <Box sx={{ display: 'flex', mt: '1.25em', mb: '1.25em' }}>
+      <Box sx={{ display: 'flex', marginTop: '1.25em', marginBottom: '1.25em' }}>
         {pageHeader}
         {searchable && (
           <SearchTable

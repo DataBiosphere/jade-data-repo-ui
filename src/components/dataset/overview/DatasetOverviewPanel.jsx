@@ -236,7 +236,7 @@ function DatasetOverviewPanel(props) {
                         </dt>
                       </dl>
                       {i < dataset.schema.relationships.length - 1 && (
-                        <Divider sx={{ mt: '14px', mb: '14px' }} />
+                        <Divider sx={{ marginTop: '14px', marginBottom: '14px' }} />
                       )}
                     </div>
                   ))}
@@ -247,9 +247,9 @@ function DatasetOverviewPanel(props) {
         </Grid>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <Grid sx={{ pb: '14px' }}>
+        <Grid sx={{ paddingBottom: '14px' }}>
           Use the dataset as is to create a full view snapshot
-          <Box component="span" sx={{ ml: 2 }}>
+          <Box component="span" sx={{ marginLeft: 2 }}>
             <FullViewSnapshotButton dataset={dataset} dispatch={dispatch} />
           </Box>
         </Grid>
@@ -289,7 +289,7 @@ function DatasetOverviewPanel(props) {
         open={isHelpVisible}
         isVisible={isHelpVisible}
       >
-        <Grid container spacing={1} sx={{ p: '30px' }}>
+        <Grid container spacing={1} sx={{ padding: '30px' }}>
           <Grid item xs={11}>
             {helpTitle}
           </Grid>

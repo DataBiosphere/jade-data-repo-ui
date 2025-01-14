@@ -41,7 +41,7 @@ function JobView({ jobs, dispatch, loading, searchString, refreshCnt }: IProps) 
       sx={{
         display: 'flex',
         justifyContent: 'center',
-        mt: '1em',
+        marginTop: '1em',
       }}
     >
       <Box sx={{ width: '100%' }}>
