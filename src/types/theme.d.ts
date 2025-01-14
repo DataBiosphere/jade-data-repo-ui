@@ -6,7 +6,6 @@ import {
   PaletteOptions,
 } from '@mui/material/styles/createPalette';
 import { Typography, TypographyOptions } from '@mui/material/styles/createTypography';
-import { Overrides } from '@mui/styles/overrides';
 import { CSSProperties, Mixins, MixinsOptions } from '@mui/material/styles/createMixins';
 
 declare module '@mui/material/styles' {
@@ -41,7 +40,6 @@ declare module '@mui/material/styles' {
     lightTable?: Partial<CustomPaletteColors>;
     panel?: Partial<CustomPaletteColors>;
     terra?: Partial<CustomPaletteColors>;
-    primary?: Partial<CustomPaletteColors>;
   }
 
   interface CustomPalette extends Palette {
@@ -68,7 +66,6 @@ declare module '@mui/material/styles' {
 
   interface CustomMixins extends Mixins {
     jadeLink: JadeLink;
-    containerWidth: CSSProperties;
     pageRoot: CSSProperties;
     pageTitle: CSSProperties;
     ellipsis: CSSProperties;
@@ -80,7 +77,6 @@ declare module '@mui/material/styles' {
 
   interface CustomMixinsOptions extends MixinsOptions {
     jadeLink?: JadeLink;
-    containerWidth?: CSSProperties;
     pageRoot?: CSSProperties;
     pageTitle?: CSSProperties;
     ellipsis?: CSSProperties;
@@ -97,7 +93,6 @@ declare module '@mui/material/styles' {
   interface CustomTheme extends Theme {
     typography: CustomTypography;
     palette: CustomPalette;
-    overrides: Overrides;
     mixins: CustomMixins;
     constants: CustomConstants;
   }
@@ -106,7 +101,6 @@ declare module '@mui/material/styles' {
   interface CustomThemeOptions extends ThemeOptions {
     typography?: CustomTypographyOptions;
     palette?: CustomPaletteOptions;
-    overrides?: Overrides;
     mixins?: CustomMixinsOptions;
     constants?: CustomConstantsOptions;
   }

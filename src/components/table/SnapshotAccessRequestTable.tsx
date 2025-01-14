@@ -3,7 +3,7 @@ import { SnapshotAccessRequestResponse, SnapshotAccessRequestDetailsResponse } f
 import { TableColumnType } from 'reducers/query';
 import LightTable from 'components/table/LightTable';
 import moment from 'moment/moment';
-import { Button } from '@mui/material';
+import { Button, Box } from '@mui/material';
 import _ from 'lodash';
 import {
   approveSnapshotAccessRequest,
@@ -12,43 +12,38 @@ import {
 } from 'actions';
 import { Action } from 'redux';
 import { Link } from 'react-router-dom';
-import { ClassNameMap, createStyles, withStyles } from '@mui/styles';
-import { CustomTheme } from '@mui/material/styles';
+import { CustomTheme, styled } from '@mui/material/styles';
 import TextWithModalDetails from 'components/common/InfoModal';
 import LoadingSpinner from 'components/common/LoadingSpinner';
 
-const styles = (theme: CustomTheme) =>
-  createStyles({
-    jadeLink: {
-      ...theme.mixins.jadeLink,
-    },
-    openButton: {
-      width: '100%',
-      border: 0,
-      justifyContent: 'left',
-      textTransform: 'none',
-      paddingTop: theme.spacing(1),
-      paddingBottom: theme.spacing(1),
-      '&:hover': {
-        border: 0,
-      },
-    },
-    overlaySpinner: {
-      opacity: 0.9,
-      position: 'absolute',
-      right: 0,
-      bottom: 0,
-      left: 0,
-      width: '100vw',
-      height: '100vh',
-      overflow: 'clip',
-      backgroundColor: theme.palette.common.white,
-      zIndex: 100,
-    },
-  });
+const OverlaySpinner = styled(Box)(({ theme }: { theme: CustomTheme }) => ({
+  opacity: 0.9,
+  position: 'absolute',
+  right: 0,
+  bottom: 0,
+  left: 0,
+  width: '100vw',
+  height: '100vh',
+  overflow: 'clip',
+  backgroundColor: theme.palette.common.white,
+  zIndex: 100,
+}));
+
+const RequestButton = styled(Button)(({ theme }: { theme: CustomTheme }) => ({
+  width: '100%',
+  border: 0,
+  justifyContent: 'left',
+  textTransform: 'none',
+  paddingTop: theme.spacing(1),
+  paddingBottom: theme.spacing(1),
+  '&:hover': {
+    border: 0,
+  },
+}));
+
+const SnapshotIdLinkLabel = styled('span')(({ theme }) => theme.mixins.jadeLink);
 
 interface IProps {
-  classes: ClassNameMap;
   dispatch: Dispatch<Action>;
   snapshotAccessRequests: Array<SnapshotAccessRequestResponse>;
   snapshotAccessRequestDetails?: SnapshotAccessRequestDetailsResponse;
@@ -59,7 +54,6 @@ interface IProps {
 }
 
 function SnapshotAccessRequestTable({
-  classes,
   dispatch,
   snapshotAccessRequests,
   snapshotAccessRequestDetails,
@@ -106,15 +100,14 @@ function SnapshotAccessRequestTable({
       label: 'Request Name',
       name: 'snapshotName',
       render: (row: SnapshotAccessRequestResponse) => (
-        <Button
-          className={classes.openButton}
+        <RequestButton
           aria-label={row.snapshotName}
           onClick={() => openDetailsModal(row)}
           disableFocusRipple={true}
           disableRipple={true}
         >
           {row.snapshotName}
-        </Button>
+        </RequestButton>
       ),
       width: '16%',
     },
@@ -135,7 +128,7 @@ function SnapshotAccessRequestTable({
       name: 'createdSnapshotId',
       render: (row: SnapshotAccessRequestResponse) => (
         <Link to={`/snapshots/${row.createdSnapshotId}`}>
-          <span className={classes.jadeLink}>{row.createdSnapshotId}</span>
+          <SnapshotIdLinkLabel>{row.createdSnapshotId}</SnapshotIdLinkLabel>
         </Link>
       ),
       width: '12%',
@@ -194,7 +187,7 @@ function SnapshotAccessRequestTable({
         />
       </div>
       {loadingSnapshotAccessRequestDetails ? (
-        <LoadingSpinner className={classes.overlaySpinner} />
+        <LoadingSpinner component={OverlaySpinner} />
       ) : (
         selectedAccessRequest &&
         snapshotAccessRequestDetails && (
@@ -209,4 +202,4 @@ function SnapshotAccessRequestTable({
   );
 }
 
-export default withStyles(styles)(SnapshotAccessRequestTable);
+export default SnapshotAccessRequestTable;

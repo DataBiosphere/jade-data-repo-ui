@@ -3,7 +3,7 @@ import { mount } from 'cypress/react';
 import { Router } from 'react-router-dom';
 import history from 'modules/hist';
 import { Provider } from 'react-redux';
-import { ThemeProvider } from '@mui/styles';
+import { ThemeProvider } from '@mui/material/styles';
 import globalTheme from 'modules/theme';
 import React from 'react';
 import DatasetOverviewPanel from 'components/dataset/overview/DatasetOverviewPanel';

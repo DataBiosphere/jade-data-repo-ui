@@ -18,7 +18,7 @@ import DatasetCreationModal from './DatasetCreationModal';
 const styles = (theme: CustomTheme) => ({
   pageRoot: { ...theme.mixins.pageRoot },
   pageTitle: { ...theme.mixins.pageTitle },
-  width: { ...theme.mixins.containerWidth },
+  width: { width: '100%' },
   jadeLink: {
     ...theme.mixins.jadeLink,
     'text-decoration': 'underline',

@@ -6,7 +6,7 @@ import Helmet from 'react-helmet';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
 import history from 'modules/hist';
-import globalTheme from 'modules/theme';
+import theme from 'modules/theme';
 import { ThemeProvider } from '@mui/material/styles';
 import axios from 'axios';
 import { WebStorageStateStore, Log } from 'oidc-client-ts';
@@ -159,7 +159,7 @@ function render(Component) {
         <Router history={history}>
           {/* CachingProvider is a way to control how css is rendered in the DOM */}
           <CacheProvider value={cache}>
-            <ThemeProvider theme={globalTheme}>
+            <ThemeProvider theme={theme}>
               <AuthProvider {...oidcConfig}>
                 <Component />
               </AuthProvider>

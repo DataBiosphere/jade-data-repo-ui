@@ -269,9 +269,6 @@ const theme = createTheme({
         color: LINK_HOVER,
       },
     },
-    containerWidth: {
-      width: '100%',
-    },
     pageRoot: {
       padding: '16px 24px',
       display: 'flex',
