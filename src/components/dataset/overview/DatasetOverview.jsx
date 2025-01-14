@@ -34,7 +34,7 @@ const ContentContainer = styled(Box)({
 const MainColumn = styled(Box)({
   display: 'flex',
   flexDirection: 'column',
-  marginLeft: 40,
+  marginLeft: '40px',
 });
 
 function DatasetOverview(props) {

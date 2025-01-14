@@ -42,7 +42,7 @@ const StyledDrawer = styled(Drawer, {
   flexShrink: 0,
   height: 'initial',
   zIndex: 10,
-  minWidth: 300,
+  minWidth: '300px',
   position: 'absolute',
   width: isVisible ? '40%' : 0,
   transition: theme.transitions.create('width', {
@@ -56,7 +56,7 @@ const StyledDrawer = styled(Drawer, {
     flexShrink: 0,
     height: 'initial',
     zIndex: 10,
-    minWidth: isVisible ? 300 : 0,
+    minWidth: isVisible ? '300px' : '0px',
     width: isVisible ? '40%' : 0,
     position: 'absolute',
     transition: theme.transitions.create('width', {
