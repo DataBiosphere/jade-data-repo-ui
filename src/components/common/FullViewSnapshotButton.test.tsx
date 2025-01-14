@@ -79,6 +79,14 @@ describe('FullViewSnapshotButton', () => {
       cy.get('[data-cy=menuItem-profile2]').click();
       cy.get('#billing-profile-select').should('have.value', 'profile2');
     });
+
+    it('allows changing the name and description', () => {
+      cy.get('button').click();
+      cy.get('#snapshot-name').clear().type('New Name');
+      cy.get('#snapshot-description').clear().type('New Description');
+      cy.get('#snapshot-name').should('have.value', 'New Name');
+      cy.get('#snapshot-description').should('have.value', 'New Description');
+    });
   });
 
   describe('FullViewSnapshotButton component without permission', () => {
