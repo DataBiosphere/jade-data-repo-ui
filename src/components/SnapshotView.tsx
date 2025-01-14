@@ -6,12 +6,10 @@ import { SnapshotSummaryModel } from 'generated/tdr';
 import { Action } from 'redux';
 import { TdrState } from 'reducers';
 import { OrderDirectionOptions } from 'reducers/query';
-import { CustomTheme, styled } from '@mui/material/styles';
 import SnapshotTable from './table/SnapshotTable';
 import SnapshotPopup from './snapshot/SnapshotPopup';
 import { SnapshotRoles } from '../constants';
-
-const Container = styled('div')(({ theme }: { theme: CustomTheme }) => theme.mixins.containerWidth);
+import Container from './common/Container';
 
 interface IProps {
   snapshots: Array<SnapshotSummaryModel>;
