@@ -9,7 +9,6 @@ import { OrderDirectionOptions } from 'reducers/query';
 import SnapshotTable from './table/SnapshotTable';
 import SnapshotPopup from './snapshot/SnapshotPopup';
 import { SnapshotRoles } from '../constants';
-import Container from './common/Container';
 
 interface IProps {
   snapshots: Array<SnapshotSummaryModel>;
@@ -59,7 +58,7 @@ function SnapshotView({
         marginTop: '1em',
       }}
     >
-      <Container>
+      <Box sx={{ width: '100%' }}>
         <div>
           <SnapshotTable
             snapshotCount={snapshotCount}
@@ -73,7 +72,7 @@ function SnapshotView({
             refreshCnt={refreshCnt}
           />
         </div>
-      </Container>
+      </Box>
       <SnapshotPopup />
     </Box>
   );

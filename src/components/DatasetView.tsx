@@ -8,7 +8,6 @@ import { TdrState } from 'reducers';
 import { OrderDirectionOptions } from 'reducers/query';
 import DatasetTable from './table/DatasetTable';
 import { DatasetRoles } from '../constants';
-import Container from './common/Container';
 
 interface IProps {
   datasets: Array<DatasetSummaryModel>;
@@ -55,7 +54,7 @@ function DatasetView({
         mt: '1em',
       }}
     >
-      <Container>
+      <Box sx={{ width: '100%' }}>
         <Box>
           {datasets && (
             <DatasetTable
@@ -71,7 +70,7 @@ function DatasetView({
             />
           )}
         </Box>
-      </Container>
+      </Box>
     </Box>
   );
 }

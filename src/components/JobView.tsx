@@ -7,7 +7,6 @@ import { JobModel } from 'generated/tdr';
 import { TdrState } from 'reducers';
 import { OrderDirectionOptions } from 'reducers/query';
 import JobTable from './table/JobTable';
-import Container from './common/Container';
 
 interface IProps {
   jobs: Array<JobModel>;
@@ -45,7 +44,7 @@ function JobView({ jobs, dispatch, loading, searchString, refreshCnt }: IProps) 
         mt: '1em',
       }}
     >
-      <Container>
+      <Box sx={{ width: '100%' }}>
         <Box>
           {jobs && (
             <JobTable
@@ -57,7 +56,7 @@ function JobView({ jobs, dispatch, loading, searchString, refreshCnt }: IProps) 
             />
           )}
         </Box>
-      </Container>
+      </Box>
     </Box>
   );
 }

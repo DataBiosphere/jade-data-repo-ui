@@ -66,7 +66,6 @@ declare module '@mui/material/styles' {
 
   interface CustomMixins extends Mixins {
     jadeLink: JadeLink;
-    containerWidth: CSSProperties;
     pageRoot: CSSProperties;
     pageTitle: CSSProperties;
     ellipsis: CSSProperties;
@@ -78,7 +77,6 @@ declare module '@mui/material/styles' {
 
   interface CustomMixinsOptions extends MixinsOptions {
     jadeLink?: JadeLink;
-    containerWidth?: CSSProperties;
     pageRoot?: CSSProperties;
     pageTitle?: CSSProperties;
     ellipsis?: CSSProperties;
