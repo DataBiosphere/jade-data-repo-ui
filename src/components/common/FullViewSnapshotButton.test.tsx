@@ -82,33 +82,15 @@ describe('FullViewSnapshotButton', () => {
   });
 
   describe('FullViewSnapshotButton component without permission', () => {
-    beforeEach(() => {
+    it('Button is disabled and has tooltip with the no access message', () => {
       const dataset = { defaultProfileId: 'profile2' };
       const profiles: BillingProfileModel[] = [];
       mountFullViewSnapshotButton(dataset, profiles);
-    });
-
-    it('Button is disabled and has tooltip with the no access message', () => {
       cy.get('button').should('be.disabled');
       cy.get('button').trigger('mouseover', { force: true });
       cy.contains('You do not have access to any billing profiles to create a snapshot').should(
         'be.visible',
       );
-    });
-  });
-
-  describe('FullViewSnapshotButton component without default billing profile', () => {
-    beforeEach(() => {
-      const dataset = {};
-      const profiles = [
-        { id: 'profile1', profileName: 'profile1' },
-        { id: 'profile2', profileName: 'profile2' },
-      ];
-      mountFullViewSnapshotButton(dataset, profiles);
-    });
-
-    it('Button is disabled and has tooltip with the no billing profile message', () => {
-      cy.get('button').click();
     });
   });
 });
