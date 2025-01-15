@@ -13,7 +13,7 @@ on:
       - 'Dockerfile'
       - '.github/workflows/dev-image-update.yaml'
 env:
-  gcr_google_project: 'broad-jade-dev'
+  GCR_GOOGLE_PROJECT: 'broad-jade-dev'
   google_sdk_version: '290.0.1'
   DEV_PROJECT: broad-jade-dev
   # This must be defined for the bash redirection
@@ -69,21 +69,21 @@ jobs:
           DISABLE_ESLINT_PLUGIN: true
         run: |
           rm -rf jade-dev-account.pem
-          docker build -t gcr.io/${gcr_google_project}/jade-data-repo-ui:${GCR_TAG} --build-arg CACHEBUST=$(date +%s) .
+          docker build -t "gcr.io/${GCR_GOOGLE_PROJECT}/jade-data-repo-ui:${GCR_TAG}" --build-arg CACHEBUST=$(date +%s) .
       # Push the Docker image to Google Container Registry
       - name: Publish and tag new docker container to GCR
         run: |
           gcloud auth activate-service-account --key-file jade-dev-account.json
           gcloud auth configure-docker --quiet
-          docker push gcr.io/${gcr_google_project}/jade-data-repo-ui:${GCR_TAG}
+          docker push "gcr.io/${GCR_GOOGLE_PROJECT}/jade-data-repo-ui:${GCR_TAG}"
           gcloud container images \
             add-tag \
-            gcr.io/${gcr_google_project}/jade-data-repo-ui:"${GCR_TAG}" \
-            gcr.io/${gcr_google_project}/jade-data-repo-ui:"${PREV_TAG}" --quiet
+            "gcr.io/${GCR_GOOGLE_PROJECT}/jade-data-repo-ui:${GCR_TAG}" \
+            "gcr.io/${GCR_GOOGLE_PROJECT}/jade-data-repo-ui:${PREV_TAG}" --quiet
           gcloud container images \
             add-tag \
-            gcr.io/${gcr_google_project}/jade-data-repo-ui:"${GCR_TAG}" \
-            gcr.io/${gcr_google_project}/jade-data-repo-ui:"${GCR_TAG}-develop" --quiet
+            "gcr.io/${GCR_GOOGLE_PROJECT}/jade-data-repo-ui:${GCR_TAG}" \
+            "gcr.io/${GCR_GOOGLE_PROJECT}/jade-data-repo-ui:${GCR_TAG}-develop" --quiet
         env:
           PREV_TAG: ${{ steps.uiprevioustag.outputs.tag }}
   helm_tag_bump:
