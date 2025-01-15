@@ -21,7 +21,7 @@ export const { getBillingProfileById } = createActions({
 });
 
 export const { createSnapshot } = createActions({
-  [ActionTypes.CREATE_SNAPSHOT]: () => ({}),
+  [ActionTypes.CREATE_SNAPSHOT]: (billingProfileId) => ({ billingProfileId }),
   [ActionTypes.CREATE_SNAPSHOT_JOB]: (snapshot) => snapshot,
   [ActionTypes.CREATE_SNAPSHOT_SUCCESS]: (snapshot) => snapshot,
   [ActionTypes.CREATE_SNAPSHOT_FAILURE]: (snapshot) => snapshot,

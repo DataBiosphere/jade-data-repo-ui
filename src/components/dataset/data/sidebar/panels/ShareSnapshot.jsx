@@ -109,7 +109,7 @@ export class ShareSnapshot extends React.PureComponent {
 
   saveSnapshot = () => {
     const { dispatch } = this.props;
-    dispatch(createSnapshot());
+    dispatch(createSnapshot(undefined));
   };
 
   render() {

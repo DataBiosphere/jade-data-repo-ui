@@ -222,7 +222,8 @@ export function* resetSnapshotExport() {
  * Snapshots.
  */
 
-export function* createSnapshot(): any {
+export function* createSnapshot({ payload }: any): any {
+  const { billingProfileId } = payload;
   const snapshots = yield select(getSnapshotState);
   const dataset = yield select(getDataset);
   const {
@@ -238,7 +239,7 @@ export function* createSnapshot(): any {
   const datasetName = dataset.name;
   const snapshotRequest = {
     name,
-    profileId: dataset.defaultProfileId,
+    profileId: billingProfileId || dataset.defaultProfileId,
     description,
     policies,
     contents: [],
