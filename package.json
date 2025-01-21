@@ -37,7 +37,7 @@
     "@mui/system": "5.10.14",
     "@reduxjs/toolkit": "^1.9.5",
     "@testing-library/react": "^12.1.5",
-    "@testing-library/user-event": "^14.5.2",
+    "@testing-library/user-event": "^14.6.0",
     "@types/jest": "^29.5.14",
     "@types/jss": "^10.0.0",
     "@types/moment-duration-format": "^2.2.6",
@@ -92,7 +92,7 @@
     "rxjs": "^7.8.1",
     "strip-markdown": "^6.0.0",
     "symbol-observable": "^4.0.0",
-    "tss-react": "^4.9.14",
+    "tss-react": "^4.9.15",
     "typescript": "^5.7.3",
     "validator": "^13.12.0",
     "webfontloader": "^1.6.28"
@@ -129,7 +129,7 @@
     "prettier": "2.2.1",
     "react-dom": "^17.0.2",
     "redux-mock-store": "^1.5.5",
-    "vite": "^5.4.11",
+    "vite": "^5.4.14",
     "vite-plugin-eslint": "^1.8.1",
     "vite-plugin-svgr": "^4.3.0",
     "vite-tsconfig-paths": "^4.3.2"
