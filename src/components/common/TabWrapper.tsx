@@ -6,7 +6,6 @@ import { TabClasses } from '@mui/material/Tab/tabClasses';
 import Tab from '@mui/material/Tab';
 import { Link, useLocation } from 'react-router-dom';
 import HelpContainer from 'components/help/HelpContainer';
-import history from 'modules/hist';
 import { CustomTheme } from '@mui/material/styles';
 import { IRoute } from 'routes/Private';
 import { TdrState } from 'reducers';
@@ -68,7 +67,7 @@ function TabWrapper(props: TabWrapperProps) {
   const location = useLocation();
 
   useEffect(() => {
-    const locationSplit = history.location.pathname.split('/');
+    const locationSplit = location.pathname.split('/');
     setSelectedTab(`/${locationSplit[1] || 'datasets'}`);
   }, [location]);
 
