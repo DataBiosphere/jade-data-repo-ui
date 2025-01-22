@@ -1,12 +1,11 @@
 import { ClassNameMap, createStyles, withStyles } from '@mui/styles';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import Tabs from '@mui/material/Tabs';
 import { TabClasses } from '@mui/material/Tab/tabClasses';
 import Tab from '@mui/material/Tab';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import HelpContainer from 'components/help/HelpContainer';
-import history from 'modules/hist';
 import { CustomTheme } from '@mui/material/styles';
 import { IRoute } from 'routes/Private';
 import { TdrState } from 'reducers';
@@ -64,9 +63,13 @@ type TabWrapperProps = {
 
 function TabWrapper(props: TabWrapperProps) {
   const { classes, routes, snapshotAccessRequests } = props;
+  const [selectedTab, setSelectedTab] = React.useState<string>('datasets');
+  const location = useLocation();
 
-  const locationSplit = history.location.pathname.split('/');
-  const selectedTab = `/${locationSplit[1] || 'datasets'}`;
+  useEffect(() => {
+    const locationSplit = location.pathname.split('/');
+    setSelectedTab(`/${locationSplit[1] || 'datasets'}`);
+  }, [location]);
 
   const tabConfigs: Array<ITabConfig> = [
     { label: 'Datasets', path: '/datasets' },
