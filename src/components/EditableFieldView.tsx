@@ -11,7 +11,7 @@ import InfoHoverButton from './common/InfoHoverButton';
 
 const EditIconButton = styled(IconButton)(({ theme }) => ({
   boxShadow: 'none',
-  color: theme.palette.primary?.main,
+  color: theme.palette.primary.main,
   marginTop: '-8px',
   marginBottom: '-6px',
   '&:hover': {
