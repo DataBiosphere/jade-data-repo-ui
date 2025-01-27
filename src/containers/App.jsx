@@ -162,13 +162,7 @@ export function App(props) {
   const auth = useAuth();
   // This effect clause is needed to handle when the auth library loads the token on page refresh
   useEffect(() => {
-    if (
-      auth &&
-      auth.isAuthenticated &&
-      !auth.isLoading &&
-      !user.isAuthenticated &&
-      !auth.activeNavigator
-    ) {
+    if (auth.isAuthenticated && !auth.isLoading && !user.isAuthenticated && !auth.activeNavigator) {
       dispatch(logInSuccess(auth.user));
       dispatch(getUserStatus());
       auth.events.addUserLoaded((u) => dispatch(userRefresh(u)));
@@ -192,7 +186,7 @@ export function App(props) {
     }
   };
 
-  const loggingIn = status.tdrOperational && configuration.configObject.clientId && auth?.isLoading;
+  const loggingIn = status.tdrOperational && configuration.configObject.clientId && auth.isLoading;
 
   return (
     <div className={classes.root}>
@@ -249,7 +243,7 @@ export function App(props) {
       </AppBar>
       <div className={clsx(classes.content, { [classes.loggingIn]: loggingIn })}>
         {!status.tdrOperational && <ServerErrorView />}
-        {status.tdrOperational && configuration.configObject.clientId && !auth?.isLoading && (
+        {status.tdrOperational && configuration.configObject.clientId && !auth.isLoading && (
           <Switch>
             <Route path="/redirect-from-oauth" exact component={LoadingSpinner} />
             <RoutePublic
@@ -274,7 +268,7 @@ export function App(props) {
             )}
             {!user.isInitiallyLoaded && (
               <RoutePrivate
-                isAuthenticated={auth?.isAuthenticated && !auth?.isLoading && !user.isTest}
+                isAuthenticated={auth.isAuthenticated && !auth.isLoading && !user.isTest}
                 path="/"
                 component={LoadingSpinner}
               />
