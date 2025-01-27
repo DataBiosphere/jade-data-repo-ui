@@ -10,12 +10,12 @@ import { TdrState } from 'reducers';
 import { RouterLocation, RouterRootState } from 'connected-react-router';
 import { LocationState } from 'history';
 
-const StyledCard = styled(Card)(({ theme }) => ({
+const StyledCard = styled(Card)({
   borderRadius: 5,
   backgroundColor: '#fbebe8',
   width: '100%',
   cursor: 'default',
-}));
+});
 
 const StyledText = styled(Box)(({ theme }) => ({
   alignSelf: 'center',
@@ -35,15 +35,6 @@ const StyledCloseButton = styled(IconButton)(({ theme }) => ({
   height: '24px',
   marginLeft: theme.spacing(2),
   ...theme.mixins.jadeLink,
-}));
-
-const JobLinkContainer = styled(Box)(({ theme }) => ({
-  backgroundColor: theme.palette.primary.light,
-  color: theme.typography.color,
-  padding: '0 24px !important',
-  border: `1px solid ${theme.palette.error.main}`,
-  borderBottomRightRadius: 5,
-  borderBottomLeftRadius: 5,
 }));
 
 const StyledLink = styled('span')(({ theme }) => ({
