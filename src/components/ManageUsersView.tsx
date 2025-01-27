@@ -1,30 +1,21 @@
 import React from 'react';
-import { WithStyles, withStyles } from '@mui/styles';
-import { CustomTheme } from '@mui/material';
+import { Box } from '@mui/material';
 import Chip from '@mui/material/Chip';
 
-const styles = (theme: CustomTheme) => ({
-  chip: {
-    marginBottom: theme.spacing(1),
-  },
-  chipContainer: {
-    margin: 0,
-    width: '100%',
-  },
-});
-
-interface ManageUsersProps extends WithStyles<typeof styles> {
+interface ManageUsersProps {
   removeUser?: (removableEmail: string) => void;
   users: Array<string>;
 }
 
-function ManageUsersView({ classes, removeUser, users }: ManageUsersProps) {
+function ManageUsersView({ removeUser, users }: ManageUsersProps) {
   const userChips =
     !!users &&
     users.map((user) => (
-      <div data-cy="chip-item" key={user}>
+      <Box data-cy="chip-item" key={user}>
         <Chip
-          className={classes.chip}
+          sx={(theme) => ({
+            marginBottom: theme.spacing(1),
+          })}
           color="primary"
           label={user}
           key={user}
@@ -32,14 +23,23 @@ function ManageUsersView({ classes, removeUser, users }: ManageUsersProps) {
           variant="outlined"
           data-cy={`chip-${user}`}
         />
-      </div>
+      </Box>
     ));
 
   return (
-    <div data-cy="chip-container">
-      {users && users.length > 0 && <div className={classes.chipContainer}>{userChips}</div>}
-    </div>
+    <Box data-cy="chip-container">
+      {users && users.length > 0 && (
+        <Box
+          sx={{
+            margin: 0,
+            width: '100%',
+          }}
+        >
+          {userChips}
+        </Box>
+      )}
+    </Box>
   );
 }
 
-export default withStyles(styles)(ManageUsersView);
+export default ManageUsersView;
