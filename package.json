@@ -22,7 +22,7 @@
     "ES6"
   ],
   "dependencies": {
-    "@babel/runtime": "^7.26.0",
+    "@babel/runtime": "^7.26.7",
     "@codemirror/lang-javascript": "^6.2.2",
     "@emotion/cache": "^11.14.0",
     "@emotion/styled": "^11.14.0",
@@ -37,7 +37,7 @@
     "@mui/system": "5.10.14",
     "@reduxjs/toolkit": "^1.9.5",
     "@testing-library/react": "^12.1.5",
-    "@testing-library/user-event": "^14.6.0",
+    "@testing-library/user-event": "^14.6.1",
     "@types/jest": "^29.5.14",
     "@types/jss": "^10.0.0",
     "@types/moment-duration-format": "^2.2.6",
@@ -80,7 +80,7 @@
     "react-oidc-context": "^2.4.0",
     "react-redux": "^7.2.9",
     "react-router-dom": "^5.3.4",
-    "react-select": "^5.9.0",
+    "react-select": "^5.10.0",
     "react-side-effect": "^2.1.2",
     "react-simplemde-editor": "^5.2.0",
     "react-window": "^1.8.11",
