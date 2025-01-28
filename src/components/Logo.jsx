@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
-import { sizeHeight, styled } from '@mui/system';
+import { styled } from '@mui/system';
 import { push } from 'modules/hist';
 
 import TerraIcon from 'media/brand/logo-wShadow.svg?react';
