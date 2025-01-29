@@ -78,13 +78,13 @@ jobs:
           NAME="${GOOGLE_DOCKER_REPOSITORY}/${GOOGLE_PROJECT}/${REPOSITORY_NAME}/${IMAGE_NAME}"
           DOCKER_TAG="${{ steps.tag.outputs.tag }}"
           TAGGED="${NAME}:${DOCKER_TAG}"
-          HASH=$(git rev-parse --short HEAD)
+          HASHED="${NAME}:$(git rev-parse --short HEAD)"
           echo "NAME: ${NAME}"
           echo "TAGGED: ${TAGGED}"
-          echo "HASH: ${HASH}"
+          echo "HASHED: ${HASHED}"
           echo "name=${NAME}" >> $GITHUB_OUTPUT
           echo "tagged=${TAGGED}" >> $GITHUB_OUTPUT
-          echo "hash=${HASH}" >> $GITHUB_OUTPUT
+          echo "hashed=${HASHED}" >> $GITHUB_OUTPUT
       - name: Build image
         run: |
           docker build -t ${{ steps.image-name.outputs.tagged }} .
@@ -104,6 +104,6 @@ jobs:
         run: |
           gcloud artifacts docker tags add \
             "${{ steps.image-name.outputs.tagged }}" \
-            "${{ steps.image-name.outputs.hash }}" \
-            "${{ steps.image-name.outputs.hash }}-develop" \
+            "${{ steps.image-name.outputs.hashed }}" \
+            "${{ steps.image-name.outputs.hashed }}-develop" \
             "${{ steps.image-name.outputs.name }}:latest"
