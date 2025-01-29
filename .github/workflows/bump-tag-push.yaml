@@ -1,0 +1,108 @@
+name: Bump, Tag, and Publish
+# The purpose of the workflow is to:
+#  1. Bump the version number and tag the release if not a PR
+#  2. Build docker image and publish to GAR
+#
+# When run on merge to main, it tags and bumps the minor version by default. You can
+# bump other parts of the version by putting #major, #minor, or #patch in your commit
+# message.
+#
+# When run on a PR, it simulates bumping the tag and appends a hash to the pushed image.
+on:
+  workflow_dispatch: {}
+  push:
+    branches:
+      - develop
+  pull_request:
+    branches:
+      - develop
+    paths-ignore:
+      - "README.md"
+env:
+  # The project we'll be pushing artifacts to.
+  GOOGLE_PROJECT: dsp-artifact-registry
+  # Name of the app-specific Docker repository configured in GOOGLE_PROJECT.
+  # This is typically equal to the GitHub repository name.
+  REPOSITORY_NAME: ${{ github.event.repository.name }}
+  # Name of the image we'll be uploading into the Docker repository.
+  # This is often equal to the GitHub repository name, but it might also be the
+  # name of the Helm Chart if that's different.
+  IMAGE_NAME: ${{ github.event.repository.name }}
+  # This is the region-specific top-level Google-managed domain where our
+  # GOOGLE_PROJECT/REPOSITORY_NAME can be found.
+  GOOGLE_DOCKER_REPOSITORY: us-central1-docker.pkg.dev
+jobs:
+  tag-build-publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: "read"
+      id-token: "write"
+    steps:
+      # Git config
+      - name: Checkout current code
+        uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.BROADBOT_TOKEN }}
+      - name: Set up Git
+        shell: bash
+        run: |
+          git config --global user.name 'broadbot'
+          git config --global user.email 'broadbot@broadinstitute.org'
+          git fetch --all --tags
+      - name: Bump the tag to a new version
+        uses: databiosphere/github-actions/actions/bumper@bumper-0.0.6
+        id: tag
+        env:
+          DEFAULT_BUMP: minor
+          GITHUB_TOKEN: ${{ secrets.BROADBOT_TOKEN }}
+          RELEASE_BRANCHES: ${{ github.event.repository.default_branch }}
+          WITH_V: true
+
+      # GCP config
+      - name: Auth to GCP
+        id: "auth"
+        uses: google-github-actions/auth@v0
+        with:
+          workload_identity_provider: "projects/1038484894585/locations/global/workloadIdentityPools/github-wi-pool/providers/github-wi-provider"
+          service_account: "dsp-artifact-registry-push@dsp-artifact-registry.iam.gserviceaccount.com"
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v0
+      - name: Explicitly auth Docker for Artifact Registry
+        run: gcloud auth configure-docker $GOOGLE_DOCKER_REPOSITORY --quiet
+
+      # Build images
+      - name: Construct docker image name and tags
+        id: image-name
+        shell: bash
+        run: |
+          NAME="${GOOGLE_DOCKER_REPOSITORY}/${GOOGLE_PROJECT}/${REPOSITORY_NAME}/${IMAGE_NAME}"
+          DOCKER_TAG="${{ steps.tag.outputs.tag }}"
+          TAGGED="${NAME}:${DOCKER_TAG}"
+          HASH=$(git rev-parse --short HEAD)
+          echo "NAME: ${NAME}"
+          echo "TAGGED: ${TAGGED}"
+          echo "name=${NAME}" >> $GITHUB_OUTPUT
+          echo "tagged=${TAGGED}" >> $GITHUB_OUTPUT
+          echo "hash=${HASH}" >> $GITHUB_OUTPUT
+      - name: Build image
+        run: |
+          docker build -t ${{ steps.image-name.outputs.tagged }} .
+
+      # Publish images
+      - name: Run Trivy vulnerability scanner
+        # From https://github.com/broadinstitute/dsp-appsec-trivy-action
+        uses: broadinstitute/dsp-appsec-trivy-action@v1
+        with:
+          image: ${{ steps.image-name.outputs.tagged }}
+      - name: Push image
+        run: |
+          docker push ${{ steps.image-name.outputs.tagged }}
+      - name: Add latest tags to Docker image
+        if: github.event_name != 'pull_request'
+        shell: bash
+        run: |
+          gcloud artifacts docker tags add \
+            "${{ steps.image-name.outputs.tagged }}" \
+            "${{ steps.image-name.outputs.hash }}" \
+            "${{ steps.image-name.outputs.hash }}-develop" \
+            "${{ steps.image-name.outputs.name }}:latest"
