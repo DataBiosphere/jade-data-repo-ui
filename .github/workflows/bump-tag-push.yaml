@@ -81,6 +81,7 @@ jobs:
           HASH=$(git rev-parse --short HEAD)
           echo "NAME: ${NAME}"
           echo "TAGGED: ${TAGGED}"
+          echo "HASH: ${HASH}"
           echo "name=${NAME}" >> $GITHUB_OUTPUT
           echo "tagged=${TAGGED}" >> $GITHUB_OUTPUT
           echo "hash=${HASH}" >> $GITHUB_OUTPUT
