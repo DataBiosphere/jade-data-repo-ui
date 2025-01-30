@@ -79,6 +79,7 @@ jobs:
           TAGGED="${NAME}:${DOCKER_TAG}"
           HASHED="${NAME}:$(git rev-parse --short HEAD)"
           echo "NAME: ${NAME}"
+          echo "DOCKER_TAG: ${DOCKER_TAG}"
           echo "TAGGED: ${TAGGED}"
           echo "HASHED: ${HASHED}"
           echo "NAME=${NAME}" >> "$GITHUB_ENV"
@@ -94,7 +95,7 @@ jobs:
       # Publish images
       - name: Push image
         run: |
-          docker push ${TAGGED}
+          docker push "${TAGGED}"
       - name: Add hashed, develop, and latest tags to Docker image
         if: github.event_name != 'pull_request'
         shell: bash
