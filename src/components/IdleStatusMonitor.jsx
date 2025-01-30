@@ -1,27 +1,25 @@
 import _ from 'lodash/fp';
 import React, { useEffect, useState } from 'react';
-import { lastActiveTimeStore } from 'libs/state'; // stub
+import { lastActiveTimeStore } from 'libs/state';
 import * as Utils from 'libs/utils';
 import PropTypes from 'prop-types';
-import { Dialog, DialogContent, DialogContentText, DialogTitle, Button } from '@mui/material';
-import { withStyles } from '@mui/styles';
+import { Box, Dialog, DialogContent, DialogContentText, DialogTitle, Button } from '@mui/material';
+import { styled } from '@mui/system';
 import moment from 'moment';
 
-// Styles
-const styles = (theme) => ({
-  buttonBar: {
-    marginTop: '1rem',
-    display: 'flex',
-    alignItem: 'baseline',
-    justifyContent: 'flex-end',
-  },
-  timer: {
-    color: theme?.palette.primary.dark,
-    whiteSpace: 'pre',
-    textAlign: 'center',
-    fontSize: '4rem',
-  },
-});
+const ButtonBar = styled(Box)(({ theme }) => ({
+  marginTop: '1rem',
+  display: 'flex',
+  alignItems: 'baseline',
+  justifyContent: 'flex-end',
+}));
+
+const Timer = styled(Box)(({ theme }) => ({
+  color: theme?.palette.primary.dark,
+  whiteSpace: 'pre',
+  textAlign: 'center',
+  fontSize: '4rem',
+}));
 
 // Helpers
 const displayRemainingTime = (remainingSeconds) => {
@@ -50,23 +48,25 @@ const getIdleData = ({ currentTime, lastRecordedActivity, timeout, countdownStar
 };
 
 // Components
-const CountdownModal = withStyles(styles)(({ classes, onSignOut, countdown }) => (
-  <Dialog open={true}>
-    <DialogTitle>Your session is about to expire!</DialogTitle>
-    <DialogContent>
-      <DialogContentText>
-        To maintain security and protect clinical data, you will be logged out in
-      </DialogContentText>
-      <div className={classes.timer}>{displayRemainingTime(countdown / 1000)}</div>
-      <DialogContentText>You can extend your session to continue working</DialogContentText>
-      <div className={classes.buttonBar}>
-        <Button>Extend Session</Button>
-        {/* For this specific dialog, we need to use a mousedown to handle the log out before the timeout is reset */}
-        <Button onMouseDown={onSignOut}>Log Out</Button>
-      </div>
-    </DialogContent>
-  </Dialog>
-));
+function CountdownModal({ onSignOut, countdown }) {
+  return (
+    <Dialog open={true}>
+      <DialogTitle>Your session is about to expire!</DialogTitle>
+      <DialogContent>
+        <DialogContentText>
+          To maintain security and protect clinical data, you will be logged out in
+        </DialogContentText>
+        <Timer>{displayRemainingTime(countdown / 1000)}</Timer>
+        <DialogContentText>You can extend your session to continue working</DialogContentText>
+        <ButtonBar>
+          <Button>Extend Session</Button>
+          {/* For this specific dialog, we need to use a mousedown to handle the log out before the timeout is reset */}
+          <Button onMouseDown={onSignOut}>Log Out</Button>
+        </ButtonBar>
+      </DialogContent>
+    </Dialog>
+  );
+}
 
 CountdownModal.propTypes = {
   countdown: PropTypes.number,
@@ -141,12 +141,12 @@ LogoutIframe.propTypes = {
   id: PropTypes.string.isRequired,
 };
 
-export const IdleStatusMonitor = ({
+export function IdleStatusMonitor({
   timeout = moment.duration(15, 'minutes').asMilliseconds(),
   countdownStart = moment.duration(13, 'minutes').asMilliseconds(),
   user = {},
   signOut,
-}) => {
+}) {
   // State
   const [signOutRequired, setSignOutRequired] = useState(false);
 
@@ -175,4 +175,4 @@ export const IdleStatusMonitor = ({
     ],
     () => null,
   );
-};
+}

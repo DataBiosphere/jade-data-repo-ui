@@ -1,57 +1,34 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import ReactDOMServer from 'react-dom/server';
-import { CustomTheme } from '@mui/material/styles';
-import { Button, CircularProgress, IconButton, TextField, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, IconButton, TextField, Typography } from '@mui/material';
+import { styled } from '@mui/system';
 import { SimpleMdeReact } from 'react-simplemde-editor';
 import SimpleMDE from 'easymde';
 import 'easymde/dist/easymde.min.css';
-import { createStyles, WithStyles, withStyles } from '@mui/styles';
 import TextContent from './common/TextContent';
 import WithoutStylesMarkdownContent from './common/WithoutStylesMarkdownContent';
 import InfoHoverButton from './common/InfoHoverButton';
 
-const styles = (theme: CustomTheme) =>
-  createStyles({
-    editor: {
-      width: '100%',
-      display: 'flex',
-      alignItems: 'top',
-    },
-    markdownPreview: {
-      width: '100%',
-      display: 'flex',
-      textAlign: 'left',
-    },
-    textInputDiv: {
-      width: '100%',
-    },
-    textInput: {
-      width: '100%',
-    },
-    editIconButton: {
-      boxShadow: 'none',
-      color: theme.palette.primary.main,
-      marginTop: '-8px',
-      marginBottom: '-6px',
-      '&:hover': {
-        color: theme.palette.primary.hover,
-      },
-    },
-    saveButton: {
-      boxShadow: 'none',
-      margin: theme.spacing(1),
-      '&:hover': {
-        backgroundColor: theme.palette.primary.hover,
-        boxShadow: 'none',
-      },
-    },
-    title: {
-      display: 'inline',
-      textAlign: 'center',
-    },
-  } as const);
+const EditIconButton = styled(IconButton)(({ theme }) => ({
+  boxShadow: 'none',
+  color: theme.palette.primary.main,
+  marginTop: '-8px',
+  marginBottom: '-6px',
+  '&:hover': {
+    color: theme.palette.primary.hover,
+  },
+}));
 
-interface EditableFieldViewProps extends WithStyles<typeof styles> {
+const SaveButton = styled(Button)(({ theme }) => ({
+  boxShadow: 'none',
+  margin: theme.spacing(1),
+  '&:hover': {
+    backgroundColor: theme.palette.primary.hover,
+    boxShadow: 'none',
+  },
+}));
+
+interface EditableFieldViewProps {
   canEdit: boolean;
   isPendingSave: boolean;
   fieldValue: string | undefined;
@@ -64,7 +41,6 @@ interface EditableFieldViewProps extends WithStyles<typeof styles> {
 function EditableFieldView({
   canEdit,
   isPendingSave,
-  classes,
   fieldValue,
   fieldName,
   infoButtonText,
@@ -133,41 +109,40 @@ function EditableFieldView({
   }, [fieldValue]);
 
   return (
-    <div data-cy={`${cypressFieldNameFormatted}-editable-field-view`}>
-      <div>
+    <Box data-cy={`${cypressFieldNameFormatted}-editable-field-view`}>
+      <Box>
         <Typography
-          className={classes.title}
+          sx={{ display: 'inline', textAlign: 'center' }}
           data-cy={`${cypressFieldNameFormatted}-field-name`}
           variant="h6"
         >
           {`${fieldName}:`}
           {canEdit && (
-            <IconButton
+            <EditIconButton
               aria-label={`Edit ${fieldName}`}
-              className={classes.editIconButton}
               data-cy={`${cypressFieldNameFormatted}-edit-button`}
               disableFocusRipple={true}
               disableRipple={true}
               onClick={onEditClick}
             >
               <i className="fa-solid fa-pen-circle" />
-            </IconButton>
+            </EditIconButton>
           )}
           {infoButtonText && <InfoHoverButton infoText={infoButtonText} fieldName={fieldName} />}
         </Typography>
-      </div>
+      </Box>
       {!canEdit && (
-        <span className={classes.markdownPreview}>
+        <Box sx={{ width: '100%', display: 'flex', textAlign: 'left' }}>
           <TextContent text={updatedFieldValue} markdown={true} />
-        </span>
+        </Box>
       )}
       {canEdit && (
-        <div className={classes.editor}>
-          <div className={classes.textInputDiv}>
+        <Box sx={{ width: '100%', display: 'flex', alignItems: 'top' }}>
+          <Box sx={{ width: '100%' }}>
             {!isEditing && (
-              <span className={classes.markdownPreview}>
+              <Box sx={{ width: '100%', display: 'flex', textAlign: 'left' }}>
                 <TextContent text={updatedFieldValue} markdown={true} />
-              </span>
+              </Box>
             )}
             {isEditing && (
               <>
@@ -181,7 +156,7 @@ function EditableFieldView({
                 {!useMarkdown && (
                   <TextField
                     id="outlined-basic"
-                    className={classes.textInput}
+                    sx={{ width: '100%' }}
                     data-cy={`${cypressFieldNameFormatted}-text-field`}
                     defaultValue={updatedFieldValue}
                     disabled={isPendingSave}
@@ -189,9 +164,8 @@ function EditableFieldView({
                     variant="outlined"
                   />
                 )}
-                <Button
+                <SaveButton
                   aria-label={`Save ${fieldName} changes`}
-                  className={classes.saveButton}
                   color="primary"
                   data-cy={`${cypressFieldNameFormatted}-save-button`}
                   disabled={!hasFieldValueChanged || isPendingSave}
@@ -200,7 +174,7 @@ function EditableFieldView({
                   variant="contained"
                 >
                   {isPendingSave ? <CircularProgress size={25} /> : 'SAVE'}
-                </Button>
+                </SaveButton>
                 <Button
                   aria-label={`Cancel ${fieldName} changes`}
                   data-cy={`${cypressFieldNameFormatted}-cancel-button`}
@@ -215,10 +189,11 @@ function EditableFieldView({
                 </Button>
               </>
             )}
-          </div>
-        </div>
+          </Box>
+        </Box>
       )}
-    </div>
+    </Box>
   );
 }
-export default withStyles(styles)(EditableFieldView);
+
+export default EditableFieldView;

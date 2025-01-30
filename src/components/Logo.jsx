@@ -1,48 +1,42 @@
 import React from 'react';
-import { withStyles } from '@mui/styles';
-import PropTypes from 'prop-types';
+import { Box, Typography } from '@mui/material';
+import { styled } from '@mui/system';
 import { push } from 'modules/hist';
 
 import TerraIcon from 'media/brand/logo-wShadow.svg?react';
 
-const styles = (theme) => ({
-  logoContainer: {
-    display: 'flex',
-    alignItems: 'center',
-    cursor: 'pointer',
-  },
-  logo: {
-    alignItems: 'flex-start',
-    display: 'inline-flex',
-    height: theme.spacing(8),
-  },
-  logoTitle: {
-    color: '#fff',
-    fontFamily: theme.typography.fontFamily,
-    fontSize: '18px',
-    fontWeight: '500',
-    paddingLeft: theme.spacing(1),
-  },
-});
+const StyledTitle = styled(Typography)(({ theme }) => ({
+  color: '#fff',
+  fontFamily: theme.typography.fontFamily,
+  fontSize: '18px',
+  fontWeight: '500',
+  paddingLeft: theme.spacing(1),
+}));
 
-class Logo extends React.PureComponent {
-  static propTypes = {
-    classes: PropTypes.object.isRequired,
-  };
+const StyledTerraIcon = styled(TerraIcon)(({ theme }) => ({
+  alignItems: 'flex-start',
+  display: 'inline-flex',
+  height: theme.spacing(8),
+}));
 
-  handleGoHome = () => {
+function Logo() {
+  const handleGoHome = () => {
     push('/');
   };
 
-  render() {
-    const { classes } = this.props;
-    return (
-      <div className={classes.logoContainer} onClick={this.handleGoHome}>
-        <TerraIcon className={classes.logo} alt="logo" />
-        <span className={classes.logoTitle}>Data Repository</span>
-      </div>
-    );
-  }
+  return (
+    <Box
+      onClick={handleGoHome}
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        cursor: 'pointer',
+      }}
+    >
+      <StyledTerraIcon alt="logo" />
+      <StyledTitle>Data Repository</StyledTitle>
+    </Box>
+  );
 }
 
-export default withStyles(styles)(Logo);
+export default Logo;
