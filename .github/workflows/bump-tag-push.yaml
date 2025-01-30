@@ -80,6 +80,7 @@ jobs:
           HASHED="${NAME}:$(git rev-parse --short HEAD)"
           echo "NAME: ${NAME}"
           echo "DOCKER_TAG: $DOCKER_TAG"
+          echo "DOCKER_TAG: ${DOCKER_TAG}"
           echo "TAGGED: ${TAGGED}"
           echo "HASHED: ${HASHED}"
           echo "NAME=${NAME}" >> "$GITHUB_ENV"
