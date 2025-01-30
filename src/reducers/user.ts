@@ -22,6 +22,7 @@ export interface UserState {
   delegateToken: string;
   tokenExpiration?: number;
   features: { [key: string]: boolean };
+  groups: ManagedGroupMembershipEntry[];
   isTimeoutEnabled: boolean;
   id: string;
   isTest: boolean;
@@ -37,6 +38,7 @@ export const initialUserState: UserState = {
   delegateToken: '',
   tokenExpiration: 0,
   features: {},
+  groups: [],
   isTimeoutEnabled: false,
   id: '',
   isTest: false,
@@ -139,6 +141,13 @@ export default {
           isTimeoutEnabled: { $set: isTimeoutEnabled },
         });
       },
+      [ActionTypes.GET_USER_GROUPS_SUCCESS]: (
+        state,
+        action: { groups: ManagedGroupMembershipEntry[] },
+      ) =>
+        immutable(state, {
+          groups: { $set: action.groups },
+        }),
     },
     initialUserState,
   ),

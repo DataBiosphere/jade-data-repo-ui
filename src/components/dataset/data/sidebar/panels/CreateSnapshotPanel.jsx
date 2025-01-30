@@ -68,14 +68,14 @@ export class CreateSnapshotPanel extends React.PureComponent {
     const { dispatch, switchPanels, filterData, dataset } = this.props;
     const { name, description, assetName } = this.state;
     dispatch(
-      snapshotCreateDetails(
+      snapshotCreateDetails({
         name,
         description,
-        SnapshotRequestContentsModelModeEnum.ByQuery,
+        mode: SnapshotRequestContentsModelModeEnum.ByQuery,
         dataset,
         assetName,
         filterData,
-      ),
+      }),
     );
     switchPanels(ShareSnapshot);
   };

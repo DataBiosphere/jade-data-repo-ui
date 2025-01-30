@@ -302,12 +302,22 @@ export default {
         });
       },
       [ActionTypes.SNAPSHOT_CREATE_DETAILS]: (state, action: any) => {
-        const { name, description, mode, assetName, filterData, dataset } = action.payload;
+        const {
+          name,
+          description,
+          mode,
+          assetName,
+          filterData,
+          dataset,
+          authDomain,
+          billingProfileId,
+        } = action.payload;
         const snapshotRequest = {
           ...state.snapshotRequest,
           name,
           description,
           mode,
+          dataAccessControlGroups: [authDomain],
         };
         if (mode === SnapshotRequestContentsModelModeEnum.ByQuery) {
           snapshotRequest.assetName = assetName;

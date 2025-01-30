@@ -8,6 +8,7 @@ import { BillingProfileModel, DatasetModel } from 'generated/tdr';
 import _ from 'lodash';
 import { initialUserState } from 'reducers/user';
 import { initialQueryState } from 'reducers/query';
+import { ManagedGroupMembershipEntry } from 'models/group';
 import history from '../../modules/hist';
 import globalTheme from '../../modules/theme';
 import FullViewSnapshotButton from './FullViewSnapshotButton';
@@ -27,12 +28,19 @@ const initialState = {
 const mountFullViewSnapshotButton = (
   dataset: DatasetModel,
   billingProfiles: Array<BillingProfileModel>,
+  groups: Array<ManagedGroupMembershipEntry>,
 ) => {
   const mockStore = createMockStore([]);
-  const store = mockStore({ ...initialState, profiles: { profiles: billingProfiles } });
+  const store = mockStore({
+    ...initialState,
+    profiles: { profiles: billingProfiles },
+    user: { groups },
+  });
 
   // Intercept the getBillingProfiles API call onMount
   cy.intercept('GET', '/api/resources/v1/profiles?offset=0&limit=1000').as('getBillingProfiles');
+
+  cy.intercept('GET', 'https://sam.dsde-dev.broadinstitute.org/api/groups/v1').as('getUserGroups');
 
   mount(
     <Router history={history}>
@@ -53,7 +61,11 @@ describe('FullViewSnapshotButton', () => {
         { id: 'profile1', profileName: 'profile1' },
         { id: 'profile2', profileName: 'profile2' },
       ];
-      mountFullViewSnapshotButton(dataset, profiles);
+      const groups = [
+        { groupEmail: 'group1', groupName: 'group1', role: 'READER' },
+        { groupEmail: 'group2', groupName: 'group2', role: 'READER' },
+      ];
+      mountFullViewSnapshotButton(dataset, profiles, groups);
     });
 
     it('Displays the button with correct text', () => {
@@ -80,6 +92,13 @@ describe('FullViewSnapshotButton', () => {
       cy.get('#billing-profile-select').should('have.value', 'profile2');
     });
 
+    it('allows selecting an auth domain', () => {
+      cy.get('button').click();
+      cy.get('#authorization-domain-select').parent().click();
+      cy.get('[data-cy=menuItem-group2]').click();
+      cy.get('#authorization-domain-select').should('have.value', 'group2');
+    });
+
     it('allows changing the name and description', () => {
       cy.get('button').click();
       cy.get('#snapshot-name').clear().type('New Name');
@@ -93,7 +112,10 @@ describe('FullViewSnapshotButton', () => {
     it('Button is disabled and has tooltip with the no access message', () => {
       const dataset = { defaultProfileId: 'profile2' };
       const profiles: BillingProfileModel[] = [];
-      mountFullViewSnapshotButton(dataset, profiles);
+      const groups: ManagedGroupMembershipEntry[] = [
+        { groupEmail: 'group1', groupName: 'group1', role: 'READER' },
+      ];
+      mountFullViewSnapshotButton(dataset, profiles, groups);
       cy.get('button').should('be.disabled');
       cy.get('button').trigger('mouseover', { force: true });
       cy.contains('You do not have access to any billing profiles to create a snapshot').should(
