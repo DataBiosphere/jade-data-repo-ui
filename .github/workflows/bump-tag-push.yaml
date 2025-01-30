@@ -82,6 +82,7 @@ jobs:
           echo "TAGGED: ${TAGGED}"
           echo "HASHED: ${HASHED}"
           echo "NAME=${NAME}" >> "$GITHUB_ENV"
+          echo "DOCKER_TAG=${DOCKER_TAG}" >> "$GITHUB_ENV"
           echo "TAGGED=${TAGGED}" >> "$GITHUB_ENV"
           echo "HASHED=${HASHED}" >> "$GITHUB_ENV"
       - name: Build image
