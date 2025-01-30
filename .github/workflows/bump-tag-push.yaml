@@ -76,29 +76,29 @@ jobs:
         shell: bash
         run: |
           NAME="${GOOGLE_DOCKER_REPOSITORY}/${GOOGLE_PROJECT}/${REPOSITORY_NAME}/${IMAGE_NAME}"
-          DOCKER_TAG="${{ steps.tag.outputs.tag }}"
           TAGGED="${NAME}:${DOCKER_TAG}"
           HASHED="${NAME}:$(git rev-parse --short HEAD)"
           echo "NAME: ${NAME}"
           echo "TAGGED: ${TAGGED}"
           echo "HASHED: ${HASHED}"
-          echo "name=${NAME}" >> $GITHUB_OUTPUT
-          echo "tagged=${TAGGED}" >> $GITHUB_OUTPUT
-          echo "hashed=${HASHED}" >> $GITHUB_OUTPUT
+          echo "NAME=${NAME}" >> "$GITHUB_ENV"
+          echo "TAGGED=${TAGGED}" >> "$GITHUB_ENV"
+          echo "HASHED=${HASHED}" >> "$GITHUB_ENV"
       - name: Build image
         run: |
-          docker build -t ${{ steps.image-name.outputs.tagged }} .
+          docker build -t ${DOCKER_TAG} .
+        env:
+          DOCKER_TAG: ${{ steps.tag.outputs.tag }}
 
       # Publish images
       - name: Push image
         run: |
-          docker push ${{ steps.image-name.outputs.tagged }}
-      - name: Add latest tags to Docker image
+          docker push ${TAGGED}
+      - name: Add hashed, develop, and latest tags to Docker image
         if: github.event_name != 'pull_request'
         shell: bash
         run: |
           gcloud artifacts docker tags add \
-            "${{ steps.image-name.outputs.tagged }}" \
-            "${{ steps.image-name.outputs.hashed }}" \
-            "${{ steps.image-name.outputs.hashed }}-develop" \
-            "${{ steps.image-name.outputs.name }}:latest"
+            "${HASHED}" \
+            "${HASHED}-develop" \
+            "${NAME}:latest"
