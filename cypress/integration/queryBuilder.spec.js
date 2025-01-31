@@ -16,6 +16,9 @@ testPlatforms.forEach((testPlatform) => {
       cy.intercept('GET', 'api/repository/v1/datasets/**').as('getDataset');
       cy.intercept('GET', 'api/repository/v1/datasets/**/policies').as('getDatasetPolicies');
       cy.intercept('GET', 'api/resources/v1/profiles/**').as('getBillingProfileById');
+      cy.intercept('GET', 'https://sam.dsde-dev.broadinstitute.org/api/groups/v1').as(
+        'getUserGroups',
+      );
 
       cy.visit('/login/e2e');
       cy.get('#tokenInput').type(Cypress.env('GOOGLE_TOKEN'), {
