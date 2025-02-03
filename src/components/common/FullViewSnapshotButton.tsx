@@ -42,7 +42,7 @@ interface FullViewSnapshotButtonProps extends WithStyles<typeof styles> {
   dispatch: Dispatch<Action>;
   dataset: DatasetModel;
   billingProfiles: Array<BillingProfileModel>;
-  groups: Array<ManagedGroupMembershipEntry>;
+  userGroups: Array<ManagedGroupMembershipEntry>;
 }
 
 function FullViewSnapshotButton({
@@ -50,7 +50,7 @@ function FullViewSnapshotButton({
   dataset,
   dispatch,
   billingProfiles,
-  groups,
+  userGroups,
 }: Readonly<FullViewSnapshotButtonProps>) {
   useOnMount(() => {
     dispatch(getBillingProfiles());
@@ -189,8 +189,8 @@ function FullViewSnapshotButton({
           </div>
           <JadeDropdown
             sx={{ height: '2.5rem' }}
-            disabled={groups ? groups.length <= 1 : true}
-            options={groups ? groups.map((group) => group.groupName) : []}
+            disabled={userGroups ? userGroups.length <= 1 : true}
+            options={userGroups ? userGroups.map((group) => group.groupName) : []}
             name="authorization-domain"
             onSelectedItem={(event) => setSelectedAuthDomain(event.target.value)}
             value={selectedAuthDomain || ''}
@@ -235,7 +235,7 @@ function mapStateToProps(state: TdrState) {
   return {
     billingProfiles: state.profiles.profiles,
     snapshot: state.snapshots.snapshot,
-    groups: state.user.groups,
+    userGroups: state.user.userGroups,
   };
 }
 

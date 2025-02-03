@@ -41,9 +41,9 @@ function DatasetDataView({ dataset, dispatch, match, polling, profile, snapshotR
   const [tableNames, setTableNames] = useState<string[]>([]);
   const [panels, setPanels] = useState<object[]>([]);
 
-  useEffect(() => {
-    const datasetId = match.params.uuid;
+  const datasetId = match.params.uuid;
 
+  useEffect(() => {
     dispatch(
       getDatasetById({
         datasetId,
@@ -58,10 +58,10 @@ function DatasetDataView({ dataset, dispatch, match, polling, profile, snapshotR
     );
     dispatch(getDatasetPolicy(datasetId));
     dispatch(getUserDatasetRoles(datasetId));
-  }, [dispatch, match.params.uuid]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [datasetId]);
 
   useEffect(() => {
-    const datasetId = match.params.uuid;
     const loaded = dataset && dataset.schema && dataset.id === datasetId;
     if (loaded) {
       dispatch(resetColumns());
@@ -71,7 +71,8 @@ function DatasetDataView({ dataset, dispatch, match, polling, profile, snapshotR
       setSelectedTable(dataset.schema?.tables.find((t) => t.name === names[0]));
       setDatasetLoaded(true);
     }
-  }, [dispatch, dataset, match]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dataset, datasetId]);
 
   useEffect(() => {
     if (datasetLoaded) {
@@ -117,7 +118,6 @@ function DatasetDataView({ dataset, dispatch, match, polling, profile, snapshotR
     _searchString: string,
     _refreshCnt: number,
   ) => {
-    const datasetId = match.params.uuid;
     if (datasetLoaded && datasetId === dataset.id && !polling) {
       const cloudPlatform: CloudPlatform = dataset.storage
         ? dataset.storage[0].cloudPlatform ?? DefaultCloudPlatform
