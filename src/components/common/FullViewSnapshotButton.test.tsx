@@ -28,13 +28,13 @@ const initialState = {
 const mountFullViewSnapshotButton = (
   dataset: DatasetModel,
   billingProfiles: Array<BillingProfileModel>,
-  groups: Array<ManagedGroupMembershipEntry>,
+  userGroups: Array<ManagedGroupMembershipEntry>,
 ) => {
   const mockStore = createMockStore([]);
   const store = mockStore({
     ...initialState,
     profiles: { profiles: billingProfiles },
-    user: { groups },
+    user: { userGroups },
   });
 
   // Intercept the getBillingProfiles API call onMount
@@ -61,11 +61,11 @@ describe('FullViewSnapshotButton', () => {
         { id: 'profile1', profileName: 'profile1' },
         { id: 'profile2', profileName: 'profile2' },
       ];
-      const groups = [
+      const userGroups = [
         { groupEmail: 'group1', groupName: 'group1', role: 'READER' },
         { groupEmail: 'group2', groupName: 'group2', role: 'READER' },
       ];
-      mountFullViewSnapshotButton(dataset, profiles, groups);
+      mountFullViewSnapshotButton(dataset, profiles, userGroups);
     });
 
     it('Displays the button with correct text', () => {
