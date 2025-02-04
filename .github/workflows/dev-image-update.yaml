@@ -86,6 +86,53 @@ jobs:
             "gcr.io/${GCR_GOOGLE_PROJECT}/jade-data-repo-ui:${GCR_TAG}-develop" --quiet
         env:
           PREV_TAG: ${{ steps.uiprevioustag.outputs.tag }}
+  update_dsp_image:
+    # The purpose of this job is to push the constructed image and tags to DSP's artifact repository
+    # Future work will migrate from TDR's artifact repository to the DSP location
+    runs-on: ubuntu-latest
+    permissions:
+      contents: "read"
+      id-token: "write"
+    steps:
+      - name: Auth to GCP
+        id: "auth"
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: "projects/1038484894585/locations/global/workloadIdentityPools/github-wi-pool/providers/github-wi-provider"
+          service_account: "dsp-artifact-registry-push@dsp-artifact-registry.iam.gserviceaccount.com"
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+      - name: Explicitly auth Docker for Artifact Registry
+        run: gcloud auth configure-docker $GOOGLE_DOCKER_REPOSITORY --quiet
+      - name: Construct docker image name and tags
+        id: image-name
+        shell: bash
+        run: |
+          NAME="${GOOGLE_DOCKER_REPOSITORY}/${GOOGLE_PROJECT}/${REPOSITORY_NAME}/${IMAGE_NAME}"
+          TAGGED="${NAME}:${GCR_TAG}"
+          echo "NAME: ${NAME}"
+          echo "TAGGED: ${TAGGED}"
+          echo "NAME=${NAME}" >> "$GITHUB_ENV"
+          echo "TAGGED=${TAGGED}" >> "$GITHUB_ENV"
+        env:
+          GOOGLE_PROJECT: dsp-artifact-registry
+          REPOSITORY_NAME: ${{ github.event.repository.name }}
+          IMAGE_NAME: ${{ github.event.repository.name }}
+          GOOGLE_DOCKER_REPOSITORY: us-central1-docker.pkg.dev
+      - name: Build image
+        run: |
+          docker build -t "$TAGGED" .
+      # Publish images
+      - name: Push image
+        run: |
+          docker push "$TAGGED"
+      - name: Add develop, and latest tags to Docker image
+        if: github.event_name != 'pull_request'
+        shell: bash
+        run: |
+          gcloud artifacts docker tags add \
+            "$TAGGED-develop" \
+            "$NAME:latest"
   helm_tag_bump:
     needs: update_image
     uses: ./.github/workflows/helmtagbump.yaml
