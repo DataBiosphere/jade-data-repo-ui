@@ -222,8 +222,7 @@ export function* resetSnapshotExport() {
  * Snapshots.
  */
 
-export function* createSnapshot({ payload }: any): any {
-  const { billingProfileId } = payload;
+export function* createSnapshot(): any {
   const snapshots = yield select(getSnapshotState);
   const dataset = yield select(getDataset);
   const {
@@ -234,6 +233,8 @@ export function* createSnapshot({ payload }: any): any {
     filterStatement,
     joinStatement,
     policies,
+    billingProfileId,
+    dataAccessControlGroups,
   } = snapshots.snapshotRequest;
 
   const datasetName = dataset.name;
@@ -243,6 +244,7 @@ export function* createSnapshot({ payload }: any): any {
     description,
     policies,
     contents: [],
+    dataAccessControlGroups,
   };
   switch (mode) {
     case SnapshotRequestContentsModelModeEnum.ByFullView: {
@@ -972,6 +974,23 @@ export function* getFeatures(): any {
   }
 }
 
+export function* getUserGroups(): any {
+  try {
+    const samUrl = yield select(getSamUrl);
+    const url = `${samUrl}/api/groups/v1`;
+    const response = yield call(authGet, url);
+    yield put({
+      type: ActionTypes.GET_USER_GROUPS_SUCCESS,
+      groups: response.data,
+    });
+  } catch (err) {
+    showNotification(err);
+    yield put({
+      type: ActionTypes.GET_USER_GROUPS_FAILURE,
+    });
+  }
+}
+
 export function* getUserStatus(): any {
   try {
     yield call(authGet, '/api/repository/v1/register/user');
@@ -1118,6 +1137,7 @@ export default function* root() {
     takeLatest(ActionTypes.GET_JOURNAL_ENTRIES, getJournalEntries),
     takeLatest(ActionTypes.PREVIEW_DATA, previewData),
     takeLatest(ActionTypes.GET_FEATURES, getFeatures),
+    takeLatest(ActionTypes.GET_USER_GROUPS, getUserGroups),
     takeEvery(ActionTypes.GET_COLUMN_STATS, getColumnStats),
     takeLatest(ActionTypes.GET_BILLING_PROFILES, getBillingProfiles),
     takeLatest(ActionTypes.GET_BILLING_PROFILE_BY_ID, getBillingProfileById),

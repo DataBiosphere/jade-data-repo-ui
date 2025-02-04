@@ -27,6 +27,9 @@ const initialState = {
   snapshots: {
     snapshots: [],
   },
+  user: {
+    groups: [],
+  },
   query: {
     orderDirection: 'asc',
   },

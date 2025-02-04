@@ -352,20 +352,24 @@ export const { openSnapshotDialog } = createActions({
 });
 
 export const { snapshotCreateDetails } = createActions({
-  [ActionTypes.SNAPSHOT_CREATE_DETAILS]: (
+  [ActionTypes.SNAPSHOT_CREATE_DETAILS]: ({
     name,
     description,
     mode,
     dataset,
     assetName,
     filterData,
-  ) => ({
+    authDomain,
+    billingProfileId,
+  }) => ({
     name,
     description,
     mode,
     assetName,
     filterData,
     dataset,
+    authDomain,
+    billingProfileId,
   }),
 });
 

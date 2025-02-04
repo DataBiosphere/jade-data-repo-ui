@@ -23,3 +23,9 @@ export const getFeatures = createAction<void>(ActionTypes.GET_FEATURES);
 export const getFeaturesSuccess = createAction<ManagedGroupMembershipEntry[]>(
   ActionTypes.GET_FEATURES_SUCCESS,
 );
+
+export const getUserGroups = createAction<void>(ActionTypes.GET_USER_GROUPS);
+export const getUserGroupsSuccess = createAction<ManagedGroupMembershipEntry[]>(
+  ActionTypes.GET_USER_GROUPS_SUCCESS,
+);
+export const getUserGroupsFailure = createAction<void>(ActionTypes.GET_USER_GROUPS_FAILURE);

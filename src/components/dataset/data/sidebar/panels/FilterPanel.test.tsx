@@ -14,6 +14,9 @@ const initialState = {
     profiles: [],
   },
   snapshots: {},
+  user: {
+    groups: [],
+  },
   query: {
     columns: [],
     filterData: {},

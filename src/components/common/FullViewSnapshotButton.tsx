@@ -1,4 +1,9 @@
-import { createSnapshot, getBillingProfiles, snapshotCreateDetails } from 'actions/index';
+import {
+  createSnapshot,
+  getBillingProfiles,
+  getUserGroups,
+  snapshotCreateDetails,
+} from 'actions/index';
 import { TdrState } from 'reducers';
 import {
   Button,
@@ -7,7 +12,9 @@ import {
   DialogTitle,
   Typography,
   FormLabel,
+  Link,
   TextField,
+  CustomTheme,
 } from '@mui/material';
 import React, { Dispatch } from 'react';
 import {
@@ -18,23 +25,36 @@ import {
 import { Action } from 'redux';
 import { connect } from 'react-redux';
 import { isEmpty, now, uniq } from 'lodash';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
+import { ManagedGroupMembershipEntry } from 'models/group';
 import TerraTooltip from './TerraTooltip';
 import JadeDropdown from '../dataset/data/JadeDropdown';
 import { useOnMount } from '../../libs/utils';
 
-interface FullViewSnapshotButtonProps {
+const styles = (theme: CustomTheme) =>
+  createStyles({
+    jadeLink: {
+      ...theme.mixins.jadeLink,
+    },
+  });
+
+interface FullViewSnapshotButtonProps extends WithStyles<typeof styles> {
   dispatch: Dispatch<Action>;
   dataset: DatasetModel;
   billingProfiles: Array<BillingProfileModel>;
+  userGroups: Array<ManagedGroupMembershipEntry>;
 }
 
 function FullViewSnapshotButton({
+  classes,
   dataset,
   dispatch,
   billingProfiles,
+  userGroups,
 }: Readonly<FullViewSnapshotButtonProps>) {
   useOnMount(() => {
     dispatch(getBillingProfiles());
+    dispatch(getUserGroups());
   });
 
   const defaultBillingProfile = billingProfiles.find(
@@ -43,6 +63,7 @@ function FullViewSnapshotButton({
 
   const [modalOpen, setModalOpen] = React.useState(false);
   const [selectedBillingProfile, setSelectedBillingProfile] = React.useState(defaultBillingProfile);
+  const [selectedAuthDomain, setSelectedAuthDomain] = React.useState<string | undefined>(undefined);
   const [snapshotName, setSnapshotName] = React.useState(
     `Full_View_Snapshot_of_${dataset.name}_${now()}`,
   );
@@ -59,14 +80,16 @@ function FullViewSnapshotButton({
 
   const handleCreateFullViewSnapshot = () => {
     dispatch(
-      snapshotCreateDetails(
-        snapshotName,
-        snapshotDescription,
-        SnapshotRequestContentsModelModeEnum.ByFullView,
+      snapshotCreateDetails({
+        name: snapshotName,
+        description: snapshotDescription,
+        mode: SnapshotRequestContentsModelModeEnum.ByFullView,
         dataset,
-      ),
+        authDomain: selectedAuthDomain,
+        billingProfileId: selectedBillingProfile?.id,
+      }),
     );
-    dispatch(createSnapshot(selectedBillingProfile?.id));
+    dispatch(createSnapshot());
   };
 
   const onDismiss = () => setModalOpen(false);
@@ -155,7 +178,36 @@ function FullViewSnapshotButton({
             }
             value={selectedBillingProfile?.profileName || ''}
           />
-          <Typography>If this is the correct billing project - just click select</Typography>
+          <div style={{ marginTop: 8 }}>
+            <FormLabel
+              sx={{ fontWeight: 600, color: 'black' }}
+              htmlFor="authorization-domain-select"
+            >
+              Authorization Domain
+              <span style={{ fontWeight: 400, color: 'black' }}> - (optional)</span>
+            </FormLabel>
+          </div>
+          <JadeDropdown
+            sx={{ height: '2.5rem' }}
+            disabled={userGroups ? userGroups.length <= 1 : true}
+            options={userGroups ? userGroups.map((group) => group.groupName) : []}
+            name="authorization-domain"
+            onSelectedItem={(event) => setSelectedAuthDomain(event.target.value)}
+            value={selectedAuthDomain || ''}
+          />
+          <div>
+            Authorization Domains restrict data access to only specified individuals in a group and
+            are intended to fulfill requirements you may have for data governed by a compliance
+            standard, such as federal controlled-access data or HIPAA protected data. They follow
+            all snapshot copies and cannot be removed. For more details, see{' '}
+            <Link
+              href="https://support.terra.bio/hc/en-us/articles/360026775691-Overview-Managing-access-to-controlled-data-with-Authorization-Domains#h_01J94P49XS1NE5KE4B3NA3A413"
+              target="_blank"
+            >
+              <span className={classes.jadeLink}>When to use an Authorization Domain</span>
+            </Link>
+            .
+          </div>
           <DialogActions sx={{ display: 'flex', justifyContent: 'flex-end' }}>
             <Button onClick={onDismiss} variant="outlined">
               Cancel
@@ -183,7 +235,8 @@ function mapStateToProps(state: TdrState) {
   return {
     billingProfiles: state.profiles.profiles,
     snapshot: state.snapshots.snapshot,
+    userGroups: state.user.userGroups,
   };
 }
 
-export default connect(mapStateToProps)(FullViewSnapshotButton);
+export default connect(mapStateToProps)(withStyles(styles)(FullViewSnapshotButton));
