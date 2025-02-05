@@ -77,7 +77,7 @@
     "react-json-view": "^1.21.3",
     "react-markdown": "^8.0.7",
     "react-notifications-component": "^3.4.1",
-    "react-oidc-context": "^2.4.0",
+    "react-oidc-context": "^3.1.0",
     "react-redux": "^7.2.9",
     "react-router-dom": "^5.3.4",
     "react-select": "^5.10.0",
