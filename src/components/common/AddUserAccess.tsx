@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import _ from 'lodash';
-import { CustomTheme } from '@mui/material/styles';
-import { createStyles, WithStyles, withStyles } from '@mui/styles';
+import { styled } from '@mui/system';
 import {
   Typography,
   Autocomplete,
@@ -10,63 +9,22 @@ import {
   SelectChangeEvent,
   MenuItem,
   Button,
+  Box,
 } from '@mui/material';
+import { CustomTheme } from '@mui/material/styles';
 import clsx from 'clsx';
 import isEmail from 'validator/lib/isEmail';
 
-const styles = (theme: CustomTheme) =>
-  createStyles({
-    sharingArea: {
-      display: 'flex',
-      'flex-direction': 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-    },
-    emailEntryArea: {
-      display: 'flex',
-    },
-    sharingCol: {
-      flexGrow: 1,
-      marginRight: '1rem',
-    },
-    permissionsCol: {
-      flexGrow: 'unset',
-      width: 150,
-    },
-    input: {
-      backgroundColor: theme.palette.common.white,
-      borderRadius: theme.spacing(0.5),
-    },
-    sharingButtonContainer: {
-      paddingTop: 22,
-    },
-    button: {
-      backgroundColor: theme.palette.common.link,
-      color: theme.palette.common.white,
-      '&:hover': {
-        backgroundColor: theme.palette.common.link,
-      },
-    },
-    section: {
-      margin: `${theme.spacing(1)} 0px`,
-      overflowX: 'hidden',
-    },
-    errMessage: {
-      color: theme.palette.error.main,
-    },
-  });
+// Styled components (>3 styles)
+const SharingArea = styled(Box)(({ theme }: { theme: CustomTheme }) => ({
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+}));
 
-export interface AccessPermission {
-  policy: string;
-  disabled: boolean;
-}
-
-interface AddUserAccessProps extends WithStyles<typeof styles> {
-  permissions: AccessPermission[];
-  onAdd: (policyName: string, usersToAdd: string[]) => void;
-}
-
-function AddUserAccess({ classes, permissions, onAdd }: AddUserAccessProps) {
+// The rest can use sx prop as they have ≤3 styles
+function AddUserAccess({ permissions, onAdd }: Omit<AddUserAccessProps, 'classes'>) {
   const [policyName, setPolicyName] = useState(permissions[0].policy);
   const permissionDisplays = permissions.map((perm) =>
     perm.policy
@@ -123,8 +81,8 @@ function AddUserAccess({ classes, permissions, onAdd }: AddUserAccessProps) {
 
   return (
     <>
-      <div className={classes.sharingArea} data-cy="manageAccessContainer">
-        <div className={classes.sharingCol}>
+      <SharingArea data-cy="manageAccessContainer">
+        <Box sx={{ flexGrow: 1, marginRight: '1rem' }}>
           <Typography variant="subtitle2">People</Typography>
           <Autocomplete
             multiple
@@ -134,7 +92,10 @@ function AddUserAccess({ classes, permissions, onAdd }: AddUserAccessProps) {
                 {...params}
                 variant="outlined"
                 fullWidth
-                className={classes.input}
+                sx={{
+                  backgroundColor: 'common.white',
+                  borderRadius: 0.5,
+                }}
                 placeholder="enter email addresses"
                 onChange={parseEmail}
                 data-cy="enterEmailBox"
@@ -145,14 +106,23 @@ function AddUserAccess({ classes, permissions, onAdd }: AddUserAccessProps) {
             inputValue={addEmailInput}
             options={[]}
           />
-        </div>
-        <div className={clsx(classes.sharingCol, classes.permissionsCol)}>
+        </Box>
+        <Box
+          sx={{
+            flexGrow: 'unset',
+            width: '150px',
+            marginRight: '1rem',
+          }}
+        >
           <Typography variant="subtitle2">Permissions</Typography>
           <Select
             value={policyName}
             variant="outlined"
-            className={classes.input}
             fullWidth
+            sx={{
+              backgroundColor: 'common.white',
+              borderRadius: 0.5,
+            }}
             onChange={(event: SelectChangeEvent) => setPolicyName(event.target.value)}
             data-cy="roleSelect"
           >
@@ -167,24 +137,31 @@ function AddUserAccess({ classes, permissions, onAdd }: AddUserAccessProps) {
               </MenuItem>
             ))}
           </Select>
-        </div>
-        <div className={classes.sharingButtonContainer}>
+        </Box>
+        <Box sx={{ paddingTop: '22px' }}>
           <Button
             variant="contained"
             color="primary"
             disableElevation
             disabled={!isEmail(addEmailInput) && !_.some(usersToAdd, (user) => isEmail(user))}
-            className={clsx(classes.button, classes.section)}
+            sx={{
+              backgroundColor: 'common.link',
+              color: 'common.white',
+              margin: '8px 0px',
+              '&:hover': {
+                backgroundColor: 'common.link',
+              },
+            }}
             onClick={invite}
             data-cy="inviteButton"
           >
             Add
           </Button>
-        </div>
-      </div>
-      {err && <div className={classes.errMessage}>{err}</div>}
+        </Box>
+      </SharingArea>
+      {err && <Box sx={{ color: 'error.main' }}>{err}</Box>}
     </>
   );
 }
 
-export default withStyles(styles)(AddUserAccess);
+export default AddUserAccess;
