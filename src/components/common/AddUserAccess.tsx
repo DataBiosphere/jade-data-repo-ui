@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import _ from 'lodash';
-import { styled } from '@mui/system';
+import { styled } from '@mui/material/styles';
 import {
   Typography,
   Autocomplete,

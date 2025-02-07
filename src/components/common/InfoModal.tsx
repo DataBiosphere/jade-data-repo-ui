@@ -8,7 +8,7 @@ import {
   Typography,
   Box,
 } from '@mui/material';
-import { styled } from '@mui/system';
+import { styled } from '@mui/material/styles';
 import CloseIcon from '@mui/icons-material/Close';
 
 const CloseIconButton = styled(IconButton)(({ theme }) => ({
