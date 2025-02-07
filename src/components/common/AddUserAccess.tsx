@@ -27,8 +27,8 @@ export interface AccessPermission {
 }
 
 interface AddUserAccessProps {
-  readonly permissions: AccessPermission[];
-  readonly onAdd: (policyName: string, usersToAdd: string[]) => void;
+  permissions: AccessPermission[];
+  onAdd: (policyName: string, usersToAdd: string[]) => void;
 }
 
 // The rest can use sx prop as they have ≤3 styles
