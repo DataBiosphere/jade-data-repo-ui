@@ -1,6 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
-import { MenuItem, FormControl, Select, SelectChangeEvent } from '@mui/material';
+import { MenuItem, FormControl, Select, SelectChangeEvent, Box } from '@mui/material';
 
 type IProps<T> = {
   disabled: boolean;
@@ -9,9 +9,18 @@ type IProps<T> = {
   options: T[];
   value: T;
   sx?: React.CSSProperties;
+  includeNoneOption?: boolean;
 };
 
-function JadeDropdown({ disabled, name, onSelectedItem, options, value, sx }: IProps<string>) {
+function JadeDropdown({
+  disabled,
+  name,
+  onSelectedItem,
+  options,
+  value,
+  sx,
+  includeNoneOption,
+}: IProps<string>) {
   return (
     <form autoComplete="off">
       <FormControl disabled={disabled} variant="outlined" fullWidth>
@@ -27,6 +36,11 @@ function JadeDropdown({ disabled, name, onSelectedItem, options, value, sx }: IP
           data-cy={_.camelCase(name)}
           sx={sx}
         >
+          {includeNoneOption && (
+            <MenuItem key="None" value="">
+              <Box sx={{ fontStyle: 'italic' }}>None</Box>
+            </MenuItem>
+          )}
           {options.map((opt) => (
             <MenuItem key={opt} value={opt} data-cy={`menuItem-${opt}`}>
               {opt}
