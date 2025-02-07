@@ -16,7 +16,7 @@ import {
 } from '@mui/material';
 import { MoreVert } from '@mui/icons-material';
 import { isEmail } from 'validator';
-import { createSnapshot } from 'actions/index';
+import { createSnapshot, snapshotCreateDetails } from 'actions/index';
 import SnapshotAccess from 'components/snapshot/SnapshotAccess';
 import AuthDomain from 'src/components/snapshot/AuthDomain';
 
@@ -115,6 +115,12 @@ export class ShareSnapshot extends React.PureComponent {
 
   saveSnapshot = () => {
     const { dispatch } = this.props;
+    const { authDomain } = this.state;
+    dispatch(
+      snapshotCreateDetails({
+        authDomain,
+      }),
+    );
     dispatch(createSnapshot(undefined));
   };
 
