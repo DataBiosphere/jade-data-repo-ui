@@ -181,7 +181,7 @@ function FullViewSnapshotButton({
           <div style={{ marginTop: 8 }}>
             <FormLabel
               sx={{ fontWeight: 600, color: 'black' }}
-              htmlFor="authorization-domain-select"
+              htmlFor="select-authorization-domain-select"
             >
               Authorization Domain
               <span style={{ fontWeight: 400, color: 'black' }}> - (optional)</span>
