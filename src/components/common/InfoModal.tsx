@@ -1,104 +1,69 @@
 import React from 'react';
-import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import {
   Button,
   Dialog,
   DialogTitle,
   DialogActions,
   IconButton,
-  CustomTheme,
   Typography,
+  Box,
 } from '@mui/material';
+import { styled } from '@mui/system';
 import CloseIcon from '@mui/icons-material/Close';
 
-const styles = (theme: CustomTheme) =>
-  createStyles({
-    wrapper: {
-      padding: theme.spacing(4),
-      margin: theme.spacing(4),
-    },
-    dialogTitle: {
-      borderBottom: `1px solid ${theme.palette.divider}`,
-      margin: 0,
-      padding: theme.spacing(2),
-    },
-    closeButton: {
-      position: 'absolute',
-      right: theme.spacing(1),
-      top: theme.spacing(1),
-      color: theme.palette.grey[500],
-    },
-    dialogInstructions: {
-      margin: 0,
-      padding: `${theme.spacing(2)} !important`,
-      whiteSpace: 'pre-wrap',
-      maxHeight: '24rem',
-      overflowY: 'scroll',
-    },
-    dialogActions: {
-      borderTop: `1px solid ${theme.palette.divider}`,
-      margin: 0,
-      padding: theme.spacing(1),
-    },
-    openButton: {
-      width: '100%',
-      border: 0,
-      justifyContent: 'left',
-      textTransform: 'none',
-      paddingTop: theme.spacing(1),
-      paddingBottom: theme.spacing(1),
-      '&:hover': {
-        border: 0,
-      },
-    },
-    openButtonIcon: {
-      marginRight: 5,
-      top: theme.spacing(1),
-    },
-    horizontalModalButton: {
-      fontSize: theme.typography.h6.fontSize,
-      color: theme.palette.primary.light,
-    },
-    overlaySpinner: {
-      opacity: 0.9,
-      position: 'absolute',
-      right: 0,
-      bottom: 0,
-      left: 0,
-      width: 'initial',
-      overflow: 'clip',
-      backgroundColor: theme.palette.common.white,
-      zIndex: 100,
-    },
-  });
+const CloseIconButton = styled(IconButton)(({ theme }) => ({
+  position: 'absolute',
+  right: theme.spacing(1),
+  top: theme.spacing(1),
+  color: theme.palette.grey[500],
+}));
 
-interface InfoModalProps extends WithStyles<typeof styles> {
+const StyledInstructions = styled(Typography)(({ theme }) => ({
+  margin: 0,
+  padding: `${theme.spacing(2)} !important`,
+  whiteSpace: 'pre-wrap',
+  maxHeight: '24rem',
+  overflowY: 'scroll',
+}));
+
+interface InfoModalProps {
   readonly modalContent: string;
   readonly modalHeading: string;
   readonly onDismiss: () => void;
 }
 
-export function InfoModal(props: InfoModalProps) {
-  const { classes, modalContent, modalHeading, onDismiss } = props;
-
+export function InfoModal({ modalContent, modalHeading, onDismiss }: InfoModalProps) {
   return (
-    <span>
+    <Box component="span">
       <Dialog fullWidth maxWidth="md" onClose={onDismiss} open={true}>
-        <DialogTitle className={classes.dialogTitle} id="customized-dialog-title">
+        <DialogTitle
+          id="customized-dialog-title"
+          sx={{
+            borderBottom: (theme) => `1px solid ${theme.palette.divider}`,
+            margin: 0,
+            padding: (theme) => theme.spacing(2),
+          }}
+        >
           {modalHeading}
-          <IconButton aria-label="Close" className={classes.closeButton} onClick={onDismiss}>
+          <CloseIconButton aria-label="Close" onClick={onDismiss}>
             <CloseIcon />
-          </IconButton>
+          </CloseIconButton>
         </DialogTitle>
-        <Typography className={classes.dialogInstructions}>{modalContent}</Typography>
-        <DialogActions className={classes.dialogActions}>
+        <StyledInstructions>{modalContent}</StyledInstructions>
+        <DialogActions
+          sx={{
+            borderTop: (theme) => `1px solid ${theme.palette.divider}`,
+            margin: 0,
+            padding: (theme) => theme.spacing(1),
+          }}
+        >
           <Button onClick={onDismiss} color="primary">
             OK
           </Button>
         </DialogActions>
       </Dialog>
-    </span>
+    </Box>
   );
 }
 
-export default withStyles(styles)(InfoModal);
+export default InfoModal;
