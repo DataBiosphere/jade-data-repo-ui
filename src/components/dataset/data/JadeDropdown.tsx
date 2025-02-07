@@ -29,7 +29,7 @@ function JadeDropdown({
           onChange={(event) => onSelectedItem(event)}
           inputProps={{
             name,
-            id: `${name}-select`,
+            id: `${_.kebabCase(name)}-select`,
           }}
           displayEmpty
           renderValue={(val) => (!val ? name : val)}
