@@ -1,35 +1,37 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@mui/styles';
+import { Box } from '@mui/material';
+import { styled } from '@mui/system';
 
 import ErrorIcon from 'media/icons/warning-standard-solid.svg?react';
 
-const styles = (theme) => ({
-  text: {
-    alignSelf: 'center',
-    fontFamily: theme.typography.fontFamily,
-    fontSize: 12,
-    fontWeight: 600,
-    padding: `0 0 0 ${theme.spacing(2)}px`,
-  },
-  icon: {
-    fill: theme.palette.primary.contrastText,
-    height: theme.spacing(4),
-  },
-});
+// Use styled component for text since it has >3 styles
+const StyledText = styled(Box)(({ theme }) => ({
+  alignSelf: 'center',
+  fontFamily: theme.typography.fontFamily,
+  fontSize: '12px',
+  fontWeight: 600,
+  padding: `0 0 0 ${theme.spacing(2)}`,
+}));
 
-function Failure({ errString, classes }) {
+function Failure({ errString }) {
+  // Use sx prop for icon since it has ≤3 styles
   return (
-    <div>
-      <ErrorIcon className={classes.icon} alt="logo" />
-      <div className={classes.text}>{errString}</div>
-    </div>
+    <Box>
+      <ErrorIcon
+        sx={{
+          fill: (theme) => theme.palette.primary.contrastText,
+          height: (theme) => theme.spacing(4),
+        }}
+        alt="logo"
+      />
+      <StyledText>{errString}</StyledText>
+    </Box>
   );
 }
 
 Failure.propTypes = {
-  classes: PropTypes.object.isRequired,
   errString: PropTypes.string,
 };
 
-export default withStyles(styles)(Failure);
+export default Failure;
