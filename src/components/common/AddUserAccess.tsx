@@ -27,12 +27,13 @@ export interface AccessPermission {
 }
 
 interface AddUserAccessProps {
-  permissions: AccessPermission[];
-  onAdd: (policyName: string, usersToAdd: string[]) => void;
+  readonly permissions: AccessPermission[];
+  readonly onAdd: (policyName: string, usersToAdd: string[]) => void;
 }
 
 // The rest can use sx prop as they have ≤3 styles
-function AddUserAccess({ permissions, onAdd }: Omit<AddUserAccessProps, 'classes'>) {
+function AddUserAccess(props: AddUserAccessProps) {
+  const { permissions, onAdd } = props;
   const [policyName, setPolicyName] = useState(permissions[0].policy);
   const permissionDisplays = permissions.map((perm) =>
     perm.policy
