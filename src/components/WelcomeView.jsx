@@ -34,6 +34,10 @@ const SubTitle = styled(Typography)({
   fontSize: '16px',
 });
 
+const SubTitleBox = styled(Box)({
+  fontSize: '16px',
+});
+
 const MainContent = styled(Box)(({ theme }) => ({
   display: 'inline-block',
   color: theme.typography.color,
@@ -100,7 +104,7 @@ function WelcomeView({ terraUrl }) {
             Terra Data Repository is a cloud-native platform that allows data owners to{' '}
             <b>govern</b> and <b>share</b> biomedical research data.
           </SubTitle>
-          <SubTitle>
+          <SubTitleBox>
             <a
               href="https://support.terra.bio/hc/en-us/sections/4407099323675-Terra-Data-Repository"
               target="_blank"
@@ -111,7 +115,7 @@ function WelcomeView({ terraUrl }) {
                 <LaunchOutlined fontSize="small" />
               </JadeLink>
             </a>
-          </SubTitle>
+          </SubTitleBox>
           <LoginButton />
           <Header>Terra Data Repository requires a Terra account.</Header>
           <p>
