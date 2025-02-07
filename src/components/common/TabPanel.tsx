@@ -1,33 +1,24 @@
 import React from 'react';
-import { createStyles, ClassNameMap, withStyles } from '@mui/styles';
-
-const styles = () =>
-  createStyles({
-    tabPanel: {
-      padding: '1em 1em 1em 28px',
-    },
-  });
+import { Box } from '@mui/material';
 
 type TabPanelProps = {
   children: React.ReactNode;
-  classes: ClassNameMap;
   index: number;
   value: number;
 };
 
-function TabPanel(props: TabPanelProps) {
-  const { classes, children, value, index } = props;
+function TabPanel({ children, value, index }: TabPanelProps) {
   return (
-    <div
-      className={classes.tabPanel}
+    <Box
+      sx={{ padding: '1em 1em 1em 28px' }}
       role="tabpanel"
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}
     >
-      {value === index && <div>{children}</div>}
-    </div>
+      {value === index && <Box>{children}</Box>}
+    </Box>
   );
 }
 
-export default withStyles(styles)(TabPanel);
+export default TabPanel;
