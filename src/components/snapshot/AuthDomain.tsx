@@ -1,6 +1,5 @@
 import React from 'react';
 import { Box, FormLabel, Link, styled } from '@mui/material';
-import { withStyles } from '@mui/styles';
 import { ManagedGroupMembershipEntry } from 'src/models/group';
 import { AppDispatch } from 'src/store';
 import { TdrState } from 'src/reducers';
@@ -9,10 +8,6 @@ import { LaunchOutlined } from '@mui/icons-material';
 import { connect } from 'react-redux';
 import { getUserGroups } from 'src/actions';
 import JadeDropdown from '../dataset/data/JadeDropdown';
-
-const styles = () => ({
-  /* empty styles */
-});
 
 const JadeLink = styled('span')(({ theme }) => theme.mixins.jadeLink);
 
@@ -74,4 +69,4 @@ function mapStateToProps(state: TdrState) {
   };
 }
 
-export default connect(mapStateToProps)(withStyles(styles)(AuthDomain));
+export default connect(mapStateToProps)(AuthDomain);
