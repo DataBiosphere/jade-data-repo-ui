@@ -11,17 +11,25 @@ import {
   Button,
   Box,
 } from '@mui/material';
-import { CustomTheme } from '@mui/material/styles';
-import clsx from 'clsx';
 import isEmail from 'validator/lib/isEmail';
 
 // Styled components (>3 styles)
-const SharingArea = styled(Box)(({ theme }: { theme: CustomTheme }) => ({
+const SharingArea = styled(Box)({
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'space-between',
   alignItems: 'center',
-}));
+});
+
+export interface AccessPermission {
+  policy: string;
+  disabled: boolean;
+}
+
+interface AddUserAccessProps {
+  permissions: AccessPermission[];
+  onAdd: (policyName: string, usersToAdd: string[]) => void;
+}
 
 // The rest can use sx prop as they have ≤3 styles
 function AddUserAccess({ permissions, onAdd }: Omit<AddUserAccessProps, 'classes'>) {
