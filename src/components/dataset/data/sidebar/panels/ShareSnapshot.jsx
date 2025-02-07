@@ -102,11 +102,14 @@ export class ShareSnapshot extends React.PureComponent {
 
   static propTypes = {
     classes: PropTypes.object,
+    dataset: PropTypes.object,
     dispatch: PropTypes.func,
+    filterData: PropTypes.object,
     isModal: PropTypes.bool,
     onDismiss: PropTypes.func,
     readers: PropTypes.arrayOf(PropTypes.string),
     setIsSharing: PropTypes.func,
+    snapshotRequest: PropTypes.object,
   };
 
   setAuthDomain = (domain) => {
@@ -114,10 +117,16 @@ export class ShareSnapshot extends React.PureComponent {
   };
 
   saveSnapshot = () => {
-    const { dispatch } = this.props;
+    const { dispatch, snapshotRequest, dataset, filterData } = this.props;
     const { authDomain } = this.state;
     dispatch(
       snapshotCreateDetails({
+        name: snapshotRequest.name,
+        description: snapshotRequest.description,
+        mode: snapshotRequest.mode,
+        assetName: snapshotRequest.assetName,
+        dataset,
+        filterData,
         authDomain,
       }),
     );
@@ -172,6 +181,9 @@ export class ShareSnapshot extends React.PureComponent {
 function mapStateToProps(state) {
   return {
     readers: state.snapshots.snapshotRequest.readers,
+    snapshotRequest: state.snapshots.snapshotRequest,
+    dataset: state.datasets.dataset,
+    filterData: state.query.filterData,
   };
 }
 
