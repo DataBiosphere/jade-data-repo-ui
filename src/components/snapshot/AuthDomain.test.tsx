@@ -73,9 +73,14 @@ describe('Test AuthDomain component', () => {
     cy.get('#authorization-domain-select').should('have.value', 'group2');
   });
 
-  it('Disables authorization domain dropdown when insufficient user groups', () => {
-    const userGroups = [{ groupEmail: 'default', groupName: 'default', role: 'READER' }];
+  it('Enables authorization domain dropdown when sufficient user groups', () => {
+    const userGroups = [{ groupEmail: 'email1', groupName: 'group1', role: 'READER' }];
     mountAuthDomain(userGroups);
+    cy.get('#authorization-domain-select').should('not.be.disabled');
+  });
+
+  it('Disables authorization domain dropdown when empty user groups', () => {
+    mountAuthDomain([]);
     cy.get('#authorization-domain-select').should('be.disabled');
   });
 });

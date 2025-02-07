@@ -49,7 +49,7 @@ function AuthDomain({ dispatch, userGroups, setParentAuthDomain }: AuthDomainPro
       </Box>
       <JadeDropdown
         sx={{ height: '2.5rem' }}
-        disabled={userGroups ? userGroups.length <= 1 : true}
+        disabled={userGroups ? userGroups.length < 1 : true}
         options={userGroups ? userGroups.map((group) => group.groupName) : []}
         name="authorization-domain"
         onSelectedItem={(event) => {
