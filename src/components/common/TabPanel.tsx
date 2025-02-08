@@ -2,12 +2,13 @@ import React from 'react';
 import { Box } from '@mui/material';
 
 type TabPanelProps = {
-  children: React.ReactNode;
-  index: number;
-  value: number;
+  readonly children: React.ReactNode;
+  readonly index: number;
+  readonly value: number;
 };
 
-function TabPanel({ children, value, index }: TabPanelProps) {
+function TabPanel(props: TabPanelProps) {
+  const { children, value, index } = props;
   return (
     <Box
       sx={{ padding: '1em 1em 1em 28px' }}

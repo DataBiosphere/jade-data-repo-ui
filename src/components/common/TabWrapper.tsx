@@ -49,11 +49,12 @@ interface ITabConfig {
 }
 
 type TabWrapperProps = {
-  routes: Array<IRoute>;
-  snapshotAccessRequests: Array<SnapshotAccessRequest>;
+  readonly routes: Array<IRoute>;
+  readonly snapshotAccessRequests: Array<SnapshotAccessRequest>;
 };
 
-function TabWrapper({ routes, snapshotAccessRequests }: TabWrapperProps) {
+function TabWrapper(props: TabWrapperProps) {
+  const { routes, snapshotAccessRequests } = props;
   const [selectedTab, setSelectedTab] = React.useState<string>('datasets');
   const location = useLocation();
 
