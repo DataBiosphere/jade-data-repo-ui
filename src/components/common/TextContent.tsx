@@ -1,59 +1,40 @@
 import React from 'react';
 import { Link, Box } from '@mui/material';
-import { CustomTheme } from '@mui/material/styles';
-import { createStyles, WithStyles, withStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 import ReactMarkdown from 'react-markdown';
 import strip from 'strip-markdown';
 
-const styles = (theme: CustomTheme) =>
-  createStyles({
-    nullValue: {
-      fontStyle: 'italic',
-      textColor: theme.palette.primary.dark,
-      color: theme.palette.primary.dark,
-    },
-    jadeLink: {
-      ...theme.mixins.jadeLink,
-    },
-  });
+const StyledLink = styled('span')(({ theme }) => ({
+  // @ts-ignore
+  ...theme.mixins.jadeLink,
+}));
 
-interface TextContentProps extends WithStyles<typeof styles> {
-  text: string | undefined;
-  markdown?: boolean;
-  stripMarkdown?: boolean;
-  emptyText?: string;
+interface TextContentProps {
+  readonly text: string | undefined;
+  readonly markdown?: boolean;
+  readonly stripMarkdown?: boolean;
+  readonly emptyText?: string;
 }
 
-function TextContent({
-  classes,
-  emptyText = '(empty)',
-  markdown = false,
-  stripMarkdown = false,
-  text,
-}: TextContentProps) {
+function TextContent(props: TextContentProps) {
+  const { emptyText = '(empty)', markdown = false, stripMarkdown = false, text } = props;
   return (
     <>
-      {text && !markdown && (
-        <Box component="div" sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
-          {text}
-        </Box>
-      )}
+      {text && !markdown && <Box sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{text}</Box>}
       {text && markdown && !stripMarkdown && (
-        <div data-cy="react-markdown-text">
+        <Box data-cy="react-markdown-text">
           <ReactMarkdown
             components={{
               a: ({ children, href, title }) => (
                 <Link href={href} target="_blank">
-                  <span className={classes.jadeLink} title={title}>
-                    {children}
-                  </span>
+                  <StyledLink title={title}>{children}</StyledLink>
                 </Link>
               ),
             }}
           >
             {text}
           </ReactMarkdown>
-        </div>
+        </Box>
       )}
       {text && markdown && stripMarkdown && (
         <ReactMarkdown
@@ -72,12 +53,20 @@ function TextContent({
         </ReactMarkdown>
       )}
       {!text && (
-        <span data-cy="react-markdown-empty-text" className={classes.nullValue}>
+        <Box
+          component="span"
+          data-cy="react-markdown-empty-text"
+          sx={{
+            fontStyle: 'italic',
+            textColor: (theme) => theme.palette.primary.dark,
+            color: (theme) => theme.palette.primary.dark,
+          }}
+        >
           {emptyText}
-        </span>
+        </Box>
       )}
     </>
   );
 }
 
-export default withStyles(styles)(TextContent);
+export default TextContent;
