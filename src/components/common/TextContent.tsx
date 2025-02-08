@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, Box } from '@mui/material';
+import { Box, Link } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import ReactMarkdown from 'react-markdown';
 import strip from 'strip-markdown';
@@ -16,8 +16,8 @@ interface TextContentProps {
   readonly emptyText?: string;
 }
 
-function TextContent(props: TextContentProps) {
-  const { emptyText = '(empty)', markdown = false, stripMarkdown = false, text } = props;
+function TextContent(componentProps: TextContentProps) {
+  const { emptyText = '(empty)', markdown = false, stripMarkdown = false, text } = componentProps;
   return (
     <>
       {text && !markdown && <Box sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{text}</Box>}
@@ -40,13 +40,13 @@ function TextContent(props: TextContentProps) {
         <ReactMarkdown
           remarkPlugins={[strip]}
           components={{
-            p: (props: any) => {
-              const r = props.children
+            p: (props: any) =>
+              // eslint-disable-next-line react/prop-types
+              props.children
+                // eslint-disable-next-line react/prop-types
                 .filter((child: any) => child && typeof child === 'string')
                 .map((child: any) => `${child}`)
-                .join(' ');
-              return r;
-            },
+                .join(' '),
           }}
         >
           {text}
