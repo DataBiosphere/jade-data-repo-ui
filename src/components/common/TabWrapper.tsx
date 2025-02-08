@@ -1,16 +1,46 @@
-import { ClassNameMap, createStyles, withStyles } from '@mui/styles';
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import Tabs from '@mui/material/Tabs';
-import { TabClasses } from '@mui/material/Tab/tabClasses';
 import Tab from '@mui/material/Tab';
+import { Box } from '@mui/material';
 import { Link, useLocation } from 'react-router-dom';
+import { styled } from '@mui/material/styles';
 import HelpContainer from 'components/help/HelpContainer';
-import { CustomTheme } from '@mui/material/styles';
-import { IRoute } from 'routes/Private';
 import { TdrState } from 'reducers';
 import { RouterRootState } from 'connected-react-router';
 import { SnapshotAccessRequest } from 'generated/tdr';
+import { IRoute } from 'routes/Private';
+
+const StyledTabs = styled(Tabs)(({ theme }) => ({
+  // @ts-ignore
+  borderBottom: `2px solid ${theme.palette.terra.green}`,
+  boxShadow: '0 2px 5px 0 rgba(0,0,0,0.26), 0 2px 10px 0 rgba(0,0,0,0.16)',
+  color: '#333F52',
+  fontFamily: theme.typography.fontFamily,
+  height: '18px',
+  fontSize: '14px',
+  fontWeight: 600,
+  lineHeight: '18px',
+  textAlign: 'center',
+  width: '100%',
+  transition: '0.3s background-color ease-in-out',
+}));
+
+const StyledTab = styled(Tab)(({ theme }) => ({
+  '&.Mui-selected': {
+    transition: '0.3s background-color ease-in-out',
+    backgroundColor: '#ddebd0',
+    color: theme.palette.secondary.dark,
+    fontWeight: '700 !important',
+  },
+}));
+
+const StyledHelpContainer = styled(HelpContainer)(({ theme }) => ({
+  borderBottom: `2px solid ${theme.palette.terra.green}`,
+  boxShadow: '0 2px 5px 0 rgba(0,0,0,0.26), 0 2px 10px 0 rgba(0,0,0,0.16)',
+  float: 'right',
+  width: '20px',
+}));
 
 interface ITabConfig {
   label: string;
@@ -18,51 +48,12 @@ interface ITabConfig {
   hidden?: boolean;
 }
 
-const styles = (theme: CustomTheme) =>
-  createStyles({
-    tabsIndicator: {
-      borderBottom: '8px solid #74ae43',
-    },
-    tabsRoot: {
-      borderBottom: `2px solid ${theme.palette.terra.green}`,
-      boxShadow: '0 2px 5px 0 rgba(0,0,0,0.26), 0 2px 10px 0 rgba(0,0,0,0.16)',
-      color: '#333F52',
-      fontFamily: theme.typography.fontFamily,
-      height: 18,
-      fontSize: 14,
-      fontWeight: 600,
-      lineHeight: 18,
-      textAlign: 'center',
-      width: '100%',
-      transition: '0.3s background-color ease-in-out',
-    },
-    tabSelected: {
-      transition: '0.3s background-color ease-in-out',
-      backgroundColor: '#ddebd0',
-      color: theme.palette.secondary.dark,
-      fontWeight: '700 !important',
-    },
-    tabWrapper: {
-      display: 'flex',
-      position: 'relative',
-      zIndex: 2,
-    },
-    helpIconDiv: {
-      borderBottom: `2px solid ${theme.palette.terra.green}`,
-      boxShadow: '0 2px 5px 0 rgba(0,0,0,0.26), 0 2px 10px 0 rgba(0,0,0,0.16)',
-      float: 'right',
-      width: '20px',
-    },
-  });
-
 type TabWrapperProps = {
   routes: Array<IRoute>;
-  classes: ClassNameMap;
   snapshotAccessRequests: Array<SnapshotAccessRequest>;
 };
 
-function TabWrapper(props: TabWrapperProps) {
-  const { classes, routes, snapshotAccessRequests } = props;
+function TabWrapper({ routes, snapshotAccessRequests }: TabWrapperProps) {
   const [selectedTab, setSelectedTab] = React.useState<string>('datasets');
   const location = useLocation();
 
@@ -89,31 +80,28 @@ function TabWrapper(props: TabWrapperProps) {
   );
 
   return (
-    <div className={classes.tabWrapper}>
-      <Tabs
+    <Box sx={{ display: 'flex', position: 'relative', zIndex: 2 }}>
+      <StyledTabs
         value={visibleTabs.map((tab) => tab.path).includes(selectedTab) ? selectedTab : false}
-        classes={
-          {
-            root: classes.tabsRoot,
-            indicator: classes.tabsIndicator,
-          } as Partial<TabClasses>
-        }
+        TabIndicatorProps={{
+          sx: { borderBottom: '8px solid #74ae43' },
+        }}
       >
         {visibleTabs.map((config: ITabConfig, i: number) => (
-          <Tab
+          <StyledTab
             key={`navbar-link-${i}`}
             label={config.label}
+            // @ts-ignore
             component={Link}
             value={config.path}
             to={config.path}
-            classes={{ selected: classes.tabSelected } as Partial<TabClasses>}
             disableFocusRipple
             disableRipple
           />
         ))}
-      </Tabs>
-      <HelpContainer className={classes.helpIconDiv} />
-    </div>
+      </StyledTabs>
+      <StyledHelpContainer />
+    </Box>
   );
 }
 
@@ -123,4 +111,4 @@ function mapStateToProps(state: TdrState & RouterRootState) {
   };
 }
 
-export default connect(mapStateToProps)(withStyles(styles)(TabWrapper));
+export default connect(mapStateToProps)(TabWrapper);
