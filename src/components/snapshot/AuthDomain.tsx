@@ -17,7 +17,7 @@ type AuthDomainProps = {
   setParentAuthDomain: (domain: string) => void;
 };
 
-function AuthDomain({ dispatch, userGroups, setParentAuthDomain }: AuthDomainProps) {
+function AuthDomain({ dispatch, userGroups, setParentAuthDomain }: Readonly<AuthDomainProps>) {
   const [selectedAuthDomain, setSelectedAuthDomain] = React.useState<string | undefined>(undefined);
 
   useOnMount(() => {
