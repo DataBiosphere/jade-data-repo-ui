@@ -52,8 +52,8 @@ function AuthDomain({ dispatch, userGroups, setParentAuthDomain }: Readonly<Auth
       </Box>
       <JadeDropdown
         sx={{ height: '2.5rem' }}
-        disabled={userGroups ? userGroups.length < 1 : true}
-        options={userGroups ? userGroups.map((group) => group.groupName) : []}
+        disabled={userGroups.length < 1}
+        options={userGroups.map((group) => group.groupName)}
         name="Select Authorization Domain"
         onSelectedItem={(event) => {
           const authDomain = event.target.value;
