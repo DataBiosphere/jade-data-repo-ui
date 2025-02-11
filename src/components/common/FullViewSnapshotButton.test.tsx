@@ -94,9 +94,9 @@ describe('FullViewSnapshotButton', () => {
 
     it('allows selecting an auth domain', () => {
       cy.get('button').click();
-      cy.get('#authorization-domain-select').parent().click();
+      cy.get('#select-authorization-domain-select').parent().click();
       cy.get('[data-cy=menuItem-group2]').click();
-      cy.get('#authorization-domain-select').should('have.value', 'group2');
+      cy.get('#select-authorization-domain-select').should('have.value', 'group2');
     });
 
     it('allows changing the name and description', () => {

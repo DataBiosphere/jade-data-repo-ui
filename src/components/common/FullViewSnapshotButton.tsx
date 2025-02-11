@@ -181,7 +181,7 @@ function FullViewSnapshotButton({
           <div style={{ marginTop: 8 }}>
             <FormLabel
               sx={{ fontWeight: 600, color: 'black' }}
-              htmlFor="authorization-domain-select"
+              htmlFor="select-authorization-domain-select"
             >
               Authorization Domain
               <span style={{ fontWeight: 400, color: 'black' }}> - (optional)</span>
@@ -191,9 +191,10 @@ function FullViewSnapshotButton({
             sx={{ height: '2.5rem' }}
             disabled={userGroups ? userGroups.length <= 1 : true}
             options={userGroups ? userGroups.map((group) => group.groupName) : []}
-            name="authorization-domain"
+            name="Select Authorization Domain"
             onSelectedItem={(event) => setSelectedAuthDomain(event.target.value)}
             value={selectedAuthDomain || ''}
+            includeNoneOption={true}
           />
           <div>
             Authorization Domains restrict data access to only specified individuals in a group and
