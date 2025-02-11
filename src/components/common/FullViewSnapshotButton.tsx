@@ -15,6 +15,8 @@ import {
   Link,
   TextField,
   Box,
+  CustomTheme,
+  useTheme,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import React, { Dispatch } from 'react';
@@ -31,8 +33,7 @@ import TerraTooltip from './TerraTooltip';
 import JadeDropdown from '../dataset/data/JadeDropdown';
 import { useOnMount } from '../../libs/utils';
 
-const StyledLink = styled('span')(({ theme }) => ({
-  // @ts-ignore
+const StyledLink = styled('span')(({ theme }: { theme: CustomTheme }) => ({
   ...theme.mixins.jadeLink,
 }));
 
@@ -204,7 +205,7 @@ function FullViewSnapshotButton({
               href="https://support.terra.bio/hc/en-us/articles/360026775691-Overview-Managing-access-to-controlled-data-with-Authorization-Domains#h_01J94P49XS1NE5KE4B3NA3A413"
               target="_blank"
             >
-              <StyledLink>When to use an Authorization Domain</StyledLink>
+              <StyledLink theme={useTheme()}>When to use an Authorization Domain</StyledLink>
             </Link>
             .
           </Box>
