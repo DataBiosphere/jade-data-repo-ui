@@ -140,6 +140,7 @@
     "build": "npm run codegen && vite build",
     "build-no-code-gen": "vite build",
     "lint": "npm run codegen && eslint  --ext .js --ext .jsx --ext .ts --ext .tsx src cypress",
+    "lint-fix": "npm run codegen && eslint --fix --ext .js --ext .jsx --ext .ts --ext .tsx src cypress",
     "test": "npm run codegen && test",
     "codegen": "docker run --rm -v \"${PWD}:/local\" openapitools/openapi-generator-cli:v6.2.1 generate -g typescript-axios -i ${TDR_OPEN_API_YAML_LOCATION:=https://jade.datarepo-dev.broadinstitute.org/data-repository-openapi.yaml} -o /local/src/generated/tdr --skip-validate-spec",
     "clean": "rm -fr build src/generated/*"
