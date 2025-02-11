@@ -2,17 +2,16 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import { Box } from '@mui/material';
+import { Box, useTheme } from '@mui/material';
 import { Link, useLocation } from 'react-router-dom';
-import { styled } from '@mui/material/styles';
+import { styled, CustomTheme } from '@mui/material/styles';
 import HelpContainer from 'components/help/HelpContainer';
 import { TdrState } from 'reducers';
 import { RouterRootState } from 'connected-react-router';
 import { SnapshotAccessRequest } from 'generated/tdr';
 import { IRoute } from 'routes/Private';
 
-const StyledTabs = styled(Tabs)(({ theme }) => ({
-  // @ts-ignore
+const StyledTabs = styled(Tabs)(({ theme }: { theme: CustomTheme }) => ({
   borderBottom: `2px solid ${theme.palette.terra.green}`,
   boxShadow: '0 2px 5px 0 rgba(0,0,0,0.26), 0 2px 10px 0 rgba(0,0,0,0.16)',
   color: '#333F52',
@@ -87,6 +86,7 @@ function TabWrapper(props: TabWrapperProps) {
         TabIndicatorProps={{
           sx: { borderBottom: '8px solid #74ae43' },
         }}
+        theme={useTheme()}
       >
         {visibleTabs.map((config: ITabConfig, i: number) => (
           <StyledTab
