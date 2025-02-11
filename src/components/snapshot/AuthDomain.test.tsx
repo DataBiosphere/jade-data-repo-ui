@@ -40,7 +40,7 @@ describe('Test AuthDomain component', () => {
   it('Displays authorization domain section', () => {
     mountAuthDomain([]);
 
-    cy.get('label[for="authorization-domain"]')
+    cy.get('label[for="select-authorization-domain-select"]')
       .should('contain.text', 'Authorization Domain')
       .should('contain.text', '(optional)');
   });
@@ -52,12 +52,12 @@ describe('Test AuthDomain component', () => {
     ];
     mountAuthDomain(userGroups);
 
-    cy.get('#authorization-domain-select')
+    cy.get('#select-authorization-domain-select')
       .should('exist')
       .should('not.be.disabled')
       .should('have.value', '');
 
-    cy.get('#authorization-domain-select').parent().click();
+    cy.get('#select-authorization-domain-select').parent().click();
     cy.get('[data-cy^=menuItem]').should('have.length', userGroups.length);
   });
 
@@ -68,19 +68,19 @@ describe('Test AuthDomain component', () => {
     ];
     mountAuthDomain(userGroups);
 
-    cy.get('#authorization-domain-select').parent().click();
+    cy.get('#select-authorization-domain-select').parent().click();
     cy.get('[data-cy=menuItem-group2]').click();
-    cy.get('#authorization-domain-select').should('have.value', 'group2');
+    cy.get('#select-authorization-domain-select').should('have.value', 'group2');
   });
 
   it('Enables authorization domain dropdown when sufficient user groups', () => {
     const userGroups = [{ groupEmail: 'email1', groupName: 'group1', role: 'READER' }];
     mountAuthDomain(userGroups);
-    cy.get('#authorization-domain-select').should('not.be.disabled');
+    cy.get('#select-authorization-domain-select').should('not.be.disabled');
   });
 
   it('Disables authorization domain dropdown when empty user groups', () => {
     mountAuthDomain([]);
-    cy.get('#authorization-domain-select').should('be.disabled');
+    cy.get('#select-authorization-domain-select').should('be.disabled');
   });
 });

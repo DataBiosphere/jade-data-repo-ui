@@ -26,7 +26,10 @@ function AuthDomain({ dispatch, userGroups, setParentAuthDomain }: Readonly<Auth
 
   return (
     <>
-      <FormLabel sx={{ fontWeight: 700, color: '#333f52' }} htmlFor="authorization-domain">
+      <FormLabel
+        sx={{ fontWeight: 700, color: '#333f52' }}
+        htmlFor="select-authorization-domain-select"
+      >
         Authorization Domain
         <span style={{ fontWeight: 400, fontStyle: 'italic' }}> - (optional)</span>
       </FormLabel>
@@ -51,13 +54,14 @@ function AuthDomain({ dispatch, userGroups, setParentAuthDomain }: Readonly<Auth
         sx={{ height: '2.5rem' }}
         disabled={userGroups ? userGroups.length < 1 : true}
         options={userGroups ? userGroups.map((group) => group.groupName) : []}
-        name="authorization-domain"
+        name="Select Authorization Domain"
         onSelectedItem={(event) => {
           const authDomain = event.target.value;
           setParentAuthDomain(authDomain);
           setSelectedAuthDomain(authDomain);
         }}
         value={selectedAuthDomain ?? ''}
+        includeNoneOption={true}
       />
     </>
   );
