@@ -57,7 +57,7 @@ function AuthDomain({ dispatch, userGroups, setParentAuthDomain }: Readonly<Auth
           setParentAuthDomain(authDomain);
           setSelectedAuthDomain(authDomain);
         }}
-        value={selectedAuthDomain || ''}
+        value={selectedAuthDomain ?? ''}
       />
     </>
   );
