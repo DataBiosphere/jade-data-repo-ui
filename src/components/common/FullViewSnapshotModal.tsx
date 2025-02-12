@@ -26,7 +26,9 @@ import { ManagedGroupMembershipEntry } from 'models/group';
 import { styled } from '@mui/system';
 import { useTheme } from '@mui/styles';
 
-const JadeLink = styled(Box)(({ theme }: { theme: CustomTheme }) => theme.mixins.jadeLink);
+const StyledLink = styled('span')(({ theme }: { theme: CustomTheme }) => ({
+  ...theme.mixins.jadeLink,
+}));
 
 interface FullViewSnapshotModalProps {
   modalOpen: boolean;
@@ -82,7 +84,7 @@ function FullViewSnapshotModal(props: FullViewSnapshotModalProps) {
       <DialogTitle id="customized-dialog-title" sx={{ fontSize: '1rem' }}>
         Creating snapshot - select a billing project
       </DialogTitle>
-      <div style={{ padding: '0px 24px 16px 24px' }}>
+      <Box sx={{ padding: '0px 24px 16px 24px' }}>
         <FormLabel sx={{ fontWeight: 600, color: 'black' }} htmlFor="snapshot-name" required>
           Snapshot Name
         </FormLabel>
@@ -109,7 +111,7 @@ function FullViewSnapshotModal(props: FullViewSnapshotModalProps) {
           Do you want to use the Google Billing Project associated with this dataset or would you
           like to select a different one?
         </Typography>
-        <div style={{ marginTop: 8 }}>
+        <Box sx={{ marginTop: '8px' }}>
           <FormLabel
             sx={{ fontWeight: 600, color: 'black' }}
             htmlFor="billing-profile-select"
@@ -117,7 +119,7 @@ function FullViewSnapshotModal(props: FullViewSnapshotModalProps) {
           >
             Google Billing Project
           </FormLabel>
-        </div>
+        </Box>
         <JadeDropdown
           sx={{ height: '2.5rem' }}
           disabled={billingProfiles.length <= 1}
@@ -127,24 +129,27 @@ function FullViewSnapshotModal(props: FullViewSnapshotModalProps) {
               .map((billingProfile) => billingProfile.profileName) as string[],
           )}
           name="billing-profile"
-          onSelectedItem={(event) => {
-            const newBillingProfile = billingProfiles.find(
-              (billingProfile: BillingProfileModel) =>
-                billingProfile.profileName === event.target.value,
-            );
-            newBillingProfile && setSelectedBillingProfile(newBillingProfile);
-          }}
+          onSelectedItem={(event) =>
+            setSelectedBillingProfile(
+              billingProfiles.find(
+                (billingProfile) => billingProfile.profileName === event.target.value,
+              ),
+            )
+          }
           value={selectedBillingProfile?.profileName || ''}
         />
-        <div style={{ marginTop: 8 }}>
+        <Box sx={{ marginTop: '8px' }}>
           <FormLabel
             sx={{ fontWeight: 600, color: 'black' }}
             htmlFor="select-authorization-domain-select"
           >
             Authorization Domain
-            <span style={{ fontWeight: 400, color: 'black' }}> - (optional)</span>
+            <Box component="span" sx={{ fontWeight: 400, color: 'black' }}>
+              {' '}
+              - (optional)
+            </Box>
           </FormLabel>
-        </div>
+        </Box>
         <JadeDropdown
           sx={{ height: '2.5rem' }}
           disabled={userGroups ? userGroups.length <= 1 : true}
@@ -154,7 +159,7 @@ function FullViewSnapshotModal(props: FullViewSnapshotModalProps) {
           value={selectedAuthDomain || ''}
           includeNoneOption={true}
         />
-        <div>
+        <Box>
           Authorization Domains restrict data access to only specified individuals in a group and
           are intended to fulfill requirements you may have for data governed by a compliance
           standard, such as federal controlled-access data or HIPAA protected data. They follow all
@@ -163,10 +168,10 @@ function FullViewSnapshotModal(props: FullViewSnapshotModalProps) {
             href="https://support.terra.bio/hc/en-us/articles/360026775691-Overview-Managing-access-to-controlled-data-with-Authorization-Domains#h_01J94P49XS1NE5KE4B3NA3A413"
             target="_blank"
           >
-            <JadeLink theme={useTheme()}>When to use an Authorization Domain</JadeLink>
+            <StyledLink theme={useTheme()}>When to use an Authorization Domain</StyledLink>
           </Link>
           .
-        </div>
+        </Box>
         <DialogActions sx={{ display: 'flex', justifyContent: 'flex-end' }}>
           <Button onClick={onDismiss} variant="outlined">
             Cancel
@@ -184,7 +189,7 @@ function FullViewSnapshotModal(props: FullViewSnapshotModalProps) {
             Create
           </Button>
         </DialogActions>
-      </div>
+      </Box>
     </Dialog>
   );
 }

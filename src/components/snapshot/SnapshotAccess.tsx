@@ -94,7 +94,7 @@ function SnapshotAccess({
   ];
 
   return (
-    <Grid container spacing={1}>
+    <Grid container spacing={1} sx={{ my: 1 }}>
       <Typography variant="h6">Roles</Typography>
       {canManageUsers && (
         <Grid item xs={12}>
