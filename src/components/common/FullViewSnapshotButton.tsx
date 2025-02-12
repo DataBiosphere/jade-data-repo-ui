@@ -1,7 +1,4 @@
-import {
-  getBillingProfiles,
-  getUserGroups,
-} from 'actions/index';
+import { getBillingProfiles, getUserGroups } from 'actions/index';
 import { TdrState } from 'reducers';
 import { Button } from '@mui/material';
 import React, { Dispatch } from 'react';

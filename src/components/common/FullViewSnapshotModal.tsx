@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import JadeDropdown from 'components/dataset/data/JadeDropdown';
 import { isEmpty, now, uniq } from 'lodash';
-import React, { Dispatch } from 'react';
+import React, { Dispatch, useEffect } from 'react';
 import { createSnapshot, snapshotCreateDetails } from 'actions';
 import {
   BillingProfileModel,
@@ -39,20 +39,24 @@ interface FullViewSnapshotModalProps {
 
 function FullViewSnapshotModal(props: FullViewSnapshotModalProps) {
   const { billingProfiles, dataset, dispatch, modalOpen, onDismiss, userGroups } = props;
-  const defaultBillingProfile = billingProfiles.find(
-    (billingProfile: BillingProfileModel) => billingProfile.id === dataset.defaultProfileId,
-  );
 
   const [selectedAuthDomain, setSelectedAuthDomain] = React.useState<string | undefined>(undefined);
   const [snapshotName, setSnapshotName] = React.useState(
     `Full_View_Snapshot_of_${dataset.name}_${now()}`,
   );
-  const [selectedBillingProfile, setSelectedBillingProfile] = React.useState(
-    defaultBillingProfile || billingProfiles[0],
-  );
+  const [selectedBillingProfile, setSelectedBillingProfile] = React.useState<
+    BillingProfileModel | undefined
+  >();
   const [snapshotDescription, setSnapshotDescription] = React.useState(
     `Full View Snapshot of Dataset with Dataset name ${dataset.name}, and Dataset id ${dataset.id}.`,
   );
+
+  useEffect(() => {
+    const defaultBillingProfile = billingProfiles.find(
+      (billingProfile: BillingProfileModel) => billingProfile.id === dataset.defaultProfileId,
+    );
+    setSelectedBillingProfile(defaultBillingProfile || billingProfiles[0]);
+  }, [billingProfiles, setSelectedBillingProfile, dataset]);
 
   const handleCreateFullViewSnapshot = () => {
     dispatch(
