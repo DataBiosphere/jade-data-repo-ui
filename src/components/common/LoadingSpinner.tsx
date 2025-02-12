@@ -1,19 +1,13 @@
 import React from 'react';
-import { makeStyles } from '@mui/styles';
-import { CircularProgress } from '@mui/material';
-import clsx from 'clsx';
+import { Box, CircularProgress } from '@mui/material';
+import { styled } from '@mui/material/styles';
 
-const useStyles = makeStyles(() => ({
-  spinWrapper: {
-    height: 'calc(100% - 60px)',
-    display: 'grid',
-    width: 500,
-    textAlign: 'center',
-    margin: 'auto',
-  },
-  spinner: {
-    margin: 'auto',
-  },
+const SpinWrapper = styled(Box)(() => ({
+  height: 'calc(100% - 60px)',
+  display: 'grid',
+  width: '500px',
+  textAlign: 'center',
+  margin: 'auto',
 }));
 
 type LoadingSpinnerProps = {
@@ -23,12 +17,11 @@ type LoadingSpinnerProps = {
 };
 
 function LoadingSpinner({ className, delay, delayMessage }: LoadingSpinnerProps) {
-  const classes = useStyles();
   return (
-    <div className={clsx(className, classes.spinWrapper)}>
-      <CircularProgress className={classes.spinner} />
+    <SpinWrapper className={className}>
+      <CircularProgress sx={{ margin: 'auto' }} />
       {delay && delayMessage}
-    </div>
+    </SpinWrapper>
   );
 }
 
