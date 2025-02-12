@@ -16,8 +16,9 @@ import {
 } from '@mui/material';
 import { MoreVert } from '@mui/icons-material';
 import { isEmail } from 'validator';
-import { createSnapshot } from 'actions/index';
+import { createSnapshot, snapshotCreateDetails } from 'actions/index';
 import SnapshotAccess from 'components/snapshot/SnapshotAccess';
+import AuthDomain from 'src/components/snapshot/AuthDomain';
 
 const drawerWidth = 600;
 const sidebarWidth = 56;
@@ -95,20 +96,40 @@ export class ShareSnapshot extends React.PureComponent {
       anchor: null,
       hasError: false,
       errorMsg: '',
+      authDomain: undefined,
     };
   }
 
   static propTypes = {
     classes: PropTypes.object,
+    dataset: PropTypes.object,
     dispatch: PropTypes.func,
+    filterData: PropTypes.object,
     isModal: PropTypes.bool,
     onDismiss: PropTypes.func,
     readers: PropTypes.arrayOf(PropTypes.string),
     setIsSharing: PropTypes.func,
+    snapshotRequest: PropTypes.object,
+  };
+
+  setAuthDomain = (domain) => {
+    this.setState({ authDomain: domain });
   };
 
   saveSnapshot = () => {
-    const { dispatch } = this.props;
+    const { dispatch, snapshotRequest, dataset, filterData } = this.props;
+    const { authDomain } = this.state;
+    dispatch(
+      snapshotCreateDetails({
+        name: snapshotRequest.name,
+        description: snapshotRequest.description,
+        mode: snapshotRequest.mode,
+        assetName: snapshotRequest.assetName,
+        dataset,
+        filterData,
+        authDomain,
+      }),
+    );
     dispatch(createSnapshot(undefined));
   };
 
@@ -126,18 +147,21 @@ export class ShareSnapshot extends React.PureComponent {
         </Typography>
         <SnapshotAccess createMode={true} />
         {!isModal && (
-          <div className={classes.bottom}>
-            <Button
-              variant="contained"
-              color="primary"
-              disableElevation
-              className={clsx(classes.button, classes.section)}
-              onClick={this.saveSnapshot}
-              data-cy="releaseDataset"
-            >
-              Create Snapshot
-            </Button>
-          </div>
+          <>
+            <AuthDomain setParentAuthDomain={this.setAuthDomain} />
+            <div className={classes.bottom}>
+              <Button
+                variant="contained"
+                color="primary"
+                disableElevation
+                className={clsx(classes.button, classes.section)}
+                onClick={this.saveSnapshot}
+                data-cy="releaseDataset"
+              >
+                Create Snapshot
+              </Button>
+            </div>
+          </>
         )}
         {isModal && (
           <div className={classes.modalBottom}>
@@ -157,6 +181,9 @@ export class ShareSnapshot extends React.PureComponent {
 function mapStateToProps(state) {
   return {
     readers: state.snapshots.snapshotRequest.readers,
+    snapshotRequest: state.snapshots.snapshotRequest,
+    dataset: state.datasets.dataset,
+    filterData: state.query.filterData,
   };
 }
 
