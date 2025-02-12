@@ -31,12 +31,12 @@ const StyledLink = styled('span')(({ theme }: { theme: CustomTheme }) => ({
 }));
 
 interface FullViewSnapshotModalProps {
-  modalOpen: boolean;
-  onDismiss: () => void;
-  dataset: DatasetModel;
-  dispatch: Dispatch<Action>;
-  billingProfiles: Array<BillingProfileModel>;
-  userGroups: Array<ManagedGroupMembershipEntry>;
+  readonly modalOpen: boolean;
+  readonly onDismiss: () => void;
+  readonly dataset: DatasetModel;
+  readonly dispatch: Dispatch<Action>;
+  readonly billingProfiles: Array<BillingProfileModel>;
+  readonly userGroups: Array<ManagedGroupMembershipEntry>;
 }
 
 function FullViewSnapshotModal(props: FullViewSnapshotModalProps) {
