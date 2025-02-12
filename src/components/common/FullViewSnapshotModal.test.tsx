@@ -69,34 +69,29 @@ describe('FullViewSnapshotModal', () => {
   });
 
   it('Button is clickable and opens billing profile modal', () => {
-    cy.get('button').click();
     cy.contains('Creating snapshot - select a billing project').should('be.visible');
     cy.get('[data-cy=select-billing-profile-button]').click();
     cy.intercept('POST', '/api/repository/v1/snapshots');
   });
 
   it('calls create snapshot when billing profile is selected', () => {
-    cy.get('button').click();
     cy.get('[data-cy=select-billing-profile-button]').click();
     cy.intercept('POST', '/api/repository/v1/snapshots');
   });
 
   it('allows selecting a billing profile', () => {
-    cy.get('button').click();
     cy.get('#billing-profile-select').parent().click();
     cy.get('[data-cy=menuItem-profile2]').click();
     cy.get('#billing-profile-select').should('have.value', 'profile2');
   });
 
   it('allows selecting an auth domain', () => {
-    cy.get('button').click();
     cy.get('#select-authorization-domain-select').parent().click();
     cy.get('[data-cy=menuItem-group2]').click();
     cy.get('#select-authorization-domain-select').should('have.value', 'group2');
   });
 
   it('allows changing the name and description', () => {
-    cy.get('button').click();
     cy.get('#snapshot-name').clear().type('New Name');
     cy.get('#snapshot-description').clear().type('New Description');
     cy.get('#snapshot-name').should('have.value', 'New Name');
