@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  CustomTheme,
   Dialog,
   DialogActions,
   DialogTitle,
