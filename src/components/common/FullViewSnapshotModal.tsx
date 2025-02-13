@@ -6,7 +6,6 @@ import {
   DialogActions,
   DialogTitle,
   FormLabel,
-  Link,
   TextField,
   Typography,
 } from '@mui/material';
@@ -22,14 +21,7 @@ import {
 import { connect } from 'react-redux';
 import { TdrState } from 'reducers';
 import { Action } from 'redux';
-import { ManagedGroupMembershipEntry } from 'models/group';
-import { styled } from '@mui/system';
-import { useTheme } from '@mui/styles';
 import AuthDomain from 'components/snapshot/AuthDomain';
-
-const StyledLink = styled('span')(({ theme }: { theme: CustomTheme }) => ({
-  ...theme.mixins.jadeLink,
-}));
 
 interface FullViewSnapshotModalProps {
   readonly modalOpen: boolean;
@@ -37,11 +29,10 @@ interface FullViewSnapshotModalProps {
   readonly dataset: DatasetModel;
   readonly dispatch: Dispatch<Action>;
   readonly billingProfiles: Array<BillingProfileModel>;
-  readonly userGroups: Array<ManagedGroupMembershipEntry>;
 }
 
 function FullViewSnapshotModal(props: FullViewSnapshotModalProps) {
-  const { billingProfiles, dataset, dispatch, modalOpen, onDismiss, userGroups } = props;
+  const { billingProfiles, dataset, dispatch, modalOpen, onDismiss } = props;
 
   const [selectedAuthDomain, setSelectedAuthDomain] = React.useState<string | undefined>(undefined);
   const [snapshotName, setSnapshotName] = React.useState(
