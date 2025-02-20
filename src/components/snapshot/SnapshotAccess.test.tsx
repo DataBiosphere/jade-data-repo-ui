@@ -45,7 +45,7 @@ describe('Snapshot access info', () => {
       <Router history={history}>
         <Provider store={store}>
           <ThemeProvider theme={globalTheme}>
-            <SnapshotAccess />
+            <SnapshotAccess createMode={false} />
           </ThemeProvider>
         </Provider>
       </Router>,
