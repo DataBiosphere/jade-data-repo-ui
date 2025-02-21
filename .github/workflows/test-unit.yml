@@ -39,6 +39,7 @@ jobs:
     uses: broadinstitute/sherlock/.github/workflows/client-report-workflow.yaml@main
     if: ${{ github.ref == 'refs/heads/develop' }}
     with:
+      # TODO: Change this to 'datarepo-ui-dev'
       relates-to-chart-releases: 'datarepo-dev'
       notify-slack-channels-upon-workflow-failure: ${{ vars.SLACK_NOTIFICATION_CHANNELS }}
       notify-slack-channels-upon-workflow-retry: ${{ vars.SLACK_NOTIFICATION_CHANNELS }}

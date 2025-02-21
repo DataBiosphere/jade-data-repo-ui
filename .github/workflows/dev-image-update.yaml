@@ -86,10 +86,6 @@ jobs:
             "gcr.io/${GCR_GOOGLE_PROJECT}/jade-data-repo-ui:${GCR_TAG}-develop" --quiet
         env:
           PREV_TAG: ${{ steps.uiprevioustag.outputs.tag }}
-  helm_tag_bump:
-    needs: update_image
-    uses: ./.github/workflows/helmtagbump.yaml
-    secrets: inherit
   cherry_pick_image_to_production_gcr:
     needs: update_image
     uses: DataBiosphere/jade-data-repo/.github/workflows/cherry-pick-image.yaml@2.201.0
@@ -98,3 +94,29 @@ jobs:
       gcr_tag: ${{ needs.update_image.outputs.ui_image_tag }}
       source_gcr_url: 'gcr.io/broad-jade-dev/jade-data-repo-ui'
       target_gcr_url: 'gcr.io/datarepo-public-gcr/jade-data-repo-ui'
+
+  report-to-sherlock:
+    name: Report App Version to DevOps
+    uses: broadinstitute/sherlock/.github/workflows/client-report-app-version.yaml@main
+    needs: [update_image, cherry_pick_image_to_production_gcr]
+    with:
+      new-version: ${{ needs.update_image.outputs.ui_image_tag }}
+      chart-name: datarepo-ui
+    permissions:
+      contents: read
+      id-token: write
+
+  # TODO: Uncomment when the datarepo-ui chart is deployed to live envs.
+  # set-app-version-in-dev:
+  #   uses: broadinstitute/sherlock/.github/workflows/client-set-environment-app-version.yaml@main
+  #   needs:
+  #     - update_image
+  #     - report-to-sherlock
+  #   with:
+  #     new-version: ${{ needs.update_image.outputs.ui_image_tag }}
+  #     chart-name: datarepo-ui
+  #     environment-name: dev
+  #   secrets:
+  #     sync-git-token: ${{ secrets.BROADBOT_TOKEN }}
+  #   permissions:
+  #     id-token: write
