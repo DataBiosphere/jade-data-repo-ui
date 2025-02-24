@@ -59,15 +59,10 @@ jobs:
         with:
           token: ${{ secrets.BROADBOT_TOKEN }}
 
-      - name: Decode SA key into JSON file
+      - name: Auth to GCP
         run: |
           base64 --decode <<< ${{ secrets.SA_B64_CREDENTIALS }} > ${GOOGLE_APPLICATION_CREDENTIALS}
-
-      - name: Auth to GCP
-        uses: google-github-actions/auth@v2
-        with:
-          credentials_json: jade-dev-account.json # ${GOOGLE_APPLICATION_CREDENTIALS}
-          service_account: "jade-k8-sa@broad-jade-dev.iam.gserviceaccount.com"
+          gcloud auth activate-service-account --key-file ${GOOGLE_APPLICATION_CREDENTIALS}
 
       - name: Explicitly auth Docker for Artifact Registry
         run: gcloud auth configure-docker $GOOGLE_DOCKER_REPOSITORY --quiet
