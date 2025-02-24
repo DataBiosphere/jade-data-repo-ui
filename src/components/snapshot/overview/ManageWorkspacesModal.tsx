@@ -1,6 +1,5 @@
 import React from 'react';
 import { SnapshotWorkspaceEntry } from 'models/workspaceentry';
-import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import {
   Button,
   Dialog,
@@ -8,78 +7,48 @@ import {
   DialogActions,
   DialogContent,
   IconButton,
-  CustomTheme,
   Typography,
+  Box,
 } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import CloseIcon from '@mui/icons-material/Close';
 import LoadingSpinner from 'components/common/LoadingSpinner';
 import { TdrState } from 'reducers';
 import { connect } from 'react-redux';
 import ManageWorkspacesView from './ManageWorkspacesView';
 
-const styles = (theme: CustomTheme) =>
-  createStyles({
-    wrapper: {
-      padding: theme.spacing(4),
-      margin: theme.spacing(4),
-    },
-    dialogTitle: {
-      borderBottom: `1px solid ${theme.palette.divider}`,
-      margin: 0,
-      padding: theme.spacing(2),
-    },
-    closeButton: {
-      position: 'absolute',
-      right: theme.spacing(1),
-      top: theme.spacing(1),
-      color: theme.palette.grey[500],
-    },
-    dialogContent: {
-      margin: 0,
-      padding: `${theme.spacing(2)} !important`,
-    },
-    dialogInstructions: {
-      margin: 0,
-      padding: `${theme.spacing(2)} !important`,
-    },
-    dialogActions: {
-      borderTop: `1px solid ${theme.palette.divider}`,
-      margin: 0,
-      padding: theme.spacing(1),
-    },
-    openButton: {
-      width: '100%',
-      border: 0,
-      justifyContent: 'left',
-      textTransform: 'none',
-      paddingTop: theme.spacing(1),
-      paddingBottom: theme.spacing(1),
-      '&:hover': {
-        border: 0,
-      },
-    },
-    openButtonIcon: {
-      marginRight: 5,
-      top: theme.spacing(1),
-    },
-    horizontalModalButton: {
-      fontSize: theme.typography.h6.fontSize,
-      color: theme.palette.primary.light,
-    },
-    overlaySpinner: {
-      opacity: 0.9,
-      position: 'absolute',
-      right: 0,
-      bottom: 0,
-      left: 0,
-      width: 'initial',
-      overflow: 'clip',
-      backgroundColor: theme.palette.common.white,
-      zIndex: 100,
-    },
-  });
+const OpenButton = styled(Button)(({ theme }) => ({
+  width: '100%',
+  border: 0,
+  justifyContent: 'left',
+  textTransform: 'none',
+  paddingTop: theme.spacing(1),
+  paddingBottom: theme.spacing(1),
+  '&:hover': {
+    border: 0,
+  },
+}));
 
-interface ManageWorkspaceModalProps extends WithStyles<typeof styles> {
+const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
+  margin: 0,
+  padding: `${theme.spacing(2)} !important`,
+  position: 'relative',
+  minHeight: '200px',
+}));
+
+const OverlaySpinner = styled(Box)(({ theme }) => ({
+  opacity: 0.9,
+  position: 'absolute',
+  right: 0,
+  bottom: 0,
+  left: 0,
+  width: 'initial',
+  overflow: 'clip',
+  backgroundColor: theme.palette.common.white,
+  zIndex: 100,
+}));
+
+interface ManageWorkspaceModalProps {
   entries: SnapshotWorkspaceEntry[];
   modalText: string;
   removeWorkspace: any;
@@ -104,9 +73,7 @@ export class ManageWorkspacesModal extends React.PureComponent<
   }
 
   handleClickOpen = () => {
-    this.setState({
-      open: true,
-    });
+    this.setState({ open: true });
   };
 
   handleClose = () => {
@@ -114,24 +81,24 @@ export class ManageWorkspacesModal extends React.PureComponent<
   };
 
   render() {
-    const { classes, modalText, entries, removeWorkspace, isLoading } = this.props;
+    const { modalText, entries, removeWorkspace, isLoading } = this.props;
     const { open } = this.state;
-    const button = (
-      <Button
-        className={classes.openButton}
-        aria-label={modalText}
-        onClick={this.handleClickOpen}
-        disableFocusRipple={true}
-        disableRipple={true}
-      >
-        <i className={`${classes.openButtonIcon} fa-solid fa-pen-circle`} />
-        {modalText}
-      </Button>
-    );
 
     return (
-      <span>
-        {button}
+      <Box component="span">
+        <OpenButton
+          aria-label={modalText}
+          onClick={this.handleClickOpen}
+          disableFocusRipple
+          disableRipple
+        >
+          <Box
+            component="i"
+            className="fa-solid fa-pen-circle"
+            sx={{ marginRight: '5px', top: (theme) => theme.spacing(1) }}
+          />
+          {modalText}
+        </OpenButton>
         <Dialog
           fullWidth
           maxWidth="md"
@@ -139,17 +106,34 @@ export class ManageWorkspacesModal extends React.PureComponent<
           aria-labelledby="customized-dialog-title"
           open={open}
         >
-          <DialogTitle className={classes.dialogTitle} id="customized-dialog-title">
+          <DialogTitle
+            id="customized-dialog-title"
+            sx={{
+              borderBottom: (theme) => `1px solid ${theme.palette.divider}`,
+              margin: 0,
+              padding: (theme) => theme.spacing(2),
+            }}
+          >
             {modalText}
             <IconButton
               aria-label="Close"
-              className={classes.closeButton}
               onClick={this.handleClose}
+              sx={{
+                position: 'absolute',
+                right: (theme) => theme.spacing(1),
+                top: (theme) => theme.spacing(1),
+                color: (theme) => theme.palette.grey[500],
+              }}
             >
               <CloseIcon />
             </IconButton>
           </DialogTitle>
-          <Typography className={classes.dialogInstructions}>
+          <Typography
+            sx={{
+              margin: 0,
+              padding: (theme) => `${theme.spacing(2)} !important`,
+            }}
+          >
             Removing workspace readers will remove access to data for{' '}
             <strong>
               <em>Project-owners, Owners, Writers, Readers</em>
@@ -160,23 +144,29 @@ export class ManageWorkspacesModal extends React.PureComponent<
             </strong>{' '}
             button.
           </Typography>
-          <DialogContent className={classes.dialogContent}>
+          <StyledDialogContent>
             {isLoading && (
               <LoadingSpinner
                 delay={true}
                 delayMessage="Thank you for your patience."
-                className={classes.overlaySpinner}
+                className={OverlaySpinner.toString()}
               />
             )}
             <ManageWorkspacesView entries={entries} removeWorkspace={removeWorkspace} />
-          </DialogContent>
-          <DialogActions className={classes.dialogActions}>
+          </StyledDialogContent>
+          <DialogActions
+            sx={{
+              borderTop: (theme) => `1px solid ${theme.palette.divider}`,
+              margin: 0,
+              padding: (theme) => theme.spacing(1),
+            }}
+          >
             <Button onClick={this.handleClose} color="primary">
               Done
             </Button>
           </DialogActions>
         </Dialog>
-      </span>
+      </Box>
     );
   }
 }
@@ -187,4 +177,4 @@ function mapStateToProps(state: TdrState) {
   };
 }
 
-export default connect(mapStateToProps)(withStyles(styles)(ManageWorkspacesModal));
+export default connect(mapStateToProps)(ManageWorkspacesModal);
