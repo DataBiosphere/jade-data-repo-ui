@@ -95,7 +95,7 @@ jobs:
           push: true
           tags: ${{ steps.image-name.outputs.tags }}
 
-      - name: Run Trivy vulnerability scanner
+      - name: DSP AppSec Trivy check
         # From https://github.com/broadinstitute/dsp-appsec-trivy-action
         uses: broadinstitute/dsp-appsec-trivy-action@v1
 
