@@ -75,7 +75,7 @@ jobs:
         id: image-name
         run: |
           DEV_NAME="${GOOGLE_DOCKER_REPOSITORY}/${DEV_GCR_GOOGLE_PROJECT}/${IMAGE_NAME}"
-          DEV_VERSION_TAG="${NAME}:${{ needs.bump_version.outputs.tag }}"
+          DEV_VERSION_TAG="${DEV_NAME}:${{ needs.bump_version.outputs.tag }}"
           if [ ${{ github.ref_name }} == ${{ github.event.repository.default_branch }} ]; then
             PUBLIC_NAME="${GOOGLE_DOCKER_REPOSITORY}/${PUBLIC_GCR_GOOGLE_PROJECT}/${IMAGE_NAME}"
             PUBLIC_VERSION_TAG="${PUBLIC_NAME}/${{ needs.bump_version.outputs.tag }}"
