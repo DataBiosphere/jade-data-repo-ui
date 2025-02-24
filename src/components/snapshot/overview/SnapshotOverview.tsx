@@ -1,8 +1,8 @@
 import React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Typography } from '@mui/material';
-import { createStyles, WithStyles, withStyles } from '@mui/styles';
+import { Typography, Box } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { TdrState } from '../../../reducers';
 import { BreadcrumbType, SnapshotIncludeOptions } from '../../../constants';
 import { useOnMount } from '../../../libs/utils';
@@ -21,38 +21,21 @@ import { AppDispatch } from '../../../store';
 import { SnapshotPendingSave } from '../../../reducers/snapshot';
 import { DuosDatasetModel } from '../../../reducers/duos';
 
-const styles = () =>
-  createStyles({
-    pageRoot: {
-      padding: '16px 24px',
-      display: 'flex',
-      flexDirection: 'column',
-      height: '100%',
-      position: 'relative',
-    },
-    root: {
-      // TODO: expect this to change as more components are added
-      height: '100%',
-      display: 'grid',
-      gridTemplateColumns: '1fr 3fr',
-      flex: 1,
-    },
-    infoColumn: {
-      display: 'flex',
-      flexDirection: 'column',
-    },
-    infoColumnPanel: {
-      flexGrow: 1,
-    },
-    mainColumn: {
-      display: 'flex',
-      flexDirection: 'column',
-      marginLeft: 40,
-    },
-    pageTitle: {
-      marginBottom: '1rem',
-    },
-  });
+// @ts-ignore
+const PageRoot = styled(Box)(({ theme }) => ({
+  padding: '16px 24px',
+  display: 'flex',
+  flexDirection: 'column',
+  height: '100%',
+  position: 'relative',
+}));
+
+const ContentRoot = styled(Box)(() => ({
+  height: '100%',
+  display: 'grid',
+  gridTemplateColumns: '1fr 3fr',
+  flex: 1,
+}));
 
 interface RouteParams {
   uuid: string;
@@ -62,24 +45,19 @@ type SnapshotProps = {
   dispatch: AppDispatch;
 };
 
-type AllSnapshotProps = SnapshotProps &
-  RouteComponentProps<RouteParams> &
-  StateProps &
-  WithStyles<typeof styles>;
+type AllSnapshotProps = SnapshotProps & RouteComponentProps<RouteParams> & StateProps;
 
-function SnapshotOverview(props: AllSnapshotProps) {
-  const {
-    classes,
-    dispatch,
-    duosDatasets,
-    duosDatasetsLoading,
-    match,
-    pendingSave,
-    snapshot,
-    snapshotByIdLoading,
-    snapshotPolicies,
-    userRoles,
-  } = props;
+function SnapshotOverview({
+  dispatch,
+  duosDatasets,
+  duosDatasetsLoading,
+  match,
+  pendingSave,
+  snapshot,
+  snapshotByIdLoading,
+  snapshotPolicies,
+  userRoles,
+}: AllSnapshotProps) {
   const snapshotId = match.params.uuid;
   useOnMount(() => {
     dispatch(
@@ -106,7 +84,7 @@ function SnapshotOverview(props: AllSnapshotProps) {
 
   const renderPage = snapshotPolicies && snapshot && snapshot.tables && snapshot.id === snapshotId;
   return renderPage ? (
-    <div className={classes.pageRoot}>
+    <PageRoot>
       <AppBreadcrumbs
         context={{
           type: BreadcrumbType.SNAPSHOT,
@@ -115,21 +93,30 @@ function SnapshotOverview(props: AllSnapshotProps) {
         }}
         childBreadcrumbs={[]}
       />
-      <Typography variant="h3" className={classes.pageTitle}>
+      <Typography variant="h3" sx={{ marginBottom: '1rem' }}>
         {snapshot.name}
       </Typography>
-      <div className={classes.root}>
-        <div className={classes.infoColumn}>
-          <div className={classes.infoColumnPanel}>
+      <ContentRoot>
+        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+          <Box sx={{ flexGrow: 1 }}>
             <SnapshotRelationshipsPanel
+              // @ts-ignore
               tables={snapshot.tables}
               resourceType="Snapshot"
+              // @ts-ignore
               resourceId={snapshot.id}
             />
-          </div>
-        </div>
-        <div className={classes.mainColumn}>
+          </Box>
+        </Box>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            marginLeft: '40px',
+          }}
+        >
           <SnapshotOverviewPanel
+            // @ts-ignore
             dispatch={dispatch}
             duosDatasets={duosDatasets}
             duosDatasetsLoading={duosDatasetsLoading}
@@ -137,11 +124,11 @@ function SnapshotOverview(props: AllSnapshotProps) {
             snapshot={snapshot}
             userRoles={userRoles}
           />
-        </div>
-      </div>
-    </div>
+        </Box>
+      </ContentRoot>
+    </PageRoot>
   ) : (
-    <div />
+    <Box />
   );
 }
 
@@ -167,4 +154,4 @@ function mapStateToProps(state: TdrState) {
   };
 }
 
-export default connect(mapStateToProps)(withStyles(styles)(SnapshotOverview));
+export default connect(mapStateToProps)(SnapshotOverview);
