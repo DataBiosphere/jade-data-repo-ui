@@ -70,8 +70,9 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      # Build and push Docker image and tags.
-      - name: Construct docker image name and tag
+      # For PR builds, push the PR version and the branch name tags,
+      # for builds on the default branch, push the semver tag to the dev and public repos.
+      - name: Build and push Docker image and tags
         id: image-name
         run: |
           DEV_NAME="${GOOGLE_DOCKER_REPOSITORY}/${DEV_GCR_GOOGLE_PROJECT}/${IMAGE_NAME}"
@@ -101,61 +102,6 @@ jobs:
       - name: Run Trivy vulnerability scanner
         # From https://github.com/broadinstitute/dsp-appsec-trivy-action
         uses: broadinstitute/dsp-appsec-trivy-action@v1
-
-      # - name: 'Get gcp credentials'
-      #   uses: broadinstitute/datarepo-actions/actions/main@0.74.0
-      #   with:
-      #     actions_subcommand: 'skip'
-      #     sa_b64_credentials: ${{ secrets.SA_B64_CREDENTIALS }}
-      # - name: 'Pull down new tags'
-      #   run: git fetch --all --tags
-      # - name: 'Get Previous tag'
-      #   id: uiprevioustag
-      #   uses: 'broadinstitute/github-action-get-previous-tag@master'
-      #   env:
-      #     GITHUB_TOKEN: '${{ secrets.BROADBOT_TOKEN }}'
-      # - name: Build nmp build for new ui container
-      #   run: |
-      #     git pull
-      #     GCR_TAG=$(git rev-parse --short HEAD)
-      #     echo "GCR_TAG=$(echo ${GCR_TAG})" >> $GITHUB_ENV
-      # # Build the Docker image
-      # - name: Build docker container
-      #   env:
-      #     DISABLE_ESLINT_PLUGIN: true
-      #   run: |
-      #     rm -rf jade-dev-account.pem
-      #     docker build -t "gcr.io/${GCR_GOOGLE_PROJECT}/jade-data-repo-ui:${GCR_TAG}" --build-arg CACHEBUST=$(date +%s) .
-      # # Push the Docker image to Google Container Registry
-      # - name: Publish and tag new docker container to GCR
-      #   run: |
-      #     gcloud auth activate-service-account --key-file jade-dev-account.json
-      #     gcloud auth configure-docker --quiet
-      #     docker push "gcr.io/${GCR_GOOGLE_PROJECT}/jade-data-repo-ui:${GCR_TAG}"
-      #     gcloud container images \
-      #       add-tag \
-      #       "gcr.io/${GCR_GOOGLE_PROJECT}/jade-data-repo-ui:${GCR_TAG}" \
-      #       "gcr.io/${GCR_GOOGLE_PROJECT}/jade-data-repo-ui:${PREV_TAG}" --quiet
-      #     gcloud container images \
-      #       add-tag \
-      #       "gcr.io/${GCR_GOOGLE_PROJECT}/jade-data-repo-ui:${GCR_TAG}" \
-      #       "gcr.io/${GCR_GOOGLE_PROJECT}/jade-data-repo-ui:${GCR_TAG}-develop" --quiet
-      #   env:
-      #     PREV_TAG: ${{ steps.uiprevioustag.outputs.tag }}
-
-  # cherry_pick_image_to_production_gcr:
-  #   if: github.ref_name == github.event.repository.default_branch
-  #   needs:
-  #     - bump_version
-  #     - update_image
-  #   # TODO: Change the branch name to the next semver version cut after merging the jade-data-repo PR.
-  #   uses: DataBiosphere/jade-data-repo/.github/workflows/cherry-pick-image.yaml@emay-dont-update-datarepo-helm
-  #   secrets: inherit
-  #   with:
-  #     source_gcr_url: 'gcr.io/broad-jade-dev/jade-data-repo-ui'
-  #     source_gcr_tag: ${{ needs.bump_version.outputs.tag }}
-  #     target_gcr_url: 'gcr.io/datarepo-public-gcr/jade-data-repo-ui'
-  #     target_gcr_tag: ${{ needs.bump_version.outputs.tag }}
 
   report-to-sherlock:
     name: Report App Version to Sherlock
