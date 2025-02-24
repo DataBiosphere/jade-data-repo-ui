@@ -95,8 +95,8 @@ jobs:
         with:
           context: .
           platforms: linux/amd64
-          build-args:
-            - CACHEBUST: $(date +%s)
+          build-args: |
+            CACHEBUST=$(date +%s)
           push: true
           tags: ${{ steps.image-name.outputs.tags }}
 
