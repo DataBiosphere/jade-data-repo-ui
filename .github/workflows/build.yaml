@@ -16,16 +16,12 @@ on:
     types:
       - opened
       - reopened
-      - synchronize  # https://github.community/t/what-is-a-pull-request-synchronize-event/14784/2
+      - synchronize
 env:
   DEV_GCR_GOOGLE_PROJECT: broad-jade-dev
   PUBLIC_GCR_GOOGLE_PROJECT: datarepo-public-gcr
-  # google_sdk_version: '290.0.1'
-  # DEV_PROJECT: broad-jade-dev
   # This must be defined for the bash redirection
   GOOGLE_APPLICATION_CREDENTIALS: jade-dev-account.json
-  # This must be defined for the bash redirection
-  # GOOGLE_SA_CERT: 'jade-dev-account.pem'
   # Name of the image to make in DEV_GCR_GOOGLE_PROJECT.
   IMAGE_NAME: ${{ github.event.repository.name }}
   # Google container repository where DEV_GCR_GOOGLE_PROJECT/IMAGE_NAME can be found.
