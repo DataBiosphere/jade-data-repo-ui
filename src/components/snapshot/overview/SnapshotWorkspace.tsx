@@ -2,46 +2,20 @@ import React from 'react';
 import { TdrState } from 'reducers';
 import { connect } from 'react-redux';
 import { PolicyModel, SnapshotModel } from 'generated/tdr';
-import { createStyles, WithStyles, withStyles } from '@mui/styles';
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  CustomTheme,
-  Typography,
-} from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Typography } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Action, Dispatch } from 'redux';
 import { SnapshotRoles } from '../../../constants';
 import { removeSnapshotPolicyMembers } from '../../../actions';
 import SnapshotWorkspaceAccordionView from './SnapshotWorkspaceAccordionView';
 
-function styles(theme: CustomTheme) {
-  return createStyles({
-    snapshotAccordion: {
-      width: '75%',
-    },
-    snapshotAccordionSummary: {
-      fontSize: '14px',
-      lineHeight: '22px',
-      fontWeight: '600',
-      color: theme.palette.primary.main,
-    },
-    snapshotAccordionTitle: {
-      fontWeight: 500,
-    },
-  });
-}
-
 type StateProps = {
   snapshot: SnapshotModel;
   dispatch: Dispatch<Action>;
 };
 
-type SnapshotWorkspaceProps = StateProps & WithStyles<typeof styles>;
-
-function SnapshotWorkspace(props: SnapshotWorkspaceProps) {
-  const { classes, snapshot, dispatch } = props;
+function SnapshotWorkspace(props: StateProps) {
+  const { snapshot, dispatch } = props;
 
   const removeWorkspace = (policyModels: PolicyModel[]) => {
     const membersToRemove: string[] = [];
@@ -55,17 +29,20 @@ function SnapshotWorkspace(props: SnapshotWorkspaceProps) {
   };
 
   return (
-    <Accordion defaultExpanded className={classes.snapshotAccordion}>
+    <Accordion defaultExpanded sx={{ width: '75%' }}>
       <AccordionSummary
         data-cy="snapshot-workspace-accordion"
-        className={classes.snapshotAccordionSummary}
+        sx={{
+          fontSize: '14px',
+          lineHeight: '22px',
+          fontWeight: '600',
+          color: (theme) => theme.palette.primary.main,
+        }}
         expandIcon={<ExpandMoreIcon />}
         aria-controls="panel1a-content"
         id="panel1a-header"
       >
-        <Typography className={classes.snapshotAccordionTitle}>
-          Snapshot Reader Workspaces
-        </Typography>
+        <Typography sx={{ fontWeight: 500 }}>Snapshot Reader Workspaces</Typography>
       </AccordionSummary>
       <AccordionDetails>
         <SnapshotWorkspaceAccordionView removeWorkspace={removeWorkspace} />
@@ -82,4 +59,4 @@ function mapStateToProps(state: TdrState) {
   };
 }
 
-export default connect(mapStateToProps)(withStyles(styles)(SnapshotWorkspace));
+export default connect(mapStateToProps)(SnapshotWorkspace);
