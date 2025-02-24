@@ -174,7 +174,7 @@ function FullViewSnapshotModal(props: FullViewSnapshotModalProps) {
                 isEmpty(snapshotDescription)
               }
               variant="contained"
-              data-cy="select-billing-profile-button"
+              data-cy="next-step-button"
             >
               {finalStep ? 'Create Snapshot' : 'Next'}
             </Button>

@@ -10,16 +10,12 @@ import { initialUserState } from 'reducers/user';
 import { initialQueryState } from 'reducers/query';
 import { ManagedGroupMembershipEntry } from 'models/group';
 import FullViewSnapshotModal from 'components/common/FullViewSnapshotModal';
+import { initialSnapshotState } from 'reducers/snapshot';
 import history from '../../modules/hist';
 import globalTheme from '../../modules/theme';
 
 const initialState = {
-  snapshots: {
-    snapshot: {
-      id: 'uuid',
-      name: 'Test Snapshot',
-    },
-  },
+  snapshots: initialSnapshotState,
   user: _.cloneDeep(initialUserState),
   query: _.cloneDeep(initialQueryState),
   router: { location: {} },
@@ -68,14 +64,13 @@ describe('FullViewSnapshotModal', () => {
     mountFullViewSnapshotModal(dataset, profiles, userGroups);
   });
 
-  it('Button is clickable and opens billing profile modal', () => {
-    cy.contains('Creating snapshot - select a billing project').should('be.visible');
-    cy.get('[data-cy=select-billing-profile-button]').click();
-    cy.intercept('POST', '/api/repository/v1/snapshots');
-  });
-
-  it('calls create snapshot when billing profile is selected', () => {
-    cy.get('[data-cy=select-billing-profile-button]').click();
+  it('allows clicking through steps', () => {
+    cy.contains('Snapshot Name').should('be.visible');
+    cy.get('[data-cy=next-step-button]').click();
+    cy.contains('Roles').should('be.visible');
+    cy.get('[data-cy=next-step-button]').click();
+    cy.contains('Authorization Domain').should('be.visible');
+    cy.get('[data-cy=next-step-button]').click();
     cy.intercept('POST', '/api/repository/v1/snapshots');
   });
 
@@ -86,6 +81,7 @@ describe('FullViewSnapshotModal', () => {
   });
 
   it('allows selecting an auth domain', () => {
+    cy.get('button').contains('Additional Security Options').click();
     cy.get('#select-authorization-domain-select').parent().click();
     cy.get('[data-cy=menuItem-group2]').click();
     cy.get('#select-authorization-domain-select').should('have.value', 'group2');

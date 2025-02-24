@@ -62,7 +62,7 @@ function SnapshotAccess({ dispatch, snapshot, snapshotRequest, createMode }: Sna
       createMode={createMode}
       addUsers={addUsers}
       removeUser={removeUser}
-      requestPolicies={snapshotRequest.policies}
+      requestPolicies={snapshotRequest?.policies}
     />
   );
 }

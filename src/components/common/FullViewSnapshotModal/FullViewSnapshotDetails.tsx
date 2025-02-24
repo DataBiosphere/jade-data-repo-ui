@@ -4,7 +4,7 @@ import JadeDropdown from 'components/dataset/data/JadeDropdown';
 import { uniq } from 'lodash';
 import React from 'react';
 
-interface FullViewSnapshotDetailsProps {
+export interface FullViewSnapshotDetailsProps {
   snapshotName: string;
   setSnapshotName: (name: string) => void;
   snapshotDescription: string;

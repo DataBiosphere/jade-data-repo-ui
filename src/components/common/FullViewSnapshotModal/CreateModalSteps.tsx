@@ -41,7 +41,7 @@ function Step(props: StepProps) {
   );
 }
 
-interface CreateModalStepsProps {
+export interface CreateModalStepsProps {
   step: FullViewSnapshotModalSteps;
   onStepChange: (step: FullViewSnapshotModalSteps) => void;
 }
