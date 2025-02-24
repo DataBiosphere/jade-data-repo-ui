@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { ClassNameMap, createStyles, withStyles } from '@mui/styles';
 import {
   Button,
+  Box,
   Checkbox,
   CircularProgress,
   FormControlLabel,
@@ -10,37 +10,13 @@ import {
   FormHelperText,
   Typography,
 } from '@mui/material';
-import { CustomTheme } from '@mui/material/styles';
 import { exportSnapshot, resetSnapshotExport } from '../../../actions';
 import { TdrState } from '../../../reducers';
 import { AppDispatch } from '../../../store';
 import { CloudPlatform, SnapshotExportResponseModel, SnapshotModel } from '../../../generated/tdr';
 import { SnapshotRoles } from '../../../constants';
 
-const styles = (theme: CustomTheme) =>
-  createStyles({
-    card: {
-      display: 'inline-block',
-      padding: theme.spacing(4),
-      width: '100%',
-    },
-    exportButton: {
-      marginTop: '0.5rem',
-      height: '36px',
-    },
-    centered: {
-      textAlign: 'center',
-    },
-    labelRight: {
-      paddingLeft: '10px',
-    },
-    section: {
-      paddingBottom: theme.spacing(1),
-    },
-  });
-
-type SnapshotExportProps = {
-  classes: ClassNameMap;
+interface SnapshotExportProps {
   dispatch: AppDispatch;
   exportResponse: SnapshotExportResponseModel;
   isDone: boolean;
@@ -48,7 +24,7 @@ type SnapshotExportProps = {
   of: SnapshotModel;
   terraUrl: string | undefined;
   userRoles: Array<string>;
-};
+}
 
 const formatExportUrl = (
   terraUrl: string,
@@ -61,17 +37,15 @@ const formatExportUrl = (
     snapshot.name
   }&tdrmanifest=${encodeURIComponent(manifest)}&tdrSyncPermissions=${tdrSyncPermissions}`;
 
-function SnapshotExport(props: SnapshotExportProps) {
-  const {
-    classes,
-    dispatch,
-    exportResponse,
-    isDone,
-    isProcessing,
-    of,
-    terraUrl,
-    userRoles,
-  } = props;
+function SnapshotExport({
+  dispatch,
+  exportResponse,
+  isDone,
+  isProcessing,
+  of,
+  terraUrl,
+  userRoles,
+}: SnapshotExportProps) {
   const exportResponseManifest = exportResponse?.format?.parquet?.manifest;
 
   const [exportGsPaths, setExportGsPaths] = React.useState(false);
@@ -95,16 +69,26 @@ function SnapshotExport(props: SnapshotExportProps) {
   };
 
   return (
-    <div>
-      <Typography variant="h6" className={classes.section}>
+    <Box
+      sx={{
+        display: 'inline-block',
+        padding: (theme) => theme.spacing(4),
+        width: '100%',
+      }}
+    >
+      <Typography variant="h6" sx={{ paddingBottom: (theme) => theme.spacing(1) }}>
         Export to Terra
       </Typography>
       {of.cloudPlatform === CloudPlatform.Azure && (
-        <Typography variant="h6" className={classes.section} data-cy="azure-warning-note">
+        <Typography
+          variant="h6"
+          sx={{ paddingBottom: (theme) => theme.spacing(1) }}
+          data-cy="azure-warning-note"
+        >
           Note: Azure snapshot import into Terra is not yet fully supported.
         </Typography>
       )}
-      <Typography variant="body1" className={classes.section}>
+      <Typography variant="body1" sx={{ paddingBottom: (theme) => theme.spacing(1) }}>
         Export a copy of the snapshot metadata to a new or existing Terra workspace
       </Typography>
       {of.cloudPlatform === CloudPlatform.Gcp && (
@@ -142,7 +126,7 @@ function SnapshotExport(props: SnapshotExportProps) {
         <Button
           data-cy="export-snapshot-button"
           onClick={exportToWorkspaceCopy}
-          className={classes.exportButton}
+          sx={{ marginTop: '0.5rem', height: '36px' }}
           variant="outlined"
           color="primary"
         >
@@ -152,19 +136,19 @@ function SnapshotExport(props: SnapshotExportProps) {
       {isProcessing && !isDone && (
         <Button
           data-cy="preparing-snapshot-button"
-          className={classes.exportButton}
+          sx={{ marginTop: '0.5rem', height: '36px' }}
           variant="outlined"
           color="primary"
         >
           <CircularProgress size={25} />
-          <div className={classes.labelRight}>Preparing snapshot</div>
+          <Box sx={{ paddingLeft: '10px' }}>Preparing snapshot</Box>
         </Button>
       )}
       {!isProcessing && isDone && terraUrl && exportResponseManifest && (
         <Button
           data-cy="snapshot-export-ready-button"
           onClick={resetExport}
-          className={classes.exportButton}
+          sx={{ marginTop: '0.5rem', height: '36px' }}
           variant="contained"
           color="primary"
         >
@@ -183,7 +167,7 @@ function SnapshotExport(props: SnapshotExportProps) {
           </a>
         </Button>
       )}
-    </div>
+    </Box>
   );
 }
 
@@ -197,4 +181,4 @@ function mapStateToProps(state: TdrState) {
   };
 }
 
-export default connect(mapStateToProps)(withStyles(styles)(SnapshotExport));
+export default connect(mapStateToProps)(SnapshotExport);
