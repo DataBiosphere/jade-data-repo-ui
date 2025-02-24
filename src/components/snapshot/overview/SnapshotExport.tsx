@@ -17,13 +17,13 @@ import { CloudPlatform, SnapshotExportResponseModel, SnapshotModel } from '../..
 import { SnapshotRoles } from '../../../constants';
 
 interface SnapshotExportProps {
-  dispatch: AppDispatch;
-  exportResponse: SnapshotExportResponseModel;
-  isDone: boolean;
-  isProcessing: boolean;
-  of: SnapshotModel;
-  terraUrl: string | undefined;
-  userRoles: Array<string>;
+  readonly dispatch: AppDispatch;
+  readonly exportResponse: SnapshotExportResponseModel;
+  readonly isDone: boolean;
+  readonly isProcessing: boolean;
+  readonly of: SnapshotModel;
+  readonly terraUrl: string | undefined;
+  readonly userRoles: Array<string>;
 }
 
 const formatExportUrl = (

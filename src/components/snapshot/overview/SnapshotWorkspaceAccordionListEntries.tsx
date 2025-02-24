@@ -5,7 +5,7 @@ import { CustomTheme } from '@mui/material/styles';
 import { SnapshotWorkspaceEntry } from '../../../models/workspaceentry';
 
 interface SnapshotWorkspaceEntriesListProps {
-  entries: SnapshotWorkspaceEntry[];
+  readonly entries: SnapshotWorkspaceEntry[];
 }
 
 export default function SnapshotWorkspaceEntriesList(props: SnapshotWorkspaceEntriesListProps) {

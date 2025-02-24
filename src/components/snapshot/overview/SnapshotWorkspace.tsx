@@ -10,8 +10,8 @@ import { removeSnapshotPolicyMembers } from '../../../actions';
 import SnapshotWorkspaceAccordionView from './SnapshotWorkspaceAccordionView';
 
 type StateProps = {
-  snapshot: SnapshotModel;
-  dispatch: Dispatch<Action>;
+  readonly snapshot: SnapshotModel;
+  readonly dispatch: Dispatch<Action>;
 };
 
 function SnapshotWorkspace(props: StateProps) {
