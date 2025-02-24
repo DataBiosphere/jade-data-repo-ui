@@ -81,7 +81,7 @@ jobs:
             PUBLIC_VERSION_TAG="${PUBLIC_NAME}/${{ needs.bump_version.outputs.tag }}"
             TAGS="${DEV_VERSION_TAG},${PUBLIC_VERSION_TAG}"
           else
-            BRANCH_TAG="${NAME}:${GITHUB_HEAD_REF}"
+            BRANCH_TAG="${DEV_NAME}:${GITHUB_HEAD_REF}"
             TAGS="${DEV_VERSION_TAG},${BRANCH_TAG}"
           fi
           echo "TAGS: ${TAGS}"
