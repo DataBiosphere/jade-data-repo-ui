@@ -3,6 +3,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Typography, Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { Action, Dispatch } from 'redux';
 import { TdrState } from '../../../reducers';
 import { BreadcrumbType, SnapshotIncludeOptions } from '../../../constants';
 import { useOnMount } from '../../../libs/utils';
@@ -17,12 +18,10 @@ import AppBreadcrumbs from '../../AppBreadcrumbs/AppBreadcrumbs';
 import SnapshotOverviewPanel from './SnapshotOverviewPanel';
 import SnapshotRelationshipsPanel from '../../common/overview/SchemaPanel';
 import LoadingSpinner from '../../common/LoadingSpinner';
-import { AppDispatch } from '../../../store';
 import { SnapshotPendingSave } from '../../../reducers/snapshot';
 import { DuosDatasetModel } from '../../../reducers/duos';
 
-// @ts-ignore
-const PageRoot = styled(Box)(({ theme }) => ({
+const PageRoot = styled(Box)(() => ({
   padding: '16px 24px',
   display: 'flex',
   flexDirection: 'column',
@@ -42,7 +41,7 @@ interface RouteParams {
 }
 
 type SnapshotProps = {
-  dispatch: AppDispatch;
+  dispatch: Dispatch<Action>;
 };
 
 type AllSnapshotProps = SnapshotProps & RouteComponentProps<RouteParams> & StateProps;
@@ -100,10 +99,8 @@ function SnapshotOverview({
         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
           <Box sx={{ flexGrow: 1 }}>
             <SnapshotRelationshipsPanel
-              // @ts-ignore
               tables={snapshot.tables}
               resourceType="Snapshot"
-              // @ts-ignore
               resourceId={snapshot.id}
             />
           </Box>
@@ -116,8 +113,6 @@ function SnapshotOverview({
           }}
         >
           <SnapshotOverviewPanel
-            // @ts-ignore
-            dispatch={dispatch}
             duosDatasets={duosDatasets}
             duosDatasetsLoading={duosDatasetsLoading}
             pendingSave={pendingSave}

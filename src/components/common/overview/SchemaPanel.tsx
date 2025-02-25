@@ -131,9 +131,9 @@ const StyledTreeItem = withStyles((theme) => ({
 }))((props: TreeItemProps) => <TreeItem {...props} />);
 
 interface IProps extends WithStyles<typeof styles> {
-  resourceId: string;
-  resourceType: string;
-  tables: Array<TableModel>;
+  resourceId: string | undefined;
+  resourceType: string | undefined;
+  tables: Array<TableModel> | undefined;
 }
 
 const renderTableName = (table: TableModel) => {
@@ -351,11 +351,11 @@ const SchemaPanel = withStyles(styles)(({ classes, resourceId, resourceType, tab
         Tables
       </Typography>
       <Typography data-cy="table-count" style={{ float: 'left', padding: '6px 0px' }}>
-        &nbsp;({tables.length})
+        &nbsp;({tables?.length || 0})
       </Typography>
     </div>
     <div className={classes.schemaSection}>
-      <SchemaTree tables={tables} readOnly />
+      <SchemaTree tables={tables || []} readOnly />
     </div>
   </Paper>
 ));

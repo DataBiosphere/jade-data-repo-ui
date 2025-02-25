@@ -12,6 +12,7 @@ import TextContent from 'components/common/TextContent';
 import InfoHoverButton from 'components/common/InfoHoverButton';
 import { IamResourceTypeEnum } from 'generated/tdr';
 import { TdrState } from 'reducers';
+import { Action, Dispatch } from 'redux';
 import {
   renderCloudPlatforms,
   renderStorageResources,
@@ -23,7 +24,6 @@ import TabPanel from '../../common/TabPanel';
 import SnapshotExport from './SnapshotExport';
 import { SnapshotModel } from '../../../generated/tdr';
 import { SnapshotRoles } from '../../../constants';
-import { AppDispatch } from '../../../store';
 import JournalEntriesView from '../../JournalEntriesView';
 import { SnapshotPendingSave } from '../../../reducers/snapshot';
 import { DuosDatasetModel } from '../../../reducers/duos';
@@ -42,7 +42,7 @@ function getDuosDatasetValue(option?: DuosDatasetModel) {
 
 interface SnapshotOverviewPanelProps {
   authDomains: Array<string>;
-  dispatch: AppDispatch;
+  dispatch: Dispatch<Action>;
   pendingSave: SnapshotPendingSave;
   snapshot: SnapshotModel;
   userRoles: Array<string>;
