@@ -11,12 +11,9 @@ on:
       - 'cypress.json'
       - 'cypress/**'
       - 'Dockerfile'
-      - '.github/workflows/dev-image-update.yaml'
+      - '.github/workflows/build.yaml'
   pull_request:
-    types:
-      - opened
-      - reopened
-      - synchronize
+
 env:
   DEV_GCR_GOOGLE_PROJECT: broad-jade-dev
   PUBLIC_GCR_GOOGLE_PROJECT: datarepo-public-gcr
