@@ -351,11 +351,11 @@ const SchemaPanel = withStyles(styles)(({ classes, resourceId, resourceType, tab
         Tables
       </Typography>
       <Typography data-cy="table-count" style={{ float: 'left', padding: '6px 0px' }}>
-        &nbsp;({tables?.length || 0})
+        &nbsp;({tables?.length ?? 0})
       </Typography>
     </div>
     <div className={classes.schemaSection}>
-      <SchemaTree tables={tables || []} readOnly />
+      <SchemaTree tables={tables ?? []} readOnly />
     </div>
   </Paper>
 ));
