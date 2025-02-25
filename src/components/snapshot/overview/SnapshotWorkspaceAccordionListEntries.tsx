@@ -26,16 +26,14 @@ export default function SnapshotWorkspaceEntriesList(props: SnapshotWorkspaceEnt
             >
               <ListItemButton
                 dense
-                // @ts-ignore
-                sx={(theme: CustomTheme) => ({
-                  ...theme.mixins.jadeLink,
+                sx={(theme) => ({
+                  ...(theme as CustomTheme).mixins.jadeLink,
                 })}
               >
                 {entry.title}
                 <ListItemIcon
-                  // @ts-ignore
-                  sx={(theme: CustomTheme) => ({
-                    ...theme.mixins.jadeLink,
+                  sx={(theme) => ({
+                    ...(theme as CustomTheme).mixins.jadeLink,
                     height: '0.75em',
                     width: '0.75em',
                   })}
