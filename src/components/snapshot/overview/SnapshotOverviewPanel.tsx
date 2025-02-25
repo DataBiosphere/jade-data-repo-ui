@@ -63,8 +63,8 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
   } = props;
   const isSteward = userRoles.includes(SnapshotRoles.STEWARD);
   const canViewJournalEntries = isSteward;
-  // @ts-ignore
-  const sourceDataset = snapshot.source[0].dataset;
+  // In practice, there will never be a source without datasets, but we need to handle the assumption in this logic.
+  const sourceDataset = snapshot.source?.[0].dataset;
   const linkToBq = snapshot.cloudPlatform === 'gcp';
   const duosDatasetsLoaded = !_.isEmpty(duosDatasets);
 
@@ -82,6 +82,10 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
   } else if (!duosDatasetsLoaded) {
     duosInfoButtonText +=
       ' You do not appear to have access to any DUOS datasets.  You must have access to at least one in order to link a snapshot to a DUOS dataset.';
+  }
+
+  if (sourceDataset === undefined) {
+    return <div>Snapshot not found</div>;
   }
 
   return (
@@ -126,18 +130,16 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
             <Typography variant="h6">Root dataset:</Typography>
             <Typography
               data-cy="snapshot-source-dataset"
-              // @ts-ignore
-              sx={(theme: CustomTheme) => ({
-                ...theme.mixins.ellipsis,
+              sx={(theme) => ({
+                ...(theme as CustomTheme).mixins.ellipsis,
               })}
               component="span"
             >
               <Link to={`/datasets/${sourceDataset.id}`}>
                 <Box
                   component="span"
-                  // @ts-ignore
-                  sx={(theme: CustomTheme) => ({
-                    ...theme.mixins.jadeLink,
+                  sx={(theme) => ({
+                    ...(theme as CustomTheme).mixins.jadeLink,
                   })}
                   title={sourceDataset.name}
                 >
