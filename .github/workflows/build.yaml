@@ -101,9 +101,9 @@ jobs:
     uses: DataBiosphere/jade-data-repo/.github/workflows/cherry-pick-image.yaml@2.237.0
     secrets: inherit
     with:
-      source_gcr_url: ${GOOGLE_DOCKER_REPOSITORY}/${DEV_GCR_GOOGLE_PROJECT}/${IMAGE_NAME}
+      source_gcr_url: ${{ env.GOOGLE_DOCKER_REPOSITORY }}/${{ env.DEV_GCR_GOOGLE_PROJECT }}/${{ env.IMAGE_NAME }}
       source_gcr_tag: ${{ needs.bump_version.outputs.tag }}
-      target_gcr_url: ${GOOGLE_DOCKER_REPOSITORY}/${PUBLIC_GCR_GOOGLE_PROJECT}/${IMAGE_NAME}
+      target_gcr_url: ${{ env.GOOGLE_DOCKER_REPOSITORY }}/${{ env.PUBLIC_GCR_GOOGLE_PROJECT }}/${{ env.IMAGE_NAME }}
       target_gcr_tag: ${{ needs.bump_version.outputs.tag }}
 
   report-to-sherlock:
