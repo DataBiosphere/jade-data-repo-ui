@@ -16,10 +16,10 @@ import { SnapshotRequest } from '../../reducers/snapshot';
 import { AppDispatch } from '../../store';
 
 type SnapshotAccessProps = {
-  dispatch: AppDispatch;
-  snapshot: SnapshotModel;
-  snapshotRequest: SnapshotRequest;
-  createMode: boolean;
+  readonly dispatch: AppDispatch;
+  readonly snapshot: SnapshotModel;
+  readonly snapshotRequest: SnapshotRequest;
+  readonly createMode: boolean;
 };
 
 function SnapshotAccess({ dispatch, snapshot, snapshotRequest, createMode }: SnapshotAccessProps) {

@@ -15,10 +15,10 @@ const StyledLinearProgress = styled(LinearProgress)(({ theme }: { theme: CustomT
 }));
 
 interface StepProps {
-  step: FullViewSnapshotModalSteps;
-  activeStep: FullViewSnapshotModalSteps;
-  children: React.ReactNode;
-  onStepChange: (step: FullViewSnapshotModalSteps) => void;
+  readonly step: FullViewSnapshotModalSteps;
+  readonly activeStep: FullViewSnapshotModalSteps;
+  readonly children: React.ReactNode;
+  readonly onStepChange: (step: FullViewSnapshotModalSteps) => void;
 }
 
 function Step(props: StepProps) {
@@ -42,8 +42,8 @@ function Step(props: StepProps) {
 }
 
 export interface CreateModalStepsProps {
-  step: FullViewSnapshotModalSteps;
-  onStepChange: (step: FullViewSnapshotModalSteps) => void;
+  readonly step: FullViewSnapshotModalSteps;
+  readonly onStepChange: (step: FullViewSnapshotModalSteps) => void;
 }
 
 export function CreateModalSteps(props: CreateModalStepsProps) {

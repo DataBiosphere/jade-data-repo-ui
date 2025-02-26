@@ -91,6 +91,31 @@ function FullViewSnapshotModal(props: FullViewSnapshotModalProps) {
     onDismiss();
   };
 
+  const addUsers = (role: string, usersToAdd: string[]) => {
+    const roleName = transformRoleToCreatePolicy(role);
+    setPolicies((prevPolicies) => ({
+      ...prevPolicies,
+      [roleName]: [
+        // @ts-ignore because the role is generated programmatically, it struggles with type safety
+        ...prevPolicies[roleName],
+        ...usersToAdd,
+      ],
+    }));
+  };
+
+  const removeUser = (role: string) => (user: string) => {
+    const roleName = transformRoleToCreatePolicy(role);
+    // @ts-ignore because the role is generated programmatically, it struggles with type safety
+    setPolicies((prevPolicies) => ({
+      ...prevPolicies,
+      [roleName]: without(
+        // @ts-ignore
+        prevPolicies[roleName],
+        user,
+      ),
+    }));
+  };
+
   const renderModalDetails = () => {
     switch (step) {
       case FullViewSnapshotModalSteps.DETAILS: {
@@ -111,30 +136,8 @@ function FullViewSnapshotModal(props: FullViewSnapshotModalProps) {
           <ManagedSnapshotAccess
             createMode={true}
             requestPolicies={policies}
-            addUsers={(role, usersToAdd) => {
-              const roleName = transformRoleToCreatePolicy(role);
-              setPolicies((prevPolicies) => ({
-                ...prevPolicies,
-                [roleName]: [
-                  // @ts-ignore because the role is generated programmatically, it struggles with type safety
-                  ...prevPolicies[roleName],
-                  ...usersToAdd,
-                ],
-              }));
-            }}
-            removeUser={(role) => (user) => {
-              const roleName = transformRoleToCreatePolicy(role);
-              // @ts-ignore because the role is generated programmatically, it struggles with type safety
-              setPolicies((prevPolicies) => ({
-                ...prevPolicies,
-                [roleName]: without(
-                  // @ts-ignore
-                  prevPolicies[roleName],
-                  user,
-                ),
-              }));
-              // set(policies, roleName, without((policies as any)[roleName], user)));
-            }}
+            addUsers={addUsers}
+            removeUser={removeUser}
           />
         );
       }

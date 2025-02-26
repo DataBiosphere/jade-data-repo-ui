@@ -5,13 +5,13 @@ import { uniq } from 'lodash';
 import React from 'react';
 
 export interface FullViewSnapshotDetailsProps {
-  snapshotName: string;
-  setSnapshotName: (name: string) => void;
-  snapshotDescription: string;
-  setSnapshotDescription: (description: string) => void;
-  selectedBillingProfile: BillingProfileModel | undefined;
-  setSelectedBillingProfile: (profile: BillingProfileModel | undefined) => void;
-  billingProfiles: Array<BillingProfileModel>;
+  readonly snapshotName: string;
+  readonly setSnapshotName: (name: string) => void;
+  readonly snapshotDescription: string;
+  readonly setSnapshotDescription: (description: string) => void;
+  readonly selectedBillingProfile: BillingProfileModel | undefined;
+  readonly setSelectedBillingProfile: (profile: BillingProfileModel | undefined) => void;
+  readonly billingProfiles: Array<BillingProfileModel>;
 }
 
 export function FullViewSnapshotDetails(props: FullViewSnapshotDetailsProps) {
