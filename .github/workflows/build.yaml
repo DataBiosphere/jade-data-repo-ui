@@ -72,7 +72,7 @@ jobs:
           if [ ${{ github.ref_name }} == ${{ github.event.repository.default_branch }} ]; then
             TAGS="${DEV_VERSION_TAG}"
           else
-            BRANCH_TAG="${DEV_NAME}:${GITHUB_HEAD_REF}"
+            BRANCH_TAG="${DEV_NAME}:${GITHUB_HEAD_REF//[\/]/_}"
             TAGS="${DEV_VERSION_TAG},${BRANCH_TAG}"
           fi
           echo "TAGS: ${TAGS}"
