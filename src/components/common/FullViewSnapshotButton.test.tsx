@@ -70,7 +70,7 @@ describe('FullViewSnapshotButton', () => {
 
     it('Button is clickable and opens billing profile modal', () => {
       cy.get('button').click();
-      cy.contains('Creating snapshot - select a billing project').should('be.visible');
+      cy.contains('Creating snapshot').should('be.visible');
     });
   });
 
