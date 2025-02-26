@@ -101,6 +101,7 @@ jobs:
     uses: DataBiosphere/jade-data-repo/.github/workflows/cherry-pick-image.yaml@2.237.0
     secrets: inherit
     with:
+      # Can't use the workflow env vars here, thus the explicit reference.
       source_gcr_url: 'gcr.io/broad-jade-dev/jade-data-repo-ui'
       source_gcr_tag: ${{ needs.bump_version.outputs.tag }}
       target_gcr_url: 'gcr.io/datarepo-public-gcr/jade-data-repo-ui'
