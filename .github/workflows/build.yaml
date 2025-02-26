@@ -98,7 +98,7 @@ jobs:
     needs:
       - bump_version
       - update_image
-    uses: ./.github/workflows/cherry-pick-image.yaml
+    uses: DataBiosphere/jade-data-repo/.github/workflows/cherry-pick-image.yaml@2.237.0
     secrets: inherit
     with:
       source_gcr_url: ${GOOGLE_DOCKER_REPOSITORY}/${DEV_GCR_GOOGLE_PROJECT}/${IMAGE_NAME}
