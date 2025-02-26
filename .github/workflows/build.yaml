@@ -70,9 +70,7 @@ jobs:
           DEV_NAME="${GOOGLE_DOCKER_REPOSITORY}/${DEV_GCR_GOOGLE_PROJECT}/${IMAGE_NAME}"
           DEV_VERSION_TAG="${DEV_NAME}:${{ needs.bump_version.outputs.tag }}"
           if [ ${{ github.ref_name }} == ${{ github.event.repository.default_branch }} ]; then
-            PUBLIC_NAME="${GOOGLE_DOCKER_REPOSITORY}/${PUBLIC_GCR_GOOGLE_PROJECT}/${IMAGE_NAME}"
-            PUBLIC_VERSION_TAG="${PUBLIC_NAME}/${{ needs.bump_version.outputs.tag }}"
-            TAGS="${DEV_VERSION_TAG},${PUBLIC_VERSION_TAG}"
+            TAGS="${DEV_VERSION_TAG}"
           else
             BRANCH_TAG="${DEV_NAME}:${GITHUB_HEAD_REF}"
             TAGS="${DEV_VERSION_TAG},${BRANCH_TAG}"
@@ -94,6 +92,19 @@ jobs:
       - name: DSP AppSec Trivy check
         # From https://github.com/broadinstitute/dsp-appsec-trivy-action
         uses: broadinstitute/dsp-appsec-trivy-action@v1
+
+  cherry_pick_image_to_production_gcr:
+    if: github.ref_name == github.event.repository.default_branch
+    needs:
+      - bump_version
+      - update_image
+    uses: ./.github/workflows/cherry-pick-image.yaml
+    secrets: inherit
+    with:
+      source_gcr_url: ${GOOGLE_DOCKER_REPOSITORY}/${DEV_GCR_GOOGLE_PROJECT}/${IMAGE_NAME}
+      source_gcr_tag: ${{ needs.bump_version.outputs.tag }}
+      target_gcr_url: ${GOOGLE_DOCKER_REPOSITORY}/${PUBLIC_GCR_GOOGLE_PROJECT}/${IMAGE_NAME}
+      target_gcr_tag: ${{ needs.bump_version.outputs.tag }}
 
   report-to-sherlock:
     name: Report App Version to Sherlock
