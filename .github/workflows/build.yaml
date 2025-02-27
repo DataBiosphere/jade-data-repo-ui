@@ -1,0 +1,150 @@
+name: Build, tag, and publish
+on:
+  workflow_dispatch: {}
+  push:
+    branches:
+      - develop
+    paths:
+      - '!*'
+      - 'src/**'
+      - 'package.json'
+      - 'cypress.json'
+      - 'cypress/**'
+      - 'Dockerfile'
+      - '.github/workflows/build.yaml'
+  pull_request:
+
+env:
+  DEV_GCR_GOOGLE_PROJECT: broad-jade-dev
+  PUBLIC_GCR_GOOGLE_PROJECT: datarepo-public-gcr
+  # This must be defined for the bash redirection
+  GOOGLE_APPLICATION_CREDENTIALS: jade-dev-account.json
+  # Name of the image to make in DEV_GCR_GOOGLE_PROJECT.
+  IMAGE_NAME: ${{ github.event.repository.name }}
+  # Google container repository where DEV_GCR_GOOGLE_PROJECT/IMAGE_NAME can be found.
+  GOOGLE_DOCKER_REPOSITORY: gcr.io
+
+jobs:
+  bump_version:
+    # Skip entire workflow if commit is authored by broadbot
+    # broadbot is only used for automated commits, like version bumps
+    # We don't want to trigger a version bump/deploy to dev for those
+    if: ${{ !contains( github.event.sender.login, 'broadbot') }}
+    uses: DataBiosphere/jade-data-repo/.github/workflows/tag.yml@2.237.0
+    with:
+      # The 'ref' parameter ensures that the provider version is postfixed with the HEAD commit of the PR branch,
+      # facilitating cross-referencing of a pact between Sherlock and GitHub.
+      ref: ${{ github.head_ref || '' }}
+      release-branches: ${{ github.event.repository.default_branch }}
+      version-file-path: package.json
+      version-line-match: "\"version\":.*"
+      version-suffix: ''
+    secrets: inherit
+
+  update_image:
+    runs-on: ubuntu-latest
+    needs:
+      - bump_version
+    steps:
+      - name: Checkout jade-data-repo-ui
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.BROADBOT_TOKEN }}
+
+      - name: Auth to GCP
+        run: |
+          base64 --decode <<< ${{ secrets.SA_B64_CREDENTIALS }} > ${GOOGLE_APPLICATION_CREDENTIALS}
+          gcloud auth activate-service-account --key-file ${GOOGLE_APPLICATION_CREDENTIALS}
+
+      - name: Explicitly auth Docker for Artifact Registry
+        run: gcloud auth configure-docker $GOOGLE_DOCKER_REPOSITORY --quiet
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # For PR builds, push the PR version and the branch name tags,
+      # for builds on the default branch, push the semver tag to the dev and public repos.
+      - name: Build and push Docker image and tags
+        id: image-name
+        run: |
+          DEV_NAME="${GOOGLE_DOCKER_REPOSITORY}/${DEV_GCR_GOOGLE_PROJECT}/${IMAGE_NAME}"
+          DEV_VERSION_TAG="${DEV_NAME}:${{ needs.bump_version.outputs.tag }}"
+          if [ ${{ github.ref_name }} == ${{ github.event.repository.default_branch }} ]; then
+            TAGS="${DEV_VERSION_TAG}"
+          else
+            BRANCH_TAG="${DEV_NAME}:${GITHUB_HEAD_REF//[\/]/_}"
+            TAGS="${DEV_VERSION_TAG},${BRANCH_TAG}"
+          fi
+          echo "TAGS: ${TAGS}"
+          echo "tags=${TAGS}" >> $GITHUB_OUTPUT
+        shell: bash
+
+      - name: Build and push image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          platforms: linux/amd64
+          build-args: |
+            CACHEBUST=$(date +%s)
+          push: true
+          tags: ${{ steps.image-name.outputs.tags }}
+
+      - name: DSP AppSec Trivy check
+        # From https://github.com/broadinstitute/dsp-appsec-trivy-action
+        uses: broadinstitute/dsp-appsec-trivy-action@v1
+
+  cherry_pick_image_to_production_gcr:
+    if: github.ref_name == github.event.repository.default_branch
+    needs:
+      - bump_version
+      - update_image
+    uses: DataBiosphere/jade-data-repo/.github/workflows/cherry-pick-image.yaml@2.237.0
+    secrets: inherit
+    with:
+      # Can't use the workflow env vars here, thus the explicit reference.
+      source_gcr_url: 'gcr.io/broad-jade-dev/jade-data-repo-ui'
+      source_gcr_tag: ${{ needs.bump_version.outputs.tag }}
+      target_gcr_url: 'gcr.io/datarepo-public-gcr/jade-data-repo-ui'
+      target_gcr_tag: ${{ needs.bump_version.outputs.tag }}
+
+  report-to-sherlock:
+    name: Report App Version to Sherlock
+    uses: broadinstitute/sherlock/.github/workflows/client-report-app-version.yaml@main
+    needs:
+      - bump_version
+      - update_image
+    with:
+      new-version: ${{ needs.bump_version.outputs.tag }}
+      chart-name: datarepo-ui
+    permissions:
+      contents: read
+      id-token: write
+
+  report-workflow:
+    name: Report workflow status on dev release
+    if: github.ref_name == github.event.repository.default_branch
+    uses: broadinstitute/sherlock/.github/workflows/client-report-workflow.yaml@main
+    # dependency is not required but makes the action run page more readable
+    needs:
+      - update_image
+    with:
+      relates-to-chart-releases: 'datarepo-ui-dev'
+      notify-slack-channels-upon-workflow-failure: ${{ vars.SLACK_NOTIFICATION_CHANNELS }}
+      notify-slack-channels-upon-workflow-retry: ${{ vars.SLACK_NOTIFICATION_CHANNELS }}
+    permissions:
+      id-token: write
+
+  set-app-version-in-dev:
+    uses: broadinstitute/sherlock/.github/workflows/client-set-environment-app-version.yaml@main
+    if: github.ref_name == github.event.repository.default_branch
+    needs:
+      - bump_version
+      - report-to-sherlock
+    with:
+      new-version: ${{ needs.bump_version.outputs.tag }}
+      chart-name: 'datarepo-ui'
+      environment-name: 'dev'
+    secrets:
+      sync-git-token: ${{ secrets.BROADBOT_TOKEN }}
+    permissions:
+      id-token: write
