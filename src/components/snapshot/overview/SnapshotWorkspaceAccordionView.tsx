@@ -86,10 +86,10 @@ function SnapshotWorkspaceAccordionView(props: SnapshotWorkspaceViewProps) {
       )}
       {entryCount === 0 && (
         <Typography
-          sx={(theme) => ({
+          sx={() => ({
             fontStyle: 'italic',
-            textColor: theme.palette.primary.dark,
-            color: theme.palette.primary.dark,
+            textColor: 'primary.dark',
+            color: 'primary.dark',
           })}
         >
           Not used by any workspaces.
