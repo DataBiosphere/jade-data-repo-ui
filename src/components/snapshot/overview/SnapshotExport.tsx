@@ -80,11 +80,7 @@ function SnapshotExport({
         Export to Terra
       </Typography>
       {of.cloudPlatform === CloudPlatform.Azure && (
-        <Typography
-          variant="h6"
-          sx={{ paddingBottom: 1 }}
-          data-cy="azure-warning-note"
-        >
+        <Typography variant="h6" sx={{ paddingBottom: 1 }} data-cy="azure-warning-note">
           Note: Azure snapshot import into Terra is not yet fully supported.
         </Typography>
       )}
