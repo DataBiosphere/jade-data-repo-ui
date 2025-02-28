@@ -72,7 +72,7 @@ function SnapshotExport({
     <Box
       sx={{
         display: 'inline-block',
-        padding: (theme) => theme.spacing(4),
+        padding: 4,
         width: '100%',
       }}
     >
@@ -82,13 +82,13 @@ function SnapshotExport({
       {of.cloudPlatform === CloudPlatform.Azure && (
         <Typography
           variant="h6"
-          sx={{ paddingBottom: (theme) => theme.spacing(1) }}
+          sx={{ paddingBottom: 1 }}
           data-cy="azure-warning-note"
         >
           Note: Azure snapshot import into Terra is not yet fully supported.
         </Typography>
       )}
-      <Typography variant="body1" sx={{ paddingBottom: (theme) => theme.spacing(1) }}>
+      <Typography variant="body1" sx={{ paddingBottom: 1 }}>
         Export a copy of the snapshot metadata to a new or existing Terra workspace
       </Typography>
       {of.cloudPlatform === CloudPlatform.Gcp && (
