@@ -75,7 +75,7 @@ function SnapshotExport({
         width: '100%',
       }}
     >
-      <Typography variant="h6" sx={{ paddingBottom: (theme) => theme.spacing(1) }}>
+      <Typography variant="h6" sx={{ paddingBottom: 1 }}>
         Export to Terra
       </Typography>
       {of.cloudPlatform === CloudPlatform.Azure && (
