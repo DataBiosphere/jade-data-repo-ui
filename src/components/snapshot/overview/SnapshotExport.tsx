@@ -72,7 +72,6 @@ function SnapshotExport({
     <Box
       sx={{
         display: 'inline-block',
-        padding: 4,
         width: '100%',
       }}
     >
