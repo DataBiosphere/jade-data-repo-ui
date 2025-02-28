@@ -23,7 +23,7 @@ export class ManageWorkspacesView extends React.PureComponent<ManageWorkspaceVie
       entries.map((entry) => (
         <Box key={entry.id}>
           <Chip
-            sx={{ margin: (theme) => theme.spacing(1) }}
+            sx={{ margin: 1 }}
             color="primary"
             label={entry.title}
             key={entry.id}
