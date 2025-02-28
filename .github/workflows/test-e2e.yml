@@ -20,11 +20,11 @@ jobs:
     strategy:
       matrix:
         node-version: [20.x]
-    if: "!contains( github.event.pull_request.labels.*.name, 'skip-ci')"
+    if: ${{ !contains(github.event.pull_request.labels.*.name, 'skip-ci') }}
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           persist-credentials: false
       - name: Use Node.js ${{ matrix.node-version }}
@@ -47,9 +47,9 @@ jobs:
           npx cypress run --record
   report-workflow:
     uses: broadinstitute/sherlock/.github/workflows/client-report-workflow.yaml@main
-    if: ${{ github.ref == 'refs/heads/develop' }}
+    if: github.ref_name == github.event.repository.default_branch
     with:
-      relates-to-chart-releases: 'datarepo-dev'
+      relates-to-chart-releases: 'datarepo-ui-dev'
       notify-slack-channels-upon-workflow-failure: ${{ vars.SLACK_NOTIFICATION_CHANNELS }}
       notify-slack-channels-upon-workflow-retry: ${{ vars.SLACK_NOTIFICATION_CHANNELS }}
       notify-slack-custom-icon: ':terra-horse:'
