@@ -36,7 +36,7 @@ function SnapshotWorkspace(props: StateProps) {
           fontSize: '14px',
           lineHeight: '22px',
           fontWeight: '600',
-          color: (theme) => theme.palette.primary.main,
+          color: 'primary.main',
         }}
         expandIcon={<ExpandMoreIcon />}
         aria-controls="panel1a-content"
