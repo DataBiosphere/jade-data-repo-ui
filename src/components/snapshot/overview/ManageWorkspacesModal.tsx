@@ -95,7 +95,7 @@ export class ManageWorkspacesModal extends React.PureComponent<
           <Box
             component="i"
             className="fa-solid fa-pen-circle"
-            sx={{ marginRight: '5px', top: (theme) => theme.spacing(1) }}
+            sx={{ marginRight: '5px', top: 1 }}
           />
           {modalText}
         </OpenButton>
@@ -111,7 +111,7 @@ export class ManageWorkspacesModal extends React.PureComponent<
             sx={{
               borderBottom: (theme) => `1px solid ${theme.palette.divider}`,
               margin: 0,
-              padding: (theme) => theme.spacing(2),
+              padding: 2,
             }}
           >
             {modalText}
@@ -120,9 +120,9 @@ export class ManageWorkspacesModal extends React.PureComponent<
               onClick={this.handleClose}
               sx={{
                 position: 'absolute',
-                right: (theme) => theme.spacing(1),
-                top: (theme) => theme.spacing(1),
-                color: (theme) => theme.palette.grey[500],
+                right: 1,
+                top: 1,
+                color: 'grey[500]',
               }}
             >
               <CloseIcon />
@@ -131,7 +131,7 @@ export class ManageWorkspacesModal extends React.PureComponent<
           <Typography
             sx={{
               margin: 0,
-              padding: (theme) => `${theme.spacing(2)} !important`,
+              padding: '2 !important',
             }}
           >
             Removing workspace readers will remove access to data for{' '}
@@ -158,7 +158,7 @@ export class ManageWorkspacesModal extends React.PureComponent<
             sx={{
               borderTop: (theme) => `1px solid ${theme.palette.divider}`,
               margin: 0,
-              padding: (theme) => theme.spacing(1),
+              padding: 1,
             }}
           >
             <Button onClick={this.handleClose} color="primary">
