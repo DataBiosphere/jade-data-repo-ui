@@ -29,11 +29,10 @@ const OpenButton = styled(Button)(({ theme }) => ({
   },
 }));
 
-const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
+const StyledDialogContent = styled(DialogContent)(() => ({
   margin: 0,
-  padding: `${theme.spacing(2)} !important`,
+  padding: '16px !important',
   position: 'relative',
-  minHeight: '200px',
 }));
 
 const OverlaySpinner = styled(Box)(({ theme }) => ({
