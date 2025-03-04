@@ -1,10 +1,9 @@
 import React, { useState, SyntheticEvent } from 'react';
 import _ from 'lodash';
 import { connect } from 'react-redux';
-import { Autocomplete, Grid, Tab, Tabs, TextField, Typography } from '@mui/material';
-import { createStyles, WithStyles, withStyles } from '@mui/styles';
-import moment from 'moment';
+import { Autocomplete, Box, Grid, Tab, Tabs, TextField, Typography } from '@mui/material';
 import { CustomTheme } from '@mui/material/styles';
+import moment from 'moment';
 import { patchSnapshot, updateDuosDataset } from 'actions';
 import EditableFieldView from 'components/EditableFieldView';
 import GoogleSheetExport from 'components/common/overview/GoogleSheetExport';
@@ -13,6 +12,7 @@ import TextContent from 'components/common/TextContent';
 import InfoHoverButton from 'components/common/InfoHoverButton';
 import { IamResourceTypeEnum } from 'generated/tdr';
 import { TdrState } from 'reducers';
+import { Action, Dispatch } from 'redux';
 import {
   renderCloudPlatforms,
   renderStorageResources,
@@ -24,36 +24,10 @@ import TabPanel from '../../common/TabPanel';
 import SnapshotExport from './SnapshotExport';
 import { SnapshotModel } from '../../../generated/tdr';
 import { SnapshotRoles } from '../../../constants';
-import { AppDispatch } from '../../../store';
 import JournalEntriesView from '../../JournalEntriesView';
 import { SnapshotPendingSave } from '../../../reducers/snapshot';
 import { DuosDatasetModel } from '../../../reducers/duos';
 import DataAccessControlGroup from '../DataAccessControlGroup';
-
-const styles = (theme: CustomTheme) =>
-  createStyles({
-    root: {
-      flexGrow: 1,
-    },
-    accordionWorkspaces: {
-      padding: theme.spacing(2),
-      paddingLeft: '0px',
-    },
-    tabPanel: {
-      padding: '1em 1em 1em 28px',
-    },
-    datasetText: {
-      ...theme.mixins.ellipsis,
-    },
-    jadeLink: {
-      ...theme.mixins.jadeLink,
-    },
-    duosDropdown: {
-      '& .MuiAutocomplete-popper': {
-        backgroundColor: 'red',
-      },
-    },
-  });
 
 function a11yProps(index: number) {
   return {
@@ -66,9 +40,9 @@ function getDuosDatasetValue(option?: DuosDatasetModel) {
   return option ? `${option.identifier} - ${option.name}` : '';
 }
 
-interface SnapshotOverviewPanelProps extends WithStyles<typeof styles> {
+interface SnapshotOverviewPanelProps {
   authDomains: Array<string>;
-  dispatch: AppDispatch;
+  dispatch: Dispatch<Action>;
   pendingSave: SnapshotPendingSave;
   snapshot: SnapshotModel;
   userRoles: Array<string>;
@@ -80,7 +54,6 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
   const [value, setValue] = useState(0);
   const {
     authDomains,
-    classes,
     dispatch,
     duosDatasets,
     duosDatasetsLoading,
@@ -90,8 +63,8 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
   } = props;
   const isSteward = userRoles.includes(SnapshotRoles.STEWARD);
   const canViewJournalEntries = isSteward;
-  // @ts-ignore
-  const sourceDataset = snapshot.source[0].dataset;
+  // In practice, there will never be a source without datasets, but we need to handle the assumption in this logic.
+  const sourceDataset = snapshot.source?.[0].dataset;
   const linkToBq = snapshot.cloudPlatform === 'gcp';
   const duosDatasetsLoaded = !_.isEmpty(duosDatasets);
 
@@ -111,8 +84,12 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
       ' You do not appear to have access to any DUOS datasets.  You must have access to at least one in order to link a snapshot to a DUOS dataset.';
   }
 
+  if (sourceDataset === undefined) {
+    return <div>Snapshot not found</div>;
+  }
+
   return (
-    <div className={classes.root}>
+    <Box sx={{ flexGrow: 1 }}>
       <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
         <Tab
           data-cy="snapshot-summary-tab"
@@ -153,13 +130,21 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
             <Typography variant="h6">Root dataset:</Typography>
             <Typography
               data-cy="snapshot-source-dataset"
-              className={classes.datasetText}
+              sx={(theme) => ({
+                ...(theme as CustomTheme).mixins.ellipsis,
+              })}
               component="span"
             >
               <Link to={`/datasets/${sourceDataset.id}`}>
-                <span className={classes.jadeLink} title={sourceDataset.name}>
+                <Box
+                  component="span"
+                  sx={(theme) => ({
+                    ...(theme as CustomTheme).mixins.jadeLink,
+                  })}
+                  title={sourceDataset.name}
+                >
                   <TextContent text={sourceDataset.name} />
-                </span>
+                </Box>
               </Link>
             </Typography>
           </Grid>
@@ -188,7 +173,11 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
                 <Autocomplete
                   data-cy="duos-id-editable-field-view"
                   disabled={pendingSave?.duosDataset}
-                  className={classes.duosDropdown}
+                  sx={{
+                    '& .MuiAutocomplete-popper': {
+                      backgroundColor: 'red',
+                    },
+                  }}
                   componentsProps={{
                     popper: {
                       style: { width: '600px' },
@@ -292,7 +281,7 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
           )}
         </Grid>
         {isSteward && (
-          <Grid item xs={12} className={classes.accordionWorkspaces}>
+          <Grid item xs={12} sx={{ padding: '16px', paddingLeft: '0px' }}>
             <SnapshotWorkspace />
           </Grid>
         )}
@@ -321,7 +310,7 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
           </Grid>
         </Grid>
       </TabPanel>
-    </div>
+    </Box>
   );
 }
 
@@ -331,4 +320,4 @@ function mapStateToProps(state: TdrState) {
   };
 }
 
-export default connect(mapStateToProps)(withStyles(styles)(SnapshotOverviewPanel));
+export default connect(mapStateToProps)(SnapshotOverviewPanel);

@@ -1,27 +1,15 @@
 import React from 'react';
 import { Launch } from '@mui/icons-material';
-import { CustomTheme, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
-import { createStyles, WithStyles, withStyles } from '@mui/styles';
+import { ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
+import { CustomTheme } from '@mui/material/styles';
 import { SnapshotWorkspaceEntry } from '../../../models/workspaceentry';
 
-const styles = (theme: CustomTheme) =>
-  createStyles({
-    jadeLink: {
-      ...theme.mixins.jadeLink,
-    },
-    jadeIconLink: {
-      ...theme.mixins.jadeLink,
-      height: '0.75em',
-      width: '0.75em',
-    },
-  });
-
-interface SnapshotWorkspaceEntriesListProps extends WithStyles<typeof styles> {
-  entries: SnapshotWorkspaceEntry[];
+interface SnapshotWorkspaceEntriesListProps {
+  readonly entries: SnapshotWorkspaceEntry[];
 }
 
-function SnapshotWorkspaceEntriesList(props: SnapshotWorkspaceEntriesListProps) {
-  const { entries, classes } = props;
+export default function SnapshotWorkspaceEntriesList(props: SnapshotWorkspaceEntriesListProps) {
+  const { entries } = props;
   return (
     <>
       {entries.map((entry) => {
@@ -36,10 +24,21 @@ function SnapshotWorkspaceEntriesList(props: SnapshotWorkspaceEntriesListProps) 
               target="_blank"
               href={entry.link}
             >
-              <ListItemButton dense className={classes.jadeLink}>
+              <ListItemButton
+                dense
+                sx={(theme) => ({
+                  ...(theme as CustomTheme).mixins.jadeLink,
+                })}
+              >
                 {entry.title}
-                <ListItemIcon className={classes.jadeLink}>
-                  <Launch className={classes.jadeIconLink} />
+                <ListItemIcon
+                  sx={(theme) => ({
+                    ...(theme as CustomTheme).mixins.jadeLink,
+                    height: '0.75em',
+                    width: '0.75em',
+                  })}
+                >
+                  <Launch />
                 </ListItemIcon>
               </ListItemButton>
             </ListItem>
@@ -54,5 +53,3 @@ function SnapshotWorkspaceEntriesList(props: SnapshotWorkspaceEntriesListProps) 
     </>
   );
 }
-
-export default withStyles(styles)(SnapshotWorkspaceEntriesList);

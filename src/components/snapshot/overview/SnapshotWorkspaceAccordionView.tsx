@@ -2,34 +2,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { TdrState } from 'reducers';
 import { SnapshotWorkspaceEntry } from 'models/workspaceentry';
-import { CustomTheme, List, ListSubheader, Typography } from '@mui/material';
-import { createStyles, withStyles, WithStyles } from '@mui/styles';
+import { List, ListSubheader, Typography } from '@mui/material';
 import { InaccessibleWorkspacePolicyModel, WorkspacePolicyModel } from 'generated/tdr';
 import ManageWorkspacesModal from './ManageWorkspacesModal';
 import SnapshotWorkspaceEntriesList from './SnapshotWorkspaceAccordionListEntries';
-
-const styles = (theme: CustomTheme) =>
-  createStyles({
-    snapshotWorkspaceList: {
-      width: '100%',
-    },
-    nullValue: {
-      fontStyle: 'italic',
-      textColor: theme.palette.primary.dark,
-      color: theme.palette.primary.dark,
-    },
-    buttonDescription: {
-      marginLeft: '0.1em',
-      display: 'inline-flex',
-    },
-  });
-
-type SnapshotWorpsaceFunctionProps = {
-  removeWorkspace: any;
-};
-type SnapshotWorkspaceViewProps = SnapshotWorpsaceFunctionProps &
-  StateProps &
-  WithStyles<typeof styles>;
 
 function getDefaultTitle(id: string | undefined): string {
   if (id) {
@@ -75,7 +51,7 @@ function compareWorkspaceListEntries(a: SnapshotWorkspaceEntry, b: SnapshotWorks
 }
 
 function SnapshotWorkspaceAccordionView(props: SnapshotWorkspaceViewProps) {
-  const { classes, accessibleWorkspaces, inaccessibleWorkspaces, removeWorkspace } = props;
+  const { accessibleWorkspaces, inaccessibleWorkspaces, removeWorkspace } = props;
   const entries: SnapshotWorkspaceEntry[] = [];
   Array.prototype.push.apply(entries, getAccessibleWorkspaceList(accessibleWorkspaces));
   Array.prototype.push.apply(entries, getInaccessibleWorkspaceList(inaccessibleWorkspaces));
@@ -87,7 +63,7 @@ function SnapshotWorkspaceAccordionView(props: SnapshotWorkspaceViewProps) {
       {entryCount > 0 && (
         <List
           aria-labelledby="workspace-list-subheader"
-          className={classes.snapshotWorkspaceList}
+          sx={{ width: '100%' }}
           component="nav"
           data-cy="snapshot-workspace-list"
           subheader={
@@ -109,7 +85,15 @@ function SnapshotWorkspaceAccordionView(props: SnapshotWorkspaceViewProps) {
         </List>
       )}
       {entryCount === 0 && (
-        <Typography className={classes.nullValue}>Not used by any workspaces.</Typography>
+        <Typography
+          sx={() => ({
+            fontStyle: 'italic',
+            textColor: 'primary.dark',
+            color: 'primary.dark',
+          })}
+        >
+          Not used by any workspaces.
+        </Typography>
       )}
     </>
   );
@@ -126,4 +110,11 @@ function mapStateToProps(state: TdrState) {
     inaccessibleWorkspaces: state.snapshots.snapshotInaccessibleWorkspaces,
   };
 }
-export default connect(mapStateToProps)(withStyles(styles)(SnapshotWorkspaceAccordionView));
+
+type SnapshotWorpsaceFunctionProps = {
+  removeWorkspace: any;
+};
+
+type SnapshotWorkspaceViewProps = SnapshotWorpsaceFunctionProps & StateProps;
+
+export default connect(mapStateToProps)(SnapshotWorkspaceAccordionView);
