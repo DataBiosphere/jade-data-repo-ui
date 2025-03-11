@@ -306,7 +306,7 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
             </Grid>
           )}
           <Grid item xs={9}>
-            <SnapshotAccess />
+            <SnapshotAccess createMode={false} />
           </Grid>
         </Grid>
       </TabPanel>
