@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import _ from 'lodash';
-import { ClassNameMap, withStyles } from '@mui/styles';
 import {
   Dialog,
   DialogContent,
@@ -16,115 +15,98 @@ import {
   TablePagination,
   TableRow,
   Typography,
+  useTheme,
 } from '@mui/material';
 import { Close } from '@mui/icons-material';
 import { applySort, resizeColumn, changePage, changeRowsPerPage } from 'actions/index';
 import { connect } from 'react-redux';
-import { CustomTheme } from '@mui/material/styles';
-import { Property } from 'csstype';
-import clsx from 'clsx';
+import { CustomTheme, styled } from '@mui/material/styles';
 
+import { AppDispatch } from 'src/store';
 import LightTableHead from './LightTableHead';
 import LoadingSpinner from '../common/LoadingSpinner';
-import { AppDispatch } from '../../store';
 import { TableColumnType, OrderDirectionOptions } from '../../reducers/query';
 import { TdrState } from '../../reducers';
 import { TABLE_DEFAULT_ROWS_PER_PAGE_OPTIONS, TABLE_DEFAULT_SORT_ORDER } from '../../constants';
 
-const styles = (theme: CustomTheme) => ({
-  root: {
-    boxShadow: 'none',
-    maxHeight: '100%',
-    position: 'relative' as Property.Position,
-  },
-  tableWrapper: {
-    border: `1px solid ${theme.palette.lightTable.borderColor}`,
-    maxHeight: 'calc(100vh - 325px)',
-    overflow: 'auto',
-    backgroundColor: theme.palette.lightTable.cellBackgroundDark,
-  },
-  nullValue: {
-    fontStyle: 'italic',
-    textColor: theme.palette.primary.dark,
-    color: theme.palette.primary.dark,
-  },
-  dialogContentText: {
-    maxWidth: '800px',
-    maxHeight: '80vh',
-  },
-  seeMoreLink: {
-    ...theme.mixins.jadeLink,
-    cursor: 'pointer',
-  },
-  valueDialogSeparator: {
-    border: 'none',
-    borderBottom: `1px solid ${theme.palette.primary.dark}`,
-    width: '100%',
-  },
-  table: {
-    borderRadius: `${theme.shape.borderRadius}px ${theme.shape.borderRadius}px 0 0`,
-  },
-  nonResizableTable: {
-    tableLayout: 'fixed' as Property.TableLayout,
-  },
-  overlaySpinner: {
-    opacity: 0.6,
-    position: 'absolute' as Property.Position,
-    top: 0,
-    right: 0,
-    bottom: 0,
-    left: 0,
-    width: 'initial',
-    height: 'initial',
-    backgroundColor: theme.palette.common.white,
-    zIndex: 100,
-  },
-  row: {
-    borderRadius: `${theme.shape.borderRadius}px ${theme.shape.borderRadius}px 0 0`,
-    '&:last-child td': {
-      borderBottom: 'none',
-    },
-  },
-  cell: {
-    borderRight: `1px solid ${theme.palette.lightTable.borderColor}`,
-    borderBottom: `1px solid ${theme.palette.lightTable.borderColor}`,
-    '&:last-child': {
-      borderRight: 'none',
-    },
-  },
-  cellArrayWrapper: {
-    display: 'flex',
-  },
-  // Typescript coaxing to combine the ellipsis mixin with other CSS properties
-  // eslint-disable-next-line prefer-object-spread
-  cellArrayContent: Object.assign({ flexGrow: 1 }, theme.mixins.ellipsis),
-  cellContent: {
-    ...theme.mixins.ellipsis,
-  },
-  lightRow: {
-    backgroundColor: theme.palette.lightTable.callBackgroundLight,
-  },
-  darkRow: {
-    backgroundColor: theme.palette.lightTable.cellBackgroundDark,
-  },
-  paginationWrapper: {
-    border: `1px solid ${theme.palette.lightTable.borderColor}`,
-    borderTop: 'none',
-  },
-  paginationButton: {
-    borderRadius: `${theme.shape.borderRadius}px`,
-    margin: '0px 2px',
-    padding: '0.25rem',
-    border: `1px solid ${theme.palette.lightTable.paginationBlue}`,
-    color: theme.palette.lightTable.paginationBlue,
-  },
+const TableWrapper = styled(TableContainer)(({ theme }: { theme: CustomTheme }) => ({
+  border: `1px solid ${theme.palette.lightTable.borderColor}`,
+  maxHeight: 'calc(100vh - 325px)',
+  overflow: 'auto',
+  backgroundColor: theme.palette.lightTable.cellBackgroundDark,
+}));
+
+const NullValue = styled('span')(({ theme }) => ({
+  fontStyle: 'italic',
+  color: theme.palette.primary.dark,
+}));
+
+const DialogContentTextStyled = styled(DialogContentText)({
+  maxWidth: '800px',
+  maxHeight: '80vh',
 });
+
+const SeeMoreLink = styled(Link)(({ theme }: { theme: CustomTheme }) => ({
+  ...theme.mixins.jadeLink,
+  cursor: 'pointer',
+}));
+
+const ValueDialogSeparator = styled('hr')(({ theme }) => ({
+  border: 'none',
+  borderBottom: `1px solid ${theme.palette.primary.dark}`,
+  width: '100%',
+}));
+
+const OverlaySpinner = styled(LoadingSpinner)(({ theme }) => ({
+  opacity: 0.6,
+  position: 'absolute',
+  top: 0,
+  right: 0,
+  bottom: 0,
+  left: 0,
+  width: 'initial',
+  height: 'initial',
+  backgroundColor: theme.palette.common.white,
+  zIndex: 100,
+}));
+
+const Row = styled(TableRow)(({ theme }) => ({
+  borderRadius: `${theme.shape.borderRadius}px ${theme.shape.borderRadius}px 0 0`,
+  '&:last-child td': {
+    borderBottom: 'none',
+  },
+}));
+
+const Cell = styled(TableCell)(({ theme }: { theme: CustomTheme }) => ({
+  borderRight: `1px solid ${theme.palette.lightTable.borderColor}`,
+  borderBottom: `1px solid ${theme.palette.lightTable.borderColor}`,
+  '&:last-child': {
+    borderRight: 'none',
+  },
+}));
+
+const CellArrayWrapper = styled('span')({
+  display: 'flex',
+});
+
+const CellArrayContent = styled('span')(({ theme }: { theme: CustomTheme }) => ({
+  flexGrow: 1,
+  ...theme.mixins.ellipsis,
+}));
+
+const CellContent = styled('div')(({ theme }: { theme: CustomTheme }) => ({
+  ...theme.mixins.ellipsis,
+}));
+
+const PaginationWrapper = styled(TablePagination)(({ theme }: { theme: CustomTheme }) => ({
+  border: `1px solid ${theme.palette.lightTable.borderColor}`,
+  borderTop: 'none',
+}));
 
 // type RowType = TableRowType | DatasetSummaryModel | SnapshotSummaryModel;
 
 type LightTableProps<RowType> = {
-  classes: ClassNameMap;
-  columns: Array<TableColumnType<RowType>>;
+  columns: Array<TableColumnType>;
   dispatch: AppDispatch;
   filteredCount: number;
   handleEnumeration?: (
@@ -150,8 +132,7 @@ type LightTableProps<RowType> = {
   refreshCnt: number;
 };
 
-function LightTable({
-  classes,
+function LightTable<T>({
   columns,
   dispatch,
   filteredCount,
@@ -171,6 +152,8 @@ function LightTable({
   refreshCnt,
 }: LightTableProps<T>) {
   const [seeMore, setSeeMore] = useState({ open: false, title: '', contents: [''] });
+
+  const theme = useTheme() as CustomTheme;
 
   const handleRequestSort = (_event: any, sort: string) => {
     let newOrder = TABLE_DEFAULT_SORT_ORDER;
@@ -209,20 +192,14 @@ function LightTable({
     });
   };
 
-  const handleNullValue = () => (
-    <span key="emptyRow" className={classes.nullValue}>
-      (empty)
-    </span>
-  );
+  const handleNullValue = () => <NullValue key="emptyRow">(empty)</NullValue>;
 
   const handleRepeatedValues = (values: Array<string>, columnName: string) => {
-    /* eslint-disable indent */
     const cleanValues = _.isEmpty(values)
       ? [handleNullValue()]
       : values
           .map((v) => (_.isNil(v) ? handleNullValue() : `${v}`))
           .map((v, i) => <span key={`val-${i}`}>{v}</span>);
-    /* eslint-enable indent */
 
     const cellValues = cleanValues
       .map((v, i) => [v, <span key={`sep-${i}`}>, </span>])
@@ -230,23 +207,25 @@ function LightTable({
       .slice(0, -1);
 
     const dialogValues = cleanValues
-      .map((v, i) => [v, <hr key={`sep-${i}`} className={classes.valueDialogSeparator} />])
+      .map((v, i) => [v, <ValueDialogSeparator key={`sep-${i}`} />])
       .flatMap((v) => v)
       .slice(0, -1);
 
     const seeMoreLink = (
-      <Link key="see-more" onClick={() => handleSeeMoreOpen(dialogValues, columnName)}>
-        <span className={classes.seeMoreLink}>
-          ({cleanValues.length} {cleanValues.length === 1 ? 'item' : 'items'})
-        </span>
-      </Link>
+      <SeeMoreLink
+        key="see-more"
+        onClick={() => handleSeeMoreOpen(dialogValues, columnName)}
+        theme={theme}
+      >
+        ({cleanValues.length} {cleanValues.length === 1 ? 'item' : 'items'})
+      </SeeMoreLink>
     );
 
     return (
-      <span className={classes.cellArrayWrapper}>
-        <span className={classes.cellArrayContent}>{cellValues}</span>
+      <CellArrayWrapper>
+        <CellArrayContent theme={theme}>{cellValues}</CellArrayContent>
         {seeMoreLink}
-      </span>
+      </CellArrayWrapper>
     );
   };
 
@@ -268,7 +247,6 @@ function LightTable({
     return `${value}`;
   };
 
-  // Not including handleEnumeration in effect list since we don't want a change in the function to trigger a fetch
   useEffect(() => {
     if (handleEnumeration) {
       handleEnumeration(
@@ -280,8 +258,16 @@ function LightTable({
         refreshCnt,
       );
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchString, page, rowsPerPage, orderProperty, orderDirection, tableName, refreshCnt]);
+  }, [
+    searchString,
+    page,
+    rowsPerPage,
+    orderProperty,
+    orderDirection,
+    tableName,
+    refreshCnt,
+    handleEnumeration,
+  ]);
 
   const supportsResize = columns.some((col) => col.allowResize);
   const tableWidth: number = columns.reduce(
@@ -291,16 +277,33 @@ function LightTable({
   const effectiveTableWidth = _.isNaN(tableWidth) || !supportsResize ? '100%' : tableWidth;
   const showPagination = (rows && rows.length > 0) || infinitePaging;
 
+  const paginationButtonStyles = {
+    borderRadius: `${theme.shape.borderRadius}px`,
+    margin: '0px 2px',
+    padding: '0.25rem',
+    border: `1px solid ${theme.palette.lightTable.paginationBlue}`,
+    color: theme.palette.lightTable.paginationBlue,
+  };
+
   return (
     <div>
       {!(loading && !rows?.length) && (
-        <Paper className={classes.root}>
-          {loading && <LoadingSpinner className={classes.overlaySpinner} />}
-          <TableContainer className={classes.tableWrapper}>
+        <Paper
+          sx={{
+            boxShadow: 'none',
+            maxHeight: '100%',
+            position: 'relative',
+          }}
+        >
+          {loading && <OverlaySpinner />}
+          <TableWrapper theme={theme}>
             <Table
-              className={clsx(classes.table, { [classes.nonResizableTable]: !supportsResize })}
               stickyHeader
-              sx={{ width: effectiveTableWidth }}
+              sx={{
+                width: effectiveTableWidth,
+                borderRadius: `${theme.shape.borderRadius}px ${theme.shape.borderRadius}px 0 0`,
+                tableLayout: supportsResize ? undefined : 'fixed',
+              }}
             >
               <LightTableHead
                 columns={columns}
@@ -309,52 +312,51 @@ function LightTable({
               />
               <TableBody data-cy="tableBody">
                 {rows && rows.length > 0 ? (
-                  rows.map((row: any, index) => {
+                  rows.map((row: any, index: number) => {
                     const darkRow = index % 2 !== 0;
                     return (
-                      <TableRow
+                      <Row
                         hover
                         key={`${index}-${row[rowKey || 'id']}}`}
-                        className={clsx({
-                          [classes.row]: true,
-                          [classes.darkRow]: darkRow,
-                          [classes.lightRow]: !darkRow,
-                        })}
+                        sx={{
+                          backgroundColor: darkRow
+                            ? theme.palette.lightTable.cellBackgroundDark
+                            : theme.palette.lightTable.callBackgroundLight,
+                        }}
                       >
                         {columns.map((col) => {
                           const maxWidth = _.isNumber(col.width) ? col.width : undefined;
                           return (
-                            <TableCell
-                              className={classes.cell}
+                            <Cell
                               key={`${col.name}-${index}`}
                               style={{ wordBreak: 'break-word' }}
                               data-cy={`cellValue-${col.name}-${index}`}
+                              theme={theme}
                             >
-                              <div
-                                className={classes.cellContent}
-                                style={{ maxWidth, ...col.cellStyles }}
-                              >
+                              <CellContent style={{ maxWidth, ...col.cellStyles }} theme={theme}>
                                 {handleValues(row, col)}
-                              </div>
-                            </TableCell>
+                              </CellContent>
+                            </Cell>
                           );
                         })}
-                      </TableRow>
+                      </Row>
                     );
                   })
                 ) : (
-                  <TableRow className={classes.row}>
-                    <TableCell colSpan={columns.length}>{noRowsMessage}</TableCell>
-                  </TableRow>
+                  <Row>
+                    <Cell colSpan={columns.length} theme={theme}>
+                      {noRowsMessage}
+                    </Cell>
+                  </Row>
                 )}
               </TableBody>
             </Table>
-          </TableContainer>
+          </TableWrapper>
           {showPagination && (
-            <TablePagination
-              className={classes.paginationWrapper}
+            <PaginationWrapper
               rowsPerPageOptions={TABLE_DEFAULT_ROWS_PER_PAGE_OPTIONS}
               component="div"
+              theme={theme}
               count={filteredCount}
               rowsPerPage={rowsPerPage}
               page={page}
@@ -365,7 +367,7 @@ function LightTable({
                 disableTouchRipple: true,
                 disableFocusRipple: true,
                 disableRipple: true,
-                className: classes.paginationButton,
+                sx: paginationButtonStyles,
               }}
               nextIconButtonProps={{
                 'aria-label': 'Next Page',
@@ -375,7 +377,7 @@ function LightTable({
                 disabled: infinitePaging
                   ? rows.length < rowsPerPage
                   : page * rowsPerPage + rows.length >= filteredCount,
-                className: classes.paginationButton,
+                sx: paginationButtonStyles,
               }}
               labelDisplayedRows={({ from, to, count }) => {
                 if (infinitePaging) {
@@ -390,21 +392,17 @@ function LightTable({
           )}
           <Dialog open={seeMore.open} scroll="paper">
             <DialogTitle id="see-more-dialog-title">
-              <Typography variant="h4" style={{ float: 'left' }}>
+              <Typography variant="h4" sx={{ float: 'left' }}>
                 {seeMore.title}
               </Typography>
-              <IconButton size="small" style={{ float: 'right' }} onClick={handleSeeMoreClose}>
+              <IconButton size="small" sx={{ float: 'right' }} onClick={handleSeeMoreClose}>
                 <Close />
               </IconButton>
             </DialogTitle>
             <DialogContent dividers={true}>
-              <DialogContentText
-                className={classes.dialogContentText}
-                component="div"
-                id="see-more-dialog-content-text"
-              >
+              <DialogContentTextStyled id="see-more-dialog-content-text">
                 {seeMore.contents}
-              </DialogContentText>
+              </DialogContentTextStyled>
             </DialogContent>
           </Dialog>
         </Paper>
@@ -423,4 +421,4 @@ function mapStateToProps(state: TdrState) {
   };
 }
 
-export default connect(mapStateToProps)(withStyles(styles)(LightTable));
+export default connect(mapStateToProps)(LightTable);
