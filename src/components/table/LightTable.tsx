@@ -124,7 +124,7 @@ const styles = (theme: CustomTheme) => ({
 
 type LightTableProps<RowType> = {
   classes: ClassNameMap;
-  columns: Array<TableColumnType>;
+  columns: Array<TableColumnType<RowType>>;
   dispatch: AppDispatch;
   filteredCount: number;
   handleEnumeration?: (
@@ -169,7 +169,7 @@ function LightTable({
   tableName,
   totalCount,
   refreshCnt,
-}: LightTableProps<object>) {
+}: LightTableProps<T>) {
   const [seeMore, setSeeMore] = useState({ open: false, title: '', contents: [''] });
 
   const handleRequestSort = (_event: any, sort: string) => {
