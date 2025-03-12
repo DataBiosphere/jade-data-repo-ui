@@ -15,7 +15,6 @@ const JadeLink = styled('span')(({ theme }) => ({
 
 class DatasetSnapshotsTable extends React.PureComponent {
   static propTypes = {
-    classes: PropTypes.object.isRequired,
     dataset: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired,
     loading: PropTypes.bool.isRequired,
@@ -34,7 +33,7 @@ class DatasetSnapshotsTable extends React.PureComponent {
   };
 
   render() {
-    const { classes, loading, snapshotCount, snapshots } = this.props;
+    const { loading, snapshotCount, snapshots } = this.props;
     const columns = [
       {
         label: 'Snapshot Name',
