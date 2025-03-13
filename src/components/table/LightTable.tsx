@@ -258,16 +258,8 @@ function LightTable<T>({
         refreshCnt,
       );
     }
-  }, [
-    searchString,
-    page,
-    rowsPerPage,
-    orderProperty,
-    orderDirection,
-    tableName,
-    refreshCnt,
-    handleEnumeration,
-  ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchString, page, rowsPerPage, orderProperty, orderDirection, tableName, refreshCnt]);
 
   const supportsResize = columns.some((col) => col.allowResize);
   const tableWidth: number = columns.reduce(
