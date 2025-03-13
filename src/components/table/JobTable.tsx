@@ -59,10 +59,8 @@ const statusMap: StatusMap = {
 };
 
 interface IProps {
-  jobs: Array<JobModel>;
-  jobsCount?: number;
-  filteredJobsCount?: number;
-  handleFilterJobs?: (
+  readonly jobs: Array<JobModel>;
+  readonly handleFilterJobs?: (
     rowsPerPage: number,
     rowsForCurrentPage: number,
     orderProperty: string,
@@ -70,11 +68,10 @@ interface IProps {
     searchString: string,
     refreshCnt: number,
   ) => void;
-  handleMakeSteward?: (jobId: string) => void;
-  loading: boolean;
-  searchString: string;
-  query?: Record<string, string>;
-  refreshCnt: number;
+  readonly loading: boolean;
+  readonly searchString: string;
+  readonly query?: Record<string, string>;
+  readonly refreshCnt: number;
 }
 
 function JobTable({ jobs, handleFilterJobs, loading, searchString, query, refreshCnt }: IProps) {

@@ -106,10 +106,10 @@ const PaginationWrapper = styled(TablePagination)(({ theme }: { theme: CustomThe
 // type RowType = TableRowType | DatasetSummaryModel | SnapshotSummaryModel;
 
 type LightTableProps<RowType> = {
-  columns: Array<TableColumnType>;
-  dispatch: AppDispatch;
-  filteredCount: number;
-  handleEnumeration?: (
+  readonly columns: Array<TableColumnType>;
+  readonly dispatch: AppDispatch;
+  readonly filteredCount: number;
+  readonly handleEnumeration?: (
     rowsPerPage: number,
     rowsForCurrentPage: number,
     orderProperty: string,
@@ -117,19 +117,19 @@ type LightTableProps<RowType> = {
     searchString: string,
     refreshCnt: number,
   ) => void;
-  infinitePaging?: boolean;
-  loading: boolean;
-  orderDirection: OrderDirectionOptions;
-  orderProperty: string;
-  noRowsMessage: string;
-  page: number;
-  rows: Array<RowType>;
-  rowsPerPage: number;
-  rowKey?: string;
-  searchString?: string;
-  tableName?: string;
-  totalCount?: number;
-  refreshCnt: number;
+  readonly infinitePaging?: boolean;
+  readonly loading: boolean;
+  readonly orderDirection: OrderDirectionOptions;
+  readonly orderProperty: string;
+  readonly noRowsMessage: string;
+  readonly page: number;
+  readonly rows: Array<RowType>;
+  readonly rowsPerPage: number;
+  readonly rowKey?: string;
+  readonly searchString?: string;
+  readonly tableName?: string;
+  readonly totalCount?: number;
+  readonly refreshCnt: number;
 };
 
 function LightTable<T>({
@@ -211,20 +211,16 @@ function LightTable<T>({
       .flatMap((v) => v)
       .slice(0, -1);
 
-    const seeMoreLink = (
-      <SeeMoreLink
-        key="see-more"
-        onClick={() => handleSeeMoreOpen(dialogValues, columnName)}
-        theme={theme}
-      >
-        ({cleanValues.length} {cleanValues.length === 1 ? 'item' : 'items'})
-      </SeeMoreLink>
-    );
-
     return (
       <CellArrayWrapper>
         <CellArrayContent theme={theme}>{cellValues}</CellArrayContent>
-        {seeMoreLink}
+        <SeeMoreLink
+          key="see-more"
+          onClick={() => handleSeeMoreOpen(dialogValues, columnName)}
+          theme={theme}
+        >
+          ({cleanValues.length} {cleanValues.length === 1 ? 'item' : 'items'})
+        </SeeMoreLink>
       </CellArrayWrapper>
     );
   };

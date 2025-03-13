@@ -34,10 +34,10 @@ function getLink(id: string, resourceType: ResourceType) {
 }
 
 interface IProps {
-  resourceType: ResourceType;
-  resource: DatasetSummaryModel | SnapshotSummaryModel;
-  roleMaps: { [key: string]: Array<string> };
-  handleMakeSteward?: (datasetId: string) => void;
+  readonly resourceType: ResourceType;
+  readonly resource: DatasetSummaryModel | SnapshotSummaryModel;
+  readonly roleMaps: { [key: string]: Array<string> };
+  readonly handleMakeSteward?: (datasetId: string) => void;
 }
 
 function ResourceName({ resourceType, resource, roleMaps, handleMakeSteward }: IProps) {

@@ -15,11 +15,11 @@ const TextWrapper = styled('span')(({ theme }) => ({
 }));
 
 interface IProps {
-  datasets: Array<DatasetSummaryModel>;
-  datasetRoleMaps: { [key: string]: Array<string> };
-  datasetsCount: number;
-  filteredDatasetsCount: number;
-  handleFilterDatasets?: (
+  readonly datasets: Array<DatasetSummaryModel>;
+  readonly datasetRoleMaps: { [key: string]: Array<string> };
+  readonly datasetsCount: number;
+  readonly filteredDatasetsCount: number;
+  readonly handleFilterDatasets?: (
     rowsPerPage: number,
     rowsForCurrentPage: number,
     orderProperty: string,
@@ -27,10 +27,10 @@ interface IProps {
     searchString: string,
     refreshCnt: number,
   ) => void;
-  handleMakeSteward?: (datasetId: string) => void;
-  loading: boolean;
-  searchString: string;
-  refreshCnt: number;
+  readonly handleMakeSteward?: (datasetId: string) => void;
+  readonly loading: boolean;
+  readonly searchString: string;
+  readonly refreshCnt: number;
 }
 
 function DatasetTable({

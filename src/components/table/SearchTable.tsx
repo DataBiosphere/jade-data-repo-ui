@@ -29,9 +29,9 @@ const ClearSearch = styled(Link)(({ theme }: { theme: CustomTheme }) => ({
 }));
 
 interface IProps {
-  searchString: string;
-  onSearchStringChange: any;
-  clearSearchString: any;
+  readonly searchString: string;
+  readonly onSearchStringChange: any;
+  readonly clearSearchString: any;
 }
 
 function SearchTable({ searchString, onSearchStringChange, clearSearchString }: IProps) {

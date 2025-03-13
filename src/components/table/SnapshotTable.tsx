@@ -12,11 +12,11 @@ import { ResourceType } from '../../constants';
 import ResourceName from './ResourceName';
 
 interface IProps {
-  snapshots: Array<SnapshotSummaryModel>;
-  snapshotRoleMaps: { [key: string]: Array<string> };
-  snapshotCount: number;
-  filteredSnapshotCount: number;
-  handleFilterSnapshots?: (
+  readonly snapshots: Array<SnapshotSummaryModel>;
+  readonly snapshotRoleMaps: { [key: string]: Array<string> };
+  readonly snapshotCount: number;
+  readonly filteredSnapshotCount: number;
+  readonly handleFilterSnapshots?: (
     rowsPerPage: number,
     rowsForCurrentPage: number,
     orderProperty: string,
@@ -24,10 +24,10 @@ interface IProps {
     searchString: string,
     refreshCnt: number,
   ) => void;
-  handleMakeSteward?: (snapshotId: string) => void;
-  loading: boolean;
-  searchString: string;
-  refreshCnt: number;
+  readonly handleMakeSteward?: (snapshotId: string) => void;
+  readonly loading: boolean;
+  readonly searchString: string;
+  readonly refreshCnt: number;
 }
 
 function SnapshotTable({

@@ -36,12 +36,10 @@ const statusMap: StatusMap = {
 };
 
 interface IProps {
-  journalEntries: Array<JournalEntryModel>;
-  journalEntriesCount?: number;
-  filteredJournalEntriesCount?: number;
-  handleFilterJournalEntries?: (rowsPerPage: number, rowsForCurrentPage: number) => void;
-  loading: boolean;
-  refreshCnt: number;
+  readonly journalEntries: Array<JournalEntryModel>;
+  readonly handleFilterJournalEntries?: (rowsPerPage: number, rowsForCurrentPage: number) => void;
+  readonly loading: boolean;
+  readonly refreshCnt: number;
 }
 
 function JournalEntryTable({

@@ -11,11 +11,11 @@ const SpinWrapper = styled(Box)(() => ({
 }));
 
 type LoadingSpinnerProps = {
-  wrapperStyles?: React.CSSProperties;
-  size?: number | string;
-  className?: string;
-  delay?: boolean;
-  delayMessage?: string;
+  readonly wrapperStyles?: React.CSSProperties;
+  readonly size?: number | string;
+  readonly className?: string;
+  readonly delay?: boolean;
+  readonly delayMessage?: string;
 };
 
 function LoadingSpinner({
