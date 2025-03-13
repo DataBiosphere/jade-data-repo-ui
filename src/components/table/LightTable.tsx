@@ -136,6 +136,7 @@ type LightTableProps<RowType> = {
     refreshCnt: number,
   ) => void;
   infinitePaging?: boolean;
+  hidePagination?: boolean;
   loading: boolean;
   orderDirection: OrderDirectionOptions;
   orderProperty: string;
@@ -157,6 +158,7 @@ function LightTable({
   filteredCount,
   handleEnumeration,
   infinitePaging,
+  hidePagination,
   loading,
   noRowsMessage,
   orderDirection,
@@ -289,7 +291,7 @@ function LightTable({
     0,
   );
   const effectiveTableWidth = _.isNaN(tableWidth) || !supportsResize ? '100%' : tableWidth;
-  const showPagination = (rows && rows.length > 0) || infinitePaging;
+  const showPagination = (rows?.length > 0 || infinitePaging) && !hidePagination;
 
   return (
     <div>
