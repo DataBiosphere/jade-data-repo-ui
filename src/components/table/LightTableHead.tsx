@@ -14,7 +14,7 @@ import {
 import { CustomTheme, styled } from '@mui/material/styles';
 import Draggable, { DraggableEventHandler } from 'react-draggable';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faLongArrowAltUp } from '@fortawesome/free-solid-svg-icons';
+import { faLongArrowAltDown, faLongArrowAltUp } from '@fortawesome/free-solid-svg-icons';
 
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import { TableColumnType, OrderDirectionOptions } from '../../reducers/query';
@@ -174,12 +174,16 @@ function LightTableHead({
                       data-cy={`columnSort-${col.name}`}
                       direction={sortDir || TABLE_DEFAULT_SORT_ORDER}
                       onClick={createSortHandler(col.name)}
-                      IconComponent={() => (
-                        <SortIcon
-                          icon={faLongArrowAltUp}
-                          style={{ marginRight: col.allowResize ? theme.spacing(1) : 0 }}
-                        />
-                      )}
+                      IconComponent={
+                        sortDir
+                          ? () => (
+                              <SortIcon
+                                icon={sortDir === 'asc' ? faLongArrowAltDown : faLongArrowAltUp}
+                                style={{ marginRight: col.allowResize ? theme.spacing(1) : 0 }}
+                              />
+                            )
+                          : undefined
+                      }
                       style={{ width: maxWidth, flex: 1 }}
                     >
                       <span style={{ flex: 1, ...theme.mixins.ellipsis }}>
