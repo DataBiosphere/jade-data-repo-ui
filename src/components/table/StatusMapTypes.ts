@@ -5,7 +5,7 @@ interface StatusIconProps {
   sx: React.CSSProperties;
 }
 
-export interface StatusMapItem {
+export interface StatusIconWithLabel {
   icon: (props: StatusIconProps, theme: CustomTheme) => React.ReactElement;
   label: string;
 }

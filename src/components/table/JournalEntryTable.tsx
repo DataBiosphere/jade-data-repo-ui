@@ -5,34 +5,33 @@ import { JournalEntryModel, JournalEntryModelEntryTypeEnum } from 'generated/tdr
 import { TableColumnType } from 'reducers/query';
 import { CustomTheme } from '@mui/material/styles';
 
-import { StatusMapItem } from 'components/table/StatusMapTypes';
+import { StatusIconWithLabel } from 'components/table/StatusMapTypes';
 import { CheckCircle } from '@mui/icons-material';
 import { Box, useTheme } from '@mui/material';
 import LightTable from './LightTable';
 
-interface StatusMap {
-  CREATE: StatusMapItem;
-  UPDATE: StatusMapItem;
-  DELETE: StatusMapItem;
-}
-
-const statusMap: StatusMap = {
-  CREATE: {
-    icon: (props, theme) => (
-      <CheckCircle sx={{ ...props.sx, color: theme.palette.success.light }} />
-    ),
-    label: 'Created',
-  },
-  UPDATE: {
-    icon: (props, theme) => (
-      <CheckCircle sx={{ ...props.sx, color: theme.palette.success.light }} />
-    ),
-    label: 'Updated',
-  },
-  DELETE: {
-    icon: (_props, _theme) => <Box>Unsupported</Box>,
-    label: 'Deleted',
-  },
+const generateStatusMapItem = (jobStatus: JournalEntryModelEntryTypeEnum): StatusIconWithLabel => {
+  switch (jobStatus) {
+    case JournalEntryModelEntryTypeEnum.Create:
+      return {
+        icon: (props, theme) => (
+          <CheckCircle sx={{ ...props.sx, color: theme.palette.success.light }} />
+        ),
+        label: 'Created',
+      };
+    case JournalEntryModelEntryTypeEnum.Update:
+      return {
+        icon: (props, theme) => (
+          <CheckCircle sx={{ ...props.sx, color: theme.palette.success.light }} />
+        ),
+        label: 'Updated',
+      };
+    default:
+      return {
+        icon: (_props, _theme) => <Box>Unsupported</Box>,
+        label: 'Unsupported',
+      };
+  }
 };
 
 interface IProps {
@@ -125,15 +124,13 @@ function JournalEntryTable({
       width: '10%',
       render: (row: any) => {
         const journalEntry = row as JournalEntryModel;
+        const statusIconWithLabel = generateStatusMapItem(journalEntry.entryType);
         return (
           <Box
             sx={{ width: '100%', display: 'flex', alignItems: 'center' }}
-            title={statusMap[journalEntry.entryType]?.label}
+            title={statusIconWithLabel.label}
           >
-            {statusMap[journalEntry.entryType]?.icon(
-              { sx: { fontSize: '1.2rem', marginRight: '10px' } },
-              theme,
-            )}
+            {statusIconWithLabel.icon({ sx: { fontSize: '1.2rem', marginRight: '10px' } }, theme)}
             {getStatusLabel(journalEntry)}
           </Box>
         );

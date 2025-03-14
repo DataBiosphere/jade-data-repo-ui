@@ -1,7 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import _ from 'lodash';
-import { JobModel } from 'generated/tdr';
+import { JobModel, JobModelJobStatusEnum } from 'generated/tdr';
 import { OrderDirectionOptions, TableColumnType } from 'reducers/query';
 import { CustomTheme, styled } from '@mui/material/styles';
 import { TdrState } from 'reducers';
@@ -12,7 +12,7 @@ import { urlEncodeParams } from 'libs/utilsTs';
 import { Box, useTheme } from '@mui/material';
 import { CheckCircle, Error } from '@mui/icons-material';
 import LoadingSpinner from 'components/common/LoadingSpinner';
-import { StatusMapItem } from 'components/table/StatusMapTypes';
+import { StatusIconWithLabel } from 'components/table/StatusMapTypes';
 import CopyTextButton from '../common/CopyTextButton';
 import LightTable from './LightTable';
 
@@ -31,31 +31,30 @@ const SeeMoreLink = styled('button')(({ theme }: { theme: CustomTheme }) => ({
   },
 }));
 
-interface StatusMap {
-  succeeded: StatusMapItem;
-  running: StatusMapItem;
-  failed: StatusMapItem;
-}
-
-const statusMap: StatusMap = {
-  succeeded: {
-    icon: (props, theme) => (
-      <CheckCircle sx={{ ...props.sx, color: theme.palette.success.light }} />
-    ),
-    label: 'Completed',
-  },
-  running: {
-    icon: (props, _theme) => (
-      <Box {...props}>
-        <LoadingSpinner wrapperStyles={{ height: '1.2rem', width: '1.2rem' }} size="1.1rem" />
-      </Box>
-    ),
-    label: 'In Progress',
-  },
-  failed: {
-    icon: (props, theme) => <Error sx={{ ...props.sx, color: theme.palette.error.light }} />,
-    label: 'Failed',
-  },
+const generateStatusMapItem = (jobStatus: JobModelJobStatusEnum): StatusIconWithLabel => {
+  switch (jobStatus) {
+    case JobModelJobStatusEnum.Succeeded:
+      return {
+        icon: (props, theme) => (
+          <CheckCircle sx={{ ...props.sx, color: theme.palette.success.light }} />
+        ),
+        label: 'Completed',
+      };
+    case JobModelJobStatusEnum.Running:
+      return {
+        icon: (props, _theme) => (
+          <Box {...props}>
+            <LoadingSpinner wrapperStyles={{ height: '1.2rem', width: '1.2rem' }} size="1.1rem" />
+          </Box>
+        ),
+        label: 'In Progress',
+      };
+    default:
+      return {
+        icon: (props, theme) => <Error sx={{ ...props.sx, color: theme.palette.error.light }} />,
+        label: 'Failed',
+      };
+  }
 };
 
 interface IProps {
@@ -88,7 +87,7 @@ function JobTable({ jobs, handleFilterJobs, loading, searchString, query, refres
       name: 'id',
       allowSort: false,
       width: '20%',
-      render: (row: JobModel) => (
+      render: (row: any) => (
         <div>
           <SeeMoreLink onClick={() => handleSeeMoreOpen(row.id)} theme={theme}>
             <span>{`${row.id || 'See More'}`}</span>
@@ -102,7 +101,7 @@ function JobTable({ jobs, handleFilterJobs, loading, searchString, query, refres
       name: 'class_name',
       allowSort: false,
       width: '15%',
-      render: (row: JobModel) => (
+      render: (row: any) => (
         <span title={row.class_name}>{_.last(row.class_name?.split('.'))}</span>
       ),
     },
@@ -110,14 +109,14 @@ function JobTable({ jobs, handleFilterJobs, loading, searchString, query, refres
       label: 'Description',
       name: 'description',
       allowSort: false,
-      render: (row: JobModel) => <span title={row.description}>{row.description}</span>,
+      render: (row: any) => <span title={row.description}>{row.description}</span>,
       width: '45%',
     },
     {
       label: 'Date',
       name: 'submitted',
       allowSort: true,
-      render: (row: JobModel) => (
+      render: (row: any) => (
         <span title={row?.submitted}>{moment(row?.submitted).fromNow()}</span>
       ),
       width: '10%',
@@ -127,25 +126,25 @@ function JobTable({ jobs, handleFilterJobs, loading, searchString, query, refres
       name: 'job_status',
       allowSort: false,
       width: '10%',
-      render: (row: JobModel) => (
-        <Box
-          sx={{ width: '100%', display: 'flex', alignItems: 'center' }}
-          title={statusMap[row.job_status]?.label}
-        >
-          {statusMap[row.job_status]?.icon(
-            { sx: { fontSize: '1.2rem', marginRight: '10px' } },
-            theme,
-          )}
-          <span>{statusMap[row.job_status]?.label}</span>
-        </Box>
-      ),
+      render: (row: any) => {
+        const statusMapItem = generateStatusMapItem(row.job_status);
+        return (
+          <Box
+            sx={{ width: '100%', display: 'flex', alignItems: 'center' }}
+            title={statusMapItem.label}
+          >
+            {statusMapItem.icon({ sx: { fontSize: '1.2rem', marginRight: '10px' } }, theme)}
+            <span>{statusMapItem.label}</span>
+          </Box>
+        );
+      },
     },
     {
       label: 'Duration',
       name: 'job_duration',
       allowSort: false,
       width: '10%',
-      render: (row: JobModel) => {
+      render: (row: any) => {
         if (row.submitted && row.completed) {
           const duration = moment(row.completed).diff(moment(row.submitted), 'seconds');
           const durationStr = moment
