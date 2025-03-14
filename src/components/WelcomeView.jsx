@@ -1,7 +1,8 @@
+import { JadeLink } from 'components/common/JadeLink';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, useTheme } from '@mui/material';
 import { styled } from '@mui/system';
 import { LaunchOutlined } from '@mui/icons-material';
 
@@ -48,12 +49,6 @@ const MainContent = styled(Box)(({ theme }) => ({
   width: '100%',
 }));
 
-const JadeLink = styled(Box)(({ theme }) => ({
-  ...theme.mixins.jadeLink,
-  paddingTop: theme.spacing(2),
-  paddingBottom: theme.spacing(2),
-}));
-
 const TerraLink = styled('span')(({ theme }) => ({
   color: theme.palette.primary.main,
   paddingBottom: theme.spacing(4),
@@ -89,6 +84,8 @@ const StyledLogoGrey = styled(LogoGrey)({
 });
 
 function WelcomeView({ terraUrl }) {
+  const theme = useTheme();
+
   return (
     <Box
       sx={{
@@ -110,7 +107,12 @@ function WelcomeView({ terraUrl }) {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <JadeLink>
+              <JadeLink
+                sx={{
+                  paddingTop: theme.spacing(2),
+                  paddingBottom: theme.spacing(2),
+                }}
+              >
                 Find how-to's, documentation, video tutorials, and discussion forums
                 <LaunchOutlined fontSize="small" />
               </JadeLink>
@@ -127,8 +129,8 @@ function WelcomeView({ terraUrl }) {
           </a>
           <hr />
           <div>
-            <Box sx={{ paddingBottom: (theme) => theme.spacing(2) }}>
-              <Typography sx={{ fontWeight: '900', paddingBottom: (theme) => theme.spacing(2) }}>
+            <Box sx={{ paddingBottom: theme.spacing(2) }}>
+              <Typography sx={{ fontWeight: '900', paddingBottom: theme.spacing(2) }}>
                 WARNING NOTICE
               </Typography>
               <div>

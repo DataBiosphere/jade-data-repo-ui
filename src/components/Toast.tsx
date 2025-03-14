@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 import { TdrState } from 'reducers';
 import { RouterLocation, RouterRootState } from 'connected-react-router';
 import { LocationState } from 'history';
+import { JadeLinkInline } from 'components/common/JadeLink';
 
 const StyledCard = styled(Card)({
   borderRadius: 5,
@@ -35,13 +36,6 @@ const StyledCloseButton = styled(IconButton)(({ theme }) => ({
   height: '24px',
   marginLeft: theme.spacing(2),
   ...theme.mixins.jadeLink,
-}));
-
-const StyledLink = styled('span')(({ theme }) => ({
-  ...theme.mixins.jadeLink,
-  fontSize: 14,
-  fontWeight: 600,
-  textDecoration: 'underline',
 }));
 
 interface ToastProps {
@@ -86,7 +80,11 @@ function Toast({ errorMsg, status, jobId, onDismiss, location }: ToastProps) {
               {jobId && (
                 <Box sx={{ paddingTop: (theme) => theme.spacing(2) }}>
                   <Link to={jobInfoUrl} onClick={onDismiss}>
-                    <StyledLink>View details</StyledLink>
+                    <JadeLinkInline
+                      style={{ fontSize: 14, fontWeight: 600, textDecoration: 'underline' }}
+                    >
+                      View details
+                    </JadeLinkInline>
                   </Link>
                 </Box>
               )}

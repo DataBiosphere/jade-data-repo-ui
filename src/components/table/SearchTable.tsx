@@ -50,7 +50,7 @@ function SearchTable({ searchString, onSearchStringChange, clearSearchString }: 
       <InputBase
         placeholder="Search keyword or description"
         sx={{
-          paddingLeft: '30px !important',
+          paddingLeft: `${theme.spacing(3.7)} !important`,
           width: '100%',
         }}
         onChange={onSearchStringChange}

@@ -8,6 +8,7 @@ import _ from 'lodash';
 import TerraTooltip from 'components/common/TerraTooltip';
 
 import { ResourceType } from '../../constants';
+import {JadeLinkInline} from "components/common/JadeLink";
 
 const AddAsStewardButton = styled(IconButton)(({ theme }) => ({
   padding: 0,
@@ -51,7 +52,7 @@ function ResourceName({ resourceType, resource, roleMaps, handleMakeSteward }: I
         }}
         to={getLink(resource.id || '', resourceType)}
       >
-        <span style={theme.mixins.jadeLink}>{resource.name}</span>
+        <JadeLinkInline>{resource.name}</JadeLinkInline>
       </Link>
       {hasAdminOnlyAccess(resource.id || '', roleMaps) && (
         <TerraTooltip

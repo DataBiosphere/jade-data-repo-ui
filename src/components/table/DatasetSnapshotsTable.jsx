@@ -1,4 +1,4 @@
-import { styled } from '@mui/system';
+import { JadeLink } from 'components/common/JadeLink';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import TextContent from 'components/common/TextContent';
@@ -8,10 +8,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import LightTable from './LightTable';
 import { getDatasetSnapshots } from '../../actions';
-
-const JadeLink = styled('span')(({ theme }) => ({
-  ...theme.mixins.jadeLink,
-}));
 
 class DatasetSnapshotsTable extends React.PureComponent {
   static propTypes = {

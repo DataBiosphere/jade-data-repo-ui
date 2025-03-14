@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, FormLabel, Link, styled } from '@mui/material';
+import { Box, FormLabel, Link } from '@mui/material';
 import { ManagedGroupMembershipEntry } from 'src/models/group';
 import { AppDispatch } from 'src/store';
 import { TdrState } from 'src/reducers';
@@ -8,8 +8,7 @@ import { LaunchOutlined } from '@mui/icons-material';
 import { connect } from 'react-redux';
 import { getUserGroups } from 'src/actions';
 import JadeDropdown from '../dataset/data/JadeDropdown';
-
-const JadeLink = styled('span')(({ theme }) => theme.mixins.jadeLink);
+import { JadeLinkInline } from '../common/JadeLink';
 
 type AuthDomainProps = {
   dispatch: AppDispatch;
@@ -43,10 +42,10 @@ function AuthDomain({ dispatch, userGroups, setParentAuthDomain }: Readonly<Auth
           target="_blank"
           rel="noopener noreferrer"
         >
-          <JadeLink>
+          <JadeLinkInline>
             When to use an Authorization Domain
             <LaunchOutlined fontSize="small" />
-          </JadeLink>
+          </JadeLinkInline>
         </Link>
         .
       </Box>

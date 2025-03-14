@@ -88,7 +88,7 @@ function JobTable({ jobs, handleFilterJobs, loading, searchString, query, refres
       name: 'id',
       allowSort: false,
       width: '20%',
-      render: (row: any) => (
+      render: (row: JobModel) => (
         <div>
           <SeeMoreLink onClick={() => handleSeeMoreOpen(row.id)} theme={theme}>
             <span>{`${row.id || 'See More'}`}</span>
@@ -102,7 +102,7 @@ function JobTable({ jobs, handleFilterJobs, loading, searchString, query, refres
       name: 'class_name',
       allowSort: false,
       width: '15%',
-      render: (row: any) => (
+      render: (row: JobModel) => (
         <span title={row.class_name}>{_.last(row.class_name?.split('.'))}</span>
       ),
     },
@@ -110,13 +110,16 @@ function JobTable({ jobs, handleFilterJobs, loading, searchString, query, refres
       label: 'Description',
       name: 'description',
       allowSort: false,
+      render: (row: JobModel) => <span title={row.description}>{row.description}</span>,
       width: '45%',
     },
     {
       label: 'Date',
       name: 'submitted',
       allowSort: true,
-      render: (row: any) => <span title={row?.submitted}>{moment(row?.submitted).fromNow()}</span>,
+      render: (row: JobModel) => (
+        <span title={row?.submitted}>{moment(row?.submitted).fromNow()}</span>
+      ),
       width: '10%',
     },
     {
@@ -124,28 +127,25 @@ function JobTable({ jobs, handleFilterJobs, loading, searchString, query, refres
       name: 'job_status',
       allowSort: false,
       width: '10%',
-      render: (row: any) => {
-        const job = row as JobModel;
-        return (
-          <Box
-            sx={{ width: '100%', display: 'flex', alignItems: 'center' }}
-            title={statusMap[job.job_status]?.label}
-          >
-            {statusMap[job.job_status]?.icon(
-              { sx: { fontSize: '1.2rem', marginRight: '10px' } },
-              theme,
-            )}
-            <span>{statusMap[job.job_status]?.label}</span>
-          </Box>
-        );
-      },
+      render: (row: JobModel) => (
+        <Box
+          sx={{ width: '100%', display: 'flex', alignItems: 'center' }}
+          title={statusMap[row.job_status]?.label}
+        >
+          {statusMap[row.job_status]?.icon(
+            { sx: { fontSize: '1.2rem', marginRight: '10px' } },
+            theme,
+          )}
+          <span>{statusMap[row.job_status]?.label}</span>
+        </Box>
+      ),
     },
     {
       label: 'Duration',
       name: 'job_duration',
       allowSort: false,
       width: '10%',
-      render: (row: any) => {
+      render: (row: JobModel) => {
         if (row.submitted && row.completed) {
           const duration = moment(row.completed).diff(moment(row.submitted), 'seconds');
           const durationStr = moment
