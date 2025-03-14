@@ -9,7 +9,7 @@ import { RouterRootState } from 'connected-react-router';
 import { connect } from 'react-redux';
 import { push } from 'modules/hist';
 import { urlEncodeParams } from 'libs/utilsTs';
-import { Box, Button, useTheme } from '@mui/material';
+import { Box, useTheme } from '@mui/material';
 import { CheckCircle, Error } from '@mui/icons-material';
 import LoadingSpinner from 'components/common/LoadingSpinner';
 import { StatusMapItem } from 'components/table/StatusMapTypes';
