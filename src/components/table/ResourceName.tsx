@@ -7,8 +7,8 @@ import { DatasetSummaryModel, SnapshotSummaryModel } from 'generated/tdr';
 import _ from 'lodash';
 import TerraTooltip from 'components/common/TerraTooltip';
 
+import { JadeLinkInline } from 'components/common/JadeLink';
 import { ResourceType } from '../../constants';
-import {JadeLinkInline} from "components/common/JadeLink";
 
 const AddAsStewardButton = styled(IconButton)(({ theme }) => ({
   padding: 0,

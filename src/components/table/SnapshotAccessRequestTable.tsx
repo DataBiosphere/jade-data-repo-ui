@@ -15,7 +15,7 @@ import { Link } from 'react-router-dom';
 import { CustomTheme, styled } from '@mui/material/styles';
 import TextWithModalDetails from 'components/common/InfoModal';
 import LoadingSpinner from 'components/common/LoadingSpinner';
-import {JadeLinkInline} from "components/common/JadeLink";
+import { JadeLinkInline } from 'components/common/JadeLink';
 
 const OverlaySpinner = styled(Box)(({ theme }: { theme: CustomTheme }) => ({
   opacity: 0.9,
