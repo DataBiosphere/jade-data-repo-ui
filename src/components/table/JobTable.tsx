@@ -16,7 +16,7 @@ import { StatusMapItem } from 'components/table/StatusMapTypes';
 import CopyTextButton from '../common/CopyTextButton';
 import LightTable from './LightTable';
 
-const SeeMoreLink = styled(Button)(({ theme }: { theme: CustomTheme }) => ({
+const SeeMoreLink = styled('button')(({ theme }: { theme: CustomTheme }) => ({
   cursor: 'pointer',
   border: 'none',
   backgroundColor: 'transparent',
