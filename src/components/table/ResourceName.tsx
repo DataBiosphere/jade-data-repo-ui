@@ -1,7 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { IconButton, Box } from '@mui/material';
-import { CustomTheme, styled } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import { PersonAdd } from '@mui/icons-material';
 import { DatasetSummaryModel, SnapshotSummaryModel } from 'generated/tdr';
 import _ from 'lodash';
