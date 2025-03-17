@@ -116,9 +116,7 @@ function JobTable({ jobs, handleFilterJobs, loading, searchString, query, refres
       label: 'Date',
       name: 'submitted',
       allowSort: true,
-      render: (row: any) => (
-        <span title={row?.submitted}>{moment(row?.submitted).fromNow()}</span>
-      ),
+      render: (row: any) => <span title={row?.submitted}>{moment(row?.submitted).fromNow()}</span>,
       width: '10%',
     },
     {
