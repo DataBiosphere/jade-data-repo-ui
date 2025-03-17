@@ -52,7 +52,7 @@ function ResourceName({ resourceType, resource, roleMaps, handleMakeSteward }: I
         }}
         to={getLink(resource.id || '', resourceType)}
       >
-        <JadeLinkInline>{resource.name}</JadeLinkInline>
+        <JadeLinkInline theme={theme}>{resource.name}</JadeLinkInline>
       </Link>
       {hasAdminOnlyAccess(resource.id || '', roleMaps) && (
         <TerraTooltip

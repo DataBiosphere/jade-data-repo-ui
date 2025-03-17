@@ -3,32 +3,31 @@ import moment from 'moment';
 import _ from 'lodash';
 import { JournalEntryModel, JournalEntryModelEntryTypeEnum } from 'generated/tdr';
 import { TableColumnType } from 'reducers/query';
-import { CustomTheme } from '@mui/material/styles';
 
 import { StatusIconWithLabel } from 'components/table/StatusMapTypes';
 import { CheckCircle } from '@mui/icons-material';
-import { Box, useTheme } from '@mui/material';
+import { Box } from '@mui/material';
 import LightTable from './LightTable';
 
 const generateStatusMapItem = (jobStatus: JournalEntryModelEntryTypeEnum): StatusIconWithLabel => {
   switch (jobStatus) {
     case JournalEntryModelEntryTypeEnum.Create:
       return {
-        icon: (props, theme) => (
-          <CheckCircle sx={{ ...props.sx, color: theme.palette.success.light }} />
+        icon: (props) => (
+          <CheckCircle sx={{ ...props.sx, color: (theme) => theme.palette.success.light }} />
         ),
         label: 'Created',
       };
     case JournalEntryModelEntryTypeEnum.Update:
       return {
-        icon: (props, theme) => (
-          <CheckCircle sx={{ ...props.sx, color: theme.palette.success.light }} />
+        icon: (props) => (
+          <CheckCircle sx={{ ...props.sx, color: (theme) => theme.palette.success.light }} />
         ),
         label: 'Updated',
       };
     default:
       return {
-        icon: (_props, _theme) => <Box>Unsupported</Box>,
+        icon: (_props) => <Box>Unsupported</Box>,
         label: 'Unsupported',
       };
   }
@@ -47,7 +46,6 @@ function JournalEntryTable({
   loading,
   refreshCnt,
 }: IProps) {
-  const theme = useTheme() as CustomTheme;
   const getStatusLabel = (row: JournalEntryModel) => {
     if (row.entryType === 'CREATE') {
       return 'Created';
@@ -130,7 +128,7 @@ function JournalEntryTable({
             sx={{ width: '100%', display: 'flex', alignItems: 'center' }}
             title={statusIconWithLabel.label}
           >
-            {statusIconWithLabel.icon({ sx: { fontSize: '1.2rem', marginRight: '10px' } }, theme)}
+            {statusIconWithLabel.icon({ sx: { fontSize: '1.2rem', marginRight: '10px' } })}
             {getStatusLabel(journalEntry)}
           </Box>
         );

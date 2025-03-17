@@ -35,14 +35,14 @@ const generateStatusMapItem = (jobStatus: JobModelJobStatusEnum): StatusIconWith
   switch (jobStatus) {
     case JobModelJobStatusEnum.Succeeded:
       return {
-        icon: (props, theme) => (
-          <CheckCircle sx={{ ...props.sx, color: theme.palette.success.light }} />
+        icon: (props) => (
+          <CheckCircle sx={{ ...props.sx, color: (theme) => theme.palette.success.light }} />
         ),
         label: 'Completed',
       };
     case JobModelJobStatusEnum.Running:
       return {
-        icon: (props, _theme) => (
+        icon: (props) => (
           <Box {...props}>
             <LoadingSpinner wrapperStyles={{ height: '1.2rem', width: '1.2rem' }} size="1.1rem" />
           </Box>
@@ -51,7 +51,7 @@ const generateStatusMapItem = (jobStatus: JobModelJobStatusEnum): StatusIconWith
       };
     default:
       return {
-        icon: (props, theme) => <Error sx={{ ...props.sx, color: theme.palette.error.light }} />,
+        icon: (props) => <Error sx={{ ...props.sx, color: 'error.light' }} />,
         label: 'Failed',
       };
   }
@@ -131,7 +131,7 @@ function JobTable({ jobs, handleFilterJobs, loading, searchString, query, refres
             sx={{ width: '100%', display: 'flex', alignItems: 'center' }}
             title={statusMapItem.label}
           >
-            {statusMapItem.icon({ sx: { fontSize: '1.2rem', marginRight: '10px' } }, theme)}
+            {statusMapItem.icon({ sx: { fontSize: '1.2rem', marginRight: '10px' } })}
             <span>{statusMapItem.label}</span>
           </Box>
         );

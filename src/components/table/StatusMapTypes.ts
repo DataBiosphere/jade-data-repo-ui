@@ -6,6 +6,6 @@ interface StatusIconProps {
 }
 
 export interface StatusIconWithLabel {
-  icon: (props: StatusIconProps, theme: CustomTheme) => React.ReactElement;
+  icon: (props: StatusIconProps) => React.ReactElement;
   label: string;
 }
