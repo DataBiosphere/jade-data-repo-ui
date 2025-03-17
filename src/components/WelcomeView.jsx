@@ -109,8 +109,8 @@ function WelcomeView({ terraUrl }) {
             >
               <JadeLink
                 sx={{
-                  paddingTop: theme.spacing(2),
-                  paddingBottom: theme.spacing(2),
+                  paddingTop: 2,
+                  paddingBottom: 2,
                 }}
               >
                 Find how-to's, documentation, video tutorials, and discussion forums
