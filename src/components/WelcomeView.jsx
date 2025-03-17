@@ -2,7 +2,7 @@ import { JadeLink } from 'components/common/JadeLink';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Box, Typography, useTheme } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { styled } from '@mui/system';
 import { LaunchOutlined } from '@mui/icons-material';
 
@@ -84,8 +84,6 @@ const StyledLogoGrey = styled(LogoGrey)({
 });
 
 function WelcomeView({ terraUrl }) {
-  const theme = useTheme();
-
   return (
     <Box
       sx={{
