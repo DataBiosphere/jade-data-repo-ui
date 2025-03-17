@@ -171,16 +171,16 @@ function LightTableHead({
                       direction={sortDir || TABLE_DEFAULT_SORT_ORDER}
                       onClick={createSortHandler(col.name)}
                       IconComponent={
-                        sortDir
-                          ? () => (
-                            <SortIcon
-                              icon={sortDir === 'asc' ? faLongArrowAltDown : faLongArrowAltUp}
-                              sx={{
-                                marginRight: col.allowResize ? (theme) => theme.spacing(1) : 0,
-                              }}
-                            />
-                          )
-                          : undefined
+                        !sortDir
+                          ? undefined
+                          : () => (
+                              <SortIcon
+                                icon={sortDir === 'asc' ? faLongArrowAltDown : faLongArrowAltUp}
+                                sx={{
+                                  marginRight: col.allowResize ? (theme) => theme.spacing(1) : 0,
+                                }}
+                              />
+                            )
                       }
                       style={{ width: maxWidth, flex: 1 }}
                     >
