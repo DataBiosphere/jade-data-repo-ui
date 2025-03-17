@@ -19,7 +19,7 @@ import {
 import { Close } from '@mui/icons-material';
 import { applySort, resizeColumn, changePage, changeRowsPerPage } from 'actions/index';
 import { connect } from 'react-redux';
-import { CustomTheme, styled } from '@mui/material/styles';
+import { CustomTheme, styled, Theme } from '@mui/material/styles';
 
 import { AppDispatch } from 'src/store';
 import LightTableHead from './LightTableHead';
@@ -28,12 +28,15 @@ import { TableColumnType, OrderDirectionOptions } from '../../reducers/query';
 import { TdrState } from '../../reducers';
 import { TABLE_DEFAULT_ROWS_PER_PAGE_OPTIONS, TABLE_DEFAULT_SORT_ORDER } from '../../constants';
 
-const TableWrapper = styled(TableContainer)(({ theme }: { theme: CustomTheme }) => ({
-  border: `1px solid ${theme.palette.lightTable.borderColor}`,
-  maxHeight: 'calc(100vh - 325px)',
-  overflow: 'auto',
-  backgroundColor: theme.palette.lightTable.cellBackgroundDark,
-}));
+const TableWrapper = styled(TableContainer)(({ theme }) => {
+  const customTheme = theme as CustomTheme;
+  return {
+    border: `1px solid ${customTheme.palette.lightTable.borderColor}`,
+    maxHeight: 'calc(100vh - 325px)',
+    overflow: 'auto',
+    backgroundColor: customTheme.palette.lightTable.cellBackgroundDark,
+  };
+});
 
 const NullValue = styled('span')(({ theme }) => ({
   fontStyle: 'italic',
@@ -261,12 +264,14 @@ function LightTable<T>({
   const effectiveTableWidth = _.isNaN(tableWidth) || !supportsResize ? '100%' : tableWidth;
   const showPagination = (rows && rows.length > 0) || infinitePaging;
 
+  // For the typing to behave, the lambda has to be of type (Theme) => CSSProperty
   const paginationButtonStyles = {
-    borderRadius: (theme) => `${theme.shape.borderRadius}px`,
+    borderRadius: (theme: Theme) => `${theme.shape.borderRadius}px`,
     margin: '0px 2px',
     padding: '0.25rem',
-    border: (theme) => `1px solid ${theme.palette.lightTable.paginationBlue}`,
-    color: (theme) => theme.palette.lightTable.paginationBlue,
+    border: (theme: Theme) =>
+      `1px solid ${(theme as CustomTheme).palette.lightTable.paginationBlue}`,
+    color: (theme: Theme) => (theme as CustomTheme).palette.lightTable.paginationBlue,
   };
 
   return (

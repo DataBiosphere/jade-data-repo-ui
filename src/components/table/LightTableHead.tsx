@@ -2,20 +2,14 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import _ from 'lodash';
-import {
-  SortDirection,
-  TableCell,
-  TableHead,
-  TableRow,
-  TableSortLabel,
-  Box,
-} from '@mui/material';
+import { SortDirection, TableCell, TableHead, TableRow, TableSortLabel, Box } from '@mui/material';
 import { CustomTheme, styled } from '@mui/material/styles';
 import Draggable, { DraggableEventHandler } from 'react-draggable';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLongArrowAltDown, faLongArrowAltUp } from '@fortawesome/free-solid-svg-icons';
 
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
+import { EllipsisBox, EllipsisSpan } from 'components/common/Ellipsis';
 import { TableColumnType, OrderDirectionOptions } from '../../reducers/query';
 import { TdrState } from '../../reducers';
 import { TABLE_DEFAULT_SORT_ORDER } from '../../constants';
@@ -165,12 +159,10 @@ function LightTableHead({
             >
               <Box sx={{ maxWidth, display: 'flex' }}>
                 {!col.allowSort ? (
-                  <Box style={{ ...theme.mixins.ellipsis, width: maxWidth }}>
-                    <span style={{ flex: 1, ...theme.mixins.ellipsis }}>
-                      {col.label ?? col.name}
-                    </span>
+                  <EllipsisBox style={{ width: maxWidth }}>
+                    <EllipsisSpan sx={{ flex: 1 }}>{col.label ?? col.name}</EllipsisSpan>
                     {createDragHandle(col)}
-                  </Box>
+                  </EllipsisBox>
                 ) : (
                   <div style={{ display: 'flex', flex: 1 }}>
                     <TableSortLabel
@@ -181,13 +173,13 @@ function LightTableHead({
                       IconComponent={
                         sortDir
                           ? () => (
-                              <SortIcon
-                                icon={sortDir === 'asc' ? faLongArrowAltDown : faLongArrowAltUp}
-                                style={{
+                            <SortIcon
+                              icon={sortDir === 'asc' ? faLongArrowAltDown : faLongArrowAltUp}
+                              sx={{
                                 marginRight: col.allowResize ? (theme) => theme.spacing(1) : 0,
                               }}
-                              />
-                            )
+                            />
+                          )
                           : undefined
                       }
                       style={{ width: maxWidth, flex: 1 }}

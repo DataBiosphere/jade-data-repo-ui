@@ -127,8 +127,8 @@ function WelcomeView({ terraUrl }) {
           </a>
           <hr />
           <div>
-            <Box sx={{ paddingBottom: theme.spacing(2) }}>
-              <Typography sx={{ fontWeight: '900', paddingBottom: theme.spacing(2) }}>
+            <Box sx={{ paddingBottom: (theme) => theme.spacing(2) }}>
+              <Typography sx={{ fontWeight: '900', paddingBottom: (theme) => theme.spacing(2) }}>
                 WARNING NOTICE
               </Typography>
               <div>
