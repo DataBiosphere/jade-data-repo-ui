@@ -9,17 +9,13 @@ import _ from 'lodash';
 import { initialUserState } from 'reducers/user';
 import { initialQueryState } from 'reducers/query';
 import { ManagedGroupMembershipEntry } from 'models/group';
+import { initialSnapshotState } from 'reducers/snapshot';
 import history from '../../modules/hist';
 import globalTheme from '../../modules/theme';
 import FullViewSnapshotButton from './FullViewSnapshotButton';
 
 const initialState = {
-  snapshots: {
-    snapshot: {
-      id: 'uuid',
-      name: 'Test Snapshot',
-    },
-  },
+  snapshots: initialSnapshotState,
   user: _.cloneDeep(initialUserState),
   query: _.cloneDeep(initialQueryState),
   router: { location: {} },
@@ -74,7 +70,7 @@ describe('FullViewSnapshotButton', () => {
 
     it('Button is clickable and opens billing profile modal', () => {
       cy.get('button').click();
-      cy.contains('Creating snapshot - select a billing project').should('be.visible');
+      cy.contains('Creating snapshot').should('be.visible');
     });
   });
 

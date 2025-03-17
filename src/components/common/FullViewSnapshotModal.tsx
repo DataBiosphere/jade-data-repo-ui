@@ -1,26 +1,23 @@
-import {
-  Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogTitle,
-  FormLabel,
-  TextField,
-  Typography,
-} from '@mui/material';
-import JadeDropdown from 'components/dataset/data/JadeDropdown';
-import { isEmpty, now, uniq } from 'lodash';
+import { Box, Button, Dialog, DialogActions, DialogTitle } from '@mui/material';
+import { entries, isEmpty, now, uniq, without } from 'lodash';
 import React, { Dispatch, useEffect } from 'react';
-import { createSnapshot, snapshotCreateDetails } from 'actions';
+import { changePolicyUsersToSnapshotRequest, createSnapshot, snapshotCreateDetails } from 'actions';
 import {
   BillingProfileModel,
   DatasetModel,
   SnapshotRequestContentsModelModeEnum,
+  SnapshotRequestModelPolicies,
 } from 'generated/tdr';
 import { connect } from 'react-redux';
 import { TdrState } from 'reducers';
 import { Action } from 'redux';
 import AuthDomain from 'components/snapshot/AuthDomain';
+import { FullViewSnapshotDetails } from 'components/common/FullViewSnapshotModal/FullViewSnapshotDetails';
+import { FullViewSnapshotModalSteps } from 'components/common/FullViewSnapshotModal/constants';
+import { CreateModalSteps } from 'components/common/FullViewSnapshotModal/CreateModalSteps';
+import ManagedSnapshotAccess, {
+  transformRoleToCreatePolicy,
+} from 'components/snapshot/ManagedSnapshotAccess';
 
 interface FullViewSnapshotModalProps {
   readonly modalOpen: boolean;
@@ -32,6 +29,7 @@ interface FullViewSnapshotModalProps {
 
 function FullViewSnapshotModal(props: FullViewSnapshotModalProps) {
   const { billingProfiles, dataset, dispatch, modalOpen, onDismiss } = props;
+  const [step, setStep] = React.useState(FullViewSnapshotModalSteps.DETAILS);
 
   const [selectedAuthDomain, setSelectedAuthDomain] = React.useState<string | undefined>(undefined);
   const [snapshotName, setSnapshotName] = React.useState(
@@ -43,6 +41,12 @@ function FullViewSnapshotModal(props: FullViewSnapshotModalProps) {
   const [snapshotDescription, setSnapshotDescription] = React.useState(
     `Full View Snapshot of Dataset with Dataset name ${dataset.name}, and Dataset id ${dataset.id}.`,
   );
+  const [policies, setPolicies] = React.useState<SnapshotRequestModelPolicies>({
+    stewards: [],
+    readers: [],
+    aggregateDataReaders: [],
+    discoverers: [],
+  });
 
   useEffect(() => {
     const defaultBillingProfile = billingProfiles.find(
@@ -51,7 +55,24 @@ function FullViewSnapshotModal(props: FullViewSnapshotModalProps) {
     setSelectedBillingProfile(defaultBillingProfile || billingProfiles[0]);
   }, [billingProfiles, setSelectedBillingProfile, dataset]);
 
+  useEffect(() => {
+    if (modalOpen) {
+      setStep(FullViewSnapshotModalSteps.DETAILS);
+      setSnapshotName(`Full_View_Snapshot_of_${dataset.name}_${now()}`);
+      setSnapshotDescription(
+        `Full View Snapshot of Dataset with Dataset name ${dataset.name}, and Dataset id ${dataset.id}.`,
+      );
+    }
+  }, [modalOpen, dataset, setStep, setSnapshotName, setSnapshotDescription]);
+
+  const finalStep = step === FullViewSnapshotModalSteps.SECURITY;
+
   const handleCreateFullViewSnapshot = () => {
+    entries(policies).forEach(([role, emails]) => {
+      const uniqEmails = uniq(emails);
+      dispatch(changePolicyUsersToSnapshotRequest(role, uniqEmails));
+    });
+
     dispatch(
       snapshotCreateDetails({
         name: snapshotName,
@@ -70,84 +91,97 @@ function FullViewSnapshotModal(props: FullViewSnapshotModalProps) {
     onDismiss();
   };
 
+  const addUsers = (role: string, usersToAdd: string[]) => {
+    const roleName = transformRoleToCreatePolicy(role);
+    setPolicies((prevPolicies) => ({
+      ...prevPolicies,
+      [roleName]: [
+        // @ts-ignore because the role is generated programmatically, it struggles with type safety
+        ...prevPolicies[roleName],
+        ...usersToAdd,
+      ],
+    }));
+  };
+
+  const removeUser = (role: string) => (user: string) => {
+    const roleName = transformRoleToCreatePolicy(role);
+    // @ts-ignore because the role is generated programmatically, it struggles with type safety
+    setPolicies((prevPolicies) => ({
+      ...prevPolicies,
+      [roleName]: without(
+        // @ts-ignore
+        prevPolicies[roleName],
+        user,
+      ),
+    }));
+  };
+
+  const renderModalDetails = () => {
+    switch (step) {
+      case FullViewSnapshotModalSteps.DETAILS: {
+        return (
+          <FullViewSnapshotDetails
+            snapshotName={snapshotName}
+            setSnapshotName={setSnapshotName}
+            snapshotDescription={snapshotDescription}
+            setSnapshotDescription={setSnapshotDescription}
+            selectedBillingProfile={selectedBillingProfile}
+            setSelectedBillingProfile={setSelectedBillingProfile}
+            billingProfiles={billingProfiles}
+          />
+        );
+      }
+      case FullViewSnapshotModalSteps.SHARING: {
+        return (
+          <ManagedSnapshotAccess
+            createMode={true}
+            requestPolicies={policies}
+            addUsers={addUsers}
+            removeUser={removeUser}
+          />
+        );
+      }
+      default: {
+        return <AuthDomain setParentAuthDomain={setSelectedAuthDomain} />;
+      }
+    }
+  };
+
   return (
     <Dialog fullWidth maxWidth="sm" onClose={onDismiss} open={modalOpen}>
       <DialogTitle id="customized-dialog-title" sx={{ fontSize: '1rem' }}>
-        Creating snapshot - select a billing project
+        Creating snapshot
       </DialogTitle>
       <Box sx={{ padding: '0px 24px 16px 24px' }}>
-        <FormLabel sx={{ fontWeight: 600, color: 'black' }} htmlFor="snapshot-name" required>
-          Snapshot Name
-        </FormLabel>
-        <TextField
-          fullWidth
-          margin="normal"
-          id="snapshot-name"
-          label="Snapshot Name"
-          value={snapshotName}
-          onChange={(e) => setSnapshotName(e.target.value)}
-        />
-        <FormLabel sx={{ fontWeight: 600, color: 'black' }} htmlFor="snapshot-description" required>
-          Snapshot Description
-        </FormLabel>
-        <TextField
-          fullWidth
-          margin="normal"
-          id="snapshot-description"
-          label="Snapshot Description"
-          value={snapshotDescription}
-          onChange={(e) => setSnapshotDescription(e.target.value)}
-        />
-        <Typography sx={{ color: 'black' }}>
-          Do you want to use the Google Billing Project associated with this dataset or would you
-          like to select a different one?
-        </Typography>
-        <Box sx={{ marginTop: '8px' }}>
-          <FormLabel
-            sx={{ fontWeight: 600, color: 'black' }}
-            htmlFor="billing-profile-select"
-            required
-          >
-            Google Billing Project
-          </FormLabel>
-        </Box>
-        <JadeDropdown
-          sx={{ height: '2.5rem' }}
-          disabled={billingProfiles.length <= 1}
-          options={uniq(
-            billingProfiles
-              .filter((billingProfile) => billingProfile.profileName !== undefined)
-              .map((billingProfile) => billingProfile.profileName) as string[],
-          )}
-          name="billing-profile"
-          onSelectedItem={(event) =>
-            setSelectedBillingProfile(
-              billingProfiles.find(
-                (billingProfile) => billingProfile.profileName === event.target.value,
-              ),
-            )
-          }
-          value={selectedBillingProfile?.profileName || ''}
-        />
-        <Box sx={{ marginTop: '8px' }}>
-          <AuthDomain setParentAuthDomain={setSelectedAuthDomain} />
-        </Box>
-        <DialogActions sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <Button onClick={onDismiss} variant="outlined">
+        <CreateModalSteps step={step} onStepChange={(newStep) => setStep(newStep)} />
+        <Box sx={{ paddingTop: '8px' }}>{renderModalDetails()}</Box>
+        <DialogActions sx={{ display: 'flex', justifyContent: 'space-between' }}>
+          <Button onClick={onDismiss} variant="text">
             Cancel
           </Button>
-          <Button
-            onClick={onSelect}
-            disabled={
-              selectedBillingProfile?.id === undefined ||
-              isEmpty(snapshotName) ||
-              isEmpty(snapshotDescription)
-            }
-            variant="contained"
-            data-cy="select-billing-profile-button"
-          >
-            Create
-          </Button>
+          <Box>
+            {step > 0 && (
+              <Button
+                onClick={() => setStep(step - 1)}
+                variant="outlined"
+                sx={{ marginRight: '8px' }}
+              >
+                Previous
+              </Button>
+            )}
+            <Button
+              onClick={finalStep ? onSelect : () => setStep(step + 1)}
+              disabled={
+                selectedBillingProfile?.id === undefined ||
+                isEmpty(snapshotName) ||
+                isEmpty(snapshotDescription)
+              }
+              variant="contained"
+              data-cy="next-step-button"
+            >
+              {finalStep ? 'Create Snapshot' : 'Next'}
+            </Button>
+          </Box>
         </DialogActions>
       </Box>
     </Dialog>

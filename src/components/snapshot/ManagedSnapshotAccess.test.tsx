@@ -6,7 +6,7 @@ import React from 'react';
 import createMockStore from 'redux-mock-store';
 import history from '../../modules/hist';
 import globalTheme from '../../modules/theme';
-import SnapshotAccess from './SnapshotAccess';
+import ManagedSnapshotAccess from './ManagedSnapshotAccess';
 
 const snapshot = {
   id: 'uuid',
@@ -37,15 +37,26 @@ const initialState = {
   },
 };
 
-describe('Snapshot access info', () => {
+describe('ManagedSnapshotAccess', () => {
   beforeEach(() => {
     const mockStore = createMockStore([]);
     const store = mockStore(initialState);
+    const snapshotRequestPolicies = {
+      stewards: ['steward@gmail.com'],
+      readers: ['reader@gmail.com'],
+      discoverers: [],
+      aggregateDataReaders: ['datareader@gmail.com'],
+    };
     mount(
       <Router history={history}>
         <Provider store={store}>
           <ThemeProvider theme={globalTheme}>
-            <SnapshotAccess createMode={false} />
+            <ManagedSnapshotAccess
+              createMode={false}
+              addUsers={cy.stub().as('addUsers')}
+              removeUser={cy.stub().as('removeUser')}
+              requestPolicies={snapshotRequestPolicies}
+            />
           </ThemeProvider>
         </Provider>
       </Router>,
@@ -81,4 +92,11 @@ describe('Snapshot access info', () => {
         });
       });
   });
+  it('Allows adding users', () => {
+    cy.get('[data-cy="enterEmailBox"]').type('newemail@gmail.com');
+    cy.get('[data-cy="inviteButton"]').click();
+    cy.get('@addUsers').should('be.calledWith', 'steward', ['newemail@gmail.com']);
+  });
+
+  // TODO: Refactor remove users to use the same pattern as add users so it is stubable
 });
