@@ -113,7 +113,6 @@ function JobTable({ jobs, handleFilterJobs, loading, searchString, query, refres
       label: 'Description',
       name: 'description',
       allowSort: false,
-      render: (row: any) => <span title={row.description}>{row.description}</span>,
       width: '45%',
     },
     {
