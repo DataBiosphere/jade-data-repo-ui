@@ -5,13 +5,14 @@ import { OrderDirectionOptions, TableColumnType } from 'reducers/query';
 
 import TextContent from 'components/common/TextContent';
 import { styled } from '@mui/system';
+import { CustomTheme } from '@mui/material/styles';
 import { renderCloudPlatforms } from '../../libs/render-utils';
 import LightTable from './LightTable';
 import ResourceName from './ResourceName';
 import { ResourceType } from '../../constants';
 
 const TextWrapper = styled('span')(({ theme }) => ({
-  ...theme.mixins.ellipsis,
+  ...(theme as CustomTheme).mixins.ellipsis,
 }));
 
 interface IProps {

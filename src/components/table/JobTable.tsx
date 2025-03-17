@@ -9,27 +9,30 @@ import { RouterRootState } from 'connected-react-router';
 import { connect } from 'react-redux';
 import { push } from 'modules/hist';
 import { urlEncodeParams } from 'libs/utilsTs';
-import { Box, useTheme } from '@mui/material';
+import { Box } from '@mui/material';
 import { CheckCircle, Error } from '@mui/icons-material';
 import LoadingSpinner from 'components/common/LoadingSpinner';
 import { StatusIconWithLabel } from 'components/table/StatusMapTypes';
 import CopyTextButton from '../common/CopyTextButton';
 import LightTable from './LightTable';
 
-const SeeMoreLink = styled('button')(({ theme }: { theme: CustomTheme }) => ({
-  cursor: 'pointer',
-  border: 'none',
-  backgroundColor: 'transparent',
-  color: theme.palette.primary.main,
-  width: '80%',
-  ...theme.mixins.ellipsis,
-  '&:hover': {
-    color: theme.palette.primary.hover,
-  },
-  '& span': {
-    ...theme.mixins.ellipsis,
-  },
-}));
+const SeeMoreLink = styled('button')(({ theme }) => {
+  const customTheme = theme as CustomTheme;
+  return {
+    cursor: 'pointer',
+    border: 'none',
+    backgroundColor: 'transparent',
+    color: theme.palette.primary.main,
+    width: '80%',
+    ...customTheme.mixins.ellipsis,
+    '&:hover': {
+      color: customTheme.palette.primary.hover,
+    },
+    '& span': {
+      ...customTheme.mixins.ellipsis,
+    },
+  };
+});
 
 const generateStatusMapItem = (jobStatus: JobModelJobStatusEnum): StatusIconWithLabel => {
   switch (jobStatus) {
@@ -51,7 +54,9 @@ const generateStatusMapItem = (jobStatus: JobModelJobStatusEnum): StatusIconWith
       };
     default:
       return {
-        icon: (props) => <Error sx={{ ...props.sx, color: 'error.light' }} />,
+        icon: (props) => (
+          <Error sx={{ ...props.sx, color: (theme) => theme.palette.error.light }} />
+        ),
         label: 'Failed',
       };
   }
@@ -79,7 +84,6 @@ function JobTable({ jobs, handleFilterJobs, loading, searchString, query, refres
     params.expandedJob = jobId;
     push(`${location.pathname}?${urlEncodeParams(params)}`);
   };
-  const theme = useTheme() as CustomTheme;
 
   const columns: Array<TableColumnType> = [
     {
@@ -89,7 +93,7 @@ function JobTable({ jobs, handleFilterJobs, loading, searchString, query, refres
       width: '20%',
       render: (row: any) => (
         <div>
-          <SeeMoreLink onClick={() => handleSeeMoreOpen(row.id)} theme={theme}>
+          <SeeMoreLink onClick={() => handleSeeMoreOpen(row.id)}>
             <span>{`${row.id || 'See More'}`}</span>
           </SeeMoreLink>
           <CopyTextButton valueToCopy={row.id} nameOfValue="Job ID" />

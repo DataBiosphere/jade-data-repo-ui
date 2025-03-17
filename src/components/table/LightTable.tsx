@@ -15,7 +15,6 @@ import {
   TablePagination,
   TableRow,
   Typography,
-  useTheme,
 } from '@mui/material';
 import { Close } from '@mui/icons-material';
 import { applySort, resizeColumn, changePage, changeRowsPerPage } from 'actions/index';
@@ -46,8 +45,8 @@ const DialogContentTextStyled = styled(DialogContentText)({
   maxHeight: '80vh',
 });
 
-const SeeMoreLink = styled(Link)(({ theme }: { theme: CustomTheme }) => ({
-  ...theme.mixins.jadeLink,
+const SeeMoreLink = styled(Link)(({ theme }) => ({
+  ...(theme as CustomTheme).mixins.jadeLink,
   cursor: 'pointer',
 }));
 
@@ -77,29 +76,32 @@ const Row = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-const Cell = styled(TableCell)(({ theme }: { theme: CustomTheme }) => ({
-  borderRight: `1px solid ${theme.palette.lightTable.borderColor}`,
-  borderBottom: `1px solid ${theme.palette.lightTable.borderColor}`,
-  '&:last-child': {
-    borderRight: 'none',
-  },
-}));
+const Cell = styled(TableCell)(({ theme }) => {
+  const customTheme = theme as CustomTheme;
+  return {
+    borderRight: `1px solid ${customTheme.palette.lightTable.borderColor}`,
+    borderBottom: `1px solid ${customTheme.palette.lightTable.borderColor}`,
+    '&:last-child': {
+      borderRight: 'none',
+    },
+  };
+});
 
 const CellArrayWrapper = styled('span')({
   display: 'flex',
 });
 
-const CellArrayContent = styled('span')(({ theme }: { theme: CustomTheme }) => ({
+const CellArrayContent = styled('span')(({ theme }) => ({
   flexGrow: 1,
-  ...theme.mixins.ellipsis,
+  ...(theme as CustomTheme).mixins.ellipsis,
 }));
 
-const CellContent = styled('div')(({ theme }: { theme: CustomTheme }) => ({
-  ...theme.mixins.ellipsis,
+const CellContent = styled('div')(({ theme }) => ({
+  ...(theme as CustomTheme).mixins.ellipsis,
 }));
 
-const PaginationWrapper = styled(TablePagination)(({ theme }: { theme: CustomTheme }) => ({
-  border: `1px solid ${theme.palette.lightTable.borderColor}`,
+const PaginationWrapper = styled(TablePagination)(({ theme }) => ({
+  border: `1px solid ${(theme as CustomTheme).palette.lightTable.borderColor}`,
   borderTop: 'none',
 }));
 
@@ -152,8 +154,6 @@ function LightTable<T>({
   refreshCnt,
 }: LightTableProps<T>) {
   const [seeMore, setSeeMore] = useState({ open: false, title: '', contents: [''] });
-
-  const theme = useTheme() as CustomTheme;
 
   const handleRequestSort = (_event: any, sort: string) => {
     let newOrder = TABLE_DEFAULT_SORT_ORDER;
@@ -213,12 +213,8 @@ function LightTable<T>({
 
     return (
       <CellArrayWrapper>
-        <CellArrayContent theme={theme}>{cellValues}</CellArrayContent>
-        <SeeMoreLink
-          key="see-more"
-          onClick={() => handleSeeMoreOpen(dialogValues, columnName)}
-          theme={theme}
-        >
+        <CellArrayContent>{cellValues}</CellArrayContent>
+        <SeeMoreLink key="see-more" onClick={() => handleSeeMoreOpen(dialogValues, columnName)}>
           ({cleanValues.length} {cleanValues.length === 1 ? 'item' : 'items'})
         </SeeMoreLink>
       </CellArrayWrapper>
@@ -266,11 +262,11 @@ function LightTable<T>({
   const showPagination = (rows && rows.length > 0) || infinitePaging;
 
   const paginationButtonStyles = {
-    borderRadius: `${theme.shape.borderRadius}px`,
+    borderRadius: (theme) => `${theme.shape.borderRadius}px`,
     margin: '0px 2px',
     padding: '0.25rem',
-    border: `1px solid ${theme.palette.lightTable.paginationBlue}`,
-    color: theme.palette.lightTable.paginationBlue,
+    border: (theme) => `1px solid ${theme.palette.lightTable.paginationBlue}`,
+    color: (theme) => theme.palette.lightTable.paginationBlue,
   };
 
   return (
@@ -284,12 +280,13 @@ function LightTable<T>({
           }}
         >
           {loading && <OverlaySpinner />}
-          <TableWrapper theme={theme}>
+          <TableWrapper>
             <Table
               stickyHeader
               sx={{
                 width: effectiveTableWidth,
-                borderRadius: `${theme.shape.borderRadius}px ${theme.shape.borderRadius}px 0 0`,
+                borderRadius: (theme) =>
+                  `${theme.shape.borderRadius}px ${theme.shape.borderRadius}px 0 0`,
                 tableLayout: supportsResize ? undefined : 'fixed',
               }}
             >
@@ -307,9 +304,10 @@ function LightTable<T>({
                         hover
                         key={`${index}-${row[rowKey || 'id']}}`}
                         sx={{
-                          backgroundColor: darkRow
-                            ? theme.palette.lightTable.cellBackgroundDark
-                            : theme.palette.lightTable.callBackgroundLight,
+                          backgroundColor: (theme) =>
+                            darkRow
+                              ? (theme as CustomTheme).palette.lightTable.cellBackgroundDark
+                              : (theme as CustomTheme).palette.lightTable.callBackgroundLight,
                         }}
                       >
                         {columns.map((col) => {
@@ -319,9 +317,8 @@ function LightTable<T>({
                               key={`${col.name}-${index}`}
                               style={{ wordBreak: 'break-word' }}
                               data-cy={`cellValue-${col.name}-${index}`}
-                              theme={theme}
                             >
-                              <CellContent style={{ maxWidth, ...col.cellStyles }} theme={theme}>
+                              <CellContent style={{ maxWidth, ...col.cellStyles }}>
                                 {handleValues(row, col)}
                               </CellContent>
                             </Cell>
@@ -332,9 +329,7 @@ function LightTable<T>({
                   })
                 ) : (
                   <Row>
-                    <Cell colSpan={columns.length} theme={theme}>
-                      {noRowsMessage}
-                    </Cell>
+                    <Cell colSpan={columns.length}>{noRowsMessage}</Cell>
                   </Row>
                 )}
               </TableBody>
@@ -344,7 +339,6 @@ function LightTable<T>({
             <PaginationWrapper
               rowsPerPageOptions={TABLE_DEFAULT_ROWS_PER_PAGE_OPTIONS}
               component="div"
-              theme={theme}
               count={filteredCount}
               rowsPerPage={rowsPerPage}
               page={page}

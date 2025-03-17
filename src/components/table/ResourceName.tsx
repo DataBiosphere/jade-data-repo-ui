@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { IconButton, Box, useTheme } from '@mui/material';
+import { IconButton, Box } from '@mui/material';
 import { CustomTheme, styled } from '@mui/material/styles';
 import { PersonAdd } from '@mui/icons-material';
 import { DatasetSummaryModel, SnapshotSummaryModel } from 'generated/tdr';
@@ -8,6 +8,7 @@ import _ from 'lodash';
 import TerraTooltip from 'components/common/TerraTooltip';
 
 import { JadeLinkInline } from 'components/common/JadeLink';
+import { EllipsisLink } from 'components/common/Ellipsis';
 import { ResourceType } from '../../constants';
 
 const AddAsStewardButton = styled(IconButton)(({ theme }) => ({
@@ -42,18 +43,16 @@ interface IProps {
 }
 
 function ResourceName({ resourceType, resource, roleMaps, handleMakeSteward }: IProps) {
-  const theme = useTheme() as CustomTheme;
   return (
     <Box sx={{ display: 'flex' }} data-cy={`resource-name-${resource.id}`}>
-      <Link
+      <EllipsisLink
         style={{
           flexGrow: 1,
-          ...theme.mixins.ellipsis,
         }}
         to={getLink(resource.id || '', resourceType)}
       >
-        <JadeLinkInline theme={theme}>{resource.name}</JadeLinkInline>
-      </Link>
+        <JadeLinkInline>{resource.name}</JadeLinkInline>
+      </EllipsisLink>
       {hasAdminOnlyAccess(resource.id || '', roleMaps) && (
         <TerraTooltip
           data-cy="add-self-as-steward"

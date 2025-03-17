@@ -1,11 +1,11 @@
 import React from 'react';
 import moment from 'moment';
-import { Box, useTheme } from '@mui/material';
-import { CustomTheme } from '@mui/material/styles';
+import { Box } from '@mui/material';
 import { OrderDirectionOptions, TableColumnType } from 'reducers/query';
 import { DatasetSummaryModel, SnapshotSummaryModel } from 'generated/tdr/api';
 
 import TextContent from 'components/common/TextContent';
+import { EllipsisSpan } from 'components/common/Ellipsis';
 import LightTable from './LightTable';
 import { renderCloudPlatforms } from '../../libs/render-utils';
 import { ResourceType } from '../../constants';
@@ -41,7 +41,6 @@ function SnapshotTable({
   searchString,
   refreshCnt,
 }: IProps) {
-  const theme = useTheme() as CustomTheme;
   const columns: Array<TableColumnType> = [
     {
       label: 'Snapshot Name',
@@ -86,7 +85,7 @@ function SnapshotTable({
       name: 'platform',
       allowSort: false,
       render: (row: DatasetSummaryModel) => (
-        <span style={theme.mixins.ellipsis}>{renderCloudPlatforms(row)}</span>
+        <EllipsisSpan>{renderCloudPlatforms(row)}</EllipsisSpan>
       ),
       width: '15%',
     },

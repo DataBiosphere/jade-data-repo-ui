@@ -9,7 +9,6 @@ import {
   TableRow,
   TableSortLabel,
   Box,
-  useTheme,
 } from '@mui/material';
 import { CustomTheme, styled } from '@mui/material/styles';
 import Draggable, { DraggableEventHandler } from 'react-draggable';
@@ -21,31 +20,34 @@ import { TableColumnType, OrderDirectionOptions } from '../../reducers/query';
 import { TdrState } from '../../reducers';
 import { TABLE_DEFAULT_SORT_ORDER } from '../../constants';
 
-const Cell = styled(TableCell)(({ theme }: { theme: CustomTheme }) => ({
-  color: theme.palette.secondary.dark,
-  minWidth: '30px',
-  fontSize: '14px',
-  fontWeight: 600,
-  letterSpacing: 0,
-  lineHeight: '16px',
-  backgroundColor: theme.palette.lightTable.cellBackgroundHeader,
-  border: `1px solid ${theme.palette.lightTable.borderColor}`,
-  borderTop: 'none',
-  borderLeft: 'none',
-  borderBottom: 'none',
-  '&:last-child': {
-    borderRight: 'none',
-  },
-  '&:after': {
-    content: '" "',
-    position: 'absolute',
-    right: 0,
-    bottom: 0,
-    left: 0,
-    height: '1px',
-    backgroundColor: theme.palette.lightTable.borderColor,
-  },
-}));
+const Cell = styled(TableCell)(({ theme }) => {
+  const customTheme = theme as CustomTheme;
+  return {
+    color: customTheme.palette.secondary.dark,
+    minWidth: '30px',
+    fontSize: '14px',
+    fontWeight: 600,
+    letterSpacing: 0,
+    lineHeight: '16px',
+    backgroundColor: customTheme.palette.lightTable.cellBackgroundHeader,
+    border: `1px solid ${customTheme.palette.lightTable.borderColor}`,
+    borderTop: 'none',
+    borderLeft: 'none',
+    borderBottom: 'none',
+    '&:last-child': {
+      borderRight: 'none',
+    },
+    '&:after': {
+      content: '" "',
+      position: 'absolute',
+      right: 0,
+      bottom: 0,
+      left: 0,
+      height: '1px',
+      backgroundColor: customTheme.palette.lightTable.borderColor,
+    },
+  };
+});
 
 const ColumnResizer = styled(DragIndicatorIcon)(({ theme }) => ({
   height: theme.spacing(3),
@@ -61,6 +63,11 @@ const SortIcon = styled(FontAwesomeIcon)(({ theme }) => ({
   width: '16px',
   height: '16px',
   marginRight: `-${theme.spacing(1)}`,
+}));
+
+const Label = styled('span')(({ theme }) => ({
+  flex: 1,
+  ...(theme as CustomTheme).mixins.ellipsis,
 }));
 
 type LightTableHeadProps = {
@@ -81,8 +88,6 @@ function LightTableHead({
   const [initialWidth, setInitialWidth] = React.useState<number | undefined>(undefined);
   const [deltaX, setDeltaX] = React.useState(0);
   const [draggingCol, setDraggingCol] = React.useState<TableColumnType | undefined>(undefined);
-
-  const theme = useTheme() as CustomTheme;
 
   const createSortHandler = (property: string) => (event: any) => {
     onRequestSort(event, property);
@@ -139,9 +144,9 @@ function LightTableHead({
   return (
     <TableHead
       sx={{
-        color: theme.palette.primary.dark,
-        backgroundColor: theme.palette.lightTable.cellBackgroundDark,
-        fontFamily: theme.typography.fontFamily,
+        color: (theme) => theme.palette.primary.dark,
+        backgroundColor: (theme) => (theme as CustomTheme).palette.lightTable.cellBackgroundDark,
+        fontFamily: (theme) => theme.typography.fontFamily,
       }}
     >
       <TableRow>
@@ -157,7 +162,6 @@ function LightTableHead({
               sortDirection={sortDir}
               width={col.width}
               data-cy={`columnHeader-${col.name}`}
-              theme={theme}
             >
               <Box sx={{ maxWidth, display: 'flex' }}>
                 {!col.allowSort ? (
@@ -179,16 +183,16 @@ function LightTableHead({
                           ? () => (
                               <SortIcon
                                 icon={sortDir === 'asc' ? faLongArrowAltDown : faLongArrowAltUp}
-                                style={{ marginRight: col.allowResize ? theme.spacing(1) : 0 }}
+                                style={{
+                                marginRight: col.allowResize ? (theme) => theme.spacing(1) : 0,
+                              }}
                               />
                             )
                           : undefined
                       }
                       style={{ width: maxWidth, flex: 1 }}
                     >
-                      <span style={{ flex: 1, ...theme.mixins.ellipsis }}>
-                        {col.label ?? col.name}
-                      </span>
+                      <Label>{col.label ?? col.name}</Label>
                     </TableSortLabel>
                     {createDragHandle(col)}
                   </div>
