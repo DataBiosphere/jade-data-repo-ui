@@ -30,25 +30,23 @@ const MainContent = styled(Box)(({ theme }) => ({
 }));
 
 function ServerErrorView({ status }) {
-  let systemsCount = 0;
   let systemRows = [];
   if (status.apiIsUp) {
     const { systems } = status.serverStatus;
-    systemsCount = Object.keys(systems).length;
-    systemRows = Object.keys(status.serverStatus.systems).map((member) => ({
+    systemRows = Object.keys(systems).map((member) => ({
       system: member,
-      system_is_up: status.serverStatus.systems[member].ok,
+      system_is_up: systems[member].ok,
     }));
   }
 
   const columns = [
     {
       label: 'System',
-      property: 'system',
+      name: 'system',
     },
     {
       label: 'Status',
-      property: 'system_status',
+      name: 'system_status',
       render: (row) => {
         if (row.system_is_up) {
           return '✅';
@@ -73,12 +71,7 @@ function ServerErrorView({ status }) {
             >
               It looks like the Data Repository server is up, but some required services are down.
             </Typography>
-            <LightTable
-              columns={columns}
-              rows={systemRows}
-              totalCount={systemsCount}
-              loading={false}
-            />
+            <LightTable columns={columns} rows={systemRows} loading={false} hidePagination={true} />
           </Box>
         )}
         {!status.apiIsUp && (
