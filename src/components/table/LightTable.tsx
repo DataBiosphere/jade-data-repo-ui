@@ -123,6 +123,7 @@ type LightTableProps<RowType> = {
     refreshCnt: number,
   ) => void;
   readonly infinitePaging?: boolean;
+  readonly hidePagination?: boolean;
   readonly loading: boolean;
   readonly orderDirection: OrderDirectionOptions;
   readonly orderProperty: string;
@@ -143,6 +144,7 @@ function LightTable<T>({
   filteredCount,
   handleEnumeration,
   infinitePaging,
+  hidePagination,
   loading,
   noRowsMessage,
   orderDirection,
@@ -262,7 +264,7 @@ function LightTable<T>({
     0,
   );
   const effectiveTableWidth = _.isNaN(tableWidth) || !supportsResize ? '100%' : tableWidth;
-  const showPagination = (rows && rows.length > 0) || infinitePaging;
+  const showPagination = (rows?.length > 0 || infinitePaging) && !hidePagination;
 
   // For the typing to behave, the lambda has to be of type (Theme) => CSSProperty
   const paginationButtonStyles = {

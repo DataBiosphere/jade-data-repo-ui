@@ -109,7 +109,7 @@ function bootstrap() {
 function render(Component) {
   const root = document.getElementById('react');
   const { configuration } = store.getState();
-  const isGoogleAuthority = configuration.configObject.authorityEndpoint.startsWith(
+  const isGoogleAuthority = configuration.configObject.authorityEndpoint?.startsWith(
     'https://accounts.google.com',
   );
   const metadata = {
