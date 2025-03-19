@@ -1,3 +1,4 @@
+import { JadeLink } from 'components/common/JadeLink';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -46,12 +47,6 @@ const MainContent = styled(Box)(({ theme }) => ({
   paddingRight: '650px',
   paddingBottom: '40px',
   width: '100%',
-}));
-
-const JadeLink = styled(Box)(({ theme }) => ({
-  ...theme.mixins.jadeLink,
-  paddingTop: theme.spacing(2),
-  paddingBottom: theme.spacing(2),
 }));
 
 const TerraLink = styled('span')(({ theme }) => ({
@@ -110,7 +105,12 @@ function WelcomeView({ terraUrl }) {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <JadeLink>
+              <JadeLink
+                sx={{
+                  paddingTop: 2,
+                  paddingBottom: 2,
+                }}
+              >
                 Find how-to's, documentation, video tutorials, and discussion forums
                 <LaunchOutlined fontSize="small" />
               </JadeLink>

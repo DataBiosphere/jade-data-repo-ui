@@ -2,35 +2,29 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import _ from 'lodash';
-import { SortDirection, TableCell, TableHead, TableRow, TableSortLabel } from '@mui/material';
-import { CustomTheme } from '@mui/material/styles';
-import { ClassNameMap, withStyles } from '@mui/styles';
+import { SortDirection, TableCell, TableHead, TableRow, TableSortLabel, Box } from '@mui/material';
+import { CustomTheme, styled } from '@mui/material/styles';
 import Draggable, { DraggableEventHandler } from 'react-draggable';
-import { Property } from 'csstype';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faLongArrowAltUp } from '@fortawesome/free-solid-svg-icons';
-import clsx from 'clsx';
+import { faLongArrowAltDown, faLongArrowAltUp } from '@fortawesome/free-solid-svg-icons';
 
+import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
+import { EllipsisBox, EllipsisSpan } from 'components/common/Ellipsis';
 import { TableColumnType, OrderDirectionOptions } from '../../reducers/query';
 import { TdrState } from '../../reducers';
 import { TABLE_DEFAULT_SORT_ORDER } from '../../constants';
-import ColumnGrabberIcon from '../../media/icons/column_grabber.svg?react';
 
-const styles = (theme: CustomTheme) => ({
-  head: {
-    color: theme.palette.primary.dark,
-    backgroundColor: theme.palette.lightTable.cellBackgroundDark,
-    fontFamily: theme.typography.fontFamily,
-  },
-  cell: {
-    color: theme.palette.secondary.dark,
-    minWidth: 30,
+const Cell = styled(TableCell)(({ theme }) => {
+  const customTheme = theme as CustomTheme;
+  return {
+    color: customTheme.palette.secondary.dark,
+    minWidth: '30px',
     fontSize: '14px',
     fontWeight: 600,
     letterSpacing: 0,
     lineHeight: '16px',
-    backgroundColor: theme.palette.lightTable.cellBackgroundHeader,
-    border: `1px solid ${theme.palette.lightTable.borderColor}`,
+    backgroundColor: customTheme.palette.lightTable.cellBackgroundHeader,
+    border: `1px solid ${customTheme.palette.lightTable.borderColor}`,
     borderTop: 'none',
     borderLeft: 'none',
     borderBottom: 'none',
@@ -43,44 +37,34 @@ const styles = (theme: CustomTheme) => ({
       right: 0,
       bottom: 0,
       left: 0,
-      height: 1,
-      backgroundColor: theme.palette.lightTable.borderColor,
+      height: '1px',
+      backgroundColor: customTheme.palette.lightTable.borderColor,
     },
-  },
-  cellContent: {
-    display: 'flex',
-  },
-  nonSortableCell: {
-    ...theme.mixins.ellipsis,
-  },
-  // Typescript coaxing to combine the ellipsis mixin with other CSS properties
-  // eslint-disable-next-line prefer-object-spread
-  label: Object.assign({ flex: 1 }, theme.mixins.ellipsis),
-  columnResizer: {
-    height: theme.spacing(3),
-    width: theme.spacing(3),
-    position: 'absolute' as Property.Position,
-    top: 13,
-    right: 0,
-    cursor: 'ew-resize',
-  },
-  cellInner: {
-    flex: 1,
-    display: 'flex',
-  },
-  sortIcon: {
-    color: `${theme.palette.primary.main} !important`,
-    width: 16,
-    height: 16,
-    marginRight: `-${theme.spacing(1)}`,
-  },
-  allowsResize: {
-    marginRight: theme.spacing(1),
-  },
+  };
 });
 
+const ColumnResizer = styled(DragIndicatorIcon)(({ theme }) => ({
+  height: theme.spacing(3),
+  width: theme.spacing(3),
+  position: 'absolute',
+  top: '13px',
+  right: 0,
+  cursor: 'ew-resize',
+}));
+
+const SortIcon = styled(FontAwesomeIcon)(({ theme }) => ({
+  color: `${theme.palette.primary.main} !important`,
+  width: '16px',
+  height: '16px',
+  marginRight: `-${theme.spacing(1)}`,
+}));
+
+const Label = styled('span')(({ theme }) => ({
+  flex: 1,
+  ...(theme as CustomTheme).mixins.ellipsis,
+}));
+
 type LightTableHeadProps = {
-  classes: ClassNameMap;
   columns: Array<TableColumnType>;
   onRequestSort: (event: any, property: string) => void;
   onResizeColumn: (event: any, property: string, size: number) => void;
@@ -89,7 +73,6 @@ type LightTableHeadProps = {
 };
 
 function LightTableHead({
-  classes,
   columns,
   onRequestSort,
   onResizeColumn,
@@ -146,23 +129,27 @@ function LightTableHead({
         onDrag={createDragHandler(col)}
         onStop={createStopHandler(col)}
         position={{ x: 0, y: 0 }}
-        // Make sure that the drag handle stays where it should while dragging by negating the drag delta
         positionOffset={{ x: draggingCol?.name === col.name ? -1 * deltaX : 0, y: 0 }}
       >
-        <ColumnGrabberIcon className={classes.columnResizer} />
+        <ColumnResizer />
       </Draggable>
     );
 
   return (
-    <TableHead className={classes.head}>
+    <TableHead
+      sx={{
+        color: (theme) => theme.palette.primary.dark,
+        backgroundColor: (theme) => (theme as CustomTheme).palette.lightTable.cellBackgroundDark,
+        fontFamily: (theme) => theme.typography.fontFamily,
+      }}
+    >
       <TableRow>
         {columns.map((col: TableColumnType) => {
           const sortDir: SortDirection =
             orderProperty === col.name ? orderDirection ?? false : false;
           const maxWidth = _.isNumber(col.width) ? col.width : undefined;
           return (
-            <TableCell
-              className={classes.cell}
+            <Cell
               key={col.name}
               align="left"
               padding="normal"
@@ -170,39 +157,40 @@ function LightTableHead({
               width={col.width}
               data-cy={`columnHeader-${col.name}`}
             >
-              <div className={classes.cellContent} style={{ maxWidth }}>
+              <Box sx={{ maxWidth, display: 'flex' }}>
                 {!col.allowSort ? (
-                  <div
-                    className={clsx(classes.cellInner, classes.nonSortableCell)}
-                    style={{ width: maxWidth }}
-                  >
-                    <span className={classes.label}>{col.label ?? col.name}</span>
+                  <EllipsisBox style={{ width: maxWidth }}>
+                    <EllipsisSpan sx={{ flex: 1 }}>{col.label ?? col.name}</EllipsisSpan>
                     {createDragHandle(col)}
-                  </div>
+                  </EllipsisBox>
                 ) : (
-                  <div className={classes.cellInner}>
+                  <div style={{ display: 'flex', flex: 1 }}>
                     <TableSortLabel
                       active={orderProperty === col.name}
                       data-cy={`columnSort-${col.name}`}
                       direction={sortDir || TABLE_DEFAULT_SORT_ORDER}
                       onClick={createSortHandler(col.name)}
-                      IconComponent={({ className }) => (
-                        <FontAwesomeIcon
-                          className={clsx(className, classes.sortIcon, {
-                            [classes.allowsResize]: col.allowResize,
-                          })}
-                          icon={faLongArrowAltUp}
-                        />
-                      )}
+                      IconComponent={
+                        !sortDir
+                          ? undefined
+                          : () => (
+                              <SortIcon
+                                icon={sortDir === 'asc' ? faLongArrowAltDown : faLongArrowAltUp}
+                                sx={{
+                                  marginRight: col.allowResize ? (theme) => theme.spacing(1) : 0,
+                                }}
+                              />
+                            )
+                      }
                       style={{ width: maxWidth, flex: 1 }}
                     >
-                      <span className={classes.label}>{col.label ?? col.name}</span>
+                      <Label>{col.label ?? col.name}</Label>
                     </TableSortLabel>
                     {createDragHandle(col)}
                   </div>
                 )}
-              </div>
-            </TableCell>
+              </Box>
+            </Cell>
           );
         })}
       </TableRow>
@@ -217,4 +205,4 @@ function mapStateToProps(state: TdrState) {
   };
 }
 
-export default connect(mapStateToProps)(withStyles(styles)(LightTableHead));
+export default connect(mapStateToProps)(LightTableHead);

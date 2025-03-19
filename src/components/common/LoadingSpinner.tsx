@@ -11,15 +11,23 @@ const SpinWrapper = styled(Box)(() => ({
 }));
 
 type LoadingSpinnerProps = {
-  className?: string;
-  delay?: boolean;
-  delayMessage?: string;
+  readonly wrapperStyles?: React.CSSProperties;
+  readonly size?: number | string;
+  readonly className?: string;
+  readonly delay?: boolean;
+  readonly delayMessage?: string;
 };
 
-function LoadingSpinner({ className, delay, delayMessage }: LoadingSpinnerProps) {
+function LoadingSpinner({
+  wrapperStyles,
+  size,
+  className,
+  delay,
+  delayMessage,
+}: LoadingSpinnerProps) {
   return (
-    <SpinWrapper className={className}>
-      <CircularProgress sx={{ margin: 'auto' }} />
+    <SpinWrapper className={className} sx={wrapperStyles}>
+      <CircularProgress sx={{ margin: 'auto' }} size={size} />
       {delay && delayMessage}
     </SpinWrapper>
   );

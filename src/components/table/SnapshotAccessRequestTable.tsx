@@ -15,6 +15,7 @@ import { Link } from 'react-router-dom';
 import { CustomTheme, styled } from '@mui/material/styles';
 import TextWithModalDetails from 'components/common/InfoModal';
 import LoadingSpinner from 'components/common/LoadingSpinner';
+import { JadeLinkInline } from 'components/common/JadeLink';
 
 const OverlaySpinner = styled(Box)(({ theme }: { theme: CustomTheme }) => ({
   opacity: 0.9,
@@ -40,8 +41,6 @@ const RequestButton = styled(Button)(({ theme }: { theme: CustomTheme }) => ({
     border: 0,
   },
 }));
-
-const SnapshotIdLinkLabel = styled('span')(({ theme }) => theme.mixins.jadeLink);
 
 interface IProps {
   dispatch: Dispatch<Action>;
@@ -128,7 +127,7 @@ function SnapshotAccessRequestTable({
       name: 'createdSnapshotId',
       render: (row: SnapshotAccessRequestResponse) => (
         <Link to={`/snapshots/${row.createdSnapshotId}`}>
-          <SnapshotIdLinkLabel>{row.createdSnapshotId}</SnapshotIdLinkLabel>
+          <JadeLinkInline>{row.createdSnapshotId}</JadeLinkInline>
         </Link>
       ),
       width: '12%',

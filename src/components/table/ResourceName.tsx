@@ -1,33 +1,22 @@
 import React from 'react';
-import { createStyles, WithStyles, withStyles } from '@mui/styles';
-import { Link } from 'react-router-dom';
-import { CustomTheme } from '@mui/material/styles';
-import { IconButton } from '@mui/material';
+import { IconButton, Box } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { PersonAdd } from '@mui/icons-material';
 import { DatasetSummaryModel, SnapshotSummaryModel } from 'generated/tdr';
 import _ from 'lodash';
 import TerraTooltip from 'components/common/TerraTooltip';
 
+import { JadeLinkInline } from 'components/common/JadeLink';
+import { EllipsisLink } from 'components/common/Ellipsis';
 import { ResourceType } from '../../constants';
 
-const styles = (theme: CustomTheme) =>
-  createStyles({
-    nameWrapper: {
-      display: 'flex',
-    },
-    // eslint-disable-next-line prefer-object-spread
-    jadeLinkWrapper: Object.assign({ flexGrow: 1 }, theme.mixins.ellipsis),
-    jadeLink: {
-      ...theme.mixins.jadeLink,
-    },
-    addAsSteward: {
-      padding: 0,
-      '& svg': {
-        height: 20,
-        fill: theme.palette.primary.main,
-      },
-    },
-  });
+const AddAsStewardButton = styled(IconButton)(({ theme }) => ({
+  padding: 0,
+  '& svg': {
+    height: '20px',
+    fill: theme.palette.primary.main,
+  },
+}));
 
 function hasAdminOnlyAccess(id: string, roleMaps: { [key: string]: Array<string> }) {
   const roles = roleMaps[id];
@@ -45,19 +34,24 @@ function getLink(id: string, resourceType: ResourceType) {
   }
 }
 
-interface IProps extends WithStyles<typeof styles> {
-  resourceType: ResourceType;
-  resource: DatasetSummaryModel | SnapshotSummaryModel;
-  roleMaps: { [key: string]: Array<string> };
-  handleMakeSteward?: (datasetId: string) => void;
+interface IProps {
+  readonly resourceType: ResourceType;
+  readonly resource: DatasetSummaryModel | SnapshotSummaryModel;
+  readonly roleMaps: { [key: string]: Array<string> };
+  readonly handleMakeSteward?: (datasetId: string) => void;
 }
 
-const ResourceName = withStyles(styles)(
-  ({ classes, resourceType, resource, roleMaps, handleMakeSteward }: IProps) => (
-    <div className={classes.nameWrapper} data-cy={`resource-name-${resource.id}`}>
-      <Link to={getLink(resource.id || '', resourceType)} className={classes.jadeLinkWrapper}>
-        <span className={classes.jadeLink}>{resource.name}</span>
-      </Link>
+function ResourceName({ resourceType, resource, roleMaps, handleMakeSteward }: IProps) {
+  return (
+    <Box sx={{ display: 'flex' }} data-cy={`resource-name-${resource.id}`}>
+      <EllipsisLink
+        style={{
+          flexGrow: 1,
+        }}
+        to={getLink(resource.id || '', resourceType)}
+      >
+        <JadeLinkInline>{resource.name}</JadeLinkInline>
+      </EllipsisLink>
       {hasAdminOnlyAccess(resource.id || '', roleMaps) && (
         <TerraTooltip
           data-cy="add-self-as-steward"
@@ -67,19 +61,18 @@ const ResourceName = withStyles(styles)(
             </span>
           }
         >
-          <IconButton
-            className={classes.addAsSteward}
+          <AddAsStewardButton
             size="small"
             onClick={() => {
               resource.id && handleMakeSteward && handleMakeSteward(resource.id || '');
             }}
           >
             <PersonAdd />
-          </IconButton>
+          </AddAsStewardButton>
         </TerraTooltip>
       )}
-    </div>
-  ),
-);
+    </Box>
+  );
+}
 
 export default ResourceName;

@@ -1,13 +1,8 @@
 import React from 'react';
 import { Box, Link } from '@mui/material';
-import { styled } from '@mui/material/styles';
 import ReactMarkdown from 'react-markdown';
 import strip from 'strip-markdown';
-
-const StyledLink = styled('span')(({ theme }) => ({
-  // @ts-ignore
-  ...theme.mixins.jadeLink,
-}));
+import { JadeLinkInline } from 'components/common/JadeLink';
 
 interface TextContentProps {
   readonly text: string | undefined;
@@ -27,7 +22,7 @@ function TextContent(componentProps: TextContentProps) {
             components={{
               a: ({ children, href, title }) => (
                 <Link href={href} target="_blank">
-                  <StyledLink title={title}>{children}</StyledLink>
+                  <JadeLinkInline title={title}>{children}</JadeLinkInline>
                 </Link>
               ),
             }}
