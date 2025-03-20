@@ -1,4 +1,4 @@
-import { Box, Button, Dialog, DialogActions, DialogTitle } from '@mui/material';
+import { Box, Button, Dialog, DialogActions, DialogTitle, Grid } from '@mui/material';
 import { entries, isEmpty, now, uniq, without } from 'lodash';
 import React, { Dispatch, useEffect } from 'react';
 import { changePolicyUsersToSnapshotRequest, createSnapshot, snapshotCreateDetails } from 'actions';
@@ -148,13 +148,15 @@ function FullViewSnapshotModal(props: FullViewSnapshotModalProps) {
   };
 
   return (
-    <Dialog fullWidth maxWidth="sm" onClose={onDismiss} open={modalOpen}>
+    <Dialog fullWidth maxWidth="sm" onClose={onDismiss} open={modalOpen} sx={{ height: '700px' }}>
       <DialogTitle id="customized-dialog-title" sx={{ fontSize: '1rem' }}>
         Creating snapshot
       </DialogTitle>
       <Box sx={{ padding: '0px 24px 16px 24px' }}>
         <CreateModalSteps step={step} onStepChange={(newStep) => setStep(newStep)} />
-        <Box sx={{ paddingTop: '8px' }}>{renderModalDetails()}</Box>
+        <Box sx={{ paddingY: '8px', height: '400px', overflowY: 'scroll' }}>
+          {renderModalDetails()}
+        </Box>
         <DialogActions sx={{ display: 'flex', justifyContent: 'space-between' }}>
           <Button onClick={onDismiss} variant="text">
             Cancel
