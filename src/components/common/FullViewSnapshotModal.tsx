@@ -1,4 +1,4 @@
-import { Box, Button, Dialog, DialogActions, DialogTitle, Grid } from '@mui/material';
+import { Box, Button, Dialog, DialogActions, DialogTitle } from '@mui/material';
 import { entries, isEmpty, now, uniq, without } from 'lodash';
 import React, { Dispatch, useEffect } from 'react';
 import { changePolicyUsersToSnapshotRequest, createSnapshot, snapshotCreateDetails } from 'actions';
