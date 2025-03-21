@@ -8,8 +8,16 @@ import { PolicyModel, SnapshotRequestModelPolicies } from 'generated/tdr';
 import { connect } from 'react-redux';
 import { TdrState } from 'reducers';
 import { SnapshotRoles } from 'constants';
+import { styled } from '@mui/material/styles';
 
 export const transformRoleToCreatePolicy = (role: string): string => `${_.camelCase(role)}s`;
+
+const ManagedSnapshotAccessGrid = styled(Grid)(() => ({
+  my: 1,
+  width: '100%',
+  marginLeft: '0',
+  paddingRight: '8px',
+}));
 
 interface ManagedSnapshotAccessProps {
   readonly createMode: boolean;
@@ -42,7 +50,7 @@ function ManagedSnapshotAccess(props: ManagedSnapshotAccessProps) {
   ];
 
   return (
-    <Grid container spacing={1} sx={{ my: 1 }}>
+    <ManagedSnapshotAccessGrid container spacing={1}>
       <Typography variant="h6">Roles</Typography>
       {canManageUsers && (
         <Grid item xs={12}>
@@ -85,7 +93,7 @@ function ManagedSnapshotAccess(props: ManagedSnapshotAccessProps) {
           defaultOpen={createMode}
         />
       </Grid>
-    </Grid>
+    </ManagedSnapshotAccessGrid>
   );
 }
 

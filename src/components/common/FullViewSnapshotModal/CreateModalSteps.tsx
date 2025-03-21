@@ -27,11 +27,13 @@ function Step(props: StepProps) {
     <Button
       sx={{
         width: '33%',
+        height: '2.5rem',
         textTransform: 'none',
         alignItems: 'flex-start',
         fontWeight: activeStep === step ? 600 : 400,
         display: 'flex',
         padding: '0 0.5rem',
+        lineHeight: '1rem',
       }}
       onClick={() => onStepChange(step)}
     >
