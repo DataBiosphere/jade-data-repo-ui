@@ -18,7 +18,7 @@ describe('DataAccess Component', () => {
   const mockPolicies: Array<PolicyModel> = [
     {
       name: 'steward',
-      members: ['steward1@example.com', 'steward2@example.com'],
+      members: [],
     },
     {
       name: 'custodian',
