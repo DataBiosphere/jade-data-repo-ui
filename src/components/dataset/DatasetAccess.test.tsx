@@ -73,18 +73,16 @@ describe('DataAccess Component', () => {
     cy.contains('custodian2@example.com').should('exist');
   });
 
-  describe('renders Dataset Custodian information correctly when inherit steward is false or undefined', () => {
-    [false, undefined].forEach((inheritSteward) => {
-      it('custodians should appear without message about inheriting stewardship', () => {
-        mockDataset.inheritSteward = inheritSteward;
-        setUp(mockDataset);
-        cy.contains('Custodians').click();
-        cy.contains(
-          'All dataset custodians are stewards on all snapshots created from this dataset.',
-        ).should('not.exist');
-        cy.contains('custodian1@example.com').should('exist');
-        cy.contains('custodian2@example.com').should('exist');
-      });
+  [false, undefined].forEach((inheritSteward) => {
+    it(`custodians should appear without message about inheriting stewardship when inherit steward is ${inheritSteward}`, () => {
+      mockDataset.inheritSteward = inheritSteward;
+      setUp(mockDataset);
+      cy.contains('Custodians').click();
+      cy.contains(
+        'All dataset custodians are stewards on all snapshots created from this dataset.',
+      ).should('not.exist');
+      cy.contains('custodian1@example.com').should('exist');
+      cy.contains('custodian2@example.com').should('exist');
     });
   });
 });
