@@ -5,12 +5,12 @@ import Typography from '@mui/material/Typography';
 import ManageUsersView from './ManageUsersView';
 
 interface UserListProps {
-  message?: string;
-  canManageUsers: boolean;
-  defaultOpen?: boolean;
-  removeUser?: (removableEmail: string) => void;
-  typeOfUsers: string;
-  users: Array<string>;
+  readonly message?: string;
+  readonly canManageUsers: boolean;
+  readonly defaultOpen?: boolean;
+  readonly removeUser?: (removableEmail: string) => void;
+  readonly typeOfUsers: string;
+  readonly users: Array<string>;
 }
 
 function UserList({
