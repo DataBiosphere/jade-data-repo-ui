@@ -1,18 +1,26 @@
 import React from 'react';
-import { Accordion, AccordionDetails, AccordionSummary, Box } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material';
 import { ExpandMore } from '@mui/icons-material';
 import Typography from '@mui/material/Typography';
 import ManageUsersView from './ManageUsersView';
 
 interface UserListProps {
-  canManageUsers: boolean;
-  defaultOpen?: boolean;
-  removeUser?: (removableEmail: string) => void;
-  typeOfUsers: string;
-  users: Array<string>;
+  readonly message?: string;
+  readonly canManageUsers: boolean;
+  readonly defaultOpen?: boolean;
+  readonly removeUser?: (removableEmail: string) => void;
+  readonly typeOfUsers: string;
+  readonly users: Array<string>;
 }
 
-function UserList({ canManageUsers, defaultOpen, removeUser, typeOfUsers, users }: UserListProps) {
+function UserList({
+  message,
+  canManageUsers,
+  defaultOpen,
+  removeUser,
+  typeOfUsers,
+  users,
+}: UserListProps) {
   return (
     <Accordion defaultExpanded={defaultOpen}>
       <AccordionSummary
@@ -28,6 +36,9 @@ function UserList({ canManageUsers, defaultOpen, removeUser, typeOfUsers, users 
         {typeOfUsers}
       </AccordionSummary>
       <AccordionDetails data-cy="user-email" sx={canManageUsers ? { paddingTop: 0 } : undefined}>
+        {message && (
+          <Typography sx={{ marginTop: '-16px', paddingBottom: '12px' }}>{message}</Typography>
+        )}
         <ManageUsersView removeUser={canManageUsers ? removeUser : undefined} users={users} />
         {users.length === 0 && (
           <Typography
