@@ -30,7 +30,7 @@ function DatasetAccess(props: DatasetAccessProps) {
       dispatch(removeDatasetPolicyMember(dataset.id, removableEmail, role));
     };
   };
-  const { policies, userRoles } = props;
+  const { dataset, policies, userRoles } = props;
   const stewards = getRoleMembersFromPolicies(policies, DatasetRoles.STEWARD);
   const custodians = getRoleMembersFromPolicies(policies, DatasetRoles.CUSTODIAN);
   const snapshotCreators = getRoleMembersFromPolicies(policies, DatasetRoles.SNAPSHOT_CREATOR);
@@ -38,6 +38,9 @@ function DatasetAccess(props: DatasetAccessProps) {
   const canManageStewards = userRoles.includes(DatasetRoles.STEWARD);
   const canManageUsers =
     userRoles.includes(DatasetRoles.STEWARD) || userRoles.includes(DatasetRoles.CUSTODIAN);
+  const message = dataset.inheritSteward
+    ? 'All dataset custodians are stewards on all snapshots created from this dataset.'
+    : undefined;
 
   const permissions: AccessPermission[] = [
     { policy: 'custodian', disabled: !canManageUsers },
@@ -62,6 +65,7 @@ function DatasetAccess(props: DatasetAccessProps) {
       </Grid>
       <Grid item xs={12}>
         <UserList
+          message={message}
           users={custodians}
           typeOfUsers="Custodians"
           canManageUsers={canManageUsers}
