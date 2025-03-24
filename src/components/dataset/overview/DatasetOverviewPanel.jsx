@@ -244,6 +244,13 @@ function DatasetOverviewPanel(props) {
               </Accordion>
             </Grid>
           )}
+          <Grid item xs={4}>
+            {renderTextFieldValue(
+              'Custodians Inherit Steward roles on Snapshots',
+              dataset.inheritSteward,
+              'Custodians added to this dataset will be Stewards on all snapshots created from this dataset',
+            )}
+          </Grid>
         </Grid>
       </TabPanel>
       <TabPanel value={value} index={1}>
