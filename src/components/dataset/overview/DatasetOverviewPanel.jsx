@@ -247,7 +247,7 @@ function DatasetOverviewPanel(props) {
           <Grid item xs={4}>
             {renderTextFieldValue(
               'Custodians Inherit Steward roles on Snapshots',
-              dataset.inheritSteward,
+              (!!dataset.inheritSteward).toString(),
               'Custodians added to this dataset will be Stewards on all snapshots created from this dataset',
             )}
           </Grid>
