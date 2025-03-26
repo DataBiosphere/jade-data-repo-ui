@@ -100,6 +100,10 @@ function DatasetOverviewPanel(props) {
     setHelpContent(content);
   };
 
+  const inheritStewardStringified = (!!dataset.inheritSteward).toString();
+  const inheritStewardDisplayText =
+    inheritStewardStringified.charAt(0).toUpperCase() + inheritStewardStringified.slice(1);
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Tabs value={value} onChange={handleChange}>
@@ -247,7 +251,7 @@ function DatasetOverviewPanel(props) {
           <Grid item xs={4}>
             {renderTextFieldValue(
               'Custodians Inherit Steward roles on Snapshots',
-              (!!dataset.inheritSteward).toString(),
+              inheritStewardDisplayText,
               'Custodians added to this dataset will be Stewards on all snapshots created from this dataset',
             )}
           </Grid>
