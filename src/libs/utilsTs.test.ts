@@ -1,5 +1,5 @@
 import { CloudPlatform, DatasetModel } from 'generated/tdr';
-import { getCloudPlatform, titleCase, urlEncodeParams } from './utilsTs';
+import { getCloudPlatform, urlEncodeParams } from './utilsTs';
 
 describe('utilsTs', () => {
   it('should render a simple url parameter correctly', () => {
@@ -20,8 +20,5 @@ describe('utilsTs', () => {
       storage: [{ cloudPlatform: 'azure' }],
     } as DatasetModel;
     expect(getCloudPlatform(dataset)).to.equal(CloudPlatform.Azure);
-  });
-  it('titleCase should convert string to title case', () => {
-    expect(titleCase('my name is foo')).to.equal('My Name Is Foo');
   });
 });

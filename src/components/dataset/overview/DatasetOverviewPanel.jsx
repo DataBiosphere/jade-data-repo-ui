@@ -32,7 +32,7 @@ import EditableFieldView from '../../EditableFieldView';
 import TabPanel from '../../common/TabPanel';
 import { DatasetRoles } from '../../../constants';
 import JournalEntriesView from '../../JournalEntriesView';
-import { getCloudPlatform, titleCase } from '../../../libs/utilsTs'
+import { getCloudPlatform } from '../../../libs/utilsTs';
 
 const StyledDrawer = styled(Drawer, {
   shouldForwardProp: (prop) => !['isVisible'].includes(prop),
@@ -247,7 +247,7 @@ function DatasetOverviewPanel(props) {
           <Grid item xs={4}>
             {renderTextFieldValue(
               'Custodians Inherit Steward roles on Snapshots',
-              titleCase((!!dataset.inheritSteward).toString()),
+              dataset.inheritSteward ? 'Yes' : 'No',
               'Custodians added to this dataset will be Stewards on all snapshots created from this dataset',
             )}
           </Grid>
