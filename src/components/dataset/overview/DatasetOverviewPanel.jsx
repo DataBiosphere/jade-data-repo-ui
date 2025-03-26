@@ -32,7 +32,7 @@ import EditableFieldView from '../../EditableFieldView';
 import TabPanel from '../../common/TabPanel';
 import { DatasetRoles } from '../../../constants';
 import JournalEntriesView from '../../JournalEntriesView';
-import { getCloudPlatform } from '../../../libs/utilsTs';
+import { getCloudPlatform, titleCase } from '../../../libs/utilsTs'
 
 const StyledDrawer = styled(Drawer, {
   shouldForwardProp: (prop) => !['isVisible'].includes(prop),
@@ -99,10 +99,6 @@ function DatasetOverviewPanel(props) {
     setHelpTitle(title);
     setHelpContent(content);
   };
-
-  const inheritStewardStringified = (!!dataset.inheritSteward).toString();
-  const inheritStewardDisplayText =
-    inheritStewardStringified.charAt(0).toUpperCase() + inheritStewardStringified.slice(1);
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -251,7 +247,7 @@ function DatasetOverviewPanel(props) {
           <Grid item xs={4}>
             {renderTextFieldValue(
               'Custodians Inherit Steward roles on Snapshots',
-              inheritStewardDisplayText,
+              titleCase((!!dataset.inheritSteward).toString()),
               'Custodians added to this dataset will be Stewards on all snapshots created from this dataset',
             )}
           </Grid>

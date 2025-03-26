@@ -18,3 +18,10 @@ export const urlEncodeParams = (params: Record<string, string | number | boolean
  */
 export const getCloudPlatform = (dataset: DatasetModel): CloudPlatform | undefined =>
   _.first(dataset.storage?.map((s) => s.cloudPlatform));
+
+export const titleCase = (str: string): string =>
+  str
+    .toLowerCase()
+    .split(' ')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
