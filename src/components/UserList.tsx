@@ -11,6 +11,8 @@ interface UserListProps {
   readonly removeUser?: (removableEmail: string) => void;
   readonly typeOfUsers: string;
   readonly users: Array<string>;
+  readonly readOnlyUsers?: Array<string>;
+  readonly readOnlyUserTooltip?: string;
 }
 
 function UserList({
@@ -20,6 +22,8 @@ function UserList({
   removeUser,
   typeOfUsers,
   users,
+  readOnlyUsers,
+  readOnlyUserTooltip,
 }: UserListProps) {
   return (
     <Accordion defaultExpanded={defaultOpen}>
@@ -39,8 +43,13 @@ function UserList({
         {message && (
           <Typography sx={{ marginTop: '-16px', paddingBottom: '12px' }}>{message}</Typography>
         )}
-        <ManageUsersView removeUser={canManageUsers ? removeUser : undefined} users={users} />
-        {users.length === 0 && (
+        <ManageUsersView
+          removeUser={canManageUsers ? removeUser : undefined}
+          users={users}
+          readOnlyUsers={readOnlyUsers}
+          readOnlyUserTooltip={readOnlyUserTooltip}
+        />
+        {users.length === 0 && readOnlyUsers?.length === 0 && (
           <Typography
             sx={{
               fontStyle: 'italic',
