@@ -7,10 +7,10 @@ import _ from 'lodash';
 import { PolicyModel, SnapshotModel, SnapshotRequestModelPolicies } from 'generated/tdr';
 import { connect } from 'react-redux';
 import { TdrState } from 'reducers';
-import { DatasetRoles, SnapshotRoles } from 'constants';
 import { styled } from '@mui/material/styles';
 import { getDatasetPolicy } from 'actions';
 import { Action } from 'redux';
+import { DatasetRoles, SnapshotRoles } from 'src/constants';
 
 export const transformRoleToCreatePolicy = (role: string): string => `${_.camelCase(role)}s`;
 
@@ -49,7 +49,7 @@ function ManagedSnapshotAccess(props: ManagedSnapshotAccessProps) {
   const datasetId = snapshot.source?.[0].dataset.id;
 
   useEffect(() => {
-    dispatch(getDatasetPolicy(datasetId));
+    dispatch(getDatasetPolicy(datasetId, { suppressErrorNotification: true }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [datasetId]);
 
@@ -65,6 +65,10 @@ function ManagedSnapshotAccess(props: ManagedSnapshotAccessProps) {
   const inheritedStewards = snapshot.source?.[0].dataset.inheritSteward
     ? datasetPolicies.find((policy) => policy.name === DatasetRoles.CUSTODIAN)?.members
     : [];
+  const datasetPolicyError = datasetPolicies.find((policy) => policy.name === 'ERROR');
+  const datasetPolicyErrorMessage =
+    datasetPolicyError &&
+    'Beacause its source dataset has Inherit Steward enabled, this snapshot may have additional stewards that are not listed here.';
 
   const canManageUsers = userRoles.includes(SnapshotRoles.STEWARD) || createMode;
   const permissions: AccessPermission[] = [
@@ -85,6 +89,7 @@ function ManagedSnapshotAccess(props: ManagedSnapshotAccessProps) {
       <Grid item xs={12} data-cy="snapshot-stewards">
         <UserList
           users={stewards}
+          message={datasetPolicyErrorMessage}
           readOnlyUsers={inheritedStewards}
           readOnlyUserTooltip="This steward has inherited access as a parent dataset custodian, to remove access, remove their role from the dataset"
           typeOfUsers="Stewards"

@@ -551,7 +551,7 @@ export function* getDatasetById({ payload }: any): any {
 }
 
 export function* getDatasetPolicy({ payload }: any): any {
-  const datasetId = payload;
+  const { datasetId, options } = payload;
   try {
     const response = yield call(authGet, `/api/repository/v1/datasets/${datasetId}/policies`);
     yield put({
@@ -559,7 +559,14 @@ export function* getDatasetPolicy({ payload }: any): any {
       policy: response,
     });
   } catch (err) {
-    showNotification(err);
+    if (options?.suppressErrorNotification) {
+      yield put({
+        type: ActionTypes.GET_DATASET_POLICY_SUCCESS,
+        policy: { data: { policies: [{ name: 'ERROR', members: [] }] } },
+      });
+    } else {
+      showNotification(err);
+    }
   }
 }
 

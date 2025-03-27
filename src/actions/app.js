@@ -147,7 +147,7 @@ export const { getDatasetById } = createActions({
 });
 
 export const { getDatasetPolicy } = createActions({
-  [ActionTypes.GET_DATASET_POLICY]: (policy) => policy,
+  [ActionTypes.GET_DATASET_POLICY]: (datasetId, options) => ({ datasetId, options }),
   [ActionTypes.GET_DATASET_POLICY_SUCCESS]: (policy) => policy,
 });
 
