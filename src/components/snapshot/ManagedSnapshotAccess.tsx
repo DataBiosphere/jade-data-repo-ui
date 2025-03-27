@@ -65,9 +65,8 @@ function ManagedSnapshotAccess(props: ManagedSnapshotAccessProps) {
   const inheritedStewards = snapshot.source?.[0].dataset.inheritSteward
     ? datasetPolicies.find((policy) => policy.name === DatasetRoles.CUSTODIAN)?.members
     : [];
-  const datasetPolicyError = datasetPolicies.find((policy) => policy.name === 'ERROR');
   const datasetPolicyErrorMessage =
-    datasetPolicyError &&
+    datasetPolicies.find((policy) => policy.name === 'ERROR') &&
     'Beacause its source dataset has Inherit Steward enabled, this snapshot may have additional stewards that are not listed here.';
 
   const canManageUsers = userRoles.includes(SnapshotRoles.STEWARD) || createMode;
@@ -91,7 +90,7 @@ function ManagedSnapshotAccess(props: ManagedSnapshotAccessProps) {
           users={stewards}
           message={datasetPolicyErrorMessage}
           readOnlyUsers={inheritedStewards}
-          readOnlyUserTooltip="This steward has inherited access as a parent dataset custodian, to remove access, remove their role from the dataset"
+          readOnlyUserTooltip="This steward has inherited access as a parent dataset custodian. To remove access, remove their role from the dataset"
           typeOfUsers="Stewards"
           canManageUsers={canManageUsers}
           removeUser={removeUser(SnapshotRoles.STEWARD)}
