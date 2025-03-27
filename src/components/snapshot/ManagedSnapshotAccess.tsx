@@ -7,7 +7,7 @@ import _ from 'lodash';
 import { PolicyModel, SnapshotModel, SnapshotRequestModelPolicies } from 'generated/tdr';
 import { connect } from 'react-redux';
 import { TdrState } from 'reducers';
-import { SnapshotRoles } from 'constants';
+import { DatasetRoles, SnapshotRoles } from 'constants';
 import { styled } from '@mui/material/styles';
 import { getDatasetPolicy } from 'actions';
 import { Action } from 'redux';
@@ -63,7 +63,7 @@ function ManagedSnapshotAccess(props: ManagedSnapshotAccessProps) {
   const discoverers = getUsers(SnapshotRoles.DISCOVERER);
   const aggregateDataReaders = getUsers(SnapshotRoles.AGGREGATE_DATA_READER);
   const inheritedStewards = snapshot.source?.[0].dataset.inheritSteward
-    ? datasetPolicies.find((policy) => policy.name === SnapshotRoles.STEWARD)?.members
+    ? datasetPolicies.find((policy) => policy.name === DatasetRoles.CUSTODIAN)?.members
     : [];
 
   const canManageUsers = userRoles.includes(SnapshotRoles.STEWARD) || createMode;
