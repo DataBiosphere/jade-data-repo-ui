@@ -264,6 +264,13 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
               {renderTextFieldValue('Google Data Project', snapshot.dataProject)}
             </Grid>
           )}
+          <Grid item xs={4}>
+            {renderTextFieldValue(
+              'Inherited Steward Roles',
+              sourceDataset.inheritSteward ? 'Yes' : 'No',
+              'Inherited Stewards will need to be removed as Custodians from the root dataset',
+            )}
+          </Grid>
         </Grid>
       </TabPanel>
       <TabPanel value={value} index={1}>
