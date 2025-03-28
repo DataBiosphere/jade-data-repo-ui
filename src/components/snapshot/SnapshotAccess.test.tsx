@@ -4,6 +4,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import { Provider } from 'react-redux';
 import React from 'react';
 import createMockStore from 'redux-mock-store';
+import { initialDatasetState } from 'reducers/dataset';
 import history from '../../modules/hist';
 import globalTheme from '../../modules/theme';
 import SnapshotAccess from './SnapshotAccess';
@@ -35,6 +36,7 @@ const initialState = {
     ],
     userRoles: ['steward', 'reader', 'discoverer', 'aggregate_data_reader'],
   },
+  datasets: initialDatasetState,
 };
 
 describe('Snapshot access info', () => {

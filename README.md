@@ -89,6 +89,11 @@ To run end-to-end tests: `npx cypress run` or `npx cypress open` (interactive mo
 
 To run unit tests: `npx cypress run --component` or `npx cypress open --component` (interactive mode)
 
+To see console output from cypress test runs using the electron browser, set `ELECTRON_ENABLE_LOGGING=1`
+```shell
+ELECTRON_ENABLE_LOGGING=1 npx cypress open
+```
+
 ## skaffold
 
 To render your own local skaffold.yaml run the following with your initials

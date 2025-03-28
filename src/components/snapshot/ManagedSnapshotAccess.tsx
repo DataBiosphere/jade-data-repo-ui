@@ -49,7 +49,9 @@ function ManagedSnapshotAccess(props: ManagedSnapshotAccessProps) {
   const datasetId = snapshot.source?.[0].dataset.id;
 
   useEffect(() => {
-    dispatch(getDatasetPolicy(datasetId, { suppressErrorNotification: true }));
+    if (snapshot.source?.[0].dataset.inheritSteward) {
+      dispatch(getDatasetPolicy(datasetId, { suppressErrorNotification: true }));
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [datasetId]);
 

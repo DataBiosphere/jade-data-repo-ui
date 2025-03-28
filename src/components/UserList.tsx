@@ -49,7 +49,7 @@ function UserList({
           readOnlyUsers={readOnlyUsers}
           readOnlyUserTooltip={readOnlyUserTooltip}
         />
-        {users.length === 0 && readOnlyUsers?.length === 0 && (
+        {users.length === 0 && (!readOnlyUsers || readOnlyUsers.length === 0) && (
           <Typography
             sx={{
               fontStyle: 'italic',

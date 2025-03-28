@@ -21,6 +21,7 @@ describe('ManageUsersView', () => {
                 classes={{}}
                 removeUser={canManageUsers ? () => <div /> : undefined}
                 users={['authdomain1', 'authdomain2', 'authdomain3']}
+                readOnlyUsers={['user1', 'user2']}
               />
             </ThemeProvider>
           </Provider>
@@ -30,6 +31,8 @@ describe('ManageUsersView', () => {
         cy.contains('authdomain1').should('exist');
         cy.contains('authdomain2').should('exist');
         cy.contains('authdomain3').should('exist');
+        cy.contains('user1').should('exist');
+        cy.contains('user2').should('exist');
       });
     });
   });
