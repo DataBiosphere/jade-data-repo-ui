@@ -268,7 +268,7 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
             {renderTextFieldValue(
               'Inherited Steward Roles',
               sourceDataset.inheritSteward ? 'Yes' : 'No',
-              'Inherited Stewards will need to be removed as Custodians from the root dataset',
+              'If enabled, Dataset custodians will inherit steward permissions on snapshots',
             )}
           </Grid>
         </Grid>
