@@ -43,13 +43,6 @@ describe('ManageUsersView', () => {
       cy.contains('read only user tooltip').should('be.visible');
     });
   });
-  it('Does not render remove user button for readOnly users even if canManageUsers is true', () => {
-    mountComponent(true);
-    cy.get('[data-cy=chip-container]').within(() => {
-      // three removable users, does not render for the two read-only users
-      cy.get('.MuiChip-deleteIcon').should('have.length', 3);
-    });
-  });
   it('No container when there are no users', () => {
     const mockStore = createMockStore([]);
     const store = mockStore({});

@@ -19,7 +19,7 @@ const initialState = {
     snapshotPolicies: [
       {
         name: 'steward',
-        members: ['steward@gmail.com'],
+        members: ['steward@gmail.com', 'steward1@gmail.com'],
       },
       {
         name: 'reader',
@@ -59,6 +59,7 @@ describe('Snapshot access info', () => {
       .within(() => {
         cy.get('[data-cy="user-email"]').then((user) => {
           cy.wrap(user[0]).should('contain.text', 'steward@gmail.com');
+          cy.wrap(user[0]).should('contain.text', 'steward1@gmail.com');
         });
       });
     cy.get('[data-cy="snapshot-readers"]')

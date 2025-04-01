@@ -69,7 +69,7 @@ function ManagedSnapshotAccess(props: ManagedSnapshotAccessProps) {
     : [];
   const datasetPolicyErrorMessage =
     datasetPolicies.find((policy) => policy.name === 'ERROR') &&
-    'Beacause its source dataset has Inherit Steward enabled, this snapshot may have additional stewards that are not listed here.';
+    'Because its source dataset has Inherit Steward enabled, this snapshot may have additional stewards that are not listed here.';
 
   const canManageUsers = userRoles.includes(SnapshotRoles.STEWARD) || createMode;
   const permissions: AccessPermission[] = [
