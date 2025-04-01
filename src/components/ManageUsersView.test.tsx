@@ -8,25 +8,30 @@ import history from '../modules/hist';
 import globalTheme from '../modules/theme';
 import ManageUsersView from './ManageUsersView';
 
+const mountComponent = (canManageUsers) => {
+  const mockStore = createMockStore([]);
+  const store = mockStore({});
+  mount(
+    <Router history={history}>
+      <Provider store={store}>
+        <ThemeProvider theme={globalTheme}>
+          <ManageUsersView
+            classes={{}}
+            removeUser={canManageUsers ? () => <div /> : undefined}
+            users={['authdomain1', 'authdomain2', 'authdomain3']}
+            readOnlyUsers={['user1', 'user2']}
+            readOnlyUserTooltip="read only user tooltip"
+          />
+        </ThemeProvider>
+      </Provider>
+    </Router>,
+  );
+};
+
 describe('ManageUsersView', () => {
   [true, false].forEach((canManageUsers) => {
     it('Renders user list independent of whether you can manage users', () => {
-      const mockStore = createMockStore([]);
-      const store = mockStore({});
-      mount(
-        <Router history={history}>
-          <Provider store={store}>
-            <ThemeProvider theme={globalTheme}>
-              <ManageUsersView
-                classes={{}}
-                removeUser={canManageUsers ? () => <div /> : undefined}
-                users={['authdomain1', 'authdomain2', 'authdomain3']}
-                readOnlyUsers={['user1', 'user2']}
-              />
-            </ThemeProvider>
-          </Provider>
-        </Router>,
-      );
+      mountComponent(canManageUsers);
       cy.get('[data-cy=chip-container]').within(() => {
         cy.contains('authdomain1').should('exist');
         cy.contains('authdomain2').should('exist');
@@ -34,6 +39,15 @@ describe('ManageUsersView', () => {
         cy.contains('user1').should('exist');
         cy.contains('user2').should('exist');
       });
+      cy.contains('user1').trigger('mouseover'); // to show the tooltip for read-only users
+      cy.contains('read only user tooltip').should('be.visible');
+    });
+  });
+  it('Does not render remove user button for readOnly users even if canManageUsers is true', () => {
+    mountComponent(true);
+    cy.get('[data-cy=chip-container]').within(() => {
+      // three removable users, does not render for the two read-only users
+      cy.get('.MuiChip-deleteIcon').should('have.length', 3);
     });
   });
   it('No container when there are no users', () => {
