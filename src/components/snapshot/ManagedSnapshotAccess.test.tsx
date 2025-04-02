@@ -68,9 +68,6 @@ const setup = (state) => {
             addUsers={cy.stub().as('addUsers')}
             removeUser={cy.stub()}
             requestPolicies={snapshotRequestPolicies}
-            // datasetPolicies={datasetPolicies}
-            // userRoles={state.snapshots.userRoles}
-            // snapshot={state.snapshots.snapshot}
           />
         </ThemeProvider>
       </Provider>

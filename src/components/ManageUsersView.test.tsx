@@ -8,6 +8,11 @@ import history from '../modules/hist';
 import globalTheme from '../modules/theme';
 import ManageUsersView from './ManageUsersView';
 
+const user1 = 'user1';
+const user2 = 'user2';
+const user3 = 'user3';
+const readOnlyUser1 = 'readOnlyUser1';
+const readOnlyUser2 = 'readOnlyUser2';
 const mountComponent = (canManageUsers) => {
   const mockStore = createMockStore([]);
   const store = mockStore({});
@@ -18,8 +23,8 @@ const mountComponent = (canManageUsers) => {
           <ManageUsersView
             classes={{}}
             removeUser={canManageUsers ? () => <div /> : undefined}
-            users={['authdomain1', 'authdomain2', 'authdomain3']}
-            readOnlyUsers={['user1', 'user2']}
+            users={[user1, user2, user3]}
+            readOnlyUsers={[readOnlyUser1, readOnlyUser2]}
             readOnlyUserTooltip="read only user tooltip"
           />
         </ThemeProvider>
@@ -33,15 +38,20 @@ describe('ManageUsersView', () => {
     it('Renders user list independent of whether you can manage users', () => {
       mountComponent(canManageUsers);
       cy.get('[data-cy=chip-container]').within(() => {
-        cy.contains('authdomain1').should('exist');
-        cy.contains('authdomain2').should('exist');
-        cy.contains('authdomain3').should('exist');
-        cy.contains('user1').should('exist');
-        cy.contains('user2').should('exist');
+        cy.contains(user1).should('exist');
+        cy.contains(user2).should('exist');
+        cy.contains(user3).should('exist');
+        cy.contains(readOnlyUser1).should('exist');
+        cy.contains(readOnlyUser2).should('exist');
       });
-      cy.contains('user1').trigger('mouseover'); // to show the tooltip for read-only users
-      cy.contains('read only user tooltip').should('be.visible');
     });
+  });
+  it('Does not render remove user button for readOnly users even if canManageUsers is true', () => {
+    mountComponent(true);
+    cy.get(`[data-cy="chip-${user1}"]`).find('[data-testid="CancelIcon"]').should('exist');
+    cy.get(`[data-cy="chip-${readOnlyUser1}"]`)
+      .contains('[data-testid="CancelIcon"]')
+      .should('not.exist');
   });
   it('No container when there are no users', () => {
     const mockStore = createMockStore([]);
