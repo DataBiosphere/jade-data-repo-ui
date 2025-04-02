@@ -1,14 +1,16 @@
 import { Grid, Typography } from '@mui/material';
 import AddUserAccess, { AccessPermission } from 'components/common/AddUserAccess';
 import UserList from 'components/UserList';
-import React from 'react';
+import React, { Dispatch, useEffect } from 'react';
 import { getRoleMembersFromPolicies } from 'libs/utils';
 import _ from 'lodash';
-import { PolicyModel, SnapshotRequestModelPolicies } from 'generated/tdr';
+import { PolicyModel, SnapshotModel, SnapshotRequestModelPolicies } from 'generated/tdr';
 import { connect } from 'react-redux';
 import { TdrState } from 'reducers';
-import { SnapshotRoles } from 'constants';
 import { styled } from '@mui/material/styles';
+import { getDatasetPolicy } from 'actions';
+import { Action } from 'redux';
+import { DatasetRoles, SnapshotRoles } from 'src/constants';
 
 export const transformRoleToCreatePolicy = (role: string): string => `${_.camelCase(role)}s`;
 
@@ -26,10 +28,32 @@ interface ManagedSnapshotAccessProps {
   readonly userRoles: string[];
   readonly policies: Array<PolicyModel>;
   readonly requestPolicies: SnapshotRequestModelPolicies;
+  readonly snapshot: SnapshotModel;
+  readonly datasetPolicies: Array<PolicyModel>;
+  readonly dispatch: Dispatch<Action>;
 }
 
 function ManagedSnapshotAccess(props: ManagedSnapshotAccessProps) {
-  const { createMode, addUsers, removeUser, userRoles, policies, requestPolicies } = props;
+  const {
+    dispatch,
+    createMode,
+    addUsers,
+    removeUser,
+    userRoles,
+    policies,
+    requestPolicies,
+    datasetPolicies,
+    snapshot,
+  } = props;
+
+  const datasetId = snapshot.source?.[0].dataset.id;
+
+  useEffect(() => {
+    if (snapshot.source?.[0].dataset.inheritSteward) {
+      dispatch(getDatasetPolicy(datasetId, { suppressErrorNotification: true }));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [datasetId]);
 
   const getUsers = (role: string): string[] =>
     createMode
@@ -40,6 +64,12 @@ function ManagedSnapshotAccess(props: ManagedSnapshotAccessProps) {
   const readers = getUsers(SnapshotRoles.READER);
   const discoverers = getUsers(SnapshotRoles.DISCOVERER);
   const aggregateDataReaders = getUsers(SnapshotRoles.AGGREGATE_DATA_READER);
+  const inheritedStewards = snapshot.source?.[0].dataset.inheritSteward
+    ? datasetPolicies.find((policy) => policy.name === DatasetRoles.CUSTODIAN)?.members
+    : [];
+  const datasetPolicyErrorMessage =
+    datasetPolicies.find((policy) => policy.name === 'ERROR') &&
+    'Because its source dataset has Inherit Steward enabled, this snapshot may have additional stewards that are not listed here.';
 
   const canManageUsers = userRoles.includes(SnapshotRoles.STEWARD) || createMode;
   const permissions: AccessPermission[] = [
@@ -60,6 +90,9 @@ function ManagedSnapshotAccess(props: ManagedSnapshotAccessProps) {
       <Grid item xs={12} data-cy="snapshot-stewards">
         <UserList
           users={stewards}
+          message={datasetPolicyErrorMessage}
+          readOnlyUsers={inheritedStewards}
+          readOnlyUserTooltip="This steward has inherited access as a parent dataset custodian. To remove access, remove their role from the dataset"
           typeOfUsers="Stewards"
           canManageUsers={canManageUsers}
           removeUser={removeUser(SnapshotRoles.STEWARD)}
@@ -101,6 +134,8 @@ function mapStateToProps(state: TdrState) {
   return {
     policies: state.snapshots.snapshotPolicies,
     userRoles: state.snapshots.userRoles,
+    snapshot: state.snapshots.snapshot,
+    datasetPolicies: state.datasets.datasetPolicies,
   };
 }
 

@@ -11,11 +11,13 @@ import { initialQueryState } from 'reducers/query';
 import { ManagedGroupMembershipEntry } from 'models/group';
 import FullViewSnapshotModal from 'components/common/FullViewSnapshotModal';
 import { initialSnapshotState } from 'reducers/snapshot';
+import { initialDatasetState } from 'reducers/dataset';
 import history from '../../modules/hist';
 import globalTheme from '../../modules/theme';
 
 const initialState = {
   snapshots: initialSnapshotState,
+  datasets: initialDatasetState,
   user: _.cloneDeep(initialUserState),
   query: _.cloneDeep(initialQueryState),
   router: { location: {} },
@@ -34,9 +36,9 @@ const mountFullViewSnapshotModal = (
   });
 
   // Intercept the getBillingProfiles API call onMount
-  cy.intercept('GET', '/api/resources/v1/profiles?offset=0&limit=1000').as('getBillingProfiles');
+  cy.intercept('GET', '/api/resources/v1/profiles?offset=0&limit=1000');
 
-  cy.intercept('GET', 'https://sam.dsde-dev.broadinstitute.org/api/groups/v1').as('getUserGroups');
+  cy.intercept('GET', 'https://sam.dsde-dev.broadinstitute.org/api/groups/v1');
 
   mount(
     <Router history={history}>
@@ -88,8 +90,10 @@ describe('FullViewSnapshotModal', () => {
   });
 
   it('allows changing the name and description', () => {
-    cy.get('#snapshot-name').clear().type('New Name');
-    cy.get('#snapshot-description').clear().type('New Description');
+    cy.get('#snapshot-name').clear();
+    cy.get('#snapshot-name').type('New Name');
+    cy.get('#snapshot-description').clear();
+    cy.get('#snapshot-description').type('New Description');
     cy.get('#snapshot-name').should('have.value', 'New Name');
     cy.get('#snapshot-description').should('have.value', 'New Description');
   });

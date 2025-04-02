@@ -36,7 +36,7 @@ describe('test snapshot creation', () => {
         id: 'snapshotId',
         createdDate: '2020-06-24',
         profileId: 'profileId',
-        source: [{ name: 'dataset' }],
+        source: [{ dataset: { id: 'datasetId' } }],
         tables: [{ rowCount: 2 }],
       },
     });

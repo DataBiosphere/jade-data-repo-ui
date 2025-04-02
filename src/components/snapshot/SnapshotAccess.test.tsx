@@ -4,6 +4,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import { Provider } from 'react-redux';
 import React from 'react';
 import createMockStore from 'redux-mock-store';
+import { initialDatasetState } from 'reducers/dataset';
 import history from '../../modules/hist';
 import globalTheme from '../../modules/theme';
 import SnapshotAccess from './SnapshotAccess';
@@ -18,7 +19,7 @@ const initialState = {
     snapshotPolicies: [
       {
         name: 'steward',
-        members: ['steward@gmail.com'],
+        members: ['steward@gmail.com', 'steward1@gmail.com'],
       },
       {
         name: 'reader',
@@ -35,6 +36,7 @@ const initialState = {
     ],
     userRoles: ['steward', 'reader', 'discoverer', 'aggregate_data_reader'],
   },
+  datasets: initialDatasetState,
 };
 
 describe('Snapshot access info', () => {
@@ -57,6 +59,7 @@ describe('Snapshot access info', () => {
       .within(() => {
         cy.get('[data-cy="user-email"]').then((user) => {
           cy.wrap(user[0]).should('contain.text', 'steward@gmail.com');
+          cy.wrap(user[0]).should('contain.text', 'steward1@gmail.com');
         });
       });
     cy.get('[data-cy="snapshot-readers"]')
