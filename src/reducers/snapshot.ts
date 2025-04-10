@@ -318,6 +318,7 @@ export default {
           description,
           mode,
           dataAccessControlGroups: [authDomain],
+          billingProfileId,
         };
         if (mode === SnapshotRequestContentsModelModeEnum.ByQuery) {
           snapshotRequest.assetName = assetName;
