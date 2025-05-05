@@ -22,7 +22,7 @@
     "ES6"
   ],
   "dependencies": {
-    "@babel/runtime": "^7.27.0",
+    "@babel/runtime": "^7.27.1",
     "@codemirror/lang-javascript": "^6.2.3",
     "@emotion/cache": "^11.14.0",
     "@emotion/styled": "^11.14.0",
@@ -45,8 +45,8 @@
     "@types/react-dom": "^18.2.4",
     "@types/react-jss": "^10.0.0",
     "@types/react-virtualized": "^9.22.2",
-    "@uiw/codemirror-theme-okaidia": "^4.23.11",
-    "@uiw/react-codemirror": "^4.23.11",
+    "@uiw/codemirror-theme-okaidia": "^4.23.12",
+    "@uiw/react-codemirror": "^4.23.12",
     "animate.css": "^4.1.1",
     "awesome-debounce-promise": "^2.1.0",
     "axios": "^1.9.0",
@@ -73,7 +73,7 @@
     "react-draggable": "^4.4.6",
     "react-fontawesome": "^1.7.1",
     "react-helmet": "^6.1.0",
-    "react-hook-form": "^7.56.1",
+    "react-hook-form": "^7.56.2",
     "react-json-view": "^1.21.3",
     "react-markdown": "^8.0.7",
     "react-notifications-component": "^3.4.1",
