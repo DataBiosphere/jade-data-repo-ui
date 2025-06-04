@@ -317,7 +317,7 @@ export default {
           name,
           description,
           mode,
-          dataAccessControlGroups: [authDomain],
+          dataAccessControlGroups: authDomain == null ? [] : [authDomain],
           billingProfileId,
         };
         if (mode === SnapshotRequestContentsModelModeEnum.ByQuery) {
