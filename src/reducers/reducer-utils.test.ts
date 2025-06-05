@@ -2,7 +2,7 @@ import { getAuthDomain } from './reducer-utils';
 
 describe('reducerUtils', () => {
   it('should return an empty array', () => {
-    const authDomains: string | null = null;
+    const authDomains: string | undefined = undefined;
     const result: string[] = getAuthDomain(authDomains);
     expect(result).to.deep.equal([]);
   });

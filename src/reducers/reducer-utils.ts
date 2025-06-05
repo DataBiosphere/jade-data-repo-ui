@@ -1,2 +1,2 @@
-export const getAuthDomain = (authDomain?: string | null): string[] =>
-  authDomain == null ? [] : [authDomain];
+export const getAuthDomain = (authDomain?: string): string[] =>
+  authDomain === undefined ? [] : [authDomain];
