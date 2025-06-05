@@ -16,6 +16,7 @@ import {
   SnapshotSummaryModel,
   WorkspacePolicyModel,
 } from 'generated/tdr';
+import { getAuthDomain } from './reducer-utils';
 
 // TODO: convert to autogenned SnapshotRequestModel
 export interface SnapshotRequest {
