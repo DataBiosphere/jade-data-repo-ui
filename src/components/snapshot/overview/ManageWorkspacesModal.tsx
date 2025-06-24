@@ -48,10 +48,10 @@ const OverlaySpinner = styled(Box)(({ theme }) => ({
 }));
 
 interface ManageWorkspaceModalProps {
-  entries: SnapshotWorkspaceEntry[];
-  modalText: string;
-  removeWorkspace: any;
-  isLoading: boolean;
+  readonly entries: SnapshotWorkspaceEntry[];
+  readonly modalText: string;
+  readonly removeWorkspace: any;
+  readonly isLoading: boolean;
 }
 
 export function ManageWorkspacesModal(props: ManageWorkspaceModalProps) {

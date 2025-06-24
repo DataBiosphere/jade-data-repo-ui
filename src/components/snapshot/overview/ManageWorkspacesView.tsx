@@ -11,8 +11,8 @@ const ChipContainer = styled(Box)(({ theme }) => ({
 }));
 
 interface ManageWorkspaceViewProps {
-  entries: SnapshotWorkspaceEntry[];
-  removeWorkspace: any;
+  readonly entries: SnapshotWorkspaceEntry[];
+  readonly removeWorkspace: any;
 }
 
 export function ManageWorkspacesView(props: ManageWorkspaceViewProps) {
