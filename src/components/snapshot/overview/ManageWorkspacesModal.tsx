@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { SnapshotWorkspaceEntry } from 'models/workspaceentry';
 import {
   Button,
@@ -54,120 +54,90 @@ interface ManageWorkspaceModalProps {
   isLoading: boolean;
 }
 
-type ManageWorkspaceModalState = {
-  open: boolean;
-};
+export function ManageWorkspacesModal(props: ManageWorkspaceModalProps) {
+  const { entries, modalText, removeWorkspace, isLoading } = props;
+  const [open, setOpen] = useState<boolean>(false);
 
-const initialState: ManageWorkspaceModalState = {
-  open: false,
-};
-
-export class ManageWorkspacesModal extends React.PureComponent<
-  ManageWorkspaceModalProps,
-  ManageWorkspaceModalState
-> {
-  constructor(props: ManageWorkspaceModalProps) {
-    super(props);
-    this.state = initialState;
-  }
-
-  handleClickOpen = () => {
-    this.setState({ open: true });
-  };
-
-  handleClose = () => {
-    this.setState({ open: false });
-  };
-
-  render() {
-    const { modalText, entries, removeWorkspace, isLoading } = this.props;
-    const { open } = this.state;
-
-    return (
-      <Box component="span">
-        <OpenButton
-          aria-label={modalText}
-          onClick={this.handleClickOpen}
-          disableFocusRipple
-          disableRipple
+  return (
+    <Box component="span">
+      <OpenButton
+        aria-label={modalText}
+        onClick={() => setOpen(true)}
+        disableFocusRipple
+        disableRipple
+      >
+        <Box component="i" className="fa-solid fa-pen-circle" sx={{ marginRight: '5px', top: 1 }} />
+        {modalText}
+      </OpenButton>
+      <Dialog
+        fullWidth
+        maxWidth="md"
+        onClose={() => setOpen(false)}
+        aria-labelledby="customized-dialog-title"
+        open={open}
+      >
+        <DialogTitle
+          id="customized-dialog-title"
+          sx={{
+            borderBottom: (theme) => `1px solid ${theme.palette.divider}`,
+            margin: 0,
+            padding: 2,
+          }}
         >
-          <Box
-            component="i"
-            className="fa-solid fa-pen-circle"
-            sx={{ marginRight: '5px', top: 1 }}
-          />
           {modalText}
-        </OpenButton>
-        <Dialog
-          fullWidth
-          maxWidth="md"
-          onClose={this.handleClose}
-          aria-labelledby="customized-dialog-title"
-          open={open}
+          <IconButton
+            aria-label="Close"
+            onClick={() => setOpen(false)}
+            sx={{
+              position: 'absolute',
+              right: 1,
+              top: 1,
+              color: 'grey[500]',
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        <Typography
+          sx={{
+            margin: 0,
+            padding: '2 !important',
+          }}
         >
-          <DialogTitle
-            id="customized-dialog-title"
-            sx={{
-              borderBottom: (theme) => `1px solid ${theme.palette.divider}`,
-              margin: 0,
-              padding: 2,
-            }}
-          >
-            {modalText}
-            <IconButton
-              aria-label="Close"
-              onClick={this.handleClose}
-              sx={{
-                position: 'absolute',
-                right: 1,
-                top: 1,
-                color: 'grey[500]',
-              }}
-            >
-              <CloseIcon />
-            </IconButton>
-          </DialogTitle>
-          <Typography
-            sx={{
-              margin: 0,
-              padding: '2 !important',
-            }}
-          >
-            Removing workspace readers will remove access to data for{' '}
-            <strong>
-              <em>Project-owners, Owners, Writers, Readers</em>
-            </strong>
-            . To add workspace readers use the{' '}
-            <strong>
-              <em>Export Snapshot to Terra Workspace</em>
-            </strong>{' '}
-            button.
-          </Typography>
-          <StyledDialogContent>
-            {isLoading && (
-              <LoadingSpinner
-                delay={true}
-                delayMessage="Thank you for your patience."
-                className={OverlaySpinner.toString()}
-              />
-            )}
-            <ManageWorkspacesView entries={entries} removeWorkspace={removeWorkspace} />
-          </StyledDialogContent>
-          <DialogActions
-            sx={{
-              borderTop: (theme) => `1px solid ${theme.palette.divider}`,
-              margin: 0,
-              padding: 1,
-            }}
-          >
-            <Button onClick={this.handleClose} color="primary">
-              Done
-            </Button>
-          </DialogActions>
-        </Dialog>
-      </Box>
-    );
-  }
+          Removing workspace readers will remove access to data for{' '}
+          <strong>
+            <em>Project-owners, Owners, Writers, Readers</em>
+          </strong>
+          . To add workspace readers use the{' '}
+          <strong>
+            <em>Export Snapshot to Terra Workspace</em>
+          </strong>{' '}
+          button.
+        </Typography>
+        <StyledDialogContent>
+          {isLoading && (
+            <LoadingSpinner
+              delay={true}
+              delayMessage="Thank you for your patience."
+              className={OverlaySpinner.toString()}
+            />
+          )}
+          <ManageWorkspacesView entries={entries} removeWorkspace={removeWorkspace} />
+        </StyledDialogContent>
+        <DialogActions
+          sx={{
+            borderTop: (theme) => `1px solid ${theme.palette.divider}`,
+            margin: 0,
+            padding: 1,
+          }}
+        >
+          <Button onClick={() => setOpen(false)} color="primary">
+            Done
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </Box>
+  );
 }
 
 function mapStateToProps(state: TdrState) {
