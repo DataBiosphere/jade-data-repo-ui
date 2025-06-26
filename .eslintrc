@@ -10,8 +10,7 @@
   "parser": "@babel/eslint-parser",
   "env": {
     "browser": true,
-    "cypress/globals": true,
-    "jest": true
+    "cypress/globals": true
   },
   "globals": {
     "$": true,
