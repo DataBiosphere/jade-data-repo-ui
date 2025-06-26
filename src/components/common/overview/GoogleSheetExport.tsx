@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { ClassNameMap, createStyles, withStyles } from '@mui/styles';
 import { Button, CircularProgress, Typography } from '@mui/material';
-import { CustomTheme } from '@mui/material/styles';
+import { CustomTheme, styled } from '@mui/material/styles';
 import { AccessInfoBigQueryModel } from 'generated/tdr';
 import {
   addBQSources,
@@ -31,23 +31,25 @@ const styles = (theme: CustomTheme) =>
     centered: {
       textAlign: 'center',
     },
-    labelRight: {
-      paddingLeft: '10px',
-    },
-    section: {
-      paddingBottom: theme.spacing(1),
-    },
   });
 
+export const ExportButton = styled(Button)(() => ({
+  marginTop: '0.5rem',
+  height: '36px',
+}));
+
+export const ButtonTextLink = styled('a')(({ theme }) => ({
+  color: theme.palette.common.white,
+}));
+
 type GoogleSheetProps = {
-  classes: ClassNameMap;
   buttonLabel: string;
   bigQueryAccessInfo: AccessInfoBigQueryModel | undefined;
   token: string;
 };
 
 function GoogleSheetExport(props: GoogleSheetProps) {
-  const { classes, buttonLabel, bigQueryAccessInfo, token } = props;
+  const { buttonLabel, bigQueryAccessInfo, token } = props;
   const [isSheetProcessing, setIsSheetProcessing] = useState(false);
   const [isSheetDone, setIsSheetDone] = useState(false);
   const [sheetUrl, setSheetUrl] = useState('');
@@ -85,47 +87,50 @@ function GoogleSheetExport(props: GoogleSheetProps) {
 
   return (
     <div>
-      <Typography variant="h6" className={classes.section}>
+      <Typography
+        variant="h6"
+        sx={{
+          paddingBottom: (theme) => theme.spacing(1),
+        }}
+      >
         Export to Google Connected Sheets
       </Typography>
-      <Typography variant="body1" className={classes.section}>
+      <Typography
+        variant="body1"
+        sx={{
+          paddingBottom: (theme) => theme.spacing(1),
+        }}
+      >
         With Connected Sheets, you can access, analyze, visualize and share many rows of BigQuery
         data from your Sheets spreadsheet. The Google Sheet will be saved to your Google drive.
       </Typography>
       {!isSheetProcessing && !isSheetDone && (
-        <Button
+        <ExportButton
           data-cy="export-google-sheet-button"
           onClick={handleCreateGoogleSheet}
-          className={classes.exportButton}
           variant="outlined"
           color="primary"
         >
           {buttonLabel}
-        </Button>
+        </ExportButton>
       )}
       {isSheetProcessing && !isSheetDone && (
-        <Button
-          data-cy="preparing-google-sheet-button"
-          className={classes.exportButton}
-          variant="outlined"
-          color="primary"
-        >
+        <ExportButton data-cy="preparing-google-sheet-button" variant="outlined" color="primary">
           <CircularProgress size={25} />
-          <div className={classes.labelRight}>Preparing Google Sheet</div>
-        </Button>
+          <div style={{ paddingLeft: '10px' }}>Preparing Google Sheet</div>
+        </ExportButton>
       )}
       {!isSheetProcessing && isSheetDone && (
-        <Button
+        <ExportButton
           data-cy="google-sheet-export-ready-button"
-          className={classes.exportButton}
           color="primary"
-          href={sheetUrl}
           onClick={resetCreate}
-          target="_blank"
           variant="contained"
         >
-          <span className={classes.buttonText}> Google Sheet ready - continue</span>
-        </Button>
+          <ButtonTextLink href={sheetUrl} target="_blank">
+            Google Sheet ready - continue
+          </ButtonTextLink>
+        </ExportButton>
       )}
     </div>
   );
@@ -137,4 +142,4 @@ function mapStateToProps(state: TdrState) {
   };
 }
 
-export default connect(mapStateToProps)(withStyles(styles)(GoogleSheetExport));
+export default connect(mapStateToProps)(GoogleSheetExport);

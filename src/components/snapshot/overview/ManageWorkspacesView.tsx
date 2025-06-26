@@ -11,31 +11,29 @@ const ChipContainer = styled(Box)(({ theme }) => ({
 }));
 
 interface ManageWorkspaceViewProps {
-  entries: SnapshotWorkspaceEntry[];
-  removeWorkspace: any;
+  readonly entries: SnapshotWorkspaceEntry[];
+  readonly removeWorkspace: any;
 }
 
-export class ManageWorkspacesView extends React.PureComponent<ManageWorkspaceViewProps> {
-  render() {
-    const { entries, removeWorkspace } = this.props;
-    const workspaceChips =
-      !!entries &&
-      entries.map((entry) => (
-        <Box key={entry.id}>
-          <Chip
-            sx={{ margin: 1 }}
-            color="primary"
-            label={entry.title}
-            key={entry.id}
-            onDelete={() => removeWorkspace(entry.policyModels)}
-            variant="outlined"
-          />
-        </Box>
-      ));
-    return (
-      <Box>{entries && entries.length > 0 && <ChipContainer>{workspaceChips}</ChipContainer>}</Box>
-    );
-  }
+export function ManageWorkspacesView(props: ManageWorkspaceViewProps) {
+  const { entries, removeWorkspace } = props;
+  const workspaceChips =
+    !!entries &&
+    entries.map((entry) => (
+      <Box key={entry.id}>
+        <Chip
+          sx={{ margin: 1 }}
+          color="primary"
+          label={entry.title}
+          key={entry.id}
+          onDelete={() => removeWorkspace(entry.policyModels)}
+          variant="outlined"
+        />
+      </Box>
+    ));
+  return (
+    <Box>{entries && entries.length > 0 && <ChipContainer>{workspaceChips}</ChipContainer>}</Box>
+  );
 }
 
 export default ManageWorkspacesView;
