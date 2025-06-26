@@ -101,9 +101,7 @@ function DataView({
             }}
             childBreadcrumbs={[{ text: 'Data', to: 'data' }]}
           />
-          <PageTitle variant="h3">
-            {resourceName}
-          </PageTitle>
+          <PageTitle variant="h3">{resourceName}</PageTitle>
           <div
             style={{
               display: 'flex',
