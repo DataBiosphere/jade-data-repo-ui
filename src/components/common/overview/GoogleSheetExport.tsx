@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { ClassNameMap, createStyles, withStyles } from '@mui/styles';
 import { Button, CircularProgress, Typography } from '@mui/material';
-import { CustomTheme, styled } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import { AccessInfoBigQueryModel } from 'generated/tdr';
 import {
   addBQSources,
@@ -13,25 +12,6 @@ import {
   SpreadsheetInfo,
 } from 'modules/googlesheets';
 import { TdrState } from '../../../reducers';
-
-const styles = (theme: CustomTheme) =>
-  createStyles({
-    card: {
-      display: 'inline-block',
-      padding: theme.spacing(4),
-      width: '100%',
-    },
-    exportButton: {
-      marginTop: '0.5rem',
-      height: '36px',
-    },
-    buttonText: {
-      color: theme.palette.common.white,
-    },
-    centered: {
-      textAlign: 'center',
-    },
-  });
 
 export const ExportButton = styled(Button)(() => ({
   marginTop: '0.5rem',

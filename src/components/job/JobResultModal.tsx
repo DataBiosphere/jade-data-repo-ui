@@ -1,6 +1,6 @@
 import React, { useEffect, Dispatch } from 'react';
 import _ from 'lodash';
-import { ClassNameMap, withStyles } from '@mui/styles';
+import { ClassNameMap } from '@mui/styles';
 import {
   Dialog,
   DialogContent,
@@ -20,45 +20,48 @@ import { JobResult, JobResultError } from 'reducers/job';
 import { RouterLocation, RouterRootState } from 'connected-react-router';
 import { LocationState } from 'history';
 import { push } from 'modules/hist';
+import { styled } from '@mui/material/styles';
 import LoadingSpinner from '../common/LoadingSpinner';
 import CopyTextButton from '../common/CopyTextButton';
 
-const styles = () => ({
-  dialog: {
-    minHeight: '80vh',
-    maxHeight: '80vh',
-    width: '80%',
-    maxWidth: 800,
-  },
-  dialogTitle: {
-    margin: 0,
-    marginTop: '5px',
-    fontSize: '1.2rem',
-  },
-  dialogInfo: {
-    display: 'flex',
-    marginBottom: 10,
-  },
-  dialogLabel: {
-    fontWeight: 'bold',
-    minWidth: 100,
-    'text-align': 'right',
-    marginRight: 15,
-  },
-  dialogContent: {
-    'word-break': 'break-all',
-  },
-});
+const dialogStyles = {
+  minHeight: '80vh',
+  maxHeight: '80vh',
+  width: '80%',
+  maxWidth: 800,
+};
+
+const DialogTitleText = styled('div')(() => ({
+  margin: 0,
+  marginTop: '5px',
+  fontSize: '1.2rem',
+  float: 'left',
+}));
+
+const JadeDialogInfo = styled('div')(() => ({
+  display: 'flex',
+  marginBottom: 10,
+}));
+
+const JadeDialogContent = styled('div')(() => ({
+  'word-break': 'break-all',
+}));
+
+const JadeDialogLabel = styled('div')(() => ({
+  fontWeight: 'bold',
+  minWidth: 100,
+  'text-align': 'right',
+  marginRight: 15,
+}));
 
 type JobResultModalProps = {
-  classes: ClassNameMap;
   dispatch: Dispatch<Action>;
   loading: boolean;
   jobResult?: JobResult;
   location: RouterLocation<LocationState>;
 };
 
-function JobResultModal({ classes, dispatch, loading, jobResult, location }: JobResultModalProps) {
+function JobResultModal({ dispatch, loading, jobResult, location }: JobResultModalProps) {
   const expandedJob = location.query?.expandedJob;
   useEffect(() => {
     if (expandedJob) {
@@ -83,76 +86,76 @@ function JobResultModal({ classes, dispatch, loading, jobResult, location }: Job
   const description = jobResult?.jobInfo?.description;
   const jobClass = jobResult?.jobInfo?.class_name;
   return (
-    <Paper className={classes.root}>
+    <Paper>
       <Dialog
         open={!!expandedJob}
         scroll="paper"
         fullWidth={true}
-        classes={{ paper: classes.dialog }}
+        paperProps={{ sx: dialogStyles }}
         onBackdropClick={handleSeeMoreClose}
       >
         <DialogTitle id="see-more-dialog-title">
-          <div className={classes.dialogTitle} style={{ float: 'left' }}>
-            Job Details
-          </div>
+          <DialogTitleText>Job Details</DialogTitleText>
           <IconButton size="small" style={{ float: 'right' }} onClick={handleSeeMoreClose}>
             <Close />
           </IconButton>
         </DialogTitle>
         <DialogContent>
           <DialogContentText
-            className={classes.dialogContentText}
+            sx={{
+              'word-break': 'break-all',
+            }}
             component="div"
             id="see-more-dialog-content-text"
           >
             {loading && <LoadingSpinner />}
             {!loading && (
               <div>
-                <div className={classes.dialogInfo}>
-                  <div className={classes.dialogLabel}>ID</div>
-                  <div className={classes.dialogContent}>
+                <JadeDialogInfo>
+                  <JadeDialogLabel>ID</JadeDialogLabel>
+                  <JadeDialogContent>
                     <span style={{ marginRight: '10px' }}>{expandedJob}</span>
                     <CopyTextButton valueToCopy={expandedJob} nameOfValue="Job ID" />
-                  </div>
-                </div>
+                  </JadeDialogContent>
+                </JadeDialogInfo>
 
-                <div className={classes.dialogInfo}>
-                  <div className={classes.dialogLabel}>Class Name</div>
-                  <div className={classes.dialogContent}>{jobClass}</div>
-                </div>
+                <JadeDialogInfo>
+                  <JadeDialogLabel>Class Name</JadeDialogLabel>
+                  <JadeDialogContent>{jobClass}</JadeDialogContent>
+                </JadeDialogInfo>
 
                 {description && (
-                  <div className={classes.dialogInfo}>
-                    <div className={classes.dialogLabel}>Description</div>
-                    <div className={classes.dialogContent}>{description}</div>
-                  </div>
+                  <JadeDialogInfo>
+                    <JadeDialogLabel>Description</JadeDialogLabel>
+                    <JadeDialogContent>{description}</JadeDialogContent>
+                  </JadeDialogInfo>
                 )}
 
                 {jobError && (
                   <>
-                    <div className={classes.dialogInfo}>
-                      <div className={classes.dialogLabel}>Message</div>
-                      <div className={classes.dialogContent}>{jobError.message}</div>
-                    </div>
+                    <JadeDialogInfo>
+                      <JadeDialogLabel>Message</JadeDialogLabel>
+                      <JadeDialogContent>{jobError.message}</JadeDialogContent>
+                    </JadeDialogInfo>
 
                     {jobError.detail && jobError.detail.length > 0 && (
-                      <div className={classes.dialogInfo}>
-                        <div className={classes.dialogLabel}>Details</div>
-                        <div className={classes.dialogContent}>
+                      <JadeDialogInfo>
+                        <JadeDialogLabel>Details</JadeDialogLabel>
+                        <JadeDialogContent>
                           {jobError.detail && <ReactJson src={jobError.detail} />}
-                        </div>
-                      </div>
+                        </JadeDialogContent>
+                      </JadeDialogInfo>
                     )}
                   </>
                 )}
 
                 {jobSuccess && (
-                  <div className={classes.dialogInfo}>
-                    <div className={classes.dialogLabel}>Content</div>
-                    <div className={classes.dialogContent}>
+                  <JadeDialogInfo>
+                    <JadeDialogLabel>Content</JadeDialogLabel>
+                    <JadeDialogContent>
                       {_.isString(jobSuccess) ? jobSuccess : <ReactJson src={jobSuccess} />}
-                    </div>
-                  </div>
+                    </JadeDialogContent>
+                  </JadeDialogInfo>
                 )}
               </div>
             )}
@@ -171,4 +174,4 @@ function mapStateToProps(state: TdrState & RouterRootState) {
   };
 }
 
-export default connect(mapStateToProps)(withStyles(styles)(JobResultModal));
+export default connect(mapStateToProps)(JobResultModal);

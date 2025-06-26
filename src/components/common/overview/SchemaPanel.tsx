@@ -1,6 +1,14 @@
 import React from 'react';
 import _ from 'lodash';
-import { Box, Button, IconButtonProps, Paper, Typography, iconButtonClasses } from '@mui/material';
+import {
+  Box,
+  Button,
+  IconButtonProps,
+  Paper,
+  Typography,
+  iconButtonClasses,
+  useTheme,
+} from '@mui/material';
 import { TreeItem, TreeItemProps, TreeView, treeItemClasses } from '@mui/lab';
 import {
   AddBoxOutlined,
@@ -8,108 +16,95 @@ import {
   RadioButtonUncheckedOutlined,
   RadioButtonCheckedOutlined,
 } from '@mui/icons-material';
-import { alpha, CustomTheme } from '@mui/material/styles';
+import { alpha, CustomTheme, styled } from '@mui/material/styles';
 import { ClassNameMap, createStyles, WithStyles, withStyles } from '@mui/styles';
 import { Link } from 'react-router-dom';
-import clsx from 'clsx';
 import { ColumnModel, TableModel } from '../../../generated/tdr';
 import TerraTooltip from '../TerraTooltip';
 
-const styles = (theme: CustomTheme) =>
-  createStyles({
-    root: {
-      height: '100%',
-      padding: 15,
-      width: 350,
-    },
-    readOnly: {
-      [`& .${treeItemClasses.content}`]: {
-        backgroundColor: 'white !important',
-        cursor: 'default',
-      },
-    },
-    headerText: {
-      fontWeight: theme.typography.bold,
-      textTransform: 'uppercase',
-    },
-    sectionHeader: {
-      padding: '6px 0px',
-    },
-    viewDatasetButton: {
-      width: '100%',
-      marginBottom: '12px',
-    },
-    schemaSection: {
-      overflowY: 'auto',
-      width: '100%',
-    },
-    columnLabel: {
-      whiteSpace: 'nowrap',
-      display: 'flex',
-      flexDirection: 'row',
-    },
-    columnLabelIcons: {
-      [`& .${iconButtonClasses.root}`]: {
-        display: 'flex',
-        marginTop: 0,
-      },
-    },
-    columnBox: {
-      background: '#e6e6e6',
-      textAlign: 'center',
-      borderRadius: 3,
-      fontSize: 12,
-      width: 18,
-      minWidth: 18,
-      height: 18,
-      display: 'inline-block',
-      paddingTop: 4,
-      fontWeight: 700,
-      lineHeight: '9px',
-      marginTop: 1,
-      marginRight: 4,
-      position: 'relative',
-      border: '1px solid #d0d0d0',
-    },
-    columnSubscript: {
-      position: 'absolute',
-      fontSize: 8,
-      top: 9,
-      left: 12,
-    },
-    columnNameHighlight: {
-      background: '#e6e6e6',
-      marginRight: '4px',
-    },
-    highlight: {
-      border: `1px solid ${theme.palette.primary.main} !important`,
-    },
-    columnNamePlain: {
-      paddingRight: 8,
-      paddingLeft: 8,
-      lineHeight: '1.1rem',
-      display: 'block',
-      borderRadius: 3,
-      border: '1px solid transparent',
-    },
-    columnNode: {
-      [`& .${treeItemClasses.content}`]: {
-        paddingTop: 2,
-        paddingRight: 0,
-        paddingBottom: 2,
-        paddingLeft: 0,
-      },
-      [`& .${treeItemClasses.iconContainer}`]: {
-        display: 'none',
-      },
-    },
-    radioIcon: {
-      marginRight: 7,
-    },
-    ellipsis: {
-      ...theme.mixins.ellipsis,
-    },
-  });
+const ColumnLabelIcons = styled('span')(() => ({
+  [`& .${iconButtonClasses.root}`]: {
+    display: 'flex',
+    marginTop: 0,
+  },
+}));
+
+const ColumnNodeTreeItem = styled(TreeItem)(({ theme }) => ({
+  [`& .${treeItemClasses.content}`]: {
+    paddingTop: 2,
+    paddingRight: 0,
+    paddingBottom: 2,
+    paddingLeft: 0,
+  },
+  [`& .${treeItemClasses.iconContainer}`]: {
+    display: 'none',
+  },
+}));
+
+const ReadOnlyTreeItem = styled(TreeItem)(({ theme }) => ({
+  [`& .${treeItemClasses.content}`]: {
+    backgroundColor: 'white !important',
+    cursor: 'default',
+  },
+}));
+
+const ColumnLabel = styled('span')(() => ({
+  whiteSpace: 'nowrap',
+  display: 'flex',
+  flexDirection: 'row',
+}));
+
+const ColumnBox = styled('span')(() => ({
+  background: '#e6e6e6',
+  textAlign: 'center',
+  borderRadius: 3,
+  fontSize: 12,
+  width: 18,
+  minWidth: 18,
+  height: 18,
+  display: 'inline-block',
+  paddingTop: 4,
+  fontWeight: 700,
+  lineHeight: '9px',
+  marginTop: 1,
+  marginRight: 4,
+  position: 'relative',
+  border: '1px solid #d0d0d0',
+}));
+
+const ColumnSubscript = styled('span')(() => ({
+  position: 'absolute',
+  fontSize: 8,
+  top: 9,
+  left: 12,
+}));
+
+const columnNameHighlight = {
+  background: '#e6e6e6',
+  marginRight: '4px',
+};
+
+const highlight = (theme: CustomTheme) => ({
+  border: `1px solid ${theme.palette.primary.main} !important`,
+});
+
+interface ColumnNameProps {
+  theme: CustomTheme;
+  isPrimaryKey?: boolean;
+  isHighlighted?: boolean;
+}
+
+const ColumnName = styled('span')(({ theme, isPrimaryKey, isHighlighted }: ColumnNameProps) => ({
+  paddingRight: 8,
+  paddingLeft: 8,
+  lineHeight: '1.1rem',
+  display: 'block',
+  borderRadius: 3,
+  border: '1px solid transparent',
+  ...theme.mixins.ellipsis,
+  ...(isPrimaryKey ? columnNameHighlight : {}),
+  ...(isHighlighted ? highlight(theme) : {}),
+}));
 
 const StyledTreeItem = withStyles((theme) => ({
   iconContainer: {
@@ -152,9 +147,9 @@ const renderTableName = (table: TableModel) => {
 const renderColumnName = (
   column: ColumnModel,
   table: TableModel,
-  classes: ClassNameMap<string>,
   selected: boolean,
   highlighted: boolean,
+  theme: CustomTheme,
   afterLabelIcons?: (table: TableModel, column: ColumnModel) => LabelIcon[],
   selectedColumnnsAsRadio?: boolean,
 ) => {
@@ -165,7 +160,9 @@ const renderColumnName = (
       retVal.push(
         <RadioButtonCheckedOutlined
           key="radio"
-          className={classes.radioIcon}
+          sx={{
+            marginRight: 7,
+          }}
           color="primary"
           fontSize="small"
         />,
@@ -174,7 +171,9 @@ const renderColumnName = (
       retVal.push(
         <RadioButtonUncheckedOutlined
           key="radio"
-          className={classes.radioIcon}
+          sx={{
+            marginRight: 7,
+          }}
           color="primary"
           fontSize="small"
         />,
@@ -183,22 +182,16 @@ const renderColumnName = (
   }
   const isPk = _.includes(table.primaryKey || [], column.name);
   retVal.push(
-    <span key="dt" className={classes.columnBox} title={column.datatype}>
+    <ColumnBox key="dt" title={column.datatype}>
       {column.datatype ? column.datatype.substring(0, 1).toUpperCase() : '?'}
-      {column.array_of && <span className={classes.columnSubscript}>[ ]</span>}
-    </span>,
+      {column.array_of && <ColumnSubscript>[ ]</ColumnSubscript>}
+    </ColumnBox>,
   );
   retVal.push(
-    <span
-      key="name"
-      className={clsx(classes.columnNamePlain, classes.ellipsis, {
-        [classes.columnNameHighlight]: isPk,
-        [classes.highlight]: highlighted,
-      })}
-    >
+    <ColumnName isPrimaryKey={isPk} isHighlighted={highlighted} theme={theme} key="name">
       {column.name}
       {column.required ? ' *' : ''}
-    </span>,
+    </ColumnName>,
   );
 
   const tooltipText = (
@@ -214,11 +207,11 @@ const renderColumnName = (
     </div>
   );
   return (
-    <span className={classes.columnLabel}>
+    <ColumnLabel>
       <TerraTooltip title={tooltipText} enterDelay={500} enterNextDelay={500}>
         <span style={{ display: 'flex', maxWidth: '100%' }}>{retVal}</span>
       </TerraTooltip>
-      <span className={classes.columnLabelIcons}>
+      <ColumnLabelIcons>
         {afterLabelIcons &&
           afterLabelIcons(table, column).map((i, index) =>
             _.isEmpty(i.tooltip) ? (
@@ -229,8 +222,8 @@ const renderColumnName = (
               </TerraTooltip>
             ),
           )}
-      </span>
-    </span>
+      </ColumnLabelIcons>
+    </ColumnLabel>
   );
 };
 
@@ -273,91 +266,122 @@ export const SchemaTree = withStyles(styles)(
     onNodeToggle,
     afterLabelIcons,
     readOnly,
-  }: IPanelProps) => (
-    <TreeView
-      aria-label="dataset schema navigator"
-      data-cy="schema-navigator"
-      defaultCollapseIcon={<IndeterminateCheckBoxOutlined color="primary" />}
-      defaultExpandIcon={<AddBoxOutlined color="primary" />}
-      defaultParentIcon={<AddBoxOutlined color="primary" />}
-      defaultExpanded={tables.length > 0 ? ['0'] : []}
-      selected={selected}
-      onNodeSelect={onNodeSelect}
-      expanded={expanded}
-      onNodeToggle={onNodeToggle}
-    >
-      {tables.map((table: TableModel, i: number) => (
-        <StyledTreeItem
-          key={`${i}`}
-          nodeId={`${i}`}
-          className={clsx({ [classes.readOnly]: readOnly })}
-          icon={table.columns.length === 0 && <IndeterminateCheckBoxOutlined color="disabled" />}
-          TransitionProps={{
-            timeout: 0,
-          }}
-          label={
-            <Box sx={{ cursor: 'pointer' }}>
-              <Typography
-                data-cy="table-name"
-                variant="h6"
-                sx={{ cursor: 'pointer', whiteSpace: 'nowrap' }}
-              >
-                {renderTableName(table)}
-              </Typography>
-            </Box>
-          }
-        >
-          {table.columns.map((column, j) => (
-            <StyledTreeItem
-              data-cy="column-name"
-              key={`${i}-${j}`}
-              nodeId={`${i}-${j}`}
-              className={classes.columnNode}
-              label={renderColumnName(
-                column,
-                table,
-                classes,
-                !_.isEmpty(selected) && selected === `${i}-${j}`,
-                (highlighted || []).indexOf(`${i}-${j}`) > -1,
-                afterLabelIcons,
-                selectedColumnnsAsRadio,
-              )}
-            />
-          ))}
-        </StyledTreeItem>
-      ))}
-    </TreeView>
-  ),
+  }: IPanelProps) => {
+    const theme = useTheme() as CustomTheme;
+    return (
+      <TreeView
+        aria-label="dataset schema navigator"
+        data-cy="schema-navigator"
+        defaultCollapseIcon={<IndeterminateCheckBoxOutlined color="primary" />}
+        defaultExpandIcon={<AddBoxOutlined color="primary" />}
+        defaultParentIcon={<AddBoxOutlined color="primary" />}
+        defaultExpanded={tables.length > 0 ? ['0'] : []}
+        selected={selected}
+        onNodeSelect={onNodeSelect}
+        expanded={expanded}
+        onNodeToggle={onNodeToggle}
+      >
+        {tables.map((table: TableModel, i: number) => (
+          <ReadOnlyTreeItem
+            key={`${i}`}
+            nodeId={`${i}`}
+            icon={table.columns.length === 0 && <IndeterminateCheckBoxOutlined color="disabled" />}
+            TransitionProps={{
+              timeout: 0,
+            }}
+            label={
+              <Box sx={{ cursor: 'pointer' }}>
+                <Typography
+                  data-cy="table-name"
+                  variant="h6"
+                  sx={{ cursor: 'pointer', whiteSpace: 'nowrap' }}
+                >
+                  {renderTableName(table)}
+                </Typography>
+              </Box>
+            }
+          >
+            {table.columns.map((column, j) => (
+              <ColumnNodeTreeItem
+                data-cy="column-name"
+                key={`${i}-${j}`}
+                nodeId={`${i}-${j}`}
+                label={renderColumnName(
+                  column,
+                  table,
+                  !_.isEmpty(selected) && selected === `${i}-${j}`,
+                  (highlighted || []).indexOf(`${i}-${j}`) > -1,
+                  theme,
+                  afterLabelIcons,
+                  selectedColumnnsAsRadio,
+                )}
+              />
+            ))}
+          </ReadOnlyTreeItem>
+        ))}
+      </TreeView>
+    );
+  },
 );
 
-const SchemaPanel = withStyles(styles)(({ classes, resourceId, resourceType, tables }: IProps) => (
-  <Paper className={classes.root} elevation={4} data-cy="schema-panel">
-    <Link to={`${resourceId}/data`} data-cy="view-data-link">
-      <Button
-        className={classes.viewDatasetButton}
-        color="primary"
-        variant="outlined"
-        disableElevation
-      >
-        View {resourceType} Data
-      </Button>
-    </Link>
+function SchemaPanel({ resourceId, resourceType, tables }: IProps) {
+  return (
+    <Paper
+      sx={{
+        height: '100%',
+        padding: 15,
+        width: 350,
+      }}
+      elevation={4}
+      data-cy="schema-panel"
+    >
+      <Link to={`${resourceId}/data`} data-cy="view-data-link">
+        <Button
+          sx={{
+            width: '100%',
+            marginBottom: '12px',
+          }}
+          color="primary"
+          variant="outlined"
+          disableElevation
+        >
+          View {resourceType} Data
+        </Button>
+      </Link>
 
-    <Typography data-cy="schema-header" className={classes.sectionHeader} variant="h5">
-      {resourceType} Schema
-    </Typography>
-    <div>
-      <Typography className={classes.sectionHeader} variant="h5" style={{ float: 'left' }}>
-        Tables
+      <Typography
+        data-cy="schema-header"
+        sx={{
+          padding: '6px 0px',
+        }}
+        variant="h5"
+      >
+        {resourceType} Schema
       </Typography>
-      <Typography data-cy="table-count" style={{ float: 'left', padding: '6px 0px' }}>
-        &nbsp;({tables?.length ?? 0})
-      </Typography>
-    </div>
-    <div className={classes.schemaSection}>
-      <SchemaTree tables={tables ?? []} readOnly />
-    </div>
-  </Paper>
-));
+      <div>
+        <Typography
+          sx={{
+            padding: '6px 0px',
+            float: 'left',
+          }}
+          variant="h5"
+        >
+          Tables
+        </Typography>
+        <Typography data-cy="table-count" style={{ float: 'left', padding: '6px 0px' }}>
+          &nbsp;({tables?.length ?? 0})
+        </Typography>
+      </div>
+      <div
+        style={{
+          overflowY: 'auto',
+          width: '100%',
+        }}
+      >
+        <SchemaTree tables={tables ?? []} readOnly />
+      </div>
+    </Paper>
+  );
+}
 
 export default SchemaPanel;
