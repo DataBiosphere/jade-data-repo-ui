@@ -1,7 +1,6 @@
 import React, { Fragment } from 'react';
 import { ClassNameMap } from '@mui/styles';
-import { Box, Button, useTheme } from '@mui/material';
-import { CustomTheme } from '@mui/material/styles';
+import { Box, Button } from '@mui/material';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import { TableDataType, TableModel } from 'generated/tdr';
@@ -86,12 +85,11 @@ function DataView({
     .filter((col) => col !== undefined)
     .map((col) => col as TableColumnType);
 
-  const theme: CustomTheme = useTheme();
   return (
     //eslint-disable-next-line react/jsx-no-useless-fragment
     <Fragment>
       {resourceLoaded && (
-        <Root theme={theme}>
+        <Root>
           <AppBreadcrumbs
             context={{
               type:
@@ -103,7 +101,7 @@ function DataView({
             }}
             childBreadcrumbs={[{ text: 'Data', to: 'data' }]}
           />
-          <PageTitle variant="h3" theme={theme}>
+          <PageTitle variant="h3">
             {resourceName}
           </PageTitle>
           <div
@@ -141,7 +139,7 @@ function DataView({
           <Box
             sx={{
               height: '100%',
-              paddingTop: theme.spacing(1),
+              paddingTop: (theme) => theme.spacing(1),
               maxWidth: showPanels ? '97%' : '100%',
             }}
           >
