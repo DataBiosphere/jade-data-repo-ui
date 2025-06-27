@@ -125,7 +125,7 @@ const StyledTreeItem = withStyles((theme) => ({
   },
 }))((props: TreeItemProps) => <TreeItem {...props} />);
 
-interface IProps extends WithStyles<typeof styles> {
+interface IProps {
   resourceId: string | undefined;
   resourceType: string | undefined;
   tables: Array<TableModel> | undefined;
@@ -232,7 +232,7 @@ export interface LabelIcon {
   tooltip?: string | JSX.Element;
 }
 
-interface IPanelProps extends WithStyles<typeof styles> {
+interface IPanelProps {
   // Tables to render
   tables: Array<TableModel>;
   // If true, will remove hover styling
@@ -249,87 +249,82 @@ interface IPanelProps extends WithStyles<typeof styles> {
   highlighted?: Array<string>;
   // If passed in, callback method to execute when any node gets toggled
   onNodeToggle?: (event: React.SyntheticEvent, nodeIds: string[]) => void;
-  // Array of react elements to add before a column label
-  beforeLabelIcons?: React.ReactElement[];
   // Array of react elements to add after a column label
   afterLabelIcons?: (table: TableModel, column: ColumnModel) => LabelIcon[];
 }
-export const SchemaTree = withStyles(styles)(
-  ({
-    classes,
-    tables,
-    selectedColumnnsAsRadio,
-    selected,
-    onNodeSelect,
-    expanded,
-    highlighted,
-    onNodeToggle,
-    afterLabelIcons,
-    readOnly,
-  }: IPanelProps) => {
-    const theme = useTheme() as CustomTheme;
-    return (
-      <TreeView
-        aria-label="dataset schema navigator"
-        data-cy="schema-navigator"
-        defaultCollapseIcon={<IndeterminateCheckBoxOutlined color="primary" />}
-        defaultExpandIcon={<AddBoxOutlined color="primary" />}
-        defaultParentIcon={<AddBoxOutlined color="primary" />}
-        defaultExpanded={tables.length > 0 ? ['0'] : []}
-        selected={selected}
-        onNodeSelect={onNodeSelect}
-        expanded={expanded}
-        onNodeToggle={onNodeToggle}
-      >
-        {tables.map((table: TableModel, i: number) => (
-          <ReadOnlyTreeItem
-            key={`${i}`}
-            nodeId={`${i}`}
-            icon={table.columns.length === 0 && <IndeterminateCheckBoxOutlined color="disabled" />}
-            TransitionProps={{
-              timeout: 0,
-            }}
-            label={
-              <Box sx={{ cursor: 'pointer' }}>
-                <Typography
-                  data-cy="table-name"
-                  variant="h6"
-                  sx={{ cursor: 'pointer', whiteSpace: 'nowrap' }}
-                >
-                  {renderTableName(table)}
-                </Typography>
-              </Box>
-            }
-          >
-            {table.columns.map((column, j) => (
-              <ColumnNodeTreeItem
-                data-cy="column-name"
-                key={`${i}-${j}`}
-                nodeId={`${i}-${j}`}
-                label={renderColumnName(
-                  column,
-                  table,
-                  !_.isEmpty(selected) && selected === `${i}-${j}`,
-                  (highlighted || []).indexOf(`${i}-${j}`) > -1,
-                  theme,
-                  afterLabelIcons,
-                  selectedColumnnsAsRadio,
-                )}
-              />
-            ))}
-          </ReadOnlyTreeItem>
-        ))}
-      </TreeView>
-    );
-  },
-);
+export function SchemaTree({
+  tables,
+  selectedColumnnsAsRadio,
+  selected,
+  onNodeSelect,
+  expanded,
+  highlighted,
+  onNodeToggle,
+  afterLabelIcons,
+  readOnly,
+}: IPanelProps) {
+  const theme = useTheme() as CustomTheme;
+  return (
+    <TreeView
+      aria-label="dataset schema navigator"
+      data-cy="schema-navigator"
+      defaultCollapseIcon={<IndeterminateCheckBoxOutlined color="primary" />}
+      defaultExpandIcon={<AddBoxOutlined color="primary" />}
+      defaultParentIcon={<AddBoxOutlined color="primary" />}
+      defaultExpanded={tables.length > 0 ? ['0'] : []}
+      selected={selected}
+      onNodeSelect={onNodeSelect}
+      expanded={expanded}
+      onNodeToggle={onNodeToggle}
+    >
+      {tables.map((table: TableModel, i: number) => (
+        <ReadOnlyTreeItem
+          key={`${i}`}
+          nodeId={`${i}`}
+          icon={table.columns.length === 0 && <IndeterminateCheckBoxOutlined color="disabled" />}
+          TransitionProps={{
+            timeout: 0,
+          }}
+          label={
+            <Box sx={{ cursor: 'pointer' }}>
+              <Typography
+                data-cy="table-name"
+                variant="h6"
+                sx={{ cursor: 'pointer', whiteSpace: 'nowrap' }}
+              >
+                {renderTableName(table)}
+              </Typography>
+            </Box>
+          }
+        >
+          {table.columns.map((column, j) => (
+            <ColumnNodeTreeItem
+              data-cy="column-name"
+              key={`${i}-${j}`}
+              nodeId={`${i}-${j}`}
+              label={renderColumnName(
+                column,
+                table,
+                !_.isEmpty(selected) && selected === `${i}-${j}`,
+                (highlighted || []).indexOf(`${i}-${j}`) > -1,
+                theme,
+                afterLabelIcons,
+                selectedColumnnsAsRadio,
+              )}
+            />
+          ))}
+        </ReadOnlyTreeItem>
+      ))}
+    </TreeView>
+  );
+}
 
 function SchemaPanel({ resourceId, resourceType, tables }: IProps) {
   return (
     <Paper
       sx={{
         height: '100%',
-        padding: 15,
+        padding: '15px',
         width: 350,
       }}
       elevation={4}
