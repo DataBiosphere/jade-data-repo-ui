@@ -18,7 +18,6 @@ import { TdrState } from '../../../reducers';
 
 type DataViewProps = {
   canLink: boolean;
-  classes: ClassNameMap;
   columns: Array<TableColumnType>;
   filteredRows: number;
   handleChangeTable: (value: string) => void;
@@ -49,7 +48,6 @@ type DataViewProps = {
 
 function DataView({
   canLink,
-  classes,
   columns,
   filteredRows,
   filterStatement,
@@ -123,13 +121,7 @@ function DataView({
               />
             </div>
             <Link to={`/${resourceType}s/${resourceId}`}>
-              <Button
-                className={classes.viewDatasetButton}
-                color="primary"
-                variant="outlined"
-                disableElevation
-                size="large"
-              >
+              <Button color="primary" variant="outlined" disableElevation size="large">
                 Back to Overview
               </Button>
             </Link>
