@@ -9,7 +9,7 @@ import {
   iconButtonClasses,
   useTheme,
 } from '@mui/material';
-import { TreeItem, TreeItemProps, TreeView, treeItemClasses } from '@mui/lab';
+import { TreeItem, TreeView, treeItemClasses } from '@mui/lab';
 import {
   AddBoxOutlined,
   IndeterminateCheckBoxOutlined,
@@ -17,10 +17,27 @@ import {
   RadioButtonCheckedOutlined,
 } from '@mui/icons-material';
 import { alpha, CustomTheme, styled } from '@mui/material/styles';
-import { ClassNameMap, createStyles, WithStyles, withStyles } from '@mui/styles';
 import { Link } from 'react-router-dom';
 import { ColumnModel, TableModel } from '../../../generated/tdr';
 import TerraTooltip from '../TerraTooltip';
+
+const StyledTreeItem = styled(TreeItem)(({ theme }) => ({
+  [`& .${treeItemClasses.iconContainer}`]: {
+    cursor: 'pointer',
+    '& .close': {
+      opacity: 0.3,
+    },
+  },
+  [`& .${treeItemClasses.group}`]: {
+    marginLeft: 14,
+    paddingLeft: 18,
+    borderLeft: `2px dashed ${alpha(theme.palette.primary.main, 0.5)}`,
+  },
+  [`& .${treeItemClasses.label}`]: {
+    marginTop: '2px',
+    marginBottom: '2px',
+  },
+}));
 
 const ColumnLabelIcons = styled('span')(() => ({
   [`& .${iconButtonClasses.root}`]: {
@@ -29,7 +46,7 @@ const ColumnLabelIcons = styled('span')(() => ({
   },
 }));
 
-const ColumnNodeTreeItem = styled(TreeItem)(({ theme }) => ({
+const ColumnNodeTreeItem = styled(StyledTreeItem)(() => ({
   [`& .${treeItemClasses.content}`]: {
     paddingTop: 2,
     paddingRight: 0,
@@ -41,7 +58,7 @@ const ColumnNodeTreeItem = styled(TreeItem)(({ theme }) => ({
   },
 }));
 
-const ReadOnlyTreeItem = styled(TreeItem)(({ theme }) => ({
+const ReadOnlyTreeItem = styled(StyledTreeItem)(() => ({
   [`& .${treeItemClasses.content}`]: {
     backgroundColor: 'white !important',
     cursor: 'default',
@@ -105,25 +122,6 @@ const ColumnName = styled('span')(({ theme, isPrimaryKey, isHighlighted }: Colum
   ...(isPrimaryKey ? columnNameHighlight : {}),
   ...(isHighlighted ? highlight(theme) : {}),
 }));
-
-const StyledTreeItem = withStyles((theme) => ({
-  iconContainer: {
-    cursor: 'pointer',
-    '& .close': {
-      opacity: 0.3,
-    },
-  },
-  group: {
-    marginLeft: 14,
-    paddingLeft: 18,
-    borderLeft: `2px dashed ${alpha(theme.palette.primary.main, 0.5)}`,
-  },
-
-  label: {
-    marginTop: '2px',
-    marginBottom: '2px',
-  },
-}))((props: TreeItemProps) => <TreeItem {...props} />);
 
 interface IProps {
   resourceId: string | undefined;
@@ -235,8 +233,6 @@ export interface LabelIcon {
 interface IPanelProps {
   // Tables to render
   tables: Array<TableModel>;
-  // If true, will remove hover styling
-  readOnly?: boolean;
   // If true, render a radio button to represent selection for columns
   selectedColumnnsAsRadio?: boolean;
   // Selected node by id where the id is either {table index} if the selected node is a table or {table index}-{column index} if the selected node is a column
@@ -261,7 +257,6 @@ export function SchemaTree({
   highlighted,
   onNodeToggle,
   afterLabelIcons,
-  readOnly,
 }: IPanelProps) {
   const theme = useTheme() as CustomTheme;
   return (
@@ -373,7 +368,7 @@ function SchemaPanel({ resourceId, resourceType, tables }: IProps) {
           width: '100%',
         }}
       >
-        <SchemaTree tables={tables ?? []} readOnly />
+        <SchemaTree tables={tables ?? []} />
       </div>
     </Paper>
   );
