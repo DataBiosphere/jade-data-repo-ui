@@ -106,9 +106,9 @@ const highlight = (theme: CustomTheme) => ({
 });
 
 interface ColumnNameProps {
-  theme: CustomTheme;
-  isPrimaryKey?: boolean;
-  isHighlighted?: boolean;
+  readonly theme: CustomTheme;
+  readonly isPrimaryKey?: boolean;
+  readonly isHighlighted?: boolean;
 }
 
 const ColumnName = styled('span')(({ theme, isPrimaryKey, isHighlighted }: ColumnNameProps) => ({
@@ -124,9 +124,9 @@ const ColumnName = styled('span')(({ theme, isPrimaryKey, isHighlighted }: Colum
 }));
 
 interface IProps {
-  resourceId: string | undefined;
-  resourceType: string | undefined;
-  tables: Array<TableModel> | undefined;
+  readonly resourceId: string | undefined;
+  readonly resourceType: string | undefined;
+  readonly tables: Array<TableModel> | undefined;
 }
 
 const renderTableName = (table: TableModel) => {
@@ -226,27 +226,27 @@ const renderColumnName = (
 };
 
 export interface LabelIcon {
-  icon: React.ReactElement<IconButtonProps>;
-  tooltip?: string | JSX.Element;
+  readonly icon: React.ReactElement<IconButtonProps>;
+  readonly tooltip?: string | JSX.Element;
 }
 
 interface IPanelProps {
   // Tables to render
-  tables: Array<TableModel>;
+  readonly tables: Array<TableModel>;
   // If true, render a radio button to represent selection for columns
-  selectedColumnnsAsRadio?: boolean;
+  readonly selectedColumnnsAsRadio?: boolean;
   // Selected node by id where the id is either {table index} if the selected node is a table or {table index}-{column index} if the selected node is a column
-  selected?: string;
+  readonly selected?: string;
   // If passed in, callback method to execute when any node gets selected
-  onNodeSelect?: (event: React.SyntheticEvent, nodeId: string) => void;
+  readonly onNodeSelect?: (event: React.SyntheticEvent, nodeId: string) => void;
   // Expanded nodes by id where the id is the {table index}
-  expanded?: Array<string>;
+  readonly expanded?: Array<string>;
   // Highlighted nodes by id where the id is the {table index}-{column index}
-  highlighted?: Array<string>;
+  readonly highlighted?: Array<string>;
   // If passed in, callback method to execute when any node gets toggled
-  onNodeToggle?: (event: React.SyntheticEvent, nodeIds: string[]) => void;
+  readonly onNodeToggle?: (event: React.SyntheticEvent, nodeIds: string[]) => void;
   // Array of react elements to add after a column label
-  afterLabelIcons?: (table: TableModel, column: ColumnModel) => LabelIcon[];
+  readonly afterLabelIcons?: (table: TableModel, column: ColumnModel) => LabelIcon[];
 }
 export function SchemaTree({
   tables,

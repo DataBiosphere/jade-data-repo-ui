@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { logIn } from '../../actions';
 
 interface IProps {
-  dispatch: Dispatch<Action<AuthContextProps>>;
+  readonly dispatch: Dispatch<Action<AuthContextProps>>;
 }
 
 function LoginButton({ dispatch }: IProps) {

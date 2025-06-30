@@ -1,6 +1,5 @@
 import React, { useEffect, Dispatch } from 'react';
 import _ from 'lodash';
-import { ClassNameMap } from '@mui/styles';
 import {
   Dialog,
   DialogContent,
@@ -55,10 +54,10 @@ const JadeDialogLabel = styled('div')(() => ({
 }));
 
 type JobResultModalProps = {
-  dispatch: Dispatch<Action>;
-  loading: boolean;
-  jobResult?: JobResult;
-  location: RouterLocation<LocationState>;
+  readonly dispatch: Dispatch<Action>;
+  readonly loading: boolean;
+  readonly jobResult?: JobResult;
+  readonly location: RouterLocation<LocationState>;
 };
 
 function JobResultModal({ dispatch, loading, jobResult, location }: JobResultModalProps) {
