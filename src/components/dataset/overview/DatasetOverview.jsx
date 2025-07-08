@@ -1,7 +1,8 @@
+import { PageTitle, Root } from 'components/common/PageUtils';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { getDatasetById, getDatasetPolicy, getUserDatasetRoles } from 'actions';
 import SnapshotPopup from 'components/snapshot/SnapshotPopup';
@@ -16,14 +17,6 @@ import AppBreadcrumbs from '../../AppBreadcrumbs/AppBreadcrumbs';
 // fix the unresolved variable warning
 // import { CustomTheme, styled } from '@mui/material/styles';
 // const Root = styled(Box)(({ theme }: { theme: CustomTheme }) => ({
-const Root = styled(Box)(({ theme }) => ({
-  ...theme.mixins.pageRoot,
-}));
-
-const PageTitle = styled(Typography)(({ theme }) => ({
-  ...theme.mixins.pageTitle,
-}));
-
 const ContentContainer = styled(Box)({
   height: '100%',
   display: 'grid',

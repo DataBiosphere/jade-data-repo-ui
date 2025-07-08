@@ -1,27 +1,16 @@
 import React, { Dispatch } from 'react';
-import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import { Button } from '@mui/material';
 import { AuthContextProps, useAuth } from 'react-oidc-context';
 import { Action } from 'redux-actions';
 import { connect } from 'react-redux';
-import { CustomTheme } from '@mui/material/styles';
 
 import { logIn } from '../../actions';
 
-const styles = (theme: CustomTheme) =>
-  createStyles({
-    root: {
-      padding: `${theme.spacing(2)} ${theme.spacing(4)}`,
-      fontWeight: '600',
-      fontSize: '16px',
-    },
-  });
-
-interface IProps extends WithStyles<typeof styles> {
-  dispatch: Dispatch<Action<AuthContextProps>>;
+interface IProps {
+  readonly dispatch: Dispatch<Action<AuthContextProps>>;
 }
 
-function LoginButton({ classes, dispatch }: IProps) {
+function LoginButton({ dispatch }: IProps) {
   const auth = useAuth();
   return (
     <Button
@@ -29,11 +18,15 @@ function LoginButton({ classes, dispatch }: IProps) {
       variant="contained"
       color="primary"
       disableElevation
-      className={classes.root}
+      sx={{
+        padding: (theme) => `${theme.spacing(2)} ${theme.spacing(4)}`,
+        fontWeight: 600,
+        fontSize: '16px',
+      }}
     >
       Log in
     </Button>
   );
 }
 
-export default connect(() => ({}))(withStyles(styles)(LoginButton));
+export default connect(() => ({}))(LoginButton);

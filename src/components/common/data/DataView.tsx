@@ -1,7 +1,5 @@
 import React, { Fragment } from 'react';
-import { ClassNameMap, withStyles } from '@mui/styles';
-import { Button, Typography } from '@mui/material';
-import { CustomTheme } from '@mui/material/styles';
+import { Box, Button } from '@mui/material';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import { TableDataType, TableModel } from 'generated/tdr';
@@ -10,42 +8,15 @@ import { Link } from 'react-router-dom';
 import JadeDropdown from 'components/dataset/data/JadeDropdown';
 import LightTable from 'components/table/LightTable';
 import SidebarDrawer from 'components/dataset/data/sidebar/SidebarDrawer';
+import { PageTitle, Root } from 'components/common/PageUtils';
 import SnapshotPopup from '../../snapshot/SnapshotPopup';
 import AppBreadcrumbs from '../../AppBreadcrumbs/AppBreadcrumbs';
 import { BreadcrumbType, DbColumns, ResourceType } from '../../../constants';
 import { OrderDirectionOptions, TableColumnType, TableRowType } from '../../../reducers/query';
 import { TdrState } from '../../../reducers';
 
-const styles = (theme: CustomTheme) => ({
-  pageRoot: { ...theme.mixins.pageRoot },
-  pageTitle: { ...theme.mixins.pageTitle },
-  wrapper: {
-    paddingTop: theme.spacing(0),
-    padding: theme.spacing(4),
-  },
-  scrollTable: {
-    height: '100%',
-    paddingTop: theme.spacing(1),
-    maxWidth: '100%',
-  },
-  scrollTableWithPadding: {
-    height: '100%',
-    paddingTop: theme.spacing(1),
-    maxWidth: '97%',
-  },
-  controls: {
-    display: 'flex',
-    justifyContent: 'flex-start',
-  },
-  dropdown: {
-    minWidth: '400px',
-    paddingRight: '1em',
-  },
-});
-
 type DataViewProps = {
   canLink: boolean;
-  classes: ClassNameMap;
   columns: Array<TableColumnType>;
   filteredRows: number;
   handleChangeTable: (value: string) => void;
@@ -76,7 +47,6 @@ type DataViewProps = {
 
 function DataView({
   canLink,
-  classes,
   columns,
   filteredRows,
   filterStatement,
@@ -111,11 +81,12 @@ function DataView({
     .map((col) => (col !== undefined ? columnsByName[col.name] : undefined))
     .filter((col) => col !== undefined)
     .map((col) => col as TableColumnType);
+
   return (
     //eslint-disable-next-line react/jsx-no-useless-fragment
     <Fragment>
       {resourceLoaded && (
-        <div className={classes.pageRoot}>
+        <Root>
           <AppBreadcrumbs
             context={{
               type:
@@ -127,11 +98,19 @@ function DataView({
             }}
             childBreadcrumbs={[{ text: 'Data', to: 'data' }]}
           />
-          <Typography variant="h3" className={classes.pageTitle}>
-            {resourceName}
-          </Typography>
-          <div className={classes.controls}>
-            <div className={classes.dropdown}>
+          <PageTitle variant="h3">{resourceName}</PageTitle>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'flex-start',
+            }}
+          >
+            <div
+              style={{
+                minWidth: '400px',
+                paddingRight: '1em',
+              }}
+            >
               <JadeDropdown
                 disabled={polling}
                 onSelectedItem={(e) => handleChangeTable(e.target.value)}
@@ -141,18 +120,18 @@ function DataView({
               />
             </div>
             <Link to={`/${resourceType}s/${resourceId}`}>
-              <Button
-                className={classes.viewDatasetButton}
-                color="primary"
-                variant="outlined"
-                disableElevation
-                size="large"
-              >
+              <Button color="primary" variant="outlined" disableElevation size="large">
                 Back to Overview
               </Button>
             </Link>
           </div>
-          <div className={showPanels ? classes.scrollTableWithPadding : classes.scrollTable}>
+          <Box
+            sx={{
+              height: '100%',
+              paddingTop: (theme) => theme.spacing(1),
+              maxWidth: showPanels ? '97%' : '100%',
+            }}
+          >
             <LightTable
               columns={orderedColumns}
               filteredCount={filteredRows}
@@ -167,7 +146,7 @@ function DataView({
               totalCount={totalRows} // TODO - DR-2663 - instead should display total rows regardless of filtering
               refreshCnt={refreshCnt}
             />
-          </div>
+          </Box>
           {showPanels && (
             <SidebarDrawer
               canLink={canLink}
@@ -179,7 +158,7 @@ function DataView({
             />
           )}
           <SnapshotPopup />
-        </div>
+        </Root>
       )}
     </Fragment>
   );
@@ -201,4 +180,4 @@ function mapStateToProps(state: TdrState) {
   };
 }
 
-export default connect(mapStateToProps)(withStyles(styles)(DataView));
+export default connect(mapStateToProps)(DataView);
