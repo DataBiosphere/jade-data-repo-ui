@@ -244,7 +244,7 @@ function DatasetSchemaRelationshipModal({
               component="div"
               id="see-more-dialog-content-text"
             >
-              Relationships will lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              Relationships will map from one table and column on the left to one column and table on the right.
               <div className={classes.flexRow}>
                 {datasetTable({
                   id: 'radioGroup-relationshipFrom',
