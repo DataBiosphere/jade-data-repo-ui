@@ -10,11 +10,9 @@ ARG TDR_OPEN_API_YAML_LOCATION
 RUN /usr/local/bin/docker-entrypoint.sh generate -g typescript-axios -i $TDR_OPEN_API_YAML_LOCATION -o /local/src/generated/tdr --skip-validate-spec
 
 ## Step 2. Build the deployable UI artifacts
-FROM node:20.19.4-bookworm-slim as build
-# Install git to check out the code keeping image minimal, and clean up cache after installing
-RUN apt-get update \
-  && apt-get install -y --no-install-recommends git \
-  && rm -rf /var/lib/apt/lists/*
+FROM node:20.19.4 as build
+# Install git
+RUN apt-get update && apt-get install -y --no-install-recommends git
 # Copy the local code
 COPY . /
 # Copy the generated code
