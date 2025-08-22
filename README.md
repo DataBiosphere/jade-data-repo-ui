@@ -16,10 +16,10 @@ Note: Do NOT install nvm through homebrew as that is no longer maintained
 - Run the following to get automatic node version switching set up (see [.node-version](.node-version) for latest version to use):
 
 ```
-nvm install 20.11.0
+nvm install 20.19.4
 rm -R ~/.avn (if you want to reset an existing or failed avn setup)
-nvm exec 20.11.0 npm install -g avn avn-nvm avn-n
-nvm exec 20.11.0 avn setup
+nvm exec 20.19.4 npm install -g avn avn-nvm avn-n
+nvm exec 20.19.4 avn setup
 nvm install lts/gallium --default
 nvm use lts/gallium
 ```
