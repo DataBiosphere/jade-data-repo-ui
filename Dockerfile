@@ -12,8 +12,10 @@ RUN /usr/local/bin/docker-entrypoint.sh generate -g typescript-axios -i $TDR_OPE
 
 ## Step 2. Build the deployable UI artifacts
 FROM node:20.19.4-bookworm-slim as build
-# Install git to check out the code
-RUN apt-get update && apt-get install -y git
+# Install git to check out the code keeping image minimal, and clean up cache after installing
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends git \
+  && rm -rf /var/lib/apt/lists/*
 # Check out the build
 RUN set -x \
   && git clone https://github.com/DataBiosphere/jade-data-repo-ui \
