@@ -16,11 +16,18 @@ FROM node:20.19.4-bookworm-slim as build
 RUN apt-get update \
   && apt-get install -y --no-install-recommends git \
   && rm -rf /var/lib/apt/lists/*
-# Check out the build
-RUN git clone https://github.com/DataBiosphere/jade-data-repo-ui \
-  && cd jade-data-repo-ui \
-  && git fetch --tags \
-  && git checkout $(git tag --sort=-v:refname | head -n1)
+# Check out the build (latest tag, fallback to develop)
+RUN set -x \
+  && LATEST_TAG=$(git ls-remote --tags --sort="v:refname" https://github.com/DataBiosphere/jade-data-repo-ui.git \
+       | grep -o 'refs/tags/.*' \
+       | sed 's#refs/tags/##' \
+       | tail -n1) \
+  && if [ -z "$LATEST_TAG" ]; then \
+       echo "No tags found, falling back to 'develop' branch" && \
+       git clone --depth 1 --branch develop https://github.com/DataBiosphere/jade-data-repo-ui; \
+     else \
+       git clone --depth 1 --branch "$LATEST_TAG" https://github.com/DataBiosphere/jade-data-repo-ui; \
+     fi
 # Copy the generated code
 COPY --from=codegen /local /jade-data-repo-ui
 # Build the code
