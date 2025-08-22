@@ -18,10 +18,10 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/*
 # Check out the build
 RUN set -x \
-  && git clone https://github.com/DataBiosphere/jade-data-repo-ui \
-  && cd jade-data-repo-ui \
-  && git fetch --tags \
-  && git checkout $(git describe --tags `git rev-list --tags --max-count=1`)
+  && git clone --depth 1 --branch $(git ls-remote --tags --sort="v:refname" https://github.com/DataBiosphere/jade-data-repo-ui.git \
+        | tail -n1 \
+        | sed 's/.*\///') \
+     https://github.com/DataBiosphere/jade-data-repo-ui
 # Copy the generated code
 COPY --from=codegen /local /jade-data-repo-ui
 # Build the code
