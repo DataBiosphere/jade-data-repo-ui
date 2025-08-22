@@ -18,14 +18,16 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/*
 # Check out the build (latest tag, fallback to develop)
 RUN set -x \
-  && LATEST_TAG=$(git ls-remote --tags --sort="v:refname" https://github.com/DataBiosphere/jade-data-repo-ui.git \
-       | grep -o 'refs/tags/.*' \
-       | sed 's#refs/tags/##' \
+  && LATEST_TAG=$(git ls-remote --tags https://github.com/DataBiosphere/jade-data-repo-ui.git \
+       | awk -F/ '{print $3}' \
+       | grep -v '\^{}' \
+       | sort -V \
        | tail -n1) \
   && if [ -z "$LATEST_TAG" ]; then \
        echo "No tags found, falling back to 'develop' branch" && \
        git clone --depth 1 --branch develop https://github.com/DataBiosphere/jade-data-repo-ui; \
      else \
+       echo "Cloning latest tag: $LATEST_TAG" && \
        git clone --depth 1 --branch "$LATEST_TAG" https://github.com/DataBiosphere/jade-data-repo-ui; \
      fi
 # Copy the generated code
