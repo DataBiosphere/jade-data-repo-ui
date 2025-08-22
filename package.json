@@ -5,7 +5,7 @@
   "version": "0.435.0",
   "author": "Jade Team <jadeteam@broadinstitute.org>",
   "engines": {
-    "node": ">=20.11"
+    "node": ">=20.x.x"
   },
   "repository": {
     "type": "git",
