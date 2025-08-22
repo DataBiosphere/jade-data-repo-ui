@@ -17,11 +17,10 @@ RUN apt-get update \
   && apt-get install -y --no-install-recommends git \
   && rm -rf /var/lib/apt/lists/*
 # Check out the build
-RUN set -x \
-  && git clone --depth 1 --branch $(git ls-remote --tags --sort="v:refname" https://github.com/DataBiosphere/jade-data-repo-ui.git \
-        | tail -n1 \
-        | sed 's/.*\///') \
-     https://github.com/DataBiosphere/jade-data-repo-ui
+RUN git clone https://github.com/DataBiosphere/jade-data-repo-ui \
+  && cd jade-data-repo-ui \
+  && git fetch --tags \
+  && git checkout $(git tag --sort=-v:refname | head -n1)
 # Copy the generated code
 COPY --from=codegen /local /jade-data-repo-ui
 # Build the code
