@@ -11,25 +11,14 @@ RUN /usr/local/bin/docker-entrypoint.sh generate -g typescript-axios -i $TDR_OPE
 
 
 ## Step 2. Build the deployable UI artifacts
-FROM node:20.19.4-bookworm-slim as build
-# Install git to check out the code keeping image minimal, and clean up cache after installing
-RUN apt-get update \
-  && apt-get install -y --no-install-recommends git \
-  && rm -rf /var/lib/apt/lists/*
-# Check out the build (latest tag, fallback to develop)
+FROM node:20.19.4 as build
+# Install git
+RUN apt-get update && apt-get install -y --no-install-recommends git
+# Check out the build
 RUN set -x \
-  && LATEST_TAG=$(git ls-remote --tags https://github.com/DataBiosphere/jade-data-repo-ui.git \
-       | awk -F/ '{print $3}' \
-       | grep -v '\^{}' \
-       | sort -V \
-       | tail -n1) \
-  && if [ -z "$LATEST_TAG" ]; then \
-       echo "No tags found, falling back to 'develop' branch" && \
-       git clone --depth 1 --branch develop https://github.com/DataBiosphere/jade-data-repo-ui; \
-     else \
-       echo "Cloning latest tag: $LATEST_TAG" && \
-       git clone --depth 1 --branch "$LATEST_TAG" https://github.com/DataBiosphere/jade-data-repo-ui; \
-     fi
+  && git clone https://github.com/DataBiosphere/jade-data-repo-ui \
+  && cd jade-data-repo-ui \
+  && git checkout $(git describe --tags --abbrev=0)
 # Copy the generated code
 COPY --from=codegen /local /jade-data-repo-ui
 # Build the code
