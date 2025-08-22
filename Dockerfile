@@ -20,7 +20,8 @@ RUN apt-get update \
 RUN set -x \
   && git clone https://github.com/DataBiosphere/jade-data-repo-ui \
   && cd jade-data-repo-ui \
-  && git checkout $(git describe --tags --abbrev=0)
+  && git fetch --tags \
+  && git checkout $(git describe --tags `git rev-list --tags --max-count=1`)
 # Copy the generated code
 COPY --from=codegen /local /jade-data-repo-ui
 # Build the code
