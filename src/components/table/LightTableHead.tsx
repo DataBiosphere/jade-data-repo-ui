@@ -5,8 +5,8 @@ import _ from 'lodash';
 import { SortDirection, TableCell, TableHead, TableRow, TableSortLabel, Box } from '@mui/material';
 import { CustomTheme, styled } from '@mui/material/styles';
 import Draggable, { DraggableEventHandler } from 'react-draggable';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faLongArrowAltDown, faLongArrowAltUp } from '@fortawesome/free-solid-svg-icons';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import { EllipsisBox, EllipsisSpan } from 'components/common/Ellipsis';
@@ -52,11 +52,13 @@ const ColumnResizer = styled(DragIndicatorIcon)(({ theme }) => ({
   cursor: 'ew-resize',
 }));
 
-const SortIcon = styled(FontAwesomeIcon)(({ theme }) => ({
+const SortIcon = styled('div')(({ theme }) => ({
   color: `${theme.palette.primary.main} !important`,
   width: '16px',
   height: '16px',
   marginRight: `-${theme.spacing(1)}`,
+  display: 'flex',
+  alignItems: 'center',
 }));
 
 const Label = styled('span')(({ theme }) => ({
@@ -64,13 +66,38 @@ const Label = styled('span')(({ theme }) => ({
   ...(theme as CustomTheme).mixins.ellipsis,
 }));
 
-type LightTableHeadProps = {
+function SortIconComponent({
+  sortDir,
+  allowResize,
+}: {
+  readonly sortDir: SortDirection;
+  readonly allowResize?: boolean;
+}) {
+  return (
+    <SortIcon
+      sx={{
+        marginRight: allowResize ? (theme) => theme.spacing(1) : 0,
+      }}
+    >
+      {sortDir === 'asc' ? <KeyboardArrowDownIcon /> : <KeyboardArrowUpIcon />}
+    </SortIcon>
+  );
+}
+
+const createSortIconComponent = (sortDir: SortDirection, allowResize?: boolean) => {
+  function SortIconWrapper() {
+    return <SortIconComponent sortDir={sortDir} allowResize={allowResize} />;
+  }
+  return SortIconWrapper;
+};
+
+type LightTableHeadProps = Readonly<{
   columns: Array<TableColumnType>;
   onRequestSort: (event: any, property: string) => void;
   onResizeColumn: (event: any, property: string, size: number) => void;
   orderDirection: OrderDirectionOptions;
   orderProperty: string;
-};
+}>;
 
 function LightTableHead({
   columns,
@@ -171,16 +198,7 @@ function LightTableHead({
                       direction={sortDir || TABLE_DEFAULT_SORT_ORDER}
                       onClick={createSortHandler(col.name)}
                       IconComponent={
-                        !sortDir
-                          ? undefined
-                          : () => (
-                              <SortIcon
-                                icon={sortDir === 'asc' ? faLongArrowAltDown : faLongArrowAltUp}
-                                sx={{
-                                  marginRight: col.allowResize ? (theme) => theme.spacing(1) : 0,
-                                }}
-                              />
-                            )
+                        !sortDir ? undefined : createSortIconComponent(sortDir, col.allowResize)
                       }
                       style={{ width: maxWidth, flex: 1 }}
                     >
