@@ -5,8 +5,8 @@ import _ from 'lodash';
 import { SortDirection, TableCell, TableHead, TableRow, TableSortLabel, Box } from '@mui/material';
 import { CustomTheme, styled } from '@mui/material/styles';
 import Draggable, { DraggableEventHandler } from 'react-draggable';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import ArrowDownward from '@mui/icons-material/ArrowDownward';
+import ArrowUpward from '@mui/icons-material/ArrowUpward';
 
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import { EllipsisBox, EllipsisSpan } from 'components/common/Ellipsis';
@@ -79,7 +79,7 @@ function SortIconComponent({
         marginRight: allowResize ? (theme) => theme.spacing(1) : 0,
       }}
     >
-      {sortDir === 'asc' ? <KeyboardArrowDownIcon /> : <KeyboardArrowUpIcon />}
+      {sortDir === 'asc' ? <ArrowDownward /> : <ArrowUpward />}
     </SortIcon>
   );
 }
