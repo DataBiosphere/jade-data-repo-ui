@@ -1,7 +1,7 @@
 // Polyfills
 import './init';
-import { createRoot } from 'react-dom/client';
 import React from 'react';
+import ReactDOM from 'react-dom';
 import Helmet from 'react-helmet';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
@@ -107,8 +107,7 @@ function bootstrap() {
 }
 
 function render(Component) {
-  const rootElement = document.getElementById('react');
-  const root = createRoot(rootElement);
+  const root = document.getElementById('react');
   const { configuration } = store.getState();
   const isGoogleAuthority = configuration.configObject.authorityEndpoint?.startsWith(
     'https://accounts.google.com',
@@ -147,7 +146,7 @@ function render(Component) {
   Log.setLogger(console);
 
   if (root) {
-    root.render(
+    ReactDOM.render(
       <Provider store={store}>
         <Helmet
           defer={false}
