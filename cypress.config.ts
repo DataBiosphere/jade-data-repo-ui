@@ -1,6 +1,5 @@
-import { devServer } from '@cypress/vite-dev-server';
 import { defineConfig } from 'cypress';
-import vitePreprocessor from 'cypress-vite';
+import { devServer } from '@cypress/vite-dev-server';
 import customViteConfig from './vite.config';
 
 export default defineConfig({
@@ -17,9 +16,6 @@ export default defineConfig({
   },
   e2e: {
     baseUrl: 'http://localhost:3000',
-    setupNodeEvents(on) {
-      on('file:preprocessor', vitePreprocessor());
-    },
     specPattern: 'cypress/integration/**/*.{js,jsx,ts,tsx}',
     supportFile: 'cypress/support/index.js',
   },
