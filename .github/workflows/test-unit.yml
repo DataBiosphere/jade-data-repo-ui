@@ -34,7 +34,7 @@ jobs:
           DISABLE_ESLINT_PLUGIN: true
         with:
           command: |
-            npx cypress run --component
+            npx cypress run-ct
   report-workflow:
     uses: broadinstitute/sherlock/.github/workflows/client-report-workflow.yaml@main
     if: github.ref_name == github.event.repository.default_branch
