@@ -26,8 +26,7 @@
   "plugins": [
     "babel",
     "cypress",
-    "redux-saga",
-    "react-hooks"
+    "redux-saga"
   ],
   "rules": {
     "array-callback-return": "off",
