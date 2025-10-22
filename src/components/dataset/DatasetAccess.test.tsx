@@ -99,7 +99,7 @@ describe('DataAccess Component', () => {
       const titleCaseRole =
         role === 'snapshot_creator'
           ? 'Snapshot Creators'
-          : role.charAt(0).toUpperCase() + role.slice(1) + 's';
+          : `${role.charAt(0).toUpperCase() + role.slice(1)}s`;
       cy.get(`[data-cy="user-list-${titleCaseRole}"]`).click();
 
       // Try to click remove on existing steward for testing dispatch call
@@ -146,7 +146,7 @@ describe('DataAccess Component', () => {
       const titleCaseRole =
         role === 'snapshot_creator'
           ? 'Snapshot Creators'
-          : role.charAt(0).toUpperCase() + role.slice(1) + 's';
+          : `${role.charAt(0).toUpperCase() + role.slice(1)}s`;
       cy.get(`[data-cy="user-list-${titleCaseRole}"]`).click();
 
       // Try to click remove on existing steward for testing dispatch call
