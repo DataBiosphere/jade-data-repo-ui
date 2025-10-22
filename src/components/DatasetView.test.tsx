@@ -71,12 +71,6 @@ const setUp = (searchString: string, loading = false, datasets = mockDatasets) =
   );
 };
 
-// Test the DatasetView component functionality that was covered by the integration test
-// This covers the key dataset-specific functionality:
-// - Dataset listing and display
-// - Search integration with DatasetTable
-// - Role-based permissions and actions
-// - Dataset filtering and management
 describe('DatasetView Component', () => {
   describe('Dataset Listing and Search', () => {
     it('should render DatasetTable with correct props', () => {
