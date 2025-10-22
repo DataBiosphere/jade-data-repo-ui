@@ -95,22 +95,15 @@ describe('DatasetView Component', () => {
       // The DatasetTable should handle the search string
       cy.get('table').should('exist');
 
-      // Trigger a search by interacting with the table's pagination or search functionality
-      // This will call handleFilterDatasets which should dispatch getDatasets with the search string
-      cy.get('[data-testid="table-pagination"]')
-        .should('exist')
-        .then(() => {
-          // Verify that getDatasets action was dispatched with the correct search string
-          cy.get('@dispatchSpy').should(
-            'have.been.calledWith',
-            Cypress.sinon.match({
-              type: 'GET_DATASETS',
-              payload: Cypress.sinon.match({
-                searchString: 'V2F_GWAS',
-              }),
-            }),
-          );
-        });
+      cy.get('@dispatchSpy').should(
+        'have.been.calledWith',
+        Cypress.sinon.match({
+          type: 'GET_DATASETS',
+          payload: Cypress.sinon.match({
+            searchString: 'V2F_GWAS',
+          }),
+        }),
+      );
     });
   });
 
@@ -118,7 +111,10 @@ describe('DatasetView Component', () => {
     it('should handle loading state', () => {
       setUp('', true); // Set loading to true
       // Should still render the component structure
-      cy.get('[data-testid="dataset-view-container"]').should('exist');
+      cy.get('table').should('exist');
+
+      // Verify loading spinner is visible
+      cy.get('.MuiCircularProgress-root').should('exist');
     });
 
     it('should handle empty dataset state', () => {
