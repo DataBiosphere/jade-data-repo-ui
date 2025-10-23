@@ -948,8 +948,21 @@ export function* changePage(page: number): any {
 export function* getDuosDatasets(): any {
   try {
     const duosUrl = yield select(getDuosUrl);
-    const url = `${duosUrl}/api/dataset/autocomplete`;
-    const response = yield call(authGet, url);
+    const url = `${duosUrl}/api/dataset/search/index`;
+    const params = {
+      query: {
+        bool: {
+          must: [
+            {
+              match: {
+                _type: 'dataset',
+              },
+            },
+          ],
+        },
+      },
+    };
+    const response = yield call(authPost, url, params);
     yield put({
       type: ActionTypes.GET_DUOS_DATASETS_SUCCESS,
       datasets: { data: response },

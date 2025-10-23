@@ -37,7 +37,7 @@ function a11yProps(index: number) {
 }
 
 function getDuosDatasetValue(option?: DuosDatasetModel) {
-  return option ? `${option.identifier} - ${option.name}` : '';
+  return option ? `${option.datasetIdentifier} - ${option.datasetName}` : '';
 }
 
 interface SnapshotOverviewPanelProps {
@@ -69,7 +69,7 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
   const duosDatasetsLoaded = !_.isEmpty(duosDatasets);
 
   const selectedDuosDataset = duosDatasets.find(
-    (ds) => ds.identifier === snapshot.duosFirecloudGroup?.duosId,
+    (ds) => ds.datasetIdentifier === snapshot.duosFirecloudGroup?.duosId,
   );
   const handleChange = (_event: SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -187,7 +187,9 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
                   options={duosDatasets}
                   // Setting to null instead of undefined if unset to make sure that this is always a controlled component
                   value={selectedDuosDataset ?? null}
-                  isOptionEqualToValue={(option, val) => option?.identifier === val?.identifier}
+                  isOptionEqualToValue={(option, val) =>
+                    option?.datasetIdentifier === val?.datasetIdentifier
+                  }
                   renderInput={(params: any) => (
                     <TextField
                       {...params}
@@ -200,7 +202,7 @@ function SnapshotOverviewPanel(props: SnapshotOverviewPanelProps) {
                   )}
                   getOptionLabel={getDuosDatasetValue}
                   onChange={(_event: any, change) => {
-                    dispatch(updateDuosDataset(snapshot.id, change?.identifier));
+                    dispatch(updateDuosDataset(snapshot.id, change?.datasetIdentifier));
                   }}
                   title={
                     pendingSave?.duosDataset
