@@ -949,19 +949,18 @@ export function* getDuosDatasets(): any {
   try {
     const duosUrl = yield select(getDuosUrl);
     const url = `${duosUrl}/api/dataset/search/index`;
-    const params = {
-      query: {
-        bool: {
-          must: [
-            {
-              match: {
-                _type: 'dataset',
-              },
-            },
-          ],
-        },
-      },
+    const params = 
+    {
+      "query":
+      {"bool":
+        {"must":
+          [{"match":{"_type":"dataset"}},
+           {"term":{"study.publicVisibility": true}},
+           {"term":{"dataLocation.keyword": "TDR Location"}}]
+        }
+      }
     };
+
     const response = yield call(authPost, url, params);
     yield put({
       type: ActionTypes.GET_DUOS_DATASETS_SUCCESS,
