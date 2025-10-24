@@ -219,8 +219,7 @@ export class FilterPanel extends React.PureComponent {
     });
 
     const billingErrorMessage =
-      "You cannot create a snapshot because you do not have access to the dataset's billing profile.";
-
+      'You cannot create a snapshot because you do not have access to any TDR billing profiles.';
     return (
       <div className={classes.root}>
         <div className={classes.rowOne}>
@@ -343,6 +342,7 @@ function mapStateToProps(state) {
     filterData: state.query.filterData,
     polling: state.query.polling,
     token: state.user.delegateToken,
+    billingProfiles: state.profiles.profiles,
   };
 }
 

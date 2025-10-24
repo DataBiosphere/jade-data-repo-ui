@@ -125,6 +125,7 @@ export class ShareSnapshot extends React.PureComponent {
         description: snapshotRequest.description,
         mode: snapshotRequest.mode,
         assetName: snapshotRequest.assetName,
+        billingProfileId: snapshotRequest.billingProfileId,
         dataset,
         filterData,
         authDomain,
