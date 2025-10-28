@@ -63,14 +63,6 @@ describe('BillingProfileDropdown Component', () => {
 
       cy.get('[data-cy="billingProfile"]').should('contain', 'Default Profile');
     });
-
-    it('should render custom label when labelProps provided', () => {
-      setUp({
-        labelProps: { variant: 'h6', marginTop: 2, children: 'Custom Billing Profile' },
-      });
-
-      cy.contains('Custom Billing Profile').should('be.visible');
-    });
   });
 
   describe('Profile Selection', () => {

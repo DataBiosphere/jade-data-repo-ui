@@ -118,7 +118,7 @@ describe('CreateSnapshotPanel Component', () => {
 
       // Check billing profile section
       cy.contains('Billing Profile').should('be.visible');
-      cy.get('[data-cy="selectBillingProfile"]').should('be.visible');
+      cy.get('[data-cy="billingProfile"]').should('be.visible');
 
       // Check buttons
       cy.contains('Cancel').should('be.visible');
@@ -135,7 +135,7 @@ describe('CreateSnapshotPanel Component', () => {
     it('should set default billing profile based on dataset defaultProfileId', () => {
       setUp();
 
-      cy.get('[data-cy="selectBillingProfile"]').should('contain', 'Default Profile');
+      cy.get('[data-cy="billingProfile"]').should('contain', 'Default Profile');
     });
 
     it('should set first billing profile as default when dataset has no defaultProfileId', () => {
@@ -150,7 +150,7 @@ describe('CreateSnapshotPanel Component', () => {
 
       setUp(overrideState);
 
-      cy.get('[data-cy="selectBillingProfile"]').should('contain', 'Default Profile');
+      cy.get('[data-cy="billingProfile"]').should('contain', 'Default Profile');
     });
   });
 
@@ -188,9 +188,9 @@ describe('CreateSnapshotPanel Component', () => {
     it('should update billing profile selection', () => {
       setUp();
 
-      cy.get('[data-cy="selectBillingProfile"]').click();
+      cy.get('[data-cy="billingProfile"]').click();
       cy.contains('Alternative Profile').click();
-      cy.get('[data-cy="selectBillingProfile"]').should('contain', 'Alternative Profile');
+      cy.get('[data-cy="billingProfile"]').should('contain', 'Alternative Profile');
     });
   });
 
@@ -291,7 +291,7 @@ describe('CreateSnapshotPanel Component', () => {
           filterData: mockFilterData,
           dataset: mockDataset,
           authDomain: undefined,
-          selectBillingProfileId: 'profile-1',
+          billingProfileId: 'profile-1',
         },
       });
 
@@ -306,7 +306,7 @@ describe('CreateSnapshotPanel Component', () => {
       cy.get('#snapshotDescription').clear().type('Updated Description');
 
       // Select different billing profile
-      cy.get('[data-cy="selectBillingProfile"]').click();
+      cy.get('[data-cy="billingProfile"]').click();
       cy.contains('Alternative Profile').click();
 
       cy.get('[data-cy="next"]').click();
@@ -321,7 +321,7 @@ describe('CreateSnapshotPanel Component', () => {
           filterData: mockFilterData,
           dataset: mockDataset,
           authDomain: undefined,
-          selectBillingProfileId: 'profile-2',
+          billingProfileId: 'profile-2',
         },
       });
     });
@@ -345,7 +345,7 @@ describe('CreateSnapshotPanel Component', () => {
           filterData: mockFilterData,
           dataset: mockDataset,
           authDomain: undefined,
-          selectBillingProfileId: 'profile-1',
+          billingProfileId: 'profile-1',
         },
       });
     });
@@ -421,7 +421,7 @@ describe('CreateSnapshotPanel Component', () => {
 
       // Verify component uses values from different Redux slices
       cy.get('[data-cy="textFieldName"] input').should('have.value', 'Redux Name');
-      cy.get('[data-cy="selectBillingProfile"]').should('contain', 'Custom Profile');
+      cy.get('[data-cy="billingProfile"]').should('contain', 'Custom Profile');
 
       // Submit and verify all state is correctly passed to action
       cy.get('[data-cy="next"]').click();
@@ -436,7 +436,7 @@ describe('CreateSnapshotPanel Component', () => {
           filterData: { customFilter: 'customValue' },
           dataset: customState.datasets.dataset,
           authDomain: undefined,
-          selectBillingProfileId: 'custom-profile',
+          billingProfileId: 'custom-profile',
         },
       });
     });
@@ -452,7 +452,7 @@ describe('CreateSnapshotPanel Component', () => {
 
       setUp(overrideState);
 
-      cy.get('[data-cy="selectBillingProfile"]').should('have.value', '');
+      cy.get('[data-cy="billingProfile"]').should('have.value', '');
       cy.get('[data-cy="next"]').should('be.disabled');
     });
 
@@ -469,7 +469,7 @@ describe('CreateSnapshotPanel Component', () => {
       setUp(overrideState);
 
       // Should only show profiles with profileName defined
-      cy.get('[data-cy="selectBillingProfile"]').click();
+      cy.get('[data-cy="billingProfile"]').click();
       cy.contains('Valid Profile').should('exist');
     });
 

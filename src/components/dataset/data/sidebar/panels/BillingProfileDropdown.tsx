@@ -44,7 +44,7 @@ function BillingProfileDropdown({
   return (
     <>
       {showLabel && (
-        <Typography {...labelProps}>{labelProps.children || 'Billing Profile'}</Typography>
+        <Typography {...labelProps}>{'Billing Profile'}</Typography>
       )}
       <JadeDropdown
         sx={sx}
