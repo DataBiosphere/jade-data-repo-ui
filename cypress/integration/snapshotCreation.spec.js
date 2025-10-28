@@ -84,9 +84,15 @@ describe('test snapshot creation is disabled', () => {
   beforeEach(() => {
     cy.intercept('GET', 'api/repository/v1/datasets/**').as('getDataset');
     cy.intercept('GET', 'api/repository/v1/datasets/**/policies').as('getDatasetPolicies');
+    cy.intercept('GET', '/api/resources/v1/profiles?*', {
+      statusCode: 401,
+      body: {
+        message: 'unauthorized',
+      },
+    });
     cy.intercept('GET', '/api/resources/v1/profiles/**', {
-      status: 401,
-      response: {
+      statusCode: 401,
+      body: {
         message: 'unauthorized',
       },
     });
