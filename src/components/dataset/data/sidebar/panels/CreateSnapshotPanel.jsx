@@ -2,12 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@mui/styles';
 import { connect } from 'react-redux';
-import { uniq } from 'lodash';
 import { Button, Divider, TextField, Typography, Box, FormLabel } from '@mui/material';
 import { snapshotCreateDetails } from 'actions/index';
 import { SnapshotRequestContentsModelModeEnum } from 'generated/tdr';
 import CreateSnapshotDropdown from '../CreateSnapshotDropdown';
-import JadeDropdown from '../../JadeDropdown';
+import BillingProfileDropdown from './BillingProfileDropdown';
 import ShareSnapshot from './ShareSnapshot';
 
 const styles = (theme) => ({
@@ -139,27 +138,12 @@ export class CreateSnapshotPanel extends React.PureComponent {
             data-cy="selectAsset"
           />
 
-          <Typography variant="subtitle2" marginTop={1}>
-            Billing Profile
-          </Typography>
-          <JadeDropdown
-            sx={{ height: '2.5rem', marginTop: '8px' }}
-            disabled={billingProfiles.length <= 1}
-            options={uniq(
-              billingProfiles
-                .filter((billingProfile) => billingProfile.profileName !== undefined)
-                .map((billingProfile) => billingProfile.profileName),
-            )}
-            name="billing-profile"
-            onSelectedItem={(event) =>
-              this.setState({
-                selectedBillingProfile: billingProfiles.find(
-                  (billingProfile) => billingProfile.profileName === event.target.value,
-                ),
-              })
+          <BillingProfileDropdown
+            billingProfiles={billingProfiles}
+            selectedBillingProfile={selectedBillingProfile}
+            onSelectedItem={(selectedProfile) =>
+              this.setState({ selectedBillingProfile: selectedProfile })
             }
-            value={selectedBillingProfile?.profileName || ''}
-            data-cy="selectBillingProfile"
           />
         </div>
         <div className={classes.rowTwo}>
