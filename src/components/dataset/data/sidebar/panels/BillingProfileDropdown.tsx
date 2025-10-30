@@ -43,9 +43,7 @@ function BillingProfileDropdown({
 
   return (
     <>
-      {showLabel && (
-        <Typography {...labelProps}>{'Billing Profile'}</Typography>
-      )}
+      {showLabel && <Typography {...labelProps}>Billing Profile</Typography>}
       <JadeDropdown
         sx={sx}
         disabled={disabled || billingProfiles.length <= 1}

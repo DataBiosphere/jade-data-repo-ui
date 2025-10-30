@@ -5,6 +5,17 @@ describe('test snapshot creation', () => {
     cy.intercept({ method: 'GET', url: 'api/resources/v1/profiles/**' }).as(
       'getBillingProfileById',
     );
+    cy.intercept({ method: 'GET', url: 'api/resources/v1/profiles?*' }, {
+      statusCode: 200,
+      body: [
+        {
+          id: 'profileId',
+          profileName: 'Test Billing Profile',
+          description: 'Test profile for E2E tests',
+          billingAccountId: 'ba-test-001'
+        }
+      ]
+    }).as('getBillingProfiles');
     cy.intercept('POST', '/api/repository/v1/snapshots', {
       statusCode: 200,
       body: {
