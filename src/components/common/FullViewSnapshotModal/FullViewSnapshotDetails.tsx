@@ -56,7 +56,7 @@ export function FullViewSnapshotDetails(props: FullViewSnapshotDetailsProps) {
         selectedBillingProfile={selectedBillingProfile}
         onSelectedItem={setSelectedBillingProfile}
         sx={{ height: '2.5rem', marginTop: '8px' }}
-        labelProps={{ sx: { fontWeight: 600, color: 'black' }, children: 'Google Billing Project' }}
+        labelProps={{ sx: { fontWeight: 600, color: 'black' } }}
       />
     </>
   );
