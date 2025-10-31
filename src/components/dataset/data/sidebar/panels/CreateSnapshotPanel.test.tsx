@@ -448,6 +448,12 @@ describe('CreateSnapshotPanel Component', () => {
         profiles: {
           profiles: [],
         },
+        datasets: {
+          dataset: {
+            ...mockDataset,
+            defaultProfileId: null,
+          },
+        },
       };
 
       setUp(overrideState);

@@ -48,7 +48,7 @@ export function FullViewSnapshotDetails(props: FullViewSnapshotDetailsProps) {
         onChange={(e) => setSnapshotDescription(e.target.value)}
       />
       <Typography sx={{ color: 'black' }}>
-        Do you want to use the Google Billing Project associated with this dataset or would you like
+        Do you want to use the TDR Billing Profile associated with this dataset or would you like
         to select a different one?
       </Typography>
       <BillingProfileDropdown
