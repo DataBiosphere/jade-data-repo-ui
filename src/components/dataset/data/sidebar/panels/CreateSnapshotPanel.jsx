@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@mui/styles';
 import { connect } from 'react-redux';
-import { Button, Divider, TextField, Typography, Box, FormLabel } from '@mui/material';
+import { Button, Divider, TextField, Typography } from '@mui/material';
 import { snapshotCreateDetails } from 'actions/index';
 import { SnapshotRequestContentsModelModeEnum } from 'generated/tdr';
 import CreateSnapshotDropdown from '../CreateSnapshotDropdown';

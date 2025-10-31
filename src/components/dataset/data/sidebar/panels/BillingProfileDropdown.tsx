@@ -10,13 +10,13 @@ export interface BillingProfile {
 }
 
 export interface BillingProfileDropdownProps {
-  billingProfiles: BillingProfile[];
-  selectedBillingProfile?: BillingProfile | null;
-  onSelectedItem: (selectedProfile: BillingProfile | undefined) => void;
-  disabled?: boolean;
-  sx?: React.CSSProperties;
-  showLabel?: boolean;
-  labelProps?: TypographyProps;
+  readonly billingProfiles: BillingProfile[];
+  readonly selectedBillingProfile?: BillingProfile | null;
+  readonly onSelectedItem: (selectedProfile: BillingProfile | undefined) => void;
+  readonly disabled?: boolean;
+  readonly sx?: React.CSSProperties;
+  readonly showLabel?: boolean;
+  readonly labelProps?: TypographyProps;
 }
 
 function BillingProfileDropdown({
