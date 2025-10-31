@@ -48,8 +48,8 @@ export function FullViewSnapshotDetails(props: FullViewSnapshotDetailsProps) {
         onChange={(e) => setSnapshotDescription(e.target.value)}
       />
       <Typography sx={{ color: 'black' }}>
-        Do you want to use the TDR Billing Profile associated with this dataset or would you like
-        to select a different one?
+        Do you want to use the TDR Billing Profile associated with this dataset or would you like to
+        select a different one?
       </Typography>
       <BillingProfileDropdown
         billingProfiles={billingProfiles}
