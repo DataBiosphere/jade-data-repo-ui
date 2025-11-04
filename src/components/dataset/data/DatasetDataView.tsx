@@ -28,11 +28,18 @@ type IProps = {
   dataset: DatasetModel;
   dispatch: Dispatch<Action>;
   polling: boolean;
-  profile: BillingProfileModel;
+  billingProfiles: BillingProfileModel[];
   snapshotRequest: SnapshotRequest;
 } & RouteComponentProps<{ uuid?: string }>;
 
-function DatasetDataView({ dataset, dispatch, match, polling, profile, snapshotRequest }: IProps) {
+function DatasetDataView({
+  dataset,
+  dispatch,
+  match,
+  polling,
+  billingProfiles,
+  snapshotRequest,
+}: IProps) {
   const [selected, setSelected] = useState('');
   const [selectedTable, setSelectedTable] = useState<TableModel | undefined>(undefined);
   const [sidebarWidth, setSidebarWidth] = useState(0);
@@ -105,10 +112,10 @@ function DatasetDataView({ dataset, dispatch, match, polling, profile, snapshotR
   }, [datasetLoaded, dataset, selectedTable, canLink, snapshotRequest.assetName]);
 
   useEffect(() => {
-    if (profile.id) {
+    if (billingProfiles && billingProfiles.length > 0) {
       setCanLink(true);
     }
-  }, [profile]);
+  }, [billingProfiles]);
 
   const handleEnumeration = (
     _limit: number,
@@ -174,7 +181,7 @@ function mapStateToProps(state: TdrState) {
   return {
     dataset: state.datasets.dataset,
     polling: state.query.polling,
-    profile: state.profiles.profile,
+    billingProfiles: state.profiles.profiles,
     snapshotRequest: state.snapshots.snapshotRequest,
   };
 }

@@ -5,6 +5,23 @@ describe('test snapshot creation', () => {
     cy.intercept({ method: 'GET', url: 'api/resources/v1/profiles/**' }).as(
       'getBillingProfileById',
     );
+    cy.intercept(
+      { method: 'GET', url: 'api/resources/v1/profiles?*' },
+      {
+        statusCode: 200,
+        body: {
+          total: 1,
+          items: [
+            {
+              id: 'profileId',
+              profileName: 'Test Billing Profile',
+              description: 'Test profile for E2E tests',
+              billingAccountId: 'ba-test-001',
+            },
+          ],
+        },
+      },
+    ).as('getBillingProfiles');
     cy.intercept('POST', '/api/repository/v1/snapshots', {
       statusCode: 200,
       body: {
@@ -84,9 +101,15 @@ describe('test snapshot creation is disabled', () => {
   beforeEach(() => {
     cy.intercept('GET', 'api/repository/v1/datasets/**').as('getDataset');
     cy.intercept('GET', 'api/repository/v1/datasets/**/policies').as('getDatasetPolicies');
+    cy.intercept('GET', '/api/resources/v1/profiles?*', {
+      statusCode: 401,
+      body: {
+        message: 'unauthorized',
+      },
+    });
     cy.intercept('GET', '/api/resources/v1/profiles/**', {
-      status: 401,
-      response: {
+      statusCode: 401,
+      body: {
         message: 'unauthorized',
       },
     });

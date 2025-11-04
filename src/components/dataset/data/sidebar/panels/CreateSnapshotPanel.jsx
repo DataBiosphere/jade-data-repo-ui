@@ -2,11 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@mui/styles';
 import { connect } from 'react-redux';
-
 import { Button, Divider, TextField, Typography } from '@mui/material';
 import { snapshotCreateDetails } from 'actions/index';
 import { SnapshotRequestContentsModelModeEnum } from 'generated/tdr';
 import CreateSnapshotDropdown from '../CreateSnapshotDropdown';
+import BillingProfileDropdown from './BillingProfileDropdown';
 import ShareSnapshot from './ShareSnapshot';
 
 const styles = (theme) => ({
@@ -51,10 +51,12 @@ export class CreateSnapshotPanel extends React.PureComponent {
       name,
       description,
       assetName,
+      selectedBillingProfile: null,
     };
   }
 
   static propTypes = {
+    billingProfiles: PropTypes.array,
     classes: PropTypes.object,
     dataset: PropTypes.object,
     dispatch: PropTypes.func,
@@ -64,9 +66,19 @@ export class CreateSnapshotPanel extends React.PureComponent {
     switchPanels: PropTypes.func,
   };
 
+  componentDidMount() {
+    const { billingProfiles, dataset } = this.props;
+    const defaultBillingProfile = billingProfiles.find(
+      (profile) => profile.id === dataset.defaultProfileId,
+    );
+    this.setState({
+      selectedBillingProfile: defaultBillingProfile || billingProfiles[0],
+    });
+  }
+
   saveNameAndDescription = () => {
     const { dispatch, switchPanels, filterData, dataset } = this.props;
-    const { name, description, assetName } = this.state;
+    const { name, description, assetName, selectedBillingProfile } = this.state;
     dispatch(
       snapshotCreateDetails({
         name,
@@ -75,6 +87,7 @@ export class CreateSnapshotPanel extends React.PureComponent {
         dataset,
         assetName,
         filterData,
+        billingProfileId: selectedBillingProfile?.id,
       }),
     );
     switchPanels(ShareSnapshot);
@@ -88,8 +101,8 @@ export class CreateSnapshotPanel extends React.PureComponent {
   };
 
   render() {
-    const { classes, dataset, handleCreateSnapshot } = this.props;
-    const { name, description, assetName } = this.state;
+    const { classes, dataset, handleCreateSnapshot, billingProfiles } = this.props;
+    const { name, description, assetName, selectedBillingProfile } = this.state;
     return (
       <div className={classes.root}>
         <div className={classes.rowOne}>
@@ -124,6 +137,14 @@ export class CreateSnapshotPanel extends React.PureComponent {
             value={assetName}
             data-cy="selectAsset"
           />
+
+          <BillingProfileDropdown
+            billingProfiles={billingProfiles}
+            selectedBillingProfile={selectedBillingProfile}
+            onSelectedItem={(selectedProfile) =>
+              this.setState({ selectedBillingProfile: selectedProfile })
+            }
+          />
         </div>
         <div className={classes.rowTwo}>
           <Divider />
@@ -135,7 +156,7 @@ export class CreateSnapshotPanel extends React.PureComponent {
               color="primary"
               disableElevation
               onClick={this.saveNameAndDescription}
-              disabled={assetName === '' || name === ''}
+              disabled={assetName === '' || name === '' || !selectedBillingProfile?.id}
               data-cy="next"
             >
               Next
@@ -152,6 +173,7 @@ function mapStateToProps(state) {
     snapshots: state.snapshots,
     dataset: state.datasets.dataset,
     filterData: state.query.filterData,
+    billingProfiles: state.profiles.profiles,
   };
 }
 
