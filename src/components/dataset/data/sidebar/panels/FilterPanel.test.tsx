@@ -77,7 +77,6 @@ const createTestStore = (stateOverrides = {}) => {
 };
 
 describe('FilterPanel', () => {
-  // Original test preserved from existing FilterPanel.test.tsx
   beforeEach(() => {
     const mockStore = createMockStore([]);
     const store = mockStore({
