@@ -4,7 +4,6 @@ import { Provider } from 'react-redux';
 import { ThemeProvider } from '@mui/material/styles';
 import { initialUserState } from 'reducers/user';
 import { initialQueryState } from 'reducers/query';
-import _ from 'lodash';
 import createMockStore from 'redux-mock-store';
 import React from 'react';
 import { routerMiddleware } from 'connected-react-router';
