@@ -21,8 +21,8 @@ const initialState = {
     { column1: 23, arrayCol: [2, 23] },
     { column1: [], arrayCol: null },
   ],
-  user: _.cloneDeep(initialUserState),
-  query: _.cloneDeep(initialQueryState),
+  user: structuredClone(initialUserState),
+  query: structuredClone(initialQueryState),
   router: { location: {} },
 };
 
@@ -94,8 +94,8 @@ describe('LightTable Timestamp Display', () => {
         timestamp_array_column: ['1/1/2024, 12:00:00 AM', '2/14/2024, 2:30:45 PM'],
       },
     ],
-    user: _.cloneDeep(initialUserState),
-    query: _.cloneDeep(initialQueryState),
+    user: structuredClone(initialUserState),
+    query: structuredClone(initialQueryState),
     router: { location: {} },
   };
 
