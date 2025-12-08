@@ -71,7 +71,7 @@
     "react-draggable": "^4.5.0",
     "react-fontawesome": "^1.7.1",
     "react-helmet": "^6.1.0",
-    "react-hook-form": "^7.67.0",
+    "react-hook-form": "^7.68.0",
     "react-json-view": "^1.21.3",
     "react-markdown": "^8.0.7",
     "react-notifications-component": "^3.4.1",
@@ -90,7 +90,7 @@
     "rxjs": "^7.8.2",
     "strip-markdown": "^6.0.0",
     "symbol-observable": "^4.0.0",
-    "tss-react": "^4.9.19",
+    "tss-react": "^4.9.20",
     "typescript": "^5.9.3",
     "validator": "^13.15.23",
     "webfontloader": "^1.6.28"
