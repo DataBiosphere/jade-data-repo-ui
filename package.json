@@ -130,7 +130,7 @@
     "vite": "^6.4.1",
     "vite-plugin-eslint": "^1.8.1",
     "vite-plugin-svgr": "^4.5.0",
-    "vite-tsconfig-paths": "^4.3.2"
+    "vite-tsconfig-paths": "^6.0.3"
   },
   "scripts": {
     "serve": "vite preview",
