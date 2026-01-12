@@ -71,7 +71,7 @@
     "react-draggable": "^4.5.0",
     "react-fontawesome": "^1.7.1",
     "react-helmet": "^6.1.0",
-    "react-hook-form": "^7.69.0",
+    "react-hook-form": "^7.71.0",
     "react-json-view": "^1.21.3",
     "react-markdown": "^8.0.7",
     "react-notifications-component": "^3.4.1",
@@ -97,7 +97,7 @@
   },
   "devDependencies": {
     "@cypress/vite-dev-server": "^6.0.3 < 7.0.0",
-    "@types/lodash": "^4.17.21",
+    "@types/lodash": "^4.17.23",
     "@types/node": "^20.19.4",
     "@types/react-redux": "^7.1.25",
     "@types/react-router-dom": "^5.3.3",
