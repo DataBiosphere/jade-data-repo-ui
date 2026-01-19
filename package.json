@@ -22,7 +22,7 @@
     "ES6"
   ],
   "dependencies": {
-    "@babel/runtime": "^7.28.4",
+    "@babel/runtime": "^7.28.6",
     "@codemirror/lang-javascript": "^6.2.4",
     "@emotion/cache": "^11.14.0",
     "@emotion/react": "^11.14.0",
@@ -71,7 +71,7 @@
     "react-draggable": "^4.5.0",
     "react-fontawesome": "^1.7.1",
     "react-helmet": "^6.1.0",
-    "react-hook-form": "^7.71.0",
+    "react-hook-form": "^7.71.1",
     "react-json-view": "^1.21.3",
     "react-markdown": "^8.0.7",
     "react-notifications-component": "^3.4.1",
