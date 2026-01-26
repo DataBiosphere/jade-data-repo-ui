@@ -47,7 +47,7 @@
     "@uiw/react-codemirror": "^4.25.4",
     "animate.css": "^4.1.1",
     "awesome-debounce-promise": "^2.1.0",
-    "axios": "^1.13.2",
+    "axios": "^1.13.3",
     "classlist-polyfill": "^1.2.0",
     "clsx": "^2.1.1",
     "connected-react-router": "^6.9.3",
@@ -130,7 +130,7 @@
     "vite": "^6.4.1",
     "vite-plugin-eslint": "^1.8.1",
     "vite-plugin-svgr": "^4.5.0",
-    "vite-tsconfig-paths": "^6.0.4"
+    "vite-tsconfig-paths": "^6.0.5"
   },
   "scripts": {
     "serve": "vite preview",
