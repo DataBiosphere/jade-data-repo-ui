@@ -132,6 +132,9 @@
     "vite-plugin-svgr": "^4.5.0",
     "vite-tsconfig-paths": "^6.1.1"
   },
+  "overrides": {
+    "form-data": "^4.0.6"
+  },
   "scripts": {
     "serve": "vite preview",
     "start": "npm run codegen && EXTEND_ESLINT=true && vite",
