@@ -28,6 +28,5 @@ RUN cd jade-data-repo-ui \
   && npm run build-no-code-gen
 
 ## Step 3. Copy the static UI artifacts into an nginx image to host
-# 2026-11-02: this comment forces a full rebuild on the latest blessed base image (CTM-739).
 FROM us.gcr.io/broad-dsp-gcr-public/base/nginx:stable-alpine
 COPY --from=build /jade-data-repo-ui/build /usr/share/nginx/html
